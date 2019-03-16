@@ -1,5 +1,20 @@
 # laravel-docker
 
+# Basic Commands
+
+### check version
+
+```sh
+$ docker-compose exec php php -v
+$ docker-compose exec php composer --version
+```
+
+```sh
+$ docker-compose exec php ash
+$ docker-compose exec nginx ash
+$ docker-compose exec mysql ash
+```
+
 # Composer
 [Download Composer](https://getcomposer.org/download/)
 
