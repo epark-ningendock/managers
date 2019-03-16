@@ -57,6 +57,7 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
+            // ここは前島の環境に合わせて追加した
             'unix_socket' => '/tmp/mysql.sock',
         ],
 
