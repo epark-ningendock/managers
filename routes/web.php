@@ -14,3 +14,11 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/login', function () {
+    return view('/vendor/adminlte/login');
+});
+
+Route::get('/register', function () {
+    return view('/vendor/adminlte/register');
+});
