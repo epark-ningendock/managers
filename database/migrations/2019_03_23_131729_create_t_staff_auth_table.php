@@ -14,7 +14,12 @@ class CreateTStaffAuthTable extends Migration
     public function up()
     {
         Schema::create('t_staff_auth', function (Blueprint $table) {
-            $table->increments('id');
+            $table->increments('no', 10)->unsigned();
+            $table->char('is_hospital', 1)->default(0);
+            $table->char('is_staff', 1)->default(0);
+            $table->char('is_item_category', 1)->default(0);
+            $table->char('is_invoice', 1)->default(0);
+            $table->char('is_pre_account', 1)->default(0);
             $table->timestamps();
         });
     }
