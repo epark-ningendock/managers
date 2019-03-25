@@ -16,8 +16,7 @@ class CreateStaffsTable extends Migration
         Schema::create('staffs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 50);
-            $table->string('login_id', 100);
-            $table->string('email')->unique();
+            $table->string('login_id', 100)->unique();
             $table->rememberToken();
             $table->string('password', 256);
             $table->char('authority', 1);

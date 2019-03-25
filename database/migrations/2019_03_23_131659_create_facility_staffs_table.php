@@ -16,7 +16,7 @@ class CreateFacilityStaffsTable extends Migration
         Schema::create('facility_staffs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 50)->nullable();
-            $table->string('login_id', 100)->nullable();
+            $table->string('login_id', 100)->nullable()->unique();
             $table->string('password', 256)->nullable();
             $table->timestamps();
         });
