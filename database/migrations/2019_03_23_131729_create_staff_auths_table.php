@@ -13,8 +13,8 @@ class CreateTStaffAuthTable extends Migration
      */
     public function up()
     {
-        Schema::create('t_staff_auth', function (Blueprint $table) {
-            $table->increments('no', 10)->unsigned();
+        Schema::create('staff_auths', function (Blueprint $table) {
+            $table->increments('id');
             $table->char('is_hospital', 1)->default(0);
             $table->char('is_staff', 1)->default(0);
             $table->char('is_item_category', 1)->default(0);
@@ -31,6 +31,6 @@ class CreateTStaffAuthTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('t_staff_auth');
+        Schema::dropIfExists('staff_auths');
     }
 }

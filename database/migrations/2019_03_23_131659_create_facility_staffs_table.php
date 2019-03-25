@@ -13,10 +13,10 @@ class CreateTFacilityStaffTable extends Migration
      */
     public function up()
     {
-        Schema::create('t_facility_staff', function (Blueprint $table) {
-            $table->increments('no', 10)->unsigned();
+        Schema::create('facility_staffs', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('name', 50)->nullable();
-            $table->string('id', 100)->nullable();
+            $table->string('login_id', 100)->nullable();
             $table->string('password', 256)->nullable();
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ class CreateTFacilityStaffTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('t_facility_staff');
+        Schema::dropIfExists('facility_staffs');
     }
 }
