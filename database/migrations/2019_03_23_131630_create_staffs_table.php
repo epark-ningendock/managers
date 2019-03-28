@@ -17,9 +17,10 @@ class CreateStaffsTable extends Migration
             $table->increments('id');
             $table->string('name', 50);
             $table->string('login_id', 100)->unique();
-            $table->rememberToken();
             $table->string('password', 256);
+            $table->rememberToken();
             $table->char('authority', 1);
+            $table->softDeletes(); 
             $table->timestamps();
         });
     }
