@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class FacilityStaff extends Model
 {
   protected $fillable = [
-    'name', 'login_id', 'password',
+    'name', 'email', 'password',
   ];
 }

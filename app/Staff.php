@@ -8,6 +8,6 @@ class Staff extends Model
 {
   protected $table = 'staffs';
   protected $fillable = [
-    'name', 'login_id', 'password',
+    'name', 'email', 'password',
   ];
 }

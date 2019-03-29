@@ -20,11 +20,6 @@ class CreateStaffAuthsTable extends Migration
             $table->char('is_item_category', 1)->default(0);
             $table->char('is_invoice', 1)->default(0);
             $table->char('is_pre_account', 1)->default(0);
-            // 共通項目
-            $table->unsignedInteger('author', false, 10)->nullable();
-            $table->unsignedInteger('changer', false, 10)->nullable();
-            $table->unsignedInteger('remover', false, 10)->nullable();
-            $table->softDeletes(); 
             $table->timestamps();
         });
     }
