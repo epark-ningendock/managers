@@ -19,6 +19,10 @@ class CreateFacilityStaffsTable extends Migration
             $table->string('login_id', 100)->nullable()->unique();
             $table->string('password', 256)->nullable();
             $table->rememberToken();
+            // 共通項目
+            $table->unsignedInteger('author', false, 10)->nullable();
+            $table->unsignedInteger('changer', false, 10)->nullable();
+            $table->unsignedInteger('remover', false, 10)->nullable();
             $table->softDeletes(); 
             $table->timestamps();
         });

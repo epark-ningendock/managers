@@ -20,6 +20,10 @@ class CreateStaffsTable extends Migration
             $table->string('password', 256);
             $table->rememberToken();
             $table->char('authority', 1);
+            // 共通項目
+            $table->unsignedInteger('author', false, 10)->nullable();
+            $table->unsignedInteger('changer', false, 10)->nullable();
+            $table->unsignedInteger('remover', false, 10)->nullable();
             $table->softDeletes(); 
             $table->timestamps();
         });
