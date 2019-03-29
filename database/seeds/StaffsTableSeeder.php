@@ -14,6 +14,7 @@ class StaffsTableSeeder extends Seeder
         DB::table('staffs')->insert([
             'name' => 'epark-dev',
             'email' => 'epark-dev@example.com',
+            'login_id' => 'epark-dev',
             'password' => bcrypt('PassW@rd01'),
             'authority' => '1'
         ]);
