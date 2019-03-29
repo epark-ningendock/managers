@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/staff', function () {
+    return view('staff');
+});
+
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');
 });
@@ -22,3 +26,4 @@ Route::get('/login', function () {
 Route::get('/register', function () {
     return view('/vendor/adminlte/register');
 });
+
