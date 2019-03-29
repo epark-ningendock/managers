@@ -18,6 +18,7 @@ class CreateFacilityStaffsTable extends Migration
             $table->string('name', 50);
             $table->string('email', 256)->unique();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('login_id', 100)->unique();
             $table->string('password', 256);
             $table->rememberToken();
             $table->unsignedInteger('author', false, 10)->nullable();
