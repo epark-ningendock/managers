@@ -15,9 +15,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/staff', function () {
-    return view('staff');
-});
+Route::get('/staff', 'StaffController@index');
 
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');
