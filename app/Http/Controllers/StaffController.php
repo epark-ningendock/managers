@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Staff;
 use Illuminate\Http\Request;
 
 class StaffController extends Controller
 {   
+    /**
+     * スタッフ一覧の表示
+     *
+     * @param  
+     * @return Response
+     */
     public function index () 
     {
-        $hello = 'Hello,World!';
-        $hello_array = ['Hello', 'こんにちは', 'ニーハオ'];
-
-        return view('staff.index', compact('hello', 'hello_array'));
+        return view('staff.index', ['staffs' => Staff::all()]);
     }
 }
