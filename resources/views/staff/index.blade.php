@@ -7,7 +7,7 @@
 
   <!-- ページの見出しを入力 -->
   @section('content_header')
-    <h1>Dashboard</h1>
+    {{-- <h1>Dashboard</h1> --}}
   @stop
 
   <!-- ページの内容を入力 -->
