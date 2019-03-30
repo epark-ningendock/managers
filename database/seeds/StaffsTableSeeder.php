@@ -16,7 +16,7 @@ class StaffsTableSeeder extends Seeder
             'email' => 'epark-dev@example.com',
             'login_id' => 'epark-dev',
             'password' => bcrypt('PassW@rd01'),
-            'authority' => '1'
+            'authority' => 1
         ]);
     }
 }

@@ -16,10 +16,11 @@
       <div class="col-xs-12">
         <div class="box">
           <div class="box-header">
-            <h3 class="box-title">Hover Data Table</h3>
+            <h3 class="box-title">スタッフ管理</h3>
           </div>
           <!-- /.box-header -->
           <div class="box-body">
+            <span class="label label-success">新規作成</span>
             <table id="example2" class="table table-bordered table-hover">
               <thead>
               <tr>
@@ -53,12 +54,17 @@
                 <th>{{ $staff['authority'] }}</th>
                 <th>{{ $staff['authority'] }}</th>
                 <th>{{ $staff['email_verified_at'] ? '有効' : '無効' }}</th>
-                <th>編集</th>
-                <th>削除</th>
+                <th><span class="label label-primary">編集</span></th>
+                <th><span class="label label-danger">削除</span></th>
               </tr>
               @endforeach
               <tr>
             </table>
+            <ul class="pagination pagination-sm inline">
+              <li><a href="#">1</a></li>
+              <li><a href="#">2</a></li>
+              <li><a href="#">3</a></li>
+            </ul>
           </div>
         </div>
       </div>

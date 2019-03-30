@@ -21,7 +21,7 @@ class CreateStaffsTable extends Migration
             $table->string('login_id', 100)->unique();
             $table->string('password', 256);
             $table->rememberToken();
-            $table->char('authority', 1);
+            $table->integer('authority', false, 1);
             $table->unsignedInteger('author', false, 10)->nullable();
             $table->unsignedInteger('changer', false, 10)->nullable();
             $table->unsignedInteger('remover', false, 10)->nullable();
