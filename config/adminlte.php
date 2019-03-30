@@ -122,7 +122,7 @@ return [
         [
             'text'        => '医療機関管理',
             'url'         => '/',
-            'icon'        => 'user',
+            'icon'        => 'hospital-o',
         ],
     ],
 
