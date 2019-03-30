@@ -10,7 +10,10 @@ class DatabaseSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
+    {   
         $this->call(StaffsTableSeeder::class);
+
+        factory(App\Staff::class, 50)->create();
+
     }
 }

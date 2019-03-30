@@ -12,10 +12,6 @@
 
   <!-- ページの内容を入力 -->
   @section('content')
-    <p>{{ $hello }}</p>
-      @foreach ($hello_array as $hello_word)
-          {{ $hello_word }}<br>
-      @endforeach
     <div class="row">
       <div class="col-xs-12">
         <div class="box">
@@ -29,8 +25,8 @@
               <tr>
                 <th>No</th>
                 <th>スタッフ名</th>
-                <th>ログインID</th>
                 <th>メールアドレス</th>
+                <th>ログインID</th>
                 <th>権限</th>
                 <th>医療機関管理</th>
                 <th>スタッフ管理</th>
@@ -43,21 +39,24 @@
               </tr>
               </thead>
               <tbody>
+              @foreach ($staffs as $staff)
               <tr>
-                <th>1</th>
-                <th>西村竜</th>
-                <th>epark-dev</th>
-                <th>epark-dev@example.com</th>
-                <th>A</th>
-                <th>A</th>
-                <th>A</th>
-                <th>A</th>
-                <th>A</th>
-                <th>A</th>
-                <th>A</th>
-                <th>A</th>
-                <th>A</th>
+                <th>{{ $staff['id'] }}</th>
+                <th>{{ $staff['name'] }}</th>
+                <th>{{ $staff['email'] }}</th>
+                <th>{{ $staff['login_id'] }}</th>
+                <th>{{ $staff['authority'] }}</th>
+                {{-- 仕様確定次第実装 --}}
+                <th>{{ $staff['authority'] }}</th>
+                <th>{{ $staff['authority'] }}</th>
+                <th>{{ $staff['authority'] }}</th>
+                <th>{{ $staff['authority'] }}</th>
+                <th>{{ $staff['authority'] }}</th>
+                <th>{{ $staff['email_verified_at'] ? '有効' : '無効' }}</th>
+                <th>編集</th>
+                <th>削除</th>
               </tr>
+              @endforeach
               <tr>
             </table>
           </div>
