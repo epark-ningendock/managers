@@ -26,7 +26,6 @@
               <tr>
                 <th>No</th>
                 <th>スタッフ名</th>
-                <th>メールアドレス</th>
                 <th>ログインID</th>
                 <th>権限</th>
                 <th>医療機関管理</th>
@@ -44,7 +43,6 @@
               <tr>
                 <th>{{ $staff['id'] }}</th>
                 <th>{{ $staff['name'] }}</th>
-                <th>{{ $staff['email'] }}</th>
                 <th>{{ $staff['login_id'] }}</th>
                 <th>{{ $staff['authority'] }}</th>
                 {{-- 仕様確定次第実装 --}}
@@ -53,7 +51,7 @@
                 <th>{{ $staff['authority'] }}</th>
                 <th>{{ $staff['authority'] }}</th>
                 <th>{{ $staff['authority'] }}</th>
-                <th>{{ $staff['email_verified_at'] ? '有効' : '無効' }}</th>
+                <th>{{ $staff['status'] ? '有効' : '無効' }}</th>
                 <th><span class="label label-primary">編集</span></th>
                 <th><span class="label label-danger">削除</span></th>
               </tr>
