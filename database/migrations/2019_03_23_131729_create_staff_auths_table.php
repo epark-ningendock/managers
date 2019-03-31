@@ -15,11 +15,11 @@ class CreateStaffAuthsTable extends Migration
     {
         Schema::create('staff_auths', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('is_hospital', false, 1)->default(0);
-            $table->integer('is_staff', false, 1)->default(0);
-            $table->integer('is_item_category', false, 1)->default(0);
-            $table->integer('is_invoice', false, 1)->default(0);
-            $table->integer('is_pre_account', false, 1)->default(0);
+            $table->tinyInteger('is_hospital', false, 1)->default(0);
+            $table->tinyInteger('is_staff', false, 1)->default(0);
+            $table->tinyInteger('is_item_category', false, 1)->default(0);
+            $table->tinyInteger('is_invoice', false, 1)->default(0);
+            $table->tinyInteger('is_pre_account', false, 1)->default(0);
             $table->timestamps();
         });
     }
