@@ -12,4 +12,12 @@ class Staff extends Model
   protected $fillable = [
     'name', 'login_id', 'password',
   ];
+
+  /**
+  * ユーザーに関連する電話レコードを取得
+  */
+  public function staff_auth()
+  {
+    return $this->hasOne('App\StaffAuth');
+  }
 }
