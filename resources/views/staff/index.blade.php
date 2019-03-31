@@ -45,12 +45,11 @@
                 <th>{{ $staff['name'] }}</th>
                 <th>{{ $staff['login_id'] }}</th>
                 <th>{{ $staff['authority'] }}</th>
-                {{-- 仕様確定次第実装 --}}
-                <th>{{ $staff['authority'] }}</th>
-                <th>{{ $staff['authority'] }}</th>
-                <th>{{ $staff['authority'] }}</th>
-                <th>{{ $staff['authority'] }}</th>
-                <th>{{ $staff['authority'] }}</th>
+                <th>{{ $staff -> staff_auth['is_hospital'] }}</th>
+                <th>{{ $staff -> staff_auth['is_staff'] }}</th>
+                <th>{{ $staff -> staff_auth['is_item_category'] }}</th>
+                <th>{{ $staff -> staff_auth['is_invoice'] }}</th>
+                <th>{{ $staff -> staff_auth['is_pre_account'] }}</th>
                 <th>{{ $staff['status'] ? '有効' : '無効' }}</th>
                 <th><span class="label label-primary">編集</span></th>
                 <th><span class="label label-danger">削除</span></th>
