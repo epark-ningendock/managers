@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class StaffAuth extends Model
+class StaffAuth extends BaseModel
 {
   /**
   * このスタッフを所有するstaff_authを取得

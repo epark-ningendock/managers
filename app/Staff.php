@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use BenSampo\Enum\Enum;
 
-class Staff extends Model
+class Staff extends BaseModel
 {
   // Larvelの設定だと、staffの複数形はstaffなので、規約に合っていないが、
   // facility_staffsテーブルと粒度を揃えるために、カスタムテーブルを使用し、staffsで扱えるようにする

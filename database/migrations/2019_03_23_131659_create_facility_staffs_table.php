@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use \App\Helpers\DBCommonColumns;
 
 class CreateFacilityStaffsTable extends Migration
 {
+    use DBCommonColumns;
     /**
      * Run the migrations.
      *
@@ -19,7 +21,7 @@ class CreateFacilityStaffsTable extends Migration
             $table->string('email', 256)->unique()->nullable();
             $table->string('login_id', 100)->unique()->nullable();
             $table->string('password', 256)->nullable();
-            $table->timestamps();
+            $this->addCommonColumns($table);
         });
     }
 

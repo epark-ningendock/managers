@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use \App\Helpers\DBCommonColumns;
 
 class CreateStaffAuthsTable extends Migration
 {
+    use DBCommonColumns;
     /**
      * Run the migrations.
      *
@@ -22,7 +24,7 @@ class CreateStaffAuthsTable extends Migration
             $table->tinyInteger('is_pre_account', false, 1)->default(0);
             $table->integer('staff_id')->unsigned()->unique();
             $table->foreign('staff_id')->references('id')->on('staffs');
-            $table->timestamps();
+            $this->addCommonColumns($table);
         });
     }
 

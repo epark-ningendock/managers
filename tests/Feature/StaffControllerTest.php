@@ -9,11 +9,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class StaffControllerTest extends TestCase
 {
     /**
-     * A basic test example.
+     * Test Staff List
      *
      * @return void
      */
-    public function testExample()
+    public function testStaffList()
     {
         $response = $this->call('GET', '/staff');
 
