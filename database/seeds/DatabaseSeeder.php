@@ -15,8 +15,5 @@ class DatabaseSeeder extends Seeder
             StaffsTableSeeder::class,
             StaffAuthsTableSeeder::class
         ]);
-
-        factory(App\Staff::class, 50)->create();
-
     }
 }

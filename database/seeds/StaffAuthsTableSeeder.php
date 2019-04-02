@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use \App\Staff;
+use \App\StaffAuth;
 
 class StaffAuthsTableSeeder extends Seeder
 {
@@ -11,13 +13,8 @@ class StaffAuthsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('staff_auths')->insert([
-            'is_hospital' => 1,
-            'is_staff' => 1,
-            'is_item_category' => 1,
-            'is_invoice' => 1,
-            'is_pre_account' => 1,
-            'staff_id' => 1
-        ]);
+        Staff::all()->each(function($staff){
+            factory(StaffAuth::class)->create(["staff_id" => $staff->id]);
+        });
     }
 }

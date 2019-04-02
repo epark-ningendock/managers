@@ -11,11 +11,9 @@ class StaffsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('staffs')->insert([
-            'name' => 'epark-dev',
-            'login_id' => 'epark-dev',
-            'password' => bcrypt('PassW@rd01'),
-            'authority' => 1
-        ]);
+        factory(App\Staff::class, 50)->make()->each(function($staff, $index) {
+            $staff->login_id = "epark-dev-$index";
+            $staff->save();
+        });
     }
 }
