@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/staff', 'StaffController@index');
+Route::delete('/staff/{id}', 'StaffController@destroy');
 
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');

@@ -22,7 +22,7 @@ class CreateStaffsTable extends Migration
             $table->string('login_id', 100)->unique()->nullable();
             $table->string('password', 256)->nullable()->nullable();
             $table->tinyInteger('authority', false, 1);
-            $table->char('status', 1)->default('1');
+            $table->char('status', 2)->default('1');
             $this->addCommonColumns($table);
         });
     }

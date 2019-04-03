@@ -2,9 +2,10 @@
 
 namespace App\Enums;
 
+use BenSampo\Enum\Contracts\LocalizedEnum;
 use BenSampo\Enum\Enum;
 
-final class Authority extends Enum
+final class Authority extends Enum implements LocalizedEnum
 {
     const Admin = 1;
     const Member = 2;

@@ -19,8 +19,38 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
+          <form role="form">
+            {{ csrf_field() }}
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="name">スタッフ名</label>
+                  <input type="text" class="form-control" id="name" name="name" placeholder="スタッフ名" value="{{ $name or '' }}">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="login_id">ログインID</label>
+                  <input type="text" class="form-control" id="login_id" name="login_id" placeholder="ログインID" value=" {{ $login_id or '' }}">
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="status">状態</label>
+                  <select class="form-control" id="status" name="status">
+                    @foreach(\App\Enums\Status::toArray() as $key)
+                      <option value="{{ $key }}" {{ (isset($status)  && $status == $key) ? "selected" : "" }}>{{ \App\Enums\Status::getDescription($key) }}</option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <button type="submit" class="btn btn-primary" style="margin-top:25px;">サーチ</button>
+              </div>
+            </div>
+          </form>
           <span class="label label-success">新規作成</span>
-          <table id="example2" class="table table-bordered table-hover">
+          <table id="example2" class="table table-bordered table-hover" style="margin-top:10px;">
             <thead>
             <tr>
               <th>No</th>
@@ -44,14 +74,16 @@
                 <th>{{ $staff['name'] }}</th>
                 <th>{{ $staff['login_id'] }}</th>
                 <th>{{ $staff['authority'] }}</th>
-                <th>{{ $staff -> staff_auth['is_hospital'] }}</th>
-                <th>{{ $staff -> staff_auth['is_staff'] }}</th>
-                <th>{{ $staff -> staff_auth['is_item_category'] }}</th>
-                <th>{{ $staff -> staff_auth['is_invoice'] }}</th>
-                <th>{{ $staff -> staff_auth['is_pre_account'] }}</th>
+                <th>{{ $staff->staff_auth['is_hospital'] }}</th>
+                <th>{{ $staff->staff_auth['is_staff'] }}</th>
+                <th>{{ $staff->staff_auth['is_item_category'] }}</th>
+                <th>{{ $staff->staff_auth['is_invoice'] }}</th>
+                <th>{{ $staff->staff_auth['is_pre_account'] }}</th>
                 <th>{{ $staff['status'] ? '有効' : '無効' }}</th>
                 <th><span class="label label-primary">編集</span></th>
-                <th><span class="label label-danger">削除</span></th>
+                <th>
+                  <span class="label label-danger delete-btn" data-id="{{ $staff->id }}">削除</span>
+                </th>
               </tr>
             @endforeach
             <tr>
@@ -61,14 +93,27 @@
       </div>
     </div>
   </div>
+  <form action="{{ action('StaffController@destroy', ':id') }}" method="post" id="delete-form">
+    {{csrf_field()}}
+    <input name="_method" type="hidden" value="DELETE">
+  </form>
 @stop
 
 <!-- 読み込ませるCSSを入力 -->
-@section('css')
-  <link rel="stylesheet" href="/css/admin_custom.css">
-@stop
+{{--@section('css')--}}
+  {{--<link rel="stylesheet" href="/css/admin_custom.css">--}}
+{{--@stop--}}
 
 <!-- 読み込ませるJSを入力 -->
 @section('js')
-  <script> console.log('Hi!'); </script>
+  <script>
+      $(document).ready(function() {
+         $('.delete-btn').click(function() {
+             const id = $(this).data('id');
+             const action = $('#delete-form').attr('action').replace(':id', id);
+             $('#delete-form').attr('action', action);
+             $('#delete-form').submit();
+         });
+      });
+  </script>
 @stop
