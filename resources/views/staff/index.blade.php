@@ -1,12 +1,12 @@
 <!-- adminlte::pageを継承 -->
-@extends('adminlte::page')
+@extends('layouts.master')
 
 <!-- ページタイトルを入力 -->
 @section('title', 'Epark')
 
 <!-- ページの見出しを入力 -->
-@section('Staff List')
-  {{-- <h1>Dashboard</h1> --}}
+@section('content_header')
+   <h1>スタッフ管理</h1>
 @stop
 
 <!-- ページの内容を入力 -->
@@ -39,18 +39,18 @@
                   <label for="status">状態</label>
                   <select class="form-control" id="status" name="status">
                     @foreach(\App\Enums\Status::toArray() as $key)
-                      <option value="{{ $key }}" {{ (isset($status)  && $status == $key) ? "selected" : "" }}>{{ \App\Enums\Status::getDescription($key) }}</option>
+                      <option value="{{ $key }}" {{ (isset($status) && $status == $key) ? "selected" : "" }}>{{ \App\Enums\Status::getDescription($key) }}</option>
                     @endforeach
                   </select>
                 </div>
               </div>
               <div class="col-md-3">
-                <button type="submit" class="btn btn-primary" style="margin-top:25px;">サーチ</button>
+                <button type="submit" class="btn btn-primary btn-search" >サーチ</button>
               </div>
             </div>
           </form>
           <span class="label label-success">新規作成</span>
-          <table id="example2" class="table table-bordered table-hover" style="margin-top:10px;">
+          <table id="example2" class="table table-bordered table-hover mt-2">
             <thead>
             <tr>
               <th>No</th>
@@ -70,16 +70,16 @@
             <tbody>
             @foreach ($staffs as $staff)
               <tr>
-                <th>{{ $staff['id'] }}</th>
-                <th>{{ $staff['name'] }}</th>
-                <th>{{ $staff['login_id'] }}</th>
-                <th>{{ $staff['authority'] }}</th>
+                <th>{{ $staff->id }}</th>
+                <th>{{ $staff->name }}</th>
+                <th>{{ $staff->login_id }}</th>
+                <th>{{ $staff->authority }}</th>
                 <th>{{ $staff->staff_auth['is_hospital'] }}</th>
                 <th>{{ $staff->staff_auth['is_staff'] }}</th>
                 <th>{{ $staff->staff_auth['is_item_category'] }}</th>
                 <th>{{ $staff->staff_auth['is_invoice'] }}</th>
                 <th>{{ $staff->staff_auth['is_pre_account'] }}</th>
-                <th>{{ $staff['status'] ? '有効' : '無効' }}</th>
+                <th>{{ \App\Enums\Status::getDescription($staff->status) }}</th>
                 <th><span class="label label-primary">編集</span></th>
                 <th>
                   <span class="label label-danger delete-btn" data-id="{{ $staff->id }}">削除</span>
