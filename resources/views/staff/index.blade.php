@@ -55,6 +55,7 @@
               <th>No</th>
               <th>スタッフ名</th>
               <th>ログインID</th>
+              <th>メールアドレス</th>
               <th>権限</th>
               <th>医療機関管理</th>
               <th>スタッフ管理</th>
@@ -72,6 +73,7 @@
                 <th>{{ $staff->id }}</th>
                 <th>{{ $staff->name }}</th>
                 <th>{{ $staff->login_id }}</th>
+                <th>{{ $staff->email }}</th>
                 <th>{{ $staff->authority }}</th>
                 <th>{{ $staff->staff_auth['is_hospital'] }}</th>
                 <th>{{ $staff->staff_auth['is_staff'] }}</th>
@@ -104,7 +106,7 @@
       $(document).ready(function() {
          $('.delete-btn').click(function() {
              const id = $(this).data('id');
-             Modal.showConfirm('Do you want to delete staff?', function() {
+             Modal.showConfirm('スタッフの情報を削除しますか？', function() {
                 submitDeleteForm(id);
              });
          });
