@@ -13,7 +13,7 @@ class StaffControllerTest extends TestCase
      *
      * @return void
      */
-    public function testExample()
+    public function testExample1()
     {
         $response = $this->call('GET', '/staff');
 

@@ -13,7 +13,8 @@ class DatabaseSeeder extends Seeder
     {   
         $this->call([
             StaffsTableSeeder::class,
-            StaffAuthsTableSeeder::class
+            StaffAuthsTableSeeder::class,
+            FacilityStaffsTableSeeder::class
         ]);
 
         factory(App\Staff::class, 50)->create();

@@ -116,7 +116,7 @@ return [
         ],
         [
             'text'        => '医療機関スタッフ管理',
-            'url'         => '/',
+            'url'         => '/facility-staff',
             'icon'        => 'user',
         ],
         [

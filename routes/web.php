@@ -15,7 +15,10 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/staff', 'StaffController@index');
+
+Route::resource('facility-staff', 'FacilityStaffController')->except([
+	'show'
+]);
 
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');
