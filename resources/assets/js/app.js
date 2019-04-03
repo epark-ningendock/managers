@@ -1,0 +1,1 @@
+window.Modal = require('./modal');

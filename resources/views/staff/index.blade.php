@@ -1,4 +1,3 @@
-<!-- adminlte::pageを継承 -->
 @extends('layouts.master')
 
 <!-- ページタイトルを入力 -->
@@ -50,7 +49,7 @@
             </div>
           </form>
           <span class="label label-success">新規作成</span>
-          <table id="example2" class="table table-bordered table-hover mt-2">
+          <table id="example2" class="table table-bordered table-hover mt-3">
             <thead>
             <tr>
               <th>No</th>
@@ -99,21 +98,22 @@
   </form>
 @stop
 
-<!-- 読み込ませるCSSを入力 -->
-{{--@section('css')--}}
-  {{--<link rel="stylesheet" href="/css/admin_custom.css">--}}
-{{--@stop--}}
-
 <!-- 読み込ませるJSを入力 -->
 @section('js')
   <script>
       $(document).ready(function() {
          $('.delete-btn').click(function() {
              const id = $(this).data('id');
-             const action = $('#delete-form').attr('action').replace(':id', id);
-             $('#delete-form').attr('action', action);
-             $('#delete-form').submit();
+             Modal.showConfirm('Do you want to delete staff?', function() {
+                submitDeleteForm(id);
+             });
          });
       });
+
+      function submitDeleteForm(id) {
+          const action = $('#delete-form').attr('action').replace(':id', id);
+          $('#delete-form').attr('action', action);
+          $('#delete-form').submit();
+      }
   </script>
 @stop

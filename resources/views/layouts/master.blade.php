@@ -1,11 +1,11 @@
 <!-- adminlte::pageを継承 -->
 @extends('adminlte::page')
 
+@include('layouts.modal')
+
 @section('css')
-  <link rel="stylesheet" href="/css/app.css?q=1.0.0">
+  <link rel="stylesheet" href="{{ asset('css/app.css?q=1.0') }}">
 @stop
 
-{{--<!-- 読み込ませるJSを入力 -->--}}
-@section('js')
-  <script src="/js/app.js?q=1.0.0"></script>
-@stop
+<script src="{{ asset('js/app.js?q=1.0') }}"></script>
+
