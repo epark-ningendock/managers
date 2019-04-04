@@ -52,7 +52,7 @@
 
                 <div class="form-group @if ($errors->has('password')) has-error @endif">
                     <label for="password">パスワード</label>
-                    <input type="password" class="form-control" id="password" name="password" value="{{ ( $facility_staff->password ) ? $facility_staff->password : Input::old('password') }}" placeholder="パスワード">
+                    <input type="password" class="form-control" id="password" name="password" value="{{  Input::old('password') }}" placeholder="パスワード">
                     @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
                 </div>
 

@@ -24,12 +24,13 @@ class FacilityStaffFormRequest extends FormRequest {
 
 		$email_validation = ( $this->method() == 'PUT' || $this->method() == 'PATCH' ) ? 'required|unique:facility_staffs,email,'. $this->facility_staff : 'required|unique:facility_staffs|email';
 		$login_id         = ( $this->method() == 'PUT' || $this->method() == 'PATCH' ) ? 'required|unique:facility_staffs,login_id, '. $this->facility_staff : 'required|unique:facility_staffs';
+		$password         = ( $this->method() == 'PUT' || $this->method() == 'PATCH' ) ? '' : 'required|min:6';
 
 		return [
 			'name'     => 'required',
 			'email'    => $email_validation,
 			'login_id' => $login_id,
-			'password' => 'required',
+			'password' => $password,
 		];
 	}
 

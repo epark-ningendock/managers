@@ -53,7 +53,7 @@
                                           action="{{ route('facility-staff.destroy', $facility_staff->id) }}">
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
-                                        <button type="submit" class="btn btn-danger">編集</button>
+                                        <button type="submit" class="btn btn-danger" data-toggle="modal" data-target=".bs-example-modal-lg">編集</button>
                                     </form>
                                 </td>
                             </tr>

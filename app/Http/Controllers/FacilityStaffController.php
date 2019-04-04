@@ -15,36 +15,39 @@ class FacilityStaffController extends Controller {
 		return view( 'facility_staff.create' );
 	}
 
-	public function store(FacilityStaffFormRequest $request) {
+	public function store( FacilityStaffFormRequest $request ) {
 
-		$facility_staff = new FacilityStaff($request->all());
+		$facility_staff           = new FacilityStaff( $request->all() );
+		$facility_staff->password = bcrypt( $request->input( 'password' ) );
 		$facility_staff->save();
 
-		return redirect('facility-staff')->with('status', '新しい施設職員が創設される');
+		return redirect( 'facility-staff' )->with( 'status', '新しい施設職員が創設される' );
 
 	}
 
-	public function edit($id) {
+	public function edit( $id ) {
 
-		$facility_staff = FacilityStaff::findOrFail($id);
+		$facility_staff = FacilityStaff::findOrFail( $id );
 
-		return view( 'facility_staff.edit', compact('facility_staff') );
+		return view( 'facility_staff.edit', compact( 'facility_staff' ) );
 	}
 
 	public function update( FacilityStaffFormRequest $request, $id ) {
 
-		$facility_staff = FacilityStaff::findOrFail($id);
-		$facility_staff->update($request->all());
+		$facility_staff     = FacilityStaff::findOrFail( $id );
+		$inputs             = request()->all();
+		$inputs['password'] = bcrypt( $request->input( 'password' ) );
+		$facility_staff->update( $inputs );
 
-		return redirect('facility-staff')->with('status', 'データ更新');
+		return redirect( 'facility-staff' )->with( 'status', 'データ更新' );
 
 	}
 
-	public function destroy( $id  ) {
+	public function destroy( $id ) {
 
-		$facility_staff = FacilityStaff::findOrFail($id);
-		$facility_staff->destroy($id);
+		$facility_staff = FacilityStaff::findOrFail( $id );
+		$facility_staff->destroy( $id );
 
-		return redirect('facility-staff')->with('status', 'データが削除されました');
+		return redirect( 'facility-staff' )->with( 'status', 'データが削除されました' );
 	}
 }

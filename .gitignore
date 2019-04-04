@@ -7,7 +7,6 @@
 /.vagrant
 .env
 .env.testing
-
 Homestead.json
 Homestead.yaml
 npm-debug.log
