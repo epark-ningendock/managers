@@ -62,7 +62,7 @@ class StaffController extends Controller
         return view( 'staff.edit',  ['staff' => $staff]);
     }
 
-    public function update($id, StaffFormRequest $request) {
+    public function update(StaffFormRequest $request, $id) {
         DB::transaction(function() use ($id, $request){
             $staff = Staff::findOrFail($id);
             $staff->update($request->only(['name', 'login_id', 'email', 'status']));

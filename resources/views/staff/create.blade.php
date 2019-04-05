@@ -1,33 +1,14 @@
-@extends('layouts.master')
+@extends('layouts.form', [ 'box_title' => 'スタッフ管理' ])
 
 @section('content_header')
   <h1>スタッフ情報</h1>
 @stop
 
-<!-- ページの内容を入力 -->
-@section('content')
-
-  <div class="box box-primary">
-    @if ($errors->any())
-      <br/>
-      <div class="alert alert-danger">
-        <ul>
-          @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-          @endforeach
-        </ul>
-      </div>
-    @endif
-
-    <div class="box-header with-border">
-      <h3 class="box-title">スタッフ管理</h3>
-    </div>
-    <!-- /.box-header -->
-    <form method="POST" action="{{ route('staff.store') }}">
-      @include('staff.partial.form')
-    </form>
-
-  </div>
+@section('form')
+  <form method="POST" action="{{ route('staff.store') }}">
+    @include('staff.partial.form')
+  </form>
+@stop
 
 @section('js')
   <script>
@@ -62,6 +43,4 @@
           })();
       });
   </script>
-@stop
-
 @stop
