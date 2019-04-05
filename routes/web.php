@@ -28,3 +28,10 @@ Route::get('/register', function () {
     return view('/vendor/adminlte/register');
 });
 
+
+Route::prefix('examples')->group(function () {
+	Route::get('listing', function () {
+		return view('examples.listing');
+	});
+});
+
