@@ -10,7 +10,7 @@ class Staff extends BaseModel
   // facility_staffsテーブルと粒度を揃えるために、カスタムテーブルを使用し、staffsで扱えるようにする
   protected $table = 'staffs';
   protected $fillable = [
-    'name', 'login_id', 'password',
+    'name', 'login_id', 'password', 'authority', 'email', 'status'
   ];
 
   /**

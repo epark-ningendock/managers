@@ -15,8 +15,7 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/staff', 'StaffController@index');
-Route::delete('/staff/{id}', 'StaffController@destroy');
+Route::resource('/staff', 'StaffController')->except(['show']);
 
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');

@@ -13,11 +13,29 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
-        <div class="box-header">
-          <h3 class="box-title">スタッフ管理</h3>
-        </div>
+        {{--<div class="box-header with-border">--}}
+          {{--<h3 class="box-title">スタッフ管理</h3>--}}
+        {{--</div>--}}
         <!-- /.box-header -->
-        <div class="box-body">
+
+          <!-- Message -->
+        @if (session('success'))
+          <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                  aria-hidden="true">&times;</span></button>
+            {{ session('success') }}
+          </div>
+          <br/>
+        @endif
+        @if (session('error'))
+          <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                  aria-hidden="true">&times;</span></button>
+            {{ session('error') }}
+          </div>
+          <br/>
+        @endif
+        <div class="box-header">
           <form role="form">
             {{ csrf_field() }}
             <div class="row">
@@ -48,8 +66,10 @@
               </div>
             </div>
           </form>
-          <span class="label label-success">新規作成</span>
-          <table id="example2" class="table table-bordered table-hover mt-3">
+          <a class="btn btn-success" href="{{ route('staff.create') }}">新規作成</a>
+        </div>
+        <div class="box-body">
+          <table id="example2" class="table table-bordered table-hover">
             <thead>
             <tr>
               <th>No</th>
@@ -81,9 +101,9 @@
                 <th>{{ $staff->staff_auth['is_invoice'] }}</th>
                 <th>{{ $staff->staff_auth['is_pre_account'] }}</th>
                 <th>{{ \App\Enums\Status::getDescription($staff->status) }}</th>
-                <th><span class="label label-primary">編集</span></th>
+                <th><a class="btn btn-primary" href="{{ route('staff.edit', $staff->id) }}">編集</a></th>
                 <th>
-                  <span class="label label-danger delete-btn" data-id="{{ $staff->id }}">削除</span>
+                  <button class="btn btn-danger delete-btn" data-id="{{ $staff->id }}">削除</button>
                 </th>
               </tr>
             @endforeach
@@ -94,9 +114,9 @@
       </div>
     </div>
   </div>
-  <form action="{{ action('StaffController@destroy', ':id') }}" method="post" id="delete-form">
+  <form action="{{ route('staff.destroy', ':id') }}" method="post" id="delete-form">
     {{csrf_field()}}
-    <input name="_method" type="hidden" value="DELETE">
+    {{ method_field('DELETE') }}
   </form>
 @stop
 
