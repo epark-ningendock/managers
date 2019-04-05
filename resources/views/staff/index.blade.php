@@ -86,9 +86,16 @@
         <th>{{ $staff->staff_auth['is_invoice'] }}</th>
         <th>{{ $staff->staff_auth['is_pre_account'] }}</th>
         <th>{{ \App\Enums\Status::getDescription($staff->status) }}</th>
-        <th><a class="btn btn-primary" href="{{ route('staff.edit', $staff->id) }}">編集</a></th>
+        <th><a class="btn btn-primary {{ $staff->status == \App\Enums\Status::Deleted()->value ? 'disabled' : '' }}"
+               href="{{ $staff->status == \App\Enums\Status::Deleted()->value ? '' : route('staff.edit', $staff->id) }}">
+            編集
+          </a>
+        </th>
         <th>
-          <button class="btn btn-danger delete-btn" data-id="{{ $staff->id }}">削除</button>
+          <button class="btn btn-danger delete-btn"
+                  {{ $staff->status == \App\Enums\Status::Deleted()->value ? 'disabled' : ''}} data-id="{{ $staff->id }}">
+            削除
+          </button>
         </th>
       </tr>
     @endforeach

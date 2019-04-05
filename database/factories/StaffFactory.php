@@ -2,8 +2,9 @@
 
 use Faker\Generator as Faker;
 use App\Enums\Authority;
+use App\Staff;
 
-$factory->define(App\Staff::class, function (Faker $faker) {
+$factory->define(Staff::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
         'login_id' => str_random(10),
