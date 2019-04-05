@@ -60,7 +60,6 @@
       <th>No</th>
       <th>スタッフ名</th>
       <th>ログインID</th>
-      <th>メールアドレス</th>
       <th>権限</th>
       <th>医療機関管理</th>
       <th>スタッフ管理</th>
@@ -74,32 +73,40 @@
     </thead>
     <tbody>
     @foreach ($staffs as $staff)
-      <tr>
-        <th>{{ $staff->id }}</th>
-        <th>{{ $staff->name }}</th>
-        <th>{{ $staff->login_id }}</th>
-        <th>{{ $staff->email }}</th>
-        <th>{{ $staff->authority }}</th>
-        <th>{{ $staff->staff_auth['is_hospital'] }}</th>
-        <th>{{ $staff->staff_auth['is_staff'] }}</th>
-        <th>{{ $staff->staff_auth['is_item_category'] }}</th>
-        <th>{{ $staff->staff_auth['is_invoice'] }}</th>
-        <th>{{ $staff->staff_auth['is_pre_account'] }}</th>
-        <th>{{ \App\Enums\Status::getDescription($staff->status) }}</th>
-        <th><a class="btn btn-primary {{ $staff->status == \App\Enums\Status::Deleted()->value ? 'disabled' : '' }}"
+      <tr class="{{ $staff->status == \App\Enums\Status::Deleted()->value ? 'dark-gray' : ($staff->status == \App\Enums\Status::Invalid()->value ? 'light-gray' : '') }}">
+        <td>{{ $staff->id }}</td>
+        <td>{{ $staff->name }}</td>
+        <td>{{ $staff->login_id }}</td>
+        <td>{{ $staff->authority }}</td>
+        <td>{{ $staff->staff_auth['is_hospital'] }}</td>
+        <td>{{ $staff->staff_auth['is_staff'] }}</td>
+        <td>{{ $staff->staff_auth['is_item_category'] }}</td>
+        <td>{{ $staff->staff_auth['is_invoice'] }}</td>
+        <td>{{ $staff->staff_auth['is_pre_account'] }}</td>
+        <td>{{ \App\Enums\Status::getDescription($staff->status) }}</td>
+        <td><a class="btn btn-primary {{ $staff->status == \App\Enums\Status::Deleted()->value ? 'disabled' : '' }}"
                href="{{ $staff->status == \App\Enums\Status::Deleted()->value ? '' : route('staff.edit', $staff->id) }}">
             編集
           </a>
-        </th>
-        <th>
+        </td>
+        <td>
           <button class="btn btn-danger delete-btn"
                   {{ $staff->status == \App\Enums\Status::Deleted()->value ? 'disabled' : ''}} data-id="{{ $staff->id }}">
             削除
           </button>
-        </th>
+        </td>
       </tr>
     @endforeach
     <tr>
   </table>
   {{ $staffs->links() }}
 @stop
+
+<style>
+  tr.light-gray td {
+    background-color: lightgray;
+  }
+  tr.dark-gray td{
+    background-color: darkgray;
+  }
+</style>

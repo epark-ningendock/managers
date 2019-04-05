@@ -20,7 +20,7 @@
 
           @yield('search')
 
-          <a class="btn btn-success" href="{{ route($create_route) }}">新規作成</a>
+          <a class="btn btn-success pull-right" href="{{ route($create_route) }}">新規作成</a>
         </div>
         <!-- /.box-header -->
         <div class="box-body">

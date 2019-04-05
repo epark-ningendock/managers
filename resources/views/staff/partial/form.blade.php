@@ -6,7 +6,7 @@
       <label>
         <input type="radio" name="status"
                {{ old('status', (isset($staff) ? $staff->status : null) ) == \App\Enums\Status::Valid()->value ? 'checked' : '' }}
-        value="{{ \App\Enums\Status::Valid()->value }}">
+               value="{{ \App\Enums\Status::Valid()->value }}">
         {{ \App\Enums\Status::Valid()->description }}
       </label>
       <label class="ml-3">
@@ -66,27 +66,53 @@
 
   <div class="form-group @if ($errors->has('is_hospital')) has-error @endif">
     <label class="mb-0">医療機関管理</label>
-    <div class="checkbox mt-0">
-      <label><input type="checkbox" id="is_hospital_view" class="permission-check"> 閲覧</label>
-      <label class="ml-3"><input type="checkbox" id="is_hospital_edit" class="permission-check"> 編集</label>
+    <div class="radio mt-0">
+      <label>
+        <input type="radio" name="is_hospital" id="is_hospital_view" value="1"
+               {{ old('is_hospital', (isset($staff) ? $staff->staff_auth->is_hospital : null)) == 1 ? 'checked' : '' }}
+               class="permission-check">
+        閲覧
+      </label>
+      <label class="ml-3">
+        <input type="radio" id="is_hospital_edit" name="is_hospital" value="3" class="permission-check"
+            {{ old('is_hospital', (isset($staff) ? $staff->staff_auth->is_hospital : null)) == 3 ? 'checked' : '' }}>
+        編集
+      </label>
     </div>
     @if ($errors->has('is_hospital')) <p class="help-block">{{ $errors->first('is_hospital') }}</p> @endif
   </div>
 
   <div class="form-group @if ($errors->has('is_staff')) has-error @endif">
     <label class="mb-0">スタッフ管理</label>
-    <div class="checkbox mt-0">
-      <label><input type="checkbox" id="is_staff_view" class="permission-check"> 閲覧</label>
-      <label class="ml-3"><input type="checkbox" id="is_staff_edit" class="permission-check"> 編集</label>
+    <div class="radio mt-0">
+      <label>
+        <input type="radio" id="is_staff_view" name="is_staff" class="permission-check" value="1"
+            {{ old('is_staff', (isset($staff) ? $staff->staff_auth->is_staff : null)) == 1 ? 'checked' : '' }}>
+        閲覧
+      </label>
+      <label class="ml-3">
+        <input type="radio" id="is_staff_edit" name="is_staff" value="3" class="permission-check"
+            {{ old('is_staff', (isset($staff) ? $staff->staff_auth->is_staff : null)) == 3 ? 'checked' : '' }}>
+        編集
+      </label>
     </div>
     @if ($errors->has('is_staff')) <p class="help-block">{{ $errors->first('is_staff') }}</p> @endif
   </div>
 
   <div class="form-group @if ($errors->has('is_item_category')) has-error @endif">
     <label class="mb-0">検査コース分類</label>
-    <div class="checkbox mt-0">
-      <label><input type="checkbox" id="is_item_category_view" class="permission-check"> 閲覧</label>
-      <label class="ml-3"><input type="checkbox" id="is_item_category_edit" class="permission-check"> 編集</label>
+    <div class="radio mt-0">
+      <label>
+        <input type="radio" id="is_item_category_view" name="is_item_category" value="1" class="permission-check"
+            {{ old('is_item_category', (isset($staff) ? $staff->staff_auth->is_item_category : null)) == 1 ? 'checked' : '' }}
+        >
+        閲覧
+      </label>
+      <label class="ml-3">
+        <input type="radio" id="is_item_category_edit" name="is_item_category" value="3" class="permission-check"
+            {{ old('is_item_category', (isset($staff) ? $staff->staff_auth->is_item_category : null)) == 3 ? 'checked' : '' }}>
+        編集
+      </label>
     </div>
     @if ($errors->has('is_item_category')) <p
         class="help-block">{{ $errors->first('is_item_category') }}</p> @endif
@@ -94,30 +120,48 @@
 
   <div class="form-group @if ($errors->has('is_invoice')) has-error @endif">
     <label class="mb-0">請求管理</label>
-    <div class="checkbox mt-0">
-      <label><input type="checkbox" id="is_invoice_view" class="permission-check"> 閲覧</label>
-      <label class="ml-3"><input type="checkbox" id="is_invoice_edit" class="permission-check"> 編集</label>
-      <label class="ml-3"><input type="checkbox" id="is_invoice_upload" class="permission-check"> アップロード</label>
+    <div class="radio mt-0">
+      <label>
+        <input type="radio" id="is_invoice_view" name="is_invoice" value="1" class="permission-check"
+            {{ old('is_invoice', (isset($staff) ? $staff->staff_auth->is_invoice : null)) == 1 ? 'checked' : '' }}>
+        閲覧
+      </label>
+      <label class="ml-3">
+        <input type="radio" id="is_invoice_edit" name="is_invoice" value="3" class="permission-check"
+            {{ old('is_invoice', (isset($staff) ? $staff->staff_auth->is_invoice : null)) == 3 ? 'checked' : '' }}>
+        編集
+      </label>
+      <label class="ml-3">
+        <input type="radio" id="is_invoice_upload" name="is_invoice" value="7" class="permission-check"
+            {{ old('is_invoice', (isset($staff) ? $staff->staff_auth->is_invoice : null)) == 7 ? 'checked' : '' }}>
+        アップロード
+      </label>
     </div>
     @if ($errors->has('is_invoice')) <p class="help-block">{{ $errors->first('is_invoice') }}</p> @endif
   </div>
 
   <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif">
     <label class="mb-0">事前決済管理</label>
-    <div class="checkbox mt-0">
-      <label><input type="checkbox" id="is_pre_account_view" class="permission-check"> 閲覧</label>
-      <label class="ml-3"><input type="checkbox" id="is_pre_account_edit" class="permission-check"> 編集</label>
-      <label class="ml-3"><input type="checkbox" id="is_pre_account_upload" class="permission-check"> アップロード</label>
+    <div class="radio mt-0">
+      <label>
+        <input type="radio" id="is_pre_account_view" name="is_pre_account" value="1" class="permission-check"
+            {{ old('is_pre_account', (isset($staff) ? $staff->staff_auth->is_pre_account : null)) == 1 ? 'checked' : '' }}>
+        閲覧
+      </label>
+      <label class="ml-3">
+        <input type="radio" id="is_pre_account_edit" name="is_pre_account" value="3" class="permission-check"
+            {{ old('is_pre_account', (isset($staff) ? $staff->staff_auth->is_pre_account : null)) == 3 ? 'checked' : '' }}>
+        編集
+      </label>
+      <label class="ml-3">
+        <input type="radio" id="is_pre_account_upload" name="is_pre_account" value="7" class="permission-check"
+            {{ old('is_pre_account', (isset($staff) ? $staff->staff_auth->is_pre_account : null)) == 1 ? 'checked' : '' }}>
+        アップロード
+      </label>
     </div>
     @if ($errors->has('is_pre_account')) <p class="help-block">{{ $errors->first('is_pre_account') }}</p> @endif
   </div>
 
-  <input type="hidden" name="is_hospital" id="is_hospital" class="permission"
-         value="{{ old('is_hospital', 0)}}"/>
-  <input type="hidden" name="is_staff" id="is_staff" class="permission" value="{{ old('is_staff', 0)}}"/>
-  <input type="hidden" name="is_item_category" class="permission" value="{{ old('is_item_category', 0)}}"/>
-  <input type="hidden" name="is_invoice" class="permission" value="{{ old('is_invoice', 0)}}"/>
-  <input type="hidden" name="is_pre_account" class="permission" value="{{ old('is_pre_account', 0)}}"/>
 
   <div class="box-footer">
     <a href="{{ url()->previous() }}" class="btn btn-default">バック</a>
