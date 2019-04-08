@@ -1,5 +1,3 @@
-<body>
-<!-- adminlte::pageを継承 -->
 @extends('adminlte::page')
 
 <!-- ページタイトルを入力 -->
@@ -49,12 +47,7 @@
                                 <td><a href="{{ route('facility-staff.edit', $facility_staff->id) }}"
                                        class="btn btn-primary">編集</a></td>
                                 <td>
-                                    <form method="POST"
-                                          action="{{ route('facility-staff.destroy', $facility_staff->id) }}">
-                                        {{ csrf_field() }}
-                                        {{ method_field('DELETE') }}
-                                        <button type="submit" class="btn btn-danger" data-toggle="modal" data-target=".bs-example-modal-lg">編集</button>
-                                    </form>
+                                    <a href="#" class="btn btn-danger delete-btn" data-id="{{ $facility_staff->id }}">削除</a></td>
                                 </td>
                             </tr>
                         @endforeach
@@ -68,15 +61,32 @@
             </div>
         </div>
     </div>
+
+    <form class="hide" method="POST"
+          action="{{ route('facility-staff.destroy', ':id') }}">
+        {{ csrf_field() }}
+        {{ method_field('DELETE') }}
+    </form>
+
 @stop
 
-<!-- 読み込ませるCSSを入力 -->
-@section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
-@stop
 
 <!-- 読み込ませるJSを入力 -->
 @section('js')
-    <script> console.log('Hi!'); </script>
+    <script>
+        $(document).ready(function() {
+            $('.delete-btn').click(function() {
+                const id = $(this).data('id');
+                Modal.showConfirm('Do you want to delete this data?', function() {
+                    submitDeleteForm(id);
+                });
+            });
+        });
+
+        function submitDeleteForm(id) {
+            const action = $('#delete-form').attr('action').replace(':id', id);
+            $('#delete-form').attr('action', action);
+            $('#delete-form').submit();
+        }
+    </script>
 @stop
-</body>
