@@ -1,4 +1,8 @@
 @php
+  use App\Enums\Status;
+  use App\Enums\Authority;
+  use App\Enums\Permission;
+
   $params = [
               'box_title' => 'スタッフ管理',
               'delete_route' => 'staff.destroy',
@@ -39,9 +43,9 @@
         <div class="form-group">
           <label for="status">状態</label>
           <select class="form-control" id="status" name="status">
-            @foreach(\App\Enums\Status::toArray() as $key)
+            @foreach(Status::toArray() as $key)
               <option
-                  value="{{ $key }}" {{ (isset($status) && $status == $key) ? "selected" : "" }}>{{ \App\Enums\Status::getDescription($key) }}</option>
+                  value="{{ $key }}" {{ (isset($status) && $status == $key) ? "selected" : "" }}>{{ Status::getDescription($key) }}</option>
             @endforeach
           </select>
         </div>
@@ -60,6 +64,7 @@
       <th>No</th>
       <th>スタッフ名</th>
       <th>ログインID</th>
+      <th>メールアドレス</th>
       <th>権限</th>
       <th>医療機関管理</th>
       <th>スタッフ管理</th>
@@ -73,27 +78,32 @@
     </thead>
     <tbody>
     @foreach ($staffs as $staff)
-      <tr class="{{ $staff->status == \App\Enums\Status::Deleted()->value ? 'dark-gray' : ($staff->status == \App\Enums\Status::Invalid()->value ? 'light-gray' : '') }}">
+      <tr class="{{ $staff->status->is(Status::Deleted) ? 'dark-gray' : ($staff->status->is(Status::Invalid) ? 'light-gray' : '') }}">
         <td>{{ $staff->id }}</td>
         <td>{{ $staff->name }}</td>
         <td>{{ $staff->login_id }}</td>
-        <td>{{ $staff->authority }}</td>
-        <td>{{ $staff->staff_auth['is_hospital'] }}</td>
-        <td>{{ $staff->staff_auth['is_staff'] }}</td>
-        <td>{{ $staff->staff_auth['is_item_category'] }}</td>
-        <td>{{ $staff->staff_auth['is_invoice'] }}</td>
-        <td>{{ $staff->staff_auth['is_pre_account'] }}</td>
-        <td>{{ \App\Enums\Status::getDescription($staff->status) }}</td>
-        <td><a class="btn btn-primary {{ $staff->status == \App\Enums\Status::Deleted()->value ? 'disabled' : '' }}"
-               href="{{ $staff->status == \App\Enums\Status::Deleted()->value ? '' : route('staff.edit', $staff->id) }}">
-            編集
-          </a>
+        <td>{{ $staff->email }}</td>
+        <td>{{ $staff->authority->description }}</td>
+        <td>{{ $staff->staff_auth->is_hospital->description }}</td>
+        <td>{{ $staff->staff_auth->is_staff->description }}</td>
+        <td>{{ $staff->staff_auth->is_item_category->description }}</td>
+        <td>{{ $staff->staff_auth->is_invoice->description }}</td>
+        <td>{{ $staff->staff_auth->is_pre_account->description }}</td>
+        <td>{{ $staff->status->description  }}</td>
+        <td>
+          @if(!$staff->status->is(Status::Deleted) && auth()->check() && auth()->user()->staff_auth->is_staff->is(Permission::Edit))
+            <a class="btn btn-primary"
+                 href="{{ route('staff.edit', $staff->id) }}">
+              編集
+            </a>
+          @endif
         </td>
         <td>
-          <button class="btn btn-danger delete-btn"
-                  {{ $staff->status == \App\Enums\Status::Deleted()->value ? 'disabled' : ''}} data-id="{{ $staff->id }}">
-            削除
-          </button>
+          @if(!$staff->status->is(Status::Deleted) && auth()->check() && auth()->user()->staff_auth->is_staff->is(Permission::Edit))
+            <button class="btn btn-danger delete-btn" data-id="{{ $staff->id }}">
+              削除
+            </button>
+          @endif
         </td>
       </tr>
     @endforeach

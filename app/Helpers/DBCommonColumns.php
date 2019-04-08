@@ -15,9 +15,9 @@ trait DBCommonColumns {
      * @return void
      */
     function addCommonColumns(Blueprint $table) {
-//        $table->string('author');
-//        $table->string('changer')->nullable();
-//        $table->string('remover')->nullable();
+//        $table->integer('author');
+//        $table->integer('changer')->nullable();
+//        $table->integer('remover')->nullable();
 //        $table->timestamp('deleted_at', 0)->nullable();
         $table->timestamps();
     }

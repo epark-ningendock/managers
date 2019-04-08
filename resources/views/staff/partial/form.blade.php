@@ -1,3 +1,7 @@
+@php
+  use App\Enums\Status;
+  use App\Enums\Authority;
+@endphp
 <div class="box-body">
   {!! csrf_field() !!}
   <div class="form-group @if ($errors->has('status')) has-error @endif">
@@ -5,15 +9,15 @@
     <div class="radio">
       <label>
         <input type="radio" name="status"
-               {{ old('status', (isset($staff) ? $staff->status : null) ) == \App\Enums\Status::Valid()->value ? 'checked' : '' }}
-               value="{{ \App\Enums\Status::Valid()->value }}">
-        {{ \App\Enums\Status::Valid()->description }}
+               {{ old('status', (isset($staff) ? $staff->status->value : null) ) == Status::Valid()->value ? 'checked' : '' }}
+               value="{{ Status::Valid()->value }}">
+        {{ Status::Valid()->description }}
       </label>
       <label class="ml-3">
         <input type="radio" name="status"
-               {{ old('status', (isset($staff) ? $staff->status : null)) == \App\Enums\Status::Invalid()->value ? 'checked' : '' }}
-               value="{{ \App\Enums\Status::Invalid()->value }}">
-        {{ \App\Enums\Status::Invalid()->description }}
+               {{ old('status', (isset($staff) ? $staff->status->value : null)) == Status::Invalid()->value ? 'checked' : '' }}
+               value="{{ Status::Invalid()->value }}">
+        {{ Status::Invalid()->description }}
       </label>
     </div>
     @if ($errors->has('status')) <p class="help-block">{{ $errors->first('status') }}</p> @endif

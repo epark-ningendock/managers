@@ -20,5 +20,12 @@ return [
         Status::Valid => 'Valid',
         Status::Invalid => 'Invalid',
         Status::Deleted => 'Deleted'
-    ]
+    ],
+
+    Permission::class => [
+    Permission::None => 'None',
+    Permission::View => 'View',
+    Permission::Edit => 'Edit',
+    Permission::Upload => 'Upload',
+]
 ];
