@@ -48,6 +48,6 @@ class FacilityStaffController extends Controller {
 		$facility_staff = FacilityStaff::findOrFail( $id );
 		$facility_staff->destroy( $id );
 
-		return redirect( 'facility-staff' )->with( 'status', 'データが削除されました' );
+		return redirect( 'facility-staff' )->with( 'success', 'データが削除されました' );
 	}
 }

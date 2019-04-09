@@ -15,16 +15,7 @@
 
       <div class="box box-primary">
 
-          @if ($errors->any())
-              <br/>
-              <div class="alert alert-danger">
-                  <ul>
-                      @foreach ($errors->all() as $error)
-                          <li>{{ $error }}</li>
-                      @endforeach
-                  </ul>
-              </div>
-          @endif
+          @include('commons.errorbag')
 
           <form method="POST" action="{{ url('/facility-staff') }}">
               {{ csrf_field() }}

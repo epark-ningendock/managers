@@ -17,14 +17,7 @@
                     <a class="btn btn-success" href="{{ url('/facility-staff/create') }}">新規作成</a>
                 </div>
 
-                @if (session('status'))
-                    <div class="alert alert-success alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                                    aria-hidden="true">&times;</span></button>
-                        {{ session('status') }}
-                    </div>
-                    <br/>
-                @endif
+                @include('commons.message')
 
 
                 <div class="box-body">
@@ -48,7 +41,9 @@
                                     <a href="{{ route('facility-staff.edit', $facility_staff->id) }}"
                                        class="btn btn-primary">編集</a>
                                 <td>
-                                    <a href="#" class="btn btn-danger delete-popup-btn"  data-target-form="#delete-record-form" data-target="#delete-confirmation" data-id="{{ $facility_staff->id }}">削除</a>
+                                    <a href="#" class="btn btn-danger delete-popup-btn"
+                                       data-target-form="#delete-record-form" data-target="#delete-confirmation"
+                                       data-id="{{ $facility_staff->id }}">削除</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -70,9 +65,9 @@
     </form>
 
     @include('commons.delete-modal-box', [
-    'id' => 'delete-confirmation',
-    'title' =>'Delete confirmation',
-    'content' => 'Are you confirmed to delete this staff facility?'
+        'id' => 'delete-confirmation',
+        'title' =>trans('commons.delete_popup_title'),
+        'content' => trans('commons.delete_popup_content', ['name' => trans('facility-staff.facility_staff')])
     ])
 
 
