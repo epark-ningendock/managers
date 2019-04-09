@@ -8,4 +8,4 @@
 @stop
 
 <script src="{{ asset('js/app.js?q=1.0') }}"></script>
-
+<script src="{{ asset('js/all.js?q=1.0') }}"></script>

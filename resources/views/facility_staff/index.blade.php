@@ -44,10 +44,11 @@
                                 <td>{{ $facility_staff->id }}</td>
                                 <td>{{ $facility_staff->name }}</td>
                                 <td>{{ $facility_staff->login_id }}</td>
-                                <td><a href="{{ route('facility-staff.edit', $facility_staff->id) }}"
-                                       class="btn btn-primary">編集</a></td>
                                 <td>
-                                    <a href="#" class="btn btn-danger delete-btn" data-id="{{ $facility_staff->id }}">削除</a></td>
+                                    <a href="{{ route('facility-staff.edit', $facility_staff->id) }}"
+                                       class="btn btn-primary">編集</a>
+                                <td>
+                                    <a href="#" class="btn btn-danger delete-popup-btn"  data-target-form="#delete-record-form" data-target="#delete-confirmation" data-id="{{ $facility_staff->id }}">削除</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -62,31 +63,17 @@
         </div>
     </div>
 
-    <form class="hide" method="POST"
+    <form id="delete-record-form" class="hide" method="POST"
           action="{{ route('facility-staff.destroy', ':id') }}">
         {{ csrf_field() }}
         {{ method_field('DELETE') }}
     </form>
 
-@stop
+    @include('commons.delete-modal-box', [
+    'id' => 'delete-confirmation',
+    'title' =>'Delete confirmation',
+    'content' => 'Are you confirmed to delete this staff facility?'
+    ])
 
 
-<!-- 読み込ませるJSを入力 -->
-@section('js')
-    <script>
-        $(document).ready(function() {
-            $('.delete-btn').click(function() {
-                const id = $(this).data('id');
-                Modal.showConfirm('Do you want to delete this data?', function() {
-                    submitDeleteForm(id);
-                });
-            });
-        });
-
-        function submitDeleteForm(id) {
-            const action = $('#delete-form').attr('action').replace(':id', id);
-            $('#delete-form').attr('action', action);
-            $('#delete-form').submit();
-        }
-    </script>
 @stop
