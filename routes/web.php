@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 
-Route::resource('facility-staff', 'FacilityStaffController')->except([
+Route::resource('hospital-staff', 'HospitalStaffController')->except([
 	'show'
 ]);
 

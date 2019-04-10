@@ -8,6 +8,7 @@
 
 use \App\Enums\Authority;
 use App\Enums\Status;
+use App\Enums\Permission;
 
 return [
     Authority::class => [
@@ -20,5 +21,12 @@ return [
         Status::Valid => '有効',
         Status::Invalid => '無効',
         Status::Deleted => '削除'
+    ],
+
+    Permission::class => [
+        Permission::None => '無し',
+        Permission::View => '閲覧',
+        Permission::Edit => '編集',
+        Permission::Upload => 'アップロード',
     ]
 ];

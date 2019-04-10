@@ -2,14 +2,14 @@
 
 namespace Tests\Unit;
 
-use App\FacilityStaff;
+use App\HospitalStaff;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class FacilityStafffInputFieldsTest extends TestCase {
-	use DatabaseMigrations;
+class HospitalStaffInputFieldsTest extends TestCase {
+	use DatabaseMigrations, RefreshDatabase;
 
 	/** @test */
 	function it_required_name() {
@@ -37,21 +37,21 @@ class FacilityStafffInputFieldsTest extends TestCase {
 	}
 
 	/** @test */
-	function it_can_create_facility_staff() {
+	function it_can_create_hospital_staff() {
 
-		$response = $this->call( 'POST', 'facility-staff', $this->validFields() );
+		$response = $this->call( 'POST', 'hospital-staff', $this->validFields() );
 
 		$this->assertEquals( 302, $response->getStatusCode() );
 
 	}
 
 	/** @test */
-	function it_can_update_facility_staff() {
+	function it_can_update_hospital_staff() {
 
-		$facility_staff = factory( FacilityStaff::class )->create();
+		$hospital_staff = factory( HospitalStaff::class )->create();
 
 		$attributes =  [
-			'id'       => $facility_staff->id,
+			'id'       => $hospital_staff->id,
 			'name'     => 'john',
 			'email'    => 'john@mail.com',
 			'login_id' => 'f93kffhfu',
@@ -59,19 +59,19 @@ class FacilityStafffInputFieldsTest extends TestCase {
 			'_token'   => csrf_token(),
 		] ;
 
-		$response = $this->put( "/facility-staff/{$facility_staff->id}", $attributes );
+		$response = $this->put( "/hospital-staff/{$hospital_staff->id}", $attributes );
 		$this->assertEquals( 302, $response->getStatusCode() );
 
 	}
 
 	/** @test */
-	public function it_can_delete_facility_staff() {
+	public function it_can_delete_hospital_staff() {
 
-		$facility_staff = factory( FacilityStaff::class )->create();
+		$hospital_staff = factory( HospitalStaff::class )->create();
 
-		$response = $this->call( 'DELETE', '/facility-staff/' . $facility_staff->id, [ '_token' => csrf_token() ] );
+		$response = $this->call( 'DELETE', '/hospital-staff/' . $hospital_staff->id, [ '_token' => csrf_token() ] );
 		$this->assertEquals( 302, $response->getStatusCode() );
-		$this->assertDatabaseMissing( 'facility_staffs', [ 'id' => $facility_staff->id ] );
+		$this->assertDatabaseMissing( 'hospital_staffs', [ 'id' => $hospital_staff->id ] );
 	}
 
 

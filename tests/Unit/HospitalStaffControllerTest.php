@@ -2,31 +2,31 @@
 
 namespace Tests\Unit;
 
-use App\FacilityStaff;
+use App\HospitalStaff;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 
-class FacilityStaffControllerTest extends TestCase
+class HospitalStaffControllerTest extends TestCase
 {
 	use DatabaseMigrations, RefreshDatabase;
 
 	/** @test */
     function it_can_list_page()
     {
-	    factory(FacilityStaff::class, 50)->create();
-	    $FacilityStaff = FacilityStaff::paginate( 20 );
+	    factory(HospitalStaff::class, 50)->create();
+	    $HospitalStaff = HospitalStaff::paginate( 20 );
 
-	    $this->assertEquals(20, $FacilityStaff->count());
+	    $this->assertEquals(20, $HospitalStaff->count());
 
     }
 
 	/** @test */
 	function it_has_create_page()
 	{
-		$response = $this->get('/facility-staff/create');
+		$response = $this->get('/hospital-staff/create');
 
 		$response->assertStatus(200);
 
@@ -35,9 +35,9 @@ class FacilityStaffControllerTest extends TestCase
 	/** @test */
 	function it_has_edit_page()
 	{
-		$facility_staff = factory(FacilityStaff::class)->create();
+		$hospital_staff = factory(HospitalStaff::class)->create();
 
-		$response = $this->get('/facility-staff/'. $facility_staff->id .'/edit');
+		$response = $this->get('/hospital-staff/'. $hospital_staff->id .'/edit');
 
 		$response->assertStatus(200);
 

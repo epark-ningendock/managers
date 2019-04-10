@@ -4,14 +4,14 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Confirmation</h4>
+        <h4 class="modal-title">EPARK人間ドック</h4>
       </div>
       <div class="modal-body">
         <p></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
-        <button type="button" class="btn btn-primary">確認する</button>
+        <button type="button" class="btn btn-primary">確認</button>
       </div>
     </div>
     <!-- /.modal-content -->
@@ -27,7 +27,7 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Info</h4>
+        <h4 class="modal-title">EPARK人間ドック</h4>
       </div>
       <div class="modal-body">
         <p></p>

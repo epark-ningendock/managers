@@ -14,7 +14,7 @@
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <a class="btn btn-success" href="{{ url('/facility-staff/create') }}">新規作成</a>
+                    <a class="btn btn-success" href="{{ url('/hospital-staff/create') }}">新規作成</a>
                 </div>
 
                 @include('commons.message')
@@ -32,25 +32,25 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($facility_staffs as $facility_staff)
+                        @foreach ($hospital_staffs as $hospital_staff)
                             <tr>
-                                <td>{{ $facility_staff->id }}</td>
-                                <td>{{ $facility_staff->name }}</td>
-                                <td>{{ $facility_staff->login_id }}</td>
+                                <td>{{ $hospital_staff->id }}</td>
+                                <td>{{ $hospital_staff->name }}</td>
+                                <td>{{ $hospital_staff->login_id }}</td>
                                 <td>
-                                    <a href="{{ route('facility-staff.edit', $facility_staff->id) }}"
+                                    <a href="{{ route('hospital-staff.edit', $hospital_staff->id) }}"
                                        class="btn btn-primary">編集</a>
                                 <td>
                                     <a href="#" class="btn btn-danger delete-popup-btn"
                                        data-target-form="#delete-record-form" data-target="#delete-confirmation"
-                                       data-id="{{ $facility_staff->id }}">削除</a>
+                                       data-id="{{ $hospital_staff->id }}">削除</a>
                                 </td>
                             </tr>
                         @endforeach
                         <tr>
                     </table>
 
-                    {{ $facility_staffs->links() }}
+                    {{ $hospital_staffs->links() }}
 
 
                 </div>
@@ -59,7 +59,7 @@
     </div>
 
     <form id="delete-record-form" class="hide" method="POST"
-          action="{{ route('facility-staff.destroy', ':id') }}">
+          action="{{ route('hospital-staff.destroy', ':id') }}">
         {{ csrf_field() }}
         {{ method_field('DELETE') }}
     </form>
@@ -67,7 +67,7 @@
     @include('commons.delete-modal-box', [
         'id' => 'delete-confirmation',
         'title' =>trans('commons.delete_popup_title'),
-        'content' => trans('commons.delete_popup_content', ['name' => trans('facility-staff.facility_staff')])
+        'content' => trans('commons.delete_popup_content', ['name' => trans('messages.names.hospital_staff')])
     ])
 
 

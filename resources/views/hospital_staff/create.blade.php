@@ -17,7 +17,7 @@
 
           @include('commons.errorbag')
 
-          <form method="POST" action="{{ url('/facility-staff') }}">
+          <form method="POST" action="{{ url('/hospital-staff') }}">
               {{ csrf_field() }}
 
               <div class="box-body">
