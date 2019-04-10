@@ -108,13 +108,12 @@
     <tr>
   </table>
   {{ $staffs->links() }}
+  <style>
+    tr.light-gray td {
+      background-color: lightgray;
+    }
+    tr.dark-gray td{
+      background-color: darkgray;
+    }
+  </style>
 @stop
-
-<style>
-  tr.light-gray td {
-    background-color: lightgray;
-  }
-  tr.dark-gray td{
-    background-color: darkgray;
-  }
-</style>
