@@ -13,8 +13,7 @@ class HospitalStaffControllerTest extends TestCase
 {
 	use DatabaseMigrations, RefreshDatabase;
 
-	/** @test */
-    function it_can_list_page()
+    function testItCanListPage()
     {
 	    factory(HospitalStaff::class, 50)->create();
 	    $HospitalStaff = HospitalStaff::paginate( 20 );
@@ -23,8 +22,8 @@ class HospitalStaffControllerTest extends TestCase
 
     }
 
-	/** @test */
-	function it_has_create_page()
+
+	function testItHasCreatePage()
 	{
 		$response = $this->get('/hospital-staff/create');
 
@@ -32,8 +31,7 @@ class HospitalStaffControllerTest extends TestCase
 
 	}
 
-	/** @test */
-	function it_has_edit_page()
+	function testItHasEditPage()
 	{
 		$hospital_staff = factory(HospitalStaff::class)->create();
 

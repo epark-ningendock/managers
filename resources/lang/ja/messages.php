@@ -24,5 +24,7 @@ return [
     'names' => [
         'staff' => 'スタッフ情報',
         'hospital_staff' => '病院スタッフ'
-    ]
+    ],
+	'delete_popup_title' => '確認を削除',
+	'delete_popup_content' => 'これを削除してよろしいです :name？'
 ];

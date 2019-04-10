@@ -66,8 +66,8 @@
 
     @include('commons.delete-modal-box', [
         'id' => 'delete-confirmation',
-        'title' =>trans('commons.delete_popup_title'),
-        'content' => trans('commons.delete_popup_content', ['name' => trans('messages.names.hospital_staff')])
+        'title' =>trans('messages.delete_popup_title'),
+        'content' => trans('messages.delete_popup_content', ['name' => trans('messages.names.hospital_staff')])
     ])
 
 

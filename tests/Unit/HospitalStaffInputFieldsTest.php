@@ -11,33 +11,40 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class HospitalStaffInputFieldsTest extends TestCase {
 	use DatabaseMigrations, RefreshDatabase;
 
-	/** @test */
-	function it_required_name() {
-		$this->it_validate_field( [ 'name' => '' ] )->assertSessionHasErrors( 'name' );
+	function testItRequiredName() {
+		$this->itValidateField( [ 'name' => '' ] )->assertSessionHasErrors( 'name' );
 	}
 
-	/** @test */
-	function it_required_email() {
-		$this->it_validate_field( [ 'email' => '' ] )->assertSessionHasErrors( 'email' );
+	function testItRequiredEmail() {
+		$this->itValidateField( [ 'email' => '' ] )->assertSessionHasErrors( 'email' );
 	}
 
-	/** @test */
-	function it_required_valid_email() {
-		$this->it_validate_field( [ 'email' => 'dsfsdf' ] )->assertSessionHasErrors( 'email' );
+	function testItRequiredValidEmail() {
+		$this->itValidateField( [ 'email' => 'dsfsdf' ] )->assertSessionHasErrors( 'email' );
 	}
 
-	/** @test */
-	function it_required_login_id() {
-		$this->it_validate_field( [ 'login_id' => '' ] )->assertSessionHasErrors( 'login_id' );
+	function testItRequiredLoginId() {
+		$this->itValidateField( [ 'login_id' => '' ] )->assertSessionHasErrors( 'login_id' );
 	}
 
-	/** @test */
-	function it_required_password() {
-		$this->it_validate_field( [ 'password' => '' ] )->assertSessionHasErrors( 'password' );
+	function testItRequiredPassword() {
+		$this->itValidateField( [ 'password' => '' ] )->assertSessionHasErrors( 'password' );
 	}
 
-	/** @test */
-	function it_can_create_hospital_staff() {
+	/**
+	 * validate fields process
+	 *
+	 * @param $attributes
+	 *
+	 * @return \Illuminate\Foundation\Testing\TestResponse
+	 */
+	protected function itValidateField( $attributes ) {
+		$this->withExceptionHandling();
+
+		return $this->post( '/hospital-staff', $this->validFields( $attributes ) );
+	}	
+
+	function testItCanCreateHospitalStaff() {
 
 		$response = $this->call( 'POST', 'hospital-staff', $this->validFields() );
 
@@ -45,8 +52,7 @@ class HospitalStaffInputFieldsTest extends TestCase {
 
 	}
 
-	/** @test */
-	function it_can_update_hospital_staff() {
+	function testItCanUpdateHospitalStaff() {
 
 		$hospital_staff = factory( HospitalStaff::class )->create();
 
@@ -64,28 +70,13 @@ class HospitalStaffInputFieldsTest extends TestCase {
 
 	}
 
-	/** @test */
-	public function it_can_delete_hospital_staff() {
+	public function testItCanDeleteHospitalStaff() {
 
 		$hospital_staff = factory( HospitalStaff::class )->create();
 
 		$response = $this->call( 'DELETE', '/hospital-staff/' . $hospital_staff->id, [ '_token' => csrf_token() ] );
-		$this->assertEquals( 302, $response->getStatusCode() );
-		$this->assertDatabaseMissing( 'hospital_staffs', [ 'id' => $hospital_staff->id ] );
-	}
-
-
-	/**
-	 * validate fields process
-	 *
-	 * @param $attributes
-	 *
-	 * @return \Illuminate\Foundation\Testing\TestResponse
-	 */
-	protected function it_validate_field( $attributes ) {
-		$this->withExceptionHandling();
-
-		return $this->post( '/facility-staff', $this->validFields( $attributes ) );
+//		$this->assertEquals( 302, $response->getStatusCode() );
+		$this->assertSoftDeleted('hospital_staffs', ['id' => $hospital_staff->id,'email' => $hospital_staff->email, 'login_id' => $hospital_staff->login_id]);
 	}
 
 

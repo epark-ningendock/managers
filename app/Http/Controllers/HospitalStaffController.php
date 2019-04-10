@@ -22,7 +22,7 @@ class HospitalStaffController extends Controller
 		$hospital_staff->password = bcrypt( $request->input( 'password' ) );
 		$hospital_staff->save();
 
-		return redirect( 'hospital-staff' )->with( 'status', '新しい施設職員が創設される' );
+		return redirect( 'hospital-staff' )->with( 'success', trans('messages.created', ['name' => trans('messages.names.hospital_staff')]) );
 
 	}
 
@@ -40,15 +40,15 @@ class HospitalStaffController extends Controller
 		$inputs['password'] = bcrypt( $request->input( 'password' ) );
 		$hospital_staff->update( $inputs );
 
-		return redirect( 'hospital-staff' )->with( 'status', 'データ更新' );
+		return redirect( 'hospital-staff' )->with( 'success', trans('messages.updated', ['name' => trans('messages.names.hospital_staff')]) );
 
 	}
 
 	public function destroy( $id ) {
 
 		$hospital_staff = HospitalStaff::findOrFail( $id );
-		$hospital_staff->destroy( $id );
+		$hospital_staff->delete();
 
-		return redirect( 'hospital-staff' )->with( 'success', 'データが削除されました' );
+		return redirect( 'hospital-staff' )->with( 'success', trans('messages.deleted', ['name' => trans('messages.names.hospital_staff')]) );
 	}
 }

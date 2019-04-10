@@ -9,14 +9,23 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class BaseModel extends Model
 {
-    protected static function boot()
-    {
-        parent::boot();
-        
+	use SoftDeletes;
+	/**
+	 * The attributes that should be mutated to dates.
+	 *
+	 * @var array
+	 */
+	protected $dates = ['deleted_at'];
+
+	protected static function boot()
+	{
+		parent::boot();
+
 //        static::creating(function($model) {
 //            if (Auth::check()) {
 //                $model->author = Auth::user()->id;
@@ -34,6 +43,6 @@ class BaseModel extends Model
 //                $model->remover = Auth::user()->id;
 //            }
 //        });
-    }
+	}
 
 }
