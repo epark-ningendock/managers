@@ -12,11 +12,15 @@ use Illuminate\Support\Facades\DB;
 
 class StaffController extends Controller
 {
+    public function __construct()
+    {
+//        $this->authorizeResource(Staff::class);
+    }
+
     /**
      * スタッフ一覧の表示
-     *
-     * @param
-     * @return Response
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index(Request $request)
     {
@@ -28,24 +32,33 @@ class StaffController extends Controller
         if ($request->input('login_id', '') != '') {
             $query->where('login_id', $request->input('login_id'));
         }
-        $query->where('status', $request->input('status', Status::Valid()->value));
+        $query->where('status', $request->input('status', Status::Valid));
 
-        return view('staff.index', [ 'staffs' => $query->paginate(10)])
+        return view('staff.index', ['staffs' => $query->paginate(20)])
             ->with($request->input());
     }
 
     /**
+     * Display staff form
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create() {
-        return view( 'staff.create' );
+    public function create()
+    {
+        return view('staff.create');
     }
 
-    public function store(StaffFormRequest $request) {
-        DB::transaction(function() use ($request) {
+    /**
+     * Create staff
+     * @param StaffFormRequest $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function store(StaffFormRequest $request)
+    {
+        try {
+            DB::beginTransaction();
             $staff_data = $request->only(['name', 'login_id', 'email', 'password', 'status']);
             $staff_data['password'] = bcrypt($staff_data['password']);
-            $staff_data['authority'] = Authority::Admin()->value;
+            $staff_data['authority'] = Authority::Admin;
             $staff = new Staff($staff_data);
             $staff->save();
 
@@ -53,17 +66,36 @@ class StaffController extends Controller
             $staff->staff_auth()->save($staff_auth);
 
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.staff')]));
-        });
-        return redirect('staff');
+            DB::commit();
+            return redirect('staff');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(trans('messages.staff_create_error'))->withInput();
+        }
+
     }
 
-    public function edit($id) {
+    /**
+     * Display staff edit form to edit
+     * @param $id Staff ID
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function edit($id)
+    {
         $staff = Staff::findOrFail($id);
-        return view( 'staff.edit',  ['staff' => $staff]);
+        return view('staff.edit', ['staff' => $staff]);
     }
 
-    public function update(StaffFormRequest $request, $id) {
-        DB::transaction(function() use ($id, $request){
+    /**
+     * Update staff
+     * @param StaffFormRequest $request
+     * @param $id Staff ID
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function update(StaffFormRequest $request, $id)
+    {
+        try {
+            DB::beginTransaction();
             $staff = Staff::findOrFail($id);
             $staff->update($request->only(['name', 'login_id', 'email', 'status']));
             $staff->save();
@@ -71,15 +103,24 @@ class StaffController extends Controller
             $staff->staff_auth()->update($request->only(['is_hospital', 'is_staff', 'is_item_category', 'is_invoice', 'is_pre_account']));
 
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.staff')]));
-        });
-        return redirect('staff');
-
+            DB::commit();
+            return redirect('staff');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(trans('messages.staff_create_error'))->withInput();
+        }
     }
 
+    /**
+     * Update Staff status to Deleted
+     * @param $id Staff ID
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy($id, Request $request)
     {
         $staff = Staff::find($id);
-        $staff->status = Status::Deleted()->value;
+        $staff->status = Status::Deleted;
         $staff->save();
         $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.staff')]));
         return redirect()->back();

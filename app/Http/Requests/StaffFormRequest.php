@@ -27,9 +27,9 @@ class StaffFormRequest extends FormRequest
     public function rules()
     {
         $is_edit = $this->method() == 'PUT' || $this->method() == 'PATCH';
-        $login_id = 'required|min:6|alpha_num|unique:staffs' . ($is_edit ? ',login_id,' . $this->staff : '');
+        $login_id = 'required|between:8,50|regex:/^[-_ a-zA-Z0-9]+$/|unique:staffs' . ($is_edit ? ',login_id,' . $this->staff : '');
         $rules = [
-            'name' => 'required',
+            'name' => 'required|between:1,25',
             'login_id' => $login_id,
             'email' => 'required|email',
             'status' => 'required|enum_value:' . Status::class . ',false',
@@ -42,11 +42,11 @@ class StaffFormRequest extends FormRequest
 
         if (!$is_edit) {
             $rules = array_merge($rules, [
-                'password' => 'required|min:6',
-                'password_confirmation' => 'required|min:6|same:password',
+                'password' => 'required|alpha_num|between:8,50'
             ]);
         }
 
         return $rules;
     }
+
 }

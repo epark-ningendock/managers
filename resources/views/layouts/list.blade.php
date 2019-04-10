@@ -16,8 +16,6 @@
           @endif
         @endforeach
         <div class="box-header with-border">
-          <h3 class="box-title mb-3">{{ $box_title  }}</h3>
-
           @yield('search')
 
           <a class="btn btn-success pull-right" href="{{ route($create_route) }}">新規作成</a>
@@ -39,9 +37,11 @@
 @section('js')
   <script>
       $(document).ready(function() {
-          $('.delete-btn').click(function() {
+          $('.delete-btn').click(function(event) {
+              event.preventDefault();
+              event.stopPropagation();
               const id = $(this).data('id');
-              Modal.showConfirm('{{ $delete_confirm_message }}', function() {
+              Modal.showConfirm(function() {
                   submitDeleteForm(id);
               });
           });

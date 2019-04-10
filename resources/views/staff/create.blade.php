@@ -1,4 +1,4 @@
-@extends('layouts.form', [ 'box_title' => 'スタッフ管理' ])
+@extends('layouts.form')
 
 @section('content_header')
   <h1>スタッフ情報</h1>

@@ -24,7 +24,7 @@ return [
     ],
 
     Permission::class => [
-        Permission::None => '無し',
+        Permission::None => '不可',
         Permission::View => '閲覧',
         Permission::Edit => '編集',
         Permission::Upload => 'アップロード',

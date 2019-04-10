@@ -53,9 +53,13 @@ trait EnumTrait {
         if ($this->isEnumAttribute($key)) {
             $enumClass = $this->getEnumClass($key);
             if (! $value instanceof $enumClass) {
-                $value = new $enumClass($value);
+                $enum_values = $enumClass::getValues();
+                $index = array_search($value, $enum_values, false);
+                if ($index >= 0) {
+                    $value = $enumClass::getInstance($enum_values[$index]);
+                }
             }
-            $this->attributes[$key] = $value->value();
+            $this->attributes[$key] = $value->value;
             return $this;
         }
         parent::setAttribute($key, $value);

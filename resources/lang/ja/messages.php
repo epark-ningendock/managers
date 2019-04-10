@@ -21,6 +21,7 @@ return [
     'created' => ':nameが登録しました。',
     'updated' => ':nameが削除しました。',
     'deleted' => ':nameが変更しました。',
+    'staff_create_error' => '正しく登録されませんでした。',
     'names' => [
         'staff' => 'スタッフ情報',
         'facility_staff' => '医療機関スタッフ'

@@ -1,6 +1,7 @@
 @php
   use App\Enums\Status;
   use App\Enums\Authority;
+  use \App\Enums\Permission;
 @endphp
 <div class="box-body">
   {!! csrf_field() !!}
@@ -9,14 +10,14 @@
     <div class="radio">
       <label>
         <input type="radio" name="status"
-               {{ old('status', (isset($staff) ? $staff->status->value : null) ) == Status::Valid()->value ? 'checked' : '' }}
-               value="{{ Status::Valid()->value }}">
+               {{ old('status', (isset($staff) ? $staff->status->value : null) ) == Status::Valid ? 'checked' : '' }}
+               value="{{ Status::Valid }}">
         {{ Status::Valid()->description }}
       </label>
       <label class="ml-3">
         <input type="radio" name="status"
-               {{ old('status', (isset($staff) ? $staff->status->value : null)) == Status::Invalid()->value ? 'checked' : '' }}
-               value="{{ Status::Invalid()->value }}">
+               {{ old('status', (isset($staff) ? $staff->status->value : null)) == Status::Invalid ? 'checked' : '' }}
+               value="{{ Status::Invalid }}">
         {{ Status::Invalid()->description }}
       </label>
     </div>
@@ -47,40 +48,32 @@
     @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
   </div>
 
-  <!-- showing password field only for create case -->
-  @if(!isset($staff))
-    <div class="form-group @if ($errors->has('password')) has-error @endif">
-      <label for="password">パスワード</label>
-      <input type="password" class="form-control" id="password" name="password"
-             placeholder="パスワード">
-      @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
-    </div>
-
-
-    <div class="form-group @if ($errors->has('password_confirmation')) has-error @endif">
-      <label for="password_confirmation">パスワードを認証する</label>
-      <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
-             placeholder="パスワードを認証する">
-      @if ($errors->has('password_confirmation')) <p
-          class="help-block">{{ $errors->first('password_confirmation') }}</p> @endif
-    </div>
-  @endif
-
-  {{--<h5 class="box-title">権限</h5>--}}
+  <div class="form-group @if ($errors->has('password')) has-error @endif">
+    <label for="password">パスワード</label>
+    <input type="password" class="form-control" id="password" name="password"
+           placeholder="パスワード">
+    @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
+  </div>
 
   <div class="form-group @if ($errors->has('is_hospital')) has-error @endif">
     <label class="mb-0">医療機関管理</label>
     <div class="radio mt-0">
       <label>
-        <input type="radio" name="is_hospital" id="is_hospital_view" value="1"
-               {{ old('is_hospital', (isset($staff) ? $staff->staff_auth->is_hospital : null)) == 1 ? 'checked' : '' }}
+        <input type="radio" name="is_hospital" id="is_hospital_none" value="{{ Permission::None }}"
+               {{ old('is_hospital', (isset($staff) ? $staff->staff_auth->is_hospital : null)) === Permission::None ? 'checked' : '' }}
                class="permission-check">
-        閲覧
+        {{ Permission::None()->description }}
+      </label>
+      <label>
+        <input type="radio" name="is_hospital" id="is_hospital_view" value="{{ Permission::View }}"
+               {{ old('is_hospital', (isset($staff) ? $staff->staff_auth->is_hospital : null)) === Permission::View ? 'checked' : '' }}
+               class="permission-check">
+        {{ Permission::View()->description }}
       </label>
       <label class="ml-3">
-        <input type="radio" id="is_hospital_edit" name="is_hospital" value="3" class="permission-check"
-            {{ old('is_hospital', (isset($staff) ? $staff->staff_auth->is_hospital : null)) == 3 ? 'checked' : '' }}>
-        編集
+        <input type="radio" id="is_hospital_edit" name="is_hospital" value="{{ Permission::Edit }}" class="permission-check"
+            {{ old('is_hospital', (isset($staff) ? $staff->staff_auth->is_hospital : null)) === Permission::Edit ? 'checked' : '' }}>
+        {{ Permission::Edit()->description }}
       </label>
     </div>
     @if ($errors->has('is_hospital')) <p class="help-block">{{ $errors->first('is_hospital') }}</p> @endif
@@ -90,14 +83,19 @@
     <label class="mb-0">スタッフ管理</label>
     <div class="radio mt-0">
       <label>
-        <input type="radio" id="is_staff_view" name="is_staff" class="permission-check" value="1"
-            {{ old('is_staff', (isset($staff) ? $staff->staff_auth->is_staff : null)) == 1 ? 'checked' : '' }}>
-        閲覧
+        <input type="radio" id="is_staff_none" name="is_staff" class="permission-check" value="{{ Permission::None  }}"
+            {{ old('is_staff', (isset($staff) ? $staff->staff_auth->is_staff : null)) === Permission::None ? 'checked' : '' }}>
+        {{ Permission::None()->description }}
+      </label>
+      <label>
+        <input type="radio" id="is_staff_view" name="is_staff" class="permission-check" value="{{ Permission::View  }}"
+            {{ old('is_staff', (isset($staff) ? $staff->staff_auth->is_staff : null)) === Permission::View ? 'checked' : '' }}>
+        {{ Permission::View()->description }}
       </label>
       <label class="ml-3">
-        <input type="radio" id="is_staff_edit" name="is_staff" value="3" class="permission-check"
-            {{ old('is_staff', (isset($staff) ? $staff->staff_auth->is_staff : null)) == 3 ? 'checked' : '' }}>
-        編集
+        <input type="radio" id="is_staff_edit" name="is_staff" value="{{ Permission::Edit }}" class="permission-check"
+            {{ old('is_staff', (isset($staff) ? $staff->staff_auth->is_staff : null)) === Permission::Edit ? 'checked' : '' }}>
+        {{ Permission::Edit()->description }}
       </label>
     </div>
     @if ($errors->has('is_staff')) <p class="help-block">{{ $errors->first('is_staff') }}</p> @endif
@@ -107,15 +105,21 @@
     <label class="mb-0">検査コース分類</label>
     <div class="radio mt-0">
       <label>
-        <input type="radio" id="is_item_category_view" name="is_item_category" value="1" class="permission-check"
-            {{ old('is_item_category', (isset($staff) ? $staff->staff_auth->is_item_category : null)) == 1 ? 'checked' : '' }}
+        <input type="radio" id="is_item_category_none" name="is_item_category" value="{{ Permission::None }}" class="permission-check"
+            {{ old('is_item_category', (isset($staff) ? $staff->staff_auth->is_item_category : null)) === Permission::None ? 'checked' : '' }}
         >
-        閲覧
+        {{ Permission::None()->description }}
+      </label>
+      <label>
+        <input type="radio" id="is_item_category_view" name="is_item_category" value="{{ Permission::View }}" class="permission-check"
+            {{ old('is_item_category', (isset($staff) ? $staff->staff_auth->is_item_category : null)) === Permission::View ? 'checked' : '' }}
+        >
+        {{ Permission::View()->description }}
       </label>
       <label class="ml-3">
-        <input type="radio" id="is_item_category_edit" name="is_item_category" value="3" class="permission-check"
-            {{ old('is_item_category', (isset($staff) ? $staff->staff_auth->is_item_category : null)) == 3 ? 'checked' : '' }}>
-        編集
+        <input type="radio" id="is_item_category_edit" name="is_item_category" value="{{ Permission::Edit }}" class="permission-check"
+            {{ old('is_item_category', (isset($staff) ? $staff->staff_auth->is_item_category : null)) === Permission::Edit ? 'checked' : '' }}>
+        {{ Permission::Edit()->description }}
       </label>
     </div>
     @if ($errors->has('is_item_category')) <p
@@ -126,19 +130,24 @@
     <label class="mb-0">請求管理</label>
     <div class="radio mt-0">
       <label>
-        <input type="radio" id="is_invoice_view" name="is_invoice" value="1" class="permission-check"
-            {{ old('is_invoice', (isset($staff) ? $staff->staff_auth->is_invoice : null)) == 1 ? 'checked' : '' }}>
-        閲覧
+        <input type="radio" id="is_invoice_none" name="is_invoice" value="{{ Permission::None }}" class="permission-check"
+            {{ old('is_invoice', (isset($staff) ? $staff->staff_auth->is_invoice : null)) === Permission::None ? 'checked' : '' }}>
+        {{ Permission::None()->description }}
+      </label>
+      <label>
+        <input type="radio" id="is_invoice_view" name="is_invoice" value="{{ Permission::View }}" class="permission-check"
+            {{ old('is_invoice', (isset($staff) ? $staff->staff_auth->is_invoice : null)) === Permission::View ? 'checked' : '' }}>
+        {{ Permission::View()->description }}
       </label>
       <label class="ml-3">
-        <input type="radio" id="is_invoice_edit" name="is_invoice" value="3" class="permission-check"
-            {{ old('is_invoice', (isset($staff) ? $staff->staff_auth->is_invoice : null)) == 3 ? 'checked' : '' }}>
-        編集
+        <input type="radio" id="is_invoice_edit" name="is_invoice" value="{{ Permission::Edit }}" class="permission-check"
+            {{ old('is_invoice', (isset($staff) ? $staff->staff_auth->is_invoice : null)) === Permission::Edit ? 'checked' : '' }}>
+        {{ Permission::Edit()->description }}
       </label>
       <label class="ml-3">
-        <input type="radio" id="is_invoice_upload" name="is_invoice" value="7" class="permission-check"
-            {{ old('is_invoice', (isset($staff) ? $staff->staff_auth->is_invoice : null)) == 7 ? 'checked' : '' }}>
-        アップロード
+        <input type="radio" id="is_invoice_upload" name="is_invoice" value="{{ Permission::Upload }}" class="permission-check"
+            {{ old('is_invoice', (isset($staff) ? $staff->staff_auth->is_invoice : null)) === Permission::Upload ? 'checked' : '' }}>
+        {{ Permission::Upload()->description }}
       </label>
     </div>
     @if ($errors->has('is_invoice')) <p class="help-block">{{ $errors->first('is_invoice') }}</p> @endif
@@ -148,19 +157,24 @@
     <label class="mb-0">事前決済管理</label>
     <div class="radio mt-0">
       <label>
-        <input type="radio" id="is_pre_account_view" name="is_pre_account" value="1" class="permission-check"
-            {{ old('is_pre_account', (isset($staff) ? $staff->staff_auth->is_pre_account : null)) == 1 ? 'checked' : '' }}>
-        閲覧
+        <input type="radio" id="is_pre_account_none" name="is_pre_account" value="{{ Permission::None }}" class="permission-check"
+            {{ old('is_pre_account', (isset($staff) ? $staff->staff_auth->is_pre_account : null)) === Permission::None ? 'checked' : '' }}>
+        {{ Permission::None()->description }}
+      </label>
+      <label>
+        <input type="radio" id="is_pre_account_view" name="is_pre_account" value="{{ Permission::View }}" class="permission-check"
+            {{ old('is_pre_account', (isset($staff) ? $staff->staff_auth->is_pre_account : null)) === Permission::View ? 'checked' : '' }}>
+        {{ Permission::View()->description }}
       </label>
       <label class="ml-3">
-        <input type="radio" id="is_pre_account_edit" name="is_pre_account" value="3" class="permission-check"
-            {{ old('is_pre_account', (isset($staff) ? $staff->staff_auth->is_pre_account : null)) == 3 ? 'checked' : '' }}>
-        編集
+        <input type="radio" id="is_pre_account_edit" name="is_pre_account" value="{{ Permission::Edit }}" class="permission-check"
+            {{ old('is_pre_account', (isset($staff) ? $staff->staff_auth->is_pre_account : null)) === Permission::Edit ? 'checked' : '' }}>
+        {{ Permission::Edit()->description }}
       </label>
       <label class="ml-3">
-        <input type="radio" id="is_pre_account_upload" name="is_pre_account" value="7" class="permission-check"
-            {{ old('is_pre_account', (isset($staff) ? $staff->staff_auth->is_pre_account : null)) == 1 ? 'checked' : '' }}>
-        アップロード
+        <input type="radio" id="is_pre_account_upload" name="is_pre_account" value="{{ Permission::Upload }}" class="permission-check"
+            {{ old('is_pre_account', (isset($staff) ? $staff->staff_auth->is_pre_account : null)) === Permission::Upload ? 'checked' : '' }}>
+        {{ Permission::Upload()->description }}
       </label>
     </div>
     @if ($errors->has('is_pre_account')) <p class="help-block">{{ $errors->first('is_pre_account') }}</p> @endif

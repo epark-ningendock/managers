@@ -4,7 +4,6 @@
   use App\Enums\Permission;
 
   $params = [
-              'box_title' => 'スタッフ管理',
               'delete_route' => 'staff.destroy',
               'create_route' => 'staff.create',
               'delete_confirm_message' => 'スタッフの情報を削除しますか？'
@@ -84,26 +83,26 @@
         <td>{{ $staff->login_id }}</td>
         <td>{{ $staff->email }}</td>
         <td>{{ $staff->authority->description }}</td>
-        <td>{{ $staff->staff_auth->is_hospital->description }}</td>
-        <td>{{ $staff->staff_auth->is_staff->description }}</td>
-        <td>{{ $staff->staff_auth->is_item_category->description }}</td>
-        <td>{{ $staff->staff_auth->is_invoice->description }}</td>
-        <td>{{ $staff->staff_auth->is_pre_account->description }}</td>
+        <td>{{ Permission::getInstance($staff->staff_auth->is_hospital)->description }}</td>
+        <td>{{ Permission::getInstance($staff->staff_auth->is_staff)->description }}</td>
+        <td>{{ Permission::getInstance($staff->staff_auth->is_item_category)->description }}</td>
+        <td>{{ Permission::getInstance($staff->staff_auth->is_invoice)->description }}</td>
+        <td>{{ Permission::getInstance($staff->staff_auth->is_pre_account)->description }}</td>
         <td>{{ $staff->status->description  }}</td>
         <td>
-          @if(!$staff->status->is(Status::Deleted) && auth()->check() && auth()->user()->staff_auth->is_staff->is(Permission::Edit))
+{{--          @if(!$staff->status->is(Status::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
             <a class="btn btn-primary"
                  href="{{ route('staff.edit', $staff->id) }}">
               編集
             </a>
-          @endif
+          {{--@endif--}}
         </td>
         <td>
-          @if(!$staff->status->is(Status::Deleted) && auth()->check() && auth()->user()->staff_auth->is_staff->is(Permission::Edit))
+{{--          @if(!$staff->status->is(Status::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
             <button class="btn btn-danger delete-btn" data-id="{{ $staff->id }}">
               削除
             </button>
-          @endif
+          {{--@endif--}}
         </td>
       </tr>
     @endforeach

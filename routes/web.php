@@ -15,7 +15,13 @@ Route::get('/', function () {
     return view('index');
 });
 
+//Route::get('/staff', 'StaffController@index')->middleware('can:view-staff');
+//
+//Route::resource('/staff', 'StaffController')->except(['show', 'index'])->middleware('can:edit-staff');
+
 Route::resource('/staff', 'StaffController')->except(['show']);
+
+
 
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');

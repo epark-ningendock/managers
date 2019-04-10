@@ -7,11 +7,15 @@
         <h4 class="modal-title">EPARK人間ドック</h4>
       </div>
       <div class="modal-body">
-        <p></p>
+        <p>
+          本当に削除しても宜しいですか？
+          <br/>
+          この処理は取り消せません。
+        </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
-        <button type="button" class="btn btn-primary">確認</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn btn-primary">削除</button>
       </div>
     </div>
     <!-- /.modal-content -->

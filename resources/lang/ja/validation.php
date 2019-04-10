@@ -23,7 +23,7 @@ return [
     'between'         => [
         'numeric' => ':attributeには、:minから、:maxまでの数字を指定してください。',
         'file'    => ':attributeには、:min KBから:max KBまでのサイズのファイルを指定してください。',
-        'string'  => ':attributeは、:min文字から:max文字にしてください。',
+        'string'  => ':attributeは、:min~:max文字以内でご入力ください。。',
         'array'   => ':attributeの項目は、:min個から:max個にしてください。',
     ],
     'boolean'              => ":attributeには、'true'か'false'を指定してください。",
@@ -124,9 +124,33 @@ return [
     |
     */
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'login_id' => [
+            'between' => 'スタッフ名は、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。',
+            'regex' => 'スタッフ名は、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。'
         ],
+        'password' => [
+            'between' => 'パスワードは、8~50文字以内の半角英数字でご入力ください。',
+            'alpha_num' => 'パスワードは、8~50文字以内の半角英数字でご入力ください。'
+        ],
+        'email' => [
+            'email' => '正しいメールアドレスの書式でご入力ください。'
+        ],
+        'is_hospital' => [
+            'required' => ':attributeは必須です'
+        ],
+        'is_staff' => [
+            'required' => ':attributeは必須です'
+        ],
+        'is_item_category' => [
+            'required' => ':attributeは必須です'
+        ],
+        'is_invoice' => [
+            'required' => ':attributeは必須です'
+        ],
+        'is_pre_account' => [
+            'required' => ':attributeは必須です'
+        ]
+
     ],
     /*
     |--------------------------------------------------------------------------

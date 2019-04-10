@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Enums\Authority;
+use App\Enums\Permission;
 use App\Enums\Status;
 use App\Helpers\EnumTrait;
 use BenSampo\Enum\Enum;
@@ -29,5 +30,15 @@ class Staff extends BaseModel
     public function staff_auth()
     {
         return $this->hasOne('App\StaffAuth');
+    }
+
+    /**
+     * Checking permission
+     * @param $function_name
+     * @param Permission $permission
+     * @return int
+     */
+    public function hasPermission($function_name, Permission $permission) {
+        return $this->staff_auth[$function_name] & $permission->getPermissionBit() == $permission->getPermissionBit();
     }
 }

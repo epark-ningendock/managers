@@ -13,6 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class StaffInputFieldsTest extends TestCase
 {
     use DatabaseMigrations;
+    use WithFaker;
 
     function testRequiredStatus()
     {
@@ -29,6 +30,11 @@ class StaffInputFieldsTest extends TestCase
         $this->validateFields(['name' => null])->assertSessionHasErrors('name');
     }
 
+    function testInvalidName()
+    {
+        $this->validateFields(['name' => $this->faker->text(100)])->assertSessionHasErrors('name');
+    }
+
     function testRequiredLoginId()
     {
         $this->validateFields(['login_id' => null])->assertSessionHasErrors('login_id');
@@ -36,7 +42,23 @@ class StaffInputFieldsTest extends TestCase
 
     function testMinLoginId()
     {
-        $this->validateFields(['login_id' => 'abc'])->assertSessionHasErrors('login_id');
+        $this->validateFields(['login_id' => $this->faker->text(6)])->assertSessionHasErrors('login_id');
+    }
+
+    function testMaxLoginId()
+    {
+        $this->validateFields(['login_id' => $this->faker->text(100)])->assertSessionHasErrors('login_id');
+    }
+
+    function testInvalidLoginId()
+    {
+        $this->validateFields(['login_id' => 'test1234#'])->assertSessionHasErrors('login_id');
+    }
+
+    function testUniqueLoginId()
+    {
+        $staff = factory(Staff::class)->create();
+        $this->validateFields(['login_id' => $staff->login_id])->assertSessionHasErrors('login_id');
     }
 
     function testRequiredEmail()
@@ -46,7 +68,7 @@ class StaffInputFieldsTest extends TestCase
 
     function testInvalidEmail()
     {
-        $this->validateFields(['email' => 'test.com'])->assertSessionHasErrors('email');
+        $this->validateFields(['email' => $this->faker->userName])->assertSessionHasErrors('email');
     }
 
     function testRequiredPassword()
@@ -56,12 +78,17 @@ class StaffInputFieldsTest extends TestCase
 
     function testMinPassword()
     {
-        $this->validateFields(['password' => "abc"])->assertSessionHasErrors('password');
+        $this->validateFields(['password' => $this->faker->text(5)])->assertSessionHasErrors('password');
     }
 
-    function testInvalidPasswordConfirmation()
+    function testMaxPassword()
     {
-        $this->validateFields(['password' => 'Test12345', 'password_confirmation'])->assertSessionHasErrors('password_confirmation');
+        $this->validateFields(['password' => $this->faker->text(100)])->assertSessionHasErrors('password');
+    }
+
+    function testInvalidPassword()
+    {
+        $this->validateFields(['password' => $this->faker->text(50)])->assertSessionHasErrors('password');
     }
 
     function testRequiredIsHospital()
@@ -133,7 +160,6 @@ class StaffInputFieldsTest extends TestCase
         $this->assertEquals(302, $response->getStatusCode());
     }
 
-    /** @test */
     function testUpdateStaff() {
         $staff = factory(Staff::class)->create();
         $params = $this->validFields(['password' => null]);
@@ -141,17 +167,15 @@ class StaffInputFieldsTest extends TestCase
         $this->assertEquals( 302, $response->getStatusCode() );
     }
 
-
     public function testDeleteStaff()
     {
         $staff = factory(Staff::class)->create();
         $response = $this->call('DELETE', "/staff/$staff->id", ['_token' => csrf_token()]);
         $this->assertEquals(302, $response->getStatusCode());
         $staff = Staff::find($staff->id);
-        $this->assertEquals(Status::Deleted()->value ,$staff->status);
+        $this->assertEquals(Status::Deleted ,$staff->status->value);
 
     }
-
 
     /**
      * Facility Staff fields
