@@ -29,7 +29,7 @@
         });
     }
 
-    delete_popup_btn_action();
-    delete_record()
+    // delete_popup_btn_action();
+    // delete_record()
 
 })(jQuery);

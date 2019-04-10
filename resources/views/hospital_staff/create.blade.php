@@ -1,36 +1,12 @@
-<body>
-  <!-- adminlte::pageを継承 -->
-  @extends('adminlte::page')
+@extends('layouts.form')
 
-  <!-- ページタイトルを入力 -->
-  @section('title', 'Epark')
+@section('content_header')
+  <h1>医療機関職員を作成する</h1>
+@stop
 
-  <!-- ページの見出しを入力 -->
-  @section('content_header')
-     <h1>医療機関職員を作成する</h1>
-  @stop
-
-
-
-
-  <!-- ページの内容を入力 -->
-  @section('content')
-
-      <div class="box box-primary">
-
-          @include('hospital_staff.partial.create-form')
-
-      </div>
-
-  @stop
-
-  <!-- 読み込ませるCSSを入力 -->
-  @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
-  @stop
-
-  <!-- 読み込ませるJSを入力 -->
-  @section('js')
-    <script> console.log('Hi!'); </script>
-  @stop
-</body>
+@section('form')
+  <form method="POST" action="{{ url('/hospital-staff') }}">
+    {{ csrf_field() }}
+    @include('hospital_staff.partials.form')
+  </form>
+@stop

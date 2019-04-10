@@ -21,6 +21,7 @@ return [
     'created' => ':nameが登録しました。',
     'updated' => ':nameが削除しました。',
     'deleted' => ':nameが変更しました。',
+	'delete_confirmation' => '確認を削除',
     'names' => [
         'staff' => 'スタッフ情報',
         'hospital_staff' => '病院スタッフ'

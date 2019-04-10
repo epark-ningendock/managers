@@ -8,9 +8,7 @@
       </div>
       <div class="modal-body">
         <p>
-          本当に削除しても宜しいですか？
-          <br/>
-          この処理は取り消せません。
+          @lang('messages.delete_confirmation')
         </p>
       </div>
       <div class="modal-footer">

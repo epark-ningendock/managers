@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature;
 
 use App\HospitalStaff;
 use Illuminate\Foundation\Testing\DatabaseMigrations;

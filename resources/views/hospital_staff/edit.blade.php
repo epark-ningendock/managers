@@ -1,33 +1,13 @@
-<body>
-<!-- adminlte::pageを継承 -->
-@extends('adminlte::page')
+@extends('layouts.form')
 
-<!-- ページタイトルを入力 -->
-@section('title', 'Epark')
-
-<!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>医療スタッフを編集 - {{ $hospital_staff->name }}</h1>
+    <h1>病院スタッフ - {{ $hospital_staff->name }}</h1>
 @stop
 
-<!-- ページの内容を入力 -->
-@section('content')
-
-    <div class="box box-primary">
-
-        @include('hospital_staff.partial.edit-form')
-
-    </div>
-
+@section('form')
+    <form method="POST"  action="{{ route('hospital-staff.update', $hospital_staff->id) }}">
+        {{ csrf_field() }}
+        {{ method_field('PUT') }}
+        @include('hospital_staff.partials.form')
+    </form>
 @stop
-
-<!-- 読み込ませるCSSを入力 -->
-@section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
-@stop
-
-<!-- 読み込ませるJSを入力 -->
-@section('js')
-    <script> console.log('Hi!'); </script>
-@stop
-</body>
