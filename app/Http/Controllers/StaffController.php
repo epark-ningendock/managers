@@ -98,6 +98,9 @@ class StaffController extends Controller
             DB::beginTransaction();
             $staff = Staff::findOrFail($id);
             $staff->update($request->only(['name', 'login_id', 'email', 'status']));
+            if ($request->input('password') != '########') {
+                $staff->password = bcrypt($request->input('password'));
+            }
             $staff->save();
 
             $staff->staff_auth()->update($request->only(['is_hospital', 'is_staff', 'is_item_category', 'is_invoice', 'is_pre_account']));

@@ -160,10 +160,16 @@ class StaffInputFieldsTest extends TestCase
         $this->assertEquals(302, $response->getStatusCode());
     }
 
-    function testUpdateStaff() {
+    function testUpdateStaffWithoutPassword() {
         $staff = factory(Staff::class)->create();
-        $params = $this->validFields(['password' => null]);
+        $params = $this->validFields(['password' => '########']);
         $response = $this->put( "/staff/{$staff->id}",  $params);
+        $this->assertEquals( 302, $response->getStatusCode() );
+    }
+
+    function testUpdateStaffWithPassword() {
+        $staff = factory(Staff::class)->create();
+        $response = $this->put( "/staff/{$staff->id}",  $this->validFields());
         $this->assertEquals( 302, $response->getStatusCode() );
     }
 

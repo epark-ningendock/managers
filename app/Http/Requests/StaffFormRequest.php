@@ -6,6 +6,7 @@ use App\Enums\Status;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\In;
+use Illuminate\Validation\Validator;
 
 class StaffFormRequest extends FormRequest
 {
@@ -39,14 +40,15 @@ class StaffFormRequest extends FormRequest
             'is_invoice' => ['required', Rule::in([0, 1, 3, 7])],
             'is_pre_account' => ['required', Rule::in([0, 1, 3, 7])]
         ];
-
-        if (!$is_edit) {
-            $rules = array_merge($rules, [
-                'password' => 'required|alpha_num|between:8,50'
-            ]);
-        }
-
         return $rules;
     }
+
+    public function withValidator (Validator $validator)
+    {
+        $validator->sometimes ('password','required|alpha_num|between:8,50', function($input){
+            return  $input->password != '########';
+        });
+    }
+
 
 }

@@ -5,7 +5,7 @@
   <div class="box box-primary">
     <!-- Message -->
     @if ($errors->any())
-      <div class="alert alert-danger mt-5">
+      <div class="alert alert-danger">
         <ul>
           @foreach ($errors->all() as $error)
             <li>{{ $error }}</li>

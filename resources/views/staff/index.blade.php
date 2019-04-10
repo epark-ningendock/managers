@@ -5,8 +5,7 @@
 
   $params = [
               'delete_route' => 'staff.destroy',
-              'create_route' => 'staff.create',
-              'delete_confirm_message' => 'スタッフの情報を削除しますか？'
+              'create_route' => 'staff.create'
             ];
 @endphp
 
