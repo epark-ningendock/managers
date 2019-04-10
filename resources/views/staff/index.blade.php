@@ -98,7 +98,7 @@
         </td>
         <td>
 {{--          @if(!$staff->status->is(Status::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
-            <button class="btn btn-danger delete-btn" data-id="{{ $staff->id }}">
+            <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $staff->id }}">
               削除
             </button>
           {{--@endif--}}

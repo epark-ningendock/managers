@@ -7,6 +7,6 @@
 @section('form')
   <form method="POST" action="{{ route('staff.update', $staff->id) }}">
     {!! method_field('PATCH') !!}
-    @include('staff.partial.form')
+    @include('staff.partials.form')
   </form>
 @stop

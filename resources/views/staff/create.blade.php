@@ -6,6 +6,6 @@
 
 @section('form')
   <form method="POST" action="{{ route('staff.store') }}">
-    @include('staff.partial.form')
+    @include('staff.partials.form')
   </form>
 @stop

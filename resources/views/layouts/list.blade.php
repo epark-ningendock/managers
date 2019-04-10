@@ -6,15 +6,7 @@
     <div class="col-xs-12">
       <div class="box">
         <!-- Message -->
-        @foreach (['error', 'success'] as $key)
-          @if(Session::has($key))
-            <div class="alert alert-{{ $key == 'error' ? 'danger' : $key }} alert-dismissible" role="alert">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                    aria-hidden="true">&times;</span></button>
-              {{ session($key) }}
-            </div>
-          @endif
-        @endforeach
+        @include('layouts.partials.message')
         <div class="box-header with-border">
           @yield('search')
 
@@ -27,30 +19,9 @@
       </div>
     </div>
   </div>
-  <form action="{{ route($delete_route, ':id') }}" method="post" id="delete-form">
-    {!! csrf_field() !!}
-    {!! method_field('DELETE') !!}
+  <form id="delete-record-form" class="hide" method="POST"
+        action="{{ route($delete_route, ':id') }}">
+    {{ csrf_field() }}
+    {{ method_field('DELETE') }}
   </form>
-@stop
-
-<!-- 読み込ませるJSを入力 -->
-@section('js')
-  <script>
-      $(document).ready(function() {
-          $('.delete-btn').click(function(event) {
-              event.preventDefault();
-              event.stopPropagation();
-              const id = $(this).data('id');
-              Modal.showConfirm(function() {
-                  submitDeleteForm(id);
-              });
-          });
-      });
-
-      function submitDeleteForm(id) {
-          const action = $('#delete-form').attr('action').replace(':id', id);
-          $('#delete-form').attr('action', action);
-          $('#delete-form').submit();
-      }
-  </script>
 @stop
