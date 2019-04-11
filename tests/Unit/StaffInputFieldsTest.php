@@ -61,14 +61,15 @@ class StaffInputFieldsTest extends TestCase
         $this->validateFields(['login_id' => $staff->login_id])->assertSessionHasErrors('login_id');
     }
 
-    function testRequiredEmail()
-    {
-        $this->validateFields(['email' => null])->assertSessionHasErrors('email');
-    }
-
     function testInvalidEmail()
     {
         $this->validateFields(['email' => $this->faker->userName])->assertSessionHasErrors('email');
+    }
+
+    function testUniqueEmail()
+    {
+        $staff = factory(Staff::class)->create();
+        $this->validateFields(['email' => $staff->email])->assertSessionHasErrors('email');
     }
 
     function testRequiredPassword()

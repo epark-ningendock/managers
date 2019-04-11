@@ -20,10 +20,10 @@ class CreateStaffsTable extends Migration
             $table->increments('id');
             $table->string('name', 50)->nullable();
             $table->string('login_id', 100)->unique()->nullable();
-            $table->string('password', 256)->nullable()->nullable();
+            $table->string('password', 256);
             $table->tinyInteger('authority', false, 1);
             $table->char('status', 2)->default('1');
-            $table->string('email', 256);
+            $table->string('email', 256)->unique()->nullable();
             $this->addCommonColumns($table);
         });
     }
