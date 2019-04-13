@@ -45,7 +45,7 @@
                 </td>
             </tr>
         @endforeach
-        <tr>
+        </tbody>
     </table>
     {{ $hospital_staffs->links() }}
 @stop

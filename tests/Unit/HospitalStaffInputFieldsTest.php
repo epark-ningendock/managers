@@ -4,12 +4,19 @@ namespace Tests\Unit;
 
 use App\HospitalStaff;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Session;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HospitalStaffInputFieldsTest extends TestCase {
 	use DatabaseMigrations, RefreshDatabase;
+
+	protected function setUp()
+	{
+		parent::setUp();
+		Session::start();
+	}
 
 	function testItRequiredName() {
 		$this->itValidateField( [ 'name' => '' ] )->assertSessionHasErrors( 'name' );

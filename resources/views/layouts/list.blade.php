@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 <!-- ページの内容を入力 -->
-@section('content')
+@section('main-content')
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
