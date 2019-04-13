@@ -1,4 +1,3 @@
-
 //// Fonts
 //@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
 
@@ -8,9 +7,13 @@
 //// Bootstrap
 //@import "~bootstrap-sass/assets/stylesheets/bootstrap";
 
+
 //For bootstrap 4 spacing
 @import "mixins/breakpoints";
 @import "spacing";
 
-//For common css
+
+/* ---------------------------------------------------
+Custom CSS
+-----------------------------------------------------*/
 @import "common";

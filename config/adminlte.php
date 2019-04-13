@@ -115,8 +115,8 @@ return [
             'icon'        => 'user',
         ],
         [
-            'text'        => '医療機関スタッフ管理',
-            'url'         => '/',
+            'text'        => '医療機関スタッフ',
+            'url'         => '/hospital-staff',
             'icon'        => 'user',
         ],
         [

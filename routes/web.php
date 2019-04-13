@@ -21,7 +21,9 @@ Route::get('/', function () {
 
 Route::resource('/staff', 'StaffController')->except(['show']);
 
-
+Route::resource('hospital-staff', 'HospitalStaffController')->except([
+	'show'
+]);
 
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');

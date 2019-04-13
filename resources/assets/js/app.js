@@ -1,3 +1,4 @@
 window.Modal = require('./modal');
 
-require('./all')
+require('./all');
+

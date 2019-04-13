@@ -23,7 +23,7 @@ return [
     'between'         => [
         'numeric' => ':attributeには、:minから、:maxまでの数字を指定してください。',
         'file'    => ':attributeには、:min KBから:max KBまでのサイズのファイルを指定してください。',
-        'string'  => ':attributeは、:min~:max文字以内でご入力ください。。',
+        'string'  => ':attributeは、:min文字から:max文字にしてください。',
         'array'   => ':attributeの項目は、:min個から:max個にしてください。',
     ],
     'boolean'              => ":attributeには、'true'か'false'を指定してください。",
@@ -150,7 +150,6 @@ return [
         'is_pre_account' => [
             'required' => ':attributeは必須です'
         ]
-
     ],
     /*
     |--------------------------------------------------------------------------

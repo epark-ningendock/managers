@@ -23,9 +23,9 @@ return [
     ],
 
     Permission::class => [
-    Permission::None => 'None',
-    Permission::View => 'View',
-    Permission::Edit => 'Edit',
-    Permission::Upload => 'Upload',
-]
+        Permission::None => 'None',
+        Permission::View => 'View',
+        Permission::Edit => 'Edit',
+        Permission::Upload => 'Upload'
+    ]
 ];

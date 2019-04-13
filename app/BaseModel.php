@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BaseModel extends Model
 {
+
     use SoftDeletes;
     /**
      * The attributes that should be mutated to dates.
@@ -25,7 +26,7 @@ class BaseModel extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
 //        static::creating(function($model) {
 //            if (Auth::check()) {
 //                $model->author = Auth::user()->id;
@@ -43,6 +44,7 @@ class BaseModel extends Model
 //                $model->remover = Auth::user()->id;
 //            }
 //        });
+
     }
 
 }
