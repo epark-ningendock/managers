@@ -105,7 +105,7 @@
         </td>
       </tr>
     @endforeach
-    <tr>
+    </tbody>
   </table>
   {{ $staffs->links() }}
   <style>

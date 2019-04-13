@@ -25,10 +25,6 @@ return [
     'delete_confirmation' => '本当に削除しても宜しいですか？<br/>この処理は取り消せません。',
     'names' => [
         'staff' => 'スタッフ情報',
-        'facility_staff' => '医療機関スタッフ'
-    ]
-    'names' => [
-        'staff' => 'スタッフ情報',
         'hospital_staff' => '病院スタッフ'
     ],
 	'delete_popup_title' => '確認を削除',
