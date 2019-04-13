@@ -5,15 +5,21 @@ namespace Tests\Feature;
 use App\Enums\Status;
 use App\Staff;
 use App\StaffAuth;
+use \Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class StaffInputFieldsTest extends TestCase
 {
     use DatabaseMigrations;
     use WithFaker;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        Session::start();
+    }
 
     function testRequiredStatus()
     {
@@ -197,7 +203,6 @@ class StaffInputFieldsTest extends TestCase
         $staff_auth = factory(StaffAuth::class)->raw();
         $fields = array_merge($staff, $staff_auth);
         $fields['_token'] = csrf_token();
-        $temp = array_merge($fields, $overwrites);
         return array_merge($fields, $overwrites);
     }
 }
