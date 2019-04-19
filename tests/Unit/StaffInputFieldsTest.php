@@ -180,6 +180,36 @@ class StaffInputFieldsTest extends TestCase
         $this->assertEquals( 302, $response->getStatusCode() );
     }
 
+	public function testUpdatePasswordStaff() {
+		$staff = factory(Staff::class)->create([
+			'authority' => 3,
+		]);
+		$attributes =  [
+			'password'              => '123456',
+			'password_confirmation' => '123456',
+			'_token'                 => csrf_token(),
+		] ;
+
+		$response = $this->put( "/staff/update-password/{$staff->id}", $attributes );
+		$this->assertEquals( 302, $response->getStatusCode() );
+
+	}
+
+	public function testUpdateWithWrongPasswordStaff() {
+		$staff = factory(Staff::class)->create([
+			'authority' => 3,
+		]);
+		$attributes =  [
+			'password'              => '123456',
+			'password_confirmation' => '1234567',
+			'_token'                 => csrf_token(),
+		] ;
+
+		$response = $this->put( "/staff/update-password/{$staff->id}", $attributes );
+		$response->assertSessionHasErrors();
+
+	}
+
     public function testDeleteStaff()
     {
         $staff = factory(Staff::class)->create();

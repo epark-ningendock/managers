@@ -2,13 +2,15 @@
 
 namespace Tests\Feature;
 
+use App\Staff;
 use App\StaffAuth;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class StaffControllerTest extends TestCase
 {
-    use DatabaseMigrations;
+	use DatabaseMigrations;
     /**
      * Test Staff List
      *
@@ -33,4 +35,26 @@ class StaffControllerTest extends TestCase
         $response = $this->call('GET', "/staff/$staff_auth->staff_id/edit");
         $this->assertEquals(200, $response->getStatusCode());
     }
+
+	public function testEditPassword() {
+
+		$staff = factory(Staff::class)->create([
+			'authority' => 3,
+		]);
+
+		$response = $this->get('/staff/edit-password/'. $staff->id);
+		$response->assertStatus(200);
+
+    }
+
+	public function testUpdatePassword() {
+
+		$staff = factory(Staff::class)->create([
+			'authority' => 2,
+		]);
+
+		$response = $this->get('/staff/edit-password/'. $staff->id);
+		$this->assertEquals( 302, $response->getStatusCode() );
+
+	}
 }

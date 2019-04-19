@@ -128,4 +128,22 @@ class StaffController extends Controller
         $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.staff')]));
         return redirect()->back();
     }
+
+	public function editPassword( $staff_id ) {
+		return view('staff.edit-password', ['staff_id' => $staff_id]);
+	}
+
+	public function updatePassword( $staff_id, Request $request ) {
+
+		$this->validate($request, [
+			'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
+			'password_confirmation' => 'min:6'
+		]);
+
+		$staff = Staff::findOrFail($staff_id);
+		$staff->password = bcrypt($request->password);
+		$staff->save();
+
+		return redirect( 'staff' )->with( 'success', trans('messages.updated', ['name' => trans('messages.names.password')]) );
+	}
 }
