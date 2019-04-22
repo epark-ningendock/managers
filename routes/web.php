@@ -25,6 +25,10 @@ Route::resource('hospital-staff', 'HospitalStaffController')->except([
 	'show'
 ]);
 
+Route::post('/classification/{id}/restore', 'ClassificationController@restore')->name('classification.restore');
+Route::resource('/classification', 'ClassificationController')->except(['show']);
+
+
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');
 });

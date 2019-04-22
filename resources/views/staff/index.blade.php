@@ -1,7 +1,7 @@
 @php
-  use App\Enums\Status;
-  use App\Enums\Authority;
-  use App\Enums\Permission;
+  use \App\Enums\StaffStatus;
+  use \App\Enums\Authority;
+  use \App\Enums\Permission;
 
   $params = [
               'delete_route' => 'staff.destroy',
@@ -41,9 +41,9 @@
         <div class="form-group">
           <label for="status">状態</label>
           <select class="form-control" id="status" name="status">
-            @foreach(Status::toArray() as $key)
+            @foreach(StaffStatus::toArray() as $key)
               <option
-                  value="{{ $key }}" {{ (isset($status) && $status == $key) ? "selected" : "" }}>{{ Status::getDescription($key) }}</option>
+                  value="{{ $key }}" {{ (isset($status) && $status == $key) ? "selected" : "" }}>{{ StaffStatus::getDescription($key) }}</option>
             @endforeach
           </select>
         </div>
@@ -76,7 +76,7 @@
     </thead>
     <tbody>
     @foreach ($staffs as $staff)
-      <tr class="{{ $staff->status->is(Status::Deleted) ? 'dark-gray' : ($staff->status->is(Status::Invalid) ? 'light-gray' : '') }}">
+      <tr class="{{ $staff->status->is(StaffStatus::Deleted) ? 'dark-gray' : ($staff->status->is(StaffStatus::Invalid) ? 'light-gray' : '') }}">
         <td>{{ $staff->id }}</td>
         <td>{{ $staff->name }}</td>
         <td>{{ $staff->login_id }}</td>
@@ -89,7 +89,7 @@
         <td>{{ Permission::getInstance($staff->staff_auth->is_pre_account)->description }}</td>
         <td>{{ $staff->status->description  }}</td>
         <td>
-{{--          @if(!$staff->status->is(Status::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
+{{--          @if(!$staff->status->is(StaffStatus::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
             <a class="btn btn-primary"
                  href="{{ route('staff.edit', $staff->id) }}">
               編集
@@ -97,7 +97,7 @@
           {{--@endif--}}
         </td>
         <td>
-{{--          @if(!$staff->status->is(Status::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
+{{--          @if(!$staff->status->is(StaffStatus::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
             <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $staff->id }}">
               削除
             </button>

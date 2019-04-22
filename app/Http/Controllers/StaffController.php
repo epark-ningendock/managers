@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Authority;
-use App\Enums\Status;
+use App\Enums\StaffStatus;
 use App\Http\Requests\StaffFormRequest;
 use App\Staff;
 use App\StaffAuth;
@@ -32,7 +32,7 @@ class StaffController extends Controller
         if ($request->input('login_id', '') != '') {
             $query->where('login_id', $request->input('login_id'));
         }
-        $query->where('status', $request->input('status', Status::Valid));
+        $query->where('status', $request->input('status', StaffStatus::Valid));
 
         return view('staff.index', ['staffs' => $query->paginate(20)])
             ->with($request->input());
@@ -123,7 +123,7 @@ class StaffController extends Controller
     public function destroy($id, Request $request)
     {
         $staff = Staff::find($id);
-        $staff->status = Status::Deleted;
+        $staff->status = StaffStatus::Deleted;
         $staff->save();
         $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.staff')]));
         return redirect()->back();

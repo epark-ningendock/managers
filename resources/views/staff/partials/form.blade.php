@@ -1,5 +1,5 @@
 @php
-  use App\Enums\Status;
+  use App\Enums\StaffStatus;
   use App\Enums\Authority;
   use \App\Enums\Permission;
 @endphp
@@ -10,15 +10,15 @@
     <div class="radio">
       <label>
         <input type="radio" name="status"
-               {{ old('status', (isset($staff) ? $staff->status->value : null) ) == Status::Valid ? 'checked' : '' }}
-               value="{{ Status::Valid }}">
-        {{ Status::Valid()->description }}
+               {{ old('status', (isset($staff) ? $staff->status->value : null) ) == StaffStatus::Valid ? 'checked' : '' }}
+               value="{{ StaffStatus::Valid }}">
+        {{ StaffStatus::Valid()->description }}
       </label>
       <label class="ml-3">
         <input type="radio" name="status"
-               {{ old('status', (isset($staff) ? $staff->status->value : null)) == Status::Invalid ? 'checked' : '' }}
-               value="{{ Status::Invalid }}">
-        {{ Status::Invalid()->description }}
+               {{ old('status', (isset($staff) ? $staff->status->value : null)) == StaffStatus::Invalid ? 'checked' : '' }}
+               value="{{ StaffStatus::Invalid }}">
+        {{ StaffStatus::Invalid()->description }}
       </label>
     </div>
     @if ($errors->has('status')) <p class="help-block">{{ $errors->first('status') }}</p> @endif

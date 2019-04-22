@@ -7,8 +7,9 @@
  */
 
 use \App\Enums\Authority;
-use App\Enums\Status;
+use App\Enums\StaffStatus;
 use App\Enums\Permission;
+use App\Enums\Status;
 
 return [
     Authority::class => [
@@ -17,10 +18,10 @@ return [
         Authority::ExternalStaff => '外部スタッフ'
     ],
 
-    Status::class => [
-        Status::Valid => '有効',
-        Status::Invalid => '無効',
-        Status::Deleted => '削除'
+    StaffStatus::class => [
+        StaffStatus::Valid => '有効',
+        StaffStatus::Invalid => '無効',
+        StaffStatus::Deleted => '削除'
     ],
 
     Permission::class => [
@@ -28,5 +29,10 @@ return [
         Permission::View => '閲覧',
         Permission::Edit => '編集',
         Permission::Upload => 'アップロード',
+    ],
+
+    Status::class => [
+        Status::Valid => '有効',
+        Status::Deleted => '削除'
     ]
 ];
