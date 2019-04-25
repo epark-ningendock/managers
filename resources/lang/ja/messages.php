@@ -23,11 +23,14 @@ return [
     'deleted' => ':nameが変更しました。',
     'restored' => ':nameが復元されます。',
     'staff_create_error' => '正しく登録されませんでした。',
+    'create_error' => 'エラーが発生しました。',
     'delete_confirmation' => '本当に削除しても宜しいですか？<br/>この処理は取り消せません。',
 	'delete_popup_title' => '確認を削除',
 	'delete_popup_content' => 'これを削除してよろしいです :name？',
     'classification_delete_popup_content' => 'この分類を削除します。よろしいですか？',
     'classification_restore_popup_content' => 'この分類を復元します。よろしいですか？',
+    'classification_sort_updated' => '分類レコードの順序が更新されました。',
+    'invalid_classification_id' => '分類IDが存在しません',
     'major_classification' => [
         'child_exist_error_on_delete' => '中分類の記録があります。 操作は完了できません。'
     ],

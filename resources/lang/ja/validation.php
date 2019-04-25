@@ -172,6 +172,8 @@ return [
         'is_staff' => 'スタッフ管理',
         'is_item_category' => '検査コース分類',
         'is_invoice' => '請求管理',
-        'is_pre_account' => '事前決済管理'
+        'is_pre_account' => '事前決済管理',
+        'classification' => '分類',
+        'classification_ids' => '分類ID'
     ],
 ];

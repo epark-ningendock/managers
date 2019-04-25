@@ -1,16 +1,9 @@
 @php
   use App\Enums\Status;
-  use App\Enums\Authority;
-  use App\Enums\Permission;
-
-  $params = [
-              'delete_route' => 'classification.destroy',
-              'create_route' => 'classification.create',
-              'delete_params' => 'classification='.(isset($classification) ? $classification : 'minor')
-            ];
+  $classification = !isset($classification) ? 'minor' : $classification;
 @endphp
 
-@extends('layouts.list', $params)
+@extends('layouts.list')
 
 <!-- ページタイトルを入力 -->
 @section('title', 'Epark')
@@ -41,11 +34,11 @@
         <div class="form-group">
           <label for="classification">分類</label>
           <select class="form-control" id="classification" name="classification">
-            <option value="major" {{ (isset($classification) && $classification == 'major') ? "selected" : "" }}>大分類
+            <option value="major" {{ $classification == 'major' ? "selected" : "" }}>大分類
             </option>
-            <option value="middle" {{ (isset($classification) && $classification == 'middle') ? "selected" : "" }}>中分類
+            <option value="middle" {{ $classification == 'middle' ? "selected" : "" }}>中分類
             </option>
-            <option value="minor" {{ (!isset($classification) || $classification == 'minor') ? "selected" : "" }}>小分類
+            <option value="minor" {{ $classification == 'minor' ? "selected" : "" }}>小分類
             </option>
           </select>
         </div>
@@ -56,7 +49,7 @@
           <select class="form-control" id="major" name="major">
             <option value="">なし</option>
             @foreach($c_majors as $c_major)
-              <option data-type-id="{{$c_major->classification_type_id}}"
+              <option data-type-id="{{ $c_major->classification_type_id }}"
                   value="{{ $c_major->id }}" {{ (isset($major) && $major == $c_major->id) ? "selected" : "" }}>{{ $c_major->name }}</option>
             @endforeach
           </select>
@@ -74,17 +67,7 @@
           </select>
         </div>
       </div>
-      <div class="col-md-2">
-        <div class="form-group">
-          <label for="status">状態</label>
-          <select class="form-control" id="status" name="status">
-            @foreach(Status::toArray() as $key)
-              <option
-                  value="{{ $key }}" {{ (isset($status) && $status == $key) ? "selected" : "" }}>{{ Status::getDescription($key) }}</option>
-            @endforeach
-          </select>
-        </div>
-      </div>
+
       <div class="col-md-1">
         <button type="submit" class="btn btn-primary btn-search">検索</button>
       </div>
@@ -92,93 +75,54 @@
   </form>
 @stop
 
-@section('button')
-  <div class="pull-right">
-    <a class="btn btn-primary mr-2" href="{{ route('classification.sort') }}">並び替え</a>
-    <a class="btn btn-success" href="{{ route('classification.create') }}">新規作成</a>
-  </div>
-@stop
-
 @section('table')
-  <table class="table table-bordered table-hover">
-    <thead>
-    <tr>
-      <th>大分類</th>
-      @if (!isset($classification) || $classification == 'minor' || $classification == 'middle')
-        <th>中分類</th>
-      @endif
-      @if (!isset($classification) || $classification == 'minor')
-        <th>小分類</th>
-      @endif
-      <th>更新日時</th>
-      <th>医療機関管理</th>
-      <th>編集</th>
-      <th>{{ isset($status) && $status == Status::Deleted ? '復元' : '削除' }}</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach ($classifications as $item)
-      <tr class="{{ $item['status']->is(Status::Deleted) ? 'dark-gray' : '' }}">
-        <td>{{ $item['major_name'] }}</td>
-        @if (!isset($classification) || $classification == 'minor' || $classification == 'middle')
-          <td>{{ $item['middle_name'] }}</td>
-        @endif
-        @if (!isset($classification) || $classification == 'minor')
-          <td>{{ $item['minor_name'] }}</td>
-        @endif
-        <td>{!! $item['updated_at'] !!} </td>
-        <td>{{ $item['status']->description }}</td>
-        <td>
-          {{--@if($item['status']->is(Status::Valid) && auth()->check() && auth()->user()->hasPermission('is_item_category', Permission::Edit))--}}
-          @if($item['status']->is(Status::Valid))
-            <a class="btn btn-primary"
-               href="{{ route('classification.edit', $item['id']) }}">
-              編集
-            </a>
-          @endif
-        </td>
-        <td>
-          {{--@if(auth()->check() && auth()->user()->hasPermission('is_item_category', Permission::Edit))--}}
-          @if($item['status']->is(Status::Valid))
-            <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"
-                    data-message="{{ trans('messages.classification_delete_popup_content') }}">
-              削除
-            </button>
-          @elseif($item['status']->is(Status::Deleted))
-            <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"
-                    data-target-form="#restore-record-form" data-message="{{ trans('messages.classification_restore_popup_content') }}">
-              復元
-            </button>
-          @endif
-          {{--@endif--}}
-        </td>
-      </tr>
-    @endforeach
-    @if($classifications->isEmpty())
+  <form method="post" action="{{ route('classification.updateSort') }}">
+    {!! csrf_field() !!}
+    {!! method_field('PATCH') !!}
+    <input type="hidden" name="classification" value="{{ $classification }}" />
+    <table class="table table-bordered table-hover">
+      <thead>
       <tr>
-        <td colspan="7" class="text-center">該当する分類はありませんでした</td>
+        <th class="text-center">分類分</th>
+        <th></th>
       </tr>
-    @endif
-    </tbody>
-  </table>
-  @if ($result->hasPages())
-    {{ $result->links() }}
-  @endif
-  <form id="restore-record-form" class="hide" method="POST"
-        action="{{ route('classification.restore', ':id') }}">
-    {{ csrf_field() }}
-    <input type="hidden" name="classification" value="{{ (isset($classification) ? $classification : 'minor') }}">
+      </thead>
+      <tbody>
+        @foreach ($classifications as $i=>$item)
+          <tr class="{{ $item['status']->is(Status::Deleted) ? 'dark-gray' : '' }}">
+            <td style="width: 80%">{{ $item[$classification.'_name'] }}</td>
+            <td class="text-center" style="width: 20%">
+              <input type="hidden" id="order" name="classification_ids[]" value="{{ $item['id'] }}" />
+              <button class="btn btn-default up"><span class="fa fa-fw fa-caret-up fa-lg"></span></button>
+              <button class="btn btn-default ml-5 down"><span class="fa fa-fw fa-caret-down fa-lg"></span></button>
+            </td>
+          </tr>
+        @endforeach
+      </tbody>
+    </table>
+    <div class="box-footer pull-right">
+      <a href="{{ url()->previous() }}" class="btn btn-default">バック</a>
+      <button type="submit" class="btn btn-primary">つくる</button>
+    </div>
   </form>
   <style>
     tr.dark-gray td {
       background-color: darkgray;
     }
+    tr {
+      cursor: move;
+    }
+    .ui-sortable-helper {
+      display: table;
+    }
   </style>
 @stop
 @section('js')
   @parent
+  <script src="{{ asset('js/lib/jquery-ui.min.js') }}"></script>
   <script>
       (function ($) {
+
           /* ---------------------------------------------------
           // classification change
           -----------------------------------------------------*/
@@ -233,9 +177,9 @@
                           const options = majorEle.find('option:not([style*="display: none"])');
                           options.each(function(i, option) {
                               option = $(option);
-                              if (option.val() != '') {
-                                  ids.push(option.val());
-                              }
+                             if (option.val() != '') {
+                                 ids.push(option.val());
+                             }
                           });
                       } else {
                           ids = [ selected ];
@@ -259,6 +203,43 @@
               onChange();
               onTypeChange();
               onMajorChange();
+          })();
+
+          /* ---------------------------------------------------
+          // move up/down and draggable
+          -----------------------------------------------------*/
+          (function () {
+              const resetUpDown = function() {
+                  $('.up, .down').removeAttr('disabled');
+                  $('tr:first-child .up, tr:last-child .down').attr('disabled', 'disabled');
+              }
+
+              $(".up,.down").click(function(event){
+                  event.preventDefault();
+                  event.stopPropagation();
+
+                  const row = $(this).parents("tr:first");
+                  if ($(this).is(".up")) {
+                      row.insertBefore(row.prev());
+                  } else {
+                      row.insertAfter(row.next());
+                  }
+                  resetUpDown();
+              });
+
+              $("tbody").sortable({
+                  helper: 'clone',
+                  distance: 5,
+                  delay: 100,
+                  cursor: 'move',
+                  axis: "y",
+                  containment: "parent",
+                  items: "> tr",
+                  update: resetUpDown
+              }).disableSelection();
+
+              resetUpDown();
+
           })();
 
       })(jQuery);

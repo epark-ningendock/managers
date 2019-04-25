@@ -20,4 +20,10 @@ class ClassificationControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
 
     }
+
+    public function testSoft()
+    {
+        $response = $this->call('GET', '/classification/sort');
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 }

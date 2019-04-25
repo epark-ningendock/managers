@@ -26,6 +26,8 @@ Route::resource('hospital-staff', 'HospitalStaffController')->except([
 ]);
 
 Route::post('/classification/{id}/restore', 'ClassificationController@restore')->name('classification.restore');
+Route::get('/classification/sort', 'ClassificationController@sort')->name('classification.sort');
+Route::patch('/classification/sort/update', 'ClassificationController@updateSort')->name('classification.updateSort');
 Route::resource('/classification', 'ClassificationController')->except(['show']);
 
 
