@@ -9,6 +9,9 @@ use App\Staff;
 use App\StaffAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class StaffController extends Controller
 {
@@ -98,9 +101,6 @@ class StaffController extends Controller
             DB::beginTransaction();
             $staff = Staff::findOrFail($id);
             $staff->update($request->only(['name', 'login_id', 'email', 'status']));
-            if ($request->input('password') != '########') {
-                $staff->password = bcrypt($request->input('password'));
-            }
             $staff->save();
 
             $staff->staff_auth()->update($request->only(['is_hospital', 'is_staff', 'is_item_category', 'is_invoice', 'is_pre_account']));
@@ -136,14 +136,24 @@ class StaffController extends Controller
 	public function updatePassword( $staff_id, Request $request ) {
 
 		$this->validate($request, [
+			'old_password' => 'required',
 			'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
 			'password_confirmation' => 'min:6'
 		]);
 
 		$staff = Staff::findOrFail($staff_id);
-		$staff->password = bcrypt($request->password);
-		$staff->save();
 
-		return redirect( 'staff' )->with( 'success', trans('messages.updated', ['name' => trans('messages.names.password')]) );
+		if (Hash::check($request->old_password, $staff->password)) {
+			$staff->password = bcrypt($request->password);
+			$staff->save();
+			return redirect( 'staff' )->with( 'success', trans('messages.updated', ['name' => trans('messages.names.password')]) );
+		} else {
+			$validator = Validator::make([], []);
+			$validator->errors()->add('old_password', '現在のパスワードが正しくありません');
+			throw new ValidationException($validator);
+			return redirect()->back();
+		}
+
+
 	}
 }

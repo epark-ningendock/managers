@@ -21,11 +21,14 @@ return [
     'created' => ':nameが登録しました。',
     'updated' => ':nameが削除しました。',
     'deleted' => ':nameが変更しました。',
+	'not_correct' => ':name正しくない',
     'staff_create_error' => '正しく登録されませんでした。',
     'delete_confirmation' => '本当に削除しても宜しいですか？<br/>この処理は取り消せません。',
     'names' => [
         'staff' => 'スタッフ情報',
-        'hospital_staff' => '病院スタッフ'
+        'hospital_staff' => '病院スタッフ',
+	    'password' => 'パスワード',
+	    'current_password' => '現在のパスワード'
     ],
 	'delete_popup_title' => '確認を削除',
 	'delete_popup_content' => 'これを削除してよろしいです :name？'

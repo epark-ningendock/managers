@@ -48,13 +48,6 @@
     @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
   </div>
 
-  <div class="form-group @if ($errors->has('password')) has-error @endif">
-    <label for="password">パスワード</label>
-    <input type="password" class="form-control" id="password" name="password"
-           placeholder="パスワード" value="{{ $errors->has('password') ? '' : (isset($staff) ? '########' : '') }}">
-    @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
-  </div>
-
   <div class="form-group @if ($errors->has('is_hospital')) has-error @endif">
     <label class="mb-0">医療機関管理</label>
     <div class="radio mt-0">

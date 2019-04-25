@@ -78,26 +78,6 @@ class StaffInputFieldsTest extends TestCase
         $this->validateFields(['email' => $staff->email])->assertSessionHasErrors('email');
     }
 
-    function testRequiredPassword()
-    {
-        $this->validateFields(['password' => null])->assertSessionHasErrors('password');
-    }
-
-    function testMinPassword()
-    {
-        $this->validateFields(['password' => $this->faker->text(5)])->assertSessionHasErrors('password');
-    }
-
-    function testMaxPassword()
-    {
-        $this->validateFields(['password' => $this->faker->text(100)])->assertSessionHasErrors('password');
-    }
-
-    function testInvalidPassword()
-    {
-        $this->validateFields(['password' => $this->faker->text(50)])->assertSessionHasErrors('password');
-    }
-
     function testRequiredIsHospital()
     {
         $this->validateFields(['is_hospital' => null])->assertSessionHasErrors('is_hospital');
