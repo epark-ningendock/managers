@@ -124,6 +124,11 @@ return [
             'url'         => '/classification',
             'icon'        => 'book',
         ],
+	    [
+            'text'        => '医療機関',
+            'url'         => '/hospital',
+            'icon'        => 'book',
+        ],
         [
             'text'        => '医療機関管理',
             'url'         => '/',

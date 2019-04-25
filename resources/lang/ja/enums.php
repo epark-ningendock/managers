@@ -7,6 +7,7 @@
  */
 
 use \App\Enums\Authority;
+use App\Enums\HospitalEnums;
 use App\Enums\StaffStatus;
 use App\Enums\Permission;
 use App\Enums\Status;
@@ -34,5 +35,11 @@ return [
     Status::class => [
         Status::Valid => '有効',
         Status::Deleted => '削除'
-    ]
+    ],
+
+	HospitalEnums::class => [
+		HospitalEnums::Private => '非公開',
+		HospitalEnums::Public => '公開中',
+		HospitalEnums::Delete => '削除',
+	]
 ];

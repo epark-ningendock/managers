@@ -41,10 +41,13 @@ return [
     'names' => [
         'staff' => 'スタッフ情報',
         'hospital_staff' => '病院スタッフ',
+	    'hospital' => '医療機関',
+	    'facilities' => '設備',
         'classifications' => [
             'major' => '大分類',
             'middle' => '中分類',
             'minor' => '小分類'
         ]
-    ]
+    ],
+	'no_record' => 'レコードなし',
 ];
