@@ -28,6 +28,7 @@ return [
 	'delete_popup_content' => 'これを削除してよろしいです :name？',
     'classification_delete_popup_content' => 'この分類を削除します。よろしいですか？',
     'classification_restore_popup_content' => 'この分類を復元します。よろしいですか？',
+	'no_record' => 'レコードがありません',
     'major_classification' => [
         'child_exist_error_on_delete' => '中分類の記録があります。 操作は完了できません。'
     ],

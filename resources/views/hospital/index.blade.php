@@ -1,9 +1,9 @@
 @php
-use \App\Enums\HospitalEnums;
-$params = [
-    'delete_route' => 'hospital-staff.destroy',
-    'create_route' => 'hospital-staff.create'
-];
+    use \App\Enums\HospitalEnums;
+    $params = [
+        'delete_route' => 'hospital-staff.destroy',
+        'create_route' => 'hospital-staff.create'
+    ];
 @endphp
 
 @extends('layouts.list', $params)
@@ -26,7 +26,8 @@ $params = [
                 <div class="col-sm-9">
                     <div class="form-group">
                         <label for="s_text">医療機関名・ID</label>
-                        <input type="text" class="form-control" autocomplete="off" name="s_text" id="s_text" value="{{ request('s_text') }}" />
+                        <input type="text" class="form-control" autocomplete="off" name="s_text" id="s_text"
+                               value="{{ request('s_text') }}"/>
                     </div>
                 </div>
 
@@ -61,64 +62,62 @@ $params = [
 
 @section('table')
 
-
-    @if ( isset($hospitals) && count($hospitals) > 0 )
-
-        <div class="table-responsive">
+    <div class="table-responsive">
         <table id="example2" class="table table-bordered table-hover mb-5 mt-5">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>医療機関名</th>
-            <th>所在地</th>
-            <th>連絡先</th>
-            <th>更新日</th>
-            <th>状態</th>
-            <th>施設</th>
-            <th>編集</th>
-            <th>削除</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach ($hospitals as $hospital)
-            <tr class="
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>医療機関名</th>
+                <th>所在地</th>
+                <th>連絡先</th>
+                <th>状態</th>
+                <th>施設</th>
+                <th>編集</th>
+                <th>削除</th>
+            </tr>
+            </thead>
+            <tbody>
+            @if ( isset($hospitals) && count($hospitals) > 0 )
+                @foreach ($hospitals as $hospital)
+                    <tr class="
                     {{ ($hospital->status === \App\Enums\HospitalEnums::Private) ? 'private-row ' : '' }}
                     {{ ($hospital->status === \App\Enums\HospitalEnums::Public) ? 'public-row ' : '' }}
                     {{ ($hospital->status === \App\Enums\HospitalEnums::Delete) ? 'deleted-row ' : '' }}
-                    ">
-                <td>{{ $hospital->id }}</td>
-                <td>{{ $hospital->name }}</td>
-                <td>{{ $hospital->address1 }}</td>
-                <td>{{ $hospital->tel }}</td>
-                <td>{{ $hospital->created_at }}</td>
-                <td>{{ \App\Enums\HospitalEnums::getDescription($hospital->status) }}</td>
-                <td><a class="btn btn-primary" href="#">施設</a></td>
-                <td>
-                    @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
-                    <a href="{{ route('hospital.edit', $hospital->id) }}"
-                       class="btn btn-primary">編集</a>
-                    @endif
-                </td>
-                <td>
-                    @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
-                    <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $hospital->id }}">
-                        削除
-                    </button>
-                    @endif
-                </td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
+                            ">
+                        <td>{{ $hospital->id }}</td>
+                        <td>{{ $hospital->name }}</td>
+                        <td>{{ $hospital->address1 }}</td>
+                        <td>{{ $hospital->tel }}</td>
+                        <td>{{ \App\Enums\HospitalEnums::getDescription($hospital->status) }}</td>
+                        <td><a class="btn btn-primary" href="#">施設</a></td>
+                        <td>
+                            @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
+                                <a href="{{ route('hospital.edit', $hospital->id) }}"
+                                   class="btn btn-primary">編集</a>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
+                                <button class="btn btn-danger delete-btn delete-popup-btn"
+                                        data-id="{{ $hospital->id }}">
+                                    削除
+                                </button>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+            @else
+                <tr>
+                    <td colspan="8" class="text-center">{{ trans('messages.no_record') }}</td>
+                </tr>
+            @endif
+
+            </tbody>
+        </table>
     </div>
 
     {{ $hospitals->links() }}
 
-    @else
-
-        @include('commons.alert', $alert = ['type' => 'danger', 'message' => trans('messages.no_record')])
-
-    @endif
 @stop
 
 
@@ -127,18 +126,18 @@ $params = [
     <script src="{{ url('js/bootstrap3-typeahead.min.js') }}"></script>
     <script type="text/javascript">
 
-        (function($){
+        (function ($) {
             var route = "{{ route('hospital.search.text') }}";
             $('#s_text').typeahead({
-                source:  function (term, process) {
-                    return $.get(route, { term: term }, function (data) {
+                source: function (term, process) {
+                    return $.get(route, {term: term}, function (data) {
                         return process(data);
                     });
                 },
-                displayText: function(item){
+                displayText: function (item) {
                     return item.name + ' - ' + item.address1;
                 },
-                afterSelect: function(item) {
+                afterSelect: function (item) {
                     $('#s_text').val(item.name);
                 }
             });
