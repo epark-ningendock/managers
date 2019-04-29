@@ -7,6 +7,7 @@
  */
 
 use \App\Enums\Authority;
+use App\Enums\StaffStatus;
 use App\Enums\Status;
 
 return [
@@ -16,10 +17,10 @@ return [
         Authority::ExternalStaff => 'External Staff'
     ],
 
-    Status::class => [
-        Status::Valid => 'Valid',
-        Status::Invalid => 'Invalid',
-        Status::Deleted => 'Deleted'
+    StaffStatus::class => [
+        StaffStatus::Valid => 'Valid',
+        StaffStatus::Invalid => 'Invalid',
+        StaffStatus::Deleted => 'Deleted'
     ],
 
     Permission::class => [
@@ -27,5 +28,10 @@ return [
         Permission::View => 'View',
         Permission::Edit => 'Edit',
         Permission::Upload => 'Upload'
+    ],
+
+    Status::class => [
+        Status::Valid => 'Valid',
+        Status::Deleted => 'Deleted'
     ]
 ];

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\Status;
+use App\Enums\StaffStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\In;
@@ -34,7 +34,7 @@ class StaffFormRequest extends FormRequest
             'name' => 'required|between:1,25',
             'login_id' => $login_id,
             'email' => $email,
-            'status' => 'required|enum_value:' . Status::class . ',false',
+            'status' => 'required|enum_value:' . StaffStatus::class . ',false',
             'is_hospital' => ['required', Rule::in([0, 1, 3])],
             'is_staff' => ['required', Rule::in([0, 1, 3])],
             'is_item_category' => ['required', Rule::in([0, 1, 3, 7])],

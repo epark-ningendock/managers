@@ -120,6 +120,11 @@ return [
             'icon'        => 'user',
         ],
         [
+            'text'        => '検査コース分類管理',
+            'url'         => '/classification',
+            'icon'        => 'book',
+        ],
+        [
             'text'        => '医療機関管理',
             'url'         => '/',
             'icon'        => 'hospital-o',

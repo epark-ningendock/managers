@@ -4,9 +4,8 @@ namespace App;
 
 use App\Enums\Authority;
 use App\Enums\Permission;
-use App\Enums\Status;
+use App\Enums\StaffStatus;
 use App\Helpers\EnumTrait;
-use BenSampo\Enum\Enum;
 
 class Staff extends BaseModel
 {
@@ -20,7 +19,7 @@ class Staff extends BaseModel
     ];
 
     protected $enums = [
-        'status' => Status::class,
+        'status' => StaffStatus::class,
         'authority' => Authority::class
     ];
 

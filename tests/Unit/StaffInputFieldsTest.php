@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Enums\Status;
+use App\Enums\StaffStatus;
 use App\Staff;
 use App\StaffAuth;
 use \Illuminate\Support\Facades\Session;
@@ -196,7 +196,7 @@ class StaffInputFieldsTest extends TestCase
         $response = $this->call('DELETE', "/staff/$staff->id", ['_token' => csrf_token()]);
         $this->assertEquals(302, $response->getStatusCode());
         $staff = Staff::find($staff->id);
-        $this->assertEquals(Status::Deleted ,$staff->status->value);
+        $this->assertEquals(StaffStatus::Deleted ,$staff->status->value);
 
     }
 
