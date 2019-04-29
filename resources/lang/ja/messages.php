@@ -45,7 +45,7 @@ return [
         'classifications' => [
             'major' => '大分類',
 	    'password' => 'パスワード',
-	    'current_password' => '現在のパスワード'
+	    'current_password' => '現在のパスワード',
             'middle' => '中分類',
             'minor' => '小分類'
         ]
