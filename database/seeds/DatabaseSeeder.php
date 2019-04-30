@@ -14,7 +14,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             StaffsTableSeeder::class,
 	        HospitalStaffsTableSeeder::class,
-            MinorClassificationsTableSeeder::class
+            MinorClassificationsTableSeeder::class,
+	        HospitalTableSeeder::class,
         ]);
     }
 }
