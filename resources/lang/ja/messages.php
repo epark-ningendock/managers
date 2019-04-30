@@ -44,6 +44,7 @@ return [
     'names' => [
         'staff' => 'スタッフ情報',
         'hospital_staff' => '病院スタッフ',
+        'classification' => '分類',
         'classifications' => [
             'major' => '大分類',
             'middle' => '中分類',

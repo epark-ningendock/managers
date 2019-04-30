@@ -13,11 +13,16 @@ use Illuminate\Support\Facades\DB;
 
 class ClassificationController extends Controller
 {
+    /**
+     * classification list
+     * @param Request $request
+     * @return mixed
+     */
     public function index(Request $request)
     {
-        $c_types = ClassificationType::withTrashed()->get();;
-        $c_majors = MajorClassification::withTrashed()->get();;
-        $c_middles = MiddleClassification::withTrashed()->get();;
+        $c_types = ClassificationType::withTrashed()->get();
+        $c_majors = MajorClassification::withTrashed()->get();
+        $c_middles = MiddleClassification::withTrashed()->get();
 
 
         [$classifications, $result] = $this->getClassifications($request);
@@ -89,6 +94,13 @@ class ClassificationController extends Controller
     }
 
 
+    /**
+     * get classification list
+     * @param Request $request
+     * @param bool $filterByStatus
+     * @param bool $isPaginate
+     * @return array
+     */
     protected function getClassifications(Request $request, $filterByStatus=true, $isPaginate=true) {
         $classification = $request->input('classification', 'minor');
         if ($classification == 'major') {
@@ -174,6 +186,8 @@ class ClassificationController extends Controller
 
     /**
      * Classification sort
+     * @param Request $request
+     * @return mixed
      */
     public function sort(Request $request)
     {
@@ -190,6 +204,10 @@ class ClassificationController extends Controller
             ->with($request->input());
     }
 
+    /**
+     * @param ClassificationFormRequest $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function updateSort(ClassificationFormRequest $request)
     {
 
@@ -225,6 +243,123 @@ class ClassificationController extends Controller
             DB::rollback();
             $request->session()->flash('error', trans('messages.create_error'));
             return redirect()->back();
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function create(Request $request)
+    {
+        $classification_types = ClassificationType::all();
+        $c_majors = MajorClassification::all();
+        $c_middles = MiddleClassification::all();
+        $type = $request->input('classification', 'minor');
+
+        return view('classification.create')
+            ->with('type', $type)
+            ->with('c_majors', $c_majors)
+            ->with('c_middles', $c_middles)
+            ->with('classification_types', $classification_types);
+    }
+
+    /**
+     * store classification
+     * @param ClassificationFormRequest $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function store(ClassificationFormRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            $type = $request->input('classification');
+            $data = $request->only(['name', 'status']);
+            if ($type == 'major') {
+                $data = array_merge($data, $request->only(['classification_type_id']));
+                $class = MajorClassification::class;
+            } else if ($type == 'middle') {
+                $data = array_merge($data, $request->only(['major_classification_id', 'is_icon', 'icon_name']));
+                $class = MiddleClassification::class;
+            } else {
+                $data = array_merge($data, $request->only(['major_classification_id', 'middle_classification_id', 'is_icon', 'icon_name', 'is_fregist', 'max_length']));
+                $class = MinorClassification::class;
+            }
+
+            $classification = new $class($data);
+            $classification->save();
+
+            $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.classification')]));
+            DB::commit();
+            return redirect('classification');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(trans('messages.create_error'))->withInput();
+        }
+
+    }
+
+    /**
+     * Display classification edit form to edit
+     * @param $id Classification ID
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function edit($id, Request $request)
+    {
+        $type = $request->input('classification');
+        $classification_types = ClassificationType::all();
+        $c_majors = MajorClassification::all();
+        $c_middles = MiddleClassification::all();
+
+        if ($type == 'major') {
+            $class = MajorClassification::class;
+        } else if ($type == 'middle') {
+            $class = MiddleClassification::class;
+        } else {
+            $class = MinorClassification::class;
+        }
+        $classification = $class::findOrFail($id);
+
+        return view('classification.edit')
+            ->with('type', $type)
+            ->with('classification_types', $classification_types)
+            ->with('c_majors', $c_majors)
+            ->with('c_middles', $c_middles)
+            ->with('classification',$classification);
+    }
+
+    /**
+     * Update staff
+     * @param ClassificationFormRequest $request
+     * @param $id Staff ID
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function update(ClassificationFormRequest $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+            $type = $request->input('classification');
+
+            $data = $request->only(['name', 'status']);
+            if ($type == 'major') {
+                $class = MajorClassification::class;
+            } else if ($type == 'middle') {
+                $class = MiddleClassification::class;
+                $data = array_merge($data, $request->only(['is_icon', 'icon_name']));
+            } else {
+                $class = MinorClassification::class;
+                $data = array_merge($data, $request->only(['is_icon', 'icon_name', 'is_fregist', 'max_length']));
+            }
+            $classification = $class::findOrFail($id);
+            $classification->fill($data);
+            $classification->save();
+
+            $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.classification')]));
+            DB::commit();
+            return redirect('classification');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(trans('messages.staff_create_error'))->withInput();
         }
     }
 

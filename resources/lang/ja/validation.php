@@ -174,6 +174,14 @@ return [
         'is_invoice' => '請求管理',
         'is_pre_account' => '事前決済管理',
         'classification' => '分類',
-        'classification_ids' => '分類ID'
+        'classification_ids' => '分類ID',
+        'classification_type_id' => '分数種別',
+        'classification_name' => '分類名',
+        'major_classification_id' => '大分数',
+        'middle_classification_id' => '中分数名',
+        'is_icon' => 'アイコン表示区分',
+        'icon_name' => 'アイコン表示分',
+        'is_fregist' => '登録区分',
+        'max_length' => 'テキスト長'
     ],
 ];

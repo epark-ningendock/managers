@@ -5,7 +5,6 @@
 
   $params = [
               'delete_route' => 'classification.destroy',
-              'create_route' => 'classification.create',
               'delete_params' => 'classification='.(isset($classification) ? $classification : 'minor')
             ];
 @endphp
@@ -95,7 +94,7 @@
 @section('button')
   <div class="pull-right">
     <a class="btn btn-primary mr-2" href="{{ route('classification.sort') }}">並び替え</a>
-    <a class="btn btn-success" href="{{ route('classification.create') }}">新規作成</a>
+    <a class="btn btn-success btn-create" href="{{ route('classification.create') }}">新規作成</a>
   </div>
 @stop
 
@@ -132,7 +131,7 @@
           {{--@if($item['status']->is(Status::Valid) && auth()->check() && auth()->user()->hasPermission('is_item_category', Permission::Edit))--}}
           @if($item['status']->is(Status::Valid))
             <a class="btn btn-primary"
-               href="{{ route('classification.edit', $item['id']) }}">
+               href="{{ route('classification.edit', $item['id']).'?classification='.(isset($classification)? $classification : 'minor') }}">
               編集
             </a>
           @endif
@@ -175,8 +174,7 @@
     }
   </style>
 @stop
-@section('js')
-  @parent
+@section('script')
   <script>
       (function ($) {
           /* ---------------------------------------------------
@@ -259,6 +257,17 @@
               onChange();
               onTypeChange();
               onMajorChange();
+          })();
+
+          /* ---------------------------------------------------
+          // link to create classification
+          -----------------------------------------------------*/
+          (function () {
+
+              $('.btn-create').click(function(){
+                  $(this).attr('href', $(this).attr('href') + '?classification=' + $('#classification').val())
+              });
+
           })();
 
       })(jQuery);
