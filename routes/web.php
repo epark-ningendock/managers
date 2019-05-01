@@ -23,6 +23,10 @@ Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], f
 	Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password');
 	Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
 });
+Route::resource('/hospital', 'HospitalController')->except(['show']);
+Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search');
+Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
+
 Route::resource('/staff', 'StaffController')->except(['show']);
 
 Route::resource('hospital-staff', 'HospitalStaffController')->except([
@@ -30,6 +34,8 @@ Route::resource('hospital-staff', 'HospitalStaffController')->except([
 ]);
 
 Route::post('/classification/{id}/restore', 'ClassificationController@restore')->name('classification.restore');
+Route::get('/classification/sort', 'ClassificationController@sort')->name('classification.sort');
+Route::patch('/classification/sort/update', 'ClassificationController@updateSort')->name('classification.updateSort');
 Route::resource('/classification', 'ClassificationController')->except(['show']);
 
 

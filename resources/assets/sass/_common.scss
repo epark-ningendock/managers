@@ -1,0 +1,22 @@
+.btn-search {
+   margin-top: 25px;
+ }
+
+.table {
+    .deleted-row {
+        background: #484747;
+        td {
+            border: 0;
+            color: #fff;
+        }
+        &:hover {
+            background: #222;
+            td {
+                color: #fff;
+            }
+        }
+    }
+    .private-row {
+        background: #e9e9e9;
+    }
+}
