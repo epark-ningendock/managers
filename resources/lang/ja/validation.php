@@ -10,6 +10,10 @@ return [
     | as the size rules. Feel free to tweak each of these messages.
     |
     */
+    'number_dash'     => ':attribute 数字またはダッシュを使用できます。',
+	'start_letter_k' => 'Kで始まる、20桁以内の英数列',
+	'start_alphabet_and_number' => 'アルファベットで始まる、2～20文字以内の英数列',
+    'strong_password' => 'The :attribute 半角英数字で、英小文字と数字を必ず使用し、8文字以上32文字以内',
     'accepted'        => ':attributeを承認してください。',
     'active_url'      => ':attributeは、有効なURLではありません。',
     'after'           => ':attributeには、:dateより後の日付を指定してください。',
@@ -149,7 +153,8 @@ return [
         ],
         'is_pre_account' => [
             'required' => ':attributeは必須です'
-        ]
+        ],
+        
     ],
     /*
     |--------------------------------------------------------------------------
@@ -172,6 +177,21 @@ return [
         'is_staff' => 'スタッフ管理',
         'is_item_category' => '検査コース分類',
         'is_invoice' => '請求管理',
-        'is_pre_account' => '事前決済管理'
+        'is_pre_account' => '事前決済管理',
+        'address' => '住所',
+        'application_date' => '出願日',
+        'billing_start_date' => '請求開始日',
+        'cancellation_date' => '退職日',
+        'postcode' => '郵便番号',
+        'address' => '住所',
+        'tel' => '電話番号',
+        'fax' => 'FAX番号',
+        'docknet_id' => 'ドックネットID',
+        'docknet_medical_institution_id' => '医療機関ID',
+	    'medical_institution_name' => '医療機関ID *医療機関名*ポリシー所有者名',
+	    'contractor_name' => '契約者名',
+	    'old_karada_dog_id' => 'からだドックID',
+	    'karada_dog_id' => 'からだドック医療機関ID',
+	    'login' => 'ログインID',
     ],
 ];

@@ -44,6 +44,10 @@ return [
         'hospital_staff' => '病院スタッフ',
 	    'hospital' => '医療機関',
 	    'facilities' => '設備',
+        'contractor' => '請負業者',
+        'policy_holder' => '保険契約者',
+        'representative_name_kana' => '代表名（ふりがな',
+        'representative_name' => '代表名',
         'classifications' => [
             'major' => '大分類',
             'middle' => '中分類',

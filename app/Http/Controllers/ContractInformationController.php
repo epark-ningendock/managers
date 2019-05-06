@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\ContractInformation;
+use App\HospitalStaff;
 use Illuminate\Http\Request;
+use App\Http\Requests\ContractInformationFormRequest;
 
 class ContractInformationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function index()
     {
         //
@@ -33,9 +31,20 @@ class ContractInformationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ContractInformationFormRequest $request)
     {
-        //
+
+	    $hospital_staff           = new HospitalStaff();
+	    $hospital_staff->name = $request->medical_institution_name;
+	    $hospital_staff->email = $request->email;
+	    $hospital_staff->password = bcrypt($request->password);
+	    $hospital_staff->login_id = $request->login;
+	    $hospital_staff->save();
+
+	    $data = $request->all();
+	    $data['hospital_staff_id']  = $hospital_staff->id;
+
+	    return ContractInformation::create($data);
     }
 
     /**

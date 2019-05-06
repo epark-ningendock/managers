@@ -1,8 +1,8 @@
 @php
     use \App\Enums\HospitalEnums;
     $params = [
-        'delete_route' => 'hospital-staff.destroy',
-        'create_route' => 'hospital-staff.create'
+        'delete_route' => 'hospital.destroy',
+        'create_route' => 'hospital.create'
     ];
 @endphp
 
@@ -58,6 +58,15 @@
     </form>
 
 @stop
+
+@section('button')
+@include('hospital.partials.record-management-modal-box')
+  <div class="pull-right">
+    <button class="btn btn-success pull-right" data-target="#record-management" data-toggle="modal">新規作成</button>
+  </div>
+@stop
+
+
 
 
 @section('table')

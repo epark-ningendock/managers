@@ -18,4 +18,19 @@
         });
     })();
 
+
+    /* ---------------------------------------------------
+    Tab
+    -----------------------------------------------------*/
+    $('.tab-list').on('click', '.btn', function(e){
+
+          e.preventDefault()
+          $(this).tab('show')
+
+        $(this).siblings('.btn').removeClass('active');
+        $(this).addClass('active');
+
+    });
+    
+
 })(jQuery);

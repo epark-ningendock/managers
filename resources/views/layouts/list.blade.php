@@ -2,11 +2,13 @@
 
 <!-- ページの内容を入力 -->
 @section('main-content')
+  
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
         <!-- Message -->
         @include('layouts.partials.message')
+
         <div class="box-header with-border">
           @yield('search')
           @section('button')
