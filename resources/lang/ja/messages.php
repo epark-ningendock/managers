@@ -55,6 +55,7 @@ return [
 	    'current_password' => '現在のパスワード',
             'middle' => '中分類',
             'minor' => '小分類'
-        ]
+        ],
+        'course' => '検査コース'
     ]
 ];

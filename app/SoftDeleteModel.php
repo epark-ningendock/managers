@@ -10,13 +10,19 @@ namespace App;
 
 use App\Enums\Status;
 use App\Helpers\CustomSoftDeletingScope;
+use App\Helpers\EnumTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class SoftDeleteModel extends BaseModel
 {
-
+    use EnumTrait;
     use SoftDeletes;
+
+
+    protected $enums = [
+        'status' => Status::class
+    ];
 
     /**
      * The attributes that should be mutated to dates.

@@ -124,6 +124,11 @@ return [
             'url'         => '/classification',
             'icon'        => 'book',
         ],
+        [
+            'text'        => '検査コース管理',
+            'url'         => '/course',
+            'icon'        => 'graduation-cap',
+        ],
 	    [
             'text'        => '医療機関',
             'url'         => '/hospital',

@@ -2,19 +2,10 @@
 
 namespace App;
 
-use App\Helpers\EnumTrait;
-use App\Enums\Status;
-
 class MiddleClassification extends SoftDeleteModel
 {
-    use EnumTrait;
-
     protected $fillable = [
         'major_classification_id', 'name', 'status', 'order', 'is_icon', 'icon_name'
-    ];
-
-    protected $enums = [
-        'status' => Status::class
     ];
 
     public function major_classification() {
