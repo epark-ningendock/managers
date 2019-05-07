@@ -43,6 +43,8 @@ return [
     'minor_classification' => [
         'parent_deleted_error_on_restore' => '親の中分類レコードが削除されます。 操作は完了できません。'
     ],
+    'invalid_course_id' => 'コースIDが存在しません',
+    'course_sort_updated' => '講座記録の順序が更新されました。',
     'names' => [
         'staff' => 'スタッフ情報',
         'hospital_staff' => '病院スタッフ',

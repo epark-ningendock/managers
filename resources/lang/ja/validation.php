@@ -182,6 +182,7 @@ return [
         'is_icon' => 'アイコン表示区分',
         'icon_name' => 'アイコン表示分',
         'is_fregist' => '登録区分',
-        'max_length' => 'テキスト長'
+        'max_length' => 'テキスト長',
+        'course_ids' => 'コースID',
     ],
 ];

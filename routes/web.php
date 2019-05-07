@@ -39,6 +39,8 @@ Route::patch('/classification/sort/update', 'ClassificationController@updateSort
 Route::resource('/classification', 'ClassificationController')->except(['show']);
 
 Route::resource('/course', 'CourseController')->except(['show']);
+Route::get('/course/sort', 'CourseController@sort')->name('course.sort');
+Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course.updateSort');
 
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');
