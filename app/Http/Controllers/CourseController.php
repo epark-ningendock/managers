@@ -15,7 +15,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::orderBy('order', 'DESC')->paginate(10);
+        $courses = Course::orderBy('order')->paginate(10);
         return view('course.index', ['courses' => $courses]);
     }
 
@@ -97,7 +97,7 @@ class CourseController extends Controller
      */
     public function sort()
     {
-        $courses = Course::orderBy('order', 'ASC')->get();
+        $courses = Course::orderBy('order')->get();
         return view('course.sort')->with('courses', $courses);
     }
 
