@@ -44,6 +44,7 @@ class ContractInformationController extends Controller
 	    $data = $request->all();
 	    $data['hospital_staff_id']  = $hospital_staff->id;
 
+
 	    return ContractInformation::create($data);
     }
 

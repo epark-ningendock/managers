@@ -19,11 +19,11 @@ Route::get('/', function () {
 //
 //Route::resource('/staff', 'StaffController')->except(['show', 'index'])->middleware('can:edit-staff');
 
-Route::resource('/hospital', 'HospitalController')->except(['show']);
-Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search');
-Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
+Route::resource('hospital', 'HospitalController')->except(['show']);
+Route::get('hospital/search', 'HospitalController@index')->name('hospital.search');
+Route::get('hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
 
-Route::post('/contract-information/store', 'ContractInformationController@store')->name('contract.store');
+Route::post('contract-information/store', 'ContractInformationController@store')->name('contract.store');
 
 Route::resource('/staff', 'StaffController')->except(['show']);
 
