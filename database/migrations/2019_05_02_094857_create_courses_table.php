@@ -20,6 +20,8 @@ class CreateCoursesTable extends Migration
             $table->increments('id');
             $table->integer('hospital_id')->unsigned();
             $table->foreign('hospital_id')->references('id')->on('hospitals');
+            $table->integer('calendar_id')->unsigned()->nullable();
+//            $table->foreign('calendar_id')->references('id')->on('calendars');
             $table->string('code', 45);
             $table->string('name', 64);
             $table->char('web_reception', 1)->nullable();
