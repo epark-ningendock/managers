@@ -78,26 +78,6 @@ class StaffInputFieldsTest extends TestCase
         $this->validateFields(['email' => $staff->email])->assertSessionHasErrors('email');
     }
 
-    function testRequiredPassword()
-    {
-        $this->validateFields(['password' => null])->assertSessionHasErrors('password');
-    }
-
-    function testMinPassword()
-    {
-        $this->validateFields(['password' => $this->faker->text(5)])->assertSessionHasErrors('password');
-    }
-
-    function testMaxPassword()
-    {
-        $this->validateFields(['password' => $this->faker->text(100)])->assertSessionHasErrors('password');
-    }
-
-    function testInvalidPassword()
-    {
-        $this->validateFields(['password' => $this->faker->text(50)])->assertSessionHasErrors('password');
-    }
-
     function testRequiredIsHospital()
     {
         $this->validateFields(['is_hospital' => null])->assertSessionHasErrors('is_hospital');
@@ -179,6 +159,36 @@ class StaffInputFieldsTest extends TestCase
         $response = $this->put( "/staff/{$staff->id}",  $this->validFields());
         $this->assertEquals( 302, $response->getStatusCode() );
     }
+
+	public function testUpdatePasswordStaff() {
+		$staff = factory(Staff::class)->create([
+			'authority' => 3,
+		]);
+		$attributes =  [
+			'password'              => '123456',
+			'password_confirmation' => '123456',
+			'_token'                 => csrf_token(),
+		] ;
+
+		$response = $this->put( "/staff/update-password/{$staff->id}", $attributes );
+		$this->assertEquals( 302, $response->getStatusCode() );
+
+	}
+
+	public function testUpdateWithWrongPasswordStaff() {
+		$staff = factory(Staff::class)->create([
+			'authority' => 3,
+		]);
+		$attributes =  [
+			'password'              => '123456',
+			'password_confirmation' => '1234567',
+			'_token'                 => csrf_token(),
+		] ;
+
+		$response = $this->put( "/staff/update-password/{$staff->id}", $attributes );
+		$response->assertSessionHasErrors();
+
+	}
 
     public function testDeleteStaff()
     {

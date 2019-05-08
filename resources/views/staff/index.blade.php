@@ -56,57 +56,67 @@
 @stop
 
 @section('table')
-  <table id="example2" class="table table-bordered table-hover">
-    <thead>
-    <tr>
-      <th>No</th>
-      <th>スタッフ名</th>
-      <th>ログインID</th>
-      <th>メールアドレス</th>
-      <th>権限</th>
-      <th>医療機関管理</th>
-      <th>スタッフ管理</th>
-      <th>検査コース分類</th>
-      <th>請求管理</th>
-      <th>事前決済管理</th>
-      <th>状態</th>
-      <th>編集</th>
-      <th>削除</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach ($staffs as $staff)
+
+  <div class="table-responsive">
+    <table id="example2" class="table table-bordered table-hover">
+      <thead>
+      <tr>
+        <th>No</th>
+        <th>スタッフ名</th>
+        <th>ログインID</th>
+        <th>メールアドレス</th>
+        <th>権限</th>
+        <th>医療機関管理</th>
+        <th>スタッフ管理</th>
+        <th>検査コース分類</th>
+        <th>請求管理</th>
+        <th>事前決済管理</th>
+        <th>状態</th>
+        <th>編集</th>
+        <th>削除</th>
+        <th>パスワード</th>
+      </tr>
+      </thead>
+      <tbody>
+      @foreach ($staffs as $staff)
       <tr class="{{ $staff->status->is(StaffStatus::Deleted) ? 'dark-gray' : ($staff->status->is(StaffStatus::Invalid) ? 'light-gray' : '') }}">
-        <td>{{ $staff->id }}</td>
-        <td>{{ $staff->name }}</td>
-        <td>{{ $staff->login_id }}</td>
-        <td>{{ $staff->email }}</td>
-        <td>{{ $staff->authority->description }}</td>
-        <td>{{ Permission::getInstance($staff->staff_auth->is_hospital)->description }}</td>
-        <td>{{ Permission::getInstance($staff->staff_auth->is_staff)->description }}</td>
-        <td>{{ Permission::getInstance($staff->staff_auth->is_item_category)->description }}</td>
-        <td>{{ Permission::getInstance($staff->staff_auth->is_invoice)->description }}</td>
-        <td>{{ Permission::getInstance($staff->staff_auth->is_pre_account)->description }}</td>
-        <td>{{ $staff->status->description  }}</td>
-        <td>
+          <td>{{ $staff->id }}</td>
+          <td>{{ $staff->name }}</td>
+          <td>{{ $staff->login_id }}</td>
+          <td>{{ $staff->email }}</td>
+          <td>{{ $staff->authority->description }}</td>
+          <td>{{ Permission::getInstance($staff->staff_auth->is_hospital)->description }}</td>
+          <td>{{ Permission::getInstance($staff->staff_auth->is_staff)->description }}</td>
+          <td>{{ Permission::getInstance($staff->staff_auth->is_item_category)->description }}</td>
+          <td>{{ Permission::getInstance($staff->staff_auth->is_invoice)->description }}</td>
+          <td>{{ Permission::getInstance($staff->staff_auth->is_pre_account)->description }}</td>
+          <td>{{ $staff->status->description  }}</td>
+          <td>
 {{--          @if(!$staff->status->is(StaffStatus::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
             <a class="btn btn-primary"
-                 href="{{ route('staff.edit', $staff->id) }}">
+               href="{{ route('staff.edit', $staff->id) }}">
               編集
             </a>
-          {{--@endif--}}
-        </td>
-        <td>
+            {{--@endif--}}
+          </td>
+          <td>
 {{--          @if(!$staff->status->is(StaffStatus::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
             <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $staff->id }}">
               削除
             </button>
-          {{--@endif--}}
-        </td>
-      </tr>
-    @endforeach
-    </tbody>
-  </table>
+            {{--@endif--}}
+          </td>
+          <td>
+            <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-primary">
+              パスワードを変更する
+            </a>
+          </td>
+        </tr>
+      @endforeach
+      </tbody>
+    </table>
+  </div>
+
   {{ $staffs->links() }}
   <style>
     tr.light-gray td {

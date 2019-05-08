@@ -44,12 +44,5 @@ class StaffFormRequest extends FormRequest
         return $rules;
     }
 
-    public function withValidator (Validator $validator)
-    {
-        $validator->sometimes ('password','required|alpha_num|between:8,50', function($input){
-            return  $input->password != '########';
-        });
-    }
-
 
 }
