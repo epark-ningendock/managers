@@ -187,7 +187,7 @@ return [
         'is_icon' => 'アイコン表示区分',
         'icon_name' => 'アイコン表示分',
         'is_fregist' => '登録区分',
-        'max_length' => 'テキスト長'
+        'max_length' => 'テキスト長',
         'address' => '住所',
         'application_date' => '出願日',
         'billing_start_date' => '請求開始日',

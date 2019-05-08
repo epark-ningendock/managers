@@ -23,7 +23,7 @@ Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], f
 	Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password');
 	Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
 });
-Route::post('contract-information/store', 'ContractInformationController@store')->name('contract.store');
+Route::post('/contract-information/store', 'ContractInformationController@store')->name('contract.store');
 Route::resource('/hospital', 'HospitalController')->except(['show']);
 Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search');
 Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
