@@ -6,7 +6,21 @@ namespace App;
 class Course extends SoftDeleteModel
 {
     protected $fillable = [
-        'hospital_id', 'code', 'name', 'price', 'order', 'status'
+        'hospital_id',
+        'code',
+        'name',
+        'course_point',
+        'course_notice',
+        'course_cancel',
+        'reception_start_date',
+        'reception_end_date',
+        'cancellation_deadline',
+        'is_price',
+        'price',
+        'is_price_memo',
+        'price_memo',
+        'order',
+        'status'
     ];
 
     protected $attributes = [
@@ -17,11 +31,11 @@ class Course extends SoftDeleteModel
         return $this->hasOne('App\CourseDetail');
     }
 
-    public function course_question() {
-        return $this->hasOne('App\CourseQuestion');
+    public function course_questions() {
+        return $this->hasMany('App\CourseQuestion');
     }
 
-    public function course_image() {
-        return $this->hasOne('App\CourseImage');
+    public function course_images() {
+        return $this->hasMany('App\CourseImage');
     }
 }
