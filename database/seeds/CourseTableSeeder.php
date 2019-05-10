@@ -37,11 +37,11 @@ class CourseTableSeeder extends Seeder
 
 
 
-            factory(CourseQuestion::class)->create([
+            factory(CourseQuestion::class, 5)->create([
                 'course_id' => $course->id
             ]);
 
-            factory(CourseImage::class)->create([
+            factory(CourseImage::class, 5)->create([
                 'course_id' => $course->id
             ]);
 

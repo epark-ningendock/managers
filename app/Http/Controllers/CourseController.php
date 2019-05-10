@@ -26,7 +26,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        //
+        return view('course.create');
     }
 
     /**
@@ -84,8 +84,8 @@ class CourseController extends Controller
     public function destroy(Course $course, Request $request)
     {
         $course->course_detail()->delete();
-        $course->course_question()->delete();
-        $course->course_image()->delete();
+        $course->course_questions()->delete();
+        $course->course_images()->delete();
         $course->delete();
         $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.course')]));
         return redirect()->back();
