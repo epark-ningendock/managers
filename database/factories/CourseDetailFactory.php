@@ -10,7 +10,7 @@ use App\CourseImage;
 
 $factory->define(CourseDetail::class, function (Faker $faker) {
     return [
-        'input_string' => $faker->text
+        'inputstring' => $faker->text
     ];
 });
 

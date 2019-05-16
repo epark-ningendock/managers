@@ -16,7 +16,11 @@ class DatabaseSeeder extends Seeder
 	        HospitalStaffsTableSeeder::class,
             MinorClassificationsTableSeeder::class,
 	        HospitalTableSeeder::class,
-            HospitalImageTableSeeder::class,
+            HospitalImagesTableSeeder::class,
+            OptionsTableSeeder::class,
+            TaxClassesTableSeeder::class,
+            ImageOrdersTableSeeder::class,
+            CalendarsTableSeeder::class,
             CourseTableSeeder::class
         ]);
     }

@@ -27,8 +27,12 @@ class Course extends SoftDeleteModel
       'course_cancel' => '0'
     ];
 
-    public function course_detail() {
-        return $this->hasOne('App\CourseDetail');
+    public function course_options() {
+        return $this->hasMany('App\CourseOption');
+    }
+
+    public function course_details() {
+        return $this->hasMany('App\CourseDetail');
     }
 
     public function course_questions() {

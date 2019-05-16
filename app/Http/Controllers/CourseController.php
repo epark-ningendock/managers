@@ -3,9 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Course;
+use App\CourseDetail;
+use App\CourseImage;
+use App\CourseOption;
+use App\CourseQuestion;
+use App\HospitalImage;
 use App\Http\Requests\CourseFormRequest;
+use App\MajorClassification;
+use App\MinorClassification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Option;
+use App\ImageOrder;
+use App\TaxClass;
+use App\Calendar;
 
 class CourseController extends Controller
 {
@@ -26,18 +37,163 @@ class CourseController extends Controller
      */
     public function create()
     {
-        return view('course.create');
+        $images = HospitalImage::all();
+        $majors = MajorClassification::orderBy('order')->get();
+        $options = Option::orderBy('order')->get();
+        $image_orders = ImageOrder::orderBy('order')->get();
+        $tax_classes = TaxClass::all();
+        $calendars = Calendar::all();
+
+        return view('course.create')
+            ->with('calendars', $calendars)
+            ->with('tax_classes', $tax_classes)
+            ->with('image_orders', $image_orders)
+            ->with('options', $options)
+            ->with('majors', $majors)
+            ->with('images', $images);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param CourseFormRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CourseFormRequest $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            //Course
+            $course_data = $request->only([
+                'name',
+                'web_reception',
+                'calendar_id',
+                'is_category',
+                'course_point',
+                'course_notice',
+                'course_cancel',
+                'cancellation_deadline',
+                'is_price',
+                'price',
+                'is_price_memo',
+                'price_memo',
+                'tax_class',
+                'is_pre_account_price'
+                ]);
+            $reception_start_day = $request->input('reception_start_day');
+            $reception_start_month = $request->input('reception_start_month');
+            $reception_end_day = $request->input('reception_end_day');
+            $reception_end_month = $request->input('reception_end_month');
+            $course_data['reception_start_date'] = $reception_start_month * 1000 + $reception_start_day;
+            $course_data['reception_end_date'] = $reception_end_month * 1000 + $reception_end_day;
+
+            $course = new Course($course_data);
+            $course->save();
+
+            //Course Image
+            $image_ids = $request->input('course_images');
+            $image_order_ids = $request->input('course_image_orders');
+
+            $filtered_image_ids = $image_ids>filter(function($id) {
+                return $id != 0;
+            });
+
+            $images = HospitalImage::whereIn('id', $filtered_image_ids)->get();
+            if ($images->count() != count($filtered_image_ids)) {
+                $request->session()->flash('error', trans('messages.invalid_hospital_image_id'));
+                return redirect()->back();
+            }
+
+            foreach ($image_ids as $index => $image_id) {
+                if ($image_id == 0) continue;
+                $image_order_id = $image_order_ids[$index];
+                $course_image = new CourseImage();
+                $course_image->course_id = $course->id;
+                $course_image->image_id = $image_id;
+                $course_image->image_order_id = $image_order_id;
+                $course_image->save();
+            }
+
+
+            //Course Options
+            $option_ids = $request->input('option_ids');
+            $options = Option::whereIn('id', $image_ids)->get();
+            if ($options->count() != count($option_ids)) {
+                $request->session()->flash('error', trans('messages.invalid_option_id'));
+                return redirect()->back();
+            }
+
+            foreach ($option_ids as $option_id) {
+                $course_option = new CourseOption();
+                $course_option->course_id = $course->id;
+                $course_option->option_id = $option_id;
+                $course_option->save();
+            }
+
+            //Course Detail
+            $minor_ids = $request->input('minor_ids');
+            $minor_values = $request->input('minor_values');
+
+            $minors = MinorClassification::whereIn('id', $minor_ids);
+            if ($minors->count() != count($minor_ids)) {
+                $request->session()->flash('error', trans('messages.invalid_minor_id'));
+                return redirect()->back();
+            }
+
+            foreach($minors as $index => $minor) {
+                $course_detail = new CourseDetail();
+                $course_detail->course_id = $course->id;
+                $course_detail->minor_classification_id = $minor->id;
+                $course_detail->major_classification_id = $minor->major_classification_id;
+                $course_detail->middle_classification_id = $minor->middle_classification_id;
+                if ($minor->is_fregist == '1') {
+                    $course_detail->select_status = 1;
+                } else {
+                    $course_detail->inputstring = $minor_values[$index];
+                }
+                $course_detail->save();
+            }
+
+            //Course Question
+            $is_questions = $request->input('is_questions');
+            $question_titles = $request->input('question_titles');
+            $answer01s = $request->input('answer01s');
+            $answer02s = $request->input('answer02s');
+            $answer03s = $request->input('answer03s');
+            $answer04s = $request->input('answer04s');
+            $answer05s = $request->input('answer05s');
+            $answer06s = $request->input('answer06s');
+            $answer07s = $request->input('answer07s');
+            $answer08s = $request->input('answer08s');
+            $answer09s = $request->input('answer09s');
+            $answer10s = $request->input('answer10s');
+
+            for($i =  0; $i < 5; $i++) {
+                $course_question = new CourseQuestion();
+                $course_question->is_question = $is_questions[$i];
+                $course_question->question_title = $question_titles[$i];
+                $course_question->answer01 = $answer01s[$i];
+                $course_question->answer02 = $answer02s[$i];
+                $course_question->answer03 = $answer03s[$i];
+                $course_question->answer04 = $answer04s[$i];
+                $course_question->answer05 = $answer05s[$i];
+                $course_question->answer06 = $answer06s[$i];
+                $course_question->answer07 = $answer07s[$i];
+                $course_question->answer08 = $answer08s[$i];
+                $course_question->answer09 = $answer09s[$i];
+                $course_question->answer10 = $answer10s[$i];
+                $course_question->save();
+            }
+
+
+            $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.course')]));
+            DB::commit();
+            return redirect('course');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(trans('messages.create_error'))->withInput();
+        }
     }
 
     /**
@@ -83,7 +239,8 @@ class CourseController extends Controller
      */
     public function destroy(Course $course, Request $request)
     {
-        $course->course_detail()->delete();
+        $course->course_details()->delete();
+        $course->course_options()->delete();
         $course->course_questions()->delete();
         $course->course_images()->delete();
         $course->delete();

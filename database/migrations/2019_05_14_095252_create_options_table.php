@@ -5,9 +5,10 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use App\Helpers\DBCommonColumns;
 
-class CreateHospitalImagesTable extends Migration
+class CreateOptionsTable extends Migration
 {
     use DBCommonColumns;
+
     /**
      * Run the migrations.
      *
@@ -15,16 +16,15 @@ class CreateHospitalImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('hospital_images', function (Blueprint $table) {
+        Schema::create('options', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('hospital_id')->unsigned();
             $table->foreign('hospital_id')->references('id')->on('hospitals');
-            $table->string('name', 128);
-            $table->string('extension', 5);
-            $table->string('path', 256);
-            $table->text('memo1')->nullable();
-            $table->text('memo2')->nullable();
-            $table->integer('is_display')->default(0);
+            $table->string('name', 40);
+            $table->text('confirm')->nullable();
+            $table->integer('price')->unsigned();
+            $table->tinyInteger('tax_class_id')->unsigned()->nullable();
+            $table->tinyInteger('order')->unsigned();
             $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
         });
@@ -37,6 +37,6 @@ class CreateHospitalImagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hospital_images');
+        Schema::dropIfExists('options');
     }
 }

@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use App\Helpers\DBCommonColumns;
 
-class CreateHospitalImagesTable extends Migration
+class CreateCalendarsTable extends Migration
 {
     use DBCommonColumns;
     /**
@@ -15,16 +15,12 @@ class CreateHospitalImagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('hospital_images', function (Blueprint $table) {
+        Schema::create('calendars', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name', 50);
+            $table->tinyInteger('is_calendar_display')->unsigned();
             $table->integer('hospital_id')->unsigned();
             $table->foreign('hospital_id')->references('id')->on('hospitals');
-            $table->string('name', 128);
-            $table->string('extension', 5);
-            $table->string('path', 256);
-            $table->text('memo1')->nullable();
-            $table->text('memo2')->nullable();
-            $table->integer('is_display')->default(0);
             $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
         });
@@ -37,6 +33,6 @@ class CreateHospitalImagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hospital_images');
+        Schema::dropIfExists('calendars');
     }
 }
