@@ -50,3 +50,7 @@ Route::get('/register', function () {
     return view('/vendor/adminlte/register');
 });
 
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
