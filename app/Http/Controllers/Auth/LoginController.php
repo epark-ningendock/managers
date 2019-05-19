@@ -69,8 +69,7 @@ class LoginController extends Controller
       if(Auth::guard($role)->attempt(['login_id' => $login_id, 'password' => $password])) {
           $facility_staff = Auth::guard($role)->user();
           session()->put('facility_staff', $facility_staff->id);
-          session()->put('user_name', $facility_staff->name);
-          session()->put('user_role', $role);
+          session()->put('facility_staff_email', $facility_staff->email);
           return true;
       }
       return false;
@@ -80,9 +79,8 @@ class LoginController extends Controller
       $role = 'staffs';
       if(Auth::guard($role)->attempt(['login_id' => $login_id, 'password' => $password])) {
           $staff = Auth::guard($role)->user();
-          session()->put('facility_staff', $staff->id);
-          session()->put('user_name', $staff->name);
-          session()->put('user_role', $role);
+          session()->put('staff', $staff->id);
+          session()->put('staff_email', $staff->email);
           return true;
       }
       return false;
