@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1b9e264492ecdf4ae69d942a3baad2f8",
+    "content-hash": "976edf4a075e3d16c03b35badaf64303",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -4988,6 +4988,52 @@
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
             "time": "2016-10-03T07:35:21+00:00"
+        },
+        {
+            "name": "suin/php-cs-fixer-rules",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/suin/php-cs-fixer-rules.git",
+                "reference": "6197cad1a783e8cc956b2a3411d499c5103820ba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/suin/php-cs-fixer-rules/zipball/6197cad1a783e8cc956b2a3411d499c5103820ba",
+                "reference": "6197cad1a783e8cc956b2a3411d499c5103820ba",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1 <7.4.0"
+            },
+            "conflict": {
+                "friendsofphp/php-cs-fixer": "<2.13"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "suin",
+                    "email": "suinyeze@gmail.com",
+                    "homepage": "https://github.com/suin",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Rule set for PHP-CS-Fixer mainly targeting PHP 7.1 or higher.",
+            "homepage": "https://github.com/suin/php",
+            "keywords": [
+                "php-cs-fixer",
+                "rules"
+            ],
+            "time": "2018-10-05T07:53:46+00:00"
         },
         {
             "name": "symfony/filesystem",

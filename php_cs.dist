@@ -1,36 +1,12 @@
 <?php
-$finder = PhpCsFixer\Finder::create()
-    ->exclude('app/Libraries/MdkPHP/tgMdk')
-    ->exclude('bootstrap/cache')
-    ->exclude('storage')
-    ->exclude('vendor')
-    ->exclude('config')
-    ->exclude('tests')
-    ->exclude('resources/lang/en')
-    ->exclude('public')
-    ->in(__DIR__)
-    ->name('*.php')
-    ->notName('*.blade.php')
-    ->notName('_ide_helper.php')
-    ->ignoreDotFiles(true)
-    ->ignoreVCS(true)
-;
 
 return PhpCsFixer\Config::create()
-    ->setRules([
-        '@Symfony' => true,
-        'binary_operator_spaces' => ['align_double_arrow' => false],
-        'array_syntax' => ['syntax' => 'short'],
-        'array_indentation' => true,
-        'linebreak_after_opening_tag' => true,
-        'not_operator_with_successor_space' => true,
-//        'ordered_imports' => true,
-//        'phpdoc_order' => true,
-        'phpdoc_no_package' => false,
-        'phpdoc_no_empty_return' => false,
-        'phpdoc_annotation_without_dot' => true,
-        'concat_space' => false,
-        'yoda_style' => false,
-    ])
-    ->setFinder($finder)
-;
+    ->setRiskyAllowed(true)
+    ->setRules(Suin\PhpCsFixer\Rules::create([
+        // ルールセットのデフォルトを上書きしたり、ルールを追加したい場合はここに書く。
+        'declare_strict_types' => false,
+    ]))
+    ->setFinder(PhpCsFixer\Finder::create()
+        ->exclude('vendor')
+        ->in(__DIR__)
+    );
