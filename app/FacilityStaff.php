@@ -2,11 +2,13 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class FacilityStaff extends BaseModel
+class FacilityStaff extends Authenticatable
 {
   protected $fillable = [
     'name', 'email', 'login_id', 'password',
   ];
+
+  protected $table = 'facility_staffs';
 }

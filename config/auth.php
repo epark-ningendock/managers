@@ -14,9 +14,10 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+        'guard' => 'staffs',
+        'passwords' => 'staffs',
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -36,10 +37,15 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'staffs' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'staffs',
         ],
+
+        'facility_staffs' => [
+            'driver' => 'session',
+            'provider' => 'facility_staffs',
+         ],
 
         'api' => [
             'driver' => 'token',
@@ -65,15 +71,15 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\User::class,
-        ],
+        'staffs' => [
+             'driver' => 'eloquent',
+             'model' => App\Staff::class,
+         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+         'facility_staffs' => [
+           'driver' => 'eloquent',
+           'model' => App\FacilityStaff::class,
+         ],
     ],
 
     /*
@@ -92,11 +98,11 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 60,
-        ],
+      'staffs' => [
+          'provider' => 'staffs',
+          'table' => 'password_resets',
+          'expire' => 60,
+      ],
     ],
 
 ];
