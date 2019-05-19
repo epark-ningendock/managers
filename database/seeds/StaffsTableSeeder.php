@@ -17,5 +17,12 @@ class StaffsTableSeeder extends Seeder
             $staff->save();
             factory(StaffAuth::class)->create(["staff_id" => $staff->id]);
         });
+        DB::table('staffs')->insert([
+          'login_id' => 'aaa',
+          'name' => 'user',
+          'email' => 'user@example.com',
+          'password' => Hash::make('ggg'),
+          'authority' => '1',
+        ]);
     }
 }
