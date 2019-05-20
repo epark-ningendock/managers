@@ -30,8 +30,10 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/home';
-    protected $facility_staff_redirectTo = '/hospital-staff';
+    // TODO スタッフログイン先確定次第変更
     protected $staff_redirectTo = '/staff';
+    // TODO 医療機関スタッフログイン先確定次第変更
+    protected $facility_staff_redirectTo = '/hospital-staff';
 
     /**
      * Create a new controller instance.
@@ -43,38 +45,26 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    // リクエストパラメータからログインしてきたユーザーの認証をかける
     public function login(Request $req) {
       $data = $req->all();
 
-      // 医療機関スタッフの場合
-      $is_facility_staff = self::is_facility_staff_login($data['login_id'], $data['password']);
-      // 医療機関スタッフ→ 画面遷移
-      if($is_facility_staff) {
-        return redirect($this->facility_staff_redirectTo);
-      }
-
-      // スタッフの場合
+      // スタッフに該当するかの判定
       $is_staff = self::is_staff_login($data['login_id'], $data['password']);
       if($is_staff) {
         return redirect($this->staff_redirectTo);
+      }
+
+      // 医療機関スタッフに該当するかの判定
+      $is_facility_staff = self::is_facility_staff_login($data['login_id'], $data['password']);
+      if($is_facility_staff) {
+        return redirect($this->facility_staff_redirectTo);
       }
 
       // ログイン情報が該当しない場合
       return redirect($this->redirectTo);
     }
 
-    public function is_facility_staff_login($login_id, $password) {
-      $role = 'facility_staffs';
-      if(Auth::guard($role)->attempt(['login_id' => $login_id, 'password' => $password])) {
-          $facility_staff = Auth::guard($role)->user();
-          session()->put('facility_staff', $facility_staff->id);
-          session()->put('facility_staff_email', $facility_staff->email);
-          return true;
-      }
-      return false;
-    }
-
+    // スタッフ認証処理
     public function is_staff_login($login_id, $password) {
       $role = 'staffs';
       if(Auth::guard($role)->attempt(['login_id' => $login_id, 'password' => $password])) {
@@ -86,5 +76,15 @@ class LoginController extends Controller
       return false;
     }
 
-
+    // 医療機関スタッフ認証処理
+    public function is_facility_staff_login($login_id, $password) {
+      $role = 'facility_staffs';
+      if(Auth::guard($role)->attempt(['login_id' => $login_id, 'password' => $password])) {
+          $facility_staff = Auth::guard($role)->user();
+          session()->put('staff', $facility_staff->id);
+          session()->put('staff_email', $facility_staff->email);
+          return true;
+      }
+      return false;
+    }
 }

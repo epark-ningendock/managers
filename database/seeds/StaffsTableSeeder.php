@@ -17,6 +17,8 @@ class StaffsTableSeeder extends Seeder
             $staff->save();
             factory(StaffAuth::class)->create(["staff_id" => $staff->id]);
         });
+        
+        // TODO　動作確認用 マージ前に削除
         DB::table('staffs')->insert([
           'login_id' => 'aaa',
           'name' => 'user',
