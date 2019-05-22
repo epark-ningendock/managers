@@ -24,13 +24,13 @@ class HospitalStaffFormRequest extends FormRequest {
 
 		$email_validation = ( $this->method() == 'PUT' || $this->method() == 'PATCH' ) ? 'required|unique:hospital_staffs,email,'. $this->hospital_staff : 'required|unique:hospital_staffs|email';
 		$login_id         = ( $this->method() == 'PUT' || $this->method() == 'PATCH' ) ? 'required|unique:hospital_staffs,login_id, '. $this->hospital_staff : 'required|unique:hospital_staffs';
-		$password         = ( $this->method() == 'PUT' || $this->method() == 'PATCH' ) ? '' : 'required|min:6';
+		// $password         = ( $this->method() == 'PUT' || $this->method() == 'PATCH' ) ? '' : 'required|min:6';
 
 		return [
 			'name'     => 'required',
 			'email'    => $email_validation,
 			'login_id' => $login_id,
-			'password' => $password,
+			// 'password' => $password,
 		];
 	}
 }
