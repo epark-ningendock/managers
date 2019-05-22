@@ -4,7 +4,7 @@
 
   if(isset($course)) {
     $course_details = $course->course_details;
-    $course_option = $course->course_images;
+    $course_options = $course->course_options;
     $course_images = $course->course_images;
     $course_questions = $course->course_questions;
   }
@@ -67,10 +67,10 @@
 
     <div class="form-group @if ($errors->has('calendar_id')) has-error @endif" >
       <label for="calendar_id">カレンダーの設定</label>
-      <select name="calendar_id" id="calendar_id" class="form-control">
+      <select name="calendar_id" id="calendar_id" class="form-control" >
         <option value="">なし</option>
         @foreach ($calendars as $calendar)
-          <option {{ old('calendar_id') == $calendar->id ? 'selected' : '' }}
+          <option {{ old('calendar_id', isset($course) ? $course->calendar_id : null) == $calendar->id ? 'selected' : '' }}
                   value="{{ $calendar->id }}"> {{ $calendar->name }}</option>
         @endforeach
       </select>
@@ -103,12 +103,11 @@
           @php
             $is_checked = false;
             $order_value = 0;
-
             if($c_images->isNotEmpty()) {
               $order_value = $c_image_orders[$index];
               $is_checked = $order_value != '';
             } else if(isset($course_images)) {
-              $temp = $course_images->where('id', $image->id, false);
+              $temp = $course_images->where('hospital_image_id', $image->id)->flatten(1);
               if ($temp->isNotEmpty()) {
                 $is_checked = true;
                 $order_value = $temp[0]->image_order_id;
@@ -141,7 +140,7 @@
     <div class="form-group">
       <label for="course_point">コースの特徴</label>
       <textarea class="form-control" id="course_point" name="course_point" rows="5">
-        {{ old('course_point', (isset($course) ? $scourse->course_point : null)) }}
+        {{ old('course_point', (isset($course) ? $course->course_point : null)) }}
       </textarea>
       <span class="pull-right">0/1000文字</span>
     </div>
@@ -149,7 +148,7 @@
     <div class="form-group">
       <label for="course_notice">注意事項</label>
       <textarea class="form-control" id="course_notice" name="course_notice">
-        {{ old('course_notice', (isset($course) ? $scourse->course_notice : null)) }}
+        {{ old('course_notice', (isset($course) ? $course->course_notice : null)) }}
       </textarea>
       <span class="pull-right">0/1000文字</span>
     </div>
@@ -157,33 +156,41 @@
     <div class="form-group">
       <label for="course_cancel">キャンセルについて</label>
       <textarea class="form-control" id="course_cancel" name="course_cancel">
-        {{ old('course_cancel', (isset($course) ? $scourse->course_cancel : null)) }}
+        {{ old('course_cancel', (isset($course) ? $course->course_cancel : null)) }}
       </textarea>
       <span class="pull-right">0/1000文字</span>
     </div>
 
-    <div class="form-group @if ($errors->has('reception_start_day') || $errors->has('reception_start_month') || $errors->has('reception_end_day') || $errors->has('reception_end_month')) has-error @endif">
+    <div class="form-group">
       <label>受付時間 <span class="text-red">必須</span></label>
       <div class="form-horizontal">
           本日から
-          <input type="number" id="reception_start_day" name="reception_start_day" class="form-control d-inline-block ml-2" style="width:60px;"
-                 value="{{ old('reception_start_day', (isset($course) ? $course->reception_start_date%1000 : 6)) }}" />
+          <div class="d-inline-block @if ($errors->has('reception_start_day')) has-error @endif" >
+              <input type="number" id="reception_start_day" name="reception_start_day" class="form-control d-inline-block ml-2" style="width:60px;"
+                     value="{{ old('reception_start_day', (isset($course) ? $course->reception_start_date%1000 : 6)) }}" />
+          </div>
           ヶ月
-          <input type="number" id="reception_start_month" name="reception_end_date" class="form-control d-inline-block ml-2 mr-2" style="width:60px;"
-                 value="{{ old('reception_start_day', (isset($course) ? $course->reception_end_date/1000 : 0)) }}" />
+          <div class="d-inline-block @if ($errors->has('reception_start_month')) has-error @endif" >
+              <input type="number" id="reception_start_month" name="reception_start_month" class="form-control d-inline-block ml-2 mr-2" style="width:60px;"
+                     value="{{ old('reception_start_month', (isset($course) ? intdiv($course->reception_start_date, 1000) : 0)) }}" />
+          </div>
           日間、受付可能。 うち
-          <input type="number" id="reception_end_day" name="reception_start_day" class="form-control d-inline-block ml-2 mr-2" style="width:60px;"
-                 value="{{ old('reception_end_day', (isset($course) ? $course->reception_start_date%1000 : 0)) }}" />
+          <div class="d-inline-block @if ($errors->has('reception_end_day')) has-error @endif" >
+              <input type="number" id="reception_end_day" name="reception_end_day" class="form-control d-inline-block ml-2 mr-2" style="width:60px;"
+                     value="{{ old('reception_end_day', (isset($course) ? $course->reception_end_date % 1000 : 0)) }}" />
+          </div>
           ヶ月
-          <input type="number" id="reception_end_month" name="reception_start_day" class="form-control d-inline-block ml-2" style="width:60px;"
-                 value="{{ old('reception_end_month', (isset($course) ? $course->reception_start_date/1000 : 7)) }}" />
+          <div class="d-inline-block @if ($errors->has('reception_end_month')) has-error @endif" >
+              <input type="number" id="reception_end_month" name="reception_end_month" class="form-control d-inline-block ml-2" style="width:60px;"
+                     value="{{ old('reception_end_month', (isset($course) ? intdiv($course->reception_end_date, 1000) : 7)) }}" />
+          </div>
           日間から受付開始。
       </div>
       <div class="mt-2">(事前決済のみ利用の場合、受付期限は90日となります。）</div>
-      @if ($errors->has('reception_start_day')) <p class="help-block">{{ $errors->first('reception_start_day') }}</p> @endif
-      @if ($errors->has('reception_start_month')) <p class="help-block">{{ $errors->first('reception_start_month') }}</p> @endif
-      @if ($errors->has('reception_end_day')) <p class="help-block">{{ $errors->first('reception_end_day') }}</p> @endif
-      @if ($errors->has('reception_end_month')) <p class="help-block">{{ $errors->first('reception_end_month') }}</p> @endif
+      @if ($errors->has('reception_start_day')) <p class="help-block text-red">{{ $errors->first('reception_start_day') }}</p>@endif
+      @if ($errors->has('reception_start_month')) <p class="help-block text-red">{{ $errors->first('reception_start_month') }}</p> @endif
+      @if ($errors->has('reception_end_day')) <p class="help-block text-red">{{ $errors->first('reception_end_day') }}</p> @endif
+      @if ($errors->has('reception_end_month')) <p class="help-block text-red">{{ $errors->first('reception_end_month') }}</p> @endif
     </div>
 
     <div class="form-group @if ($errors->has('cancellation_deadline')) has-error @endif" >
@@ -192,7 +199,7 @@
         受診日
         <select name="cancellation_deadline" id="cancellation_deadline" class="form-control mr-2 d-inline-block" style="width: 60px;">
           @for ($i = 1; $i <= 31; $i++)
-            <option {{ old('cancellation_deadline', 20) == $i ? 'selected' : '' }}
+            <option {{ old('cancellation_deadline', isset($course) ? $course->cancellation_deadline : 20) == $i ? 'selected' : '' }}
                     value="{{ $i }}"> {{ $i }}</option>
           @endfor
         </select>
@@ -203,6 +210,7 @@
 
   </div>
 </div>
+
 <div class="box box-primary">
   <div class="box-header with-border">
     <div class="box-tools" data-widget="collapse">
@@ -216,7 +224,7 @@
     <div class="form-group @if ($errors->has('price')) has-error @endif">
       <label for="name">表示価格</label>
       <div>
-        <input type="checkbox" class="checkbox d-inline-block mr-2" name="is_price"
+        <input type="checkbox" class="checkbox d-inline-block mr-2" name="is_price" value="1"
                id="is_price" {{ old('is_price', (isset($course)? $course->is_price : null)) == 1 ? 'checked' : '' }} />
         <label for="is_price">価格</label>
         <input type="number" class="form-control d-inline-block mr-2 ml-2" id="price" name="price" style="width: 100px;"
@@ -230,10 +238,10 @@
     <div class="form-group @if ( $errors->has('price_memo')) has-error @endif">
       <label for="name">手動設定金額</label>
       <div>
-        <input type="checkbox" class="checkbox d-inline-block mr-2" name="is_price_memo"
+        <input type="checkbox" class="checkbox d-inline-block mr-2" name="is_price_memo" value="1"
                id="is_price_memo" {{ old('is_price_memo', (isset($course)? $course->is_price_memo : null)) == 1 ? 'checked' : '' }} />
         <label for="is_price_memo">メモ</label>
-        <input type="number" class="form-control d-inline-block mr-2 ml-2" id="price_memo" name="price_memo" style="width: 230px;"
+        <input type="text" class="form-control d-inline-block mr-2 ml-2" id="price_memo" name="price_memo" style="width: 230px;"
                value="{{ old('price_memo', (isset($course) ? $course->price_memo : null)) }}">
       </div>
       @if ($errors->has('price_memo')) <p class="help-block">{{ $errors->first('price_memo') }}</p> @endif
@@ -274,14 +282,15 @@
     <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif" >
       <label for="tax_class">利用設定 <span class="text-red">必須</span></label>
       <div>
-        <input type="radio" class="checkbox d-inline-block"
-               {{ old('is_pre_account', isset($course) ? $course->is_pre_account : null) == 0  }}
+        <input type="radio" class="checkbox d-inline-block" id="is_pre_account_normal_payment"
+               {{ old('is_pre_account', isset($course) ? $course->is_pre_account : null) == 0 ? 'checked' : '' }}
                name="is_pre_account" value="0"/>
-        通常決済利用
-        <input type="radio" class="checkbox d-inline-block ml-2" name="is_pre_account"
-               {{ old('is_pre_account', isset($course) ? $course->is_pre_account : null) == 1  }}
+        <label for="is_pre_account_normal_payment">通常決済利用</label>
+        <input type="radio" class="checkbox d-inline-block ml-2" name="is_pre_account" id="is_pre_account_pre_payment"
+               {{ old('is_pre_account', isset($course) ? $course->is_pre_account : null) == 1 ? 'checked' : '' }}
                value="1"/>
-        事前決済利用
+        <label for="is_pre_account_pre_payment">事前決済利用</label>
+
       </div>
       @if ($errors->has('is_pre_account')) <p class="help-block">{{ $errors->first('is_pre_account') }}</p> @endif
     </div>
@@ -310,13 +319,13 @@
           $is_checked = false;
           if ($o_option_ids->isNotEmpty()) {
             $is_checked = $o_option_ids->contains($option->id);
-          } else if(isset($course_option)) {
-            $is_checked = $course_options->where('id', $option->id)->isNotEmpty();
+          } else if(isset($course_options)) {
+            $is_checked = $course_options->where('option_id', $option->id)->isNotEmpty();
           }
         @endphp
         <tr>
           <td style="width: 60px;text-align: center;">
-            <input type="checkbox" name="options_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
+            <input type="checkbox" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
           </td>
           <td class="text-center">{{ $option->name }}</td>
           <td class="text-center">{{ $option->price }} 円</td>
@@ -352,14 +361,14 @@
               @php
                 $minor_value = '';
                 if($o_minor_ids->isNotEmpty()) {
-                  $search_index = $o_minor_ids->seach(function($m_id) use ($minor) {
+                  $search_index = $o_minor_ids->search(function($m_id) use ($minor) {
                     return $m_id == $minor->id;
                   });
                   if ($search_index >= 0) {
                     $minor_value = $o_minor_values[$search_index];
                   }
                 } else if (isset($course_details)) {
-                  $temp = $course_details->where('minor_classification_id', $minor->id);
+                  $temp = $course_details->where('minor_classification_id', $minor->id)->flatten(1);
                   if ($temp->isNotEmpty()) {
                     $minor_value = $minor->is_fregist == '1' ? $temp[0]->select_status : $temp[0]->inputstring;
                   }
@@ -367,12 +376,12 @@
               @endphp
               <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
               @if($minor->is_fregist == '1')
-                <input type="checkbox" class="checkbox d-inline-block" name="minor_values[]"
+                <input type="checkbox" class="checkbox d-inline-block minor-checkbox" name="minor_values[]"
                        {{ $minor_value == $minor->id ? 'checked' : '' }} value="{{ $minor->id }}" />
                 {{ $minor->name }}
               @else
                 <input type="text" name="minor_values[]" class="form-control minor-text" data-maxlength="{{ $minor->max_length }}"
-                  value = {{ $minor_value }}/>
+                  value = "{{ $minor_value }}" />
                 <span class="pull-right">0/{{ $minor->max_length }}文字</span>
               @endif
             @endforeach
@@ -384,11 +393,10 @@
   </div>
 </div>
 
-
 @for($qi = 0; $qi < 5; $qi++)
   @php
     $question = isset($course_questions) ? $course_questions[$qi] : null;
-    $is_question = '';
+    $is_question = '0';
     $question_title = '';
     $answer01 = '';
     $answer02 = '';
@@ -402,19 +410,19 @@
     $answer10 = '';
     if ($o_is_questions->isNotEmpty()) {
       $is_question = $o_is_questions[$qi];
-      $question_title = $o_question_titles[$qi];
-      $answer01 = $o_answer01s[$qi];
-      $answer02 = $o_answer02s[$qi];
-      $answer03 = $o_answer03s[$qi];
-      $answer04 = $o_answer04s[$qi];
-      $answer05 = $o_answer05s[$qi];
-      $answer06 = $o_answer06s[$qi];
-      $answer07 = $o_answer07s[$qi];
-      $answer08 = $o_answer08s[$qi];
-      $answer09 = $o_answer09s[$qi];
-      $answer10 = $o_answer10s[$qi];
+      $question_title = $o_question_titles->get($qi);
+      $answer01 = $o_answer01s->get($qi);
+      $answer02 = $o_answer02s->get($qi);
+      $answer03 = $o_answer03s->get($qi);
+      $answer04 = $o_answer04s->get($qi);
+      $answer05 = $o_answer05s->get($qi);
+      $answer06 = $o_answer06s->get($qi);
+      $answer07 = $o_answer07s->get($qi);
+      $answer08 = $o_answer08s->get($qi);
+      $answer09 = $o_answer09s->get($qi);
+      $answer10 = $o_answer10s->get($qi);
     } else if(isset($question)) {
-      $is_question = $question->is_questions;
+      $is_question = $question->is_question;
       $question_title = $question->question_title;
       $answer01 = $question->answer01;
       $answer02 = $question->answer02;
@@ -425,7 +433,7 @@
       $answer07 = $question->answer07;
       $answer08 = $question->answer08;
       $answer09 = $question->answer09;
-      $answer10 = $quesiton->answer10;
+      $answer10 = $question->answer10;
     }
   @endphp
   <div class="box box-primary">
@@ -440,12 +448,13 @@
       <div class="form-group">
         <label for="name">質問事項の利用</label>
         <div>
-          <input type="checkbox" class="checkbox d-inline-block mr-2" {{ $is_question == 1 ? 'checked' : '' }}
-                 id="is_question_use_{{$qi}}" name="is_question[]" value="1"/>
+          <input type="radio" class="checkbox d-inline-block mr-2 is_question" {{ $is_question == 1 ? 'checked' : '' }}
+                 id="is_question_use_{{$qi}}" name="is_question_{{ $qi }}" value="1"/>
           <label for="is_question_use_{{$qi}}">利用する</label>
-          <input type="checkbox" class="checkbox d-inline-block mr-2 ml-2" {{ $is_question == 0 ? 'checked' : '' }}
-                 id="is_question_not_use_{{$qi}}" name="is_question[]" value="0"/>
+          <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" {{ $is_question == 0 ? 'checked' : '' }}
+                 id="is_question_not_use_{{$qi}}" name="is_question_{{ $qi }}" value="0"/>
           <label for="is_question_not_use_{{$qi}}">利用しない</label>
+            <input type="hidden" value="{{ $is_question }}" name="is_questions[]"/>
         </div>
       </div>
 
@@ -459,70 +468,70 @@
         <label for="anser01_{{$qi}}">回答1</label>
         <input type="text" class="form-control" id="answer01_{{$qi}}"
                value = "{{ $answer01 }}"
-               name="answer01[]"/>
+               name="answer01s[]"/>
       </div>
 
       <div class="form-group">
         <label for="anser02_{{$qi}}">回答2</label>
         <input type="text" class="form-control" id="answer02_{{$qi}}"
                value = "{{ $answer02 }}"
-               name="answer02[]"/>
+               name="answer02s[]"/>
       </div>
 
       <div class="form-group">
         <label for="anser03_{{$qi}}">回答3</label>
         <input type="text" class="form-control" id="answer03_{{$qi}}"
                value = "{{ $answer03 }}"
-               name="answer03[]"/>
+               name="answer03s[]"/>
       </div>
 
       <div class="form-group">
         <label for="anser04_{{$qi}}">回答4</label>
         <input type="text" class="form-control" id="answer04_{{$qi}}"
                value = "{{ $answer04 }}"
-               name="answer04[]"/>
+               name="answer04s[]"/>
       </div>
 
       <div class="form-group">
         <label for="anser05_{{$qi}}">回答5</label>
         <input type="text" class="form-control" id="answer05_{{$qi}}"
                value = "{{ $answer05 }}"
-               name="answer05[]"/>
+               name="answer05s[]"/>
       </div>
 
       <div class="form-group">
         <label for="anser06_{{$qi}}">回答6</label>
         <input type="text" class="form-control" id="answer06_{{$qi}}"
                value = "{{ $answer06 }}"
-               name="answer06[]"/>
+               name="answer06s[]"/>
       </div>
 
       <div class="form-group">
-        <label for="anser07_{{$qi}}">回答2</label>
+        <label for="anser07_{{$qi}}">回答7</label>
         <input type="text" class="form-control" id="answer07_{{$qi}}"
                value = "{{ $answer07 }}"
-               name="answer07[]"/>
+               name="answer07s[]"/>
       </div>
 
       <div class="form-group">
         <label for="anser08_{{$qi}}">回答8</label>
         <input type="text" class="form-control" id="answer08_{{$qi}}"
                value = "{{ $answer08 }}"
-               name="answer08[]"/>
+               name="answer08s[]"/>
       </div>
 
       <div class="form-group">
         <label for="anser09_{{$qi}}">回答9</label>
         <input type="text" class="form-control" id="answer09_{{$qi}}"
                value = "{{ $answer09 }}"
-               name="answer09[]"/>
+               name="answer09s[]"/>
       </div>
 
       <div class="form-group">
         <label for="anser10_{{$qi}}">回答10</label>
         <input type="text" class="form-control" id="answer10_{{$qi}}"
                value = "{{ $answer10 }}"
-               name="answer10[]"/>
+               name="answer10s[]"/>
       </div>
 
     </div>
@@ -601,6 +610,27 @@
           })();
 
           /* ---------------------------------------------------
+          // minor checkbox values
+          -----------------------------------------------------*/
+          (function () {
+              const change = function(ele) {
+                  if (ele.prop('checked')) {
+                      ele.next('input:hidden').remove();
+                  } else {
+                      $('<input type="hidden" name="minor_values[]" value="0"/>').insertAfter(ele);
+                  }
+              };
+
+              $('.minor-checkbox').each(function(index, ele) {
+                  ele = $(ele);
+                  ele.change(function() {
+                      change(ele);
+                  });
+                  change(ele);
+              });
+          })();
+
+          /* ---------------------------------------------------
           // price enable/disable
           -----------------------------------------------------*/
           (function () {
@@ -628,6 +658,23 @@
               };
               change();
               $('#is_price_memo').change(change);
+          })();
+
+          /* ---------------------------------------------------
+          // is_question values
+          -----------------------------------------------------*/
+          (function () {
+              const change = function(ele) {
+                  ele.siblings('input:hidden').val(ele.val());
+              };
+
+              $('.is_question').each(function(index, ele){
+                  ele = $(ele);
+                  ele.change(function() {
+                      change(ele);
+                  });
+                  change(ele);
+              })
           })();
 
 

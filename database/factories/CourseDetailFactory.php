@@ -20,7 +20,7 @@ $factory->defineAs(CourseDetail::class, 'with_all', function(Faker $faker) use (
 
     $course = factory(Course::class)->create([
         'hospital_id' => $hospital->id,
-        'code' => 'C'.$faker->numberBetween(1, 100).'H'.$hospital->id
+        'code' => 'C'.$faker->randomElement(range(1, 100)).'H'.$hospital->id
     ]);
 
     $detail = $factory->raw(CourseDetail::class);
@@ -41,3 +41,4 @@ $factory->defineAs(CourseDetail::class, 'with_all', function(Faker $faker) use (
         'major_classification_id' => $minor->major_classification_id
     ]);
 });
+
