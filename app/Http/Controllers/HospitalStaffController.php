@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\HospitalStaff;
+use App\Mail\HospitalStaff\RegisteredMail;
+use App\Mail\HospitalStaff\PasswordResetMail;
+use App\Mail\HospitalStaff\PasswordResetConfirmMail;
 use App\Http\Requests\HospitalStaffFormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class HospitalStaffController extends Controller
 {
@@ -22,6 +26,9 @@ class HospitalStaffController extends Controller
 		$hospital_staff->password = bcrypt( $request->input( 'password' ) );
 		$hospital_staff->save();
 
+		Mail::to($hospital_staff->email)
+			->send(new RegisteredMail());
+		
 		return redirect( 'hospital-staff' )->with( 'success', trans('messages.created', ['name' => trans('messages.names.hospital_staff')]) );
 
 	}
@@ -50,5 +57,27 @@ class HospitalStaffController extends Controller
 		$hospital_staff->delete();
 
 		return redirect( 'hospital-staff' )->with( 'success', trans('messages.deleted', ['name' => trans('messages.names.hospital_staff')]) );
+	}
+
+	// パスワードリセットメール送信画面を表示する
+	public function showPasswordResetsMail() {
+
+	}
+
+	// パスワードリセットメール送信画面に遷移する
+	public function sendPasswordResetsMail() {
+		Mail::to($hospital_staff->email)
+			->send(new PasswordResetMail());
+	}
+
+	// パスワードリセット画面を表示する
+	public function showPasswordResets() {
+		
+	}
+
+	// パスワードをUpdateする
+	public function resetPassword() {
+		Mail::to($hospital_staff->email)
+			->send(new PasswordResetConfirmMail());
 	}
 }
