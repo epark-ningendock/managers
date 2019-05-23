@@ -27,8 +27,13 @@ class HospitalStaffController extends Controller
 		$hospital_staff->password = bcrypt( $password );
 		$hospital_staff->save();
 
-		Mail::to($hospital_staff->email)
-			->send(new RegisteredMail());
+		$hospital_staff_information = [
+			'hospital_staff' => $hospital_staff,
+			'password' => $password
+		];
+		
+		Mail::to( $hospital_staff->email )
+			->send(new RegisteredMail( $hospital_staff ));
 		
 		return redirect( 'hospital-staff' )->with( 'success', trans('messages.created', ['name' => trans('messages.names.hospital_staff')]) );
 

@@ -1,10 +1,10 @@
 <html>
     <body>
-      <p>{{ $name = "西村竜" }}さん ご登録ありがとうございます！</p>
+      <p>{{ $hospital_staff->name }}さん ご登録ありがとうございます！</p>
       <br>
       <p>あなたのパスワードは</p>
       <br>
-      <p>{{ $password = "PazzW@rd01" }} です</p>
+      {{-- <p>{{ $hospital_staff_information->password }} です</p> --}}
       <br>
       <p>次のリンクからログインすることができます。</p>
       <br>
