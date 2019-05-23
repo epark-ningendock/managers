@@ -121,7 +121,7 @@ return [
         ],
         [
             'text'        => 'パスワードの変更',
-            'url'         => '/hospital-staff',
+            'url'         => '/hospital-staff/edit-password',
             'icon'        => 'user',
         ],
         [
