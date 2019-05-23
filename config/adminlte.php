@@ -120,6 +120,11 @@ return [
             'icon'        => 'user',
         ],
         [
+            'text'        => 'パスワードの変更',
+            'url'         => '/hospital-staff',
+            'icon'        => 'user',
+        ],
+        [
             'text'        => '検査コース分類管理',
             'url'         => '/classification',
             'icon'        => 'book',

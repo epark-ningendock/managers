@@ -18,12 +18,6 @@
         @if ($errors->has('login_id')) <p class="help-block">{{ $errors->first('login_id') }}</p> @endif
     </div>
 
-    {{-- <div class="form-group @if ($errors->has('password')) has-error @endif">
-        <label for="password">パスワード</label>
-        <input type="password" class="form-control" id="password" name="password" value="{{  Input::old('password') }}" placeholder="パスワード">
-        @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
-    </div> --}}
-
     <div class="box-footer">
         <a href="{{ route('hospital-staff.index') }}" class="btn btn-default">バック</a>
         <button type="submit" class="btn btn-primary">つくる</button>

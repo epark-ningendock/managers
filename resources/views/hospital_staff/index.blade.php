@@ -23,7 +23,7 @@
         <thead>
         <tr>
             <th>No</th>
-            <th>スタッフ施設名</th>
+            <th>医療機関スタッフ名</th>
             <th>ログインID</th>
             <th>編集</th>
             <th>削除</th>
