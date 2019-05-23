@@ -192,7 +192,23 @@
       @if ($errors->has('reception_end_day')) <p class="help-block text-red">{{ $errors->first('reception_end_day') }}</p> @endif
       @if ($errors->has('reception_end_month')) <p class="help-block text-red">{{ $errors->first('reception_end_month') }}</p> @endif
     </div>
-
+    <div class="form-group">
+      <label>受付許可日  <span class="text-red">必須</span></label>
+      <div class="form-horizontal">
+          本日から
+          <div class="d-inline-block @if ($errors->has('reception_acceptance_day')) has-error @endif" >
+              <input type="number" id="reception_acceptance_day" name="reception_acceptance_day" class="form-control d-inline-block ml-2" style="width:60px;"
+                     value="{{ old('reception_acceptance_day', (isset($course) ? $course->reception_acceptance_date % 1000 : 5)) }}" />
+          </div>
+          ヶ月
+          <div class="d-inline-block @if ($errors->has('reception_acceptance_month')) has-error @endif" >
+              <input type="number" id="reception_acceptance_month" name="reception_acceptance_month" class="form-control d-inline-block ml-2 mr-2" style="width:60px;"
+                     value="{{ old('reception_acceptance_month', (isset($course) ? intdiv($course->reception_acceptance_date, 1000) : 0)) }}" />
+          </div>
+      </div>
+      @if ($errors->has('reception_acceptance_day')) <p class="help-block text-red">{{ $errors->first('reception_acceptance_day') }}</p>@endif
+      @if ($errors->has('reception_acceptance_month')) <p class="help-block text-red">{{ $errors->first('reception_acceptance_month') }}</p> @endif
+    </div>
     <div class="form-group @if ($errors->has('cancellation_deadline')) has-error @endif" >
       <label for="cancellation_deadline">変更キャンセル受付期限</label>
       <div>
@@ -377,10 +393,12 @@
               <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
               @if($minor->is_fregist == '1')
                 <input type="checkbox" class="checkbox d-inline-block minor-checkbox" name="minor_values[]"
-                       {{ $minor_value == $minor->id ? 'checked' : '' }} value="{{ $minor->id }}" />
-                {{ $minor->name }}
+                       id="{{ 'minor_id_'.$minor->id }}"
+                       {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
+                <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label>
               @else
-                <input type="text" name="minor_values[]" class="form-control minor-text" data-maxlength="{{ $minor->max_length }}"
+                <input type="text" name="minor_values[]"
+                       class="form-control minor-text @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
                   value = "{{ $minor_value }}" />
                 <span class="pull-right">0/{{ $minor->max_length }}文字</span>
               @endif

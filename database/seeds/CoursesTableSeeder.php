@@ -15,7 +15,7 @@ use App\Calendar;
 use App\HospitalImage;
 use App\ImageOrder;
 
-class CourseTableSeeder extends Seeder
+class CoursesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

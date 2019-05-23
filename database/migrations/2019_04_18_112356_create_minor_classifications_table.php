@@ -25,7 +25,7 @@ class CreateMinorClassificationsTable extends Migration
             $table->string('name', 100);
             $table->char('is_fregist', 1)->default('0');
             $table->smallInteger('order')->default(0);
-            $table->smallInteger('max_length');
+            $table->smallInteger('max_length')->nullable();
             $table->char('is_icon', 1)->default('0');
             $table->string('icon_name', 100)->nullable();
             $table->char('status', 1)->default('1');

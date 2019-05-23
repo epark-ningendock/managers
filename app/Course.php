@@ -17,6 +17,7 @@ class Course extends SoftDeleteModel
         'course_cancel',
         'reception_start_date',
         'reception_end_date',
+        'reception_acceptance_date',
         'cancellation_deadline',
         'is_price',
         'price',

@@ -39,6 +39,8 @@ class CourseFormRequest extends FormRequest
                 'reception_start_month' => 'required|integer',
                 'reception_end_day' => 'required|integer',
                 'reception_end_month' => 'required|integer',
+                'reception_acceptance_day' => 'required|integer',
+                'reception_acceptance_month' => 'required|integer',
                 'cancellation_deadline' => 'required|integer',
                 'is_price' => [Rule::in([0, 1])],
                 'is_price_memo' => [Rule::in([0, 1])],

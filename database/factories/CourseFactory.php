@@ -18,6 +18,7 @@ $factory->define(Course::class, function (Faker $faker) {
         'course_notice' => $faker->text,
         'reception_start_date' => $faker->randomElement(range(0, 12)) * 1000 + $faker->randomElement(range(0, 31)),
         'reception_end_date' => $faker->randomElement(range(0, 12)) * 1000 + $faker->randomElement(range(0, 31)),
+        'reception_acceptance_date' => $faker->randomElement(range(0, 12)) * 1000 + $faker->randomElement(range(0, 31)),
         'cancellation_deadline' => $faker->randomElement(range(1, 31)),
         'is_pre_account' => $faker->randomElement([0, 1])
     ];

@@ -236,6 +236,26 @@ class CourseControllerTest extends TestCase
         $this->validateFields([ 'reception_end_month' => $this->faker->userName ])->assertSessionHasErrors('reception_end_month');
     }
 
+    function testRequiredReceptionAcceptanceDay()
+    {
+        $this->validateFields([ 'reception_acceptance_day' => null ])->assertSessionHasErrors('reception_acceptance_day');
+    }
+
+    function testInvalidReceptionAcceptanceDay()
+    {
+        $this->validateFields([ 'reception_acceptance_day' => $this->faker->userName ])->assertSessionHasErrors('reception_acceptance_day');
+    }
+
+    function testRequiredReceptionAcceptanceMonth()
+    {
+        $this->validateFields([ 'reception_acceptance_month' => null ])->assertSessionHasErrors('reception_acceptance_month');
+    }
+
+    function testInvalidReceptionAcceptanceMonth()
+    {
+        $this->validateFields([ 'reception_acceptance_month' => $this->faker->userName ])->assertSessionHasErrors('reception_acceptance_month');
+    }
+
     function testRequiredCancellationDeadline()
     {
         $this->validateFields([ 'cancellation_deadline' => null ])->assertSessionHasErrors('cancellation_deadline');
@@ -388,6 +408,7 @@ class CourseControllerTest extends TestCase
     function testCreateCourse()
     {
         $response = $this->call('POST', 'course', $this->validFields());
+        $response->assertSessionHas('success');
         $this->assertEquals(302, $response->getStatusCode());
     }
 
@@ -395,8 +416,8 @@ class CourseControllerTest extends TestCase
         $course = $this->createCourse();
 
         $response = $this->put( "/course/{$course->id}", $this->validFields());
+        $response->assertSessionHas('success');
         $this->assertEquals( 302, $response->getStatusCode() );
-
     }
 
     /**
@@ -432,6 +453,8 @@ class CourseControllerTest extends TestCase
             'reception_start_month' => $this->faker->randomElement(range(1, 12)),
             'reception_end_day' => $this->faker->randomElement(range(1, 31)),
             'reception_end_month' => $this->faker->randomElement(range(1, 12)),
+            'reception_acceptance_day' => $this->faker->randomElement(range(1, 31)),
+            'reception_acceptance_month' => $this->faker->randomElement(range(1, 12)),
             'option_ids' => $option_ids,
             'is_questions' => [1, 1, 1, 1, 1],
             'question_titles' => $this->faker->words(5),

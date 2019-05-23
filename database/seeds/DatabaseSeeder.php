@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             TaxClassesTableSeeder::class,
             ImageOrdersTableSeeder::class,
             CalendarsTableSeeder::class,
-            CourseTableSeeder::class
+            CoursesTableSeeder::class
         ]);
     }
 }
