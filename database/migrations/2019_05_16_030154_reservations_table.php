@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\Helpers\DBCommonColumns;
 
 class ReservationsTable extends Migration
 {
+    use DBCommonColumns;
     /**
      * Run the migrations.
      *
@@ -65,6 +67,7 @@ class ReservationsTable extends Migration
             $table->string('internal_memo')->nullable();
             $table->integer('acceptance_number')->nullable();
             $table->string('y_uid')->nullable();
+            $this->addCommonColumns($table);
         });
     }
 
