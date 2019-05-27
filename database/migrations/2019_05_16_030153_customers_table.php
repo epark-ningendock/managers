@@ -28,7 +28,7 @@ class CustomersTable extends Migration
             $table->integer('prefecture_id')->nullable();
             $table->string('address',200)->nullable();
             $table->char('sex',1)->nullable();
-            $table->string('birthday',8)->unsigned()->nullable();
+            $table->string('birthday',8)->nullable();
             $table->string('memo',255)->nullable();
             $table->integer('claim_count')->unsigned()->default(0);
             $table->integer('recall_count')->unsigned()->default(0);

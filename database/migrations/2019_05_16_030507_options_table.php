@@ -17,7 +17,7 @@ class OptionsTable extends Migration
     {
         Schema::create('options', function (Blueprint $table) {
             $table->increments('id');
-            $table->bigInteger('hospital_id')->unsigned();
+            $table->integer('hospital_id')->unsigned();
             $table->string('name',40);
             $table->text('confirm')->nullable();
             $table->integer('price')->nullable()->unsigned();
@@ -25,6 +25,7 @@ class OptionsTable extends Migration
             $table->tinyInteger('order')->unsigined();
             $table->char('status',1)->default('1');
             $this->addCommonColumns($table);
+            $table->foreign('hospital_id')->references('id')->on('hospitals');
         });
     }
 

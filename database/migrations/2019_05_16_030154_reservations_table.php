@@ -18,7 +18,7 @@ class ReservationsTable extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('hospital_id')->unsigned();
-            $table->integer('course_id');
+            $table->integer('course_id')->unsigned();
             $table->date('reservation_date');
             $table->string('start_time_hour',2)->nullable();
             $table->string('start_time_min',2)->nullable();
@@ -30,7 +30,7 @@ class ReservationsTable extends Migration
             $table->datetime('cancel_date')->nullable();
             $table->string('user_message', 255)->nullable();
             $table->string('site_code')->nullable();
-            $table->integer('customer_id',11)->nullable()->unsigned();
+            $table->integer('customer_id')->nullable()->unsigned();
             $table->string('epark_member_id')->nullable();
             $table->integer('member_number')->nullable();
             $table->tinyInteger('terminal_type');
@@ -48,7 +48,7 @@ class ReservationsTable extends Migration
             $table->tinyInteger('is_choose')->nullable();
             $table->string('campaign_code', 50)->nullable();
             $table->integer('tel_timezone')->nullable();
-            $table->integer('insurance_assoc_id',50)->nullable();
+            $table->integer('insurance_assoc_id')->nullable();
             $table->string('insurance_assoc')->nullable();
             $table->char('mail_type',1);
             $table->string('cancelled_appoint_code')->nullable();
@@ -67,6 +67,9 @@ class ReservationsTable extends Migration
             $table->string('internal_memo')->nullable();
             $table->integer('acceptance_number')->nullable();
             $table->string('y_uid')->nullable();
+            $table->foreign('hospital_id')->references('id')->on('hospitals');
+            $table->foreign('course_id')->references('id')->on('courses');
+            $table->foreign('customer_id')->references('id')->on('customers');
             $this->addCommonColumns($table);
         });
     }
