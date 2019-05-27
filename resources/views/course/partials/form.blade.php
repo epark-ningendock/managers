@@ -700,10 +700,12 @@
           -----------------------------------------------------*/
           (function () {
               const change = function() {
-                  const price = $('#price').val()
-                  if ($('#is_price').is(':checked') && price) {
-                      const tax = price * $('#tax_class option:selected').data('rate') / 100;
-                      $('#tax_amt').html(tax + '円（税込）');
+                  if ($('#is_price').is(':checked') && $('#price').val()) {
+                      const price = parseInt($('#price').val());
+                      const total = price + (price * $('#tax_class option:selected').data('rate') / 100);
+                      $('#tax_amt').html(total + '円（税込）');
+                  } else {
+                      $('#tax_amt').html('0円（税込）');
                   }
               };
 
