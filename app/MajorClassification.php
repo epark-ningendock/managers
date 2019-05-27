@@ -13,11 +13,11 @@ class MajorClassification extends SoftDeleteModel
     }
 
     public function middle_classifications() {
-        return $this->hasMany('App\MiddleClassification');
+        return $this->hasMany('App\MiddleClassification')->orderBy('order');
     }
 
     public function minor_classifications() {
-        return $this->hasMany('App\MinorClassification');
+        return $this->hasMany('App\MinorClassification')->orderBy('order');
     }
 
     /**

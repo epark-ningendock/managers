@@ -52,9 +52,9 @@
             <button class="btn btn-danger delete-btn delete-popup-btn ml-3" data-id="{{ $course->id }}">
               削除
             </button>
-            <button class="btn btn-default ml-3">
+            <a class="btn btn-default ml-3" href="{{ route('course.copy', $course->id) }}">
               コピー
-            </button>
+            </a>
             <button class="btn btn-default ml-3">
               プレビュー
             </button>
