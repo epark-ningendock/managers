@@ -2,9 +2,14 @@
 
 namespace App;
 
+use App\Enums\WebReception;
+use App\Helpers\EnumTrait;
+
 
 class Course extends SoftDeleteModel
 {
+    use EnumTrait;
+
     protected $fillable = [
         'hospital_id',
         'web_reception',
@@ -31,6 +36,8 @@ class Course extends SoftDeleteModel
       'course_cancel' => '0'
     ];
 
+    protected $enums = [ 'web_reception' => WebReception::class ];
+
     public function course_options()
     {
         return $this->hasMany('App\CourseOption');
@@ -54,5 +61,10 @@ class Course extends SoftDeleteModel
     public function hospital()
     {
         return $this->hasOne('App\Hospital');
+    }
+
+    public function calendar()
+    {
+        return $this->hasOne('App\Calendar');
     }
 }

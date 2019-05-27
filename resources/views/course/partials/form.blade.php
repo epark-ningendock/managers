@@ -1,6 +1,5 @@
 @php
-  use App\Enums\Authority;
-  use \App\Enums\Permission;
+  use \App\Enums\WebReception;
 
   if(isset($course)) {
     $course_details = $course->course_details;
@@ -51,14 +50,14 @@
       <div class="radio">
         <label>
           <input type="radio" name="web_reception"
-                 {{ old('web_reception', (isset($course) ? $course->web_reception : null) ) == '1' ? 'checked' : '' }}
-                 value="1">
+                 {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::Accept ? 'checked' : '' }}
+                 value="{{ WebReception::Accept }}">
           受け付ける
         </label>
         <label class="ml-3">
           <input type="radio" name="web_reception"
-                 {{ old('web_reception', (isset($course) ? $course->web_reception : null)) == '0' ? 'checked' : '' }}
-                 value="0">
+                 {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::NotAccept ? 'checked' : '' }}
+                 value="{{ WebReception::NotAccept }}">
           受け付け
         </label>
       </div>
@@ -246,7 +245,7 @@
         <input type="number" class="form-control d-inline-block mr-2 ml-2" id="price" name="price" style="width: 100px;"
                value="{{ old('price', (isset($course) ? $course->price : null)) }}">
         円
-        <span class="ml-5">０円（税込）</span>
+        <span id="tax_amt" class="ml-5">０円（税込）</span>
       </div>
       @if ($errors->has('price')) <p class="help-block">{{ $errors->first('price') }}</p> @endif
     </div>
@@ -270,6 +269,7 @@
           <select name="tax_class" id="tax_class" class="form-control">
             @foreach ($tax_classes as $tax_class)
               <option {{ old('tax_class', isset($course) ? $course->$tax_class : null) == $tax_class->id ? 'selected' : '' }}
+                  data-rate="{{ $tax_class->rate }}"
               value="{{ $tax_class->id }}"> {{ $tax_class->name }}</option>
             @endforeach
           </select>
@@ -695,6 +695,22 @@
               })
           })();
 
+          /* ---------------------------------------------------
+          // Tax
+          -----------------------------------------------------*/
+          (function () {
+              const change = function() {
+                  const price = $('#price').val()
+                  if ($('#is_price').is(':checked') && price) {
+                      const tax = price * $('#tax_class option:selected').data('rate') / 100;
+                      $('#tax_amt').html(tax + '円（税込）');
+                  }
+              };
+
+              $('#tax_class, #is_price').change(change);
+              $('#price').on('change paste keyup', change);
+              change();
+          })();
 
       })(jQuery);
   </script>

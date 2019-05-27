@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Enums\WebReception;
 
 class CourseFormRequest extends FormRequest
 {
@@ -32,7 +33,7 @@ class CourseFormRequest extends FormRequest
         } else {
             return [
                 'name' => 'required|max:64',
-                'web_reception' => [ 'required', Rule::in([0, 1]) ],
+                'web_reception' => 'required|enum_value:' . WebReception::class . ',false',
                 'calendar_id' => 'nullable|exists:calendars,id',
                 'is_category' => [ 'required', Rule::in([1, 2]) ],
                 'reception_start_day' => 'required|integer',
