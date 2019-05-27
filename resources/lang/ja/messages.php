@@ -51,7 +51,7 @@ return [
     'course_sort_updated' => '講座記録の順序が更新されました。',
     'names' => [
         'staff' => 'スタッフ情報',
-        'hospital_staff' => '病院スタッフ',
+        'hospital_staff' => '医療機関スタッフ',
         'hospital' => '医療機関',
         'facilities' => '設備',
         'classification' => '分類',

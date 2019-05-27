@@ -31,14 +31,14 @@ class HospitalStaffController extends Controller
 		$hospital_staff->password = bcrypt( $password );
 		$hospital_staff->save();
 
-		$hospital_staff_information = [
+		$data = [
 			'hospital_staff' => $hospital_staff,
 			'password' => $password
 		];
 		
 		// 登録メールを送信する
 		Mail::to( $hospital_staff->email )
-			->send(new RegisteredMail( $hospital_staff ));
+			->send(new RegisteredMail( $data ));
 		
 		return redirect( 'hospital-staff' )->with( 'success', trans('messages.created', ['name' => trans('messages.names.hospital_staff')]) );
 

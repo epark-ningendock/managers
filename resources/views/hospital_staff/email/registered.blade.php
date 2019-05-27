@@ -1,14 +1,15 @@
 <html>
     <body>
-      <p>{{ $hospital_staff->name }}さん ご登録ありがとうございます！</p>
+      <p>{{ $data['hospital_staff']['name'] }}さん ご登録ありがとうございます！</p>
       <br>
       <p>あなたのパスワードは</p>
       <br>
-      {{-- <p>{{ $hospital_staff_information->password }} です</p> --}}
+      <p>{{ $data['password'] }} です</p>
       <br>
       <p>次のリンクからログインすることができます。</p>
       <br>
-      <a href="#">#</a>
+      {{-- ログイン処理が完成後、ログイン画面に変更 --}}
+      <a href="#">login</a>
       <br>
       <p>これからもEparkをご利用ください！</p>
     </body>

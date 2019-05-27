@@ -12,16 +12,16 @@ class RegisteredMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $hospital_staff;
+    public $data;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(HospitalStaff $hospital_staff)
+    public function __construct( $data )
     {
-        $this->hospital_staff = $hospital_staff;
+        $this->data = $data;
     }
 
     /**
