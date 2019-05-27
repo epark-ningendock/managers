@@ -39,7 +39,7 @@ Route::get('/hospital-staff/edit-password', 'HospitalStaffController@editPasswor
 Route::put('/hospital-staff/update-password', 'HospitalStaffController@updatePassword')->name('hospital-staff.update.password'); // ログインユーザーのパスワードを更新する
 Route::get('/hospital-staff/show-password-resets-mail', 'HospitalStaffController@showPasswordResetsMail'); // パスワードのリセットメール送信画面に遷移する
 Route::get('/hospital-staff/send-password-resets-mail', 'HospitalStaffController@sendPasswordResetsMail')->name('hospital-staff.send.password-reset'); // パスワードのリセットメール送信を送信する
-Route::get('/hospital-staff/show-reset-password/{reset_token}', 'HospitalStaffController@showResetPassword'); // パスワードのリセット画面に遷移する
+Route::get('/hospital-staff/show-reset-password/{reset_token}/{email}', 'HospitalStaffController@showResetPassword'); // パスワードのリセット画面に遷移する
 Route::put('/hospital-staff/reset-password', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password'); // パスワードをリセットする
 
 // 検査コース分類系

@@ -4,7 +4,7 @@
       <br>
       <p>でも、心配しないでください！次のリンクからパスワードをリセットすることができます。</p>
       <br>
-      <a href="{{url('hospital-staff/show-reset-password/'.$data['reset_token'])}}">{{url('hospital-staff/show-reset-password/'.$data['reset_token'])}}</a>
+      <a href="{{url('hospital-staff/show-reset-password/'.$data['reset_token'].'/'.$data['hospital_staff']['email'])}}">{{url('hospital-staff/show-reset-password/'.$data['reset_token'].'/'.$data['hospital_staff']['email'])}}</a>
       <br>
       <br>
       <p>このリンクトークンは3時間で切れるので、ご注意をお願いします。</p>

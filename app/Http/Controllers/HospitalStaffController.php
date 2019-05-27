@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
 class HospitalStaffController extends Controller
@@ -73,7 +74,7 @@ class HospitalStaffController extends Controller
 	public function editPassword() {
 
 		// ログインユーザーのidはログイン時のセッション情報から取得する
-		$hospital_staff     = HospitalStaff::findOrFail( 1 );
+		$hospital_staff = HospitalStaff::findOrFail(1);
 
 		return view( 'hospital_staff.edit-password', compact( 'hospital_staff' ) );
 	}
@@ -134,8 +135,21 @@ class HospitalStaffController extends Controller
 	}
 
 	// パスワードリセット画面に遷移する
-	public function showResetPassword( $reset_token ) {
-		return view( 'hospital_staff.reset-password' );
+	public function showResetPassword( $reset_token, $email ) {
+		$hospital_staff = HospitalStaff::where('email', $email)->first();
+		$expired_date = new Carbon($hospital_staff->reset_sent_at);
+		if (!($expired_date->addHour(3)->gt(Carbon::now()))) {
+			// ログイン機能実装後、ログイン画面に変更
+			return redirect( 'hospital-staff' )->with( 'error', trans('messages.token_expired') );
+		} else if (!$hospital_staff) {
+			// ログイン機能実装後、ログイン画面に変更
+			return redirect( 'hospital-staff' )->with( 'error', trans('messages.hospital_staff_does_not_exist') );
+		} else if (!(Hash::check($reset_token, $hospital_staff->reset_token_digest))) {
+			// ログイン機能実装後、ログイン画面に変更
+			return redirect( 'hospital-staff' )->with( 'error', trans('messages.incorrect_token') );
+		} else {
+			return view( 'hospital_staff.reset-password' );
+		}
 	}
 
 	// パスワードをUpdateする
