@@ -26,7 +26,7 @@ class CreateCourseDetailsTable extends Migration
             $table->integer('minor_classification_id')->unsigned();
             $table->foreign('minor_classification_id')->references('id')->on('minor_classifications');
             $table->tinyInteger('select_status')->nullable();
-            $table->text('input_string')->nullable();
+            $table->text('inputstring')->nullable();
             $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
         });

@@ -22,7 +22,7 @@ class CreateCourseQuestionsTable extends Migration
             $table->foreign('course_id')->references('id')->on('courses');
             $table->tinyInteger('question_number')->unsigned();
             $table->tinyInteger('is_question')->unsigned()->default(0);
-            $table->string('question_title', 100);
+            $table->string('question_title', 100)->nullable();
             $table->text('answer01')->nullable();
             $table->text('answer02')->nullable();
             $table->text('answer03')->nullable();
