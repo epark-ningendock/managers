@@ -22,8 +22,8 @@
 
 
     <div class="box-footer">
-        <a href="{{ url('/staff') }}" class="btn btn-default">バック</a>
-        <button type="submit" class="btn btn-primary">パスワード更新</button>
+        <a href="{{ url('/staff') }}" class="btn btn-default">戻る</a>
+        <button type="submit" class="btn btn-primary">更新</button>
     </div>
 
 </div>
