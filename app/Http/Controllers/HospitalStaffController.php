@@ -139,23 +139,41 @@ class HospitalStaffController extends Controller
 		$hospital_staff = HospitalStaff::where('email', $email)->first();
 		$expired_date = new Carbon($hospital_staff->reset_sent_at);
 		if (!($expired_date->addHour(3)->gt(Carbon::now()))) {
-			// ログイン機能実装後、ログイン画面に変更
+			// ログイン機能実装後、遷移先をログイン画面に変更
 			return redirect( 'hospital-staff' )->with( 'error', trans('messages.token_expired') );
 		} else if (!$hospital_staff) {
-			// ログイン機能実装後、ログイン画面に変更
+			// ログイン機能実装後、遷移先をログイン画面に変更
 			return redirect( 'hospital-staff' )->with( 'error', trans('messages.hospital_staff_does_not_exist') );
 		} else if (!(Hash::check($reset_token, $hospital_staff->reset_token_digest))) {
-			// ログイン機能実装後、ログイン画面に変更
+			// ログイン機能実装後、遷移先をログイン画面に変更
 			return redirect( 'hospital-staff' )->with( 'error', trans('messages.incorrect_token') );
 		} else {
-			return view( 'hospital_staff.reset-password' );
+			return view( 'hospital_staff.reset-password', ['hospital_staff_id' => $hospital_staff->id] );
 		}
 	}
 
 	// パスワードをUpdateする
-	public function resetPassword(Request $request) {
-		// 更新完了メールを送信する
-		Mail::to( $hospital_staff->email )
-			->send(new PasswordResetConfirmMail());
+	public function resetPassword( $hospital_staff_id, Request $request ) {
+		$this->validate($request, [
+			'old_password' => 'required',
+			'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
+			'password_confirmation' => 'min:6'
+		]);
+
+		$hospital_staff = HospitalStaff::findOrFail($hospital_staff_id);
+
+		if (Hash::check($request->old_password, $hospital_staff->password)) {
+			$hospital_staff->password = bcrypt($request->password);
+			$hospital_staff->save();
+			// 更新完了メールを送信する
+			Mail::to( $hospital_staff->email )
+				->send(new PasswordResetConfirmMail());
+			return redirect( 'hospital-staff' )->with( 'success', trans('messages.updated', ['name' => trans('messages.names.password')]) );
+		} else {
+			$validator = Validator::make([], []);
+			$validator->errors()->add('old_password', '現在のパスワードが正しくありません');
+			throw new ValidationException($validator);
+			return redirect()->back();
+		}
 	}
 }

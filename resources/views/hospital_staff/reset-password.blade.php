@@ -5,7 +5,7 @@
 @stop
 
 @section('form')
-    <form method="POST"  action="{{ route('hospital-staff.reset.password') }}">
+    <form method="POST"  action="{{ route('hospital-staff.reset.password', ['hospital_staff_id' => $hospital_staff_id]) }}">
         {{ csrf_field() }}
         {{ method_field('PUT') }}
         @include('hospital_staff.partials.reset-password')
