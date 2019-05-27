@@ -1,6 +1,5 @@
 @php
-  use App\Enums\Authority;
-  use \App\Enums\Permission;
+  use \App\Enums\WebReception;
 
   if(isset($course)) {
     $course_details = $course->course_details;
@@ -51,14 +50,14 @@
       <div class="radio">
         <label>
           <input type="radio" name="web_reception"
-                 {{ old('web_reception', (isset($course) ? $course->web_reception : null) ) == '1' ? 'checked' : '' }}
-                 value="1">
+                 {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::Accept ? 'checked' : '' }}
+                 value="{{ WebReception::Accept }}">
           受け付ける
         </label>
         <label class="ml-3">
           <input type="radio" name="web_reception"
-                 {{ old('web_reception', (isset($course) ? $course->web_reception : null)) == '0' ? 'checked' : '' }}
-                 value="0">
+                 {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::NotAccept ? 'checked' : '' }}
+                 value="{{ WebReception::NotAccept }}">
           受け付け
         </label>
       </div>
