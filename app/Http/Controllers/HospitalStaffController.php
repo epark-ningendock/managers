@@ -32,6 +32,7 @@ class HospitalStaffController extends Controller
 			'password' => $password
 		];
 		
+		// 登録メールを送信する
 		Mail::to( $hospital_staff->email )
 			->send(new RegisteredMail( $hospital_staff ));
 		
@@ -65,7 +66,7 @@ class HospitalStaffController extends Controller
 		return redirect( 'hospital-staff' )->with( 'success', trans('messages.deleted', ['name' => trans('messages.names.hospital_staff')]) );
 	}
 
-
+	// ログインユーザーのパスワードの編集画面に遷移する
 	public function editPassword() {
 
 		// ログインユーザーのidはログイン時のセッション情報から取得する
@@ -74,6 +75,7 @@ class HospitalStaffController extends Controller
 		return view( 'hospital_staff.edit-password', compact( 'hospital_staff' ) );
 	}
 
+	// ログインユーザーのパスワードをUpdateする
 	public function updatePassword( $hospital_staff_id, Request $request ) {
 
 		$this->validate($request, [
@@ -97,25 +99,27 @@ class HospitalStaffController extends Controller
 
 	}
 
-	// パスワードリセットメール送信画面を表示する
+	// パスワードリセットメール送信画面に遷移する
 	public function showPasswordResetsMail() {
-		return view( 'hospital_staff.send-password-mail' );
+		return view( 'hospital_staff.send-password-reset-mail' );
 	}
 
-	// パスワードリセットメール送信画面に遷移する
+	// パスワードリセットメールを送信する
 	public function sendPasswordResetsMail() {
+		// パスワードリセットメールを送信する
 		Mail::to($hospital_staff->email)
 			->send(new PasswordResetMail());
 	}
 
-	// パスワードリセット画面を表示する
-	public function showPasswordResets() {
-		
+	// パスワードリセット画面に遷移する
+	public function showResetPassword() {
+		return view( 'hospital_staff.reset-password' );
 	}
 
 	// パスワードをUpdateする
 	public function resetPassword() {
-		Mail::to($hospital_staff->email)
+		// 更新完了メールを送信する
+		Mail::to( $hospital_staff->email )
 			->send(new PasswordResetConfirmMail());
 	}
 }
