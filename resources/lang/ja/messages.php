@@ -21,6 +21,7 @@ return [
     'created' => ':nameが登録しました。',
     'updated' => ':nameが削除しました。',
     'deleted' => ':nameが変更しました。',
+    'sent' => ':mailを送信しました。',
     'not_correct' => ':name正しくない',
     'restored' => ':nameが復元されます。',
     'staff_create_error' => '正しく登録されませんでした。',
@@ -59,5 +60,10 @@ return [
             'minor' => '小分類'
         ],
         'course' => '検査コース'
-    ]
+    ],
+    'mails' => [
+        'reset-passoword' => '医療機関スタッフパスワードリセットメール',
+        'reset-passoword-confirm' => '医療機関スタッフパスワードリセット確認メール',
+        'registered' => '医療機関スタッフ登録メール',
+    ],
 ];

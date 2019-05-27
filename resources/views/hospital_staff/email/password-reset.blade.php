@@ -1,10 +1,10 @@
 <html>
     <body>
-      <p>こんにちは {{ $name = "西村竜" }}さん！パスワードがわからなくなってしまったようですね。申し訳ございません。</p>
+      <p>こんにちは {{ $data['hospital_staff']['name'] }}さん！パスワードがわからなくなってしまったようですね。申し訳ございません。</p>
       <br>
       <p>でも、心配しないでください！次のリンクからパスワードをリセットすることができます。</p>
       <br>
-      <a href="#">#</a>
+      <a href="{{url('hospital-staff/show-reset-password/'.$data['reset_token'])}}">{{url('hospital-staff/show-reset-password/'.$data['reset_token'])}}</a>
       <br>
       <br>
       <p>このリンクトークンは3時間で切れるので、ご注意をお願いします。</p>

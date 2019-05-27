@@ -8,7 +8,10 @@ use App\Mail\HospitalStaff\PasswordResetMail;
 use App\Mail\HospitalStaff\PasswordResetConfirmMail;
 use App\Http\Requests\HospitalStaffFormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
+use Carbon\Carbon;
 
 class HospitalStaffController extends Controller
 {
@@ -105,19 +108,38 @@ class HospitalStaffController extends Controller
 	}
 
 	// パスワードリセットメールを送信する
-	public function sendPasswordResetsMail() {
-		// パスワードリセットメールを送信する
-		Mail::to($hospital_staff->email)
-			->send(new PasswordResetMail());
+	public function sendPasswordResetsMail(Request $request) {
+		$this->validate($request, [
+			'email' => 'required|email',
+		]);
+		$hospital_staff = HospitalStaff::where('email', $request->email)->first();
+		if ($hospital_staff) {
+			$reset_token = str_random(32);
+			$hospital_staff->reset_token_digest = bcrypt($reset_token);
+			$hospital_staff->reset_sent_at = Carbon::now();
+			$hospital_staff->save();
+			$data = array(
+				'hospital_staff'  => $hospital_staff,
+				'reset_token'   => $reset_token
+			);
+			Mail::to($request->email)
+				->send(new PasswordResetMail($data));
+				return redirect( 'hospital-staff' )->with( 'success', trans('messages.sent', ['mail' => trans('messages.mails.reset-passoword')]) );
+		} else {
+			$validator = Validator::make([], []);
+			$validator->errors()->add('email', 'メールアドレスが存在しません');
+			throw new ValidationException($validator);
+			return redirect()->back();
+		}
 	}
 
 	// パスワードリセット画面に遷移する
-	public function showResetPassword() {
+	public function showResetPassword( $reset_token ) {
 		return view( 'hospital_staff.reset-password' );
 	}
 
 	// パスワードをUpdateする
-	public function resetPassword() {
+	public function resetPassword(Request $request) {
 		// 更新完了メールを送信する
 		Mail::to( $hospital_staff->email )
 			->send(new PasswordResetConfirmMail());
