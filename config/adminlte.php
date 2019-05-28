@@ -139,6 +139,11 @@ return [
             'url'         => '/',
             'icon'        => 'hospital-o',
         ],
+        [
+            'text'        => 'カレンダー管理',
+            'url'         => '/calendar',
+            'icon'        => 'calendar',
+        ]
     ],
 
     /*

@@ -40,6 +40,7 @@ Route::resource('/classification', 'ClassificationController')->except(['show'])
 
 Route::resource('/course', 'CourseController')->except(['show']);
 Route::get('/course/sort', 'CourseController@sort')->name('course.sort');
+Route::get('/course/{id}/copy', 'CourseController@copy')->name('course.copy');
 Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course.updateSort');
 
 Route::get('/login', function () {
@@ -54,3 +55,5 @@ Route::get('/register', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::resource('/calendar', 'CalendarController')->except(['show']);
