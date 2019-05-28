@@ -51,3 +51,5 @@ Route::get('/register', function () {
     return view('/vendor/adminlte/register');
 });
 
+Route::resource('/calendar', 'CalendarController')->except(['show']);
+
