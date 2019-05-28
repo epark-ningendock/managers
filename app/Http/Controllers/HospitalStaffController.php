@@ -74,7 +74,7 @@ class HospitalStaffController extends Controller
 	public function editPassword() {
 
 		// ログインユーザーのidはログイン時のセッション情報から取得する
-		$hospital_staff = HospitalStaff::findOrFail(101);
+		$hospital_staff = HospitalStaff::findOrFail(1);
 
 		return view( 'hospital_staff.edit-password', compact( 'hospital_staff' ) );
 	}
