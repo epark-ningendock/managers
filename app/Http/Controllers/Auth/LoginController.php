@@ -29,6 +29,8 @@ class LoginController extends Controller
      *
      * @var string
      */
+    protected $staff_role = 'staffs';
+    protected $facility_staff_role = 'facility_staffs';
     protected $redirectTo = '/home';
     // TODO スタッフログイン先確定次第変更
     protected $staff_redirectTo = '/staff';
@@ -66,10 +68,9 @@ class LoginController extends Controller
 
     // スタッフ認証処理
     public function is_staff_login($login_id, $password) {
-      $role = 'staffs';
-      if(Auth::guard($role)->attempt(['login_id' => $login_id, 'password' => $password])) {
-          $staff = Auth::guard($role)->user();
-          session()->put('staff', $staff->id);
+      if(Auth::guard($this->staff_role)->attempt(['login_id' => $login_id, 'password' => $password])) {
+          $staff = Auth::guard($this->staff_role)->user();
+          session()->put('staffs', $staff->id);
           session()->put('staff_email', $staff->email);
           return true;
       }
@@ -78,10 +79,9 @@ class LoginController extends Controller
 
     // 医療機関スタッフ認証処理
     public function is_facility_staff_login($login_id, $password) {
-      $role = 'facility_staffs';
-      if(Auth::guard($role)->attempt(['login_id' => $login_id, 'password' => $password])) {
-          $facility_staff = Auth::guard($role)->user();
-          session()->put('staff', $facility_staff->id);
+      if(Auth::guard($this->facility_staff_role)->attempt(['login_id' => $login_id, 'password' => $password])) {
+          $facility_staff = Auth::guard($this->facility_staff_role)->user();
+          session()->put('staffs', $facility_staff->id);
           session()->put('staff_email', $facility_staff->email);
           return true;
       }
