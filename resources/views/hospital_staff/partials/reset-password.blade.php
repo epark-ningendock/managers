@@ -1,12 +1,6 @@
 
 <div class="box-body">
 
-  <div class="form-group @if ($errors->has('old_password')) has-error @endif">
-      <label for="old_password">現在のパスワード</label>
-      <input id="old_password" type="password" class="form-control" name="old_password" required>
-      @if ($errors->has('old_password')) <p class="help-block">{{ $errors->first('old_password') }}</p> @endif
-  </div>
-
   <div class="form-group @if ($errors->has('password')) has-error @endif">
       <label for="password">新しいパスワード</label>
       <input id="password" type="password" class="form-control" name="password" required>

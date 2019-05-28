@@ -74,7 +74,7 @@ class HospitalStaffController extends Controller
 	public function editPassword() {
 
 		// ログインユーザーのidはログイン時のセッション情報から取得する
-		$hospital_staff = HospitalStaff::findOrFail(1);
+		$hospital_staff = HospitalStaff::findOrFail(101);
 
 		return view( 'hospital_staff.edit-password', compact( 'hospital_staff' ) );
 	}
@@ -93,7 +93,7 @@ class HospitalStaffController extends Controller
 		if (Hash::check($request->old_password, $hospital_staff->password)) {
 			$hospital_staff->password = bcrypt($request->password);
 			$hospital_staff->save();
-			return redirect( 'hospital-staff' )->with( 'success', trans('messages.updated', ['name' => trans('messages.names.hospital_staff')]) );
+			return redirect( 'hospital-staff' )->with( 'success', trans('messages.hospital_staff_update_passoword') );
 		} else {
 			$validator = Validator::make([], []);
 			$validator->errors()->add('old_password', '現在のパスワードが正しくありません');
@@ -125,7 +125,7 @@ class HospitalStaffController extends Controller
 			);
 			Mail::to($request->email)
 				->send(new PasswordResetMail($data));
-				return redirect( 'hospital-staff' )->with( 'success', trans('messages.sent', ['mail' => trans('messages.mails.reset-passoword')]) );
+				return redirect( 'hospital-staff' )->with( 'success', trans('messages.sent', ['mail' => trans('messages.mails.reset_passoword')]) );
 		} else {
 			$validator = Validator::make([], []);
 			$validator->errors()->add('email', 'メールアドレスが存在しません');
@@ -155,25 +155,15 @@ class HospitalStaffController extends Controller
 	// パスワードをUpdateする
 	public function resetPassword( $hospital_staff_id, Request $request ) {
 		$this->validate($request, [
-			'old_password' => 'required',
 			'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
 			'password_confirmation' => 'min:6'
 		]);
 
 		$hospital_staff = HospitalStaff::findOrFail($hospital_staff_id);
-
-		if (Hash::check($request->old_password, $hospital_staff->password)) {
-			$hospital_staff->password = bcrypt($request->password);
-			$hospital_staff->save();
-			// 更新完了メールを送信する
-			Mail::to( $hospital_staff->email )
-				->send(new PasswordResetConfirmMail());
-			return redirect( 'hospital-staff' )->with( 'success', trans('messages.updated', ['name' => trans('messages.names.password')]) );
-		} else {
-			$validator = Validator::make([], []);
-			$validator->errors()->add('old_password', '現在のパスワードが正しくありません');
-			throw new ValidationException($validator);
-			return redirect()->back();
-		}
+		$hospital_staff->password = bcrypt($request->password);
+		$hospital_staff->save();
+		Mail::to( $hospital_staff->email )
+			->send(new PasswordResetConfirmMail());
+		return redirect( 'hospital-staff' )->with( 'success', trans('messages.hospital_staff_update_passoword') );
 	}
 }

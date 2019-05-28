@@ -22,6 +22,7 @@ return [
     'updated' => ':nameが削除しました。',
     'deleted' => ':nameが変更しました。',
     'sent' => ':mailを送信しました。',
+    'hospital_staff_update_passoword' => '医療機関スタッフのパスワードを更新しました',
     'token_expired' => 'トークンが期限切れです。再送信してください',
     'hospital_staff_does_not_exist' => 'この医療機関スタッフは存在しません。',
     'incorrect_token' => '不正なトークンです。',
@@ -65,8 +66,7 @@ return [
         'course' => '検査コース'
     ],
     'mails' => [
-        'reset-passoword' => '医療機関スタッフパスワードリセットメール',
-        'reset-passoword-confirm' => '医療機関スタッフパスワードリセット確認メール',
+        'reset_passoword' => '医療機関スタッフパスワードリセットメール',
         'registered' => '医療機関スタッフ登録メール',
     ],
 ];
