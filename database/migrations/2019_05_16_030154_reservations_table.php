@@ -38,7 +38,7 @@ class ReservationsTable extends Migration
             $table->boolean('is_repeat');
             $table->boolean('is_representative');
             $table->string('timezone_pattern_id');
-            $table->tinyInteger('timezone_id');
+            $table->string('timezone_id');
             $table->string('order');
             $table->Integer('tax_included_price')->nullable();
             $table->Integer('adjustment_price')->nullable();
