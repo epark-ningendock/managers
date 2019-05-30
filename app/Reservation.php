@@ -4,7 +4,6 @@ namespace App;
 
 class Reservation extends SoftDeleteModel
 {
-
     protected $guarded = [
         'id',
     ];
@@ -12,5 +11,10 @@ class Reservation extends SoftDeleteModel
     public function hospital()
     {
         return $this->belongsTo('App\Hospital');
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo('App\Customer');
     }
 }
