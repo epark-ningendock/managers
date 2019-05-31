@@ -65,3 +65,9 @@ Route::get('/register', function () {
 
 Route::resource('/calendar', 'CalendarController')->except(['show']);
 
+/*
+|--------------------------------------------------------------------------
+| Medical Institution Management Option
+|--------------------------------------------------------------------------
+*/
+Route::resource('option', 'OptionController');

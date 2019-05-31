@@ -69,4 +69,8 @@ return [
         'reset_passoword' => '医療機関スタッフパスワードリセットメール',
         'registered' => '医療機関スタッフ登録メール',
     ],
+	'option_name' => 'オプション名',
+	'option_description' => 'オプションの説明',
+	'price' => '価格',
+	'tax_classification' => '税区分',
 ];
