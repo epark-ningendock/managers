@@ -19,30 +19,42 @@ Route::get('/', function () {
 //
 //Route::resource('/staff', 'StaffController')->except(['show', 'index'])->middleware('can:edit-staff');
 
+// スタッフ系
 Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], function(){
 	Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password');
 	Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
 });
+Route::resource('/staff', 'StaffController')->except(['show']);
+
+// 医療機関系
 Route::resource('/hospital', 'HospitalController')->except(['show']);
 Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search');
 Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
 
-Route::resource('/staff', 'StaffController')->except(['show']);
-
+// 医療機関スタッフ系
+Route::get('/hospital-staff/edit-password', 'HospitalStaffController@editPassword'); // ログインユーザーのパスワード編集画面に遷移する
+Route::put('/hospital-staff/update-password/{hospital_staff_id}', 'HospitalStaffController@updatePassword')->name('hospital-staff.update.password'); // ログインユーザーのパスワードを更新する
+Route::get('/hospital-staff/show-password-resets-mail', 'HospitalStaffController@showPasswordResetsMail'); // パスワードのリセットメール送信画面に遷移する
+Route::get('/hospital-staff/send-password-resets-mail', 'HospitalStaffController@sendPasswordResetsMail')->name('hospital-staff.send.password-reset'); // パスワードのリセットメール送信を送信する
+Route::get('/hospital-staff/show-reset-password/{reset_token}/{email}', 'HospitalStaffController@showResetPassword'); // パスワードのリセット画面に遷移する
+Route::put('/hospital-staff/reset-password/{hospital_staff_id}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password'); // パスワードをリセットする
 Route::resource('hospital-staff', 'HospitalStaffController')->except([
-	'show'
+	'show',
 ]);
 
+// 検査コース分類系
 Route::post('/classification/{id}/restore', 'ClassificationController@restore')->name('classification.restore');
 Route::get('/classification/sort', 'ClassificationController@sort')->name('classification.sort');
 Route::patch('/classification/sort/update', 'ClassificationController@updateSort')->name('classification.updateSort');
 Route::resource('/classification', 'ClassificationController')->except(['show']);
 
+// 検査コース系
 Route::resource('/course', 'CourseController')->except(['show']);
 Route::get('/course/sort', 'CourseController@sort')->name('course.sort');
 Route::get('/course/{id}/copy', 'CourseController@copy')->name('course.copy');
 Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course.updateSort');
 
+// ログイン系
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');
 });

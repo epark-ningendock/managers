@@ -34,9 +34,9 @@ class HospitalStaffInputFieldsTest extends TestCase {
 		$this->itValidateField( [ 'login_id' => '' ] )->assertSessionHasErrors( 'login_id' );
 	}
 
-	function testItRequiredPassword() {
-		$this->itValidateField( [ 'password' => '' ] )->assertSessionHasErrors( 'password' );
-	}
+	// function testItRequiredPassword() {
+	// 	$this->itValidateField( [ 'password' => '' ] )->assertSessionHasErrors( 'password' );
+	// }
 
 	/**
 	 * validate fields process
