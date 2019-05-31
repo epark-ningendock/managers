@@ -36,7 +36,10 @@
                 </a>
                 「カレンダー受付可否 : {{ $calendar->is_calendar_display->description }}」
               </h4>
-              <button class="btn btn-primary pull-right">カレンダー確定</button>
+              <div class="pull-right">
+                <a class="btn btn-primary" href="{{ route('calendar.edit', $calendar->id) }}">編集</a>
+                <a class="btn btn-primary ml-2" >カレンダー確定</a>
+              </div>
             </div>
           </td>
         </tr>
