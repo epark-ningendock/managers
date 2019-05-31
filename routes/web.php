@@ -19,9 +19,9 @@ Route::get('/', function () {
 //
 //Route::resource('/staff', 'StaffController')->except(['show', 'index'])->middleware('can:edit-staff');
 
-Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], function(){
-	Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password');
-	Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
+Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], function () {
+    Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password');
+    Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
 });
 Route::resource('/hospital', 'HospitalController')->except(['show']);
 Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search');
@@ -50,4 +50,3 @@ Route::get('/login', function () {
 Route::get('/register', function () {
     return view('/vendor/adminlte/register');
 });
-
