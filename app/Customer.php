@@ -2,7 +2,7 @@
 
 namespace App;
 
-class Customer extends SoftDeleteModel
+class Customer extends BaseModel
 {
     protected $guarded = [
         'id',
