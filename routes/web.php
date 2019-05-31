@@ -29,6 +29,9 @@ Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hosp
 
 Route::resource('/staff', 'StaffController')->except(['show']);
 
+Route::resource('hospital-staff', 'HospitalStaffController')->except([
+    'show'
+]);
 Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
 
 Route::post('/classification/{id}/restore', 'ClassificationController@restore')->name('classification.restore');
