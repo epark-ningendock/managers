@@ -17,8 +17,7 @@ class HospitalStaff extends BaseModel
      */
     protected $dates = ['deleted_at'];
 
-	protected $fillable = [
-		'name', 'email', 'login_id', 'password',
-	];
-
+    protected $fillable = [
+        'name', 'email', 'login_id', 'password',
+    ];
 }

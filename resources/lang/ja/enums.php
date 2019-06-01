@@ -39,11 +39,11 @@ return [
         Status::Deleted => '削除'
     ],
 
-	HospitalEnums::class => [
-		HospitalEnums::Private => '非公開',
-		HospitalEnums::Public => '公開中',
-		HospitalEnums::Delete => '削除',
-	],
+    HospitalEnums::class => [
+        HospitalEnums::Private => '非公開',
+        HospitalEnums::Public => '公開中',
+        HospitalEnums::Delete => '削除',
+    ],
 
     WebReception::class => [
         WebReception::NotAccept => '受け付けない',

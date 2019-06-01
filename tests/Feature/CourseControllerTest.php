@@ -20,7 +20,6 @@ use App\Hospital;
 use App\Option;
 use App\MinorClassification;
 
-
 class CourseControllerTest extends TestCase
 {
     use DatabaseMigrations;
@@ -88,7 +87,6 @@ class CourseControllerTest extends TestCase
     {
         $response = $this->call('GET', '/course');
         $this->assertEquals(200, $response->getStatusCode());
-
     }
 
     public function testCreate()
@@ -117,277 +115,281 @@ class CourseControllerTest extends TestCase
         $response = $this->call('DELETE', "/course/$course->id", ['_token' => csrf_token()]);
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertSoftDeleted('courses', [ 'id' => $course->id]);
-
     }
 
     public function testInvalidIdsInUpdateSort()
     {
-        $response = $this->patch("/course/sort/update",
-            ['_token' => csrf_token(), 'course_ids' => $this->faker->userName]);
-        $response->assertSessionHasErrors( 'course_ids' );
-
+        $response = $this->patch(
+            "/course/sort/update",
+            ['_token' => csrf_token(), 'course_ids' => $this->faker->userName]
+        );
+        $response->assertSessionHasErrors('course_ids');
     }
 
     public function testNonIntegerIdInUpdateSort()
     {
         $ids = $this->faker->words();
-        $response = $this->patch("/course/sort/update",
-            ['_token' => csrf_token(), 'course_ids' => [ $this->faker->userName ] ]);
-        $response->assertSessionHasErrors( 'course_ids.0' );
-
+        $response = $this->patch(
+            "/course/sort/update",
+            ['_token' => csrf_token(), 'course_ids' => [ $this->faker->userName ] ]
+        );
+        $response->assertSessionHasErrors('course_ids.0');
     }
 
     public function testWrongIdInUpdateSort()
     {
         $ids = [900, 901, 902];
-        $response = $this->patch("/course/sort/update",
-            ['_token' => csrf_token(), 'course_ids' => $ids]);
-        $response->assertSessionHas( 'error' );
-
+        $response = $this->patch(
+            "/course/sort/update",
+            ['_token' => csrf_token(), 'course_ids' => $ids]
+        );
+        $response->assertSessionHas('error');
     }
 
     public function testRequireIdsInUpdateSort()
     {
-        $response = $this->patch("/course/sort/update",
-            ['_token' => csrf_token()]);
-        $response->assertSessionHasErrors( 'course_ids' );
-
+        $response = $this->patch(
+            "/course/sort/update",
+            ['_token' => csrf_token()]
+        );
+        $response->assertSessionHasErrors('course_ids');
     }
 
     public function testUpdateSort()
     {
         $details = factory(CourseDetail::class, 'with_all', 5)->create();
-        $ids = $details->map(function($detail) {
+        $ids = $details->map(function ($detail) {
             return $detail->course_id;
         })->toArray();
-        $response = $this->patch("/course/sort/update",
-            ['_token' => csrf_token(), 'course_ids' => $ids]);
+        $response = $this->patch(
+            "/course/sort/update",
+            ['_token' => csrf_token(), 'course_ids' => $ids]
+        );
         $this->assertEquals(302, $response->getStatusCode());
         foreach ($details as $i => $detail) {
             $course = $detail->course;
             $course->refresh();
             self::assertEquals($i + 1, $course->order);
         }
-
     }
 
-    function testRequiredName()
+    public function testRequiredName()
     {
         $this->validateFields([ 'name' => null])->assertSessionHasErrors('name');
     }
 
-    function testInvalidName()
+    public function testInvalidName()
     {
         $this->validateFields([ 'name' => Str::random(65)])->assertSessionHasErrors('name');
     }
 
-    function testRequiredWebReception()
+    public function testRequiredWebReception()
     {
         $this->validateFields([ 'web_reception' => null])->assertSessionHasErrors('web_reception');
     }
 
-    function testInvalidWebReception()
+    public function testInvalidWebReception()
     {
         $this->validateFields(['web_reception' => -1])->assertSessionHasErrors('web_reception');
     }
 
-    function testInvalidCalendarId()
+    public function testInvalidCalendarId()
     {
         $this->validateFields([ 'calendar_id' => -1 ])->assertSessionHasErrors('calendar_id');
     }
 
-    function testRequiredReceptionStartDay()
+    public function testRequiredReceptionStartDay()
     {
         $this->validateFields([ 'reception_start_day' => null ])->assertSessionHasErrors('reception_start_day');
     }
 
-    function testInvalidReceptionStartDay()
+    public function testInvalidReceptionStartDay()
     {
         $this->validateFields([ 'reception_start_day' => $this->faker->userName ])->assertSessionHasErrors('reception_start_day');
     }
 
-    function testRequiredReceptionStartMonth()
+    public function testRequiredReceptionStartMonth()
     {
         $this->validateFields([ 'reception_start_month' => null ])->assertSessionHasErrors('reception_start_month');
     }
 
-    function testInvalidReceptionStartMonth()
+    public function testInvalidReceptionStartMonth()
     {
         $this->validateFields([ 'reception_start_month' => $this->faker->userName ])->assertSessionHasErrors('reception_start_month');
     }
 
-    function testRequiredReceptionEndDay()
+    public function testRequiredReceptionEndDay()
     {
         $this->validateFields([ 'reception_end_day' => null ])->assertSessionHasErrors('reception_end_day');
     }
 
-    function testInvalidReceptionEndDay()
+    public function testInvalidReceptionEndDay()
     {
         $this->validateFields([ 'reception_end_day' => $this->faker->userName ])->assertSessionHasErrors('reception_end_day');
     }
 
-    function testRequiredReceptionEndMonth()
+    public function testRequiredReceptionEndMonth()
     {
         $this->validateFields([ 'reception_end_month' => null ])->assertSessionHasErrors('reception_end_month');
     }
 
-    function testInvalidReceptionEndMonth()
+    public function testInvalidReceptionEndMonth()
     {
         $this->validateFields([ 'reception_end_month' => $this->faker->userName ])->assertSessionHasErrors('reception_end_month');
     }
 
-    function testRequiredReceptionAcceptanceDay()
+    public function testRequiredReceptionAcceptanceDay()
     {
         $this->validateFields([ 'reception_acceptance_day' => null ])->assertSessionHasErrors('reception_acceptance_day');
     }
 
-    function testInvalidReceptionAcceptanceDay()
+    public function testInvalidReceptionAcceptanceDay()
     {
         $this->validateFields([ 'reception_acceptance_day' => $this->faker->userName ])->assertSessionHasErrors('reception_acceptance_day');
     }
 
-    function testRequiredReceptionAcceptanceMonth()
+    public function testRequiredReceptionAcceptanceMonth()
     {
         $this->validateFields([ 'reception_acceptance_month' => null ])->assertSessionHasErrors('reception_acceptance_month');
     }
 
-    function testInvalidReceptionAcceptanceMonth()
+    public function testInvalidReceptionAcceptanceMonth()
     {
         $this->validateFields([ 'reception_acceptance_month' => $this->faker->userName ])->assertSessionHasErrors('reception_acceptance_month');
     }
 
-    function testRequiredCancellationDeadline()
+    public function testRequiredCancellationDeadline()
     {
         $this->validateFields([ 'cancellation_deadline' => null ])->assertSessionHasErrors('cancellation_deadline');
     }
 
-    function testInvalidCancellationDeadline()
+    public function testInvalidCancellationDeadline()
     {
         $this->validateFields([ 'cancellation_deadline' => $this->faker->userName ])->assertSessionHasErrors('cancellation_deadline');
     }
 
-    function testInvalidIsPrice()
+    public function testInvalidIsPrice()
     {
         $this->validateFields([ 'is_price' => -1 ])->assertSessionHasErrors('is_price');
     }
 
-    function testInvalidIsPriceMemo()
+    public function testInvalidIsPriceMemo()
     {
         $this->validateFields(['is_price_memo' => -1 ])->assertSessionHasErrors('is_price_memo');
     }
 
-    function testRequiredPrice()
+    public function testRequiredPrice()
     {
         $this->validateFields([ 'is_price' => 1, 'price' => null ])->assertSessionHasErrors('price');
     }
 
-    function testInvalidPrice()
+    public function testInvalidPrice()
     {
         $this->validateFields([ 'is_price' => 1, 'price' => $this->faker->word ])->assertSessionHasErrors('price');
     }
 
-    function testRequiredPriceMemo()
+    public function testRequiredPriceMemo()
     {
         $this->validateFields([ 'is_price_memo' => 1, 'price_memo' => null ])->assertSessionHasErrors('price_memo');
     }
 
-    function testInvalidTaxClass()
+    public function testInvalidTaxClass()
     {
         $this->validateFields([ 'tax_class' => -1 ])->assertSessionHasErrors('tax_class');
     }
 
-    function testRequiredIsPreAccount()
+    public function testRequiredIsPreAccount()
     {
         $this->validateFields([ 'is_pre_account' => null ])->assertSessionHasErrors('is_pre_account');
     }
 
-    function testInvalidIsPreAccount()
+    public function testInvalidIsPreAccount()
     {
         $this->validateFields([ 'is_pre_account' => -1 ])->assertSessionHasErrors('is_pre_account');
     }
 
-    function testInvalidCourseOption()
+    public function testInvalidCourseOption()
     {
         $this->validateFields([ 'course_option_ids' => $this->faker->userName ])->assertSessionHasErrors('course_option_ids');
     }
 
-    function testInvalidCourseOptionId()
+    public function testInvalidCourseOptionId()
     {
         $this->validateFields([ 'course_option_ids' => [ $this->faker->userName ] ])->assertSessionHasErrors('course_option_ids.0');
     }
 
-    function testInvalidMinorIds()
+    public function testInvalidMinorIds()
     {
         $this->validateFields([ 'minor_ids' => $this->faker->userName ])->assertSessionHasErrors('minor_ids');
     }
 
-    function testInvalidMinorValues()
+    public function testInvalidMinorValues()
     {
         $this->validateFields([ 'minor_values' => $this->faker->userName ])->assertSessionHasErrors('minor_values');
     }
 
-    function testInvalidIsQuestions()
+    public function testInvalidIsQuestions()
     {
         $this->validateFields([ 'is_questions' => $this->faker->userName ])->assertSessionHasErrors('is_questions');
     }
 
-    function testInvalidIsQuestionsValue()
+    public function testInvalidIsQuestionsValue()
     {
         $this->validateFields([ 'is_questions' => [ -1, 1, 0, 0, 1 ] ])->assertSessionHasErrors('is_questions.0');
     }
 
-    function testInvalidQuestionTitles()
+    public function testInvalidQuestionTitles()
     {
         $this->validateFields([ 'question_titles' => $this->faker->userName ])->assertSessionHasErrors('question_titles');
     }
 
-    function testInvalidAnswer01s()
+    public function testInvalidAnswer01s()
     {
         $this->validateFields([ 'answer01s' => $this->faker->userName ])->assertSessionHasErrors('answer01s');
     }
 
-    function testInvalidAnswer02s()
+    public function testInvalidAnswer02s()
     {
         $this->validateFields([ 'answer02s' => $this->faker->userName ])->assertSessionHasErrors('answer02s');
     }
 
-    function testInvalidAnswer03s()
+    public function testInvalidAnswer03s()
     {
         $this->validateFields([ 'answer03s' => $this->faker->userName ])->assertSessionHasErrors('answer03s');
     }
 
 
-    function testInvalidAnswer04s()
+    public function testInvalidAnswer04s()
     {
         $this->validateFields([ 'answer04s' => $this->faker->userName ])->assertSessionHasErrors('answer04s');
     }
 
-    function testInvalidAnswer05s()
+    public function testInvalidAnswer05s()
     {
         $this->validateFields([ 'answer05s' => $this->faker->userName ])->assertSessionHasErrors('answer05s');
     }
 
-    function testInvalidAnswer06s()
+    public function testInvalidAnswer06s()
     {
         $this->validateFields([ 'answer06s' => $this->faker->userName ])->assertSessionHasErrors('answer06s');
     }
 
-    function testInvalidAnswer07s()
+    public function testInvalidAnswer07s()
     {
         $this->validateFields([ 'answer07s' => $this->faker->userName ])->assertSessionHasErrors('answer07s');
     }
 
-    function testInvalidAnswer08s()
+    public function testInvalidAnswer08s()
     {
         $this->validateFields([ 'answer08s' => $this->faker->userName ])->assertSessionHasErrors('answer08s');
     }
 
-    function testInvalidAnswer09s()
+    public function testInvalidAnswer09s()
     {
         $this->validateFields([ 'answer09s' => $this->faker->userName ])->assertSessionHasErrors('answer09s');
     }
 
-    function testInvalidAnswer10s()
+    public function testInvalidAnswer10s()
     {
         $this->validateFields([ 'answer10s' => $this->faker->userName ])->assertSessionHasErrors('answer10s');
     }
@@ -405,19 +407,20 @@ class CourseControllerTest extends TestCase
         return $this->post('/course', $this->validFields($attributes));
     }
 
-    function testCreateCourse()
+    public function testCreateCourse()
     {
         $response = $this->call('POST', 'course', $this->validFields());
         $response->assertSessionHas('success');
         $this->assertEquals(302, $response->getStatusCode());
     }
 
-    public function testUpdateCourse() {
+    public function testUpdateCourse()
+    {
         $course = $this->createCourse();
 
-        $response = $this->put( "/course/{$course->id}", $this->validFields());
+        $response = $this->put("/course/{$course->id}", $this->validFields());
         $response->assertSessionHas('success');
-        $this->assertEquals( 302, $response->getStatusCode() );
+        $this->assertEquals(302, $response->getStatusCode());
     }
 
     /**
@@ -434,13 +437,21 @@ class CourseControllerTest extends TestCase
         $tax_class = factory(TaxClass::class)->create();
         $images = factory(HospitalImage::class, 2)->create([ 'hospital_id' => $hospital->id ]);
         $image_orders = factory(ImageOrder::class, 2)->create();
-        $image_ids = $images->map(function($img){ return $img->id; })->toArray();
-        $image_order_ids = $image_orders->map(function($order){ return $order->id; })->toArray();
+        $image_ids = $images->map(function ($img) {
+            return $img->id;
+        })->toArray();
+        $image_order_ids = $image_orders->map(function ($order) {
+            return $order->id;
+        })->toArray();
         $options = factory(Option::class, 2)->create([ 'hospital_id' => $hospital->id ]);
-        $option_ids = $options->map(function($option){ return $option->id; })->toArray();
+        $option_ids = $options->map(function ($option) {
+            return $option->id;
+        })->toArray();
         $minors = factory(MinorClassification::class, 'with_major_middle', 5)->create();
-        $minor_ids = $minors->map(function($minor){ return $minor->id; })->toArray();
-        $minor_values = $minors->map(function($minor) {
+        $minor_ids = $minors->map(function ($minor) {
+            return $minor->id;
+        })->toArray();
+        $minor_values = $minors->map(function ($minor) {
             return $minor->is_fregist == '1' ? $minor->id : $this->faker->text;
         })->toArray();
 

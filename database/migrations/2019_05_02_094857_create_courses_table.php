@@ -33,7 +33,7 @@ class CreateCoursesTable extends Migration
             $table->tinyInteger('is_price')->nullable();
             $table->integer('price')->nullable();
             $table->tinyInteger('is_price_memo')->nullable();
-            $table->string('price_memo',50)->nullable();
+            $table->string('price_memo', 50)->nullable();
             $table->integer('regular_price')->nullable();
             $table->integer('discounted_p[rice')->nullable();
             $table->integer('tax_class')->unsigned()->default(0);

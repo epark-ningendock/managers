@@ -5,7 +5,6 @@ namespace App;
 use App\Enums\WebReception;
 use App\Helpers\EnumTrait;
 
-
 class Course extends SoftDeleteModel
 {
     use EnumTrait;

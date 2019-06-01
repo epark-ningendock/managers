@@ -12,7 +12,7 @@ class StaffsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Staff::class, 50)->make()->each(function($staff, $index) {
+        factory(App\Staff::class, 50)->make()->each(function ($staff, $index) {
             $staff->login_id = "epark-dev-$index";
             $staff->save();
             factory(StaffAuth::class)->create(["staff_id" => $staff->id]);

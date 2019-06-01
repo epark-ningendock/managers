@@ -22,7 +22,7 @@ $factory->define(MinorClassification::class, function (Faker $faker) {
     return $result;
 });
 
-$factory->defineAs(MinorClassification::class, 'with_major_middle', function(Faker $faker) use ($factory){
+$factory->defineAs(MinorClassification::class, 'with_major_middle', function (Faker $faker) use ($factory) {
     $minor = $factory->raw(MinorClassification::class);
     $middle = factory(MiddleClassification::class, 'with_major')->create();
     return array_merge($minor, [
