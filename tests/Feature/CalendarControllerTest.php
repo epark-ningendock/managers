@@ -28,7 +28,6 @@ class CalendarControllerTest extends TestCase
     {
         $response = $this->call('GET', '/calendar');
         $this->assertEquals(200, $response->getStatusCode());
-
     }
 
     public function testCreate()
@@ -44,52 +43,53 @@ class CalendarControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    function testCreateCalendar()
+    public function testCreateCalendar()
     {
         $response = $this->call('POST', 'calendar', $this->validFields());
         $response->assertSessionHas('success');
         $this->assertEquals(302, $response->getStatusCode());
     }
 
-    public function testUpdateCalendar() {
+    public function testUpdateCalendar()
+    {
         $calendar = factory(Calendar::class)->create();
 
-        $response = $this->put( "/calendar/{$calendar->id}", $this->validFields());
+        $response = $this->put("/calendar/{$calendar->id}", $this->validFields());
         $response->assertSessionHas('success');
-        $this->assertEquals( 302, $response->getStatusCode() );
+        $this->assertEquals(302, $response->getStatusCode());
     }
 
-    function testRequiredName()
+    public function testRequiredName()
     {
         $this->validateFields([ 'name' => null])->assertSessionHasErrors('name');
     }
 
-    function testRequiredIsCalendarDisplay()
+    public function testRequiredIsCalendarDisplay()
     {
         $this->validateFields([ 'is_calendar_display' => null])->assertSessionHasErrors('is_calendar_display');
     }
 
-    function testInvalidIsCalendarDisplay()
+    public function testInvalidIsCalendarDisplay()
     {
         $this->validateFields(['is_calendar_display' => -1])->assertSessionHasErrors('is_calendar_display');
     }
 
-    function testInvalidRegisteredCalendarIds()
+    public function testInvalidRegisteredCalendarIds()
     {
         $this->validateFields([ 'registered_course_ids' => $this->faker->userName ])->assertSessionHasErrors('registered_course_ids');
     }
 
-    function testInvalidRegisteredCalendarIdValues()
+    public function testInvalidRegisteredCalendarIdValues()
     {
         $this->validateFields([ 'registered_course_ids' => [ $this->faker->userName ] ])->assertSessionHasErrors('registered_course_ids.0');
     }
 
-    function testInvalidUnRegisteredCalendarIds()
+    public function testInvalidUnRegisteredCalendarIds()
     {
         $this->validateFields([ 'unregistered_course_ids' => $this->faker->userName ])->assertSessionHasErrors('unregistered_course_ids');
     }
 
-    function testInvalidUnRegisteredCalendarIdValues()
+    public function testInvalidUnRegisteredCalendarIdValues()
     {
         $this->validateFields([ 'unregistered_course_ids' => [ $this->faker->userName ] ])->assertSessionHasErrors('unregistered_course_ids.0');
     }
@@ -116,8 +116,12 @@ class CalendarControllerTest extends TestCase
      */
     protected function validFields($overwrites = [])
     {
-        $register_course_ids = factory(Course::class, 5)->create()->map(function($c){ return $c->id; });
-        $unregister_course_ids = factory(Course::class, 5)->create()->map(function($c){ return $c->id; });
+        $register_course_ids = factory(Course::class, 5)->create()->map(function ($c) {
+            return $c->id;
+        });
+        $unregister_course_ids = factory(Course::class, 5)->create()->map(function ($c) {
+            return $c->id;
+        });
         $fields = factory(Calendar::class)->raw();
         $fields['registered_course_ids'] = $register_course_ids->toArray();
         $fields['unregistered_course_ids'] = $unregister_course_ids->toArray();

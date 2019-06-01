@@ -20,7 +20,6 @@ class ClassificationControllerTest extends TestCase
     {
         $response = $this->call('GET', '/classification');
         $this->assertEquals(200, $response->getStatusCode());
-
     }
 
     /**
@@ -65,7 +64,4 @@ class ClassificationControllerTest extends TestCase
         $response = $this->call('GET', '/classification/'.$minor->id.'/edit?classification=minor');
         $this->assertEquals(200, $response->getStatusCode());
     }
-
-
-
 }

@@ -14,7 +14,7 @@ class StaffTest extends TestCase
      * @return void
      */
     public function testExample()
-    {   
+    {
         $this->assertTrue(true);
     }
 }

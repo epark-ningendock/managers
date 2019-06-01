@@ -11,6 +11,6 @@ class HospitalStaffsTableSeeder extends Seeder
      */
     public function run()
     {
-	    factory(App\HospitalStaff::class, 50)->create();
+        factory(App\HospitalStaff::class, 50)->create();
     }
 }

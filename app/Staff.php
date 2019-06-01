@@ -37,7 +37,8 @@ class Staff extends BaseModel
      * @param Permission $permission
      * @return int
      */
-    public function hasPermission($function_name, Permission $permission) {
+    public function hasPermission($function_name, Permission $permission)
+    {
         return $this->staff_auth[$function_name] & $permission->getPermissionBit() == $permission->getPermissionBit();
     }
 }

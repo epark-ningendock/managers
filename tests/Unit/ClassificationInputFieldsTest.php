@@ -74,96 +74,104 @@ class ClassificationInputFieldsTest extends TestCase
     public function testUpdateMajorClassificationSort()
     {
         $majors = factory(MajorClassification::class, 'with_type', 5)->create();
-        $ids = $majors->map(function($major) {
-                   return $major->id;
-                })->toArray();
-        $response = $this->patch("/classification/sort/update",
-            ['_token' => csrf_token(), 'classification' => 'major', 'classification_ids' => $ids]);
+        $ids = $majors->map(function ($major) {
+            return $major->id;
+        })->toArray();
+        $response = $this->patch(
+            "/classification/sort/update",
+            ['_token' => csrf_token(), 'classification' => 'major', 'classification_ids' => $ids]
+        );
         $this->assertEquals(302, $response->getStatusCode());
         foreach ($majors as $i => $major) {
             $major->refresh();
             self::assertEquals($i + 1, $major->order);
         }
-
     }
 
 
     public function testInvalidIdsInUpdateSort()
     {
-        $response = $this->patch("/classification/sort/update",
-            ['_token' => csrf_token(), 'classification' => 'minor', 'classification_ids' => $this->faker->userName]);
-        $response->assertSessionHasErrors( 'classification_ids' );
-
+        $response = $this->patch(
+            "/classification/sort/update",
+            ['_token' => csrf_token(), 'classification' => 'minor', 'classification_ids' => $this->faker->userName]
+        );
+        $response->assertSessionHasErrors('classification_ids');
     }
 
     public function testNonIntegerIdInUpdateSort()
     {
         $ids = $this->faker->words();
-        $response = $this->patch("/classification/sort/update",
-            ['_token' => csrf_token(), 'classification' => 'minor', 'classification_ids' => $this->faker->userName]);
-        $response->assertSessionHasErrors( 'classification_ids' );
-
+        $response = $this->patch(
+            "/classification/sort/update",
+            ['_token' => csrf_token(), 'classification' => 'minor', 'classification_ids' => $this->faker->userName]
+        );
+        $response->assertSessionHasErrors('classification_ids');
     }
 
     public function testWrongIdInUpdateSort()
     {
         $ids = [900, 901, 902];
-        $response = $this->patch("/classification/sort/update",
-            ['_token' => csrf_token(), 'classification' => 'minor', 'classification_ids' => $ids]);
-        $response->assertSessionHas( 'error' );
-
+        $response = $this->patch(
+            "/classification/sort/update",
+            ['_token' => csrf_token(), 'classification' => 'minor', 'classification_ids' => $ids]
+        );
+        $response->assertSessionHas('error');
     }
 
     public function testRequireIdsInUpdateSort()
     {
-        $response = $this->patch("/classification/sort/update",
-            ['_token' => csrf_token(), 'classification' => 'minor']);
-        $response->assertSessionHasErrors( 'classification_ids' );
-
+        $response = $this->patch(
+            "/classification/sort/update",
+            ['_token' => csrf_token(), 'classification' => 'minor']
+        );
+        $response->assertSessionHasErrors('classification_ids');
     }
 
     public function testUpdateMiddleClassificationSort()
     {
         $middles = factory(MiddleClassification::class, 'with_major', 5)->create();
-        $ids = $middles->map(function($middle) {
+        $ids = $middles->map(function ($middle) {
             return $middle->id;
         })->toArray();
-        $response = $this->patch("/classification/sort/update",
-            ['_token' => csrf_token(), 'classification' => 'middle', 'classification_ids' => $ids]);
+        $response = $this->patch(
+            "/classification/sort/update",
+            ['_token' => csrf_token(), 'classification' => 'middle', 'classification_ids' => $ids]
+        );
         $this->assertEquals(302, $response->getStatusCode());
         foreach ($middles as $i => $middle) {
             $middle->refresh();
             self::assertEquals($i + 1, $middle->order);
         }
-
     }
 
     public function testUpdateMinorClassificationSort()
     {
         $minors = factory(MinorClassification::class, 'with_major_middle', 5)->create();
-        $ids = $minors->map(function($minor) {
+        $ids = $minors->map(function ($minor) {
             return $minor->id;
         })->toArray();
-        $response = $this->patch("/classification/sort/update",
-            ['_token' => csrf_token(), 'classification' => 'minor', 'classification_ids' => $ids]);
+        $response = $this->patch(
+            "/classification/sort/update",
+            ['_token' => csrf_token(), 'classification' => 'minor', 'classification_ids' => $ids]
+        );
         $this->assertEquals(302, $response->getStatusCode());
         foreach ($minors as $i => $minor) {
             $minor->refresh();
             self::assertEquals($i + 1, $minor->order);
         }
-
     }
 
     public function testRequireClassificationInUpdateSort()
     {
         $minors = factory(MinorClassification::class, 'with_major_middle', 5)->create();
-        $ids = $minors->map(function($minor) {
+        $ids = $minors->map(function ($minor) {
             return $minor->id;
         })->toArray();
-        $response = $this->patch("/classification/sort/update",
-            ['_token' => csrf_token(), 'classification_ids' => $ids]);
-        $response->assertSessionHasErrors( 'classification' );
-
+        $response = $this->patch(
+            "/classification/sort/update",
+            ['_token' => csrf_token(), 'classification_ids' => $ids]
+        );
+        $response->assertSessionHasErrors('classification');
     }
 
     public function testRequireClassificationType()
@@ -256,40 +264,43 @@ class ClassificationInputFieldsTest extends TestCase
         $this->validateMajorFields(['status' => '5'])->assertSessionHasErrors('status');
     }
 
-    function testCreateMajorClassification()
+    public function testCreateMajorClassification()
     {
         $response = $this->call('POST', 'classification', $this->validMajorFields());
         $this->assertEquals(302, $response->getStatusCode());
     }
 
-    function testCreateMiddleClassification()
+    public function testCreateMiddleClassification()
     {
         $response = $this->call('POST', 'classification', $this->validMiddleFields());
         $this->assertEquals(302, $response->getStatusCode());
     }
 
-    function testCreateMinorClassification()
+    public function testCreateMinorClassification()
     {
         $response = $this->call('POST', 'classification', $this->validMinorFields());
         $this->assertEquals(302, $response->getStatusCode());
     }
 
-    function testUpdateMajorClassification() {
+    public function testUpdateMajorClassification()
+    {
         $major = factory(MajorClassification::class, 'with_type')->create();
-        $response = $this->put( "/classification/{$major->id}",  $this->validMajorFields());
-        $this->assertEquals( 302, $response->getStatusCode() );
+        $response = $this->put("/classification/{$major->id}", $this->validMajorFields());
+        $this->assertEquals(302, $response->getStatusCode());
     }
 
-    function testUpdateMiddleClassification() {
+    public function testUpdateMiddleClassification()
+    {
         $middle = factory(MiddleClassification::class, 'with_major')->create();
-        $response = $this->put( "/classification/{$middle->id}",  $this->validMiddleFields());
-        $this->assertEquals( 302, $response->getStatusCode() );
+        $response = $this->put("/classification/{$middle->id}", $this->validMiddleFields());
+        $this->assertEquals(302, $response->getStatusCode());
     }
 
-    function testUpdateMinorClassification() {
+    public function testUpdateMinorClassification()
+    {
         $minor = factory(MinorClassification::class, 'with_major_middle')->create();
-        $response = $this->put( "/classification/{$minor->id}",  $this->validMinorFields());
-        $this->assertEquals( 302, $response->getStatusCode() );
+        $response = $this->put("/classification/{$minor->id}", $this->validMinorFields());
+        $this->assertEquals(302, $response->getStatusCode());
     }
 
     /**
@@ -378,5 +389,4 @@ class ClassificationInputFieldsTest extends TestCase
         $this->withExceptionHandling();
         return $this->post('/classification', $this->validMinorFields($attributes));
     }
-
 }

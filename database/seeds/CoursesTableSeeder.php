@@ -32,9 +32,7 @@ class CoursesTableSeeder extends Seeder
         $options = Option::all();
         $tax_classes = TaxClass::all();
         $calendars = Calendar::all();
-        factory(Course::class, 50)->make()->each(function($course, $index)
-            use($faker, $hospitals, $minors, $options, $tax_classes, $calendars, $hospital_images, $image_orders) {
-
+        factory(Course::class, 50)->make()->each(function ($course, $index) use ($faker, $hospitals, $minors, $options, $tax_classes, $calendars, $hospital_images, $image_orders) {
             $hospital = $faker->randomElement($hospitals);
             $course->hospital_id = $hospital->id;
             $course->code = 'C'.$index.'H'.$hospital->id;
@@ -66,7 +64,7 @@ class CoursesTableSeeder extends Seeder
             ]);
 
             $images = $faker->randomElements($hospital_images, 5);
-            foreach($images as $image) {
+            foreach ($images as $image) {
                 factory(CourseImage::class)->create([
                     'course_id' => $course->id,
                     'hospital_image_id' => $image->id,
@@ -85,7 +83,6 @@ class CoursesTableSeeder extends Seeder
                     $course_option->save();
                 }
             }
-
         });
     }
 }

@@ -13,7 +13,7 @@ class StaffAuthsTableSeeder extends Seeder
      */
     public function run()
     {
-        Staff::all()->each(function($staff){
+        Staff::all()->each(function ($staff) {
             factory(StaffAuth::class)->create(["staff_id" => $staff->id]);
         });
     }
