@@ -42,9 +42,9 @@ return [
             'provider' => 'staffs',
         ],
 
-        'facility_staffs' => [
+        'hospital_staffs' => [
             'driver' => 'session',
-            'provider' => 'facility_staffs',
+            'provider' => 'hospital_staffs',
          ],
 
         'api' => [
@@ -76,9 +76,9 @@ return [
              'model' => App\Staff::class,
          ],
 
-         'facility_staffs' => [
+         'hospital_staffs' => [
            'driver' => 'eloquent',
-           'model' => App\FacilityStaff::class,
+           'model' => App\HospitalStaff::class,
          ],
     ],
 
@@ -103,8 +103,8 @@ return [
           'table' => 'password_resets',
           'expire' => 60,
       ],
-      'facility_staffs' => [
-          'provider' => 'facility_staffs',
+      'hospital_staffs' => [
+          'provider' => 'hospital_staffs',
           'table' => 'password_resets',
           'expire' => 60,
       ],
