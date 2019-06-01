@@ -8,11 +8,7 @@ class EmailTemplate extends Model
 {
     protected $fillable = [
         'title', 
-        'text'
+        'text',
+        'hospital_id'
     ];
-
-    public function hospital()
-    {
-        return $this->belongsTo('App\Hospital');
-    }
 }

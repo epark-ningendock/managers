@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\EmailTemplate;
 
 class EmailTemplatesTableSeeder extends Seeder
 {
@@ -11,6 +12,6 @@ class EmailTemplatesTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+        factory(EmailTemplate::class, 10)->create();
     }
 }
