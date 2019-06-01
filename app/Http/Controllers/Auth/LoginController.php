@@ -83,6 +83,7 @@ class LoginController extends Controller
           $hospital_staff = Auth::guard($this->hospital_staff_role)->user();
           session()->put('staffs', $hospital_staff->id);
           session()->put('staff_email', $hospital_staff->email);
+          session()->put('hospital_id', $hospital_staff->hospital_id);
           return true;
       }
       return false;
