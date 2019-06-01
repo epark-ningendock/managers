@@ -8,13 +8,33 @@ use Illuminate\Http\Request;
 
 class EmailTemplateController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        return view('user.profile', ['user' => User::findOrFail($id)]);
+        return view('email_template.index');
     }
 
-    public function show($id)
+    public function create()
     {
-        return view('user.profile', ['user' => User::findOrFail($id)]);
+        return view('email_template.create');
+    }
+
+    public function store(Request $request, $id)
+    {
+        return view('email_template.index');
+    }
+
+    public function edit($id)
+    {
+        return view('email_template.create');
+    }
+
+    public function update(Request $request, $id)
+    {
+        return view('email_template.index');
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        return view('email_template.index');
     }
 }

@@ -148,6 +148,11 @@ return [
             'text'        => 'カレンダー管理',
             'url'         => '/calendar',
             'icon'        => 'calendar',
+        ],
+        [
+            'text'        => 'テンプレート管理',
+            'url'         => '/email-template',
+            'icon'        => 'sticky-note-o',
         ]
     ],
 

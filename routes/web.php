@@ -54,6 +54,9 @@ Route::get('/course/sort', 'CourseController@sort')->name('course.sort');
 Route::get('/course/{id}/copy', 'CourseController@copy')->name('course.copy');
 Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course.updateSort');
 
+// メールテンプレート系
+Route::get('/email-template', 'EmailTemplateController@index');
+
 // ログイン系
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');
