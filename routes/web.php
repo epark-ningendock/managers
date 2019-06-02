@@ -53,7 +53,7 @@ Route::get('/register', function () {
 
 
 Auth::routes();
-Route::get('/login', 'Auth\LoginController@getLogin');
+Route::get('/login', 'Auth\LoginController@getLogin')->name('login');
 Route::post('/login', 'Auth\LoginController@postLogin');
 
 Route::get('/home', 'HomeController@index')->name('home');
