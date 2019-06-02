@@ -16,16 +16,15 @@ class TaxClassesTableSeeder extends Seeder
         TaxClass::create([
             'name' => 'なし',
             'rate' => 0,
-            'life_time_from' => Carbon::createFromDate(2014,4, 1),
+            'life_time_from' => Carbon::createFromDate(2014, 4, 1),
             'life_time_to' => Carbon::createFromDate(2037, 12, 31)
         ]);
 
         TaxClass::create([
             'name' => '消費税８％',
             'rate' => 8,
-            'life_time_from' => Carbon::createFromDate(2014,4, 1),
+            'life_time_from' => Carbon::createFromDate(2014, 4, 1),
             'life_time_to' => Carbon::createFromDate(2037, 12, 31)
         ]);
-
     }
 }

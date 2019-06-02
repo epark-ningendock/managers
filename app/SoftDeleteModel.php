@@ -13,7 +13,6 @@ use App\Helpers\CustomSoftDeletingScope;
 use App\Helpers\EnumTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
 class SoftDeleteModel extends BaseModel
 {
     use EnumTrait;
@@ -38,7 +37,6 @@ class SoftDeleteModel extends BaseModel
 
     protected function runSoftDelete()
     {
-
         $query = $this->newModelQuery()->where($this->getKeyName(), $this->getKey());
 
         $time = $this->freshTimestamp();
@@ -58,7 +56,5 @@ class SoftDeleteModel extends BaseModel
         }
 
         $query->update($columns);
-
     }
-
 }

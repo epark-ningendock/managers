@@ -20,7 +20,7 @@ class HospitalStaff extends Authenticatable
 
     protected $table = 'hospital_staffs';
 
-  	protected $fillable = [
+    protected $fillable = [
   		'name', 'email', 'login_id', 'password',
   	];
 

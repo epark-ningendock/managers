@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateHospitalStaffsTable extends Migration
 {
-	use DBCommonColumns;
+    use DBCommonColumns;
     /**
      * Run the migrations.
      *

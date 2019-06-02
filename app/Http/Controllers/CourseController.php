@@ -164,7 +164,7 @@ class CourseController extends Controller
             $image_ids = collect($request->input('course_images'));
             $image_order_ids = collect($request->input('course_image_orders'));
 
-            $filtered_image_ids = $image_ids->filter(function($id) {
+            $filtered_image_ids = $image_ids->filter(function ($id) {
                 return $id != 0;
             });
 
@@ -179,7 +179,9 @@ class CourseController extends Controller
             }
 
             foreach ($image_ids as $index => $image_id) {
-                if ($image_id == 0) continue;
+                if ($image_id == 0) {
+                    continue;
+                }
                 $image_order_id = $image_order_ids[$index];
                 $course_image = new CourseImage();
                 $course_image->course_id = $course->id;
@@ -215,7 +217,7 @@ class CourseController extends Controller
             $minor_ids = collect($request->input('minor_ids'), []);
             $minor_values = collect($request->input('minor_values'), []);
 
-            if($minor_ids->isNotEmpty()) {
+            if ($minor_ids->isNotEmpty()) {
                 $minors = MinorClassification::whereIn('id', $minor_ids)->orderBy('order')->get();
                 if ($minors->count() != count($minor_ids)) {
                     $request->session()->flash('error', trans('messages.invalid_minor_id'));
@@ -225,13 +227,15 @@ class CourseController extends Controller
                 if (isset($course_param)) {
                     $course->course_details()->forceDelete();
                 }
-                foreach($minors as $index => $minor) {
-                    $input_index = $minor_ids->search(function($id) use ($minor) {
+                foreach ($minors as $index => $minor) {
+                    $input_index = $minor_ids->search(function ($id) use ($minor) {
                         return $minor->id == $id;
                     });
 
                     if ($input_index == -1 || ($minor->is_fregist == '1' && $minor_values[$input_index] == 0)
-                        || ($minor->is_fregist == '0' && $minor_values[$input_index] == '')) continue;
+                        || ($minor->is_fregist == '0' && $minor_values[$input_index] == '')) {
+                        continue;
+                    }
 
 
                     $course_detail = new CourseDetail();
@@ -265,7 +269,7 @@ class CourseController extends Controller
             if (isset($course_param)) {
                 $course->course_questions()->forceDelete();
             }
-            for($i =  0; $i < 5; $i++) {
+            for ($i =  0; $i < 5; $i++) {
                 $course_question = new CourseQuestion();
                 $course_question->question_number = $i + 1;
                 $course_question->course_id = $course->id;

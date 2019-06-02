@@ -14,9 +14,8 @@ $factory->define(StaffAuth::class, function (Faker $faker) {
     ];
 });
 
-$factory->defineAs(StaffAuth::class, 'with_staff', function(Faker $faker) use ($factory) {
+$factory->defineAs(StaffAuth::class, 'with_staff', function (Faker $faker) use ($factory) {
     $staff_auth = $factory->raw(StaffAuth::class);
     $staff = factory(Staff::class)->create();
     return array_merge($staff_auth, ['staff_id' => $staff->id]);
 });
-

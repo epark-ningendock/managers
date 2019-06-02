@@ -1,7 +1,7 @@
 @extends('layouts.form')
 
 @section('content_header')
-  <h1>医療機関職員を作成する</h1>
+  <h1>医療機関スタッフを作成する</h1>
 @stop
 
 @section('form')
