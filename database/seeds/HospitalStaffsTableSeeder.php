@@ -23,10 +23,10 @@ class HospitalStaffsTableSeeder extends Seeder
 
       // TODO　動作確認用 マージ前に削除
       DB::table('hospital_staffs')->insert([
-        'login_id' => '12345',
+        'login_id' => '11111111',
         'name' => 'user',
         'email' => 'user@example.com',
-        'password' => Hash::make('1111'),
+        'password' => Hash::make('11111111'),
         'hospital_id' => '1',
       ]);
 

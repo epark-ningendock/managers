@@ -17,13 +17,13 @@ class StaffsTableSeeder extends Seeder
             $staff->save();
             factory(StaffAuth::class)->create(["staff_id" => $staff->id]);
         });
-        
+
         // TODO　動作確認用 マージ前に削除
         DB::table('staffs')->insert([
-          'login_id' => 'aaa',
+          'login_id' => 'aaaaaaaa',
           'name' => 'user',
           'email' => 'user@example.com',
-          'password' => Hash::make('ggg'),
+          'password' => Hash::make('11111111'),
           'authority' => '1',
         ]);
     }
