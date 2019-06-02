@@ -10,9 +10,7 @@ class EmailTemplateController extends Controller
 {
     public function index()
     {
-        // dd(EmailTemplate::paginate(20));
         return view('email_template.index', [ 'email_templates' => EmailTemplate::paginate(20) ]);
-        // return view('email_template.index');
     }
 
     public function create()
@@ -35,8 +33,11 @@ class EmailTemplateController extends Controller
         return view('email_template.index');
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-        return view('email_template.index');
+        $email_template = EmailTemplate::findOrFail($id);
+        $email_template->delete();
+
+        return redirect('email-template')->with('success', trans('messages.deleted', ['name' => trans('messages.names.email_template')]));
     }
 }

@@ -65,7 +65,8 @@ return [
             'minor' => '小分類'
         ],
         'course' => '検査コース',
-        'calendar' => 'カレンダ'
+        'calendar' => 'カレンダー',
+        'email_template' => 'メールテンプレート'
     ],
     'mails' => [
         'reset_passoword' => '医療機関スタッフパスワードリセットメール',
