@@ -19,8 +19,8 @@ return [
     */
 
     'created' => ':nameが登録しました。',
-    'updated' => ':nameが削除しました。',
-    'deleted' => ':nameが変更しました。',
+    'updated' => ':nameが変更されました。',
+    'deleted' => ':nameを削除しました。',
     'sent' => ':mailを送信しました。',
     'hospital_staff_update_passoword' => '医療機関スタッフのパスワードを更新しました',
     'token_expired' => 'トークンが期限切れです。再送信してください',
