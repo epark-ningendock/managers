@@ -201,5 +201,6 @@ return [
         'is_calendar_display' => 'カレンダー受付可否',
         'title' => '件名',
         'text' => '本文',
+        'hospital_id' => '医療機関ID'
     ],
 ];

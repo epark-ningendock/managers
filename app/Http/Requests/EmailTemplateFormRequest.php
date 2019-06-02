@@ -25,6 +25,7 @@ class EmailTemplateFormRequest extends FormRequest
     public function rules()
     {
         return [
+            // 'hospital_id' => 'required',
             'title' => 'required',
             'text' => 'max:20000'
         ];
