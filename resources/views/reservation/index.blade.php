@@ -78,7 +78,9 @@
                     <th>{{ $reservation->id }}</th>
                     <th>{{ $reservation->completed_date }}</th>
                     <th>{{ $reservation->hospital->name }}</th>
-                    <th>{{ $reservation->channel }}</th>
+                    <th>
+                        {{ \App\Reservation::getChannel($reservation->channel) }}
+                    </th>
                     <th>{{ $reservation->is_reservation }}</th>
                     <th>{{ $reservation->course->name }}</th>
                     <th>{{ $reservation->course->price }}</th>
