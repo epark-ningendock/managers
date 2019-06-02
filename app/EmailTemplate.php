@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class EmailTemplate extends Model
 {
     protected $fillable = [
-        'title', 
+        'title',
         'text',
         'hospital_id'
     ];

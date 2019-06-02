@@ -6,7 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use App\Helpers\DBCommonColumns;
 
 class CreateEmailTemplates extends Migration
-{   
+{
     use DBCommonColumns;
     /**
      * Run the migrations.
