@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\EmailTemplate;
 use Illuminate\Foundation\Http\FormRequest;
 
-class EmailTemplateRequest extends FormRequest
+class EmailTemplateFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class EmailTemplateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +25,7 @@ class EmailTemplateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required'
         ];
     }
 }

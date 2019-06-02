@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\EmailTemplate;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\EmailTemplateFormRequest;
 
 class EmailTemplateController extends Controller
 {
@@ -18,9 +19,14 @@ class EmailTemplateController extends Controller
         return view('email_template.create');
     }
 
-    public function store(Request $request, $id)
+    public function store(EmailTemplateFormRequest $request)
     {
-        return view('email_template.index');
+        $email_template = new EmailTemplate($request->all());
+        # TODO：ログインユーザーの医療機関を紐づける
+        $email_template->hospital_id = 1;
+        $email_template->save();
+        
+        return redirect('email-template')->with('success', trans('messages.created', ['name' => trans('messages.names.email_template')]));
     }
 
     public function edit($id)
