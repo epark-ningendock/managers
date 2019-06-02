@@ -55,7 +55,8 @@ Route::get('/course/{id}/copy', 'CourseController@copy')->name('course.copy');
 Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course.updateSort');
 
 // メールテンプレート系
-Route::get('/email-template', 'EmailTemplateController@index');
+Route::resource('/email-template', 'EmailTemplateController')->except(['show']);
+// Route::get('/email-template/edit', 'EmailTemplateController@index');
 
 // ログイン系
 Route::get('/login', function () {

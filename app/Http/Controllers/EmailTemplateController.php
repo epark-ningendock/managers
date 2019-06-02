@@ -10,7 +10,9 @@ class EmailTemplateController extends Controller
 {
     public function index()
     {
-        return view('email_template.index');
+        // dd(EmailTemplate::paginate(20));
+        return view('email_template.index', [ 'email_templates' => EmailTemplate::paginate(20) ]);
+        // return view('email_template.index');
     }
 
     public function create()
@@ -25,7 +27,7 @@ class EmailTemplateController extends Controller
 
     public function edit($id)
     {
-        return view('email_template.create');
+        return view('email_template.edit');
     }
 
     public function update(Request $request, $id)
