@@ -25,7 +25,8 @@ class EmailTemplateFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required'
+            'title' => 'required',
+            'text' => 'max:20000'
         ];
     }
 }
