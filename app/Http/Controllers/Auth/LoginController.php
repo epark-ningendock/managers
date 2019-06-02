@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginFormRequest;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\SessionGuard;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
@@ -44,10 +47,14 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+      $this->middleware('guest')->except('logout');
     }
 
-    public function login(Request $req) {
+    public function getLogin(Request $req) {
+      return view('auth.login');
+    }
+
+    public function postLogin(LoginFormRequest $req) {
       $data = $req->all();
 
       // スタッフに該当するかの判定
@@ -62,8 +69,11 @@ class LoginController extends Controller
         return redirect($this->hospital_staff_redirectTo);
       }
 
-      // ログイン情報が該当しない場合
-      return redirect($this->redirectTo);
+      // 該当ユーザーが存在しない場合
+      $validator = Validator::make([], []);
+      $validator->errors()->add('fail_login', 'IDまたはpasswordが正しくありません');
+      throw new ValidationException($validator);
+      return redirect()->back();
     }
 
     // スタッフ認証処理

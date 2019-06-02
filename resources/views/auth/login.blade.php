@@ -20,12 +20,17 @@
         {!! csrf_field() !!}
 
         <div class="form-group has-feedback {{ $errors->has('login_id') ? 'has-error' : '' }}">
+          @if ($errors->has('fail_login'))
+            <span class="help-block">
+              <strong>{{ $errors->first('fail_login') }}</strong>
+            </span>
+          @endif
           <input type="text" name="login_id" class="form-control" value="{{ old('login_id') }}"
                placeholder="login ID">
           <!-- <span class="glyphicon glyphicon-envelope form-control-feedback"></span> -->
-          @if ($errors->has('email'))
+          @if ($errors->has('login_id'))
             <span class="help-block">
-              <strong>{{ $errors->first('email') }}</strong>
+              <strong>{{ $errors->first('login_id') }}</strong>
             </span>
           @endif
         </div>
