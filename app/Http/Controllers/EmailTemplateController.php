@@ -31,12 +31,18 @@ class EmailTemplateController extends Controller
 
     public function edit($id)
     {
-        return view('email_template.edit');
+        $email_template = EmailTemplate::findOrFail($id);
+
+        return view('email_template.edit', compact('email_template'));
     }
 
-    public function update(Request $request, $id)
+    public function update(EmailTemplateFormRequest $request, $id)
     {
-        return view('email_template.index');
+        $email_template = EmailTemplate::findOrFail($id);
+        $inputs = request()->all();
+        $email_template->update($inputs);
+
+        return redirect('email-template')->with('success', trans('messages.updated', ['name' => trans('messages.names.email_template')]));
     }
 
     public function destroy($id)

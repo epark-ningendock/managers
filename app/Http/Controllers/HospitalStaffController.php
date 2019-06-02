@@ -56,7 +56,6 @@ class HospitalStaffController extends Controller
     {
         $hospital_staff     = HospitalStaff::findOrFail($id);
         $inputs             = request()->all();
-        // $inputs['password'] = bcrypt( $request->input( 'password' ) );
         $hospital_staff->update($inputs);
 
         return redirect('hospital-staff')->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_staff')]));
