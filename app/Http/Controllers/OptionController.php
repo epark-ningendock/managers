@@ -25,15 +25,11 @@ class OptionController extends Controller
         return view('option.create', ['tax_classes' => $tax_classes]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(OptionformStore $request)
     {
-        //
+//    	$request->request->add(['hospital'])
+        $option = Option::create($request->all());
     }
 
     /**

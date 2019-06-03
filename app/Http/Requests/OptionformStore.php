@@ -26,7 +26,7 @@ class OptionformStore extends FormRequest
         return [
             'name' => 'required|max:40',
 	        'confirm' => 'max:128',
-	        'price' => 'required',
+	        'price' => 'required|digits_between:0,8',
 	        'tax_class_id' => 'required|exists:tax_classes,id'
         ];
     }
