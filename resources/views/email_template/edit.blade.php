@@ -5,9 +5,7 @@
 @stop
 
 @section('form')
-    <form method="POST"  action="{{ route('email-template.update', $email_template->id) }}">
-        {{ csrf_field() }}
-        {{ method_field('PUT') }}
-        @include('email_template.partials.form')
-    </form>
+  {{ Form::open(['route' => array('email-template.update', $email_template->id), 'method' => 'post']) }}
+    {{ method_field('PUT') }}
+    @include('email_template.partials.form')
 @stop

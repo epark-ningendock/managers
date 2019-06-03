@@ -5,8 +5,6 @@
 @stop
 
 @section('form')
-  <form method="POST" action="{{ url('/email-template') }}">
-    {{ csrf_field() }}
+  {{ Form::open(['route' => 'email-template.store', 'method' => 'post']) }}
     @include('email_template.partials.form')
-  </form>
 @stop
