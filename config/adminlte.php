@@ -134,7 +134,7 @@ return [
             'url'         => '/course',
             'icon'        => 'graduation-cap',
         ],
-	    [
+        [
             'text'        => '医療機関',
             'url'         => '/hospital',
             'icon'        => 'book',

@@ -20,9 +20,9 @@ Route::get('/', function () {
 //Route::resource('/staff', 'StaffController')->except(['show', 'index'])->middleware('can:edit-staff');
 
 // スタッフ系
-Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], function(){
-	Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password');
-	Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
+Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], function () {
+    Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password');
+    Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
 });
 Route::resource('/staff', 'StaffController')->except(['show']);
 
@@ -39,7 +39,7 @@ Route::get('/hospital-staff/send-password-resets-mail', 'HospitalStaffController
 Route::get('/hospital-staff/show-reset-password/{reset_token}/{email}', 'HospitalStaffController@showResetPassword'); // パスワードのリセット画面に遷移する
 Route::put('/hospital-staff/reset-password/{hospital_staff_id}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password'); // パスワードをリセットする
 Route::resource('hospital-staff', 'HospitalStaffController')->except([
-	'show',
+    'show',
 ]);
 
 // 検査コース分類系
@@ -63,7 +63,13 @@ Route::get('/register', function () {
     return view('/vendor/adminlte/register');
 });
 
-Route::resource('/calendar', 'CalendarController')->except(['show']);
+
+
+Auth::routes();
+Route::get('/login', 'Auth\LoginController@getLogin')->name('login');
+Route::post('/login', 'Auth\LoginController@postLogin');
+
+Route::get('/home', 'HomeController@index')->name('home');
 
 /*
 |--------------------------------------------------------------------------
@@ -71,3 +77,4 @@ Route::resource('/calendar', 'CalendarController')->except(['show']);
 |--------------------------------------------------------------------------
 */
 Route::resource('option', 'OptionController');
+Route::resource('/calendar', 'CalendarController')->except(['show']);

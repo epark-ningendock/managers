@@ -14,7 +14,7 @@ $factory->define(CourseDetail::class, function (Faker $faker) {
     ];
 });
 
-$factory->defineAs(CourseDetail::class, 'with_all', function(Faker $faker) use ($factory){
+$factory->defineAs(CourseDetail::class, 'with_all', function (Faker $faker) use ($factory) {
     $hospital = factory(Hospital::class)->create();
     $minor = factory(MinorClassification::class, 'with_major_middle')->create();
 
@@ -41,4 +41,3 @@ $factory->defineAs(CourseDetail::class, 'with_all', function(Faker $faker) use (
         'major_classification_id' => $minor->major_classification_id
     ]);
 });
-

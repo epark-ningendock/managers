@@ -9,12 +9,14 @@ use Illuminate\Database\Schema\Blueprint;
  * Date: 2019-04-01
  * Time: 20:51
  */
-trait DBCommonColumns {
+trait DBCommonColumns
+{
     /**
      * @param Blueprint $table
      * @return void
      */
-    function addCommonColumns(Blueprint $table) {
+    public function addCommonColumns(Blueprint $table)
+    {
         $table->softDeletes();
         $table->timestamps();
     }

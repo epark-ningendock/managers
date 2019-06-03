@@ -19,7 +19,7 @@ class CreateCalendarsTable extends Migration
             $table->increments('id');
             $table->string('name', 50);
             $table->tinyInteger('is_calendar_display')->unsigned();
-            $table->integer('hospital_id')->unsigned();
+            $table->integer('hospital_id')->unsigned()->nullable();
             $table->foreign('hospital_id')->references('id')->on('hospitals');
             $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
