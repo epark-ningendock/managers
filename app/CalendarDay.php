@@ -4,5 +4,5 @@ namespace App;
 
 class CalendarDay extends SoftDeleteModel
 {
-    protected $fillable = [ 'date', 'holiday_flg', 'reservation_flg', 'reservation_flames', 'reservation_id' ];
+    protected $fillable = [ 'date', 'is_holiday', 'is_reservation_acceptance', 'reservation_frames', 'calendar_id' ];
 }
