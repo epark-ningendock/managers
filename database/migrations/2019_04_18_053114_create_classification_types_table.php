@@ -7,7 +7,6 @@ use App\Helpers\DBCommonColumns;
 
 class CreateClassificationTypesTable extends Migration
 {
-
     use DBCommonColumns;
 
     /**

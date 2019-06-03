@@ -2,7 +2,6 @@
 
 namespace App;
 
-
 class CourseQuestion extends SoftDeleteModel
 {
     protected $fillable = [
@@ -22,7 +21,8 @@ class CourseQuestion extends SoftDeleteModel
         'answer10'
     ];
 
-    public function course() {
+    public function course()
+    {
         return $this->belongsTo('App\Course');
     }
 }

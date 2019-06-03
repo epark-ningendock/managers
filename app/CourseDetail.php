@@ -8,7 +8,8 @@ class CourseDetail extends SoftDeleteModel
         'course_id', 'major_classification_id', 'middle_classification_id', 'minor_classification_id', 'select_status', 'inputstring'
     ];
 
-    public function course() {
+    public function course()
+    {
         return $this->belongsTo('App\Course');
     }
 

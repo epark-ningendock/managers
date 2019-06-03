@@ -196,6 +196,8 @@ return [
         'price' => '表示価格',
         'price_memo' => '手動設定金額',
         'course_is_pre_account' => '利用設定',
-        'is_question' => '質問事項の利用'
+        'is_question' => '質問事項の利用',
+        'calendar_name' => 'カレンダー名',
+        'is_calendar_display' => 'カレンダー受付可否'
     ],
 ];

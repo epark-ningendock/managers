@@ -1,7 +1,7 @@
 @extends('layouts.form')
 
 @section('content_header')
-    <h1>病院スタッフ - {{ $hospital_staff->name }}</h1>
+    <h1>医療機関スタッフ - {{ $hospital_staff->name }}</h1>
 @stop
 
 @section('form')

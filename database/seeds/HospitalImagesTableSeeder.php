@@ -17,12 +17,12 @@ class HospitalImagesTableSeeder extends Seeder
     {
         $faker = Factory::create();
         $filepath = storage_path('/app/public/images/hospitals');
-        if(!File::exists($filepath)){
+        if (!File::exists($filepath)) {
             File::makeDirectory($filepath, 0755, true);  //follow the declaration to see the complete signature
         }
         $hospitals = Hospital::all();
         foreach ($hospitals as $hospital) {
-            $image = $faker->image($filepath, 300,300, null, true);
+            $image = $faker->image($filepath, 300, 300, null, true);
             $path_info = pathinfo($image);
             factory(HospitalImage::class)->create([
                 'hospital_id'=> $hospital->id,

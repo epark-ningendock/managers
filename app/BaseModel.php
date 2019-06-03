@@ -13,10 +13,8 @@ use App\Helpers\CustomSoftDeletingScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
 class BaseModel extends Model
 {
-
     protected static function boot()
     {
         parent::boot();
@@ -38,7 +36,5 @@ class BaseModel extends Model
 //                $model->remover = Auth::user()->id;
 //            }
 //        });
-
     }
-
 }
