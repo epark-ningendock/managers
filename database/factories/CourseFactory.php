@@ -5,7 +5,7 @@ use \App\Course;
 
 $factory->define(Course::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
+        'name' => $faker->randomElement(['Aコース', 'Bコース', 'Cコース']),
         'web_reception' => $faker->randomElement(['0', '1']),
         'is_price' => 1,
         'price' => $faker->randomDigit,

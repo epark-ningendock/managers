@@ -40,7 +40,8 @@ class ReservationController extends Controller
         $params = $request->all();
 
         $query = $this->reservation
-            ->with(['hospital', 'course'])
+            ->byRequest($request)
+            ->with(['hospital', 'course', 'customer'])
             ->orderBy('created_at', 'desc');
 
         $reservations = $query->paginate(env('PAGINATE_NUMBER'));
