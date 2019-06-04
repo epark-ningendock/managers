@@ -199,5 +199,10 @@ return [
         'is_question' => '質問事項の利用',
         'confirm' => 'オプションの説明',
         'tax_classification' => '税区分',
+        'calendar_name' => 'カレンダー名',
+        'is_calendar_display' => 'カレンダー受付可否',
+        'title' => '件名',
+        'text' => '本文',
+        'hospital_id' => '医療機関ID'
     ],
 ];

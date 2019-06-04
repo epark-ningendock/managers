@@ -54,6 +54,9 @@ Route::get('/course/sort', 'CourseController@sort')->name('course.sort');
 Route::get('/course/{id}/copy', 'CourseController@copy')->name('course.copy');
 Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course.updateSort');
 
+// メールテンプレート系
+Route::resource('/email-template', 'EmailTemplateController')->except(['show']);
+
 // ログイン系
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');
@@ -83,3 +86,5 @@ Route::patch('option/sort/update', 'OptionController@updateSort')->name('option.
 
 
 Route::resource('/calendar', 'CalendarController')->except(['show']);
+
+Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);

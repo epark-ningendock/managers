@@ -47,55 +47,59 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-      $this->middleware('guest')->except('logout');
+        $this->middleware('guest')->except('logout');
     }
 
-    public function getLogin(Request $req) {
-      return view('auth.login');
+    public function getLogin(Request $req)
+    {
+        return view('auth.login');
     }
 
-    public function postLogin(LoginFormRequest $req) {
-      $data = $req->all();
+    public function postLogin(LoginFormRequest $req)
+    {
+        $data = $req->all();
 
-      // スタッフに該当するかの判定
-      $is_staff = self::is_staff_login($data['login_id'], $data['password']);
-      if($is_staff) {
-        return redirect($this->staff_redirectTo);
-      }
+        // スタッフに該当するかの判定
+        $is_staff = self::is_staff_login($data['login_id'], $data['password']);
+        if ($is_staff) {
+            return redirect($this->staff_redirectTo);
+        }
 
-      // 医療機関スタッフに該当するかの判定
-      $is_hospital_staff = self::is_hospital_staff_login($data['login_id'], $data['password']);
-      if($is_hospital_staff) {
-        return redirect($this->hospital_staff_redirectTo);
-      }
+        // 医療機関スタッフに該当するかの判定
+        $is_hospital_staff = self::is_hospital_staff_login($data['login_id'], $data['password']);
+        if ($is_hospital_staff) {
+            return redirect($this->hospital_staff_redirectTo);
+        }
 
-      // 該当ユーザーが存在しない場合
-      $validator = Validator::make([], []);
-      $validator->errors()->add('fail_login', 'IDまたはpasswordが正しくありません');
-      throw new ValidationException($validator);
-      return redirect()->back();
+        // 該当ユーザーが存在しない場合
+        $validator = Validator::make([], []);
+        $validator->errors()->add('fail_login', 'IDまたはpasswordが正しくありません');
+        throw new ValidationException($validator);
+        return redirect()->back();
     }
 
     // スタッフ認証処理
-    public function is_staff_login($login_id, $password) {
-      if(Auth::guard($this->staff_role)->attempt(['login_id' => $login_id, 'password' => $password])) {
-          $staff = Auth::guard($this->staff_role)->user();
-          session()->put('staffs', $staff->id);
-          session()->put('staff_email', $staff->email);
-          return true;
-      }
-      return false;
+    public function is_staff_login($login_id, $password)
+    {
+        if (Auth::guard($this->staff_role)->attempt(['login_id' => $login_id, 'password' => $password])) {
+            $staff = Auth::guard($this->staff_role)->user();
+            session()->put('staffs', $staff->id);
+            session()->put('staff_email', $staff->email);
+            return true;
+        }
+        return false;
     }
 
     // 医療機関スタッフ認証処理
-    public function is_hospital_staff_login($login_id, $password) {
-      if(Auth::guard($this->hospital_staff_role)->attempt(['login_id' => $login_id, 'password' => $password])) {
-          $hospital_staff = Auth::guard($this->hospital_staff_role)->user();
-          session()->put('staffs', $hospital_staff->id);
-          session()->put('staff_email', $hospital_staff->email);
-          session()->put('hospital_id', $hospital_staff->hospital_id);
-          return true;
-      }
-      return false;
+    public function is_hospital_staff_login($login_id, $password)
+    {
+        if (Auth::guard($this->hospital_staff_role)->attempt(['login_id' => $login_id, 'password' => $password])) {
+            $hospital_staff = Auth::guard($this->hospital_staff_role)->user();
+            session()->put('staffs', $hospital_staff->id);
+            session()->put('staff_email', $hospital_staff->email);
+            session()->put('hospital_id', $hospital_staff->hospital_id);
+            return true;
+        }
+        return false;
     }
 }

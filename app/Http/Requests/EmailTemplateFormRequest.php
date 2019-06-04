@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\EmailTemplate;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Validator;
 
-class LoginFormRequest extends FormRequest
+class EmailTemplateFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,10 @@ class LoginFormRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-          'login_id' => 'required|between:8,50|regex:/^[-_ a-zA-Z0-9]+$/',
-          'password' => 'required|between:8,20|regex:/^[a-zA-Z0-9]+$/'
+        return [
+            // 'hospital_id' => 'required',
+            'title' => 'required',
+            'text' => 'max:20000'
         ];
-        return $rules;
     }
 }

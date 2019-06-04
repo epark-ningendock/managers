@@ -1,8 +1,8 @@
 <?php
 
 return [
-	'pagination' => [
-		'option_index' => 20,
-	]
+    'pagination' => [
+        'option_index' => 20,
+    ]
 
 ];

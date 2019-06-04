@@ -1,5 +1,4 @@
 <?php
-
 use Faker\Generator as Faker;
 use \App\Course;
 use App\Calendar;
@@ -22,7 +21,6 @@ $factory->define(Course::class, function (Faker $faker) {
         'cancellation_deadline' => $faker->randomElement(range(1, 31)),
         'is_pre_account' => $faker->randomElement([0, 1])
     ];
-
     if ($result['is_price'] == 1) {
         $result['price'] = $faker->randomDigit;
     }
@@ -31,7 +29,6 @@ $factory->define(Course::class, function (Faker $faker) {
     }
     return $result;
 });
-
 $factory->defineAs(Course::class, 'with_all', function (Faker $faker) use ($factory) {
     $hospital = factory(Hospital::class)->create();
     $calendar = factory(Calendar::class)->create(['hospital_id' => $hospital->id]);

@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\Helpers\DBCommonColumns;
 
-class AddHospitalIdToHospitalStaffsTable extends Migration
+class CreateEmailTemplates extends Migration
 {
+    use DBCommonColumns;
     /**
      * Run the migrations.
      *
@@ -13,9 +15,13 @@ class AddHospitalIdToHospitalStaffsTable extends Migration
      */
     public function up()
     {
-        Schema::table('hospital_staffs', function (Blueprint $table) {
+        Schema::create('email_templates', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('hospital_id')->unsigned();
             $table->foreign('hospital_id')->references('id')->on('hospitals');
+            $table->string('title');
+            $table->string('text')->nullable();
+            $this->addCommonColumns($table);
         });
     }
 
@@ -26,9 +32,6 @@ class AddHospitalIdToHospitalStaffsTable extends Migration
      */
     public function down()
     {
-        Schema::table('hospital_staffs', function (Blueprint $table) {
-            $table->dropForeign('hospital_staffs_hospital_id_foreign');
-            $table->dropColumn('hospital_id');
-        });
+        Schema::dropIfExists('email_templates');
     }
 }
