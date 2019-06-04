@@ -43,6 +43,4 @@ class StaffFormRequest extends FormRequest
         ];
         return $rules;
     }
-
-
 }

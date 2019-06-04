@@ -3,11 +3,12 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use \App\Helpers\DBCommonColumns;
+use App\Helpers\DBCommonColumns;
 
-class CreateFacilityStaffsTable extends Migration
+class CreateTaxClassesTable extends Migration
 {
     use DBCommonColumns;
+
     /**
      * Run the migrations.
      *
@@ -15,12 +16,13 @@ class CreateFacilityStaffsTable extends Migration
      */
     public function up()
     {
-        Schema::create('facility_staffs', function (Blueprint $table) {
+        Schema::create('tax_classes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 50)->nullable();
-            $table->string('email', 256)->unique()->nullable();
-            $table->string('login_id', 100)->unique()->nullable();
-            $table->string('password', 256)->nullable();
+            $table->string('name', 50);
+            $table->tinyInteger('rate')->unsigned();
+            $table->date('life_time_from');
+            $table->date('life_time_to');
+            $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
         });
     }
@@ -32,6 +34,6 @@ class CreateFacilityStaffsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('facility_staffs');
+        Schema::dropIfExists('tax_classes');
     }
 }

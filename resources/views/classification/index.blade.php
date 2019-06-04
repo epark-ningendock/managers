@@ -269,7 +269,6 @@
               });
 
           })();
-
       })(jQuery);
   </script>
 @stop

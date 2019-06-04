@@ -5,9 +5,10 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use App\Helpers\DBCommonColumns;
 
-class CourseOptionsTable extends Migration
+class CreateImageOrdersTable extends Migration
 {
     use DBCommonColumns;
+
     /**
      * Run the migrations.
      *
@@ -15,12 +16,13 @@ class CourseOptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('course_options', function (Blueprint $table) {
+        Schema::create('image_orders', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('course_id')->unsigned();
-            $table->integer('option_id')->unsigned();
-            $table->foreign('course_id')->references('id')->on('courses');
-            $table->foreign('option_id')->references('id')->on('options');
+            $table->integer('image_group_number')->unsigned();
+            $table->integer('image_location_number')->unsigned();
+            $table->string('name', 50);
+            $table->tinyInteger('order')->unsigned();
+            $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
         });
     }
@@ -32,6 +34,6 @@ class CourseOptionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('course_options');
+        Schema::dropIfExists('image_orders');
     }
 }

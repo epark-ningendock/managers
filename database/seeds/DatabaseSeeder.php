@@ -10,13 +10,18 @@ class DatabaseSeeder extends Seeder
      * @return void
      */
     public function run()
-    {   
+    {
         $this->call([
             StaffsTableSeeder::class,
-	        HospitalStaffsTableSeeder::class,
+            HospitalStaffsTableSeeder::class,
             MinorClassificationsTableSeeder::class,
-	        HospitalTableSeeder::class,
-            CourseTableSeeder::class
+            HospitalTableSeeder::class,
+            HospitalImagesTableSeeder::class,
+            OptionsTableSeeder::class,
+            TaxClassesTableSeeder::class,
+            ImageOrdersTableSeeder::class,
+            CalendarsTableSeeder::class,
+            CoursesTableSeeder::class
         ]);
     }
 }

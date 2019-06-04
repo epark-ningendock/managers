@@ -125,8 +125,8 @@ return [
     */
     'custom' => [
         'login_id' => [
-            'between' => 'スタッフ名は、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。',
-            'regex' => 'スタッフ名は、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。'
+            'between' => 'ログインIDは、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。',
+            'regex' => 'ログインIDは、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。'
         ],
         'password' => [
             'between' => 'パスワードは、8~50文字以内の半角英数字でご入力ください。',
@@ -184,5 +184,20 @@ return [
         'is_fregist' => '登録区分',
         'max_length' => 'テキスト長',
         'course_ids' => 'コースID',
+        'course_name' => '検査コース名',
+        'course_is_category' => 'コースの種別',
+        'web_reception' => 'WEBの受付',
+        'reception_start_day' => '受付時間の開始日',
+        'reception_start_month' => '受付時間の開始月',
+        'reception_end_day' => '受付時間の終了日',
+        'reception_end_month' => '受付時間の終了月',
+        'reception_acceptance_day' => '受付許可日の終了日',
+        'reception_acceptance_month' => '受付許可日の終了月',
+        'price' => '表示価格',
+        'price_memo' => '手動設定金額',
+        'course_is_pre_account' => '利用設定',
+        'is_question' => '質問事項の利用',
+        'calendar_name' => 'カレンダー名',
+        'is_calendar_display' => 'カレンダー受付可否'
     ],
 ];

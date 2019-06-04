@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class StaffControllerTest extends TestCase
 {
-	use DatabaseMigrations;
+    use DatabaseMigrations;
     /**
      * Test Staff List
      *
@@ -20,7 +20,6 @@ class StaffControllerTest extends TestCase
     {
         $response = $this->call('GET', '/staff');
         $this->assertEquals(200, $response->getStatusCode());
-
     }
 
     public function testCreate()
@@ -36,25 +35,23 @@ class StaffControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-	public function testEditPassword() {
+    public function testEditPassword()
+    {
+        $staff = factory(Staff::class)->create([
+            'authority' => 3,
+        ]);
 
-		$staff = factory(Staff::class)->create([
-			'authority' => 3,
-		]);
-
-		$response = $this->get('/staff/edit-password/'. $staff->id);
-		$response->assertStatus(200);
-
+        $response = $this->get('/staff/edit-password/'. $staff->id);
+        $response->assertStatus(200);
     }
 
-	public function testUpdatePassword() {
+    public function testUpdatePassword()
+    {
+        $staff = factory(Staff::class)->create([
+            'authority' => 2,
+        ]);
 
-		$staff = factory(Staff::class)->create([
-			'authority' => 2,
-		]);
-
-		$response = $this->get('/staff/edit-password/'. $staff->id);
-		$this->assertEquals( 302, $response->getStatusCode() );
-
-	}
+        $response = $this->get('/staff/edit-password/'. $staff->id);
+        $this->assertEquals(302, $response->getStatusCode());
+    }
 }

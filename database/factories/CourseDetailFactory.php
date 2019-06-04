@@ -10,17 +10,17 @@ use App\CourseImage;
 
 $factory->define(CourseDetail::class, function (Faker $faker) {
     return [
-        'input_string' => $faker->text
+        'inputstring' => $faker->text
     ];
 });
 
-$factory->defineAs(CourseDetail::class, 'with_all', function(Faker $faker) use ($factory){
+$factory->defineAs(CourseDetail::class, 'with_all', function (Faker $faker) use ($factory) {
     $hospital = factory(Hospital::class)->create();
     $minor = factory(MinorClassification::class, 'with_major_middle')->create();
 
     $course = factory(Course::class)->create([
         'hospital_id' => $hospital->id,
-        'code' => 'C'.$faker->numberBetween(1, 100).'H'.$hospital->id
+        'code' => 'C'.$faker->randomElement(range(1, 100)).'H'.$hospital->id
     ]);
 
     $detail = $factory->raw(CourseDetail::class);

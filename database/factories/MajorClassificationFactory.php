@@ -19,7 +19,7 @@ $factory->define(MajorClassification::class, function (Faker $faker) {
     return $result;
 });
 
-$factory->defineAs(MajorClassification::class, 'with_type', function(Faker $faker) use ($factory){
+$factory->defineAs(MajorClassification::class, 'with_type', function (Faker $faker) use ($factory) {
     $major = $factory->raw(MajorClassification::class);
     $type = factory(ClassificationType::class)->create();
     return array_merge($major, ['classification_type_id' => $type->id]);

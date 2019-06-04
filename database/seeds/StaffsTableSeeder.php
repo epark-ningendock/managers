@@ -12,10 +12,19 @@ class StaffsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Staff::class, 50)->make()->each(function($staff, $index) {
+        factory(App\Staff::class, 50)->make()->each(function ($staff, $index) {
             $staff->login_id = "epark-dev-$index";
             $staff->save();
             factory(StaffAuth::class)->create(["staff_id" => $staff->id]);
         });
+
+        // TODO　動作確認用 マージ前に削除
+        DB::table('staffs')->insert([
+          'login_id' => 'aaaaaaaa',
+          'name' => 'user',
+          'email' => 'user@example.com',
+          'password' => Hash::make('11111111'),
+          'authority' => '1',
+        ]);
     }
 }

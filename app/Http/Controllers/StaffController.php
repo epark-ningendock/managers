@@ -75,7 +75,6 @@ class StaffController extends Controller
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.staff_create_error'))->withInput();
         }
-
     }
 
     /**
@@ -129,31 +128,30 @@ class StaffController extends Controller
         return redirect()->back();
     }
 
-	public function editPassword( $staff_id ) {
-		return view('staff.edit-password', ['staff_id' => $staff_id]);
-	}
+    public function editPassword($staff_id)
+    {
+        return view('staff.edit-password', ['staff_id' => $staff_id]);
+    }
 
-	public function updatePassword( $staff_id, Request $request ) {
+    public function updatePassword($staff_id, Request $request)
+    {
+        $this->validate($request, [
+            'old_password' => 'required',
+            'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:6'
+        ]);
 
-		$this->validate($request, [
-			'old_password' => 'required',
-			'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
-			'password_confirmation' => 'min:6'
-		]);
+        $staff = Staff::findOrFail($staff_id);
 
-		$staff = Staff::findOrFail($staff_id);
-
-		if (Hash::check($request->old_password, $staff->password)) {
-			$staff->password = bcrypt($request->password);
-			$staff->save();
-			return redirect( 'staff' )->with( 'success', trans('messages.updated', ['name' => trans('messages.names.password')]) );
-		} else {
-			$validator = Validator::make([], []);
-			$validator->errors()->add('old_password', '現在のパスワードが正しくありません');
-			throw new ValidationException($validator);
-			return redirect()->back();
-		}
-
-
-	}
+        if (Hash::check($request->old_password, $staff->password)) {
+            $staff->password = bcrypt($request->password);
+            $staff->save();
+            return redirect('staff')->with('success', trans('messages.updated', ['name' => trans('messages.names.password')]));
+        } else {
+            $validator = Validator::make([], []);
+            $validator->errors()->add('old_password', '現在のパスワードが正しくありません');
+            throw new ValidationException($validator);
+            return redirect()->back();
+        }
+    }
 }

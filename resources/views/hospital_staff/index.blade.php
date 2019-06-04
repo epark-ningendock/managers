@@ -13,7 +13,7 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>病院スタッフ</h1>
+    <h1>医療機関スタッフ</h1>
 @stop
 
 
@@ -22,9 +22,9 @@
     <table id="example2" class="table table-bordered table-hover mb-5 mt-5">
         <thead>
         <tr>
-            <th>No</th>
-            <th>スタッフ施設名</th>
             <th>ログインID</th>
+            <th>医療機関スタッフ名</th>
+            <th>メールアドレス</th>
             <th>編集</th>
             <th>削除</th>
         </tr>
@@ -32,9 +32,9 @@
         <tbody>
         @foreach ($hospital_staffs as $hospital_staff)
             <tr>
-                <td>{{ $hospital_staff->id }}</td>
-                <td>{{ $hospital_staff->name }}</td>
                 <td>{{ $hospital_staff->login_id }}</td>
+                <td>{{ $hospital_staff->name }}</td>
+                <td>{{ $hospital_staff->email }}</td>
                 <td>
                     <a href="{{ route('hospital-staff.edit', $hospital_staff->id) }}"
                        class="btn btn-primary">編集</a>

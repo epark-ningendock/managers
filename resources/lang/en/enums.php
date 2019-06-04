@@ -9,6 +9,9 @@
 use \App\Enums\Authority;
 use App\Enums\StaffStatus;
 use App\Enums\Status;
+use App\Enums\Permission;
+use App\Enums\WebReception;
+use App\Enums\CalendarDisplay;
 
 return [
     Authority::class => [
@@ -33,5 +36,16 @@ return [
     Status::class => [
         Status::Valid => 'Valid',
         Status::Deleted => 'Deleted'
+    ],
+
+    WebReception::class => [
+        WebReception::NotAccept => 'Not Accept',
+        WebReception::Accept => 'Accept'
+    ],
+
+    CalendarDisplay::class => [
+        CalendarDisplay::Hide => 'Hide',
+        CalendarDisplay::Show => 'Show'
     ]
+
 ];

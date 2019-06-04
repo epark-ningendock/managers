@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateHospitalStaffsTable extends Migration
 {
-	use DBCommonColumns;
+    use DBCommonColumns;
     /**
      * Run the migrations.
      *
@@ -21,6 +21,7 @@ class CreateHospitalStaffsTable extends Migration
 	        $table->string('email', 256)->unique()->nullable();
 	        $table->string('login_id', 100)->unique()->nullable();
 	        $table->string('password', 256)->nullable();
+	        $table->string('remember_token', 100)->nullable();
 	        $this->addCommonColumns($table);
         });
     }

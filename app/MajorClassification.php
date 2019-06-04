@@ -8,16 +8,19 @@ class MajorClassification extends SoftDeleteModel
         'classification_type_id', 'name', 'status', 'order', 'is_icon', 'icon_name'
     ];
 
-    public function classification_type() {
+    public function classification_type()
+    {
         return $this->belongsTo('App\ClassificationType');
     }
 
-    public function middle_classifications() {
-        return $this->hasMany('App\MiddleClassification');
+    public function middle_classifications()
+    {
+        return $this->hasMany('App\MiddleClassification')->orderBy('order');
     }
 
-    public function minor_classifications() {
-        return $this->hasMany('App\MinorClassification');
+    public function minor_classifications()
+    {
+        return $this->hasMany('App\MinorClassification')->orderBy('order');
     }
 
     /**

@@ -8,7 +8,6 @@
 
 namespace App\Helpers;
 
-
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -26,7 +25,7 @@ class CustomSoftDeletingScope extends SoftDeletingScope
     public function apply(Builder $builder, Model $model)
     {
         $builder->whereNull($model->getQualifiedDeletedAtColumn())
-            ->where($model->getTable().'.status', '<>',Status::Deleted);
+            ->where($model->getTable().'.status', '<>', Status::Deleted);
     }
 
     /**
@@ -60,7 +59,7 @@ class CustomSoftDeletingScope extends SoftDeletingScope
 
             $builder->withoutGlobalScope($this)->whereNull(
                 $model->getQualifiedDeletedAtColumn()
-            )->where($model->getTable().'.status', '<>',Status::Deleted);
+            )->where($model->getTable().'.status', '<>', Status::Deleted);
 
             return $builder;
         });

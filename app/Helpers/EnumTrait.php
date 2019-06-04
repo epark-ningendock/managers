@@ -1,14 +1,14 @@
 <?php
 namespace  App\Helpers;
 
-
 /**
  * Created by PhpStorm.
  * User: thanhtetaung
  * Date: 2019-08-01
  * Time: 09:51
  */
-trait EnumTrait {
+trait EnumTrait
+{
     /**
      * Get a plain attribute (not a relationship).
      *
