@@ -56,6 +56,32 @@ class Reservation extends BaseModel
             $query->whereBetween('reservation_date', [$request->reservation_date_start, $request->reservation_date_end]);
         }
 
+        if (isset($request->completed_date_start) && isset($request->completed_date_end)) {
+            $query->whereBetween('completed_date', [$request->completed_date_start, $request->completed_date_end]);
+        }
+
+        if (isset($request->customer_id)) {
+            $query->where('customer_id', 'LIKE', "%$request->customer_id%");
+        }
+
+        if (isset($request->customer_name)) {
+            $query->whereHas('Customer', function ($q) use ($request) {
+                $q->where('name', 'LIKE', "%$request->customer_name%");
+            });
+        }
+
+        if (isset($request->customer_name)) {
+            $query->whereHas('Customer', function ($q) use ($request) {
+                $q->where('name', 'LIKE', "%$request->customer_name%");
+            });
+        }
+
+        if (isset($request->birthday)) {
+            $query->whereHas('Customer', function ($q) use ($request) {
+                $q->where('birthday', 'LIKE', "%$request->birthday%");
+            });
+        }
+
         return $query;
     }
 }

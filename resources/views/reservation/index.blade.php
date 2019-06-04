@@ -35,11 +35,13 @@
 
                 <div class="col-sm-9 form-inline">
                     <label for="s_text">予約日</label>
-                    {{ Form::text('reservation_date_start', old('reservation_date_start'), ['class' => 'form-control', 'id' => 'reservation_date_start-field', 'placeholder' => '2019-04-01']) }}
-                    {{ Form::text('reservation_date_end', old('reservation_date_end'), ['class' => 'form-control', 'id' => 'reservation_date_end-field', 'placeholder' => '2019-04-30']) }}
+                        <div class="form-inline">
+                        {{ Form::text('reservation_date_start', old('reservation_date_start'), ['class' => 'form-control', 'id' => 'reservation_date_start-field', 'placeholder' => '2019-04-01']) }}
+                        {{ Form::text('reservation_date_end', old('reservation_date_end'), ['class' => 'form-control', 'id' => 'reservation_date_end-field', 'placeholder' => '2019-04-30']) }}
+                    </div>
                 </div>
 
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <div class="form-group">
                         <label for="s_text">医療機関名</label>
                         <input type="text" class="form-control" autocomplete="off" name="s_text" id="s_text"
@@ -47,39 +49,41 @@
                     </div>
                 </div>
 
-                <div class="col-sm-4">
+                <div class="col-sm-9 form-inline">
+                    <label for="s_text">来院日</label>
+                    <div class="form-inline">
+                        {{ Form::text('completed_date_start', old('completed_date_start'), ['class' => 'form-control', 'id' => 'completed_date_start-field', 'placeholder' => '2019-04-01']) }}
+                        {{ Form::text('completed_date_end', old('completed_date_end'), ['class' => 'form-control', 'id' => 'completed_date_end-field', 'placeholder' => '2019-04-30']) }}
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
                     <div class="form-group">
                         <label for="s_text">顧客ID</label>
-                        <input type="text" class="form-control" autocomplete="off" name="s_text" id="s_text"
-                               value="{{ request('s_text') }}"/>
+                        {{ Form::text('customer_id', old('customer_id'), ['class' => 'form-control', 'id' => 'customer_id-field', 'placeholder' => '1123']) }}
                     </div>
                 </div>
 
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <label for="s_text">受信者名</label>
-                        <input type="text" class="form-control" autocomplete="off" name="s_text" id="s_text"
-                               value="{{ request('s_text') }}"/>
+                        <label for="s_text">受診者名</label>
+                        {{ Form::text('customer_name', old('customer_name'), ['class' => 'form-control', 'id' => 'customer_name-field', 'placeholder' => '山田太郎']) }}
                     </div>
                 </div>
 
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="s_text">生年月日</label>
-                        <input type="text" class="form-control" autocomplete="off" name="s_text" id="s_text"
-                               value="{{ request('s_text') }}"/>
+                        {{ Form::text('birthday', old('birthday'), ['class' => 'form-control', 'id' => 'birthday-field', 'placeholder' => '19850405']) }}
                     </div>
                 </div>
-
-
-                <div class="text-center">
-                    <button type="reset" class="btn btn-default">検索用にクリア</button>
-                    <button type="submit" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                        検索する
-                    </button>
-                </div>
-
+            </div>
+            <div class="text-center">
+                <button type="reset" class="btn btn-default">検索用にクリア</button>
+                <button type="submit" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    検索する
+                </button>
             </div>
         </div>
 
