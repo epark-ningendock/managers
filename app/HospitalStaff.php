@@ -4,8 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class HospitalStaff extends BaseModel
+class HospitalStaff extends Authenticatable
 {
     //TODO remove this and extend SoftDeleteModel if status is added
     use SoftDeletes;
@@ -17,7 +18,10 @@ class HospitalStaff extends BaseModel
      */
     protected $dates = ['deleted_at'];
 
+    protected $table = 'hospital_staffs';
+
     protected $fillable = [
-        'name', 'email', 'login_id', 'password',
-    ];
+  		'name', 'email', 'login_id', 'password',
+  	];
+
 }

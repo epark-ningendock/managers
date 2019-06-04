@@ -14,9 +14,10 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+        'guard' => 'staffs',
+        'passwords' => 'staffs',
     ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -36,14 +37,19 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'staffs' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'staffs',
         ],
+
+        'hospital_staffs' => [
+            'driver' => 'session',
+            'provider' => 'hospital_staffs',
+         ],
 
         'api' => [
             'driver' => 'token',
-            'provider' => 'users',
+            'provider' => 'staffs',
         ],
     ],
 
@@ -65,15 +71,15 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => App\User::class,
-        ],
+        'staffs' => [
+             'driver' => 'eloquent',
+             'model' => App\Staff::class,
+         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+         'hospital_staffs' => [
+           'driver' => 'eloquent',
+           'model' => App\HospitalStaff::class,
+         ],
     ],
 
     /*
@@ -92,11 +98,16 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 60,
-        ],
+      'staffs' => [
+          'provider' => 'staffs',
+          'table' => 'password_resets',
+          'expire' => 60,
+      ],
+      'hospital_staffs' => [
+          'provider' => 'hospital_staffs',
+          'table' => 'password_resets',
+          'expire' => 60,
+      ],
     ],
 
 ];

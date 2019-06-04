@@ -56,7 +56,6 @@ Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course
 
 // メールテンプレート系
 Route::resource('/email-template', 'EmailTemplateController')->except(['show']);
-// Route::get('/email-template/edit', 'EmailTemplateController@index');
 
 // ログイン系
 Route::get('/login', function () {
@@ -67,4 +66,13 @@ Route::get('/register', function () {
     return view('/vendor/adminlte/register');
 });
 
+
+Auth::routes();
+Route::get('/login', 'Auth\LoginController@getLogin')->name('login');
+Route::post('/login', 'Auth\LoginController@postLogin');
+
+Route::get('/home', 'HomeController@index')->name('home');
+
 Route::resource('/calendar', 'CalendarController')->except(['show']);
+
+Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
