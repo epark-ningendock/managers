@@ -21,12 +21,12 @@ class HospitalStaffsTableSeeder extends Seeder
 	      factory(HospitalStaff::class, 50)->create();
       }
 
-      // TODO　動作確認用 マージ前に削除
+      // 動作確認用
       DB::table('hospital_staffs')->insert([
-        'login_id' => '11111111',
-        'name' => 'user',
-        'email' => 'user@example.com',
-        'password' => Hash::make('11111111'),
+        'login_id' => 'eparkdock02',
+        'name' => 'eparkdock02',
+        'email' => 'epark02@example.com',
+        'password' => Hash::make('password02'),
         'hospital_id' => '1',
       ]);
 

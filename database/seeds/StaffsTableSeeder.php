@@ -18,12 +18,12 @@ class StaffsTableSeeder extends Seeder
             factory(StaffAuth::class)->create(["staff_id" => $staff->id]);
         });
 
-        // TODO　動作確認用 マージ前に削除
+        // 動作確認用
         DB::table('staffs')->insert([
-          'login_id' => 'aaaaaaaa',
-          'name' => 'user',
-          'email' => 'user@example.com',
-          'password' => Hash::make('11111111'),
+          'login_id' => 'eparkdock01',
+          'name' => 'eparkdock01',
+          'email' => 'epark01@example.com',
+          'password' => Hash::make('password01'),
           'authority' => '1',
         ]);
     }
