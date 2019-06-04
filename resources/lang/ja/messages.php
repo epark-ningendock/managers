@@ -19,14 +19,9 @@ return [
     */
 
     'created' => ':nameが登録しました。',
-<<<<<<< HEAD
     'updated' => ':nameが削除しました。',
 	'remove' => '削除する',
     'deleted' => ':nameが変更しました。',
-=======
-    'updated' => ':nameが変更されました。',
-    'deleted' => ':nameを削除しました。',
->>>>>>> master
     'sent' => ':mailを送信しました。',
     'hospital_staff_update_passoword' => '医療機関スタッフのパスワードを更新しました',
     'token_expired' => 'トークンが期限切れです。再送信してください',
