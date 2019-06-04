@@ -30,7 +30,7 @@
             オプション登録
         </a>
 
-        <a href="#" class="btn btn-primary">
+        <a href="{{ route('option.sort') }}" class="btn btn-primary">
             オプション並べ替え
         </a>
 

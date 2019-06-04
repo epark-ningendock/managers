@@ -23,12 +23,24 @@ class OptionformStore extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required|max:40',
-	        'confirm' => 'max:128',
-	        'price' => 'required|digits_between:0,8',
-	        'tax_class_id' => 'required|exists:tax_classes,id'
-        ];
+
+    	if ( request()->route()->uri == 'option/sort/update' ) {
+
+		    return [
+			    'option_ids' => 'required|array',
+			    'option_ids.*' => 'sometimes|integer'
+		    ];
+
+	    } else {
+
+		    return [
+			    'name' => 'required|max:40',
+			    'confirm' => 'max:128',
+			    'price' => 'required|digits_between:0,8',
+			    'tax_class_id' => 'required|exists:tax_classes,id',
+		    ];
+
+	    }
     }
 
 

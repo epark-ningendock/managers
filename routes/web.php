@@ -76,5 +76,10 @@ Route::get('/home', 'HomeController@index')->name('home');
 | Medical Institution Management Option
 |--------------------------------------------------------------------------
 */
-Route::resource('option', 'OptionController');
+Route::get('option/sort', 'OptionController@sort')->name('option.sort');
+Route::resource('option', 'OptionController', ['excerpt' => 'show']);
+Route::patch('option/sort/update', 'OptionController@updateSort')->name('option.updateSort');
+
+
+
 Route::resource('/calendar', 'CalendarController')->except(['show']);

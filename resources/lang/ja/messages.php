@@ -20,6 +20,7 @@ return [
 
     'created' => ':nameが登録しました。',
     'updated' => ':nameが削除しました。',
+	'remove' => '削除する',
     'deleted' => ':nameが変更しました。',
     'sent' => ':mailを送信しました。',
     'hospital_staff_update_passoword' => '医療機関スタッフのパスワードを更新しました',
@@ -73,4 +74,6 @@ return [
 	'option_description' => 'オプションの説明',
 	'price' => '価格',
 	'tax_classification' => '税区分',
+	'invalid_option_id' => '無効なオプションID',
+	'option_sorting_updated' => 'オプションソートの更新',
 ];
