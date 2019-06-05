@@ -4,9 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FacilityStaff extends BaseModel
+class EmailTemplate extends Model
 {
     protected $fillable = [
-    'name', 'email', 'login_id', 'password',
-  ];
+        'title',
+        'text',
+        'hospital_id'
+    ];
 }

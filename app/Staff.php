@@ -6,8 +6,9 @@ use App\Enums\Authority;
 use App\Enums\Permission;
 use App\Enums\StaffStatus;
 use App\Helpers\EnumTrait;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Staff extends BaseModel
+class Staff extends Authenticatable
 {
     use EnumTrait;
 

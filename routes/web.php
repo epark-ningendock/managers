@@ -54,6 +54,9 @@ Route::get('/course/sort', 'CourseController@sort')->name('course.sort');
 Route::get('/course/{id}/copy', 'CourseController@copy')->name('course.copy');
 Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course.updateSort');
 
+// メールテンプレート系
+Route::resource('/email-template', 'EmailTemplateController')->except(['show']);
+
 // ログイン系
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');
@@ -63,6 +66,24 @@ Route::get('/register', function () {
     return view('/vendor/adminlte/register');
 });
 
+// Calendar
 Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting');
 Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting');
 Route::resource('/calendar', 'CalendarController')->except(['show']);
+
+Auth::routes();
+Route::get('/login', 'Auth\LoginController@getLogin')->name('login');
+Route::post('/login', 'Auth\LoginController@postLogin');
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+/*
+|--------------------------------------------------------------------------
+| Medical Institution Management Option
+|--------------------------------------------------------------------------
+*/
+Route::get('option/sort', 'OptionController@sort')->name('option.sort');
+Route::resource('option', 'OptionController', ['excerpt' => 'show']);
+Route::patch('option/sort/update', 'OptionController@updateSort')->name('option.updateSort');
+
+Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);

@@ -197,7 +197,12 @@ return [
         'price_memo' => '手動設定金額',
         'course_is_pre_account' => '利用設定',
         'is_question' => '質問事項の利用',
+        'confirm' => 'オプションの説明',
+        'tax_classification' => '税区分',
         'calendar_name' => 'カレンダー名',
-        'is_calendar_display' => 'カレンダー受付可否'
+        'is_calendar_display' => 'カレンダー受付可否',
+        'title' => '件名',
+        'text' => '本文',
+        'hospital_id' => '医療機関ID'
     ],
 ];
