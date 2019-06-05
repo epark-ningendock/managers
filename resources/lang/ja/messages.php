@@ -71,4 +71,5 @@ return [
         'reset_passoword' => '医療機関スタッフパスワードリセットメール',
         'registered' => '医療機関スタッフ登録メール',
     ],
+    'calendar_setting' => 'カレンダー管理'
 ];

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Enums\CalendarDisplay;
+use Illuminate\Validation\Rule;
 
 class CalendarFormRequest extends FormRequest
 {
@@ -24,14 +25,26 @@ class CalendarFormRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required',
-            'is_calendar_display' => 'required|enum_value:' . CalendarDisplay::class . ',false',
-            'unregistered_course_ids' => 'array',
-            'registered_course_ids' => 'array',
-            'unregistered_course_ids.*' => 'integer',
-            'registered_course_ids.*' => 'integer'
-        ];
+        if (str_contains($this->url(), 'setting')) {
+            return [
+                'days' => 'required|array',
+                'days.*' => 'integer',
+                'is_reservation_acceptances' => 'required|array',
+                'is_reservation_acceptances.*' => [ Rule::in([0, 1]) ],
+                'calendar_frames' => 'required|array',
+                'calendar_frames.*' => 'integer',
+            ];
+        } else {
+            return [
+                'name' => 'required',
+                'is_calendar_display' => 'required|enum_value:' . CalendarDisplay::class . ',false',
+                'unregistered_course_ids' => 'array',
+                'registered_course_ids' => 'array',
+                'unregistered_course_ids.*' => 'integer',
+                'registered_course_ids.*' => 'integer'
+            ];
+        }
+
     }
 
     public function messages()

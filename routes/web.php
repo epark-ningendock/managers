@@ -63,6 +63,6 @@ Route::get('/register', function () {
     return view('/vendor/adminlte/register');
 });
 
-Route::resource('/calendar', 'CalendarController')->except(['show']);
 Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting');
 Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting');
+Route::resource('/calendar', 'CalendarController')->except(['show']);
