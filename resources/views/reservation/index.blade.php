@@ -36,8 +36,8 @@
                 <div class="col-sm-9 form-inline">
                     <label for="s_text">予約日</label>
                         <div class="form-inline">
-                        {{ Form::text('reservation_date_start', old('reservation_date_start'), ['class' => 'form-control', 'id' => 'reservation_date_start-field', 'placeholder' => '2019-04-01']) }}
-                        {{ Form::text('reservation_date_end', old('reservation_date_end'), ['class' => 'form-control', 'id' => 'reservation_date_end-field', 'placeholder' => '2019-04-30']) }}
+                        {{ Form::text('reservation_date_start', old('reservation_date_start'), ['class' => 'datetimepicker form-control', 'id' => 'reservation_date_start-field', 'placeholder' => '2019-04-01']) }}
+                        {{ Form::text('reservation_date_end', old('reservation_date_end'), ['class' => 'datetimepicker form-control', 'id' => 'reservation_date_end-field', 'placeholder' => '2019-04-30']) }}
                     </div>
                 </div>
 
@@ -52,8 +52,8 @@
                 <div class="col-sm-9 form-inline">
                     <label for="s_text">来院日</label>
                     <div class="form-inline">
-                        {{ Form::text('completed_date_start', old('completed_date_start'), ['class' => 'form-control', 'id' => 'completed_date_start-field', 'placeholder' => '2019-04-01']) }}
-                        {{ Form::text('completed_date_end', old('completed_date_end'), ['class' => 'form-control', 'id' => 'completed_date_end-field', 'placeholder' => '2019-04-30']) }}
+                        {{ Form::text('completed_date_start', old('completed_date_start'), ['class' => 'datetimepicker form-control', 'id' => 'completed_date_start-field', 'placeholder' => '2019-04-01']) }}
+                        {{ Form::text('completed_date_end', old('completed_date_end'), ['class' => 'datetimepicker form-control', 'id' => 'completed_date_end-field', 'placeholder' => '2019-04-30']) }}
                     </div>
                 </div>
 
@@ -74,7 +74,12 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="s_text">生年月日</label>
-                        {{ Form::text('birthday', old('birthday'), ['class' => 'form-control', 'id' => 'birthday-field', 'placeholder' => '19850405']) }}
+                        <div class='input-group date' id="datetimepicker-birthday">
+                            {{ Form::text('birthday', old('birthday'), ['class' => 'form-control', 'id' => 'datetimepicker-birthday', 'placeholder' => '19850405']) }}
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -148,3 +153,28 @@
 
 
 @stop
+
+@push('css')
+    <link rel="stylesheet" type="text/css" href="{{ url('css/bootstrap-datepicker.min.css') }}">
+@endpush
+
+@push('js')
+    <script src="{{ url('js/handlebars.js') }}"></script>
+    <script src="{{ url('js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ url('js/bootstrap-datepicker.ja.min.js') }}"></script>
+    <script src="{{ url('js/bootstrap3-typeahead.min.js') }}"></script>
+    <script type="text/javascript">
+        (function ($) {
+            $('#datetimepicker-birthday').datepicker({
+                language:'ja',
+                defaultViewDate: '1990/05/05',
+                format: 'yyyymmdd',
+            });
+            $('.datetimepicker').datepicker({
+                language:'ja',
+                format: 'yyyy-mm-dd',
+            });
+        })(jQuery);
+    </script>
+@endpush
+
