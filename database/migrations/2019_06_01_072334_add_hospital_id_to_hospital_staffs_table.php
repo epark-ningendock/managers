@@ -14,8 +14,8 @@ class AddHospitalIdToHospitalStaffsTable extends Migration
     public function up()
     {
         Schema::table('hospital_staffs', function (Blueprint $table) {
-          $table->integer('hospital_id')->unsigned();
-          $table->foreign('hospital_id')->references('id')->on('hospitals');
+            $table->integer('hospital_id')->unsigned();
+            $table->foreign('hospital_id')->references('id')->on('hospitals');
         });
     }
 
@@ -27,8 +27,8 @@ class AddHospitalIdToHospitalStaffsTable extends Migration
     public function down()
     {
         Schema::table('hospital_staffs', function (Blueprint $table) {
-          $table->dropForeign('hospital_staffs_hospital_id_foreign');
-          $table->dropColumn('hospital_id');
+            $table->dropForeign('hospital_staffs_hospital_id_foreign');
+            $table->dropColumn('hospital_id');
         });
     }
 }

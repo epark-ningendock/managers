@@ -13,16 +13,16 @@ class HospitalStaffsTableSeeder extends Seeder
      */
     public function run()
     {
-      $hospitals = Hospital::all();
-      HospitalStaff::unguard();
-      DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $hospitals = Hospital::all();
+        HospitalStaff::unguard();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-      foreach ($hospitals as $hospital) {
-	      factory(HospitalStaff::class, 50)->create();
-      }
+        foreach ($hospitals as $hospital) {
+            factory(HospitalStaff::class, 50)->create();
+        }
 
-      // 動作確認用
-      DB::table('hospital_staffs')->insert([
+        // 動作確認用
+        DB::table('hospital_staffs')->insert([
         'login_id' => 'eparkdock02',
         'name' => 'eparkdock02',
         'email' => 'epark02@example.com',
@@ -30,7 +30,7 @@ class HospitalStaffsTableSeeder extends Seeder
         'hospital_id' => '1',
       ]);
 
-      DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-      HospitalStaff::reguard();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        HospitalStaff::reguard();
     }
 }

@@ -4,6 +4,7 @@ use \App\Course;
 use App\Calendar;
 use App\TaxClass;
 use App\Hospital;
+
 $factory->define(Course::class, function (Faker $faker) {
     $result = [
         'name' => $faker->name,

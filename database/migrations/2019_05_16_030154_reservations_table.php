@@ -20,11 +20,11 @@ class ReservationsTable extends Migration
             $table->integer('hospital_id')->unsigned();
             $table->integer('course_id')->unsigned();
             $table->date('reservation_date');
-            $table->string('start_time_hour',2)->nullable();
-            $table->string('start_time_min',2)->nullable();
-            $table->string('end_time_hour',2)->nullable();
-            $table->string('end_time_min',2)->nullable();
-            $table->char('channel',1)->nullable()->default(0);
+            $table->string('start_time_hour', 2)->nullable();
+            $table->string('start_time_min', 2)->nullable();
+            $table->string('end_time_hour', 2)->nullable();
+            $table->string('end_time_min', 2)->nullable();
+            $table->char('channel', 1)->nullable()->default(0);
             $table->char('reservation_status');
             $table->datetime('completed_date')->nullable();
             $table->datetime('cancel_date')->nullable();
@@ -50,7 +50,7 @@ class ReservationsTable extends Migration
             $table->integer('tel_timezone')->nullable();
             $table->integer('insurance_assoc_id')->nullable();
             $table->string('insurance_assoc')->nullable();
-            $table->char('mail_type',1);
+            $table->char('mail_type', 1);
             $table->string('cancelled_appoint_code')->nullable();
             $table->char('is_billable', 1)->nullable();
             $table->string('claim_month')->nullable();

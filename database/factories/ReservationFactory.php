@@ -3,11 +3,10 @@
 use Faker\Generator as Faker;
 
 $factory->define(App\Reservation::class, function (Faker $faker) {
-
     return [
         'hospital_id' => $faker->numberBetween(1, 50),
         'course_id' => $faker->numberBetween(1, 50),
-        'reservation_date' => $faker->date('Y-m-d','now'),
+        'reservation_date' => $faker->date('Y-m-d', 'now'),
         'start_time_hour' => sprintf('%02d', $faker->numberBetween(0, 23)),
         'start_time_min' => sprintf('%02d', $faker->numberBetween(0, 59)),
         'end_time_hour' => sprintf('%02d', $faker->numberBetween(0, 23)),
@@ -26,8 +25,8 @@ $factory->define(App\Reservation::class, function (Faker $faker) {
         'is_repeat' => $faker->randomElement([0, 1]),
         'is_representative' => $faker->randomElement([0, 1]),
         'timezone_pattern_id' => $faker->shuffle('abcdefghijklmnopqrstuvwxyz'),
-        'timezone_id' => $faker->shuffle('abcdefghijklmnopqrstuvwxyz',10),
-        'order' => $faker->shuffle('123',3),
+        'timezone_id' => $faker->shuffle('abcdefghijklmnopqrstuvwxyz', 10),
+        'order' => $faker->shuffle('123', 3),
         'tax_included_price' => null,
         'adjustment_price' => null,
         'tax_rate' => null,
@@ -44,7 +43,7 @@ $factory->define(App\Reservation::class, function (Faker $faker) {
         'claim_month' => null,
         'is_payment' => $faker->randomElement(['0', '1']),
         'payment_status' => $faker->randomElement(['1', '2', '3', '9']),
-        'trade_id' => $faker->shuffle('abcdefghijklmnopqrstuvwxyz',10),
+        'trade_id' => $faker->shuffle('abcdefghijklmnopqrstuvwxyz', 10),
         'order_id' => null,
         'settlement_price' => $faker->numberBetween(1000, 4000),
         'payment_method' => $faker->randomElement(['現金', 'クレジットカード']),

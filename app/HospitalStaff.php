@@ -21,7 +21,6 @@ class HospitalStaff extends Authenticatable
     protected $table = 'hospital_staffs';
 
     protected $fillable = [
-  		'name', 'email', 'login_id', 'password',
-  	];
-
+        'name', 'email', 'login_id', 'password',
+    ];
 }

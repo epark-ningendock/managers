@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Validator;
 
-class LoginFormRequest extends FormRequest
+class ReceptionEmailSettingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +13,7 @@ class LoginFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,10 +23,8 @@ class LoginFormRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-          'login_id' => 'required|between:8,50|regex:/^[-_ a-zA-Z0-9]+$/',
-          'password' => 'required|between:8,20|regex:/^[a-zA-Z0-9]+$/'
+        return [
+            //
         ];
-        return $rules;
     }
 }
