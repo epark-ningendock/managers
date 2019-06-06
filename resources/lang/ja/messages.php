@@ -19,8 +19,9 @@ return [
     */
 
     'created' => ':nameが登録しました。',
-    'updated' => ':nameが変更されました。',
-    'deleted' => ':nameを削除しました。',
+    'updated' => ':nameが削除しました。',
+	'remove' => '削除する',
+    'deleted' => ':nameが変更しました。',
     'sent' => ':mailを送信しました。',
     'hospital_staff_update_passoword' => '医療機関スタッフのパスワードを更新しました',
     'token_expired' => 'トークンが期限切れです。再送信してください',
@@ -30,15 +31,14 @@ return [
     'restored' => ':nameが復元されます。',
     'staff_create_error' => '正しく登録されませんでした。',
     'create_error' => 'エラーが発生しました。',
-    'update_error' => 'エラーが発生しました。',
     'delete_confirmation' => '本当に削除しても宜しいですか？<br/>この処理は取り消せません。',
-    'delete_popup_title' => '確認を削除',
-    'delete_popup_content' => 'これを削除してよろしいです :name？',
+	'delete_popup_title' => '確認を削除',
+	'delete_popup_content' => 'これを削除してよろしいです :name？',
     'classification_delete_popup_content' => 'この分類を削除します。よろしいですか？',
     'classification_restore_popup_content' => 'この分類を復元します。よろしいですか？',
     'classification_sort_updated' => '分類レコードの順序が更新されました。',
     'invalid_classification_id' => '分類IDが存在しません',
-    'no_record' => 'レコードがありません',
+	'no_record' => 'レコードがありません',
     'major_classification' => [
         'child_exist_error_on_delete' => '中分類の記録があります。 操作は完了できません。'
     ],
@@ -59,8 +59,8 @@ return [
         'classification' => '分類',
         'classifications' => [
             'major' => '大分類',
-        'password' => 'パスワード',
-        'current_password' => '現在のパスワード',
+	    'password' => 'パスワード',
+	    'current_password' => '現在のパスワード',
             'middle' => '中分類',
             'minor' => '小分類'
         ],
@@ -72,4 +72,11 @@ return [
         'reset_passoword' => '医療機関スタッフパスワードリセットメール',
         'registered' => '医療機関スタッフ登録メール',
     ],
+	'option_name' => 'オプション名',
+	'option_description' => 'オプションの説明',
+	'price' => '価格',
+	'tax_classification' => '税区分',
+	'invalid_option_id' => '無効なオプションID',
+	'option_sorting_updated' => 'オプションソートの更新',
+	'need_to_login' => 'あなたは最初にログインする必要があります',
 ];

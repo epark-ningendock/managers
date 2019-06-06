@@ -67,11 +67,23 @@ Route::get('/register', function () {
 });
 
 
+
 Auth::routes();
 Route::get('/login', 'Auth\LoginController@getLogin')->name('login');
 Route::post('/login', 'Auth\LoginController@postLogin');
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+/*
+|--------------------------------------------------------------------------
+| Medical Institution Management Option
+|--------------------------------------------------------------------------
+*/
+Route::get('option/sort', 'OptionController@sort')->name('option.sort');
+Route::resource('option', 'OptionController', ['excerpt' => 'show']);
+Route::patch('option/sort/update', 'OptionController@updateSort')->name('option.updateSort');
+
+
 
 Route::resource('/calendar', 'CalendarController')->except(['show']);
 

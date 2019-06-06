@@ -105,6 +105,9 @@ class HospitalStaffInputFieldsTest extends TestCase
             'email'    => 'john@mail.com',
             'login_id' => 'f93kffhfu',
             'password' => bcrypt('123456'),
+            'hospital_id' => 1,
+            'reset_token_digest' => '$2y$10$TKh8H1.PfQx37YgCzwi',
+            'reset_sent_at' => $faker->dateTime,
             '_token'   => csrf_token(),
         ], $overwrites);
     }

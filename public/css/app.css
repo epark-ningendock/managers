@@ -2203,3 +2203,8 @@ Custom CSS
   width: 100%;
 }
 
+table tr td.gray-column {
+  background: #e5e2e2;
+  padding-left: 30px;
+}
+
