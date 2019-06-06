@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\ReceptionEmailSetting;
 
 class ReceprionEmailSettingsTableSeeder extends Seeder
 {
@@ -11,6 +12,6 @@ class ReceprionEmailSettingsTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+        factory(ReceptionEmailSetting::class, 10)->create();
     }
 }
