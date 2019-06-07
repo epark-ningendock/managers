@@ -159,14 +159,14 @@
                   <tr>
                     @foreach($week as $day)
                       @if($day != null)
-                        <td class="@if($day['date']->isSunday()) holiday @elseif($day['date']->isSaturday()) saturday @endif">
+                        <td class="@if($day['date']->isSunday() || (isset($day['calendar_day']) && $day['calendar_day']->is_holiday == 1)) holiday @elseif($day['date']->isSaturday()) saturday @endif">
                           <!-- date -->
                           <input type="hidden" name="days[]" value="{{ $day['date']->format('Ymd') }}" />
                           <span class="day-label @if($day['date']->isSunday() || (isset($day['calendar_day']) && $day['calendar_day']->is_holiday == '1')) text-red @elseif($day['date']->isSaturday()) text-blue @endif">
                             {{ $day['date']->day }}
                           </span>
 
-                          <div class="data-box @if(isset($day['calendar_day']) || ($day['date']->isPast())) bg-gray @endif">
+                          <div class="data-box @if(isset($day['calendar_day']) && $day['calendar_day']->is_holiday == 1) holiday @elseif($day['date']->isPast())) bg-gray @endif">
                             <!-- holiday and reservation acceptance -->
                             @if(isset($day['calendar_day']) && $day['calendar_day']->is_holiday == '1')
                               <span class="day-label text-red">休</span>
