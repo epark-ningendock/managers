@@ -23,9 +23,15 @@ class HospitalStaffControllerTest extends TestCase
 		$this->assertEquals(20, $HospitalStaff->count());
 	}
 
+	public function loginWithHospitalStaff() {
+		factory(HospitalStaff::class)->create(['login_id' => 'john', 'password' => bcrypt('ok')]);
+		auth('hospital_staffs')->attempt(['login_id' => 'john', 'password' => 'ok']);
+	}
+
 
 	public function testItHasCreatePage()
 	{
+		$this->loginWithHospitalStaff();
 		$response = $this->get('/hospital-staff/create');
 
 		$response->assertStatus(200);
@@ -33,6 +39,7 @@ class HospitalStaffControllerTest extends TestCase
 
 	public function testItHasEditPage()
 	{
+		$this->loginWithHospitalStaff();
 		$hospital_staff = factory(HospitalStaff::class)->create();
 
 		$response = $this->get('/hospital-staff/'. $hospital_staff->id .'/edit');
@@ -52,6 +59,7 @@ class HospitalStaffControllerTest extends TestCase
 
 	public function testItHasShowPasswordResetsPage()
 	{
+		$this->loginWithHospitalStaff();
 		$response = $this->get('/hospital-staff/show-password-resets-mail/');
 
 		$response->assertStatus(200);
@@ -59,6 +67,7 @@ class HospitalStaffControllerTest extends TestCase
 
 	public function testItHasShowResetPasswordPage()
 	{
+		$this->loginWithHospitalStaff();
 		$hospital = factory(Hospital::class)->create();
 		$hospital_staff = factory(HospitalStaff::class)->create(['hospital_id' => $hospital->id]);
 
