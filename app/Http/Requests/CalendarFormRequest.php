@@ -30,9 +30,9 @@ class CalendarFormRequest extends FormRequest
                 'days' => 'required|array',
                 'days.*' => 'integer',
                 'is_reservation_acceptances' => 'required|array',
-                'is_reservation_acceptances.*' => [ Rule::in([0, 1]) ],
-                'calendar_frames' => 'required|array',
-                'calendar_frames.*' => 'integer',
+                'is_reservation_acceptances.*' => [ Rule::in(['0', '1']) ],
+                'reservation_frames' => 'required|array',
+                'reservation_frames.*' => 'nullable|integer',
             ];
         } else {
             return [

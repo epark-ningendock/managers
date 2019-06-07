@@ -159,44 +159,52 @@
                   <tr>
                     @foreach($week as $day)
                       @if($day != null)
-                        <td class="@if(isset($day['date']) && $day['date']->isPast()) bg-gray @endif">
+                        <td class="@if($day['date']->isSunday()) holiday @elseif($day['date']->isSaturday()) saturday @endif">
                           <!-- date -->
                           <input type="hidden" name="days[]" value="{{ $day['date']->format('Ymd') }}" />
                           <span class="day-label @if($day['date']->isSunday() || (isset($day['calendar_day']) && $day['calendar_day']->is_holiday == '1')) text-red @elseif($day['date']->isSaturday()) text-blue @endif">
                             {{ $day['date']->day }}
                           </span>
 
-                          <!-- holiday and reservation acceptance -->
-                          @if(isset($day['calendar_day']) && $day['calendar_day']->is_holiday == '1')
-                            <span class="text-red">休</span>
-                          @else
-                            <a @if(!$day['date']->isPast())class="is_reservation_acceptance day-label" @else class="day-label" @endif>
-                              {{ isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0' ? '✕' : '◯' }}
-                            </a>
-                          @endif
+                          <div class="data-box @if(isset($day['calendar_day']) || ($day['date']->isPast())) bg-gray @endif">
+                            <!-- holiday and reservation acceptance -->
+                            @if(isset($day['calendar_day']) && $day['calendar_day']->is_holiday == '1')
+                              <span class="day-label text-red">休</span>
+                            @elseif(!$day['date']->isPast())
+                              <a class="is_reservation_acceptance day-label">
+                                {{ isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0' ? '✕' : '◯' }}
+                              </a>
+                            @else
+                              <span class="day-label">&nbsp;</span>
+                            @endif
+                            <input type="hidden" name="is_reservation_acceptances[]" value="{{ isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">
 
-                          <!-- reservation frame -->
-                          <input type="hidden" name="is_reservation_acceptances[]" value="{{ isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">
-                          @if($day['date']->isPast())
-                            {{  isset($day['calendar_day']) ? $day['calendar_day']->calendar_frame : 0}}
-                            <input type="hidden" name="calendar_frames[]" value="{{  isset($day['calendar_day']) ? $day['calendar_day']->calendar_frame : 0}}" />
-                          @else
-                            <select name="calendar_frames[]" class='calendar-frame' data-day="{{ $day['date']->day }}"
-                                    data-origin="{{ isset($day['calendar_day']) ? $day['calendar_day']->calendar_frame : '' }}">
-                              <option></option>
-                              @foreach(range(0, 99) as $i)
-                                <option @if(isset($day['calendar_day']) && $day['calendar_day']->calendar_frame == $i)) selected @endif>
-                                  {{ $i }}
-                                </option>
-                              @endforeach
-                            </select>
-                          @endif
+                            <!-- reservation frame -->
+                            @if($day['date']->isPast())
+                              {{  isset($day['calendar_day']) ? $day['calendar_day']->calendar_frame : 0}}
+                              <input type="hidden" name="reservation_frames[]" value="{{  isset($day['calendar_day']) ? $day['calendar_day']->reservation_frames : 0}}" />
+                            @else
+                              <select name="reservation_frames[]" class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
+                                      @if(isset($day['calendar_day']) && $day['calendar_day']->is_holiday === 1) data-holiday="true" @endif
+                                      data-origin="{{ isset($day['calendar_day']) ? $day['calendar_day']->reservation_frames : '' }}">
+                                <option></option>
+                                @foreach(range(0, 99) as $i)
+                                  <option @if(isset($day['calendar_day']) && $day['calendar_day']->reservation_frames === $i)) selected @endif>
+                                    {{ $i }}
+                                  </option>
+                                @endforeach
+                              </select>
+                            @endif
 
-                          <!-- reservation count -->
-                          <span class="reservation-count">予約 : {{ 0 }}</span>
+                            <!-- reservation count -->
+                            <span class="reservation-count mb-4">予約 : {{ isset($day['reservation_count']) ? $day['reservation_count'] : 0 }}</span>
+                          </div>
                         </td>
                       @else
-                        <td></td>
+                        <td>
+                          <span class="day-label">&nbsp;</span>
+                          <div class="data-box"></div>
+                        </td>
                       @endif
                     @endforeach
                   </tr>
@@ -218,7 +226,6 @@
         <button class="btn btn-primary" id="clear-data">期間限定・予約枠の数全てクリア</button>
         <button class="btn btn-primary" id="reset-data">設定のクリア</button>
         <button class="btn btn-primary" id="clear-data">登録する</button>
-        <button class="btn btn-default pull-right">トップへ</button>
       </div>
     </div>
   </form>
@@ -226,6 +233,9 @@
   <style>
     .top-table td, .top-table th, .calendar-table th {
       text-align: center;
+    }
+    .calendar-table tbody tr td {
+      padding: 0px;
     }
     .calendar-table td a {
       cursor: pointer;
@@ -250,6 +260,18 @@
       margin-top: 4px;
       display: block;
       text-align: center;
+    }
+    .data-box {
+      padding-top: 5px;
+      border-top: 1px solid #f4f4f4;
+      height: 90px;
+    }
+    .holiday {
+      /*background-color: rgba(254, 109, 104, .6) !important;*/
+      background-color: #FCE4E4;
+    }
+    .saturday {
+      background-color: #CBE0F8;
     }
   </style>
 @stop
@@ -306,6 +328,7 @@
                   event.preventDefault();
                   event.stopPropagation();
 
+                  const holidayFrame=  $('#holiday-frame').val();
                   const frames = [
                       $('#sunday-frame').val(),
                       $('#monday-frame').val(),
@@ -321,24 +344,28 @@
                           $(table).find('.calendar-frame').each(function(j, ele){
                               ele = $(ele);
                               const day = parseInt(ele.data('day'));
+                              const isHoliday = ele.data('holiday');
 
-                              let weekKey = '#week-';
-                              if(day >= 1 && day <= 7) {
-                                  weekKey += 1;
-                              } else if(day >= 8 && day <= 14) {
-                                  weekKey += 2;
-                              } if(day >= 15 && day <= 21) {
-                                  weekKey += 3;
-                              } if(day >= 22 && day <= 28) {
-                                  weekKey += 4;
-                              } else if(day > 28) {
-                                  weekKey += 5;
+                              if (isHoliday) {
+                                  ele.val(holidayFrame);
+                              } else {
+                                  let weekKey = '#week-';
+                                  if(day >= 1 && day <= 7) {
+                                      weekKey += 1;
+                                  } else if(day >= 8 && day <= 14) {
+                                      weekKey += 2;
+                                  } if(day >= 15 && day <= 21) {
+                                      weekKey += 3;
+                                  } if(day >= 22 && day <= 28) {
+                                      weekKey += 4;
+                                  } else if(day > 28) {
+                                      weekKey += 5;
+                                  }
+
+                                  if ($(weekKey).prop('checked')) {
+                                      ele.val(frames[ele.parents('td').index()]);
+                                  }
                               }
-
-                              if ($(weekKey).prop('checked')) {
-                                  ele.val(frames[ele.parent('td').index()]);
-                              }
-
                           });
                       }
                   });
@@ -368,7 +395,11 @@
                   });
               });
           })();
-
       })(jQuery);
+
+      /* ---------------------------------------------------
+      // scroll to top feature
+      -----------------------------------------------------*/
+      addScrollToTop();
   </script>
 @stop

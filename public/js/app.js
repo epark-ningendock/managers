@@ -68,7 +68,7 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(1);
-module.exports = __webpack_require__(4);
+module.exports = __webpack_require__(5);
 
 
 /***/ }),
@@ -77,7 +77,9 @@ module.exports = __webpack_require__(4);
 
 window.Modal = __webpack_require__(2);
 
-__webpack_require__(3);
+window.addScrollToTop = __webpack_require__(3).addScrollToTop;
+
+__webpack_require__(4);
 
 /***/ }),
 /* 2 */
@@ -114,6 +116,69 @@ module.exports.showMessage = function (message) {
 /* 3 */
 /***/ (function(module, exports) {
 
+/**
+ * add scroll to top feature to page
+ */
+module.exports.addScrollToTop = function () {
+    (function ($) {
+        $(function () {
+            var slideToTop = $("<div />");
+            slideToTop.html('<i class="fa fa-chevron-up"></i>');
+            slideToTop.css({
+                position: 'fixed',
+                bottom: '20px',
+                right: '25px',
+                width: '40px',
+                height: '40px',
+                color: '#eee',
+                'font-size': '',
+                'line-height': '40px',
+                'text-align': 'center',
+                'background-color': '#222d32',
+                cursor: 'pointer',
+                'border-radius': '5px',
+                'z-index': '99999',
+                opacity: '.7',
+                'display': 'none'
+            });
+            slideToTop.on('mouseenter', function () {
+                $(this).css('opacity', '1');
+            });
+            slideToTop.on('mouseout', function () {
+                $(this).css('opacity', '.7');
+            });
+            $('.wrapper').append(slideToTop);
+            $(window).scroll(function () {
+                if ($(window).scrollTop() >= 150) {
+                    if (!$(slideToTop).is(':visible')) {
+                        $(slideToTop).fadeIn(500);
+                    }
+                } else {
+                    $(slideToTop).fadeOut(500);
+                }
+            });
+            $(slideToTop).click(function () {
+                $("html, body").animate({
+                    scrollTop: 0
+                }, 500);
+            });
+            $(".sidebar-menu li:not(.treeview) a").click(function () {
+                var $this = $(this);
+                var target = $this.attr("href");
+                if (typeof target === 'string') {
+                    $("html, body").animate({
+                        scrollTop: $(target).offset().top + "px"
+                    }, 500);
+                }
+            });
+        });
+    })(jQuery);
+};
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
 (function ($) {
 
     /* ---------------------------------------------------
@@ -136,7 +201,7 @@ module.exports.showMessage = function (message) {
 })(jQuery);
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

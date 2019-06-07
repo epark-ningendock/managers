@@ -11,6 +11,7 @@ use App\Course;
 use App\Http\Requests\CalendarFormRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use App\Reservation;
 
 class CalendarController extends Controller
 {
@@ -153,6 +154,14 @@ class CalendarController extends Controller
             ->whereDate('date', '>=', $start->toDateString())
             ->whereDate('date', '<=', $end->toDateString())->get();
 
+        $reservation_counts = Reservation::join('courses', 'courses.id', '=', 'reservations.course_id')
+            ->whereDate('reservation_date', '>=', $start->toDateString())
+            ->whereDate('reservation_date', '<=', $end->toDateString())
+            ->where('courses.calendar_id', $id)
+            ->groupBy('reservation_date')
+            ->orderBy('reservation_date')
+            ->selectRaw('count(*) as count, DATE_FORMAT(reservation_date, "%Y%m%d") as reservation_date')
+            ->pluck('count', 'reservation_date');
 
         while($start->lt($end)) {
             $key = $start->format('Y年m月');
@@ -172,7 +181,10 @@ class CalendarController extends Controller
             $calendar_day = $calendar_days->first(function($day) use ($start) {
                 return $day->date->isSameDay($start);
             });
-            $month->push([ 'date' => $start->copy(), 'calendar_day' => $calendar_day ]);
+
+            $reservation = $reservation_counts->get($start->format('Ymd'));
+
+            $month->push([ 'date' => $start->copy(), 'calendar_day' => $calendar_day, 'reservation_count' => $reservation ]);
 
             if ($start->isLastOfMonth() && !$start->isSaturday()) {
                 for ($i = $start->dayOfWeek; $i < 6; $i++) {
@@ -213,10 +225,11 @@ class CalendarController extends Controller
 
             $days = collect($request->input('days'));
             $is_reservation_acceptances = collect($request->input('is_reservation_acceptances'));
-            $calendar_frames = collect($request->input('calendar_frames'));
+            $reservation_frames = collect($request->input('reservation_frames'));
 
             while($start->lt($end)) {
                 if($start->isPast()) {
+                    $start->addDay(1);
                     continue;
                 }
                 $calendar_day = $calendar_days->first(function($day) use ($start) {
@@ -227,15 +240,17 @@ class CalendarController extends Controller
                     return $start->format('Ymd') == $d;
                 });
                 $is_reservation_acceptance = $is_reservation_acceptances->get($index);
-                $calendar_frame = $calendar_frames->get($index);
+                $reservation_frame = $reservation_frames->get($index);
 
-                if(isset($calendar_day)) {
+                if(!isset($calendar_day)) {
                     $calendar_day = new CalendarDay();
+                    $calendar_day->date = $start->copy();
+                    $calendar_day->is_holiday = 0;
                     $calendar_days->push($calendar_day);
                 }
 
                 $calendar_day->is_reservation_acceptance = $is_reservation_acceptance;
-                $calendar_day->calendar_frame = $calendar_frame;
+                $calendar_day->reservation_frames = $reservation_frame;
 
                 $start->addDay(1);
             }

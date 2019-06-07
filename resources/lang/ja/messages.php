@@ -31,6 +31,7 @@ return [
     'restored' => ':nameが復元されます。',
     'staff_create_error' => '正しく登録されませんでした。',
     'create_error' => 'エラーが発生しました。',
+    'update_error' => 'エラーが発生しました。',
     'delete_confirmation' => '本当に削除しても宜しいですか？<br/>この処理は取り消せません。',
 	'delete_popup_title' => '確認を削除',
 	'delete_popup_content' => 'これを削除してよろしいです :name？',
@@ -66,7 +67,8 @@ return [
         ],
         'course' => '検査コース',
         'calendar' => 'カレンダー',
-        'email_template' => 'メールテンプレート'
+        'email_template' => 'メールテンプレート',
+        'calendar_setting' => 'カレンダー管理'
     ],
     'mails' => [
         'reset_passoword' => '医療機関スタッフパスワードリセットメール',
@@ -78,6 +80,5 @@ return [
 	'tax_classification' => '税区分',
 	'invalid_option_id' => '無効なオプションID',
 	'option_sorting_updated' => 'オプションソートの更新',
-	'need_to_login' => 'あなたは最初にログインする必要があります',
-    'calendar_setting' => 'カレンダー管理'
+	'need_to_login' => 'あなたは最初にログインする必要があります'
 ];
