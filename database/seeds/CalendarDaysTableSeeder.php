@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\CalendarDay;
+use App\Calendar;
 
 class CalendarDaysTableSeeder extends Seeder
 {
@@ -12,6 +13,12 @@ class CalendarDaysTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(CalendarDay::class, 50)->create();
+        $calendars = Calendar::all();
+        foreach($calendars as $calendar) {
+            factory(CalendarDay::class, 10)->create([
+                'calendar_id' => $calendar->id
+            ]);
+        }
+
     }
 }

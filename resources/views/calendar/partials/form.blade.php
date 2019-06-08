@@ -70,6 +70,7 @@
     overflow-y: auto;
   }
   .transfer {
+    width: 70px;
     margin-top: 80px;
   }
 </style>
