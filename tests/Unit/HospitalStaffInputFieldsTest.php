@@ -2,8 +2,10 @@
 
 namespace Tests\Unit;
 
+use App\Hospital;
 use App\HospitalStaff;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -11,7 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class HospitalStaffInputFieldsTest extends TestCase
 {
-    use DatabaseMigrations, RefreshDatabase;
+    use DatabaseMigrations, RefreshDatabase, WithFaker;
 
     protected function setUp()
     {
@@ -52,6 +54,8 @@ class HospitalStaffInputFieldsTest extends TestCase
      */
     protected function itValidateField($attributes)
     {
+	    factory(HospitalStaff::class)->create(['login_id' => 'john', 'password' => bcrypt('ok')]);
+	    auth('hospital_staffs')->attempt(['login_id' => 'john', 'password' => 'ok']);
         $this->withExceptionHandling();
 
         return $this->post('/hospital-staff', $this->validFields($attributes));
@@ -59,7 +63,15 @@ class HospitalStaffInputFieldsTest extends TestCase
 
     public function testItCanCreateHospitalStaff()
     {
-        $response = $this->call('POST', 'hospital-staff', $this->validFields());
+    	factory(HospitalStaff::class)->create(['login_id' => 'john', 'password' => bcrypt('ok')]);
+    	auth('hospital_staffs')->attempt(['login_id' => 'john', 'password' => 'ok']);
+//	    $hospital_staff = Auth::guard('hospital_staffs')->user();
+
+        $response = $this->call('POST', 'hospital-staff', [
+        	'login' => 'peter',
+	        'name' => 'Peter',
+	        'email' => 'peter@mail.com'
+        ]);
 
         $this->assertEquals(302, $response->getStatusCode());
     }
@@ -83,9 +95,11 @@ class HospitalStaffInputFieldsTest extends TestCase
 
     public function testItCanDeleteHospitalStaff()
     {
+	    factory(HospitalStaff::class)->create(['login_id' => 'john', 'password' => bcrypt('ok')]);
+	    auth('hospital_staffs')->attempt(['login_id' => 'john', 'password' => 'ok']);
         $hospital_staff = factory(HospitalStaff::class)->create();
 
-        $response = $this->call('DELETE', '/hospital-staff/' . $hospital_staff->id, [ '_token' => csrf_token() ]);
+        $this->call('DELETE', '/hospital-staff/' . $hospital_staff->id, [ '_token' => csrf_token() ]);
         //		$this->assertEquals( 302, $response->getStatusCode() );
         $this->assertSoftDeleted('hospital_staffs', ['id' => $hospital_staff->id,'email' => $hospital_staff->email, 'login_id' => $hospital_staff->login_id]);
     }
@@ -105,9 +119,9 @@ class HospitalStaffInputFieldsTest extends TestCase
             'email'    => 'john@mail.com',
             'login_id' => 'f93kffhfu',
             'password' => bcrypt('123456'),
-            'hospital_id' => 1,
+            'hospital_id' => factory(Hospital::class)->create()->id,
             'reset_token_digest' => '$2y$10$TKh8H1.PfQx37YgCzwi',
-            'reset_sent_at' => $faker->dateTime,
+            'reset_sent_at' => $this->faker->dateTime,
             '_token'   => csrf_token(),
         ], $overwrites);
     }
