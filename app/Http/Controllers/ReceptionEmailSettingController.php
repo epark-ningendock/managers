@@ -11,6 +11,7 @@ class ReceptionEmailSettingController extends Controller
 {
     public function index()
     {
+        return view('reception_email_setting.index', [ 'reception_email_setting' => ReceptionEmailSetting::findOrFail(1) ]);
     }
 
     public function create()

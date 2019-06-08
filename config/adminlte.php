@@ -115,7 +115,7 @@ return [
             'icon'        => 'user',
         ],
         [
-            'text'        => '医療機関スタッフ',
+            'text'        => '医療機関スタッフ管理',
             'url'         => '/hospital-staff',
             'icon'        => 'user',
         ],
@@ -125,6 +125,11 @@ return [
             'icon'        => 'user',
         ],
         [
+            'text'        => '医療機関管理',
+            'url'         => '/hospital',
+            'icon'        => 'hospital-o',
+        ],
+        [
             'text'        => '検査コース分類管理',
             'url'         => '/classification',
             'icon'        => 'book',
@@ -132,17 +137,12 @@ return [
         [
             'text'        => '検査コース管理',
             'url'         => '/course',
-            'icon'        => 'graduation-cap',
-        ],
-        [
-            'text'        => '医療機関',
-            'url'         => '/hospital',
             'icon'        => 'book',
         ],
         [
-            'text'        => '医療機関管理',
-            'url'         => '/',
-            'icon'        => 'hospital-o',
+            'text'        => '検査コースオプション管理',
+            'url'         => '/option',
+            'icon'        => 'book',
         ],
         [
             'text'        => 'カレンダー管理',
@@ -150,15 +150,15 @@ return [
             'icon'        => 'calendar',
         ],
         [
-            'text'        => 'オプション',
-            'url'         => '/option',
-            'icon'        => 'book',
-        ],
-        [
-            'text'        => 'テンプレート管理',
+            'text'        => 'メールテンプレート管理',
             'url'         => '/email-template',
-            'icon'        => 'sticky-note-o',
-        ]
+            'icon'        => 'gear',
+        ],
+        [
+            'text'        => '受付メール設定',
+            'url'         => '/reception-email-setting',
+            'icon'        => 'gear ',
+        ],
     ],
 
     /*
