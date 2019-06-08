@@ -18,10 +18,11 @@ class CreateCalendarDaysTable extends Migration
         Schema::create('calendar_days', function (Blueprint $table) {
             $table->increments('id');
             $table->date('date');
-            $table->tinyInteger('holiday_flg')->unsigned();
-            $table->tinyInteger('reservation_flg')->unsigned();
-            $table->integer('reservation_flames')->nullable();
-            $table->integer('reservation_id');
+            $table->tinyInteger('is_holiday')->unsigned();
+            $table->tinyInteger('is_reservation_acceptance')->unsigned();
+            $table->integer('reservation_frames')->nullable();
+            $table->integer('calendar_id')->unsigned();
+            $table->foreign('calendar_id')->references('id')->on('calendars');
             $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
         });
