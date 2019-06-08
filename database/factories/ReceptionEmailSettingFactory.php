@@ -19,6 +19,6 @@ $factory->define(ReceptionEmailSetting::class, function (Faker $faker) {
         'reception_email4' => $faker->unique()->safeEmail,
         'reception_email5' => $faker->unique()->safeEmail,
         'epark_in_hospital_reception_mail_flg' => $faker->randomElement([0, 1]),
-        'epark_web_eception_email_flg' => $faker->randomElement([0, 1]),
+        'epark_web_reception_email_flg' => $faker->randomElement([0, 1]),
     ];
 });

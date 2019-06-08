@@ -5,8 +5,7 @@
 @stop
 
 @section('form')
-  {{-- <form method="POST" action="{{ route('staff.update', $staff->id) }}">
-    {!! method_field('PATCH') !!}
-    @include('staff.partials.form')
-  </form> --}}
+  {{ Form::open(['route' => array('reception-email-setting.update', $reception_email_setting->id), 'method' => 'post']) }}
+    {{ method_field('PUT') }}
+    @include('reception_email_setting.partials.form')
 @stop

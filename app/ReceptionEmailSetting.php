@@ -20,6 +20,6 @@ class ReceptionEmailSetting extends Model
         'reception_email4',
         'reception_email5',
         'epark_in_hospital_reception_mail_flg',
-        'epark_web_eception_email_flg'
+        'epark_web_reception_email_flg'
     ];
 }

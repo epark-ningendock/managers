@@ -44,7 +44,6 @@ class CalendarFormRequest extends FormRequest
                 'registered_course_ids.*' => 'integer'
             ];
         }
-
     }
 
     public function messages()

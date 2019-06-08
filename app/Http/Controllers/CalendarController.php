@@ -135,7 +135,6 @@ class CalendarController extends Controller
      */
     public function destroy(Calendar $calendar)
     {
-
     }
 
     /**
@@ -163,7 +162,7 @@ class CalendarController extends Controller
             ->selectRaw('count(*) as count, DATE_FORMAT(reservation_date, "%Y%m%d") as reservation_date')
             ->pluck('count', 'reservation_date');
 
-        while($start->lt($end)) {
+        while ($start->lt($end)) {
             $key = $start->format('Y年m月');
             $month = $months->get($key);
 
@@ -178,7 +177,7 @@ class CalendarController extends Controller
                 }
             }
 
-            $calendar_day = $calendar_days->first(function($day) use ($start) {
+            $calendar_day = $calendar_days->first(function ($day) use ($start) {
                 return $day->date->isSameDay($start);
             });
 
@@ -227,22 +226,22 @@ class CalendarController extends Controller
             $is_reservation_acceptances = collect($request->input('is_reservation_acceptances'));
             $reservation_frames = collect($request->input('reservation_frames'));
 
-            while($start->lt($end)) {
-                if($start->isPast()) {
+            while ($start->lt($end)) {
+                if ($start->isPast()) {
                     $start->addDay(1);
                     continue;
                 }
-                $calendar_day = $calendar_days->first(function($day) use ($start) {
+                $calendar_day = $calendar_days->first(function ($day) use ($start) {
                     return $day->date->isSameDay($start);
                 });
 
-                $index = $days->search(function($d) use ($start) {
+                $index = $days->search(function ($d) use ($start) {
                     return $start->format('Ymd') == $d;
                 });
                 $is_reservation_acceptance = $is_reservation_acceptances->get($index);
                 $reservation_frame = $reservation_frames->get($index);
 
-                if(!isset($calendar_day)) {
+                if (!isset($calendar_day)) {
                     $calendar_day = new CalendarDay();
                     $calendar_day->date = $start->copy();
                     $calendar_day->is_holiday = 0;

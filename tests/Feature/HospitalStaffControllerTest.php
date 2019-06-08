@@ -12,72 +12,73 @@ use Carbon\Carbon;
 
 class HospitalStaffControllerTest extends TestCase
 {
-	use DatabaseMigrations, RefreshDatabase;
+    use DatabaseMigrations, RefreshDatabase;
 
-	public function testItCanListPage()
-	{
-		$hospital = factory(Hospital::class)->create();
-		factory(HospitalStaff::class, 50)->create(['hospital_id' => $hospital->id]);
-		$HospitalStaff = HospitalStaff::paginate(20);
+    public function testItCanListPage()
+    {
+        $hospital = factory(Hospital::class)->create();
+        factory(HospitalStaff::class, 50)->create(['hospital_id' => $hospital->id]);
+        $HospitalStaff = HospitalStaff::paginate(20);
 
-		$this->assertEquals(20, $HospitalStaff->count());
-	}
+        $this->assertEquals(20, $HospitalStaff->count());
+    }
 
-	public function loginWithHospitalStaff() {
-		factory(HospitalStaff::class)->create(['login_id' => 'john', 'password' => bcrypt('ok')]);
-		auth('hospital_staffs')->attempt(['login_id' => 'john', 'password' => 'ok']);
-	}
+    public function loginWithHospitalStaff()
+    {
+        factory(HospitalStaff::class)->create(['login_id' => 'john', 'password' => bcrypt('ok')]);
+        auth('hospital_staffs')->attempt(['login_id' => 'john', 'password' => 'ok']);
+    }
 
 
-	public function testItHasCreatePage()
-	{
-		$this->loginWithHospitalStaff();
-		$response = $this->get('/hospital-staff/create');
+    public function testItHasCreatePage()
+    {
+        $this->loginWithHospitalStaff();
+        $response = $this->get('/hospital-staff/create');
 
-		$response->assertStatus(200);
-	}
+        $response->assertStatus(200);
+    }
 
-	public function testItHasEditPage()
-	{
-		$this->loginWithHospitalStaff();
-		$hospital_staff = factory(HospitalStaff::class)->create();
+    public function testItHasEditPage()
+    {
+        $this->loginWithHospitalStaff();
+        $hospital_staff = factory(HospitalStaff::class)->create();
 
-		$response = $this->get('/hospital-staff/'. $hospital_staff->id .'/edit');
+        $response = $this->get('/hospital-staff/'. $hospital_staff->id .'/edit');
 
-		$response->assertStatus(200);
-	}
+        $response->assertStatus(200);
+    }
 
-	// ログイン機能ができた時に記載する
-	// function testItHasEditPasswordPage()
-	// {
+    // ログイン機能ができた時に記載する
+    // function testItHasEditPasswordPage()
+    // {
 
-	// 	$response = $this->get('/hospital-staff/edit-password/');
+    // 	$response = $this->get('/hospital-staff/edit-password/');
 
-	// 	$response->assertStatus(200);
+    // 	$response->assertStatus(200);
 
-	// }
+    // }
 
-	public function testItHasShowPasswordResetsPage()
-	{
-		$this->loginWithHospitalStaff();
-		$response = $this->get('/hospital-staff/show-password-resets-mail/');
+    public function testItHasShowPasswordResetsPage()
+    {
+        $this->loginWithHospitalStaff();
+        $response = $this->get('/hospital-staff/show-password-resets-mail/');
 
-		$response->assertStatus(200);
-	}
+        $response->assertStatus(200);
+    }
 
-	public function testItHasShowResetPasswordPage()
-	{
-		$this->loginWithHospitalStaff();
-		$hospital = factory(Hospital::class)->create();
-		$hospital_staff = factory(HospitalStaff::class)->create(['hospital_id' => $hospital->id]);
+    public function testItHasShowResetPasswordPage()
+    {
+        $this->loginWithHospitalStaff();
+        $hospital = factory(Hospital::class)->create();
+        $hospital_staff = factory(HospitalStaff::class)->create(['hospital_id' => $hospital->id]);
 
-		$reset_token = str_random(32);
-		$hospital_staff->reset_token_digest = bcrypt($reset_token);
-		$hospital_staff->reset_sent_at = Carbon::now();
-		$hospital_staff->save();
+        $reset_token = str_random(32);
+        $hospital_staff->reset_token_digest = bcrypt($reset_token);
+        $hospital_staff->reset_sent_at = Carbon::now();
+        $hospital_staff->save();
 
-		$response = $this->get('hospital-staff/show-reset-password/'. $reset_token .'/'. $hospital_staff->email);
+        $response = $this->get('hospital-staff/show-reset-password/'. $reset_token .'/'. $hospital_staff->email);
 
-		$response->assertStatus(200);
-	}
+        $response->assertStatus(200);
+    }
 }

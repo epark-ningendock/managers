@@ -33,7 +33,7 @@ class ReceptionEmailSettingsTable extends Migration
             $table->string('reception_email4')->nullable();
             $table->string('reception_email5')->nullable();
             $table->tinyInteger('epark_in_hospital_reception_mail_flg')->nullable();
-            $table->tinyInteger('epark_web_eception_email_flg')->nullable();
+            $table->tinyInteger('epark_web_reception_email_flg')->nullable();
             $this->addCommonColumns($table);
         });
     }

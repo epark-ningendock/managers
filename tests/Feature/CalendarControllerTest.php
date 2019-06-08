@@ -201,7 +201,7 @@ class CalendarControllerTest extends TestCase
         $days = collect();
         $is_reservation_acceptances = collect();
         $reservation_frames = collect();
-        while($start->lt($end)) {
+        while ($start->lt($end)) {
             $days->push($start->format('Ymd'));
             $is_reservation_acceptances->push($this->faker->randomElement([0, 1]));
             $reservation_frames->push($this->faker->randomElement(range(0, 99)));

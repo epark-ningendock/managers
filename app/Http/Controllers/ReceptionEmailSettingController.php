@@ -26,7 +26,7 @@ class ReceptionEmailSettingController extends Controller
     {
     }
 
-    public function update()
+    public function update($id)
     {
     }
 
