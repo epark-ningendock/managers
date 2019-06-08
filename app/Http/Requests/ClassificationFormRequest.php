@@ -40,14 +40,14 @@ class ClassificationFormRequest extends FormRequest
 
             $type = $this->input('classification');
 
-            if($type == 'major') {
-                if($this->method() == 'POST') {
+            if ($type == 'major') {
+                if ($this->method() == 'POST') {
                     $rules['classification_type_id'] = 'required|exists:classification_types,id';
                 }
             } else {
                 $rules['is_icon'] = ['required', Rule::in(['0', '1'])];
 
-                if($this->method() == 'POST') {
+                if ($this->method() == 'POST') {
                     $rules['major_classification_id'] = 'required|exists:major_classifications,id';
                 }
 
@@ -56,7 +56,7 @@ class ClassificationFormRequest extends FormRequest
                 }
 
                 if ($type == 'minor') {
-                    if($this->method() == 'POST') {
+                    if ($this->method() == 'POST') {
                         $rules['middle_classification_id'] = 'required|exists:middle_classifications,id';
                     }
                     $rules['is_fregist'] = ['required', Rule::in(['0', '1'])];
@@ -66,9 +66,7 @@ class ClassificationFormRequest extends FormRequest
                 }
             }
             return $rules;
-
         }
-
     }
 
     public function messages()
@@ -78,5 +76,4 @@ class ClassificationFormRequest extends FormRequest
             'name.max' => trans('validation.max.string', [ 'attribute' => trans('validation.attributes.classification_name')])
         ];
     }
-
 }

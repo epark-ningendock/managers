@@ -120,11 +120,21 @@ return [
             'icon'        => 'user',
         ],
         [
+            'text'        => 'パスワードの変更',
+            'url'         => '/hospital-staff/edit-password',
+            'icon'        => 'user',
+        ],
+        [
             'text'        => '検査コース分類管理',
             'url'         => '/classification',
             'icon'        => 'book',
         ],
-	    [
+        [
+            'text'        => '検査コース管理',
+            'url'         => '/course',
+            'icon'        => 'graduation-cap',
+        ],
+        [
             'text'        => '医療機関',
             'url'         => '/hospital',
             'icon'        => 'book',
@@ -134,6 +144,21 @@ return [
             'url'         => '/',
             'icon'        => 'hospital-o',
         ],
+        [
+            'text'        => 'カレンダー管理',
+            'url'         => '/calendar',
+            'icon'        => 'calendar',
+        ],
+        [
+            'text'        => 'オプション',
+            'url'         => '/option',
+            'icon'        => 'book',
+        ],
+        [
+            'text'        => 'テンプレート管理',
+            'url'         => '/email-template',
+            'icon'        => 'sticky-note-o',
+        ]
     ],
 
     /*

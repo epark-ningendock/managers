@@ -2,31 +2,25 @@
 
 namespace App;
 
-use App\Helpers\EnumTrait;
-use App\Enums\Status;
-
 class MajorClassification extends SoftDeleteModel
 {
-    use EnumTrait;
-
     protected $fillable = [
         'classification_type_id', 'name', 'status', 'order', 'is_icon', 'icon_name'
     ];
 
-    protected $enums = [
-        'status' => Status::class
-    ];
-
-    public function classification_type() {
+    public function classification_type()
+    {
         return $this->belongsTo('App\ClassificationType');
     }
 
-    public function middle_classifications() {
-        return $this->hasMany('App\MiddleClassification');
+    public function middle_classifications()
+    {
+        return $this->hasMany('App\MiddleClassification')->orderBy('order');
     }
 
-    public function minor_classifications() {
-        return $this->hasMany('App\MinorClassification');
+    public function minor_classifications()
+    {
+        return $this->hasMany('App\MinorClassification')->orderBy('order');
     }
 
     /**

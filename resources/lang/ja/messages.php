@@ -20,7 +20,13 @@ return [
 
     'created' => ':nameが登録しました。',
     'updated' => ':nameが削除しました。',
+	'remove' => '削除する',
     'deleted' => ':nameが変更しました。',
+    'sent' => ':mailを送信しました。',
+    'hospital_staff_update_passoword' => '医療機関スタッフのパスワードを更新しました',
+    'token_expired' => 'トークンが期限切れです。再送信してください',
+    'hospital_staff_does_not_exist' => 'この医療機関スタッフは存在しません。',
+    'incorrect_token' => '不正なトークンです。',
     'not_correct' => ':name正しくない',
     'restored' => ':nameが復元されます。',
     'staff_create_error' => '正しく登録されませんでした。',
@@ -43,9 +49,11 @@ return [
     'minor_classification' => [
         'parent_deleted_error_on_restore' => '親の中分類レコードが削除されます。 操作は完了できません。'
     ],
+    'invalid_course_id' => 'コースIDが存在しません',
+    'course_sort_updated' => '講座記録の順序が更新されました。',
     'names' => [
         'staff' => 'スタッフ情報',
-        'hospital_staff' => '病院スタッフ',
+        'hospital_staff' => '医療機関スタッフ',
         'hospital' => '医療機関',
         'facilities' => '設備',
         'classification' => '分類',
@@ -59,6 +67,20 @@ return [
 	    'current_password' => '現在のパスワード',
             'middle' => '中分類',
             'minor' => '小分類'
-        ]
-    ]
+        ],
+        'course' => '検査コース',
+        'calendar' => 'カレンダー',
+        'email_template' => 'メールテンプレート'
+    ],
+    'mails' => [
+        'reset_passoword' => '医療機関スタッフパスワードリセットメール',
+        'registered' => '医療機関スタッフ登録メール',
+    ],
+	'option_name' => 'オプション名',
+	'option_description' => 'オプションの説明',
+	'price' => '価格',
+	'tax_classification' => '税区分',
+	'invalid_option_id' => '無効なオプションID',
+	'option_sorting_updated' => 'オプションソートの更新',
+	'need_to_login' => 'あなたは最初にログインする必要があります',
 ];

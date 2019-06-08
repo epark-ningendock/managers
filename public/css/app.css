@@ -2219,5 +2219,7 @@ body .no-border {
 
 .contract-form-alert {
   display: none;
+table tr td.gray-column {
+  background: #e5e2e2;
+  padding-left: 30px;
 }
-

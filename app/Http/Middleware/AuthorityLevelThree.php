@@ -17,11 +17,11 @@ class AuthorityLevelThree
      */
     public function handle($request, Closure $next)
     {
-	    $staff = Staff::findOrFail($request->staff_id);
+        $staff = Staff::findOrFail($request->staff_id);
 
-	    if ( $staff->authority->value !== Authority::ExternalStaff ) {
-	    	return redirect('/staff');
-	    }
-	    return $next($request);
+        if ($staff->authority->value !== Authority::ExternalStaff) {
+            return redirect('/staff');
+        }
+        return $next($request);
     }
 }

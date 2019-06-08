@@ -3,11 +3,12 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use \App\Helpers\DBCommonColumns;
+use App\Helpers\DBCommonColumns;
 
-class CreateFacilityStaffsTable extends Migration
+class CreateImageOrdersTable extends Migration
 {
     use DBCommonColumns;
+
     /**
      * Run the migrations.
      *
@@ -15,12 +16,13 @@ class CreateFacilityStaffsTable extends Migration
      */
     public function up()
     {
-        Schema::create('facility_staffs', function (Blueprint $table) {
+        Schema::create('image_orders', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 50)->nullable();
-            $table->string('email', 256)->unique()->nullable();
-            $table->string('login_id', 100)->unique()->nullable();
-            $table->string('password', 256)->nullable();
+            $table->integer('image_group_number')->unsigned();
+            $table->integer('image_location_number')->unsigned();
+            $table->string('name', 50);
+            $table->tinyInteger('order')->unsigned();
+            $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
         });
     }
@@ -32,6 +34,6 @@ class CreateFacilityStaffsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('facility_staffs');
+        Schema::dropIfExists('image_orders');
     }
 }

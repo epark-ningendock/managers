@@ -11,6 +11,8 @@ use App\Enums\HospitalEnums;
 use App\Enums\StaffStatus;
 use App\Enums\Permission;
 use App\Enums\Status;
+use App\Enums\WebReception;
+use App\Enums\CalendarDisplay;
 
 return [
     Authority::class => [
@@ -37,9 +39,19 @@ return [
         Status::Deleted => '削除'
     ],
 
-	HospitalEnums::class => [
-		HospitalEnums::Private => '非公開',
-		HospitalEnums::Public => '公開中',
-		HospitalEnums::Delete => '削除',
-	]
+    HospitalEnums::class => [
+        HospitalEnums::Private => '非公開',
+        HospitalEnums::Public => '公開中',
+        HospitalEnums::Delete => '削除',
+    ],
+
+    WebReception::class => [
+        WebReception::NotAccept => '受け付けない',
+        WebReception::Accept => '受け付ける'
+    ],
+
+    CalendarDisplay::class => [
+        CalendarDisplay::Hide => '非表示',
+        CalendarDisplay::Show => '表示'
+    ]
 ];
