@@ -22,4 +22,12 @@ class ReceptionEmailSetting extends Model
         'epark_in_hospital_reception_mail_flg',
         'epark_web_reception_email_flg'
     ];
+
+    /**
+     * この受付メール設定を所有するHospitalを取得
+     */
+    public function hospital()
+    {
+        return $this->belongsTo('App\Hospital');
+    }
 }

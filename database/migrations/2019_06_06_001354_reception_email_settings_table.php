@@ -18,7 +18,7 @@ class ReceptionEmailSettingsTable extends Migration
         Schema::create('reception_email_settings', function (Blueprint $table) {
             // TODO: デフォルト値の確認, DB定義書には無い
             $table->increments('id');
-            $table->integer('hospital_id')->unsigned();
+            $table->integer('hospital_id')->unsigned()->unique();
             $table->foreign('hospital_id')->references('id')->on('hospitals');
             $table->tinyInteger('in_hospital_email_reception_flg');
             $table->tinyInteger('in_hospital_confirmation_email_reception_flg')->nullable();

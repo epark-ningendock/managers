@@ -70,7 +70,8 @@ class HospitalStaffInputFieldsTest extends TestCase
         $response = $this->call('POST', 'hospital-staff', [
             'login' => 'peter',
             'name' => 'Peter',
-            'email' => 'peter@mail.com'
+            'email' => 'peter@mail.com',
+            '_token'   => csrf_token()
         ]);
 
         $this->assertEquals(302, $response->getStatusCode());

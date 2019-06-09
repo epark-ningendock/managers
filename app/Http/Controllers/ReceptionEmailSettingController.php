@@ -6,12 +6,14 @@ use App\ReceptionEmailSetting;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\ReceptionEmailSettingRequest;
+use Illuminate\Support\Facades\Session;
 
 class ReceptionEmailSettingController extends Controller
 {
     public function index()
     {
-        // TODO: 医療機関IDで検索する
+        // TODO: セッションの医療機関IDに変更する
+        // return view('reception_email_setting.index', [ 'reception_email_setting' => ReceptionEmailSetting::where('hospital_id', 1)->first() ]);
         return view('reception_email_setting.index', [ 'reception_email_setting' => ReceptionEmailSetting::findOrFail(1) ]);
     }
 

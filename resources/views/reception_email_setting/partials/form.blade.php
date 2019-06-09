@@ -12,15 +12,11 @@
   <p class="text-bold">【受信希望者・院内受付メール送信設定】</p>
   <div class="radio ml-3">
     <label>
-      <input type="radio" name="in_hospital_email_reception_flg"
-            {{ old('in_hospital_email_reception_flg', (isset($reception_email_setting) ? $reception_email_setting->in_hospital_email_reception_flg : null) ) == ReceptionEmailSetting::Accept ? 'checked' : '' }}
-            value="{{ ReceptionEmailSetting::Accept }}">
+      {{ Form::radio('in_hospital_email_reception_flg', 1, (isset($reception_email_setting) ? $reception_email_setting->in_hospital_email_reception_flg : null) == ReceptionEmailSetting::Accept ? true : false) }}
       メールを配信する
     </label>
     <label class="ml-3">
-      <input type="radio" name="in_hospital_email_reception_flg"
-            {{ old('in_hospital_email_reception_flg', (isset($reception_email_setting) ? $reception_email_setting->in_hospital_email_reception_flg : null) ) == ReceptionEmailSetting::NotAccept ? 'checked' : '' }}
-            value="{{ ReceptionEmailSetting::NotAccept }}">
+      {{ Form::radio('in_hospital_email_reception_flg', 0, (isset($reception_email_setting) ? $reception_email_setting->in_hospital_email_reception_flg : null) == ReceptionEmailSetting::NotAccept ? true : false) }}
       メールを配信しない
     </label>
   </div>
@@ -50,15 +46,11 @@
   <p class="text-bold">【受付メール受信アドレス設定】</p>
   <div class="radio ml-3">
     <label>
-      <input type="radio" name="email_reception_flg"
-            {{ old('email_reception_flg', (isset($reception_email_setting) ? $reception_email_setting->email_reception_flg : null) ) == ReceptionEmailSetting::Accept ? 'checked' : '' }}
-            value="{{ ReceptionEmailSetting::Accept }}">
+      {{ Form::radio('email_reception_flg', 1, (isset($reception_email_setting) ? $reception_email_setting->email_reception_flg : null) == ReceptionEmailSetting::Accept ? true : false) }}
       受け取る
     </label>
     <label class="ml-3">
-      <input type="radio" name="email_reception_flg"
-            {{ old('email_reception_flg', (isset($reception_email_setting) ? $reception_email_setting->email_reception_flg : null) ) == ReceptionEmailSetting::NotAccept ? 'checked' : '' }}
-            value="{{ ReceptionEmailSetting::NotAccept }}">
+      {{ Form::radio('email_reception_flg', 0, (isset($reception_email_setting) ? $reception_email_setting->email_reception_flg : null) == ReceptionEmailSetting::NotAccept ? true : false) }}
       受け取らない
     </label>
   </div>

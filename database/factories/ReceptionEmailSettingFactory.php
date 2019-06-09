@@ -5,7 +5,7 @@ use App\ReceptionEmailSetting;
 
 $factory->define(ReceptionEmailSetting::class, function (Faker $faker) {
     return [
-        'hospital_id' => $faker->numberBetween(1, 50),
+        'hospital_id' => $faker->unique()->numberBetween(1, 50),
         'in_hospital_email_reception_flg' => $faker->randomElement([0, 1]),
         'in_hospital_confirmation_email_reception_flg' => $faker->randomElement([0, 1]),
         'in_hospital_change_email_reception_flg' => $faker->randomElement([0, 1]),
