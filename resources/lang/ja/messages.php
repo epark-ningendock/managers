@@ -19,9 +19,9 @@ return [
     */
 
     'created' => ':nameが登録しました。',
-    'updated' => ':nameが削除しました。',
+    'updated' => ':nameを更新しました。',
     'remove' => '削除する',
-    'deleted' => ':nameが変更しました。',
+    'deleted' => ':nameを削除しました。',
     'sent' => ':mailを送信しました。',
     'hospital_staff_update_passoword' => '医療機関スタッフのパスワードを更新しました',
     'token_expired' => 'トークンが期限切れです。再送信してください',
@@ -68,7 +68,8 @@ return [
         'course' => '検査コース',
         'calendar' => 'カレンダー',
         'email_template' => 'メールテンプレート',
-        'calendar_setting' => 'カレンダー管理'
+        'calendar_setting' => 'カレンダー管理',
+        'reception_email_setting' => '受付メール設定'
     ],
     'mails' => [
         'reset_passoword' => '医療機関スタッフパスワードリセットメール',

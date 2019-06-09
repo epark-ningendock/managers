@@ -7,7 +7,7 @@
 <p class='ml-3'>差出人メールアドレス：epark@example.com</p>
 <br>
 
-<div class="form-group @if ($errors->has('web_reception')) has-error @endif">
+<div class="form-group @if ($errors->has('reception_email_setting')) has-error @endif">
 
   <p class="text-bold">【受信希望者・院内受付メール送信設定】</p>
   <div class="radio ml-3">
@@ -27,17 +27,20 @@
   <br>
 
   <div class='checkbox ml-3'>
-      <label for="in_hospital_confirmation_email_reception_flg">
+      <label>
+          {{ Form::hidden('in_hospital_confirmation_email_reception_flg', 0) }}
           {{ Form::checkbox('in_hospital_confirmation_email_reception_flg', 1, (isset($reception_email_setting) ? $reception_email_setting->in_hospital_confirmation_email_reception_flg : null) == ReceptionEmailSetting::Accept ? true : false) }}
           受付確定時
       </label>
 
-      <label class="ml-3" for="in_hospital_change_email_reception_flg">
+      <label class="ml-3">
+          {{ Form::hidden('in_hospital_change_email_reception_flg', 0) }}
           {{ Form::checkbox('in_hospital_change_email_reception_flg', 1, (isset($reception_email_setting) ? $reception_email_setting->in_hospital_change_email_reception_flg : null) == ReceptionEmailSetting::Accept ? true : false) }}
           受付変更時
       </label>
 
-      <label class="ml-3" for="in_hospital_cancellation_email_reception_flg">
+      <label class="ml-3">
+          {{ Form::hidden('in_hospital_cancellation_email_reception_flg', 0) }}
           {{ Form::checkbox('in_hospital_cancellation_email_reception_flg', 1, (isset($reception_email_setting) ? $reception_email_setting->in_hospital_cancellation_email_reception_flg : null) == ReceptionEmailSetting::Accept ? true : false) }}
           キャンセル時
       </label>
@@ -62,12 +65,14 @@
   <br>
 
   <div class='checkbox ml-3'>
-      <label for="in_hospital_reception_email_flg">
+      <label>
+          {{ Form::hidden('in_hospital_reception_email_flg', 0) }}
           {{ Form::checkbox('in_hospital_reception_email_flg', 1, (isset($reception_email_setting) ? $reception_email_setting->in_hospital_reception_email_flg : null) == ReceptionEmailSetting::Accept ? true : false) }}
           院内受付
       </label>
   
-      <label class="ml-3" for="web_reception_email_flg">
+      <label class="ml-3">
+          {{ Form::hidden('web_reception_email_flg', 0) }}
           {{ Form::checkbox('web_reception_email_flg', 1, (isset($reception_email_setting) ? $reception_email_setting->web_reception_email_flg : null) == ReceptionEmailSetting::Accept ? true : false) }}
           WEB受付
       </label>
@@ -96,12 +101,14 @@
 
   <p class="text-bold">【EPARK人間ドック受付設定】</p>
   <div class='checkbox ml-3'>
-      <label for="epark_in_hospital_reception_mail_flg">
+      <label>
+          {{ Form::hidden('epark_in_hospital_reception_mail_flg', 0) }}
           {{ Form::checkbox('epark_in_hospital_reception_mail_flg', 1, (isset($reception_email_setting) ? $reception_email_setting->epark_in_hospital_reception_mail_flg : null) == ReceptionEmailSetting::Accept ? true : false) }}
           院内受付
       </label>
 
-      <label class="ml-3" for="epark_web_reception_email_flg">
+      <label class="ml-3">
+          {{ Form::hidden('epark_web_reception_email_flg', 0) }}
           {{ Form::checkbox('epark_web_reception_email_flg', 1, (isset($reception_email_setting) ? $reception_email_setting->epark_web_reception_email_flg : null) == ReceptionEmailSetting::Accept ? true : false) }}
           WEB受付
       </label>
@@ -111,6 +118,4 @@
   <div class="box-footer">
       <button type="submit" class="btn btn-primary">更新</button>
   </div>
-
-  @if ($errors->has('web_reception')) <p class="help-block">{{ $errors->first('web_') }}</p> @endif
 </div>

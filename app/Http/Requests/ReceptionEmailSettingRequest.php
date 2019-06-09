@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\Enums\ReceptionEmailSetting;
 
 class ReceptionEmailSettingRequest extends FormRequest
 {
@@ -13,7 +15,7 @@ class ReceptionEmailSettingRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +26,20 @@ class ReceptionEmailSettingRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'in_hospital_email_reception_flg' => 'required|enum_value:' . ReceptionEmailSetting::class . ',false',
+            'in_hospital_confirmation_email_reception_flg' => 'nullable|enum_value:' . ReceptionEmailSetting::class . ',false',
+            'in_hospital_change_email_reception_flg' => 'nullable|enum_value:' . ReceptionEmailSetting::class . ',false',
+            'in_hospital_cancellation_email_reception_flg' => 'nullable|enum_value:' . ReceptionEmailSetting::class . ',false',
+            'email_reception_flg' => 'required|enum_value:' . ReceptionEmailSetting::class . ',false',
+            'in_hospital_reception_email_flg' => 'nullable|enum_value:' . ReceptionEmailSetting::class . ',false',
+            'web_reception_email_flg' => 'enum_value:' . ReceptionEmailSetting::class . ',false',
+            'reception_email1' => 'nullable|email',
+            'reception_email2' => 'nullable|email',
+            'reception_email3' => 'nullable|email',
+            'reception_email4' => 'nullable|email',
+            'reception_email5' => 'nullable|email',
+            'epark_in_hospital_reception_mail_flg' => 'nullable|enum_value:' . ReceptionEmailSetting::class . ',false',
+            'epark_web_reception_email_flg' => 'nullable|enum_value:' . ReceptionEmailSetting::class . ',false'
         ];
     }
 }

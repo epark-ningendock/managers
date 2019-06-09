@@ -11,26 +11,16 @@ class ReceptionEmailSettingController extends Controller
 {
     public function index()
     {
+        // TODO: 医療機関IDで検索する
         return view('reception_email_setting.index', [ 'reception_email_setting' => ReceptionEmailSetting::findOrFail(1) ]);
     }
 
-    public function create()
+    public function update(ReceptionEmailSettingRequest $request, $id)
     {
-    }
+        $reception_email_setting = ReceptionEmailSetting::findOrFail($id);
+        $inputs = request()->all();
+        $reception_email_setting->update($inputs);
 
-    public function store()
-    {
-    }
-
-    public function edit()
-    {
-    }
-
-    public function update($id)
-    {
-    }
-
-    public function destroy()
-    {
+        return redirect('reception-email-setting')->with('success', trans('messages.updated', ['name' => trans('messages.names.reception_email_setting')]));
     }
 }

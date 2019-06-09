@@ -1,6 +1,7 @@
 @extends('layouts.form')
 
 @section('content_header')
+  @include('layouts.partials.message')
   <h1>受付メール設定</h1>
 @stop
 

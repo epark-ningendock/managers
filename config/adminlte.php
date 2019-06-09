@@ -156,6 +156,7 @@ return [
         ],
         [
             'text'        => '受付メール設定',
+            // TODO: セッションの医療機関IDを入れる
             'url'         => '/reception-email-setting',
             'icon'        => 'gear ',
         ],
