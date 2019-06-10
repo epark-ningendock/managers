@@ -7,6 +7,6 @@ use BenSampo\Enum\Enum;
 
 final class ReceptionEmailSetting extends Enum implements LocalizedEnum
 {
-    const NotAccept = 0;
-    const Accept = 1;
+    const NOT_ACCEPT = 0;
+    const ACCEPT = 1;
 }
