@@ -88,3 +88,4 @@ Route::patch('option/sort/update', 'OptionController@updateSort')->name('option.
 Route::resource('/calendar', 'CalendarController')->except(['show']);
 
 Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
+Route::get('reservation/operation_csv', 'ReservationController@operationCsv')->name('reservation.operation_csv');
