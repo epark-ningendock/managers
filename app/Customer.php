@@ -16,7 +16,7 @@ class Customer extends BaseModel
     ];
 
     protected $fillable = [
-        'parent_customer_id', 'member_number', 'registration_card_number', 'name_seri', 'name_mei', 'name_kana_seri', 'name_kana_mei', 'tel', 'email', 'postcode', 'prefecture_id', 'address1', 'address2', 'sex', 'birthday', 'memo', 'claim_count', 'recall_count'
+        'parent_customer_id', 'member_number', 'registration_card_number', 'name_seri', 'name_mei', 'name_kana_seri', 'name_kana_mei', 'tel', 'email', 'postcode', 'prefecture_id', 'address1', 'address2', 'sex', 'birthday', 'memo', 'claim_count', 'recall_count', 'deleted_at'
     ];
 
     protected $guarded = [

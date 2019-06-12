@@ -31,7 +31,7 @@
                     data: {
                         _token: '{{ csrf_token() }}',
                         page_id: page_id,
-                        id: '{{ $customer_detail->id }}'
+                        {{--id: '{{ $customer_detail->id }}'--}}
                     },
                     cache: false,
                     success: function (response) {

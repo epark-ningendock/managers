@@ -21,13 +21,10 @@ class CustomerController extends Controller {
 		] ) ) ? request()->get( 'pagination' ) : 10;
 
 		$customers       = Customer::filter( $customerFilters )->orderBy( 'id', 'asc' )->paginate( $pagination );
-		$customer_detail = Customer::findOrFail( 1 );
-		$reservations    = $customer_detail->reservations()->paginate( 2 );
+		$customer_detail = [];// Customer::findOrFail( 1 );
+		$reservations    = [];// $customer_detail->reservations()->paginate( 2 );
 
-		return view( 'customer.index', [ 'customers'       => $customers,
-		                                 'customer_detail' => $customer_detail,
-		                                 'reservations'    => $reservations,
-		] );
+		return view( 'customer.index', [ 'customers'       => $customers] );
 
 	}
 
