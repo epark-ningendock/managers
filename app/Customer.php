@@ -23,6 +23,12 @@ class Customer extends BaseModel
         'id',
     ];
 
+
+    public function getName()
+    {
+        return $this->name_seri . ' '. $this->name_mei;
+    }
+
     public function hospitals()
     {
         return $this->HasMany('App\Hospital');

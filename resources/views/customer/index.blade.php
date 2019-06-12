@@ -75,7 +75,7 @@
                         <td>{{ $customer->id }}</td>
                         <td>
                             <a class="detail-link" href="#" data-id="{{ $customer->id }}" data-route="{{ route('customer.detail') }}">
-                                {{ $customer->name_seri . ' '. $customer->name_mei }}
+                                {{ $customer->getName() }}
                             </a>
                         </td>
                         <td>{{ $customer->registration_card_number }}</td>
@@ -121,6 +121,8 @@
     @includeIf('customer.partials.email-popup-script')
 
 @stop
+
+@includeIf('commons.datepicker')
 
 @push('js')
     <script type="text/javascript">

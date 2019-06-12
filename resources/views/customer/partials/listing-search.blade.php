@@ -10,9 +10,9 @@
         </div>
 
         <div class="col-sm-6">
-            <div class="form-group">
+            <div class="form-group date-picker">
                 <label for="name">{{ trans('messages.name') }}</label>
-                <input value="{{ request('name') }}" id="name" type="text" class="form-control" name="name" />
+                <input value="{{ request('name') }}" id="name" type="text" class="form-control date-picker" name="name" />
             </div>
         </div>
 
@@ -32,9 +32,9 @@
 
         <div class="col-sm-6">
             <div class="form-group">
-                <label for="birthday">テキスト長</label>
+                <label for="birthday">{{ trans('messages.birthday') }}</label>
                 <div class="input-group date datepicker"  data-date-format="yyyy-mm-dd" data-provide="datepicker">
-                    <input class="form-control" name="birthday" id="birthday"
+                    <input  autocomplete="off"  class="form-control" name="birthday" id="birthday"
                            value="{{ request('birthday') }}"/>
                     <div class="input-group-addon">
                         <span class="glyphicon glyphicon-th"></span>
@@ -53,7 +53,13 @@
         <div class="col-sm-6">
             <div class="form-group">
                 <label for="updated_at">{{ trans('messages.updated_at') }}</label>
-                <input value="{{ request('updated_at') }}" id="updated_at" type="text" class="form-control" name="updated_at" />
+                <div class="input-group date datepicker"  data-date-format="yyyy-mm-dd" data-provide="datepicker">
+                    <input  autocomplete="off"  class="form-control" name="update_at" id="update_at"
+                            value="{{ request('update_at') }}"/>
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -12,12 +12,16 @@ class CustomerFilters extends QueryFilters
 		return $this->builder->where('id', $customer_id);
 	}
 
-	public function name( $name ) {
-		return $this->builder->where('name_seri', 'LIKE', '%'. $name .'%');
-	}
+    public function registration_card_number( $registration_card_number ) {
+        return $this->builder->where('registration_card_number', 'LIKE', '%'. $registration_card_number .'%');
+    }
 
-	public function registration_card_number( $registration_card_number ) {
-		return $this->builder->where('registration_card_number', 'LIKE', '%'. $registration_card_number .'%');
+	public function name( $name ) {
+        $names = explode(" ", $name);
+
+        return $this->builder
+            ->whereIn('name_seri', $names);
+//            ->orWhere('name_mei', $names);
 	}
 
 	public function tel( $tel ) {
