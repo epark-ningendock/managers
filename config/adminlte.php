@@ -125,6 +125,11 @@ return [
             'icon'        => 'user',
         ],
         [
+            'text'        => 'お客様',
+            'url'         => '/customer',
+            'icon'        => 'user',
+        ],
+        [
             'text'        => '医療機関管理',
             'url'         => '/hospital',
             'icon'        => 'hospital-o',

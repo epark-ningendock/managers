@@ -90,3 +90,18 @@ Route::resource('option', 'OptionController', ['excerpt' => 'show']);
 Route::patch('option/sort/update', 'OptionController@updateSort')->name('option.updateSort');
 
 Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
+
+
+
+/*
+|--------------------------------------------------------------------------
+| Customer Route
+|--------------------------------------------------------------------------
+*/
+
+Route::resource('customer', 'CustomerController');
+Route::post('customer/detail', 'CustomerController@detail')->name('customer.detail');
+//Route::get('customer/basic-information', 'CustomerController@basicInformationCreate');
+Route::post('customer/import', 'CustomerController@importData')->name('customer.import.data');
+Route::post('customer/email/{customer_id}', 'CustomerController@showEmailForm' )->name('customer.show.email.form');
+Route::post('customer/email-send/{customer_id}', 'CustomerController@emailSend' )->name('customer.email.send');

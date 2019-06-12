@@ -1,5 +1,7 @@
 <?php
 
+use App\Customer;
+use App\Reservation;
 use Illuminate\Database\Seeder;
 
 class CustomersSeeder extends Seeder
@@ -11,6 +13,10 @@ class CustomersSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Customere::class, 50)->create();
+        factory(Customer::class, 50)->create()->each(function($customer, $index){
+            factory(Reservation::class, 3)->create([
+                'customer_id' => $customer->id
+            ]);
+        });
     }
 }
