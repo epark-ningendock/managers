@@ -203,6 +203,21 @@ return [
         'is_calendar_display' => 'カレンダー受付可否',
         'title' => '件名',
         'text' => '本文',
-        'hospital_id' => '医療機関ID'
+        'hospital_id' => '医療機関ID',
+        // 受付メール設定系
+        'in_hospital_email_reception_flg' => '院内受付メール受信フラグ',
+        'in_hospital_confirmation_email_reception_flg' => '受付確定メール受信フラグ',
+        'in_hospital_change_email_reception_flg' => '受付変更メール受信フラグ',
+        'in_hospital_cancellation_email_reception_flg' => '受付キャンセルメール受信フラグ',
+        'email_reception_flg' => '受付メール受信フラグ',
+        'in_hospital_reception_email_flg' => '受付メール（院内）受信フラグ',
+        'web_reception_email_flg' => '受付メール（web）受信フラグ',
+        'reception_email1' => '受信メールアドレス1',
+        'reception_email2' => '受信メールアドレス2',
+        'reception_email3' => '受信メールアドレス3',
+        'reception_email4' => '受信メールアドレス4',
+        'reception_email5' => '受信メールアドレス5',
+        'epark_in_hospital_reception_mail_flg' => '受付メール（院内）受信フラグ(epark)',
+        'epark_web_reception_email_flg' => '受付メール（web）受信フラグ(epark)'
     ],
 ];

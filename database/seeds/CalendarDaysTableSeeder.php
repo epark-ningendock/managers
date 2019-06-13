@@ -14,11 +14,10 @@ class CalendarDaysTableSeeder extends Seeder
     public function run()
     {
         $calendars = Calendar::all();
-        foreach($calendars as $calendar) {
+        foreach ($calendars as $calendar) {
             factory(CalendarDay::class, 10)->create([
                 'calendar_id' => $calendar->id
             ]);
         }
-
     }
 }

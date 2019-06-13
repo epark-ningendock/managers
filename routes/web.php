@@ -57,6 +57,9 @@ Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course
 // メールテンプレート系
 Route::resource('/email-template', 'EmailTemplateController')->except(['show']);
 
+// 受付メール設定系
+Route::resource('/reception-email-setting', 'ReceptionEmailSettingController');
+
 // ログイン系
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');

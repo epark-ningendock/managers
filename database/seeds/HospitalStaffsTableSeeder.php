@@ -19,7 +19,7 @@ class HospitalStaffsTableSeeder extends Seeder
 
         foreach ($hospitals as $hospital) {
             factory(HospitalStaff::class, 50)->create([
-            	'hospital_id' => $hospital->id,
+                'hospital_id' => $hospital->id,
             ]);
         }
 

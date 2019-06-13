@@ -54,8 +54,8 @@ class HospitalStaffInputFieldsTest extends TestCase
      */
     protected function itValidateField($attributes)
     {
-	    factory(HospitalStaff::class)->create(['login_id' => 'john', 'password' => bcrypt('ok')]);
-	    auth('hospital_staffs')->attempt(['login_id' => 'john', 'password' => 'ok']);
+        factory(HospitalStaff::class)->create(['login_id' => 'john', 'password' => bcrypt('ok')]);
+        auth('hospital_staffs')->attempt(['login_id' => 'john', 'password' => 'ok']);
         $this->withExceptionHandling();
 
         return $this->post('/hospital-staff', $this->validFields($attributes));
@@ -63,14 +63,15 @@ class HospitalStaffInputFieldsTest extends TestCase
 
     public function testItCanCreateHospitalStaff()
     {
-    	factory(HospitalStaff::class)->create(['login_id' => 'john', 'password' => bcrypt('ok')]);
-    	auth('hospital_staffs')->attempt(['login_id' => 'john', 'password' => 'ok']);
-//	    $hospital_staff = Auth::guard('hospital_staffs')->user();
+        factory(HospitalStaff::class)->create(['login_id' => 'john', 'password' => bcrypt('ok')]);
+        auth('hospital_staffs')->attempt(['login_id' => 'john', 'password' => 'ok']);
+        //	    $hospital_staff = Auth::guard('hospital_staffs')->user();
 
         $response = $this->call('POST', 'hospital-staff', [
-        	'login' => 'peter',
-	        'name' => 'Peter',
-	        'email' => 'peter@mail.com'
+            'login' => 'peter',
+            'name' => 'Peter',
+            'email' => 'peter@mail.com',
+            '_token'   => csrf_token()
         ]);
 
         $this->assertEquals(302, $response->getStatusCode());
@@ -95,8 +96,8 @@ class HospitalStaffInputFieldsTest extends TestCase
 
     public function testItCanDeleteHospitalStaff()
     {
-	    factory(HospitalStaff::class)->create(['login_id' => 'john', 'password' => bcrypt('ok')]);
-	    auth('hospital_staffs')->attempt(['login_id' => 'john', 'password' => 'ok']);
+        factory(HospitalStaff::class)->create(['login_id' => 'john', 'password' => bcrypt('ok')]);
+        auth('hospital_staffs')->attempt(['login_id' => 'john', 'password' => 'ok']);
         $hospital_staff = factory(HospitalStaff::class)->create();
 
         $this->call('DELETE', '/hospital-staff/' . $hospital_staff->id, [ '_token' => csrf_token() ]);

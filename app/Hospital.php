@@ -72,4 +72,12 @@ class Hospital extends Model
         'pre_account_discount_rate',
         'pre_account_commission_rate',
     ];
+
+    /**
+     * 医療機関に関連する受付メール設定レコードを取得
+     */
+    public function reception_email_setting()
+    {
+        return $this->hasOne('App\ReceptionEmailSetting');
+    }
 }
