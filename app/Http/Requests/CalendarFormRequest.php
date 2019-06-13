@@ -30,10 +30,18 @@ class CalendarFormRequest extends FormRequest
                 'days' => 'required|array',
                 'days.*' => 'integer',
                 'is_reservation_acceptances' => 'required|array',
-                'is_reservation_acceptances.*' => [ Rule::in(['0', '1']) ],
+                'is_reservation_acceptances.*' => [Rule::in(['0', '1'])],
                 'reservation_frames' => 'required|array',
                 'reservation_frames.*' => 'nullable|integer',
             ];
+        } else if (str_contains($this->url(), 'holiday')) {
+            return [
+                'days' => 'required|array',
+                'days.*' => 'integer',
+                'is_holidays' => 'required|array',
+                'is_holidays.*' => [ Rule::in(['', '1'])]
+            ];
+
         } else {
             return [
                 'name' => 'required',

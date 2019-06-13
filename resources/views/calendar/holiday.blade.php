@@ -8,17 +8,14 @@
 @extends('layouts.form')
 
 @section('content_header')
-  <h1>カレンダー管理</h1>
+  <h1>休日確定</h1>
 @stop
 
 @section('form')
-  <form method="POST" action="{{ route('calendar.setting', $calendar->id) }}">
+  <form method="POST" action="{{ route('calendar.updateHoliday') }}">
     {!! csrf_field() !!}
     {!! method_field('PATCH') !!}
     <div class="box-body">
-      <div class="form-group">
-        <h4>カレンダー名 <span class="ml-2 mr-2"> : </span> {{ $calendar->name }}</h4>
-      </div>
       <h4>期間 <span class="ml-2 mr-2"> : </span> {{ $start->format('Y/m/d').' ~ '.$end->format('Y/m/d') }}</h4>
       {!! csrf_field() !!}
       <hr>
@@ -41,67 +38,51 @@
             <tbody>
             <tr>
               <td>
-                <select id="sunday-frame">
+                <select id="sunday">
                   <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
+                  <option value="1">休</option>
                 </select>
               </td>
               <td>
-                <select id="monday-frame">
+                <select id="monday">
                   <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
+                  <option value="1">休</option>
                 </select>
               </td>
               <td>
-                <select id="tuesday-frame">
+                <select id="tuesday">
                   <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
+                  <option value="1">休</option>
                 </select>
               </td>
               <td>
-                <select id="wednesday-frame">
+                <select id="wednesday">
                   <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
+                  <option value="1">休</option>
                 </select>
               </td>
               <td>
-                <select id="thursday-frame">
+                <select id="thursday">
                   <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
+                  <option value="1">休</option>
                 </select>
               </td>
               <td>
-                <select id="friday-frame">
+                <select id="friday">
                   <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
+                  <option value="1">休</option>
                 </select>
               </td>
               <td>
-                <select id="saturday-frame">
+                <select id="saturday">
                   <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
+                  <option value="1">休</option>
                 </select>
               </td>
               <td>
-                <select id="holiday-frame">
+                <select id="holiday">
                   <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
+                  <option value="1">休</option>
                 </select>
               </td>
             </tr>
@@ -134,70 +115,59 @@
         </div>
       </div>
       <hr />
-
-      <div class="row">
-        @php
-          $index = 1
-        @endphp
-        @foreach($months as $key => $month)
-          <div class="col-md-6">
+      @php
+        $index = 1
+      @endphp
+      <div class="pull-right">
+        <button class="btn btn-primary page-button" data-index="0"><span class="glyphicon glyphicon-chevron-left"></span></button>
+        <span class="ml-2 mr-2">1/2 ページ</span>
+        <button class="btn btn-primary page-button" data-index="1"><span class="glyphicon glyphicon-chevron-right"></span></button>
+      </div>
+      @foreach($months->chunk(6) as $c_months)
+        <div class="row page">
+          @foreach($c_months as $key => $month)
+            <div class="col-md-6">
               <h4 class="text-center">{{ $key }}</h4>
               <table class="table table-bordered calendar-table">
                 <thead>
-                  <tr>
-                    <th class="text-red">日</th>
-                    <th>月</th>
-                    <th>火</th>
-                    <th>水</th>
-                    <th>木</th>
-                    <th>金</th>
-                    <th class="text-blue">土</th>
-                  </tr>
+                <tr>
+                  <th class="text-red">日</th>
+                  <th>月</th>
+                  <th>火</th>
+                  <th>水</th>
+                  <th>木</th>
+                  <th>金</th>
+                  <th class="text-blue">土</th>
+                </tr>
                 </thead>
                 <tbody>
                 @foreach($month->chunk(7) as $week)
                   <tr>
                     @foreach($week as $day)
                       @if($day != null)
-                        <td class="@if($day['date']->isSunday() || $day['is_holiday']) holiday @elseif($day['date']->isSaturday()) saturday @endif">
+                        <td class="@if($day['date']->isSunday() || (isset($day['date']) && $day['is_holiday'])) holiday @elseif($day['date']->isSaturday()) saturday @endif">
                           <!-- date -->
                           <input type="hidden" name="days[]" value="{{ $day['date']->format('Ymd') }}" />
-                          <span class="day-label @if($day['date']->isSunday() || $day['is_holiday']) text-red @elseif($day['date']->isSaturday()) text-blue @endif">
+                          <span class="day-label @if($day['date']->isSunday() || ($day['is_holiday'])) text-red @elseif($day['date']->isSaturday()) text-blue @endif">
                             {{ $day['date']->day }}
                           </span>
 
-                          <div class="data-box @if($day['is_holiday']) holiday @elseif($day['date']->isPast())) bg-gray @endif">
-                            <!-- holiday and reservation acceptance -->
-                            @if($day['is_holiday'])
-                              <span class="day-label text-red">休</span>
-                            @elseif(!$day['date']->isPast())
-                              <a class="is_reservation_acceptance day-label">
-                                {{ isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0' ? '✕' : '◯' }}
-                              </a>
-                            @else
-                              <span class="day-label">&nbsp;</span>
-                            @endif
-                            <input type="hidden" name="is_reservation_acceptances[]" value="{{ isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">
-
+                          <div class="data-box @if($day['is_holiday']) holiday @endif">
                             <!-- reservation frame -->
-                            @if($day['date']->isPast())
-                              {{  isset($day['calendar_day']) ? $day['calendar_day']->calendar_frame : 0}}
-                              <input type="hidden" name="reservation_frames[]" value="{{  isset($day['calendar_day']) ? $day['calendar_day']->reservation_frames : 0}}" />
-                            @else
-                              <select name="reservation_frames[]" class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
-                                      @if($day['is_holiday']) data-holiday="true" @endif
-                                      data-origin="{{ isset($day['calendar_day']) ? $day['calendar_day']->reservation_frames : '' }}">
-                                <option></option>
-                                @foreach(range(0, 99) as $i)
-                                  <option @if(isset($day['calendar_day']) && $day['calendar_day']->reservation_frames === $i)) selected @endif>
-                                    {{ $i }}
-                                  </option>
-                                @endforeach
-                              </select>
-                            @endif
 
-                            <!-- reservation count -->
-                            <span class="reservation-count mb-4">予約 : {{ isset($day['reservation_count']) ? $day['reservation_count'] : 0 }}</span>
+                            <select name="is_holidays[]" class='is-holiday mt-1' data-day="{{ $day['date']->day }}"
+                                    @if($day['is_holiday']) data-holiday="true" @endif
+                                    data-origin="{{ $day['is_holiday'] }}">
+                              <option></option>
+                              <option value="1" @if($day['is_holiday']) selected @endif>休</option>
+                            </select>
+
+
+                            <!-- holiday name -->
+                            @if(isset($day['holiday']))
+                              <br/>
+                              <span class="text-red small mt-2">{{ $day['holiday']->getName() }}</span>
+                            @endif
                           </div>
                         </td>
                       @else
@@ -211,19 +181,20 @@
                 @endforeach
                 </tbody>
               </table>
-          </div>
-          @if($index % 2 == 0)
-            <div class="clearfix"></div>
-          @endif
-          @php
-            $index++
-          @endphp
-        @endforeach
+            </div>
+            @if($index % 2 == 0)
+              <div class="clearfix"></div>
+            @endif
+            @php
+              $index++
+            @endphp
+          @endforeach
         </div>
+      @endforeach
+
       </div>
       <div class="box-footer">
         <a href="{{ url()->previous() }}" class="btn btn-default">バック</a>
-        <button class="btn btn-primary" id="clear-data">期間限定・予約枠の数全てクリア</button>
         <button class="btn btn-primary" id="reset-data">設定のクリア</button>
         <button class="btn btn-primary" id="clear-data">登録する</button>
       </div>
@@ -255,16 +226,12 @@
     }
     .calendar-table td {
       text-align: center;
-    }
-    .reservation-count {
-      margin-top: 4px;
-      display: block;
-      text-align: center;
+      width: 14%;
     }
     .data-box {
       padding-top: 5px;
       border-top: 1px solid #f4f4f4;
-      height: 90px;
+      height: 55px;
     }
     .holiday {
       /*background-color: rgba(254, 109, 104, .6) !important;*/
@@ -273,27 +240,15 @@
     .saturday {
       background-color: #CBE0F8;
     }
+    .small {
+      font-size: .55vw;
+    }
   </style>
 @stop
 
 @section('script')
   <script>
       (function ($) {
-          /* ---------------------------------------------------
-          // reservation accept/unaccept
-          -----------------------------------------------------*/
-          (function () {
-              $('.is_reservation_acceptance').click(function() {
-                  if($(this).html() == '✕') {
-                      $(this).html('◯');
-                      $(this).next('input:hidden').val('1');
-                  } else {
-                      $(this).html('✕');
-                      $(this).next('input:hidden').val('0');
-                  }
-              });
-          })();
-
           /* ---------------------------------------------------
           // all month
           -----------------------------------------------------*/
@@ -328,26 +283,26 @@
                   event.preventDefault();
                   event.stopPropagation();
 
-                  const holidayFrame=  $('#holiday-frame').val();
-                  const frames = [
-                      $('#sunday-frame').val(),
-                      $('#monday-frame').val(),
-                      $('#tuesday-frame').val(),
-                      $('#wednesday-frame').val(),
-                      $('#thursday-frame').val(),
-                      $('#friday-frame').val(),
-                      $('#saturday-frame').val()
+                  const holiday=  $('#holiday').val();
+                  const holidays = [
+                      $('#sunday').val(),
+                      $('#monday').val(),
+                      $('#tuesday').val(),
+                      $('#wednesday').val(),
+                      $('#thursday').val(),
+                      $('#friday').val(),
+                      $('#saturday').val()
                   ];
 
                   $('.calendar-table').each(function(i, table) {
                       if ($('#month-' + i).prop('checked')) {
-                          $(table).find('.calendar-frame').each(function(j, ele){
+                          $(table).find('.is-holiday').each(function(j, ele){
                               ele = $(ele);
                               const day = parseInt(ele.data('day'));
                               const isHoliday = ele.data('holiday');
 
                               if (isHoliday) {
-                                  ele.val(holidayFrame);
+                                  ele.val(holiday);
                               } else {
                                   let weekKey = '#week-';
                                   if(day >= 1 && day <= 7) {
@@ -363,23 +318,12 @@
                                   }
 
                                   if ($(weekKey).prop('checked')) {
-                                      ele.val(frames[ele.parents('td').index()]);
+                                      ele.val(holidays[ele.parents('td').index()]);
                                   }
                               }
                           });
                       }
                   });
-              });
-          })();
-
-          /* ---------------------------------------------------
-          // clear data
-          -----------------------------------------------------*/
-          (function () {
-              $('#clear-data').click(function(event) {
-                  event.preventDefault();
-                  event.stopPropagation();
-                  $('.calendar-frame ').val('0');
               });
           })();
 
@@ -390,10 +334,30 @@
               $('#reset-data').click(function(event) {
                   event.preventDefault();
                   event.stopPropagation();
-                  $('.calendar-frame').each(function(i, ele){
+                  $('.is-holiday').each(function(i, ele){
                       $(ele).val($(ele).data('origin'));
                   });
               });
+          })();
+
+          /* ---------------------------------------------------
+          // calendar paging
+          -----------------------------------------------------*/
+          (function () {
+              $('.page-button').click(function(event) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  $(this).prop('disabled', true);
+                  $(this).siblings('button').prop('disabled', false);
+                  const index = parseInt($(this).data('index'));
+                  $('.page').hide();
+                  $($('.page').get(index)).show();
+
+                  $(this).siblings('span').html( (index + 1) + '/2ページ');
+              });
+
+              $('.page').last().hide();
+              $('.page-button').first().prop('disabled', true);
           })();
       })(jQuery);
 

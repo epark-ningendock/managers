@@ -19,7 +19,7 @@
   <h4>カレンダーの登録</h4>
   <div class="mb-4">下記のボタンをクリックすると新しいカレンダーを登録することができます。</div>
   <a class="btn btn-success" href="{{ route('calendar.create') }}">カレンダーの新規登録</a>
-  <a class="btn btn-primary ml-2">休日確定</a>
+  <a class="btn btn-primary ml-2" href="{{ route('calendar.holiday') }}">休日確定</a>
 @stop
 
 @section('table')

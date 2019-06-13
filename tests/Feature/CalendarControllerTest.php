@@ -140,6 +140,50 @@ class CalendarControllerTest extends TestCase
         $this->assertEquals(302, $response->getStatusCode());
     }
 
+    public function testHolidaySetting()
+    {
+        $response = $this->call('get', '/calendar/holiday');
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testInvalidDaysInHolidaySetting()
+    {
+        $this->validateHolidayFields(['days' => $this->faker->userName ])->assertSessionHasErrors('days');
+    }
+
+    public function testWrongDayFormatInHolidaySetting()
+    {
+        $this->validateHolidayFields(['days' => [ $this->faker->userName ] ])->assertSessionHasErrors('days.0');
+    }
+
+    public function testInvalidIsHolidaysInHolidaySetting()
+    {
+        $this->validateHolidayFields(['is_holidays' => $this->faker->userName ])->assertSessionHasErrors('is_holidays');
+    }
+
+    public function testWrongIsHolidaysInHolidaySetting()
+    {
+        $this->validateHolidayFields(['is_holidays' => [ $this->faker->userName ] ])->assertSessionHasErrors('is_holidays.0');
+    }
+
+    public function testUpdateHolidaySetting()
+    {
+        $response = $this->patch('/calendar/holiday', $this->validHolidayFields());
+        $response->assertSessionHas('success');
+        $this->assertEquals(302, $response->getStatusCode());
+    }
+
+    /**
+     * validate holiday setting fields process
+     *
+     * @param $attributes
+     * @return \Illuminate\Foundation\Testing\TestResponse
+     */
+    protected function validateHolidayFields($attributes)
+    {
+        $this->withExceptionHandling();
+        return $this->patch('/calendar/holiday', $this->validHolidayFields($attributes));
+    }
 
     /**
      * validate setting fields process
@@ -213,6 +257,30 @@ class CalendarControllerTest extends TestCase
             'reservation_frames' => $reservation_frames->toArray(),
             '_token' => csrf_token()
             ];
+        return array_merge($fields, $overwrites);
+    }
+
+    /**
+     * Holiday setting fields
+     * @param array $overwrites
+     * @return array
+     */
+    protected function validHolidayFields($overwrites = [])
+    {
+        $start = Carbon::now()->startOfMonth();
+        $end = Carbon::now()->addMonth(11)->endOfMonth();
+        $days = collect();
+        $is_holidays = collect();
+        while($start->lt($end)) {
+            $days->push($start->format('Ymd'));
+            $is_holidays->push($this->faker->randomElement(['', '1']));
+            $start->addDay(1);
+        }
+        $fields = [
+            'days' => $days->toArray(),
+            'is_holidays' => $is_holidays->toArray(),
+            '_token' => csrf_token()
+        ];
         return array_merge($fields, $overwrites);
     }
 }

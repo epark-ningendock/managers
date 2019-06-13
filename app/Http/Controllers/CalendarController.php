@@ -4,14 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Calendar;
 use App\CalendarDay;
+use App\Holiday;
 use Illuminate\Http\Request;
 
 use Carbon\Carbon;
 use App\Course;
 use App\Http\Requests\CalendarFormRequest;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use App\Reservation;
+use Yasumi\Yasumi;
+use \DateTime;
 
 class CalendarController extends Controller
 {
@@ -154,6 +158,9 @@ class CalendarController extends Controller
             ->whereDate('date', '>=', $start->toDateString())
             ->whereDate('date', '<=', $end->toDateString())->get();
 
+        $holidays = Holiday::whereDate('date', '>=', $start->toDateString())
+            ->whereDate('date', '<=', $end->toDateString())->get();
+
         $reservation_counts = Reservation::join('courses', 'courses.id', '=', 'reservations.course_id')
             ->whereDate('reservation_date', '>=', $start->toDateString())
             ->whereDate('reservation_date', '<=', $end->toDateString())
@@ -182,9 +189,13 @@ class CalendarController extends Controller
                 return $day->date->isSameDay($start);
             });
 
+            $holiday = $holidays->first(function($day) use ($start) {
+                return $day->date->isSameDay($start);
+            });
+
             $reservation = $reservation_counts->get($start->format('Ymd'));
 
-            $month->push([ 'date' => $start->copy(), 'calendar_day' => $calendar_day, 'reservation_count' => $reservation ]);
+            $month->push([ 'date' => $start->copy(), 'is_holiday' => isset($holiday), 'calendar_day' => $calendar_day, 'reservation_count' => $reservation ]);
 
             if ($start->isLastOfMonth() && !$start->isSaturday()) {
                 for ($i = $start->dayOfWeek; $i < 6; $i++) {
@@ -258,6 +269,127 @@ class CalendarController extends Controller
             $calendar->calendar_days()->saveMany($calendar_days);
 
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar_setting')]));
+            DB::commit();
+            return redirect('calendar');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
+        }
+    }
+
+    /**
+     * Display holiday setting
+     * @return \Illuminate\Http\Response
+     */
+    public function holiday_setting()
+    {
+        $start = Carbon::now()->startOfMonth();
+        $end = Carbon::now()->addMonth(11)->endOfMonth();
+        $months = collect();
+
+        $holidays = Holiday::whereDate('date', '>=', $start->toDateString())
+            ->whereDate('date', '<=', $end->toDateString())->get();
+
+        $public_holidays = collect(Yasumi::create('Japan', $start->year, 'ja_JP')->getHolidays())->flatten(1);
+
+        if ($start->year != $end->year) {
+            $temp = collect(Yasumi::create('Japan', $end->year, 'ja_JP')->getHolidays())->flatten(1);
+            $public_holidays = $public_holidays->merge($temp);
+        }
+
+        while($start->lt($end)) {
+            $key = $start->format('Y年m月');
+            $month = $months->get($key);
+
+            if (!isset($month)) {
+                $month = collect();
+                $months->put($key, $month);
+            }
+
+            if ($start->day == 1 && $start->dayOfWeek != 0) {
+                for ($i = 0; $i < $start->dayOfWeek; $i++) {
+                    $month->push(null);
+                }
+            }
+
+            $holiday = $holidays->first(function($day) use ($start) {
+                return $day->date->isSameDay($start);
+            });
+
+            $p_holiday = $public_holidays->first(function($h) use ($start){
+                return $start->isSameDay($h);
+            });
+            $month->push([ 'date' => $start->copy(), 'is_holiday' => isset($p_holiday) || isset($holiday), 'holiday' =>  $p_holiday]);
+
+            if ($start->isLastOfMonth() && !$start->isSaturday()) {
+                for ($i = $start->dayOfWeek; $i < 6; $i++) {
+                    $month->push(null);
+                }
+            }
+
+            $start->addDay(1);
+        }
+
+        $start = Carbon::now()->startOfMonth();
+
+        return view('calendar.holiday')
+            ->with('months', $months)
+            ->with('start', $start)
+            ->with('end', $end);
+    }
+
+    /**
+     * Update holiday setting
+     * @param CalendarFormRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function update_holiday(CalendarFormRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $start = Carbon::now()->startOfMonth();
+            $end = Carbon::now()->addMonth(11)->endOfMonth();
+            $months = collect();
+
+            $holidays = Holiday::whereDate('date', '>=', $start->toDateString())
+                ->whereDate('date', '<=', $end->toDateString())->get();
+
+            $days = collect($request->input('days'));
+            $is_holidays = collect($request->input('is_holidays'));
+
+            $new_holidays = collect();
+
+            while($start->lt($end)) {
+                $key = $start->format('Y年m月');
+                $month = $months->get($key);
+
+                if (!isset($month)) {
+                    $month = collect();
+                    $months->put($key, $month);
+                }
+
+                $index = $days->search(function($d) use ($start) {
+                    return $start->format('Ymd') == $d;
+                });
+                $is_holiday = $is_holidays->get($index);
+
+                $holiday = $holidays->first(function($day) use ($start) {
+                    return $day->date->isSameDay($start);
+                });
+
+                if($is_holiday && !isset($holiday)) {
+                    //TODO to add hospital_id from logined user
+                    $new_holidays->push([ 'date' => $start->copy(), 'created_at' => Carbon::now(), 'updated_at'=> Carbon::now() ]);
+                } else if(isset($holiday)) {
+                    $holiday->forceDelete();
+                }
+                $start->addDay(1);
+            }
+
+            Holiday::insert($new_holidays->toArray());
+
+            Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.holiday_setting')]));
             DB::commit();
             return redirect('calendar');
         } catch (\Exception $e) {

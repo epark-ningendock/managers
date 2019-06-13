@@ -67,6 +67,8 @@ Route::get('/register', function () {
 });
 
 // Calendar
+Route::get('/calendar/holiday', 'CalendarController@holiday_setting')->name('calendar.holiday');
+Route::patch('/calendar/holiday', 'CalendarController@update_holiday')->name('calendar.updateHoliday');
 Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting');
 Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting');
 Route::resource('/calendar', 'CalendarController')->except(['show']);

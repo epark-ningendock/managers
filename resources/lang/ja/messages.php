@@ -68,7 +68,8 @@ return [
         'course' => '検査コース',
         'calendar' => 'カレンダー',
         'email_template' => 'メールテンプレート',
-        'calendar_setting' => 'カレンダー管理'
+        'calendar_setting' => 'カレンダー管理',
+        'holiday_setting' => '休日確定'
     ],
     'mails' => [
         'reset_passoword' => '医療機関スタッフパスワードリセットメール',
