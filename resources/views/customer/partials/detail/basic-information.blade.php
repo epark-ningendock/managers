@@ -12,20 +12,30 @@
                     <td class="gray-cell-bg">{{ trans('messages.customer_id') }}</td>
                     <td>{{ $customer_detail->id }}</td>
                     <td class="gray-cell-bg">{{ trans('messages.registration_card_number') }}</td>
-                    <td>3</td>
+                    <td>{{ $customer_detail->registration_card_number }}</td>
                 </tr>
                 <tr>
-                    <td  class="gray-cell-bg"><label for="name">{{ trans('messages.name') }}</label></td>
+                    <td  class="gray-cell-bg"><label for="name">{{ trans('messages.name_seri') }}</label></td>
                     <td>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="name" value="{{ ( !empty($customer_detail->name )) ? $customer_detail->name : old('name') }}" />
+                            <input type="text" class="form-control" name="name_seri" value="{{ ( !empty($customer_detail->name_seri )) ? $customer_detail->name_seri : old('name_seri') }}" />
                         </div>
                     </td>
-                    <td class="gray-cell-bg"><label for="name_kana">{{ trans('messages.name_kana') }}</label></td>
+                    <td  class="gray-cell-bg"><label for="name">{{ trans('messages.name_mei') }}</label></td>
                     <td>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="name_kana" value="{{ ( !empty($customer_detail->name_kana )) ? $customer_detail->name_kana : old('name_kana') }}" />
+                            <input type="text" class="form-control" name="name_mei" value="{{ ( !empty($customer_detail->name_mei )) ? $customer_detail->name_mei : old('name_mei') }}" />
                         </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td  class="gray-cell-bg"><label for="name">{{ trans('messages.name_kana_seri') }}</label></td>
+                    <td>
+                        {{ $customer_detail->name_kana_seri }}
+                    </td>
+                    <td  class="gray-cell-bg"><label for="name">{{ trans('messages.name_kana_mei') }}</label></td>
+                    <td>
+                        {{ $customer_detail->name_kana_mei }}
                     </td>
                 </tr>
                 <tr>
@@ -43,8 +53,13 @@
                     <td>{{ $customer_detail->birthday }}</td>
                 </tr>
                 <tr>
-                    <td class="gray-cell-bg">{{ trans('messages.postcode') }}</td>
-                    <td colspan="3">{{ $customer_detail->postcode }}</td>
+                    <td class="gray-cell-bg">{{ trans('messages.address') }}</td>
+                    <td colspan="3">
+                        {{ trans('messages.postcode') }} - {{ $customer_detail->postcode }}<br/>
+                        {{ trans('messages.prefectures') }} - {{ $customer_detail->prefecture_id }}<br/>
+                        {{ $customer_detail->address1 }}<br/>
+                        {{ $customer_detail->address2 }}<br/>
+                    </td>
                 </tr>
                 <tr>
                     <td class="gray-cell-bg">{{ trans('messages.email') }}</td>

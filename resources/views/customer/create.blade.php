@@ -12,7 +12,6 @@
     <form method="POST" action="{{ route('customer.store') }}">
       {{ csrf_field() }}
 
-
       @includeIf('customer.partials.form')
 
       <div class="text-center mb-5 pb-5">

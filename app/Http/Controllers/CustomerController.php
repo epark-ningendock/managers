@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Customer;
 use App\Filters\Customer\CustomerFilters;
+use App\Hospital;
 use App\Http\Requests\CustomerFormRequest;
+use App\Mail\Customer\CustomerSendMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class CustomerController extends Controller {
 
@@ -65,12 +68,16 @@ class CustomerController extends Controller {
 
 
 	public function create() {
-		return view( 'customer.create' );
+		$customers = Customer::select('prefecture_id')->get();
+		return view( 'customer.create', ['customers' => $customers] );
 	}
 
 
 	public function store( CustomerFormRequest $request ) {
 
+		$request->request->add([
+			'postcode' => $request->postcode1 . $request->postcode2
+		]);
 		if ( Customer::create( $request->all() ) ) {
 			return redirect( 'customer' )->with( 'success', trans( 'messages.created', [ 'name' => trans( 'messages.names.customers' ) ] ) );
 		} else {
@@ -81,14 +88,18 @@ class CustomerController extends Controller {
 
 	public function edit( Customer $customer ) {
 
+		$customers = Customer::select('prefecture_id')->get();
 		$customer_detail = Customer::findOrFail( $customer->id );
 
-		return view( 'customer.edit', [ 'customer_detail' => $customer_detail ] );
+		return view( 'customer.edit', [ 'customer_detail' => $customer_detail, 'customers' => $customers ] );
 	}
 
 
 	public function update( Request $request, Customer $customer ) {
 
+		$request->request->add([
+			'postcode' => $request->postcode1 . $request->postcode2
+		]);
 		$customer = Customer::findOrFail( $customer->id );
 
 		if ( $customer->update( $request->all() ) ) {
@@ -112,16 +123,20 @@ class CustomerController extends Controller {
 	public function showEmailForm( $customer_id ) {
 
 		$customer = Customer::findOrFail( $customer_id );
+		$hospitals = Hospital::select('email')->get();
 
 		return response()->json( [
 			'data' => view( 'customer.partials.email', [
 				'customer' => $customer,
+				'hospitals' => $hospitals,
 			] )->render(),
 		] );
 	}
 
 
-	public function emailSend( $customer_id ) {
-		dd( $customer_id );
+	public function emailSend( Request $request ) {
+		Mail::to($request->destination_mail_address)->send(new CustomerSendMail($request));
+
+		return redirect('/customer');
 	}
 }
