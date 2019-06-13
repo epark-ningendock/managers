@@ -35,7 +35,10 @@ if ( ! function_exists( 'csvToArray' ) ) :
 				if ( ! $header ) {
 					$header = $row;
 				} else {
-					$data[] = array_combine( $header, $row );
+					foreach($row as $key => $value ) {
+						$updateDataRow[$key] = ( $value == 'NULL') ? null : $value;
+					}
+					$data[] = array_combine( $header, $updateDataRow );
 				}
 			}
 			fclose( $handle );

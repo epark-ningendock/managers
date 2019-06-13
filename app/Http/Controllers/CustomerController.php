@@ -10,6 +10,7 @@ use App\Mail\Customer\CustomerSendMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class CustomerController extends Controller {
 
@@ -57,9 +58,11 @@ class CustomerController extends Controller {
 
 		$csv_file_path = $request->file( 'file_selection' )->storeAs( 'customer-csv', time() . '.csv' );
 		$customerArr   = csvToArray( storage_path( 'app/' . $csv_file_path ) );
-		$savedCustomer = DB::table( 'customers' )->insert( $customerArr );
+
+		$savedCustomer = Customer::insert( $customerArr );
 
 		if ( $savedCustomer ) {
+			Storage::delete($csv_file_path);
 			return redirect( 'customer' )->with( 'success', trans( 'messages.created', [ 'name' => trans( 'messages.names.customers' ) ] ) );
 		} else {
 			return redirect( 'customer' )->with( 'error', trans( 'messages.invalid_format', [ 'name' => trans( 'messages.names.customers' ) ] ) );

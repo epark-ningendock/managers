@@ -129,7 +129,7 @@
                         @foreach($customers as $customer)
                             <option value="{{ $customer->prefecture_id }}"
                                 @if( $customer->prefecture_id === $customer_detail->prefecture_id )
-                                    selected="selected"    
+                                    selected="selected"
                                     @endif
                             >{{ $customer->prefecture_id }}</option>
                         @endforeach
