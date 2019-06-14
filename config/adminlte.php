@@ -153,8 +153,8 @@ return [
             'text'        => 'メールテンプレート管理',
             'url'         => '/email-template',
             'icon'        => 'gear',
-        ],
-        [
+        ],
+	    [
             'text'        => '受付メール設定',
             'url'         => '/reception-email-setting',
             'icon'        => 'gear ',
