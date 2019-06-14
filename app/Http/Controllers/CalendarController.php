@@ -3,16 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Calendar;
+use App\CalendarDay;
 use Illuminate\Http\Request;
+
+use Carbon\Carbon;
 use App\Course;
 use App\Http\Requests\CalendarFormRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use App\Reservation;
 
 class CalendarController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the calendar.
      *
      * @return \Illuminate\Http\Response
      */
@@ -99,7 +103,6 @@ class CalendarController extends Controller
 
             Session::flash('success', trans('messages.created', ['name' => trans('messages.names.calendar')]));
             DB::commit();
-            return redirect('calendar');
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
@@ -132,6 +135,133 @@ class CalendarController extends Controller
      */
     public function destroy(Calendar $calendar)
     {
-        //
+    }
+
+    /**
+     * Display calendar setting
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    public function setting($id)
+    {
+        $calendar = Calendar::findOrFail($id);
+        $start = Carbon::now()->startOfMonth();
+        $end = Carbon::now()->addMonth(5)->endOfMonth();
+        $months = collect();
+
+        $calendar_days = CalendarDay::where('calendar_id', $id)
+            ->whereDate('date', '>=', $start->toDateString())
+            ->whereDate('date', '<=', $end->toDateString())->get();
+
+        $reservation_counts = Reservation::join('courses', 'courses.id', '=', 'reservations.course_id')
+            ->whereDate('reservation_date', '>=', $start->toDateString())
+            ->whereDate('reservation_date', '<=', $end->toDateString())
+            ->where('courses.calendar_id', $id)
+            ->groupBy('reservation_date')
+            ->orderBy('reservation_date')
+            ->selectRaw('count(*) as count, DATE_FORMAT(reservation_date, "%Y%m%d") as reservation_date')
+            ->pluck('count', 'reservation_date');
+
+        while ($start->lt($end)) {
+            $key = $start->format('Y年m月');
+            $month = $months->get($key);
+
+            if (!isset($month)) {
+                $month = collect();
+                $months->put($key, $month);
+            }
+
+            if ($start->day == 1 && $start->dayOfWeek != 0) {
+                for ($i = 0; $i < $start->dayOfWeek; $i++) {
+                    $month->push(null);
+                }
+            }
+
+            $calendar_day = $calendar_days->first(function ($day) use ($start) {
+                return $day->date->isSameDay($start);
+            });
+
+            $reservation = $reservation_counts->get($start->format('Ymd'));
+
+            $month->push([ 'date' => $start->copy(), 'calendar_day' => $calendar_day, 'reservation_count' => $reservation ]);
+
+            if ($start->isLastOfMonth() && !$start->isSaturday()) {
+                for ($i = $start->dayOfWeek; $i < 6; $i++) {
+                    $month->push(null);
+                }
+            }
+
+            $start->addDay(1);
+        }
+
+        $start = Carbon::now()->startOfMonth();
+
+        return view('calendar.setting')
+            ->with('calendar', $calendar)
+            ->with('months', $months)
+            ->with('start', $start)
+            ->with('end', $end);
+    }
+
+    /**
+     * Update calendar setting
+     * @param $id
+     * @param CalendarFormRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updateSetting($id, CalendarFormRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $calendar = Calendar::findOrFail($id);
+            $start = Carbon::now()->startOfMonth();
+            $end = Carbon::now()->addMonth(5)->endOfMonth();
+
+            $calendar_days = CalendarDay::where('calendar_id', $id)
+                ->whereDate('date', '>=', $start->toDateString())
+                ->whereDate('date', '<=', $end->toDateString())->get();
+
+            $days = collect($request->input('days'));
+            $is_reservation_acceptances = collect($request->input('is_reservation_acceptances'));
+            $reservation_frames = collect($request->input('reservation_frames'));
+
+            while ($start->lt($end)) {
+                if ($start->isPast()) {
+                    $start->addDay(1);
+                    continue;
+                }
+                $calendar_day = $calendar_days->first(function ($day) use ($start) {
+                    return $day->date->isSameDay($start);
+                });
+
+                $index = $days->search(function ($d) use ($start) {
+                    return $start->format('Ymd') == $d;
+                });
+                $is_reservation_acceptance = $is_reservation_acceptances->get($index);
+                $reservation_frame = $reservation_frames->get($index);
+
+                if (!isset($calendar_day)) {
+                    $calendar_day = new CalendarDay();
+                    $calendar_day->date = $start->copy();
+                    $calendar_day->is_holiday = 0;
+                    $calendar_days->push($calendar_day);
+                }
+
+                $calendar_day->is_reservation_acceptance = $is_reservation_acceptance;
+                $calendar_day->reservation_frames = $reservation_frame;
+
+                $start->addDay(1);
+            }
+
+            $calendar->calendar_days()->saveMany($calendar_days);
+
+            Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar_setting')]));
+            DB::commit();
+            return redirect('calendar');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
+        }
     }
 }

@@ -17,4 +17,9 @@ class Calendar extends SoftDeleteModel
     {
         return $this->hasMany('App\Course')->orderBy('order');
     }
+
+    public function calendar_days()
+    {
+        return $this->hasMany('App\CalendarDay');
+    }
 }

@@ -16,6 +16,11 @@ use Carbon\Carbon;
 
 class HospitalStaffController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:hospital_staffs', ['except' => 'index', 'edit']);
+    }
+
     public function index()
     {
         return view('hospital_staff.index', [ 'hospital_staffs' => HospitalStaff::paginate(20) ]);
@@ -28,6 +33,10 @@ class HospitalStaffController extends Controller
 
     public function store(HospitalStaffFormRequest $request)
     {
+        $request->request->add([
+            'hospital_id' => session()->get('hospital_id'),
+        ]);
+
         $hospital_staff           = new HospitalStaff($request->all());
         $password = str_random(8);
         $hospital_staff->password = bcrypt($password);
@@ -54,6 +63,10 @@ class HospitalStaffController extends Controller
 
     public function update(HospitalStaffFormRequest $request, $id)
     {
+        $request->request->add([
+            'hospital_id' => session()->get('hospital_id'),
+        ]);
+
         $hospital_staff     = HospitalStaff::findOrFail($id);
         $inputs             = request()->all();
         $hospital_staff->update($inputs);

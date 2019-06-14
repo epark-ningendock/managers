@@ -11,7 +11,7 @@
 @stop
 
 @section('js')
-  <script src="{{ asset('js/app.js?q=1.0') }}"></script>
+  <script src="{{ asset('js/app.js?q=1.1') }}"></script>
   @yield('script')
 @stop
 

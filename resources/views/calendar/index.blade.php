@@ -38,7 +38,7 @@
               </h4>
               <div class="pull-right">
                 <a class="btn btn-primary" href="{{ route('calendar.edit', $calendar->id) }}">編集</a>
-                <a class="btn btn-primary ml-2" >カレンダー確定</a>
+                <a class="btn btn-primary ml-2" href="{{ route('calendar.setting', $calendar->id) }}">カレンダー確定</a>
               </div>
             </div>
           </td>

@@ -14,11 +14,15 @@
 
         <div class="std-container">
             <div class="row">
-
                 <div class="col-sm-3">
                     <div class="form-group">
-                        {{ Form::label('claim_month-field', '請求月') }}
-                        {{ Form::text('claim_month', old('claim_month'), ['class' => 'form-control', 'id' => 'claim_month-field', 'placeholder' => '2019/04']) }}
+                        <label for="s_text">請求月</label>
+                        <div class='input-group date' id="claim-calendar">
+                            {{ Form::text('claim_month', old('claim_month', date('Y/m')), ['class' => 'form-control', 'id' => 'claim_month-field', 'placeholder' => '2019/04']) }}
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -173,6 +177,12 @@
             $('.datetimepicker').datepicker({
                 language:'ja',
                 format: 'yyyy-mm-dd',
+            });
+            $('#claim-calendar').datepicker({
+                format: 'yyyy/mm',
+                language: 'ja',
+                autoclose: true,
+                minViewMode: 'months'
             });
         })(jQuery);
     </script>

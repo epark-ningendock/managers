@@ -58,6 +58,9 @@ Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course
 // メールテンプレート系
 Route::resource('/email-template', 'EmailTemplateController')->except(['show']);
 
+// 受付メール設定系
+Route::resource('/reception-email-setting', 'ReceptionEmailSettingController');
+
 // ログイン系
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');
@@ -67,7 +70,10 @@ Route::get('/register', function () {
     return view('/vendor/adminlte/register');
 });
 
-
+// Calendar
+Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting');
+Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting');
+Route::resource('/calendar', 'CalendarController')->except(['show']);
 
 Auth::routes();
 Route::get('/login', 'Auth\LoginController@getLogin')->name('login');
@@ -83,9 +89,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('option/sort', 'OptionController@sort')->name('option.sort');
 Route::resource('option', 'OptionController', ['excerpt' => 'show']);
 Route::patch('option/sort/update', 'OptionController@updateSort')->name('option.updateSort');
-
-
-
-Route::resource('/calendar', 'CalendarController')->except(['show']);
 
 Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);

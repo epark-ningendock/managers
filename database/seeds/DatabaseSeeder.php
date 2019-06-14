@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
             ImageOrdersTableSeeder::class,
             CalendarsTableSeeder::class,
             CoursesTableSeeder::class,
-            EmailTemplatesTableSeeder::class
+            EmailTemplatesTableSeeder::class,
+            ReceprionEmailSettingsTableSeeder::class
         ]);
     }
 }
