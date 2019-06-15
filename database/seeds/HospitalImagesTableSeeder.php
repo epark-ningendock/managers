@@ -27,7 +27,7 @@ class HospitalImagesTableSeeder extends Seeder
             factory(HospitalImage::class)->create([
                 'hospital_id'=> $hospital->id,
                 'name' => $path_info['filename'],
-                'extension' => $path_info['extension'],
+                //'extension' => $path_info['extension'],
                 'path' => '/images/hospitals/'.$path_info['filename'].'.jpg'
             ]);
         }

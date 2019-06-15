@@ -4,6 +4,12 @@ namespace App;
 
 class Reservation extends BaseModel
 {
+    const HOSPITAL = 1;
+    const PC = 2;
+    const SP = 3;
+    const TEL_API = 4;
+    const TEL_PPC = 5;
+
     protected $dates = [
         'completed_date',
         'created_at',
@@ -14,6 +20,14 @@ class Reservation extends BaseModel
     public static $channel = [
         '0' => 'Tel',
         '1' => 'Web',
+    ];
+
+    public static $english_names = [
+        self::HOSPITAL => '院内',
+        self::PC => 'PC',
+        self::SP => 'スマホ',
+        self::TEL_API => '電話予約(API）',
+        self::TEL_PPC => '電話予約(PPC)'
     ];
 
     //todo channelがどういうケースが発生するのか未定なので、とりあえず仮で
@@ -67,6 +81,12 @@ class Reservation extends BaseModel
         if (isset($request->customer_name)) {
             $query->whereHas('Customer', function ($q) use ($request) {
                 $q->where('name', 'LIKE', "%$request->customer_name%");
+            });
+        }
+
+        if (isset($request->hospital_name)) {
+            $query->whereHas('Hospital', function ($q) use ($request) {
+                $q->where('name', 'LIKE', "%$request->hospital_name%");
             });
         }
 
