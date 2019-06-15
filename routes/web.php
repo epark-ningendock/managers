@@ -57,6 +57,9 @@ Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course
 // メールテンプレート系
 Route::resource('/email-template', 'EmailTemplateController')->except(['show']);
 
+// 受付メール設定系
+Route::resource('/reception-email-setting', 'ReceptionEmailSettingController');
+
 // ログイン系
 Route::get('/login', function () {
     return view('/vendor/adminlte/login');
@@ -66,7 +69,12 @@ Route::get('/register', function () {
     return view('/vendor/adminlte/register');
 });
 
-
+// Calendar
+Route::get('/calendar/holiday', 'CalendarController@holiday_setting')->name('calendar.holiday');
+Route::patch('/calendar/holiday', 'CalendarController@update_holiday')->name('calendar.updateHoliday');
+Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting');
+Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting');
+Route::resource('/calendar', 'CalendarController')->except(['show']);
 
 Auth::routes();
 Route::get('/login', 'Auth\LoginController@getLogin')->name('login');
@@ -83,7 +91,24 @@ Route::get('option/sort', 'OptionController@sort')->name('option.sort');
 Route::resource('option', 'OptionController', ['excerpt' => 'show']);
 Route::patch('option/sort/update', 'OptionController@updateSort')->name('option.updateSort');
 
-Route::resource('/calendar', 'CalendarController')->except(['show']);
-
+/*
+|--------------------------------------------------------------------------
+| Reservation
+|--------------------------------------------------------------------------
+*/
 Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
 Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
+
+/*
+|--------------------------------------------------------------------------
+| Customer Route
+|--------------------------------------------------------------------------
+*/
+
+Route::resource('customer', 'CustomerController');
+Route::post('customer/detail', 'CustomerController@detail')->name('customer.detail');
+//Route::get('customer/basic-information', 'CustomerController@basicInformationCreate');
+Route::post('customer/import', 'CustomerController@importData')->name('customer.import.data');
+Route::post('customer/email/{customer_id}', 'CustomerController@showEmailForm')->name('customer.show.email.form');
+Route::post('customer/email-send/{customer_id}', 'CustomerController@emailSend')->name('customer.email.send');
+

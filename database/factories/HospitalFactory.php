@@ -49,7 +49,6 @@ $factory->define(App\Hospital::class, function (Faker $faker) {
         'pv_count' => $faker->numberBetween(0, 1),
         'pvad' => $faker->numberBetween(0, 1),
         'is_pickup' => $faker->numberBetween(0, 1),
-        'hospital_staff_id' => factory(\App\HospitalStaff::class)->create()->id,
         'login_id' => $faker->userName,
         'login_psw' => bcrypt('123456'),
         'login_status' => $faker->numberBetween(0, 1),

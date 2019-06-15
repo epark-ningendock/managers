@@ -60,8 +60,8 @@
   </div>
 </div>
 <div class="box-footer">
-  <a href="{{ url()->previous() }}" class="btn btn-default">バック</a>
-  <button type="submit" class="btn btn-primary">つくる</button>
+  <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
+  <button type="submit" class="btn btn-primary">作成</button>
 </div>
 
 <style>
@@ -70,6 +70,7 @@
     overflow-y: auto;
   }
   .transfer {
+    width: 70px;
     margin-top: 80px;
   }
 </style>

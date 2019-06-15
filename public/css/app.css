@@ -2208,3 +2208,33 @@ table tr td.gray-column {
   padding-left: 30px;
 }
 
+.top-action-bar-file-with-file {
+  display: inline-block;
+  padding: 0;
+  float: right;
+  margin-top: 4px;
+}
+
+.input-file {
+  display: inline-block;
+  background: #ddd;
+  width: 100px;
+  height: 26px;
+  overflow: hidden;
+  margin: 0 7px;
+  position: relative;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.input-file label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #ddd;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  margin: 0;
+}
+

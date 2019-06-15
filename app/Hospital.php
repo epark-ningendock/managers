@@ -55,7 +55,6 @@ class Hospital extends Model
         'pv_count',
         'pvad',
         'is_pickup',
-        'hospital_staff_id',
         'login_id',
         'login_psw',
         'login_status',
@@ -73,4 +72,12 @@ class Hospital extends Model
         'pre_account_discount_rate',
         'pre_account_commission_rate',
     ];
+
+    /**
+     * 医療機関に関連する受付メール設定レコードを取得
+     */
+    public function reception_email_setting()
+    {
+        return $this->hasOne('App\ReceptionEmailSetting');
+    }
 }
