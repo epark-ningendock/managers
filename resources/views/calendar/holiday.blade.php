@@ -8,7 +8,7 @@
 @extends('layouts.form')
 
 @section('content_header')
-  <h1>休日確定</h1>
+  <h1>休日設定</h1>
 @stop
 
 @section('form')
@@ -194,7 +194,7 @@
 
       </div>
       <div class="box-footer">
-        <a href="{{ url()->previous() }}" class="btn btn-default">バック</a>
+        <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
         <button class="btn btn-primary" id="reset-data">設定のクリア</button>
         <button class="btn btn-primary" id="clear-data">登録する</button>
       </div>

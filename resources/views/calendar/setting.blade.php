@@ -222,7 +222,7 @@
         </div>
       </div>
       <div class="box-footer">
-        <a href="{{ url()->previous() }}" class="btn btn-default">バック</a>
+        <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
         <button class="btn btn-primary" id="clear-data">期間限定・予約枠の数全てクリア</button>
         <button class="btn btn-primary" id="reset-data">設定のクリア</button>
         <button class="btn btn-primary" id="clear-data">登録する</button>

@@ -70,7 +70,7 @@ return [
         'email_template' => 'メールテンプレート',
         'calendar_setting' => 'カレンダー管理',
         'reception_email_setting' => '受付メール設定',
-        'holiday_setting' => '休日確定'
+        'holiday_setting' => '休日設定'
     ],
     'mails' => [
         'reset_passoword' => '医療機関スタッフパスワードリセットメール',
