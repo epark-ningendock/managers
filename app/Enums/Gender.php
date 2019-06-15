@@ -7,6 +7,6 @@ use BenSampo\Enum\Enum;
 
 final class Gender extends Enum implements LocalizedEnum
 {
-	const Female = 'F';
-	const Male = 'M';
+    const Female = 'F';
+    const Male = 'M';
 }

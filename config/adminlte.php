@@ -125,7 +125,7 @@ return [
             'icon'        => 'user',
         ],
         [
-            'text'        => 'お客様',
+            'text'        => '顧客管理',
             'url'         => '/customer',
             'icon'        => 'user',
         ],
@@ -154,16 +154,16 @@ return [
             'url'         => '/calendar',
             'icon'        => 'calendar',
         ],
-	    [
-		    'text'        => 'メールテンプレート管理',
-		    'url'         => '/email-template',
-		    'icon'        => 'gear',
-	    ],
-	    [
-		    'text'        => '受付メール設定',
-		    'url'         => '/reception-email-setting',
-		    'icon'        => 'gear',
-	    ],
+        [
+            'text'        => 'メールテンプレート管理',
+            'url'         => '/email-template',
+            'icon'        => 'gear',
+        ],
+        [
+            'text'        => '受付メール設定',
+            'url'         => '/reception-email-setting',
+            'icon'        => 'gear ',
+        ],
     ],
 
     /*

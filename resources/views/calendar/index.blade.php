@@ -19,7 +19,7 @@
   <h4>カレンダーの登録</h4>
   <div class="mb-4">下記のボタンをクリックすると新しいカレンダーを登録することができます。</div>
   <a class="btn btn-success" href="{{ route('calendar.create') }}">カレンダーの新規登録</a>
-  <a class="btn btn-primary ml-2">休日確定</a>
+  <a class="btn btn-primary ml-2" href="{{ route('calendar.holiday') }}">休日設定</a>
 @stop
 
 @section('table')
@@ -38,7 +38,7 @@
               </h4>
               <div class="pull-right">
                 <a class="btn btn-primary" href="{{ route('calendar.edit', $calendar->id) }}">編集</a>
-                <a class="btn btn-primary ml-2" href="{{ route('calendar.setting', $calendar->id) }}">カレンダー確定</a>
+                <a class="btn btn-primary ml-2" href="{{ route('calendar.setting', $calendar->id) }}">カレンダー設定</a>
               </div>
             </div>
           </td>

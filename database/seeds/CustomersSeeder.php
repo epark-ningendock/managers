@@ -13,7 +13,7 @@ class CustomersSeeder extends Seeder
      */
     public function run()
     {
-        factory(Customer::class, 50)->create()->each(function($customer, $index){
+        factory(Customer::class, 50)->create()->each(function ($customer, $index) {
             factory(Reservation::class, 3)->create([
                 'customer_id' => $customer->id
             ]);

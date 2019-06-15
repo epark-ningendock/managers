@@ -10,9 +10,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class CustomerSendMail extends Mailable
 {
     use Queueable, SerializesModels;
-	public $data;
+    public $data;
 
-	/**
+    /**
      * Create a new message instance.
      *
      * @return void
@@ -20,7 +20,7 @@ class CustomerSendMail extends Mailable
     public function __construct($data)
     {
         //
-	    $this->data = $data;
+        $this->data = $data;
     }
 
     /**
@@ -30,9 +30,9 @@ class CustomerSendMail extends Mailable
      */
     public function build()
     {
-	    return $this
-		    ->from($this->data->appointed_submissions)
-		    ->subject($this->data->subject)
-		    ->view('customer.email.customer-mail');
+        return $this
+            ->from($this->data->appointed_submissions)
+            ->subject($this->data->subject)
+            ->view('customer.email.customer-mail');
     }
 }

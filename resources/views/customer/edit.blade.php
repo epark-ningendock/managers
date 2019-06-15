@@ -17,7 +17,8 @@
 
       <div class="text-center mb-5 pb-5">
         <button type="submit" class="btn btn-primary btn-lg">{{trans('messages.update') }}</button>
-          <a href="{{ route('customer.index') }}" class="btn btn-default btn-lg">{{ trans('messages.remove') }}</a>
+        {{-- Because there is "「削除」（Delete）" in the list, "「戻る」（Return）" is added here --}}
+          <a href="{{ route('customer.index') }}" class="btn btn-default btn-lg">戻る</a>
       </div>
 
     </form>

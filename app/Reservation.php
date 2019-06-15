@@ -41,10 +41,12 @@ class Reservation extends BaseModel
         return $this->belongsTo('App\Customer');
     }
 
-    public function scopeNearestDate($query) {
+    public function scopeNearestDate($query)
+    {
         return $query->orderBy('reservation_date', 'asc');
     }
-    public function scopeDescOrder( $query ) {
+    public function scopeDescOrder($query)
+    {
         return $query->orderBy('reservation_date', 'desc');
     }
 
@@ -91,7 +93,4 @@ class Reservation extends BaseModel
 
         return $query;
     }
-
-
-
 }

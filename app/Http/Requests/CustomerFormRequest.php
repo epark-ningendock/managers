@@ -43,15 +43,16 @@ class CustomerFormRequest extends FormRequest
         ];
     }
 
-	public function messages() {
-		return [
-			'claim_count.required' => trans('validation.required', ['attribute' => trans('messages.claim_count')]),
-			'claim_count.integer' => trans('validation.integer', ['attribute' => trans('messages.claim_count')]),
-			'recall_count.required' => trans('validation.required', ['attribute' => trans('messages.recall_count')]),
-			'recall_count.integer' => trans('validation.integer', ['attribute' => trans('messages.recall_count')]),
-			'sex.required' => trans('validation.required', ['attribute' => trans('messages.gender')]),
-			'name_seri.required' => trans('validation.required', ['attribute' => trans('messages.name_seri')]),
-			'name_mei.required' => trans('validation.required', ['attribute' => trans('messages.name_mei')]),
-		];
+    public function messages()
+    {
+        return [
+            'claim_count.required' => trans('validation.required', ['attribute' => trans('messages.claim_count')]),
+            'claim_count.integer' => trans('validation.integer', ['attribute' => trans('messages.claim_count')]),
+            'recall_count.required' => trans('validation.required', ['attribute' => trans('messages.recall_count')]),
+            'recall_count.integer' => trans('validation.integer', ['attribute' => trans('messages.recall_count')]),
+            'sex.required' => trans('validation.required', ['attribute' => trans('messages.gender')]),
+            'name_seri.required' => trans('validation.required', ['attribute' => trans('messages.name_seri')]),
+            'name_mei.required' => trans('validation.required', ['attribute' => trans('messages.name_mei')]),
+        ];
     }
 }
