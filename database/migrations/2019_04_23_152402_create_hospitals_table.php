@@ -62,6 +62,7 @@ class CreateHospitalsTable extends Migration
             $table->integer('pv_count')->default(0)->nullable();
             $table->integer('pvad')->default(0)->nullable();
             $table->integer('is_pickup');
+            $table->unsignedInteger('hospital_staff_id');
             $table->string('login_id', 32);
             $table->string('login_psw', 256);
             $table->char('login_status')->default(0);
