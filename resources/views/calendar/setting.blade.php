@@ -126,7 +126,7 @@
                 <label><input type="checkbox" class="week" id="week-2" /> 第2 (8日~14日)</label>
                 <label><input type="checkbox" class="week" id="week-3" /> 第3 (15日~21日)</label>
                 <label><input type="checkbox" class="week" id="week-4" /> 第4 (22日~28日)</label>
-                <label><input type="checkbox" class="week" id="week-5" /> 第5 (28日~)</label>
+                <label><input type="checkbox" class="week" id="week-5" /> 第5 (29日~)</label>
               </td>
             </tr>
           </table>
@@ -159,16 +159,16 @@
                   <tr>
                     @foreach($week as $day)
                       @if($day != null)
-                        <td class="@if($day['date']->isSunday() || (isset($day['calendar_day']) && $day['calendar_day']->is_holiday == 1)) holiday @elseif($day['date']->isSaturday()) saturday @endif">
+                        <td class="@if($day['date']->isSunday() || $day['is_holiday']) holiday @elseif($day['date']->isSaturday()) saturday @endif">
                           <!-- date -->
                           <input type="hidden" name="days[]" value="{{ $day['date']->format('Ymd') }}" />
-                          <span class="day-label @if($day['date']->isSunday() || (isset($day['calendar_day']) && $day['calendar_day']->is_holiday == '1')) text-red @elseif($day['date']->isSaturday()) text-blue @endif">
+                          <span class="day-label @if($day['date']->isSunday() || $day['is_holiday']) text-red @elseif($day['date']->isSaturday()) text-blue @endif">
                             {{ $day['date']->day }}
                           </span>
 
-                          <div class="data-box @if(isset($day['calendar_day']) && $day['calendar_day']->is_holiday == 1) holiday @elseif($day['date']->isPast())) bg-gray @endif">
+                          <div class="data-box @if($day['is_holiday']) holiday @elseif($day['date']->isPast())) bg-gray @endif">
                             <!-- holiday and reservation acceptance -->
-                            @if(isset($day['calendar_day']) && $day['calendar_day']->is_holiday == '1')
+                            @if($day['is_holiday'])
                               <span class="day-label text-red">休</span>
                             @elseif(!$day['date']->isPast())
                               <a class="is_reservation_acceptance day-label">
@@ -185,7 +185,7 @@
                               <input type="hidden" name="reservation_frames[]" value="{{  isset($day['calendar_day']) ? $day['calendar_day']->reservation_frames : 0}}" />
                             @else
                               <select name="reservation_frames[]" class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
-                                      @if(isset($day['calendar_day']) && $day['calendar_day']->is_holiday === 1) data-holiday="true" @endif
+                                      @if($day['is_holiday']) data-holiday="true" @endif
                                       data-origin="{{ isset($day['calendar_day']) ? $day['calendar_day']->reservation_frames : '' }}">
                                 <option></option>
                                 @foreach(range(0, 99) as $i)
@@ -222,7 +222,7 @@
         </div>
       </div>
       <div class="box-footer">
-        <a href="{{ url()->previous() }}" class="btn btn-default">バック</a>
+        <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
         <button class="btn btn-primary" id="clear-data">期間限定・予約枠の数全てクリア</button>
         <button class="btn btn-primary" id="reset-data">設定のクリア</button>
         <button class="btn btn-primary" id="clear-data">登録する</button>

@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 /*
 |--------------------------------------------------------------------------
-| Login System
+| Login Route
 |--------------------------------------------------------------------------
 */
 Auth::routes();
@@ -27,7 +27,7 @@ Route::post('/login', 'Auth\LoginController@postLogin');
 
 /*
 |--------------------------------------------------------------------------
-| Staff System
+| Staff Route
 |--------------------------------------------------------------------------
 */
 Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], function () {
@@ -38,7 +38,7 @@ Route::resource('/staff', 'StaffController')->except(['show'])->middleware('auth
 
 /*
 |--------------------------------------------------------------------------
-| Hospital System
+| Hospital Route
 |--------------------------------------------------------------------------
 */
 Route::resource('/hospital', 'HospitalController')->except(['show'])->middleware('auth');
@@ -47,7 +47,7 @@ Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hosp
 
 /*
 |--------------------------------------------------------------------------
-| Hospital Staff System
+| Hospital Staff Route
 |--------------------------------------------------------------------------
 */
 Route::get('/hospital-staff/edit-password', 'HospitalStaffController@editPassword')->middleware('auth'); // ログインユーザーのパスワード編集画面に遷移する
@@ -62,7 +62,7 @@ Route::resource('hospital-staff', 'HospitalStaffController')->except([
 
 /*
 |--------------------------------------------------------------------------
-| Course Classification System
+| Course Classification Route
 |--------------------------------------------------------------------------
 */
 Route::post('/classification/{id}/restore', 'ClassificationController@restore')->name('classification.restore')->middleware('auth');
@@ -72,7 +72,7 @@ Route::resource('/classification', 'ClassificationController')->except(['show'])
 
 /*
 |--------------------------------------------------------------------------
-| Course System
+| Course Route
 |--------------------------------------------------------------------------
 */
 Route::resource('/course', 'CourseController')->except(['show'])->middleware('auth');
@@ -82,7 +82,7 @@ Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course
 
 /*
 |--------------------------------------------------------------------------
-| Course Option System
+| Course Option Route
 |--------------------------------------------------------------------------
 */
 Route::get('option/sort', 'OptionController@sort')->name('option.sort')->middleware('auth');
@@ -91,30 +91,47 @@ Route::patch('option/sort/update', 'OptionController@updateSort')->name('option.
 
 /*
 |--------------------------------------------------------------------------
-| Email Template System
+| Email Template Route
 |--------------------------------------------------------------------------
 */
 Route::resource('/email-template', 'EmailTemplateController')->except(['show'])->middleware('auth');
 
 /*
 |--------------------------------------------------------------------------
-| Reception Email Setting System
+| Reception Email Setting Route
 |--------------------------------------------------------------------------
 */
 Route::resource('/reception-email-setting', 'ReceptionEmailSettingController')->middleware('auth');
 
 /*
 |--------------------------------------------------------------------------
-| Reception Email Setting System
+| Calendar Route
 |--------------------------------------------------------------------------
 */
-Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting')->middleware('auth');
-Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting')->middleware('auth');
-Route::resource('/calendar', 'CalendarController')->except(['show'])->middleware('auth');
+Route::get('/calendar/holiday', 'CalendarController@holiday_setting')->name('calendar.holiday');
+Route::patch('/calendar/holiday', 'CalendarController@update_holiday')->name('calendar.updateHoliday');
+Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting');
+Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting');
+Route::resource('/calendar', 'CalendarController')->except(['show']);
 
 /*
 |--------------------------------------------------------------------------
-| Reservation System
+| Reservation Route
 |--------------------------------------------------------------------------
 */
 Route::resource('/reservation', 'ReservationController', ['only' => ['index']])->middleware('auth');
+Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
+
+/*
+|--------------------------------------------------------------------------
+| Customer Route
+|--------------------------------------------------------------------------
+*/
+
+Route::resource('customer', 'CustomerController');
+Route::post('customer/detail', 'CustomerController@detail')->name('customer.detail');
+//Route::get('customer/basic-information', 'CustomerController@basicInformationCreate');
+Route::post('customer/import', 'CustomerController@importData')->name('customer.import.data');
+Route::post('customer/email/{customer_id}', 'CustomerController@showEmailForm')->name('customer.show.email.form');
+Route::post('customer/email-send/{customer_id}', 'CustomerController@emailSend')->name('customer.email.send');
+

@@ -23,7 +23,9 @@ class DatabaseSeeder extends Seeder
             CalendarsTableSeeder::class,
             CoursesTableSeeder::class,
             EmailTemplatesTableSeeder::class,
-            ReceprionEmailSettingsTableSeeder::class
+            ReceprionEmailSettingsTableSeeder::class,
+            CustomersSeeder::class,
+            PrefecturesSeeder::class
         ]);
     }
 }

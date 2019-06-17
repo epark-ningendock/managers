@@ -6,6 +6,7 @@ use App\Reservation;
 use App\Hospital;
 use App\Customer;
 use App\Course;
+use App\Services\ReservationExportService;
 //use App\CourseOption;
 //use App\Option;
 use Illuminate\Http\Request;
@@ -16,17 +17,20 @@ class ReservationController extends Controller
     protected $hospital;
     protected $customer;
     protected $course;
+    protected $export_file;
 
     public function __construct(
         Reservation $reservation,
         Hospital $hospital,
         Customer $customer,
-        Course $course
+        Course $course,
+        ReservationExportService $export_file
     ) {
         $this->reservation = $reservation;
         $this->hospital = $hospital;
         $this->customer = $customer;
         $this->course = $course;
+        $this->export_file = $export_file;
     }
     /**
      * 一覧表示.
@@ -46,6 +50,11 @@ class ReservationController extends Controller
 
         $reservations = $query->paginate(env('PAGINATE_NUMBER'));
 
-        return view('reservation.index', compact('reservations', 'params'));
+        return view('reservation.index', compact('reservations', 'params', 'request'));
+    }
+
+    public function operation(Request $request)
+    {
+        return $this->export_file->operationCsv($request);
     }
 }
