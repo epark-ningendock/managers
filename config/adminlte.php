@@ -125,6 +125,11 @@ return [
             'icon'        => 'user',
         ],
         [
+            'text'        => '顧客管理',
+            'url'         => '/customer',
+            'icon'        => 'user',
+        ],
+        [
             'text'        => '医療機関管理',
             'url'         => '/hospital',
             'icon'        => 'hospital-o',
@@ -154,7 +159,7 @@ return [
             'url'         => '/email-template',
             'icon'        => 'gear',
         ],
-	    [
+        [
             'text'        => '受付メール設定',
             'url'         => '/reception-email-setting',
             'icon'        => 'gear ',
