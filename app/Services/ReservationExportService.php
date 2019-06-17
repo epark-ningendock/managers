@@ -16,6 +16,7 @@ class ReservationExportService
 
     public function operationCsv($request)
     {
+
         $query = $this->reservation
             ->byRequest($request)
             ->with(['hospital', 'course', 'customer'])
@@ -44,7 +45,7 @@ class ReservationExportService
                 $reservation_lists->terminal_type,//'医院/院外'
                 $reservation_lists->channel,//'媒体'
                 Reservation::$english_names[$reservation_lists->reservation_status],//区分
-                $reservation_lists->is_billiable,//課金・未課金
+                Reservation::$is_billable[$reservation_lists->is_billable],//課金・未課金
                 $reservation_lists->site_code,//サイトコード
                 $reservation_lists->cancel_date,//キャンセル日
                 $reservation_lists->member_number,//顧客番号

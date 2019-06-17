@@ -52,7 +52,7 @@ class ReservationsTable extends Migration
             $table->string('insurance_assoc')->nullable();
             $table->char('mail_type', 1);
             $table->string('cancelled_appoint_code')->nullable();
-            $table->char('is_billable', 1)->nullable();
+            $table->char('is_billable', 1)->default('0');
             $table->string('claim_month')->nullable();
             $table->string('is_payment')->nullable();
             $table->string('payment_status');

@@ -22,6 +22,11 @@ class Reservation extends BaseModel
         '1' => 'Web',
     ];
 
+    public static $is_billable = [
+        '0' => '未課金',
+        '1' => '課金',
+    ];
+
     public static $english_names = [
         self::HOSPITAL => '院内',
         self::PC => 'PC',
