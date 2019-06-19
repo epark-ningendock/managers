@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Carbon\Carbon;
+
 class Reservation extends BaseModel
 {
     const HOSPITAL = 1;
@@ -76,8 +78,11 @@ class Reservation extends BaseModel
 
     public function scopeByRequest($query, $request)
     {
-        if (strlen($request->claim_month)) {
+
+        if (isset($request->claim_month)) {
             $query->where('claim_month', $request->claim_month);
+        } else {
+            $query->where('claim_month', Carbon::now()->format('Y/m'));
         }
 
         if (isset($request->reservation_date_start) && isset($request->reservation_date_end)) {
@@ -94,25 +99,13 @@ class Reservation extends BaseModel
 
         if (isset($request->customer_name)) {
             $query->whereHas('Customer', function ($q) use ($request) {
-                $q->where('name', 'LIKE', "%$request->customer_name%");
+                $q->where('first_name', 'LIKE', "%$request->customer_name%")->orWhere('family_name', 'LIKE', "%$request->customer_name%");
             });
         }
 
         if (isset($request->hospital_name)) {
             $query->whereHas('Hospital', function ($q) use ($request) {
                 $q->where('name', 'LIKE', "%$request->hospital_name%");
-            });
-        }
-
-        if (isset($request->customer_name)) {
-            $query->whereHas('Customer', function ($q) use ($request) {
-                $q->where('name', 'LIKE', "%$request->customer_name%");
-            });
-        }
-
-        if (isset($request->birthday)) {
-            $query->whereHas('Customer', function ($q) use ($request) {
-                $q->where('birthday', 'LIKE', "%$request->birthday%");
             });
         }
 

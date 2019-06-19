@@ -25,8 +25,8 @@ class CustomerFormRequest extends FormRequest
     {
         return [
 //            'registration_card_number' => 'required',
-            'name_seri' => 'required',
-            'name_mei' => 'required',
+            'family_name' => 'required',
+            'first_name' => 'required',
 //            'name_kana' => 'required',
 //            'tel' => 'required',
             'sex' => 'required',
@@ -51,8 +51,8 @@ class CustomerFormRequest extends FormRequest
             'recall_count.required' => trans('validation.required', ['attribute' => trans('messages.recall_count')]),
             'recall_count.integer' => trans('validation.integer', ['attribute' => trans('messages.recall_count')]),
             'sex.required' => trans('validation.required', ['attribute' => trans('messages.gender')]),
-            'name_seri.required' => trans('validation.required', ['attribute' => trans('messages.name_seri')]),
-            'name_mei.required' => trans('validation.required', ['attribute' => trans('messages.name_mei')]),
+            'family_name.required' => trans('validation.required', ['attribute' => trans('messages.family_name')]),
+            'first_name.required' => trans('validation.required', ['attribute' => trans('messages.first_name')]),
         ];
     }
 }

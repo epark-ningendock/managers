@@ -19,10 +19,10 @@ class Customer extends BaseModel
         'parent_customer_id',
         'member_number',
         'registration_card_number',
-        'name_seri',
-        'name_mei',
-        'name_kana_seri',
-        'name_kana_mei',
+        'first_name',
+        'family_name',
+        'family_name_kana',
+        'first_name_kana',
         'tel',
         'email',
         'postcode',
@@ -62,7 +62,7 @@ class Customer extends BaseModel
 
     public function getName()
     {
-        return $this->name_seri . ' ' . $this->name_mei;
+        return $this->family_name . ' ' . $this->first_name;
     }
 
     public function hospitals()

@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Faker\Generator as Faker;
 
 $factory->define(App\Reservation::class, function (Faker $faker) {
@@ -40,7 +41,7 @@ $factory->define(App\Reservation::class, function (Faker $faker) {
         'insurance_assoc' => null,
         'mail_type' => $faker->randomElement(['0', '1']),
         'cancelled_appoint_code' => null,
-        'claim_month' => null,
+        'claim_month' => $faker->randomElement([Carbon::now()->addMonth()->format('Y/m'),  Carbon::now()->subMonth()->format('Y/m'), Carbon::now()->format('Y/m')]),
         'is_payment' => $faker->randomElement(['0', '1']),
         'payment_status' => $faker->randomElement(['1', '2', '3', '9']),
         'trade_id' => $faker->shuffle('abcdefghijklmnopqrstuvwxyz', 10),
