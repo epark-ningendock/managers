@@ -29,8 +29,10 @@ Route::resource('/staff', 'StaffController')->except(['show']);
 
 // 医療機関系
 Route::resource('/hospital', 'HospitalController')->except(['show']);
+Route::get('/hospital/contract-information', 'ContractInformationController@index')->name('hospital.contractInfo');
 Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search');
 Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
+Route::get('/hospital/search/contract-info', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');
 
 // 医療機関スタッフ系
 Route::get('/hospital-staff/edit-password', 'HospitalStaffController@editPassword'); // ログインユーザーのパスワード編集画面に遷移する
