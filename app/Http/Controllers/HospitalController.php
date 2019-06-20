@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enums\HospitalEnums;
 use App\Hospital;
+use App\ContractInformation;
+use App\HospitalStaff;
 use Illuminate\Http\Request;
 
 class HospitalController extends Controller
@@ -34,6 +36,37 @@ class HospitalController extends Controller
     {
         $hospitals = Hospital::select('name', 'address1')->where('name', 'LIKE', "%" .$request->get('s_text') . "%")->get();
         return response()->json($hospitals);
+    }
+
+    // TODO この関数は全体的に見直し必要
+    public function searchHospiralContractInfo(Request $request)
+    {
+        // returnさせる医療機関一覧
+        $contractInformations = [];
+        $inputText = $request->get('contract_info_search_word');
+        // 医療機関名ID検索 or 医療機関名検索
+
+        // ドグネット検索
+        $contractInformation = ContractInformation::select()->where('code', 'LIKE', "%" .$inputText . "%")->get();
+        // 医療機関名検索
+        // TODO 複数該当する可能性がある
+        // $hospitals = Hospital::select()->where('name', 'LIKE', "%" .$inputText . "%")->get();
+        // 契約者名検索
+        // TODO 複数該当する可能性がある
+        // $contractInformations = ContractInformation::select()->where('contractor_name', 'LIKE', "%" .$inputText . "%")->get();
+
+        // 関連する医療機関を追加
+        // array_push($hospitals, $contractInformations->hospital);
+
+        // 懸念点
+        // 複数一致する条件があった場合、どうするのか？
+        // 一旦、候補を複数検索させて、候補を表示する感じ？？
+        // $hospitals = Hospital::where(id, $inputText);
+        // $contractInformation = ContractInformation::find($inputText);
+
+        // $hospitals = Hospital::select('name', 'address1')->where('name', 'LIKE', "%" .$request->get('s_text') . "%")->get();
+        // return response()->json($responseJson);
+        return view('hospital.contract-form', [ 'contract_information' => $contractInformation[0] ]);
     }
 
     /**
@@ -71,7 +104,7 @@ class HospitalController extends Controller
     
     public function edit(Hospital $hospital)
     {
-        //
+        return view('hospital.contract-form');
     }
 
     /**
