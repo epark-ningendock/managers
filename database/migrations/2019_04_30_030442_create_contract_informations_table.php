@@ -26,7 +26,6 @@ class CreateContractInformationsTable extends Migration
             $table->string('address', 200)->nullable();
             $table->string('tel', 30);
             $table->string('fax', 30)->nullable();
-            $table->string('email', 255)->unique();
             $table->string('karada_dog_id', 20)->nullable();
             $table->string('code', 20)->nullable();
             $table->string('old_karada_dog_id', 20);
