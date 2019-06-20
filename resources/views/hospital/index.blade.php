@@ -62,7 +62,7 @@
 @section('button')
 @include('hospital.partials.record-management-modal-box')
   <div class="pull-right">
-    <button class="btn btn-success pull-right" data-target="#record-management" data-toggle="modal">新規作成</button>
+    <a class="btn btn-success btn-create" href="{{ route('hospital.contractInfo') }}">新規作成</a>
   </div>
 @stop
 
