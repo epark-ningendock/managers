@@ -35,7 +35,7 @@ class StaffController extends Controller
         if ($request->input('login_id', '') != '') {
             $query->where('login_id', $request->input('login_id'));
         }
-        $query->where('status', $request->input('status', StaffStatus::Valid));
+        $query->where('status', $request->input('status', StaffStatus::Valid))->with(['staff_auth']);
 
         return view('staff.index', ['staffs' => $query->paginate(20)])
             ->with($request->input());
