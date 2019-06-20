@@ -13,7 +13,7 @@ return [
     'number_dash'     => ':attribute 数字またはダッシュを使用できます。',
 	'start_letter_k' => 'Kで始まる、20桁以内の英数列',
 	'start_alphabet_and_number' => 'アルファベットで始まる、2～20文字以内の英数列',
-    'strong_password' => 'The :attribute 半角英数字で、英小文字と数字を必ず使用し、8文字以上32文字以内',
+    'strong_password' => ':attribute 半角英数字で、英小文字と数字を必ず使用し、8文字以上32文字以内',
     'accepted'        => ':attributeを承認してください。',
     'active_url'      => ':attributeは、有効なURLではありません。',
     'after'           => ':attributeには、:dateより後の日付を指定してください。',

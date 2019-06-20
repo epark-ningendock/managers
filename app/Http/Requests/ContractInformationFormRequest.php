@@ -24,7 +24,6 @@ class ContractInformationFormRequest extends FormRequest
     public function rules()
     {
         return [
-             'medical_institution_name' => 'required',
             'contractor_name_kana' => 'required|max:100',
             'contractor_name' => 'required|max:100',
             'application_date' => 'required|date',
@@ -32,15 +31,15 @@ class ContractInformationFormRequest extends FormRequest
             'cancellation_date' => 'required|date|after:today',
             'representative_name_kana' => 'required|max:100',
             'representative_name' => 'required|max:100',
-            'postcode' => 'required|number_dash',
-            'address' => 'required|max:200',
+            'postcode' => 'number_dash',
+            'address' => 'max:200',
             'tel' => 'required|number_dash',
-            'fax' => 'required|number_dash',
-            'email' => 'required|email|unique:contract_informations,email',
-            'login' => 'required|unique:hospitals,login_id',
-            'password' => 'required|strong_password',
-            'old_karada_dog_id' => 'required|start_letter_k',
-	        'karada_dog_id' => 'required|start_alphabet_and_number'
+            'fax' => 'number_dash',
+            'email' => 'required|email|unique:hospital_staffs,email',
+            'login_id' => 'required|unique:hospitals,login_id',
+            'password' => 'required',
+            'old_karada_dog_id' => 'start_letter_k',
+            'karada_dog_id' => 'required|start_alphabet_and_number'
         ];
     }
 
