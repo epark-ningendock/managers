@@ -13,7 +13,7 @@
 
 Route::get('/', function () {
     return view('index');
-})->middleware('auth');
+})->middleware('auth:staffs,hospital_staffs');
 
 /*
 |--------------------------------------------------------------------------
@@ -50,14 +50,14 @@ Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hosp
 | Hospital Staff Route
 |--------------------------------------------------------------------------
 */
-Route::get('/hospital-staff/edit-password', 'HospitalStaffController@editPassword')->middleware('auth'); // ログインユーザーのパスワード編集画面に遷移する
-Route::put('/hospital-staff/update-password/{hospital_staff_id}', 'HospitalStaffController@updatePassword')->name('hospital-staff.update.password')->middleware('auth'); // ログインユーザーのパスワードを更新する
-Route::get('/hospital-staff/show-password-resets-mail', 'HospitalStaffController@showPasswordResetsMail')->middleware('auth'); // パスワードのリセットメール送信画面に遷移する
-Route::get('/hospital-staff/send-password-resets-mail', 'HospitalStaffController@sendPasswordResetsMail')->name('hospital-staff.send.password-reset')->middleware('auth'); // パスワードのリセットメール送信を送信する
-Route::get('/hospital-staff/show-reset-password/{reset_token}/{email}', 'HospitalStaffController@showResetPassword')->middleware('auth'); // パスワードのリセット画面に遷移する
-Route::put('/hospital-staff/reset-password/{hospital_staff_id}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password')->middleware('auth'); // パスワードをリセットする
+Route::get('/hospital-staff/edit-password', 'HospitalStaffController@editPassword')->middleware('auth:staffs,hospital_staffs'); // ログインユーザーのパスワード編集画面に遷移する
+Route::put('/hospital-staff/update-password/{hospital_staff_id}', 'HospitalStaffController@updatePassword')->name('hospital-staff.update.password')->middleware('auth:staffs,hospital_staffs'); // ログインユーザーのパスワードを更新する
+Route::get('/hospital-staff/show-password-resets-mail', 'HospitalStaffController@showPasswordResetsMail')->middleware('auth:staffs,hospital_staffs'); // パスワードのリセットメール送信画面に遷移する
+Route::get('/hospital-staff/send-password-resets-mail', 'HospitalStaffController@sendPasswordResetsMail')->name('hospital-staff.send.password-reset')->middleware('auth:staffs,hospital_staffs'); // パスワードのリセットメール送信を送信する
+Route::get('/hospital-staff/show-reset-password/{reset_token}/{email}', 'HospitalStaffController@showResetPassword')->middleware('auth:staffs,hospital_staffs'); // パスワードのリセット画面に遷移する
+Route::put('/hospital-staff/reset-password/{hospital_staff_id}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password')->middleware('auth:staffs,hospital_staffs'); // パスワードをリセットする
 Route::resource('hospital-staff', 'HospitalStaffController')->except([
-    'show',])->middleware('auth:hospital_staffs');;
+    'show',])->middleware('auth:staffs,hospital_staffs');;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,52 +74,52 @@ Route::resource('/classification', 'ClassificationController')->except(['show'])
 | Course Route
 |--------------------------------------------------------------------------
 */
-Route::resource('/course', 'CourseController')->except(['show'])->middleware('auth');
-Route::get('/course/sort', 'CourseController@sort')->name('course.sort')->middleware('auth');
-Route::get('/course/{id}/copy', 'CourseController@copy')->name('course.copy')->middleware('auth');
-Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course.updateSort')->middleware('auth');
+Route::resource('/course', 'CourseController')->except(['show'])->middleware('auth:staffs,hospital_staffs');
+Route::get('/course/sort', 'CourseController@sort')->name('course.sort')->middleware('auth:staffs,hospital_staffs');
+Route::get('/course/{id}/copy', 'CourseController@copy')->name('course.copy')->middleware('auth:staffs,hospital_staffs');
+Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course.updateSort')->middleware('auth:staffs,hospital_staffs');
 
 /*
 |--------------------------------------------------------------------------
 | Course Option Route
 |--------------------------------------------------------------------------
 */
-Route::get('option/sort', 'OptionController@sort')->name('option.sort')->middleware('auth');
-Route::resource('option', 'OptionController', ['excerpt' => 'show'])->middleware('auth');
-Route::patch('option/sort/update', 'OptionController@updateSort')->name('option.updateSort')->middleware('auth');
+Route::get('option/sort', 'OptionController@sort')->name('option.sort')->middleware('auth:staffs,hospital_staffs');
+Route::resource('option', 'OptionController', ['excerpt' => 'show'])->middleware('auth:staffs,hospital_staffs');
+Route::patch('option/sort/update', 'OptionController@updateSort')->name('option.updateSort')->middleware('auth:staffs,hospital_staffs');
 
 /*
 |--------------------------------------------------------------------------
 | Email Template Route
 |--------------------------------------------------------------------------
 */
-Route::resource('/email-template', 'EmailTemplateController')->except(['show'])->middleware('auth');
+Route::resource('/email-template', 'EmailTemplateController')->except(['show'])->middleware('auth:staffs,hospital_staffs');
 
 /*
 |--------------------------------------------------------------------------
 | Reception Email Setting Route
 |--------------------------------------------------------------------------
 */
-Route::resource('/reception-email-setting', 'ReceptionEmailSettingController')->middleware('auth');
+Route::resource('/reception-email-setting', 'ReceptionEmailSettingController')->middleware('auth:staffs,hospital_staffs');
 
 /*
 |--------------------------------------------------------------------------
 | Calendar Route
 |--------------------------------------------------------------------------
 */
-Route::get('/calendar/holiday', 'CalendarController@holiday_setting')->name('calendar.holiday')->middleware('auth');
-Route::patch('/calendar/holiday', 'CalendarController@update_holiday')->name('calendar.updateHoliday')->middleware('auth');
-Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting')->middleware('auth');
-Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting')->middleware('auth');
-Route::resource('/calendar', 'CalendarController')->except(['show'])->middleware('auth');
+Route::get('/calendar/holiday', 'CalendarController@holiday_setting')->name('calendar.holiday')->middleware('auth:staffs,hospital_staffs');
+Route::patch('/calendar/holiday', 'CalendarController@update_holiday')->name('calendar.updateHoliday')->middleware('auth:staffs,hospital_staffs');
+Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting')->middleware('auth:staffs,hospital_staffs');
+Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting')->middleware('auth:staffs,hospital_staffs');
+Route::resource('/calendar', 'CalendarController')->except(['show'])->middleware('auth:staffs,hospital_staffs');
 
 /*
 |--------------------------------------------------------------------------
 | Reservation Route
 |--------------------------------------------------------------------------
 */
-Route::resource('/reservation', 'ReservationController', ['only' => ['index']])->middleware('auth');
-Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation')->middleware('auth');
+Route::resource('/reservation', 'ReservationController', ['only' => ['index']])->middleware('auth:staffs,hospital_staffs');
+Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation')->middleware('auth:staffs,hospital_staffs');
 
 /*
 |--------------------------------------------------------------------------
@@ -127,9 +127,9 @@ Route::get('reservation/operation', 'ReservationController@operation')->name('re
 |--------------------------------------------------------------------------
 */
 
-Route::resource('customer', 'CustomerController')->middleware('auth');
-Route::post('customer/detail', 'CustomerController@detail')->name('customer.detail')->middleware('auth');
+Route::resource('customer', 'CustomerController')->middleware('auth:staffs,hospital_staffs');
+Route::post('customer/detail', 'CustomerController@detail')->name('customer.detail')->middleware('auth:staffs,hospital_staffs');
 //Route::get('customer/basic-information', 'CustomerController@basicInformationCreate');
-Route::post('customer/import', 'CustomerController@importData')->name('customer.import.data')->middleware('auth');
-Route::post('customer/email/{customer_id}', 'CustomerController@showEmailForm')->name('customer.show.email.form')->middleware('auth');
-Route::post('customer/email-send/{customer_id}', 'CustomerController@emailSend')->name('customer.email.send')->middleware('auth');
+Route::post('customer/import', 'CustomerController@importData')->name('customer.import.data')->middleware('auth:staffs,hospital_staffs');
+Route::post('customer/email/{customer_id}', 'CustomerController@showEmailForm')->name('customer.show.email.form')->middleware('auth:staffs,hospital_staffs');
+Route::post('customer/email-send/{customer_id}', 'CustomerController@emailSend')->name('customer.email.send')->middleware('auth:staffs,hospital_staffs');
