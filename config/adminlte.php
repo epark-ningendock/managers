@@ -108,12 +108,23 @@ return [
     */
 
     'menu' => [
-        'メニュー',
+        'EPRAKスタッフ',
         [
             'text'        => 'スタッフ管理',
             'url'         => '/staff',
             'icon'        => 'user',
         ],
+        [
+            'text'        => '医療機関管理',
+            'url'         => '/hospital',
+            'icon'        => 'hospital-o',
+        ],
+        [
+            'text'        => '検査コース分類管理',
+            'url'         => '/classification',
+            'icon'        => 'book',
+        ],
+        '医療機関スタッフ',
         [
             'text'        => '医療機関スタッフ管理',
             'url'         => '/hospital-staff',
@@ -128,16 +139,6 @@ return [
             'text'        => '顧客管理',
             'url'         => '/customer',
             'icon'        => 'user',
-        ],
-        [
-            'text'        => '医療機関管理',
-            'url'         => '/hospital',
-            'icon'        => 'hospital-o',
-        ],
-        [
-            'text'        => '検査コース分類管理',
-            'url'         => '/classification',
-            'icon'        => 'book',
         ],
         [
             'text'        => '検査コース管理',

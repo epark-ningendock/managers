@@ -31,19 +31,19 @@ Route::post('/login', 'Auth\LoginController@postLogin');
 |--------------------------------------------------------------------------
 */
 Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], function () {
-    Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password')->middleware('auth');
-    Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password')->middleware('auth');
+    Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password')->middleware('auth:staffs');
+    Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password')->middleware('auth:staffs');
 });
-Route::resource('/staff', 'StaffController')->except(['show'])->middleware('auth');
+Route::resource('/staff', 'StaffController')->except(['show'])->middleware('auth:staffs');
 
 /*
 |--------------------------------------------------------------------------
 | Hospital Route
 |--------------------------------------------------------------------------
 */
-Route::resource('/hospital', 'HospitalController')->except(['show'])->middleware('auth');
-Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search')->middleware('auth');
-Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text')->middleware('auth');
+Route::resource('/hospital', 'HospitalController')->except(['show'])->middleware('auth:staffs');
+Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search')->middleware('auth:staffs');
+Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text')->middleware('auth:staffs');
 
 /*
 |--------------------------------------------------------------------------
@@ -57,20 +57,19 @@ Route::get('/hospital-staff/send-password-resets-mail', 'HospitalStaffController
 Route::get('/hospital-staff/show-reset-password/{reset_token}/{email}', 'HospitalStaffController@showResetPassword')->middleware('auth'); // パスワードのリセット画面に遷移する
 Route::put('/hospital-staff/reset-password/{hospital_staff_id}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password')->middleware('auth'); // パスワードをリセットする
 Route::resource('hospital-staff', 'HospitalStaffController')->except([
-    'show',
-]);
+    'show',])->middleware('auth:hospital_staffs');;
 
 /*
 |--------------------------------------------------------------------------
 | Course Classification Route
 |--------------------------------------------------------------------------
 */
-Route::post('/classification/{id}/restore', 'ClassificationController@restore')->name('classification.restore')->middleware('auth');
-Route::get('/classification/sort', 'ClassificationController@sort')->name('classification.sort')->middleware('auth');
-Route::patch('/classification/sort/update', 'ClassificationController@updateSort')->name('classification.updateSort')->middleware('auth');
-Route::resource('/classification', 'ClassificationController')->except(['show'])->middleware('auth');
+Route::post('/classification/{id}/restore', 'ClassificationController@restore')->name('classification.restore')->middleware('auth:staffs');
+Route::get('/classification/sort', 'ClassificationController@sort')->name('classification.sort')->middleware('auth:staffs');
+Route::patch('/classification/sort/update', 'ClassificationController@updateSort')->name('classification.updateSort')->middleware('auth:staffs');
+Route::resource('/classification', 'ClassificationController')->except(['show'])->middleware('auth:staffs');
 
-/*
+/*¥
 |--------------------------------------------------------------------------
 | Course Route
 |--------------------------------------------------------------------------
@@ -108,11 +107,11 @@ Route::resource('/reception-email-setting', 'ReceptionEmailSettingController')->
 | Calendar Route
 |--------------------------------------------------------------------------
 */
-Route::get('/calendar/holiday', 'CalendarController@holiday_setting')->name('calendar.holiday');
-Route::patch('/calendar/holiday', 'CalendarController@update_holiday')->name('calendar.updateHoliday');
-Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting');
-Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting');
-Route::resource('/calendar', 'CalendarController')->except(['show']);
+Route::get('/calendar/holiday', 'CalendarController@holiday_setting')->name('calendar.holiday')->middleware('auth');
+Route::patch('/calendar/holiday', 'CalendarController@update_holiday')->name('calendar.updateHoliday')->middleware('auth');
+Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting')->middleware('auth');
+Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting')->middleware('auth');
+Route::resource('/calendar', 'CalendarController')->except(['show'])->middleware('auth');
 
 /*
 |--------------------------------------------------------------------------
@@ -120,7 +119,7 @@ Route::resource('/calendar', 'CalendarController')->except(['show']);
 |--------------------------------------------------------------------------
 */
 Route::resource('/reservation', 'ReservationController', ['only' => ['index']])->middleware('auth');
-Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
+Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation')->middleware('auth');
 
 /*
 |--------------------------------------------------------------------------
@@ -128,10 +127,10 @@ Route::get('reservation/operation', 'ReservationController@operation')->name('re
 |--------------------------------------------------------------------------
 */
 
-Route::resource('customer', 'CustomerController');
-Route::post('customer/detail', 'CustomerController@detail')->name('customer.detail');
+Route::resource('customer', 'CustomerController')->middleware('auth');
+Route::post('customer/detail', 'CustomerController@detail')->name('customer.detail')->middleware('auth');
 //Route::get('customer/basic-information', 'CustomerController@basicInformationCreate');
-Route::post('customer/import', 'CustomerController@importData')->name('customer.import.data');
-Route::post('customer/email/{customer_id}', 'CustomerController@showEmailForm')->name('customer.show.email.form');
-Route::post('customer/email-send/{customer_id}', 'CustomerController@emailSend')->name('customer.email.send');
+Route::post('customer/import', 'CustomerController@importData')->name('customer.import.data')->middleware('auth');
+Route::post('customer/email/{customer_id}', 'CustomerController@showEmailForm')->name('customer.show.email.form')->middleware('auth');
+Route::post('customer/email-send/{customer_id}', 'CustomerController@emailSend')->name('customer.email.send')->middleware('auth');
 
