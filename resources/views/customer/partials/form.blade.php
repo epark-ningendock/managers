@@ -17,32 +17,32 @@
             <td  class="gray-cell-bg"><label for="name">{{ trans('messages.name') }}<span class="text-danger">(*)</span></label></td>
             <td>
 
-                <div class="form-group @if ($errors->has('name_seri')) has-error @endif">
-                    <input type="text" class="form-control" name="name_seri" id="name_seri"
-                           value="{{ old('name_seri', ( isset($customer_detail->name_seri) ? $customer_detail->name_seri : '')) }}"/>
-                    @if ($errors->has('name_seri')) <p class="help-block">{{ $errors->first('name_seri') }}</p> @endif
+                <div class="form-group @if ($errors->has('family_name')) has-error @endif">
+                    <input type="text" class="form-control" name="family_name" id="family_name"
+                           value="{{ old('family_name', ( isset($customer_detail->family_name) ? $customer_detail->family_name : '')) }}"/>
+                    @if ($errors->has('family_name')) <p class="help-block">{{ $errors->first('family_name') }}</p> @endif
                 </div>
 
-                <div class="form-group @if ($errors->has('name_mei')) has-error @endif">
-                    <input type="text" class="form-control" name="name_mei" id="name_mei"
-                           value="{{ old('name_mei', ( isset($customer_detail->name_mei) ? $customer_detail->name_mei : '')) }}"/>
-                    @if ($errors->has('name_mei')) <p class="help-block">{{ $errors->first('name_mei') }}</p> @endif
+                <div class="form-group @if ($errors->has('first_name')) has-error @endif">
+                    <input type="text" class="form-control" name="first_name" id="first_name"
+                           value="{{ old('first_name', ( isset($customer_detail->first_name) ? $customer_detail->first_name : '')) }}"/>
+                    @if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
                 </div>
 
             </td>
             <td class="gray-cell-bg"><label for="name_kana">{{ trans('messages.name_kana') }}</label></td>
             <td>
 
-                <div class="form-group @if ($errors->has('name_seri')) has-error @endif">
-                    <input type="text" class="form-control" name="name_kana_seri" id="name_kana_seri"
-                           value="{{ old('name_kana_seri', ( isset($customer_detail->name_kana_seri) ? $customer_detail->name_kana_seri : '')) }}"/>
-                    @if ($errors->has('name_kana_seri')) <p class="help-block">{{ $errors->first('name_kana_seri') }}</p> @endif
+                <div class="form-group @if ($errors->has('family_name')) has-error @endif">
+                    <input type="text" class="form-control" name="family_name_kana" id="family_name_kana"
+                           value="{{ old('family_name_kana', ( isset($customer_detail->family_name_kana) ? $customer_detail->family_name_kana : '')) }}"/>
+                    @if ($errors->has('family_name_kana')) <p class="help-block">{{ $errors->first('family_name_kana') }}</p> @endif
                 </div>
 
-                <div class="form-group @if ($errors->has('name_kana_mei')) has-error @endif">
-                    <input type="text" class="form-control" name="name_kana_mei" id="name_kana_mei"
-                           value="{{ old('name_kana_mei', ( isset($customer_detail->name_kana_mei) ? $customer_detail->name_kana_mei : '')) }}"/>
-                    @if ($errors->has('name_kana_mei')) <p class="help-block">{{ $errors->first('name_kana_mei') }}</p> @endif
+                <div class="form-group @if ($errors->has('first_name_kana')) has-error @endif">
+                    <input type="text" class="form-control" name="first_name_kana" id="first_name_kana"
+                           value="{{ old('first_name_kana', ( isset($customer_detail->first_name_kana) ? $customer_detail->first_name_kana : '')) }}"/>
+                    @if ($errors->has('first_name_kana')) <p class="help-block">{{ $errors->first('first_name_kana') }}</p> @endif
                 </div>
 
             </td>
