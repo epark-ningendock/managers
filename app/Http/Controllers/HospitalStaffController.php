@@ -13,12 +13,13 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class HospitalStaffController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:hospital_staffs', ['except' => 'index', 'edit']);
+        $this->middleware('auth:hospital_staffs', ['except' => 'showPasswordResetsMail', 'sendPasswordResetsMail']);
     }
 
     public function index()
@@ -83,12 +84,9 @@ class HospitalStaffController extends Controller
     }
 
     // ログインユーザーのパスワードの編集画面に遷移する
-    public function editPassword()
+    public function editPassword(Request $request)
     {
-
-        // ログインユーザーのidはログイン時のセッション情報から取得する
-        $hospital_staff = HospitalStaff::findOrFail(1);
-
+        $hospital_staff = HospitalStaff::where('email', $request->session()->get('staff_email'))->first();
         return view('hospital_staff.edit-password', compact('hospital_staff'));
     }
 
@@ -106,7 +104,7 @@ class HospitalStaffController extends Controller
         if (Hash::check($request->old_password, $hospital_staff->password)) {
             $hospital_staff->password = bcrypt($request->password);
             $hospital_staff->save();
-            return redirect('hospital-staff')->with('success', trans('messages.hospital_staff_update_passoword'));
+            return redirect()->back();
         } else {
             $validator = Validator::make([], []);
             $validator->errors()->add('old_password', '現在のパスワードが正しくありません');

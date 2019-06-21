@@ -50,12 +50,12 @@ Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hosp
 | Hospital Staff Route
 |--------------------------------------------------------------------------
 */
-Route::get('/hospital-staff/edit-password', 'HospitalStaffController@editPassword')->middleware('auth:staffs,hospital_staffs'); // ログインユーザーのパスワード編集画面に遷移する
-Route::put('/hospital-staff/update-password/{hospital_staff_id}', 'HospitalStaffController@updatePassword')->name('hospital-staff.update.password')->middleware('auth:staffs,hospital_staffs'); // ログインユーザーのパスワードを更新する
-Route::get('/hospital-staff/show-password-resets-mail', 'HospitalStaffController@showPasswordResetsMail')->middleware('auth:staffs,hospital_staffs'); // パスワードのリセットメール送信画面に遷移する
-Route::get('/hospital-staff/send-password-resets-mail', 'HospitalStaffController@sendPasswordResetsMail')->name('hospital-staff.send.password-reset')->middleware('auth:staffs,hospital_staffs'); // パスワードのリセットメール送信を送信する
-Route::get('/hospital-staff/show-reset-password/{reset_token}/{email}', 'HospitalStaffController@showResetPassword')->middleware('auth:staffs,hospital_staffs'); // パスワードのリセット画面に遷移する
-Route::put('/hospital-staff/reset-password/{hospital_staff_id}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password')->middleware('auth:staffs,hospital_staffs'); // パスワードをリセットする
+Route::get('/hospital-staff/edit-password', 'HospitalStaffController@editPassword')->middleware('auth:hospital_staffs');
+Route::put('/hospital-staff/update-password/{hospital_staff_id}', 'HospitalStaffController@updatePassword')->name('hospital-staff.update.password')->middleware('auth:hospital_staffs');
+Route::get('/hospital-staff/show-password-resets-mail', 'HospitalStaffController@showPasswordResetsMail');
+Route::get('/hospital-staff/send-password-resets-mail', 'HospitalStaffController@sendPasswordResetsMail')->name('hospital-staff.send.password-reset');
+Route::get('/hospital-staff/show-reset-password/{reset_token}/{email}', 'HospitalStaffController@showResetPassword');
+Route::put('/hospital-staff/reset-password/{hospital_staff_id}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password');
 Route::resource('hospital-staff', 'HospitalStaffController')->except([
     'show',])->middleware('auth:staffs,hospital_staffs');;
 
