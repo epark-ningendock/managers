@@ -44,7 +44,7 @@ class ClassificationSearchFormRequest extends FormRequest
             'classification.in' => '「分類」を正しく選択してください。',
             'major.integer' => '「大分類」を正しく選択してください。',
             'middle.integer' => '「中分類」を正しく選択してください。',
-            'status.in' => '「状態」を正しく選択してください。。',
+            'status.in' => '「状態」を正しく選択してください。',
         ];
     }
 }
