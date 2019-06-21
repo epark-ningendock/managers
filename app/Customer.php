@@ -6,8 +6,7 @@ use App\Filters\Filterable;
 
 class Customer extends SoftDeleteModel
 {
-    use Filterable;
-
+    use Filterable, SoftDeletes;
 
     protected $casts = [
         'birthday' => 'date:Y-m-d',
@@ -17,10 +16,10 @@ class Customer extends SoftDeleteModel
         'parent_customer_id',
         'member_number',
         'registration_card_number',
-        'name_seri',
-        'name_mei',
-        'name_kana_seri',
-        'name_kana_mei',
+        'first_name',
+        'family_name',
+        'family_name_kana',
+        'first_name_kana',
         'tel',
         'email',
         'postcode',
@@ -38,6 +37,13 @@ class Customer extends SoftDeleteModel
         'id',
     ];
 
+    const MALE = 'M';
+    const FEMALE = 'F';
+
+    public static $sex = [
+        self::MALE => '男性',
+        self::FEMALE => '女性',
+    ];
 
     public function setParentCustomerIdAttribute($value)
     {
@@ -52,12 +58,17 @@ class Customer extends SoftDeleteModel
 
     public function getNameAttribute()
     {
-        return $this->name_seri . ' ' . $this->name_mei;
+        return $this->family_name . ' ' . $this->first_name;
     }
 
     public function hospitals()
     {
         return $this->HasMany('App\Hospital');
+    }
+
+    public function prefecture()
+    {
+        return $this->belongsTo('App\Prefecture');
     }
 
     public function reservations()

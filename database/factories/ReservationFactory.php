@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Faker\Generator as Faker;
 use App\Reservation;
 use App\Hospital;
@@ -16,6 +17,7 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'end_time_hour' => sprintf('%02d', $faker->numberBetween(0, 23)),
         'end_time_min' => sprintf('%02d', $faker->numberBetween(0, 59)),
         'channel' => $faker->randomElement([0, 1, 2]),
+        'is_billable' => $faker->randomElement(['0', '1']),
         'reservation_status' => $faker->randomElement([1, 2, 3, 4]),
         'completed_date' => $faker->dateTimeThisMonth->format('Y-m-d H:i:s'),
         'cancel_date' => $faker->dateTimeThisMonth->format('Y-m-d H:i:s'),
@@ -43,8 +45,7 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'insurance_assoc' => null,
         'mail_type' => $faker->randomElement(['0', '1']),
         'cancelled_appoint_code' => null,
-        'is_billable' => null,
-        'claim_month' => null,
+        'claim_month' => $faker->randomElement([Carbon::now()->addMonth()->format('Y/m'),  Carbon::now()->subMonth()->format('Y/m'), Carbon::now()->format('Y/m')]),
         'is_payment' => $faker->randomElement(['0', '1']),
         'payment_status' => $faker->randomElement(['1', '2', '3', '9']),
         'trade_id' => $faker->shuffle('abcdefghijklmnopqrstuvwxyz', 10),

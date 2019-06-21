@@ -22,8 +22,8 @@ class CustomerFilters extends QueryFilters
         $names = explode(" ", $name);
 
         return $this->builder
-            ->whereIn('name_seri', $names);
-//            ->orWhere('name_mei', $names);
+            ->whereIn('family_name', $names);
+//            ->orWhere('first_name', $names);
     }
 
     public function tel($tel)
@@ -48,7 +48,7 @@ class CustomerFilters extends QueryFilters
 
     public function name_sorting($sorting)
     {
-        return $this->builder->orderBy('name_seri', $sorting);
+        return $this->builder->orderBy('family_name', $sorting);
     }
 
     public function registration_card_number_sorting($registration_card_number)

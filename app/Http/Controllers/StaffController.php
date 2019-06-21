@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\Authority;
 use App\Enums\StaffStatus;
 use App\Http\Requests\StaffFormRequest;
+use App\Http\Requests\StaffSearchFormRequest;
 use App\Staff;
 use App\StaffAuth;
 use Illuminate\Http\Request;
@@ -22,10 +23,10 @@ class StaffController extends Controller
 
     /**
      * スタッフ一覧の表示
-     * @param Request $request
+     * @param StaffSearchFormRequest $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request)
+    public function index(StaffSearchFormRequest $request)
     {
         $query = Staff::query();
         if ($request->input('name', '') != '') {
@@ -35,7 +36,7 @@ class StaffController extends Controller
         if ($request->input('login_id', '') != '') {
             $query->where('login_id', $request->input('login_id'));
         }
-        $query->where('status', $request->input('status', StaffStatus::Valid));
+        $query->where('status', $request->input('status', StaffStatus::Valid))->with(['staff_auth']);
 
         return view('staff.index', ['staffs' => $query->paginate(20)])
             ->with($request->input());

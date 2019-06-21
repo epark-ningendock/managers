@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\ClassificationType;
 use App\Enums\Status;
 use App\Http\Requests\ClassificationFormRequest;
+use App\Http\Requests\ClassificationSearchFormRequest;
 use App\MajorClassification;
 use App\MiddleClassification;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class ClassificationController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function index(Request $request)
+    public function index(ClassificationSearchFormRequest $request)
     {
         $c_types = ClassificationType::withTrashed()->get();
         $c_majors = MajorClassification::withTrashed()->get();

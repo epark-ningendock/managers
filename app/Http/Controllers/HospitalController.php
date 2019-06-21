@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Enums\HospitalEnums;
 use App\Hospital;
 use Illuminate\Http\Request;
+use App\Http\Requests\HospitalFormRequest;
 
 class HospitalController extends Controller
 {
-    public function index(Request $request)
+    public function index(HospitalFormRequest $request)
     {
         $query = Hospital::query();
 

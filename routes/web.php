@@ -91,13 +91,17 @@ Route::get('option/sort', 'OptionController@sort')->name('option.sort');
 Route::resource('option', 'OptionController', ['excerpt' => 'show']);
 Route::patch('option/sort/update', 'OptionController@updateSort')->name('option.updateSort');
 
+/*
+|--------------------------------------------------------------------------
+| Reservation
+|--------------------------------------------------------------------------
+*/
 Route::get('/reception/csv', 'ReservationController@reception_csv')->name('reception.csv');
 Route::get('/reception', 'ReservationController@reception');
 Route::patch('/reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
 Route::delete('/reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');
 Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
-
-
+Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
 
 /*
 |--------------------------------------------------------------------------
@@ -111,3 +115,4 @@ Route::post('customer/detail', 'CustomerController@detail')->name('customer.deta
 Route::post('customer/import', 'CustomerController@importData')->name('customer.import.data');
 Route::post('customer/email/{customer_id}', 'CustomerController@showEmailForm')->name('customer.show.email.form');
 Route::post('customer/email-send/{customer_id}', 'CustomerController@emailSend')->name('customer.email.send');
+
