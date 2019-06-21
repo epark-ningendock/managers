@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends BaseModel
 {
-
     use Filterable, SoftDeletes;
 
 

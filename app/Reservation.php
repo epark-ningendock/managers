@@ -78,7 +78,6 @@ class Reservation extends BaseModel
 
     public function scopeByRequest($query, $request)
     {
-
         if (isset($request->claim_month)) {
             $query->where('claim_month', $request->claim_month);
         } else {

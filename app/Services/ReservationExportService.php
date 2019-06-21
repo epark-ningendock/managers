@@ -16,7 +16,6 @@ class ReservationExportService
 
     public function operationCsv($request)
     {
-
         $query = $this->reservation
             ->byRequest($request)
             ->with(['hospital', 'course', 'customer'])

@@ -133,4 +133,3 @@ Route::post('customer/detail', 'CustomerController@detail')->name('customer.deta
 Route::post('customer/import', 'CustomerController@importData')->name('customer.import.data')->middleware('auth');
 Route::post('customer/email/{customer_id}', 'CustomerController@showEmailForm')->name('customer.show.email.form')->middleware('auth');
 Route::post('customer/email-send/{customer_id}', 'CustomerController@emailSend')->name('customer.email.send')->middleware('auth');
-
