@@ -91,6 +91,10 @@ Route::get('option/sort', 'OptionController@sort')->name('option.sort');
 Route::resource('option', 'OptionController', ['excerpt' => 'show']);
 Route::patch('option/sort/update', 'OptionController@updateSort')->name('option.updateSort');
 
+Route::get('/reception/csv', 'ReservationController@reception_csv')->name('reception.csv');
+Route::get('/reception', 'ReservationController@reception');
+Route::patch('/reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
+Route::delete('/reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');
 Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
 
 

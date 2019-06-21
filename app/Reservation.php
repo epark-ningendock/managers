@@ -2,18 +2,27 @@
 
 namespace App;
 
-class Reservation extends BaseModel
+use App\Enums\ReservationStatus;
+use App\Enums\PaymentStatus;
+
+class Reservation extends SoftDeleteModel
 {
     protected $dates = [
         'completed_date',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
+        'reservation_date'
     ];
 
     public static $channel = [
         '0' => 'Tel',
         '1' => 'Web',
+    ];
+
+    protected $enums = [
+        'reservation_status' => ReservationStatus::class,
+        'payment_status' => PaymentStatus::class
     ];
 
     //todo channelがどういうケースが発生するのか未定なので、とりあえず仮で
@@ -55,6 +64,11 @@ class Reservation extends BaseModel
         return $this->belongsTo('App\Course');
     }
 
+    public function reservation_options()
+    {
+        return $this->hasMany('App\ReservationOption');
+    }
+
     public function scopeByRequest($query, $request)
     {
         if (strlen($request->claim_month)) {
@@ -92,5 +106,9 @@ class Reservation extends BaseModel
         }
 
         return $query;
+    }
+
+    public function getFullNameAttribute() {
+        return $this->customer->name_seri.$this->customer->name_mei;
     }
 }

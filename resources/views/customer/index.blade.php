@@ -75,7 +75,7 @@
                         <td>{{ $customer->id }}</td>
                         <td>
                             <a class="detail-link" href="#" data-id="{{ $customer->id }}" data-route="{{ route('customer.detail') }}">
-                                {{ $customer->getName() }}
+                                {{ $customer->name }}
                             </a>
                         </td>
                         <td>{{ $customer->registration_card_number }}</td>

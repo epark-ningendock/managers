@@ -134,5 +134,13 @@ return [
     'tax_classification' => '税区分',
     'invalid_option_id' => '無効なオプションID',
     'option_sorting_updated' => 'オプションソートの更新',
-    'need_to_login' => 'あなたは最初にログインする必要があります'
+    'need_to_login' => 'あなたは最初にログインする必要があります',
+    'reservation' =>[
+        'accept_confirmation' => '予約を受け入れますか？',
+        'cancel_confirmation' => '予約をキャンセルしますか？',
+        'accept_success' => '予約は承認されました。',
+        'accept_error' => 'エラーが発生しました。',
+        'cancel_success' => '予約がキャンセルされました。',
+        'cancel_error' => 'エラーが発生しました。'
+    ]
 ];
