@@ -44,6 +44,7 @@ Route::resource('/staff', 'StaffController')->except(['show'])->middleware('auth
 Route::resource('/hospital', 'HospitalController')->except(['show'])->middleware('auth:staffs');
 Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search')->middleware('auth:staffs');
 Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text')->middleware('auth:staffs');
+Route::get('/hospital/select', 'HospitalController@selectHospital')->name('hospital.select')->middleware('auth:staffs');
 
 /*
 |--------------------------------------------------------------------------
