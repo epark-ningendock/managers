@@ -101,7 +101,13 @@ class HospitalController extends Controller
 
     public function selectHospital(Request $request)
     {
+        // dd($request->get('hospital_id'));
+        session()->forget('hospital_id');
+        session()->forget('hospital_name');
+        $hospital_name = Hospital::findOrFail(intval($request->get('hospital_id')))->name;
+        // dd($hospital_name);
         session()->put('hospital_id', $request->get('hospital_id'));
+        session()->put('hospital_name', $hospital_name);
 
         $query = Hospital::query();
 

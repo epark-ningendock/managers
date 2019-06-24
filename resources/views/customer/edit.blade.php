@@ -1,7 +1,7 @@
 @extends('layouts.form')
 
 @section('content_header')
-  <h1>{{ trans('messages.update') }}</h1>
+  <h1>{{ trans('messages.update') }} &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
 @stop
 
 @section('form')

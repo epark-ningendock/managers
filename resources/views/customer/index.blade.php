@@ -12,7 +12,7 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>{{ trans('messages.names.customers') }}</h1>
+    <h1>{{ trans('messages.names.customers') }} &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
 @stop
 
 @section('search')

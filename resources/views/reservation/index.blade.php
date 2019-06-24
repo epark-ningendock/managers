@@ -5,7 +5,7 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>予約一覧</h1>
+    <h1>予約一覧 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
 @stop
 
 @section('search')

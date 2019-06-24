@@ -1,7 +1,7 @@
 @extends('layouts.form')
 
 @section('content_header')
-    <h1>オプション管理</h1>
+    <h1>オプション管理 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
 @stop
 
 @section('form')

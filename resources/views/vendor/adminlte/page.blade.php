@@ -101,6 +101,7 @@
               <li><a href="/staff"><i class="fa fa-user"></i>スタッフ管理</a></li>
               <li><a href="/hospital"><i class="fa fa-hospital-o"></i>医療機関管理</a></li>
               <li><a href="/classification"><i class="fa fa-book"></i>検査コース分類管理</a></li>
+              <li><a href="/reservation"><i class="fa fa-book"></i>請求管理</a></li>
           @endif
 
           {{-- 医療機関スタッフの機能 --}}
@@ -108,6 +109,7 @@
             <li class="header">医療機関スタッフ機能</li>
             <li><a href="/hospital-staff"><i class="fa fa-user"></i>医療機関スタッフ管理</a></li>
             <li><a href="/customer"><i class="fa fa-user"></i>顧客管理</a></li>
+            <li><a href="#"><i class="fa fa-book"></i>請求管理</a></li>
             <li><a href="/course"><i class="fa fa-book"></i>検査コース管理</a></li>
             <li><a href="/option"><i class="fa fa-book"></i>検査コースオプション管理</a></li>
             <li><a href="/calendar"><i class="fa fa-calendar"></i>カレンダー管理</a></li>

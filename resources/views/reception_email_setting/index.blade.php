@@ -6,7 +6,7 @@
 
 @section('content_header')
   @include('layouts.partials.message')
-  <h1>受付メール設定 - {{ Hospital::findOrFail($reception_email_setting->hospital_id)->name }}</h1>
+  <h1>受付メール設定 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
 @stop
 
 @section('form')
