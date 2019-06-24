@@ -90,10 +90,11 @@
                         <td>{{ $hospital->tel }}</td>
                         <td>{{ \App\Enums\HospitalEnums::getDescription($hospital->status) }}</td>
                         <td>
-                            <a class="btn btn-primary insert-hospital-id-popup-btn" href="#">操作</a>
+                            <a class="btn btn-primary insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">操作</a>
                             {{-- 医療機関の選択フォーム --}}
-                            {{ Form::open(['class' => 'hide', 'route' => array('hospital.select'), 'method' => 'get', 'id' => 'select-hospital-form']) }}
-                                {{ Form::hidden('hospital_id', $hospital->id)  }}
+                            <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
+                                {{ csrf_field() }}
+                            </form>
                         </td>
                         <td>
                             @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
