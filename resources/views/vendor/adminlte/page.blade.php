@@ -118,7 +118,7 @@
           @endif
           {{-- 医療機関スタッフ固有の機能 --}}
           @if(Auth::user()->getTable() == "hospital_staffs" && request()->session()->get('hospital_id'))
-            <li><a href="/hospital-staff/edit-password"><i class="fa fa-user"></i>パスワードの変更</a></li>
+          <li><a href="{{ route('hospital-staff.edit.password') }}"><i class="fa fa-user"></i>パスワードの変更</a></li>
           @endif
           {{-- デフォルトのサイドバー --}}
           @each('adminlte::partials.menu-item', $adminlte->menu(), 'item')

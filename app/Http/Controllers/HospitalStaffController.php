@@ -17,12 +17,6 @@ use Illuminate\Support\Facades\Auth;
 
 class HospitalStaffController extends Controller
 {
-    // TODO: 見直す
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:hospital_staffs', ['except' => 'showPasswordResetsMail', 'sendPasswordResetsMail']);
-    // }
-
     public function index()
     {
         return view('hospital_staff.index', [ 'hospital_staffs' => HospitalStaff::paginate(20) ]);
@@ -140,9 +134,10 @@ class HospitalStaffController extends Controller
                 ->send(new PasswordResetMail($data));
             return redirect()->back();
         } else {
-            $validator = Validator::make([], []);
-            $validator->errors()->add('email', 'メールアドレスが存在しません');
-            throw new ValidationException($validator);
+            // TODO: バリデーション修正
+            // $validator = Validator::make([], []);
+            // $validator->errors()->add('email', 'メールアドレスが存在しません');
+            // throw new ValidationException($validator);
             return redirect()->back();
         }
     }

@@ -61,7 +61,7 @@
         </div>
       </form>
       <div class="auth-links">
-        <a href="/hospital-staff/show-password-resets-mail"
+        <a href="{{ route('hospital-staff.show.password-reset') }}"
            class="text-center"
         >パスワードをお忘れの方はこちら！</a>
         <br>
