@@ -14,6 +14,7 @@
   <h1>受付一覧</h1>
 @stop
 
+<!-- search section -->
 @section('search')
   <form role="form" id="search_form">
     <div class="row">
@@ -143,55 +144,83 @@
           </select>
         </div>
       </div>
+      <div class="col-md-12 mt-4">
+        <div class="pull-right">
+          <button class="btn btn-primary" id="bulk-update">一括更新ボタン</button>
+          <select id="reservation_status_u" class="form-control mr-4 ml-4" style="display: inline-block; width: auto;">
+            @foreach(ReservationStatus::toArray() as $status_value)
+              <option value="{{ $status_value }}">{{ ReservationStatus::getInstance($status_value)->description }}</option>
+            @endforeach()
+          </select>
+        </div>
+      </div>
 
     </div>
   </form>
 @stop
 
-<!-- search section -->
 @section('table')
   <div class="table-responsive">
-    <table id="example2" class="table table-bordered table-hover">
-      <thead>
-      <tr>
-        <th>受診日</th>
-        <th>受診者名</th>
-        <th>検査コース</th>
-        <th>受付ステータス</th>
-        <th>編集</th>
-        <th>ステータス変更</th>
-      </tr>
-      </thead>
-      <tbody>
-      @foreach ($reservations as $reservation)
+    <form id="bulk-status-form"  method="POST" action="{{ route('reservation.bulk_status') }}">
+      {{ csrf_field() }}
+      {{ method_field('PATCH') }}
+      <input id="reservation_status" name="reservation_status" />
+      <table id="example2" class="table table-bordered table-hover">
+        <thead>
         <tr>
-          <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
-          <td>{{ $reservation->full_name }}</td>
-          <td>{{ $reservation->course->name  }}</td>
-          <td>{{ $reservation->reservation_status->description  }}</td>
-          <td>
-            <a class="btn btn-primary ml-3" href="#">
-              変更
-            </a>
-          </td>
-          <td>
-            @if($reservation->reservation_status->is(ReservationStatus::Pending))
-              <button class="btn btn-success ml-3 delete-popup-btn"
-                      data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.accept_confirmation') }}"
-                      data-target-form="#accept-form" data-button-text="確認する">
-                受診完了
-              </button>
-              <button class="btn btn-danger ml-3 delete-popup-btn" data-id="{{ $reservation->id }}"
-                      data-message="{{ trans('messages.reservation.cancel_confirmation') }}"
-                      data-target-form="#cancel-form" data-button-text="確認する">
-                キャンセル
-              </button>
-            @endif
-          </td>
+          <th>選択</th>
+          <th>受診日</th>
+          <th>受診者名</th>
+          <th>検査コース</th>
+          <th>受付ステータス</th>
+          <th>編集</th>
+          <th>ステータス変更</th>
         </tr>
-      @endforeach
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+        @foreach ($reservations as $reservation)
+          <tr>
+            <td>
+              <input type="checkbox" name="ids[]" value="{{ $reservation->id }}" />
+            </td>
+            <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
+            <td>{{ $reservation->full_name }}</td>
+            <td>{{ $reservation->course->name  }}</td>
+            <td>{{ $reservation->reservation_status->description  }}</td>
+            <td>
+              <a class="btn btn-primary ml-3" href="#">
+                変更
+              </a>
+            </td>
+            <td>
+              @if($reservation->reservation_status->is(ReservationStatus::Pending))
+                <button class="btn btn-success ml-3 delete-popup-btn"
+                        data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.accept_confirmation') }}"
+                        data-target-form="#accept-form" data-button-text="確認する">
+                  確定
+                </button>
+              @endif
+              @if($reservation->reservation_status->is(ReservationStatus::ReceptionCompleted))
+                <button class="btn btn-primary ml-3 delete-popup-btn"
+                        data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.complete_confirmation') }}"
+                        data-target-form="#complete-form" data-button-text="確認する">
+                  受診完了
+                </button>
+              @endif
+              @if(!$reservation->reservation_status->is(ReservationStatus::Cancelled) && !$reservation->reservation_status->is(ReservationStatus::Completed))
+                <button class="btn btn-danger ml-3 delete-popup-btn" data-id="{{ $reservation->id }}"
+                        data-message="{{ trans('messages.reservation.cancel_confirmation') }}"
+                        data-target-form="#cancel-form" data-button-text="確認する">
+                  キャンセル
+                </button>
+              @endif
+
+            </td>
+          </tr>
+        @endforeach
+        </tbody>
+      </table>
+    </form>
     <form id="cancel-form" class="hide" method="POST"
           action="{{ route('reservation.cancel', ':id') }}">
       {{ csrf_field() }}
@@ -199,6 +228,11 @@
     </form>
     <form id="accept-form" class="hide" method="POST"
           action="{{ route('reservation.accept', ':id') }}">
+      {{ csrf_field() }}
+      {{ method_field('PATCH') }}
+    </form>
+    <form id="complete-form" class="hide" method="POST"
+          action="{{ route('reservation.complete', ':id') }}">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}
     </form>
@@ -234,19 +268,19 @@
                   $('input:checked').prop('checked', false);
               });
           })();
-      })(jQuery);
 
-      (function ($) {
           /* ---------------------------------------------------
-          // csv download
+          // bulk status update
           -----------------------------------------------------*/
           (function(){
-              $('#csv_download').click(function(){
+              $('#bulk-update').click(function(){
                   event.preventDefault();
                   event.stopPropagation();
-                  window.open('{{ route('reception.csv') }}' + '?' + $('#search_form').serialize(), '_black');
+                  $('#reservation_status').val($('#reservation_status_u').val());
+                  $('#bulk-status-form').submit();
               });
           })();
+
       })(jQuery);
   </script>
 @stop

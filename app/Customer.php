@@ -6,7 +6,7 @@ use App\Filters\Filterable;
 
 class Customer extends SoftDeleteModel
 {
-    use Filterable, SoftDeletes;
+    use Filterable;
 
     protected $casts = [
         'birthday' => 'date:Y-m-d',

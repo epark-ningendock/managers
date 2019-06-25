@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReservationFormRequest;
 use App\Reservation;
 use App\Hospital;
 use App\Customer;
 use App\Course;
 use App\Services\ReservationExportService;
-//use App\CourseOption;
-//use App\Option;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Enums\ReservationStatus;
@@ -28,13 +28,15 @@ class ReservationController extends Controller
         Customer $customer,
         Course $course,
         ReservationExportService $export_file
-    ) {
+    )
+    {
         $this->reservation = $reservation;
         $this->hospital = $hospital;
         $this->customer = $customer;
         $this->course = $course;
         $this->export_file = $export_file;
     }
+
     /**
      * 一覧表示.
      *
@@ -69,54 +71,54 @@ class ReservationController extends Controller
      */
     protected function get_reception_list_query(Request $request)
     {
-        $query = Reservation::with(['course', 'customer', 'reservation_options', 'reservation_options.option']);
+        $query = Reservation::with(['course', 'customer', 'reservation_options', 'reservation_options.option', 'course.course_questions']);
 
-        if($request->input('reservation_start_date', '') != '') {
+        if ($request->input('reservation_start_date', '') != '') {
             $query->whereDate('reservation_date', '>=', $request->input('reservation_start_date'));
         }
 
-        if($request->input('reservation_end_date', '') != '') {
+        if ($request->input('reservation_end_date', '') != '') {
             $query->whereDate('reservation_date', '<=', $request->input('reservation_end_date'));
         }
 
-        if($request->input('completed_start_date', '') != '') {
+        if ($request->input('completed_start_date', '') != '') {
             $query->whereDate('completed_date', '>=', $request->input('completed_start_date'));
         }
 
-        if($request->input('completed_end_date', '') != '') {
+        if ($request->input('completed_end_date', '') != '') {
             $query->whereDate('completed_date', '<=', $request->input('completed_end_date'));
         }
 
-        if($request->input('customer_name', '') != '') {
+        if ($request->input('customer_name', '') != '') {
             $query->whereHas('Customer', function ($q) use ($request) {
-                $q->where(DB::raw("concat(name_seri, name_mei)"), 'LIKE', '%'.$request->input('customer_name').'%');
-                $q->orWhere(DB::raw("concat(name_kana_seri, name_kana_mei)"), 'LIKE', '%'.$request->input('customer_name').'%');
+                $q->where(DB::raw("concat(name_seri, name_mei)"), 'LIKE', '%' . $request->input('customer_name') . '%');
+                $q->orWhere(DB::raw("concat(name_kana_seri, name_kana_mei)"), 'LIKE', '%' . $request->input('customer_name') . '%');
             });
         }
 
-        if($request->input('course_id', '') != '') {
+        if ($request->input('course_id', '') != '') {
             $query->where('course_id', $request->input('course_id'));
         }
 
         $status_filter = collect();
 
-        if($request->input('is_pending', '') != '') {
+        if ($request->input('is_pending', '') != '') {
             $status_filter->push($request->input('is_pending'));
         }
 
-        if($request->input('is_reception_completed', '') != '') {
+        if ($request->input('is_reception_completed', '') != '') {
             $status_filter->push($request->input('is_reception_completed'));
         }
 
-        if($request->input('is_completed', '') != '') {
+        if ($request->input('is_completed', '') != '') {
             $status_filter->push($request->input('is_completed'));
         }
 
-        if($request->input('is_cancelled', '') != '') {
+        if ($request->input('is_cancelled', '') != '') {
             $status_filter->push($request->input('is_cancelled'));
         }
 
-        if($status_filter->isNotEmpty()) {
+        if ($status_filter->isNotEmpty()) {
             $query->whereIn('reservation_status', $status_filter);
         }
         return $query;
@@ -148,13 +150,14 @@ class ReservationController extends Controller
     }
 
     /**
-    * CSV download
-    * @param array $columnNames
-    * @param array $rows
-    * @param string $fileName
-    * @return \Symfony\Component\HttpFoundation\StreamedResponse
-    */
-    protected function get_csv($columnNames, $rows, $fileName) {
+     * CSV download
+     * @param array $columnNames
+     * @param array $rows
+     * @param string $fileName
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    protected function get_csv($columnNames, $rows, $fileName)
+    {
         $headers = [
             "Content-Encoding" => "UTF-8",
             "Content-type" => "text/csv",
@@ -163,7 +166,7 @@ class ReservationController extends Controller
             "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
             "Expires" => "0"
         ];
-        $callback = function() use ($columnNames, $rows ) {
+        $callback = function () use ($columnNames, $rows) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columnNames);
             foreach ($rows as $row) {
@@ -183,21 +186,29 @@ class ReservationController extends Controller
             'completed_end_date' => 'nullable|date',
         ]);
         $query = $this->get_reception_list_query($request);
-        $option_count = 1;
+        $question_count = 0;
 
-        //TODO to check performance and if slow, to change to use SQL directly
-        $reservations = $query->get()->map(function($reservation) use (&$option_count){
-            if ($reservation->reservation_options->count() > $option_count) {
-                $option_count = $reservation->reservation_options->count();
-            }
+        $reservations = $query->get();
+
+        $option_count = $reservations->max(function ($reservation) {
+            return $reservation->reservation_options->count();
+        });
+
+
+        $reservations = $reservations->map(function ($reservation) use (&$question_count, $option_count) {
 
             $fee = $reservation->course->price + $reservation->adjustment_price;
             $options = collect();
 
-            foreach($reservation->reservation_options as $reservation_option) {
+            foreach ($reservation->reservation_options as $reservation_option) {
                 $options->push($reservation_option->option->name);
                 $options->push($reservation_option->option->price);
                 $fee += $reservation_option->option->price;
+            }
+
+            // fill to fix maximum option count
+            for ($i = $reservation->reservation_options->count(); $i <= $option_count; $i++) {
+                $options->merge(['', '']);
             }
 
             $result = [
@@ -213,15 +224,38 @@ class ReservationController extends Controller
                 $reservation->payment_status->description,
                 $reservation->settlement_price,
                 $reservation->cashpo_used_price,
-                $reservation->billing_price,
                 $reservation->acceptance_number,
                 Reservation::getChannel($reservation->channel),
-                $reservation->course_question,
-                $reservation->reservation_memo_crypt,
-                $reservation->todays_memo_crypt
+                $reservation->reservation_memo,
+                $reservation->todays_memo
             ];
 
-            return array_merge($result, $options->toArray());
+            $questions = collect();
+            $q_count = 0;
+
+            foreach ($reservation->course->course_questions as $course_question) {
+                if (empty($course_question->question_title)) {
+                    continue;
+                }
+                $questions->push($course_question->question_title);
+                $questions->push($course_question->answer01);
+                $questions->push($course_question->answer02);
+                $questions->push($course_question->answer03);
+                $questions->push($course_question->answer04);
+                $questions->push($course_question->answer05);
+                $questions->push($course_question->answer06);
+                $questions->push($course_question->answer07);
+                $questions->push($course_question->answer08);
+                $questions->push($course_question->answer09);
+                $questions->push($course_question->answer10);
+                $q_count++;
+            }
+
+            if ($q_count > $question_count) {
+                $question_count = $q_count;
+            }
+
+            return array_merge($result, $options->toArray(), $questions->toArray());
         });
 
         $headers = [
@@ -233,20 +267,36 @@ class ReservationController extends Controller
             '検査コース',
             'コース料金',
             '調整額',
+            '合計金額',
             '決済ステータス',
             'カード決済額',
             'キャシュポ利用額',
-            '現地支払い額',
             '受付番号',
             '受付形態',
-            '受付質問',
             '受付・予約メモ',
             '医療機関備考'
         ];
 
-        for($i = 0; $i < $option_count; $i++) {
-            $headers = array_merge($headers,['オプション', 'オプション金額']);
+        for ($i = 0; $i < $option_count; $i++) {
+            $headers = array_merge($headers, ['オプション', 'オプション金額']);
         }
+
+        for ($i = 0; $i < $question_count; $i++) {
+            $headers = array_merge($headers, [
+                '受付質問',
+                '回答01',
+                '回答02',
+                '回答03',
+                '回答04',
+                '回答05',
+                '回答06',
+                '回答07',
+                '回答08',
+                '回答09',
+                '回答10'
+            ]);
+        }
+
 
         return $this->get_csv($headers, $reservations, 'reception.csv');
 
@@ -262,6 +312,9 @@ class ReservationController extends Controller
         try {
             DB::beginTransaction();
             $reservation = Reservation::findOrFail($id);
+            if (!$reservation->reservation_status->is(ReservationStatus::Pending)) {
+                return redirect()->back()->withErrors(trans('messages.reservation.invalid_reservation_status'))->withInput();
+            }
             $reservation->reservation_status = ReservationStatus::ReceptionCompleted;
             $reservation->save();
             Session::flash('success', trans('messages.reservation.accept_success'));
@@ -284,6 +337,10 @@ class ReservationController extends Controller
         try {
             DB::beginTransaction();
             $reservation = Reservation::findOrFail($id);
+            if (!$reservation->reservation_status->is(ReservationStatus::ReceptionCompleted) &&
+                !$reservation->reservation_status->is(ReservationStatus::Pending)) {
+                return redirect()->back()->withErrors(trans('messages.reservation.invalid_reservation_status'))->withInput();
+            }
             $reservation->reservation_status = ReservationStatus::Cancelled;
             $reservation->save();
             Session::flash('success', trans('messages.reservation.cancel_success'));
@@ -291,6 +348,61 @@ class ReservationController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.reservation.cancel_error'))->withInput();
+        }
+    }
+
+    /**
+     * Complete reservation
+     * @param $id Reservatoin ID
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function complete($id)
+    {
+        try {
+            DB::beginTransaction();
+            $reservation = Reservation::findOrFail($id);
+            if (!$reservation->reservation_status->is(ReservationStatus::ReceptionCompleted)) {
+                return redirect()->back()->withErrors(trans('messages.reservation.invalid_reservation_status'))->withInput();
+            }
+            $reservation->reservation_status = ReservationStatus::Completed;
+            $reservation->save();
+            Session::flash('success', trans('messages.reservation.complete_success'));
+            DB::commit();
+            return redirect('reception');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(trans('messages.reservation.complete_error'))->withInput();
+        }
+
+    }
+
+    /**
+     * bulk reservation status update
+     * @param ReservationFormRequest $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function reservation_status(ReservationFormRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            $ids = $request->input('ids');
+            $reservation_status = ReservationStatus::getInstance($request->input('reservation_status'));
+            $update_query = Reservation::whereIn('id', $ids);
+            if($reservation_status->is(ReservationStatus::ReceptionCompleted)) {
+                $update_query->where('reservation_status', ReservationStatus::Pending);
+            } else if($reservation_status->is(ReservationStatus::Completed)) {
+                $update_query->where('reservation_status', ReservationStatus::ReceptionCompleted);
+            } else if($reservation_status->is(ReservationStatus::Cancelled)) {
+                $update_query->where('reservation_status', ReservationStatus::Pending)
+                    ->orWhere('reservation_status', ReservationStatus::ReceptionCompleted);
+            }
+            $update_query->update([ 'reservation_status' => $reservation_status->value ]);
+            Session::flash('success', trans('messages.reservation.status_update_success'));
+            DB::commit();
+            return redirect('reception');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(trans('messages.reservation.status_update_error'))->withInput();
         }
     }
 
