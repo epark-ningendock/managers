@@ -18,7 +18,7 @@
     <table class="table table-bordered table-hover">
       <thead>
       <tr>
-        <th class="text-center">検査コース名</th>
+        <th class="text-center">検査コース名 &gt; &GT;{{ request()->session()->get('hospital_name') }}</th>
         <th></th>
       </tr>
       </thead>

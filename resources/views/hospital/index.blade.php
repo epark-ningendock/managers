@@ -71,7 +71,7 @@
                 <th>所在地</th>
                 <th>連絡先</th>
                 <th>状態</th>
-                <th>施設</th>
+                <th>操作</th>
                 <th>編集</th>
                 <th>削除</th>
             </tr>
@@ -89,7 +89,13 @@
                         <td>{{ $hospital->address1 }}</td>
                         <td>{{ $hospital->tel }}</td>
                         <td>{{ \App\Enums\HospitalEnums::getDescription($hospital->status) }}</td>
-                        <td><a class="btn btn-primary" href="#">施設</a></td>
+                        <td>
+                            <a class="btn btn-primary insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">操作</a>
+                            {{-- 医療機関の選択フォーム --}}
+                            <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
+                                {{ csrf_field() }}
+                            </form>
+                        </td>
                         <td>
                             @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
                                 <a href="{{ route('hospital.edit', $hospital->id) }}"

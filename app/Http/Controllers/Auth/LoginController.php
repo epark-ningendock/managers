@@ -11,6 +11,7 @@ use Illuminate\Auth\SessionGuard;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
+use App\Hospital;
 
 class LoginController extends Controller
 {
@@ -34,10 +35,7 @@ class LoginController extends Controller
      */
     protected $staff_role = 'staffs';
     protected $hospital_staff_role = 'hospital_staffs';
-    protected $redirectTo = '/home';
-    // TODO スタッフログイン先確定次第変更
     protected $staff_redirectTo = '/staff';
-    // TODO 医療機関スタッフログイン先確定次第変更
     protected $hospital_staff_redirectTo = '/hospital-staff';
 
     /**
@@ -48,6 +46,12 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return view('auth.login');
     }
 
     public function getLogin(Request $req)
@@ -98,6 +102,7 @@ class LoginController extends Controller
             session()->put('staffs', $hospital_staff->id);
             session()->put('staff_email', $hospital_staff->email);
             session()->put('hospital_id', $hospital_staff->hospital_id);
+            session()->put('hospital_name', Hospital::findOrFail($hospital_staff->hospital_id)->name);
             return true;
         }
         return false;

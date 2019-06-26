@@ -8,7 +8,7 @@
 @extends('layouts.form')
 
 @section('content_header')
-  <h1>休日設定</h1>
+  <h1>休日設定 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
 @stop
 
 @section('form')

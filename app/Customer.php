@@ -6,6 +6,7 @@ use App\Filters\Filterable;
 
 class Customer extends SoftDeleteModel
 {
+
     use Filterable;
 
     protected $casts = [

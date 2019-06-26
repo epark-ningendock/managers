@@ -94,7 +94,35 @@
 
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu" data-widget="tree">
+
+          {{-- EPARKスタッフの機能 --}}
+          @if(Auth::user()->getTable() == "staffs")
+              <li class="header">EPARKスタッフ機能</li>
+              <li><a href="/staff"><i class="fa fa-user"></i>スタッフ管理</a></li>
+              <li><a href="/hospital"><i class="fa fa-hospital-o"></i>医療機関管理</a></li>
+              <li><a href="/classification"><i class="fa fa-book"></i>検査コース分類管理</a></li>
+              <li><a href="/reservation"><i class="fa fa-book"></i>請求管理</a></li>
+          @endif
+
+          {{-- 医療機関スタッフの機能 --}}
+          @if(request()->session()->get('hospital_id'))
+            <li class="header">医療機関スタッフ機能</li>
+            <li><a href="/hospital-staff"><i class="fa fa-user"></i>医療機関スタッフ管理</a></li>
+            <li><a href="/customer"><i class="fa fa-user"></i>顧客管理</a></li>
+            <li><a href="#"><i class="fa fa-book"></i>請求管理</a></li>
+            <li><a href="/course"><i class="fa fa-book"></i>検査コース管理</a></li>
+            <li><a href="/option"><i class="fa fa-book"></i>検査コースオプション管理</a></li>
+            <li><a href="/calendar"><i class="fa fa-calendar"></i>カレンダー管理</a></li>
+            <li><a href="/email-template"><i class="fa fa-gear"></i>メールテンプレート管理</a></li>
+            <li><a href="/reception-email-setting"><i class="fa fa-gear"></i>受付メール設定</a></li>
+          @endif
+          {{-- 医療機関スタッフ固有の機能 --}}
+          @if(Auth::user()->getTable() == "hospital_staffs" && request()->session()->get('hospital_id'))
+          <li><a href="{{ route('hospital-staff.edit.password') }}"><i class="fa fa-user"></i>パスワードの変更</a></li>
+          @endif
+          {{-- デフォルトのサイドバー --}}
           @each('adminlte::partials.menu-item', $adminlte->menu(), 'item')
+          
         </ul>
         <!-- /.sidebar-menu -->
       </section>
