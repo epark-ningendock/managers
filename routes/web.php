@@ -26,17 +26,6 @@ Route::post('/login', 'Auth\LoginController@postLogin');
 
 /*
 |--------------------------------------------------------------------------
-| Login Routes
-|--------------------------------------------------------------------------
-*/
-Route::put('/hospital-staff/update-password/{hospital_staff_id}', 'HospitalStaffController@updatePassword')->name('hospital-staff.update.password');
-Route::get('/hospital-staff/show-password-resets-mail', 'HospitalStaffController@showPasswordResetsMail')->name('hospital-staff.show.password-reset');
-Route::get('/hospital-staff/send-password-resets-mail', 'HospitalStaffController@sendPasswordResetsMail')->name('hospital-staff.send.password-reset');
-Route::get('/hospital-staff/show-reset-password/{reset_token}/{email}', 'HospitalStaffController@showResetPassword');
-Route::put('/hospital-staff/reset-password/{hospital_staff_id}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password');
-
-/*
-|--------------------------------------------------------------------------
 | Hospital staff authentication required
 |--------------------------------------------------------------------------
 */
@@ -44,6 +33,16 @@ Route::middleware('auth:hospital_staffs')->group(function () {
     Route::get('/hospital-staff/edit-password', 'HospitalStaffController@editPassword')->name('hospital-staff.edit.password');
     Route::put('/hospital-staff/update-password/{hospital_staff_id}', 'HospitalStaffController@updatePassword')->name('hospital-staff.update.password');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Hospital staff Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/hospital-staff/show-password-resets-mail', 'HospitalStaffController@showPasswordResetsMail')->name('hospital-staff.show.password-reset');
+Route::get('/hospital-staff/send-password-resets-mail', 'HospitalStaffController@sendPasswordResetsMail')->name('hospital-staff.send.password-reset');
+Route::get('/hospital-staff/show-reset-password/{reset_token}/{email}', 'HospitalStaffController@showResetPassword');
+Route::put('/hospital-staff/reset-password/{hospital_staff_id}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password');
 
 /*
 |--------------------------------------------------------------------------

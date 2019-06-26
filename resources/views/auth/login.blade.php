@@ -11,7 +11,9 @@
 @section('body')
   <div class="login-box">
     <!-- /.login-logo -->
-    <div class="login-box-body">
+    <div class="login-box-body font-size">
+      @include('layouts.partials.message')
+      @include('layouts.partials.errorbag')
       <div class="login-logo">
         <a href="{{ url(config('adminlte.dashboard_url', 'home')) }}">{!! config('adminlte.logo', '<b>Admin</b>LTE') !!}</a>
       </div>
