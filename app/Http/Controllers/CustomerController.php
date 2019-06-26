@@ -123,22 +123,15 @@ class CustomerController extends Controller
 
     public function showEmailForm($customer_id)
     {
-        /* セッション */
-        // dd($request->session());
-
-        /* Sample */
-        // $hospital_staff = HospitalStaff::where('email', $request->session()->get('staff_email'))->first();
-
-        /* TODO: ここにセッションの医療機関IDを入れて検索する */
-        // $email_template = EmailTemplate::where('hospital_id', session())
-
+        $email_templates = EmailTemplate::where('hospital_id', intval(session()->get('hospital_id')))->get()->toArray();
         $customer = Customer::findOrFail($customer_id);
         $hospitals = Hospital::select('email')->get();
-
+        
         return response()->json([
             'data' => view('customer.partials.email', [
                 'customer' => $customer,
                 'hospitals' => $hospitals,
+                'email_templates' => $email_templates
             ])->render(),
         ]);
     }

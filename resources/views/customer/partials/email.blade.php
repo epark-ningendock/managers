@@ -20,7 +20,6 @@
                 </td>
             </tr>
 
-
             {{-- <tr>
                 <td class="gray-cell-bg">
                     <label for="appointed_submissions">{{ __('任命された応募') }}</label>
@@ -48,20 +47,22 @@
                     </div>
                 </td>
             </tr>
-
-
             <tr>
                 <td class="gray-cell-bg">
                     <label for="template">{{ __('テンプレート') }}</label>
                 </td>
                 <td>
                     <div class="form-group">
-                        <select name="template" id="template">
-                            <option value="Template 1">Template 1</option>
-                            <option value="Template 2">Template 2</option>
-                            <option value="Template 3">Template 3</option>
+                        <select class="form-control" name="email_template" id="email_template">
+                            @foreach($email_templates as $email_template)
+                                <option value="{{ $email_template['id'] }}">{{ $email_template['title'] }}</option>
+                            @endforeach
                         </select>
+                    
                     </div>
+                </td>
+                <td>
+                    <button id="reflect-template" type="button" class="btn btn-primary btn-lg">反映する</button>
                 </td>
             </tr>
 
@@ -104,3 +105,24 @@
 
     </form>
 </div>
+
+
+<script type="text/javascript">
+
+    (function ($) {
+
+        /* ---------------------------------------------------
+            「反映する」を
+        -----------------------------------------------------*/
+        $('#reflect-template').click(function () {
+            console.log("Hi Ryu.");
+            var val = $('[name=email_template]').val();
+            console.log(val);
+            var txt = $('[name=email_template] option:selected').text();
+            console.log(txt);
+        });
+
+    })(jQuery);
+
+
+</script>
