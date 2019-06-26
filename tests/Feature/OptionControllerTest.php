@@ -33,6 +33,7 @@ class OptionControllerTest extends TestCase
 
     public function testOptionListing()
     {
+        $this->withLoginUser();
         $response = $this->call('GET', 'option');
         $this->assertEquals(200, $response->getStatusCode());
     }

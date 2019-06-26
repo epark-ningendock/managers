@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\HospitalStaff;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -18,6 +19,10 @@ class ReservationControllerTest extends TestCase
     {
         parent::setUp();
         Session::start();
+
+        //authentication
+        $hospital_staff = factory(HospitalStaff::class)->create();
+        $this->be($hospital_staff);
     }
 
     /**
