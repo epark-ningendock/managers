@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Customer;
 use App\Filters\Customer\CustomerFilters;
 use App\Hospital;
+use App\EmailTemplate;
 use App\Http\Requests\CustomerFormRequest;
 use App\Mail\Customer\CustomerSendMail;
 use Illuminate\Http\Request;
@@ -122,6 +123,15 @@ class CustomerController extends Controller
 
     public function showEmailForm($customer_id)
     {
+        /* セッション */
+        // dd($request->session());
+
+        /* Sample */
+        // $hospital_staff = HospitalStaff::where('email', $request->session()->get('staff_email'))->first();
+
+        /* TODO: ここにセッションの医療機関IDを入れて検索する */
+        // $email_template = EmailTemplate::where('hospital_id', session())
+
         $customer = Customer::findOrFail($customer_id);
         $hospitals = Hospital::select('email')->get();
 

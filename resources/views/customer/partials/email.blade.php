@@ -21,7 +21,7 @@
             </tr>
 
 
-            <tr>
+            {{-- <tr>
                 <td class="gray-cell-bg">
                     <label for="appointed_submissions">{{ __('任命された応募') }}</label>
                 </td>
@@ -30,12 +30,12 @@
                         <input type="text" class="form-control" name="appointed_submissions" id="appointed_submissions" />
                     </div>
                 </td>
-            </tr>
+            </tr> --}}
 
 
             <tr>
                 <td class="gray-cell-bg">
-                    <label for="hospital_email">{{ __('メールアドレスから') }}</label>
+                    <label for="hospital_email">{{ __('差出人メールアドレス') }}</label>
                 </td>
                 <td>
                     <div class="form-group">
@@ -78,7 +78,7 @@
 
             <tr>
                 <td class="gray-cell-bg">
-                    <label for="message">{{ __('この文') }}</label>
+                    <label for="message">{{ __('本文') }}</label>
                 </td>
                 <td>
                     <div class="form-group">
