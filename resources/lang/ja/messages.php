@@ -126,8 +126,8 @@ return [
     'email_template'                       => 'メールテンプレート',
     'calendar_setting'                     => 'カレンダー管理',
     'mails' => [
-        'reset_passoword' => '医療機関スタッフパスワードリセットメール',
-        'registered' => '医療機関スタッフ登録メール',
+        'reset_passoword' => 'パスワードリセットメール',
+        'registered' => 'スタッフ登録メール',
     ],
     'option_name' => 'オプション名',
     'option_description' => 'オプションの説明',
