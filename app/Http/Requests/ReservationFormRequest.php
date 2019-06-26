@@ -30,4 +30,11 @@ class ReservationFormRequest extends FormRequest
             'reservation_status' => 'required|enum_value:' . ReservationStatus::class . ',false'
         ];
     }
+
+    public function messages()
+    {
+        return [
+          'ids.required' => 'レコードを選択してください。'
+        ];
+    }
 }

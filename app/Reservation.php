@@ -124,8 +124,4 @@ class Reservation extends SoftDeleteModel
 
         return $query;
     }
-
-    public function getFullNameAttribute() {
-        return $this->customer->name_seri.$this->customer->name_mei;
-    }
 }

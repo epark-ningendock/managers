@@ -148,8 +148,10 @@
         <div class="pull-right">
           <button class="btn btn-primary" id="bulk-update">一括更新ボタン</button>
           <select id="reservation_status_u" class="form-control mr-4 ml-4" style="display: inline-block; width: auto;">
-            @foreach(ReservationStatus::toArray() as $status_value)
-              <option value="{{ $status_value }}">{{ ReservationStatus::getInstance($status_value)->description }}</option>
+            @foreach(ReservationStatus::toArray() as $key => $status_value)
+              @if($key != 'Pending')
+                <option value="{{ $status_value }}">{{ ReservationStatus::getInstance($status_value)->description }}</option>
+              @endif
             @endforeach()
           </select>
         </div>
@@ -164,7 +166,7 @@
     <form id="bulk-status-form"  method="POST" action="{{ route('reservation.bulk_status') }}">
       {{ csrf_field() }}
       {{ method_field('PATCH') }}
-      <input id="reservation_status" name="reservation_status" />
+      <input type="hidden" id="reservation_status" name="reservation_status" />
       <table id="example2" class="table table-bordered table-hover">
         <thead>
         <tr>
@@ -184,7 +186,7 @@
               <input type="checkbox" name="ids[]" value="{{ $reservation->id }}" />
             </td>
             <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
-            <td>{{ $reservation->full_name }}</td>
+            <td>{{ $reservation->customer->name }}</td>
             <td>{{ $reservation->course->name  }}</td>
             <td>{{ $reservation->reservation_status->description  }}</td>
             <td>
@@ -197,14 +199,14 @@
                 <button class="btn btn-success ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.accept_confirmation') }}"
                         data-target-form="#accept-form" data-button-text="確認する">
-                  確定
+                  受診完了
                 </button>
               @endif
               @if($reservation->reservation_status->is(ReservationStatus::ReceptionCompleted))
                 <button class="btn btn-primary ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.complete_confirmation') }}"
                         data-target-form="#complete-form" data-button-text="確認する">
-                  受診完了
+                  確定
                 </button>
               @endif
               @if(!$reservation->reservation_status->is(ReservationStatus::Cancelled) && !$reservation->reservation_status->is(ReservationStatus::Completed))
@@ -266,6 +268,17 @@
                   event.stopPropagation();
                   $('input, #course_id').val('');
                   $('input:checked').prop('checked', false);
+              });
+          })();
+
+          /* ---------------------------------------------------
+          // csv download
+          -----------------------------------------------------*/
+          (function(){
+              $('#csv_download').click(function(){
+                  event.preventDefault();
+                  event.stopPropagation();
+                  window.open('{{ route('reception.csv') }}' + '?' + $('#search_form').serialize(), '_black');
               });
           })();
 

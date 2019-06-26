@@ -91,8 +91,7 @@ class ReservationController extends Controller
 
         if ($request->input('customer_name', '') != '') {
             $query->whereHas('Customer', function ($q) use ($request) {
-                $q->where(DB::raw("concat(name_seri, name_mei)"), 'LIKE', '%' . $request->input('customer_name') . '%');
-                $q->orWhere(DB::raw("concat(name_kana_seri, name_kana_mei)"), 'LIKE', '%' . $request->input('customer_name') . '%');
+                $q->where(DB::raw("concat(family_name, ' ', first_name)"), 'LIKE', '%' . $request->input('customer_name') . '%');
             });
         }
 
@@ -319,7 +318,7 @@ class ReservationController extends Controller
             $reservation->save();
             Session::flash('success', trans('messages.reservation.accept_success'));
             DB::commit();
-            return redirect('reception');
+            return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.reservation.accept_error'))->withInput();
@@ -344,7 +343,8 @@ class ReservationController extends Controller
             $reservation->reservation_status = ReservationStatus::Cancelled;
             $reservation->save();
             Session::flash('success', trans('messages.reservation.cancel_success'));
-            return redirect('reception');
+            DB::commit();
+            return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.reservation.cancel_error'))->withInput();
@@ -368,7 +368,7 @@ class ReservationController extends Controller
             $reservation->save();
             Session::flash('success', trans('messages.reservation.complete_success'));
             DB::commit();
-            return redirect('reception');
+            return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.reservation.complete_error'))->withInput();
@@ -399,7 +399,7 @@ class ReservationController extends Controller
             $update_query->update([ 'reservation_status' => $reservation_status->value ]);
             Session::flash('success', trans('messages.reservation.status_update_success'));
             DB::commit();
-            return redirect('reception');
+            return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.reservation.status_update_error'))->withInput();
