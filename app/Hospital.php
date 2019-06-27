@@ -55,6 +55,7 @@ class Hospital extends Model
         'pv_count',
         'pvad',
         'is_pickup',
+        'hospital_staff_id',
         'login_id',
         'login_psw',
         'login_status',

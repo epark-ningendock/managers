@@ -2195,20 +2195,6 @@ Custom CSS
   background: #e9e9e9;
 }
 
-body .no-border {
-  border: 0 none;
-}
-
-.tab-list .btn {
-  background: #868686;
-  color: #fff;
-}
-
-.tab-list .btn.active {
-  background: #f3f3f3;
-  color: #222;
-}
-
 .form-group {
   position: relative;
 }
@@ -2217,9 +2203,38 @@ body .no-border {
   width: 100%;
 }
 
-.contract-form-alert {
-  display: none;
 table tr td.gray-column {
   background: #e5e2e2;
   padding-left: 30px;
 }
+
+.top-action-bar-file-with-file {
+  display: inline-block;
+  padding: 0;
+  float: right;
+  margin-top: 4px;
+}
+
+.input-file {
+  display: inline-block;
+  background: #ddd;
+  width: 100px;
+  height: 26px;
+  overflow: hidden;
+  margin: 0 7px;
+  position: relative;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.input-file label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #ddd;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  margin: 0;
+}
+

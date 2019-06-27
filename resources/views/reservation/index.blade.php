@@ -5,7 +5,7 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>予約一覧</h1>
+    <h1>予約一覧 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
 @stop
 
 @section('search')
@@ -30,9 +30,9 @@
                     <div class="form-group">
                         <label for="s_text">出力</label>
                         <div>
-                        {{Form::button('確定明細表出力', ['class' => 'btn btn-default'])}}
-                        {{Form::button('予約内訳明細表出力', ['class' => 'btn btn-default'])}}
-                        {{Form::button('運用分析用一覧出力', ['class' => 'btn btn-default'])}}
+                            {{Form::button('確定明細出力', ['class' => 'btn btn-default'])}}
+                            {{Form::button('予約内訳明細表出力', ['class' => 'btn btn-default'])}}
+                            <a href="{{ route('reservation.operation', $request->toArray()) }}" class="btn btn-default"> 運用分析用一覧出力 </a>
                         </div>
                     </div>
                 </div>
@@ -48,8 +48,7 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="s_text">医療機関名</label>
-                        <input type="text" class="form-control" autocomplete="off" name="s_text" id="s_text"
-                               value="{{ request('s_text') }}"/>
+                        {{ Form::text('hospital_name', old('hospital_name'), ['class' => 'form-control', 'id' => 'hospital_name-field', 'placeholder' => '病院名']) }}
                     </div>
                 </div>
 

@@ -108,57 +108,63 @@ return [
     */
 
     'menu' => [
-        'メニュー',
-        [
-            'text'        => 'スタッフ管理',
-            'url'         => '/staff',
-            'icon'        => 'user',
-        ],
-        [
-            'text'        => '医療機関スタッフ管理',
-            'url'         => '/hospital-staff',
-            'icon'        => 'user',
-        ],
-        [
-            'text'        => 'パスワードの変更',
-            'url'         => '/hospital-staff/edit-password',
-            'icon'        => 'user',
-        ],
-        [
-            'text'        => '医療機関管理',
-            'url'         => '/hospital',
-            'icon'        => 'hospital-o',
-        ],
-        [
-            'text'        => '検査コース分類管理',
-            'url'         => '/classification',
-            'icon'        => 'book',
-        ],
-        [
-            'text'        => '検査コース管理',
-            'url'         => '/course',
-            'icon'        => 'book',
-        ],
-        [
-            'text'        => '検査コースオプション管理',
-            'url'         => '/option',
-            'icon'        => 'book',
-        ],
-        [
-            'text'        => 'カレンダー管理',
-            'url'         => '/calendar',
-            'icon'        => 'calendar',
-        ],
-        [
-            'text'        => 'メールテンプレート管理',
-            'url'         => '/email-template',
-            'icon'        => 'gear',
-        ],
-        [
-            'text'        => '受付メール設定',
-            'url'         => '/reception-email-setting',
-            'icon'        => 'gear ',
-        ],
+        // 'EPRAKスタッフ',
+        // [
+        //     'text'        => 'スタッフ管理',
+        //     'url'         => '/staff',
+        //     'icon'        => 'user',
+        // ],
+        // [
+        //     'text'        => '医療機関管理',
+        //     'url'         => '/hospital',
+        //     'icon'        => 'hospital-o',
+        // ],
+        // [
+        //     'text'        => '検査コース分類管理',
+        //     'url'         => '/classification',
+        //     'icon'        => 'book',
+        // // ],
+        // '医療機関スタッフ',
+        // [
+        //     'text'        => '医療機関スタッフ管理',
+        //     'url'         => '/hospital-staff',
+        //     'icon'        => 'user',
+        // ],
+        // [
+        //     'text'        => 'パスワードの変更',
+        //     'url'         => '/hospital-staff/edit-password',
+        //     'icon'        => 'user',
+        // ],
+        // [
+        //     'text'        => '顧客管理',
+        //     'url'         => '/customer',
+        //     'icon'        => 'user',
+        // ],
+        // [
+        //     'text'        => '検査コース管理',
+        //     'url'         => '/course',
+        //     'icon'        => 'book',
+        // ],
+        // [
+        //     'text'        => '検査コースオプション管理',
+        //     'url'         => '/option',
+        //     'icon'        => 'book',
+        // ],
+        // [
+        //     'text'        => 'カレンダー管理',
+        //     'url'         => '/calendar',
+        //     'icon'        => 'calendar',
+        // ],
+        // [
+        //     'text'        => 'メールテンプレート管理',
+        //     'url'         => '/email-template',
+        //     'icon'        => 'gear',
+        // ],
+        // [
+        //     'text'        => '受付メール設定',
+        //     'url'         => '/reception-email-setting',
+        //     'icon'        => 'gear ',
+        // ],
     ],
 
     /*

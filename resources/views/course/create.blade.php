@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content_header')
-  <h1>検査コース管理</h1>
+  <h1>検査コース管理 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
 @stop
 
 <!-- ページの内容を入力 -->

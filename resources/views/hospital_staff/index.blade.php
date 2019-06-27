@@ -13,7 +13,7 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>医療機関スタッフ</h1>
+    <h1>医療機関スタッフ &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
 @stop
 
 

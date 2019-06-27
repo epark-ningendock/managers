@@ -18,7 +18,7 @@
     <table class="table table-bordered table-hover">
       <thead>
       <tr>
-        <th class="text-center">検査コース名</th>
+        <th class="text-center">検査コース名 &gt; &GT;{{ request()->session()->get('hospital_name') }}</th>
         <th></th>
       </tr>
       </thead>
@@ -36,8 +36,8 @@
       </tbody>
     </table>
     <div class="box-footer pull-right">
-      <a href="{{ url()->previous() }}" class="btn btn-default">バック</a>
-      <button type="submit" class="btn btn-primary">つくる</button>
+      <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
+      <button type="submit" class="btn btn-primary">作成</button>
     </div>
   </form>
   <style>

@@ -9,7 +9,7 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>オプション管理</h1>
+    <h1>オプション管理 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
 @stop
 @section('table')
     <form method="post" action="{{ route('option.updateSort') }}">
@@ -37,8 +37,8 @@
             </tbody>
         </table>
         <div class="box-footer pull-right">
-            <a href="{{ url()->previous() }}" class="btn btn-default">バック</a>
-            <button type="submit" class="btn btn-primary">つくる</button>
+            <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
+            <button type="submit" class="btn btn-primary">作成</button>
         </div>
     </form>
     <style>

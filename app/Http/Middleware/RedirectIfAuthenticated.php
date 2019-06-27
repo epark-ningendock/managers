@@ -17,9 +17,12 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if (Auth::guard($guard)->check()) {
-            return redirect('/home');
-        }
+        // if (Auth::guard($guard)->check()) {
+        //     // ログインユーザーがスタッフの場合、スタッフ一覧に遷移する
+        //     dd(Auth::user());
+        //     // ログインユーザーが医療機関スタッフの場合、医療機関スタッフ一覧に遷移する
+        //     return redirect('/');
+        // }
 
         return $next($request);
     }

@@ -11,7 +11,7 @@
 @section('title', 'Epark')
 
 @section('content_header')
-  <h1>テンプレート管理</h1>
+  <h1>テンプレート管理 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
 @stop
 
 @section('table')

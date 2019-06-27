@@ -42,6 +42,11 @@ class Course extends SoftDeleteModel
         return $this->hasMany('App\CourseOption');
     }
 
+    public function options()
+    {
+        return $this->hasManyThrough('App\Option', 'App\CourseOption', 'course_id', 'id', null, 'option_id');
+    }
+
     public function course_details()
     {
         return $this->hasMany('App\CourseDetail');
