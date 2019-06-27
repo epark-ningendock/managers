@@ -31,7 +31,6 @@
                 </td>
             </tr> --}}
 
-
             <tr>
                 <td class="gray-cell-bg">
                     <label for="hospital_email">{{ __('差出人メールアドレス') }}</label>
@@ -54,6 +53,7 @@
                 <td>
                     <div class="form-group">
                         <select class="form-control" name="email_template" id="email_template">
+                            <option value=""></option>
                             @foreach($email_templates as $email_template)
                                 <option value="{{ $email_template['id'] }}">{{ $email_template['title'] }}</option>
                             @endforeach
@@ -68,22 +68,22 @@
 
             <tr>
                 <td class="gray-cell-bg">
-                    <label for="subject">{{ __('件名') }}</label>
+                    <label for="title">{{ __('件名') }}</label>
                 </td>
                 <td>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="subject" id="subject" />
+                        <input type="text" class="form-control" name="title" id="title" />
                     </div>
                 </td>
             </tr>
 
             <tr>
                 <td class="gray-cell-bg">
-                    <label for="message">{{ __('本文') }}</label>
+                    <label for="text">{{ __('本文') }}</label>
                 </td>
                 <td>
                     <div class="form-group">
-                        <textarea class="form-control" name="message" id="message" cols="30" rows="5"></textarea>
+                        <textarea class="form-control" name="text" id="text" cols="30" rows="5"></textarea>
                     </div>
                 </td>
             </tr>
@@ -110,16 +110,24 @@
 <script type="text/javascript">
 
     (function ($) {
-
         /* ---------------------------------------------------
-            「反映する」を
+            「反映する」を押した時に、画面にテンプレートを反映する
         -----------------------------------------------------*/
         $('#reflect-template').click(function () {
-            console.log("Hi Ryu.");
-            var val = $('[name=email_template]').val();
-            console.log(val);
-            var txt = $('[name=email_template] option:selected').text();
-            console.log(txt);
+            var targetId = $('[name=email_template]').val();
+            if (!targetId) {
+                $('#title').val('');
+                $('#text').val('');
+                return
+            } 
+            var email_templates = JSON.parse("{{ json_encode($email_templates) }}".replace(/&quot;/g,'"'));
+
+            target = email_templates.filter(function(email_template) {
+                return email_template.id == targetId
+            }).shift();
+            
+            $('#title').val(target.title);
+            $('#text').val(target.text);
         });
 
     })(jQuery);
