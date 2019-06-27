@@ -19,7 +19,6 @@ class CustomerSendMail extends Mailable
      */
     public function __construct($data)
     {
-        //
         $this->data = $data;
     }
 
@@ -30,9 +29,10 @@ class CustomerSendMail extends Mailable
      */
     public function build()
     {
+        // dd($this->data);
         return $this
-            ->from($this->data->appointed_submissions)
-            ->subject($this->data->subject)
+            ->from($this->data['hospital_email'])
+            ->subject($this->data['title'])
             ->view('customer.email.customer-mail');
     }
 }

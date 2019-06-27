@@ -128,6 +128,7 @@ return [
     'mails' => [
         'reset_passoword' => 'パスワードリセットメール',
         'registered' => 'スタッフ登録メール',
+        'customer' => '顧客メール'
     ],
     'option_name' => 'オプション名',
     'option_description' => 'オプションの説明',

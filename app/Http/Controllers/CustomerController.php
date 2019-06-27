@@ -139,8 +139,9 @@ class CustomerController extends Controller
 
     public function emailSend(Request $request)
     {
-        Mail::to($request->destination_mail_address)->send(new CustomerSendMail($request));
+        Mail::to($request->destination_mail_address)->send(new CustomerSendMail($request->all()));
 
-        return redirect('/customer');
+        return redirect('/customer')->with('success', trans('messages.sent', [ 'mail' => trans('messages.mails.customer') ]));
+        ;
     }
 }

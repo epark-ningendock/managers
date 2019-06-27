@@ -30,7 +30,7 @@
                     </div>
                 </td>
             </tr> --}}
-
+            
             <tr>
                 <td class="gray-cell-bg">
                     <label for="hospital_email">{{ __('差出人メールアドレス') }}</label>
