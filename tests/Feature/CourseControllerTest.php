@@ -19,6 +19,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use App\Hospital;
 use App\Option;
 use App\MinorClassification;
+use App\HospitalStaff;
 
 class CourseControllerTest extends TestCase
 {
@@ -29,6 +30,10 @@ class CourseControllerTest extends TestCase
     {
         parent::setUp();
         Session::start();
+
+        //authentication
+        $hospital_staff = factory(HospitalStaff::class)->create();
+        $this->be($hospital_staff);
     }
 
     protected function createCourse()

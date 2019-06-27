@@ -19,6 +19,10 @@ class HospitalStaffInputFieldsTest extends TestCase
     {
         parent::setUp();
         Session::start();
+
+        //authentication
+        $hospital_staff = factory(HospitalStaff::class)->create();
+        $this->be($hospital_staff);
     }
 
     public function testItRequiredName()

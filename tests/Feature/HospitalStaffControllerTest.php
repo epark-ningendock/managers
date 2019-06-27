@@ -4,15 +4,23 @@ namespace Tests\Feature;
 
 use App\Hospital;
 use App\HospitalStaff;
+use App\Staff;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class HospitalStaffControllerTest extends TestCase
 {
     use DatabaseMigrations, RefreshDatabase;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        Session::start();
+    }
 
     public function testItCanListPage()
     {
