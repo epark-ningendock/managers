@@ -153,3 +153,5 @@ Route::middleware('auth:staffs,hospital_staffs')->group(function () {
     Route::post('customer/email/{customer_id}', 'CustomerController@showEmailForm')->name('customer.show.email.form');
     Route::post('customer/email-send/{customer_id}', 'CustomerController@emailSend')->name('customer.email.send');
 });
+
+Route::resource('hospital_images', 'HospitalImagesController');
