@@ -15,7 +15,7 @@
                 <td>
                     <div class="form-group">
                         {{ $customer->email }}
-                        <input type="hidden" name="destination_mail_address" value="{{ $customer->email }}">
+                        <input type="hidden" name="customer_email" value="{{ $customer->email }}">
                     </div>
                 </td>
             </tr>
@@ -37,12 +37,8 @@
                 </td>
                 <td>
                     <div class="form-group">
-                        <select class="form-control" name="hospital_email" id="hospital_email">
-                            <option value="">Select Email</option>
-                            @foreach($hospitals as $hospital)
-                                <option value="{{ $hospital->email }}">{{ $hospital->email }}</option>
-                            @endforeach
-                        </select>
+                        {{ $hospital->email }}
+                        <input type="hidden" name="hospital_email" value="{{ $hospital->email }}">
                     </div>
                 </td>
             </tr>
@@ -129,7 +125,13 @@
             $('#title').val(target.title);
             $('#text').val(target.text);
         });
-
+        
+        $("textarea").change( function() {
+            var txtVal = $(this).val();
+            txtVal = txtVal.replace(/\r\n/g, "&lt;br /&gt;<br />");
+            txtVal = txtVal.replace(/(\n|\r)/g, "&lt;br /&gt;<br />");
+            $('#testpre').html('<p>'+ txtVal +'</p>');
+        });
     })(jQuery);
 
 

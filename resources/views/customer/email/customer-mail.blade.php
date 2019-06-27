@@ -1,5 +1,5 @@
 <html>
 <body>
-    {{ $data['text'] }}
+    {!!  nl2br($data["text"]) !!}
 </body>
 </html>

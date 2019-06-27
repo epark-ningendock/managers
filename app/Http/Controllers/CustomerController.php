@@ -123,14 +123,14 @@ class CustomerController extends Controller
 
     public function showEmailForm($customer_id)
     {
-        $email_templates = EmailTemplate::where('hospital_id', intval(session()->get('hospital_id')))->get()->toArray();
+        $email_templates = EmailTemplate::where('hospital_id', session()->get('hospital_id'))->get()->toArray();
         $customer = Customer::findOrFail($customer_id);
-        $hospitals = Hospital::select('email')->get();
+        $hospital = Hospital::findOrFail(session()->get('hospital_id'));
         
         return response()->json([
             'data' => view('customer.partials.email', [
                 'customer' => $customer,
-                'hospitals' => $hospitals,
+                'hospital' => $hospital,
                 'email_templates' => $email_templates
             ])->render(),
         ]);
@@ -139,9 +139,15 @@ class CustomerController extends Controller
 
     public function emailSend(Request $request)
     {
-        Mail::to($request->destination_mail_address)->send(new CustomerSendMail($request->all()));
+        $this->validate($request, [
+            'customer_email' => 'required|email|max:100',
+            'hospital_email' => 'required|email|max:100',
+            'title' => 'required|max:100',
+            'text' => 'required|max:1000'
+        ]);
+
+        Mail::to($request->customer_email)->send(new CustomerSendMail($request->all()));
 
         return redirect('/customer')->with('success', trans('messages.sent', [ 'mail' => trans('messages.mails.customer') ]));
-        ;
     }
 }
