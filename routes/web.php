@@ -24,12 +24,21 @@ Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], f
     Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password');
     Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| Contract Information
+|--------------------------------------------------------------------------
+*/
 Route::post('/contract-information/store', 'ContractInformationController@store')->name('contract.store');
+Route::get('/hospital/contract-information', 'ContractInformationController@index')->name('hospital.contractInfo');
+
+
 Route::resource('/staff', 'StaffController')->except(['show']);
 
 // 医療機関系
 Route::resource('/hospital', 'HospitalController')->except(['show']);
-Route::get('/hospital/contract-information', 'ContractInformationController@index')->name('hospital.contractInfo');
 Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search');
 Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
 Route::get('/hospital/search/contract-info', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');

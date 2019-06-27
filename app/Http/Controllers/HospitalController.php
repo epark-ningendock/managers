@@ -29,7 +29,7 @@ class HospitalController extends Controller
             $query->where('status', HospitalEnums::Public);
         }
 
-        $hospitals = $query->orderBy('created_id', 'desc')->paginate(10)->appends(request()->query());
+        $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());
 
         return view('hospital.index', [ 'hospitals' => $hospitals ]);
     }
@@ -79,7 +79,7 @@ class HospitalController extends Controller
      */
     public function create()
     {
-        //
+        return view('hospital.create');
     }
 
     /**
