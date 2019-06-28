@@ -21,8 +21,10 @@ class HospitalImagesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($hospital_id)
     {
+
+        return view('hospital_images.create', compact('hospital_id'));
         return view('hospital_images.create');
     }
 
@@ -32,7 +34,7 @@ class HospitalImagesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $hosital_id)
     {
         $params = $request->validate([
             'image' => 'required|file|image|max:4000',
@@ -42,13 +44,13 @@ class HospitalImagesController extends Controller
 
         $image = \Image::make(file_get_contents($file->getRealPath()));
         $image
-            ->save(public_path().'/img/'.$file->hashName())
+            ->save(public_path().'/img/uploads/'.$file->hashName())
             ->resize(300, 300)
-            ->save(public_path().'/img/300-300-'.$file->hashName())
+            ->save(public_path().'/img/uploads/300-300-'.$file->hashName())
             ->resize(500, 500)
-            ->save(public_path().'/img/500-500-'.$file->hashName());
+            ->save(public_path().'/img/uploads/500-500-'.$file->hashName());
 
-        return redirect('/img/'.$file->hashName());
+        return redirect('/img/uploads/'.$file->hashName());
     }
 
     /**
