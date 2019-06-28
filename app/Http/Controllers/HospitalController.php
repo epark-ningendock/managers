@@ -151,4 +151,5 @@ class HospitalController extends Controller
 
         return view('hospital.index', [ 'hospitals' => $hospitals ])->with('success', trans('messages.created', ['name' => trans('messages.names.email_template')]));
     }
+    
 }

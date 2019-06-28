@@ -1,18 +1,26 @@
 <?php
 
-namespace Tests\Feature;
+namespace Feature;
 
+
+use App\HospitalStaff;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
 
 class HospitalControllerTest extends TestCase
 {
 	use DatabaseMigrations, RefreshDatabase;
 
-	public function testListingPage() {
 
+	public function setUp()
+	{
+		parent::setUp();
+		$this->hospitalStaffSignIn();
+	}
+
+	public function testListingPage() {
 		$response = $this->get('hospital');
 		$response->assertStatus(200);
     }
@@ -24,6 +32,13 @@ class HospitalControllerTest extends TestCase
 
 	public function testSearchText() {
 		$response = $this->get('hospital/search/text');
+		$response->assertStatus(200);
+	}
+
+
+	public function testCreateHospitalPage()
+	{
+		$response = $this->get('hospital/create');
 		$response->assertStatus(200);
 	}
 }
