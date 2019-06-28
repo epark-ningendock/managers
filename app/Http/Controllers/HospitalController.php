@@ -123,4 +123,34 @@ class HospitalController extends Controller
 
         return view('hospital.index', [ 'hospitals' => $hospitals ])->with('success', trans('messages.created', ['name' => trans('messages.names.email_template')]));
     }
+
+    public function showAttentionInformation()
+    {
+        /* TODO 他の医療機関情報と結合するときに、引数を変更する */
+        $hospital = Hospital::findOrFail(1);
+
+        return view('hospital.attention-information', [ 'hospital' => $hospital ]);
+    }
+
+    public function storeAttentionInformation()
+    {
+        /* TODO 以下、indexと同じ処理なので、共通メソッドにしたい */
+        $query = Hospital::query();
+
+        if ($request->get('s_text')) {
+            $query->where('name', 'LIKE', "%". $request->get('s_text') . "%");
+        }
+
+        if ($request->get('status') || ($request->get('status') === '0')) {
+            $query->where('status', '=', $request->get('status'));
+        }
+
+        if (empty($request->get('s_text')) && empty($request->get('status')) && ($request->get('status') !== '0')) {
+            $query->where('status', HospitalEnums::Public);
+        }
+
+        $hospitals = $query->orderBy('created_id', 'desc')->paginate(10)->appends(request()->query());
+
+        return view('hospital.index', [ 'hospitals' => $hospitals ]);
+    }
 }
