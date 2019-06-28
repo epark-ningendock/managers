@@ -105,6 +105,7 @@ Route::middleware('auth:staffs,hospital_staffs')->group(function () {
     | Course Routes
     |--------------------------------------------------------------------------
     */
+    Route::get('/course/json/{id}/detail', 'CourseController@course_detail')->name('course.detail.json');
     Route::resource('/course', 'CourseController')->except(['show']);
     Route::get('/course/sort', 'CourseController@sort')->name('course.sort');
     Route::get('/course/{id}/copy', 'CourseController@copy')->name('course.copy');
@@ -163,7 +164,7 @@ Route::middleware('auth:staffs,hospital_staffs')->group(function () {
     Route::patch('/reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
     Route::delete('/reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');
     Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
-    Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
+    Route::resource('/reservation', 'ReservationController')->except(['show', 'delete']);
     Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
 
 });

@@ -373,4 +373,17 @@ class CourseController extends Controller
             return redirect()->back();
         }
     }
+
+    /**
+     * getting course details
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function course_detail($id)
+    {
+        $course = Course::with([ 'course_options', 'course_options.option', 'course_questions' ])
+            ->where('id', $id)
+            ->get();
+        return response()->json($course);
+    }
 }

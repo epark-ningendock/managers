@@ -130,7 +130,10 @@
       </div>
       <div class="clearfix"></div>
       <div class="col-md-12">
-        <button class="btn btn-success pull-right mr-4" id="csv_download">受付一覧をダウンロード</button>
+        <div class="pull-right">
+        <a class="btn btn-primary" href="{{ route('reservation.create') }}">新規受付を登録する</a>
+        <button class="btn btn-success ml-4 mr-4" id="csv_download">受付一覧をダウンロード</button>
+        </div>
       </div>
       <div class="clearfix"></div>
       <div class="col-md-12 mt-4">

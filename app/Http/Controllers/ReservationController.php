@@ -406,4 +406,14 @@ class ReservationController extends Controller
         }
     }
 
+    /**
+     * create form for reservation
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function create()
+    {
+        $courses = Course::all();
+        return view('reservation.create')->with('courses', $courses);
+    }
+
 }
