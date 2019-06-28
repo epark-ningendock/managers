@@ -60,6 +60,12 @@ class ReservationControllerTest extends TestCase
         $response->assertSessionHasErrors('completed_end_date');
     }
 
+    public function testInvalidCustomerNameInReceptionList()
+    {
+        $response = $this->call('GET', '/reception?customer_name='.$this->faker->regexify('[A-Za-z]{70}'));
+        $response->assertSessionHasErrors('customer_name');
+    }
+
     public function testInvalidStatusInAcceptReservation()
     {
         $reservation = factory(Reservation::class, 'with_all')->create([ 'reservation_status' => ReservationStatus::Cancelled ]);

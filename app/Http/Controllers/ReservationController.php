@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Enums\ReservationStatus;
 use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
 class ReservationController extends Controller
 {
@@ -81,12 +82,16 @@ class ReservationController extends Controller
             $query->whereDate('reservation_date', '<=', $request->input('reservation_end_date'));
         }
 
-        if ($request->input('completed_start_date', '') != '') {
+        if($request->has('completed_start_date') && $request->input('completed_start_date', '') != '') {
             $query->whereDate('completed_date', '>=', $request->input('completed_start_date'));
+        } else if(!$request->has('completed_start_date')){
+            $query->whereDate('completed_date', '>=', Carbon::now());
         }
 
-        if ($request->input('completed_end_date', '') != '') {
+        if ($request->has('completed_end_date') && $request->input('completed_end_date', '') != '') {
             $query->whereDate('completed_date', '<=', $request->input('completed_end_date'));
+        } else if(!$request->has('completed_end_date')) {
+            $query->whereDate('completed_date', '<=', Carbon::now());
         }
 
         if ($request->input('customer_name', '') != '') {
@@ -135,6 +140,7 @@ class ReservationController extends Controller
             'reservation_end_date' => 'nullable|date',
             'completed_start_date' => 'nullable|date',
             'completed_end_date' => 'nullable|date',
+            'customer_name' => 'nullable|max:64'
         ]);
 
         $page_per_record = $request->input('record_per_page', 10);
@@ -144,8 +150,18 @@ class ReservationController extends Controller
             ->appends($request->query());
         $courses = Course::all();
 
+        $params = $request->input();
+
+        // for initial default value if it has not been set empty purposely
+        if(!$request->has('completed_start_date')) {
+            $params['completed_start_date'] = Carbon::now()->format('Y/m/d');
+        }
+        if(!$request->has('completed_end_date')) {
+            $params['completed_end_date'] = Carbon::now()->format('Y/m/d');
+        }
+
         return view('reservation.reception', compact('reservations', 'courses'))
-            ->with($request->input());
+            ->with($params);
     }
 
     /**
