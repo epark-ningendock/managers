@@ -3,12 +3,11 @@
 namespace App;
 
 use App\Filters\Filterable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Customer extends BaseModel
+class Customer extends SoftDeleteModel
 {
-    use Filterable, SoftDeletes;
 
+    use Filterable;
 
     protected $casts = [
         'birthday' => 'date:Y-m-d',
@@ -32,8 +31,7 @@ class Customer extends BaseModel
         'birthday',
         'memo',
         'claim_count',
-        'recall_count',
-        'deleted_at',
+        'recall_count'
     ];
 
     protected $guarded = [
@@ -59,7 +57,7 @@ class Customer extends BaseModel
     }
 
 
-    public function getName()
+    public function getNameAttribute()
     {
         return $this->family_name . ' ' . $this->first_name;
     }

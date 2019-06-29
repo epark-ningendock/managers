@@ -5,12 +5,25 @@ namespace Tests\Feature;
 use App\Staff;
 use App\StaffAuth;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Session;
+use App\HospitalStaff;
 
 class StaffControllerTest extends TestCase
 {
     use DatabaseMigrations;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        Session::start();
+
+        //authentication
+        $hospital_staff = factory(HospitalStaff::class)->create();
+        $this->be($hospital_staff);
+    }
+
+
     /**
      * Test Staff List
      *

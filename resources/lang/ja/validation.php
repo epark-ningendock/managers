@@ -218,6 +218,11 @@ return [
         'reception_email4' => '受信メールアドレス4',
         'reception_email5' => '受信メールアドレス5',
         'epark_in_hospital_reception_mail_flg' => '受付メール（院内）受信フラグ(epark)',
-        'epark_web_reception_email_flg' => '受付メール（web）受信フラグ(epark)'
+        'epark_web_reception_email_flg' => '受付メール（web）受信フラグ(epark)',
+        'reservation_start_date' => '予約開始日',
+        'reservation_end_date' => '予約終了日',
+        'completed_start_date' => '受診開始日',
+        'completed_end_date' => '受診終了日',
+        'customer_name' => '受診者名'
     ],
 ];

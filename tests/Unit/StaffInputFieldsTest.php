@@ -9,6 +9,7 @@ use \Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
+use App\HospitalStaff;
 
 class StaffInputFieldsTest extends TestCase
 {
@@ -19,6 +20,10 @@ class StaffInputFieldsTest extends TestCase
     {
         parent::setUp();
         Session::start();
+
+        //authentication
+        $hospital_staff = factory(HospitalStaff::class)->create();
+        $this->be($hospital_staff);
     }
 
     public function testRequiredStatus()

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
+use App\HospitalStaff;
 
 class ClassificationInputFieldsTest extends TestCase
 {
@@ -21,6 +22,10 @@ class ClassificationInputFieldsTest extends TestCase
     {
         parent::setUp();
         Session::start();
+
+        //authentication
+        $hospital_staff = factory(HospitalStaff::class)->create();
+        $this->be($hospital_staff);
     }
 
     public function testDeleteMinorClassification()

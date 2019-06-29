@@ -156,6 +156,11 @@ return [
         //     'icon'        => 'calendar',
         // ],
         // [
+        //    'text'        => '受付一覧',
+        //    'url'         => '/reception',
+        //    'icon'        => 'list-alt',
+        // ],
+        // [
         //     'text'        => 'メールテンプレート管理',
         //     'url'         => '/email-template',
         //     'icon'        => 'gear',
