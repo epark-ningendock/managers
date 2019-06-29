@@ -132,8 +132,10 @@ class HospitalController extends Controller
         return view('hospital.attention-information', [ 'hospital' => $hospital ]);
     }
 
-    public function storeAttentionInformation()
+    public function storeAttentionInformation(Request $request)
     {
+        dd($request);
+
         /* TODO 以下、indexと同じ処理なので、共通メソッドにしたい */
         $query = Hospital::query();
 
