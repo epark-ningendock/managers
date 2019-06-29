@@ -4,97 +4,101 @@
   <label for="name">PV・予約</label>
   <div class="row">
     <div class='col-sm-4'>
+        {{-- pv_countを使う --}}
       <p>PV件数</p>
     </div>
-    <div class="form-group col-sm-4 @if ($errors->has('name')) has-error @endif">
-      <input type="text" class="form-control" id="name" name="name" value="" placeholder="名前を入力">
+    <div class="form-group col-sm-4 @if ($errors->has('pvad')) has-error @endif">
+      <input type="text" class="form-control" id="pvad" name="pvad" value="" placeholder="名前を入力">
     </div>
-    @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
+    @if ($errors->has('pvad')) <p class="help-block">{{ $errors->first('pvad') }}</p> @endif
     <div class='col-sm-4 checkbox'>
       <label class="ml-3">
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
+          {{ Form::hidden('is_pickup') }}
+          {{ Form::checkbox('is_pickup') }}
           ピックアップ
       </label>
     </div>
   </div>
 
   {{-- アクセスのついて --}}
-  <label for="email">アクセスについて</label>
+  <label>アクセスについて</label>
   <div class='checkbox'>
     <label class="ml-3">
-      {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
+      {{ Form::hidden('is_parking') }}
+      {{ Form::checkbox('is_parking') }}
       駐車場あり
     </label>
   </div>
-  <div class="form-group @if ($errors->has('email')) has-error @endif">
-      <textarea class="form-control" id="course_point" name="course_point" rows="5">
-        
+  <div class="form-group @if ($errors->has('parking_supplement')) has-error @endif">
+      <textarea class="form-control" id="parking_supplement" name="parking_supplement" rows="5"> 
       </textarea>
-    @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
+    @if ($errors->has('parking_supplement')) <p class="help-block">{{ $errors->first('parking_supplement') }}</p> @endif
   </div>
   <div class='row'>
     <div class='checkbox col-sm-6'>
       <label class="ml-3">
-        {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
+        {{ Form::hidden('is_transfer') }}
+        {{ Form::checkbox('is_transfer') }}
         送迎サービスあり
       </label>
     </div>
     <div class='checkbox col-sm-6'>
       <label class="ml-3">
-        {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-        駐車場あり
+        {{ Form::hidden('station1') }}
+        {{ Form::checkbox('station1') }}
+        駅近
       </label>
       <input type="email" class="form-control" id="email" name="email" value="" placeholder="メールアドレスを入力して">
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('login_id')) has-error @endif">
-      <label for="login_id">クレジットカード対応</label>
-      <textarea class="form-control" id="course_point" name="course_point" rows="5">
+  <div class="form-group @if ($errors->has('credit_card_supplement')) has-error @endif">
+      <label for="credit_card_supplement">クレジットカード対応</label>
+      <textarea class="form-control" id="credit_card_supplement" name="credit_card_supplement" rows="5">
           
       </textarea>
-      @if ($errors->has('login_id')) <p class="help-block">{{ $errors->first('login_id') }}</p> @endif
+      @if ($errors->has('credit_card_supplement')) <p class="help-block">{{ $errors->first('credit_card_supplement') }}</p> @endif
   </div>
 
   {{-- 外国語対応 --}}
-  <label for="login_id">外国語対応</label>
+  <label>外国語対応</label>
   <div class='checkbox ml-3'>
       <label>
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
+          {{ Form::hidden('foreign_language_correspondence') }}
+          {{ Form::checkbox('foreign_language_correspondence') }}
           英語
       </label>
 
       <label class="ml-3">
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
+          {{ Form::hidden('foreign_language_correspondence') }}
+          {{ Form::checkbox('foreign_language_correspondence') }}
           中国語
       </label>
 
       <label class="ml-3">
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
+          {{ Form::hidden('foreign_language_correspondence') }}
+          {{ Form::checkbox('foreign_language_correspondence') }}
           韓国語
       </label>
   </div>
-  <div class="form-group @if ($errors->has('login_id')) has-error @endif">
-      <textarea class="form-control" id="course_point" name="course_point" rows="5" placeholder="HTMLで記述することも可能です">
+  <div class="form-group @if ($errors->has('foreign_language_supplement')) has-error @endif">
+      <textarea class="form-control" id="foreign_language_supplement" name="foreign_language_supplement" rows="5" placeholder="HTMLで記述することも可能です">
           
       </textarea>
-    @if ($errors->has('login_id')) <p class="help-block">{{ $errors->first('login_id') }}</p> @endif
+    @if ($errors->has('foreign_language_supplement')) <p class="help-block">{{ $errors->first('foreign_language_supplement') }}</p> @endif
   </div>
 
   {{-- 認定施設について --}}
-  <div class="form-group @if ($errors->has('login_id')) has-error @endif">
-    <label for="login_id">認定施設について</label>
+  <div class="form-group @if ($errors->has('is_certification')) has-error @endif">
+    <label for="is_certification">認定施設について</label>
     <div class='checkbox ml-3'>
         <label>
-            {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-            {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
+            {{ Form::hidden('is_certification') }}
+            {{ Form::checkbox('is_certification') }}
             日本認定ドック学会 機能評価認定施設
         </label>
     </div>
-    @if ($errors->has('login_id')) <p class="help-block">{{ $errors->first('login_id') }}</p> @endif
+    @if ($errors->has('is_certification')) <p class="help-block">{{ $errors->first('is_certification') }}</p> @endif
   </div>
 
   {{-- 女性対応 --}}

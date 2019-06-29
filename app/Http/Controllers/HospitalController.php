@@ -134,7 +134,7 @@ class HospitalController extends Controller
 
     public function storeAttentionInformation(Request $request)
     {
-        dd($request);
+        dd($request->all());
 
         /* TODO 以下、indexと同じ処理なので、共通メソッドにしたい */
         $query = Hospital::query();
