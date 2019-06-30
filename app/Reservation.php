@@ -4,6 +4,7 @@ namespace App;
 
 use App\Enums\ReservationStatus;
 use App\Enums\PaymentStatus;
+use Carbon\Carbon;
 
 class Reservation extends SoftDeleteModel
 {
