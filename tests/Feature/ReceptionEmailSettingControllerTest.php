@@ -8,10 +8,22 @@ use App\ReceptionEmailSetting;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Session;
+use App\HospitalStaff;
 
 class ReceptionEmailSettingControllerTest extends TestCase
 {
     use DatabaseMigrations, RefreshDatabase;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        Session::start();
+
+        //authentication
+        $hospital_staff = factory(HospitalStaff::class)->create();
+        $this->be($hospital_staff);
+    }
 
     public function testIndex()
     {

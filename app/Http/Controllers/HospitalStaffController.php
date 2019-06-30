@@ -78,14 +78,12 @@ class HospitalStaffController extends Controller
         return redirect('hospital-staff')->with('success', trans('messages.deleted', ['name' => trans('messages.names.hospital_staff')]));
     }
 
-    // ログインユーザーのパスワードの編集画面に遷移する
     public function editPassword(Request $request)
     {
         $hospital_staff = HospitalStaff::where('email', $request->session()->get('staff_email'))->first();
         return view('hospital_staff.edit-password', compact('hospital_staff'));
     }
 
-    // ログインユーザーのパスワードをUpdateする
     public function updatePassword($hospital_staff_id, Request $request)
     {
         $this->validate($request, [
@@ -99,7 +97,7 @@ class HospitalStaffController extends Controller
         if (Hash::check($request->old_password, $hospital_staff->password)) {
             $hospital_staff->password = bcrypt($request->password);
             $hospital_staff->save();
-            return redirect()->back();
+            return redirect('/login')->with('success', trans('messages.hospital_staff_update_passoword'));
         } else {
             $validator = Validator::make([], []);
             $validator->errors()->add('old_password', '現在のパスワードが正しくありません');
@@ -108,13 +106,11 @@ class HospitalStaffController extends Controller
         }
     }
 
-    // パスワードリセットメール送信画面に遷移する
     public function showPasswordResetsMail()
     {
         return view('hospital_staff.send-password-reset-mail');
     }
 
-    // パスワードリセットメールを送信する
     public function sendPasswordResetsMail(Request $request)
     {
         $this->validate($request, [
@@ -132,40 +128,30 @@ class HospitalStaffController extends Controller
             );
             Mail::to($request->email)
                 ->send(new PasswordResetMail($data));
-            return redirect()->back();
+            return redirect('/login')->with('success', trans('messages.sent', ['mail' => trans('messages.mails.reset_passoword')]));
         } else {
-            // TODO: バリデーション修正
-            // $validator = Validator::make([], []);
-            // $validator->errors()->add('email', 'メールアドレスが存在しません');
-            // throw new ValidationException($validator);
+            $validator = Validator::make([], []);
+            $validator->errors()->add('email', 'メールアドレスが存在しません。');
+            throw new ValidationException($validator);
             return redirect()->back();
         }
     }
 
-    // パスワードリセット画面に遷移する
     public function showResetPassword($reset_token, $email)
     {
         $hospital_staff = HospitalStaff::where('email', $email)->first();
         $expired_date = new Carbon($hospital_staff->reset_sent_at);
         if (!($expired_date->addHour(3)->gt(Carbon::now()))) {
-            // ログイン機能実装後、遷移先をログイン画面に変更
-            // return redirect('hospital-staff')->with('error', trans('messages.token_expired'));
-            return redirect('/login');
+            return redirect('/login')->with('error', trans('messages.token_expired'));
         } elseif (!$hospital_staff) {
-            // ログイン機能実装後、遷移先をログイン画面に変更
-            // return redirect('hospital-staff')->with('error', trans('messages.hospital_staff_does_not_exist'));
-            return redirect('/login');
+            return redirect('/login')->with('error', trans('messages.hospital_staff_does_not_exist'));
         } elseif (!(Hash::check($reset_token, $hospital_staff->reset_token_digest))) {
-            // ログイン機能実装後、遷移先をログイン画面に変更
-            // return redirect('hospital-staff')->with('error', trans('messages.incorrect_token'));
-            return redirect('/login');
+            return redirect('/login')->with('error', trans('messages.incorrect_token'));
         } else {
-            // return view('hospital_staff.reset-password', ['hospital_staff_id' => $hospital_staff->id]);
-            return redirect('/login');
+            return view('hospital_staff.reset-password', ['hospital_staff_id' => $hospital_staff->id]);
         }
     }
 
-    // パスワードをUpdateする
     public function resetPassword($hospital_staff_id, Request $request)
     {
         $this->validate($request, [
@@ -178,7 +164,6 @@ class HospitalStaffController extends Controller
         $hospital_staff->save();
         Mail::to($hospital_staff->email)
             ->send(new PasswordResetConfirmMail());
-        // return redirect('hospital-staff')->with('success', trans('messages.hospital_staff_update_passoword'));
-        return redirect('/login');
+        return redirect('/login')->with('success', trans('messages.hospital_staff_update_passoword'));
     }
 }

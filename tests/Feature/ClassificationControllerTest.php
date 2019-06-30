@@ -7,10 +7,22 @@ use App\MiddleClassification;
 use App\MinorClassification;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Session;
+use App\HospitalStaff;
 
 class ClassificationControllerTest extends TestCase
 {
     use DatabaseMigrations;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        Session::start();
+
+        //authentication
+        $hospital_staff = factory(HospitalStaff::class)->create();
+        $this->be($hospital_staff);
+    }
 
     /**
      * Test Classification List

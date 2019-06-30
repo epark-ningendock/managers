@@ -10,6 +10,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Log;
+use App\HospitalStaff;
 
 class ReceptionEmailSettingInputFieldsTest extends TestCase
 {
@@ -19,6 +20,10 @@ class ReceptionEmailSettingInputFieldsTest extends TestCase
     {
         parent::setUp();
         Session::start();
+
+        //authentication
+        $hospital_staff = factory(HospitalStaff::class)->create();
+        $this->be($hospital_staff);
     }
 
     public function testRequiredInHospitalEmailReceptionFlg()

@@ -15,13 +15,12 @@
                 <td>
                     <div class="form-group">
                         {{ $customer->email }}
-                        <input type="hidden" name="destination_mail_address" value="{{ $customer->email }}">
+                        <input type="hidden" name="customer_email" value="{{ $customer->email }}">
                     </div>
                 </td>
             </tr>
 
-
-            <tr>
+            {{-- <tr>
                 <td class="gray-cell-bg">
                     <label for="appointed_submissions">{{ __('任命された応募') }}</label>
                 </td>
@@ -30,59 +29,57 @@
                         <input type="text" class="form-control" name="appointed_submissions" id="appointed_submissions" />
                     </div>
                 </td>
-            </tr>
-
-
+            </tr> --}}
+            
             <tr>
                 <td class="gray-cell-bg">
-                    <label for="hospital_email">{{ __('メールアドレスから') }}</label>
+                    <label for="hospital_email">{{ __('差出人メールアドレス') }}</label>
                 </td>
                 <td>
                     <div class="form-group">
-                        <select class="form-control" name="hospital_email" id="hospital_email">
-                            <option value="">Select Email</option>
-                            @foreach($hospitals as $hospital)
-                                <option value="{{ $hospital->email }}">{{ $hospital->email }}</option>
-                            @endforeach
-                        </select>
+                        {{ $hospital->email }}
+                        <input type="hidden" name="hospital_email" value="{{ $hospital->email }}">
                     </div>
                 </td>
             </tr>
-
-
             <tr>
                 <td class="gray-cell-bg">
                     <label for="template">{{ __('テンプレート') }}</label>
                 </td>
                 <td>
                     <div class="form-group">
-                        <select name="template" id="template">
-                            <option value="Template 1">Template 1</option>
-                            <option value="Template 2">Template 2</option>
-                            <option value="Template 3">Template 3</option>
+                        <select class="form-control" name="email_template" id="email_template">
+                            <option value=""></option>
+                            @foreach($email_templates as $email_template)
+                                <option value="{{ $email_template['id'] }}">{{ $email_template['title'] }}</option>
+                            @endforeach
                         </select>
+                    
+                    </div>
+                </td>
+                <td>
+                    <button id="reflect-template" type="button" class="btn btn-primary btn-lg">反映する</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="gray-cell-bg">
+                    <label for="title">{{ __('件名') }}</label>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="title" id="title" />
                     </div>
                 </td>
             </tr>
 
             <tr>
                 <td class="gray-cell-bg">
-                    <label for="subject">{{ __('件名') }}</label>
+                    <label for="text">{{ __('本文') }}</label>
                 </td>
                 <td>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="subject" id="subject" />
-                    </div>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="gray-cell-bg">
-                    <label for="message">{{ __('この文') }}</label>
-                </td>
-                <td>
-                    <div class="form-group">
-                        <textarea class="form-control" name="message" id="message" cols="30" rows="5"></textarea>
+                        <textarea class="form-control" name="text" id="text" cols="30" rows="5"></textarea>
                     </div>
                 </td>
             </tr>
@@ -104,3 +101,38 @@
 
     </form>
 </div>
+
+
+<script type="text/javascript">
+
+    (function ($) {
+        /* ---------------------------------------------------
+            「反映する」を押した時に、画面にテンプレートを反映する
+        -----------------------------------------------------*/
+        $('#reflect-template').click(function () {
+            var targetId = $('[name=email_template]').val();
+            if (!targetId) {
+                $('#title').val('');
+                $('#text').val('');
+                return
+            } 
+            var email_templates = JSON.parse("{{ json_encode($email_templates) }}".replace(/&quot;/g,'"'));
+
+            target = email_templates.filter(function(email_template) {
+                return email_template.id == targetId
+            }).shift();
+            
+            $('#title').val(target.title);
+            $('#text').val(target.text);
+        });
+        
+        $("textarea").change( function() {
+            var txtVal = $(this).val();
+            txtVal = txtVal.replace(/\r\n/g, "&lt;br /&gt;<br />");
+            txtVal = txtVal.replace(/(\n|\r)/g, "&lt;br /&gt;<br />");
+            $('#testpre').html('<p>'+ txtVal +'</p>');
+        });
+    })(jQuery);
+
+
+</script>

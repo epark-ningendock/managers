@@ -2,8 +2,12 @@
 
 use Carbon\Carbon;
 use Faker\Generator as Faker;
+use App\Reservation;
+use App\Hospital;
+use App\Customer;
+use App\Course;
 
-$factory->define(App\Reservation::class, function (Faker $faker) {
+$factory->define(Reservation::class, function (Faker $faker) {
     return [
         'hospital_id' => $faker->numberBetween(1, 50),
         'course_id' => $faker->numberBetween(1, 50),
@@ -56,4 +60,17 @@ $factory->define(App\Reservation::class, function (Faker $faker) {
         'acceptance_number' => $faker->numberBetween(1000, 4000),
         'y_uid' => null,
     ];
+});
+
+
+$factory->defineAs(Reservation::class, 'with_all', function (Faker $faker) use ($factory) {
+    $reservation = $factory->raw(Reservation::class);
+    $hospital = factory(Hospital::class)->create();
+    $customer = factory(Customer::class)->create();
+    $course = factory(Course::class, 'with_all')->create();
+    return array_merge($reservation, [
+        'hospital_id' => $hospital->id,
+        'customer_id' => $customer->id,
+        'course_id' => $course->id
+    ]);
 });
