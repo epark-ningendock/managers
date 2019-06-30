@@ -37,10 +37,10 @@ class HospitalImagesController extends Controller
     public function store(Request $request, $hosital_id)
     {
         $params = $request->validate([
-            'image' => 'required|file|image|max:4000',
+            'main_image' => 'file|image|max:4000',
         ]);
 
-        $file = $params['image'];
+        $file = $params['main_image'];
 
         $image = \Image::make(file_get_contents($file->getRealPath()));
         $image
@@ -49,7 +49,7 @@ class HospitalImagesController extends Controller
             ->save(public_path().'/img/uploads/300-300-'.$file->hashName())
             ->resize(500, 500)
             ->save(public_path().'/img/uploads/500-500-'.$file->hashName());
-
+        dd(public_path().'/img/uploads/'.$file->hashName());
         return redirect('/img/uploads/'.$file->hashName());
     }
 
