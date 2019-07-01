@@ -4,9 +4,6 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Hospital::class, function (Faker $faker) {
     return [
-        'karada_dog_id'               => $faker->randomNumber(),
-        'code'                        => $faker->randomNumber(),
-        'old_karada_dog_id'           => $faker->randomNumber(),
         'name'                        => 'Hospital ' . $faker->company,
         'kana'                        => $faker->randomElement([ 'asc', 'desc' ]),
         'postcode'                    => $faker->randomElement([
@@ -18,7 +15,6 @@ $factory->define(App\Hospital::class, function (Faker $faker) {
             '25050',
             '92050',
         ]),
-        'pref'                        => $faker->randomElement([ '0001', '0003', '0004', '0005', '0008', '0006' ]),
         'district_code_id'            => $faker->randomNumber(),
         'address1'                    => $faker->address,
         'address2'                    => $faker->address,
@@ -32,7 +28,6 @@ $factory->define(App\Hospital::class, function (Faker $faker) {
         'url'                         => $faker->url,
         'consultation_note'           => $faker->text(),
         'memo'                        => $faker->text(100),
-        'business_hours'              => $faker->time(),
         'medical_examination_system_id'              => rand(1,100),
         'rail1'                       => $faker->randomNumber(),
         'station1'                    => $faker->randomNumber(),
@@ -90,9 +85,6 @@ $factory->define(App\Hospital::class, function (Faker $faker) {
         'pvad'                        => $faker->numberBetween(0, 1),
         'is_pickup'                   => $faker->numberBetween(0, 1),
         'hospital_staff_id'           => 1,
-        'login_id'                    => $faker->userName,
-        'login_psw'                   => bcrypt('123456'),
-        'login_status'                => $faker->numberBetween(0, 1),
         'status'                      => $faker->randomElement([ '0', '1', 'X' ]),
         'free_area'                   => $faker->text,
         'search_word'                 => $faker->text,

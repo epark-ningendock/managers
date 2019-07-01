@@ -17,13 +17,9 @@ class CreateHospitalsTable extends Migration
     {
         Schema::create('hospitals', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('karada_dog_id', 20);
-            $table->string('code', 20);
-            $table->string('old_karada_dog_id', 20)->nullable();
             $table->string('name', 200);
             $table->string('kana', 100);
             $table->char('postcode', 8)->nullable();
-            $table->tinyInteger('pref')->nullable();
             $table->integer('district_code_id')->nullable();
             $table->unsignedInteger('course_meta_information_id')->nullable();
             $table->string('address1', 256)->nullable();
@@ -38,7 +34,6 @@ class CreateHospitalsTable extends Migration
             $table->string('url', 256)->nullable();
             $table->string('consultation_note', 256)->nullable();
             $table->text('memo')->nullable();
-            $table->string('business_hours', 256)->nullable();
             $table->unsignedInteger('medical_examination_system_id')->nullable();
             $table->unsignedInteger('rail1')->nullable();
             $table->unsignedInteger('station1')->nullable();
@@ -64,9 +59,6 @@ class CreateHospitalsTable extends Migration
             $table->integer('pvad')->default(0);
             $table->integer('is_pickup')->nullable();
             $table->unsignedInteger('hospital_staff_id');
-            $table->string('login_id', 32)->nullable();
-            $table->string('login_psw', 256)->nullable();
-            $table->char('login_status')->default(0)->nullable();
             $table->char('status')->default(0);
             $table->text('free_area')->nullable();
             $table->text('search_word')->nullable();
