@@ -13,7 +13,7 @@ class ContractInformationController extends Controller
     
     public function index()
     {
-      return view('hospital.contract-form');
+      return view('hospital.create-contract-form');
     }
 
     /**

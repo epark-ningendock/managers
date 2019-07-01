@@ -103,18 +103,6 @@ module.exports.showConfirm = function () {
     $('#confirm-modal').modal('show');
 };
 
-module.exports.showSelectHospital = function () {
-    var message = typeof arguments[0] != 'function' ? arguments[0] : null;
-    var callback = typeof arguments[arguments.length - 1] == 'function' ? arguments[arguments.length - 1] : function () {};
-
-    if (message) {
-        $('#select-hospital-modal .modal-body p').html(message);
-    }
-    $('#select-hospital-modal .btn-primary').click(callback);
-
-    $('#select-hospital-modal').modal('show');
-};
-
 /**
  *
  * @param message
@@ -211,21 +199,17 @@ module.exports.addScrollToTop = function () {
         });
     })();
 
-    (function () {
-        $('.insert-hospital-id-popup-btn').on('click', function () {
-            var id = $(this).data('id');
-            var targetForm = $(this).data('target-form') || '#select-hospital-form';
-            var message = $(this).data('message');
-            var targetFormAction = $(targetForm).attr('action').replace(':id', id);
-            $(targetForm).attr('action', targetFormAction);
+    /* ---------------------------------------------------
+    Tab
+    -----------------------------------------------------*/
+    $('.tab-list').on('click', '.btn', function (e) {
 
-            Modal.showSelectHospital(message, function () {
-                $(targetForm).submit();
-            });
-            return false;
-        });
-    })();
+        e.preventDefault();
+        $(this).tab('show');
 
+        $(this).siblings('.btn').removeClass('active');
+        $(this).addClass('active');
+    });
 })(jQuery);
 
 /***/ }),

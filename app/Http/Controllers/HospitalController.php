@@ -69,7 +69,7 @@ class HospitalController extends Controller
 
         // $hospitals = Hospital::select('name', 'address1')->where('name', 'LIKE', "%" .$request->get('s_text') . "%")->get();
         // return response()->json($responseJson);
-        return view('hospital.contract-form', [ 'contract_information' => $contractInformation[0] ]);
+        return view('hospital.create-contract-form', [ 'contract_information' => $contractInformation[0] ]);
     }
 
     /**
@@ -79,7 +79,7 @@ class HospitalController extends Controller
      */
     public function create()
     {
-        return view('hospital.create');
+        return view('hospital.create-contract-form');
     }
 
     /**
@@ -107,7 +107,7 @@ class HospitalController extends Controller
     
     public function edit(Hospital $hospital)
     {
-        return view('hospital.contract-form');
+        return view('hospital.create-contract-form');
     }
 
     /**

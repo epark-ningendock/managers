@@ -36,7 +36,7 @@ class ContractInformationFormRequest extends FormRequest
             'tel' => 'required|number_dash',
             'fax' => 'number_dash',
             'email' => 'required|email|unique:hospital_staffs,email',
-            'login_id' => 'required|unique:hospitals,login_id',
+            'login_id' => 'required|unique:hospital_staffs,login_id',
             'password' => 'required',
             'old_karada_dog_id' => 'start_letter_k',
             'karada_dog_id' => 'required|start_alphabet_and_number'
