@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 class HospitalControllerTest extends TestCase
 {
-	use DatabaseMigrations, RefreshDatabase;
+	use DatabaseMigrations, RefreshDatabase, WithFaker;
 
 
 	public function setUp()
@@ -41,4 +41,26 @@ class HospitalControllerTest extends TestCase
 		$response = $this->get('hospital/create');
 		$response->assertStatus(200);
 	}
+
+	public function testStoreHospital()
+	{
+		$attributes = [
+			'name' => 'John Hospital'
+		];
+
+		$this->post('/hospital', $attributes);
+		$this->assertDatabaseHas('hospitals', [
+			'name' => 'John Hospital',
+		]);
+	}
+
+
+	protected function attributes($attributes = [])
+	{	
+		return array_merge([
+			'status' => $this->faker->numberBetween(0,1),
+			// 'name' => $this-
+		], $attributes);
+	}
+
 }
