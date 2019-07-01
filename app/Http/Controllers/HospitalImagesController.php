@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Hospital;
+use App\HospitalImage;
 use Illuminate\Http\Request;
 
 class HospitalImagesController extends Controller
@@ -34,23 +36,28 @@ class HospitalImagesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $hosital_id)
+    public function store(Request $request, $hospital_id)
     {
         $params = $request->validate([
-            'main_image' => 'file|image|max:4000',
+            'image.*.' => 'file|image|max:4000',
         ]);
 
-        $file = $params['main_image'];
+        $file = $params;
 
-        $image = \Image::make(file_get_contents($file->getRealPath()));
+        $image = \Image::make(file_get_contents($file['image']['main']->getRealPath()));
         $image
-            ->save(public_path().'/img/uploads/'.$file->hashName())
+            ->save(public_path().'/img/uploads/'.$file['image']['main']->hashName())
             ->resize(300, 300)
-            ->save(public_path().'/img/uploads/300-300-'.$file->hashName())
+            ->save(public_path().'/img/uploads/300-300-'.$file['image']['main']->hashName())
             ->resize(500, 500)
-            ->save(public_path().'/img/uploads/500-500-'.$file->hashName());
-        dd(public_path().'/img/uploads/'.$file->hashName());
-        return redirect('/img/uploads/'.$file->hashName());
+            ->save(public_path().'/img/uploads/500-500-'.$file['image']['main']->hashName());
+
+        $hospital = Hospital::find($hospital_id);
+
+        $hospital->hospital_images()->saveMany([
+            new HospitalImage(['extension' => 'png', 'name' => $file['image']['main']->hashName(), 'path' => $file['image']['main']->hashName(),'category' => 'main']),
+        ]);
+        return redirect('/img/uploads/'.$file['image']['main']->hashName());
     }
 
     /**

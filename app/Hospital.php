@@ -81,4 +81,9 @@ class Hospital extends Model
     {
         return $this->hasOne('App\ReceptionEmailSetting');
     }
+
+    public function hospital_images()
+    {
+        return $this->hasMany('App\HospitalImage');
+    }
 }
