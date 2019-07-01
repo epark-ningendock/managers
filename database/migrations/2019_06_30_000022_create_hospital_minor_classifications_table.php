@@ -21,6 +21,7 @@ class CreateHospitalMinorClassificationsTable extends Migration
             $table->foreign('middle_classification_id')->references('id')->on('hospital_middle_classifications');
             $table->string('name', 100);
             $table->char('status', 1)->default('1');
+            $table->char('is_fregist', 1)->default('0');
             $table->tinyInteger('order')->default(0);
             $table->char('is_icon', 1)->default('0');
             $table->string('icon_name', 100)->nullable();
