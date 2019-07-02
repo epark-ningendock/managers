@@ -9,6 +9,8 @@ class HospitalImage extends SoftDeleteModel
         'name',
         'extension',
         'path',
-        'is_display'
+        'is_display',
+        'category',
+        'sort'
     ];
 }

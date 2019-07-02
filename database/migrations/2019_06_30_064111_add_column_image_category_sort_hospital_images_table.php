@@ -14,8 +14,8 @@ class AddColumnImageCategorySortHospitalImagesTable extends Migration
     public function up()
     {
         Schema::table('hospital_images', function (Blueprint $table) {
-            $table->text('category', 10)->nullable();
-            $table->integer('sort')->nullable()->unsigned();
+            $table->text('category', 10)->after('status')->nullable();
+            $table->integer('sort')->after('category')->nullable()->unsigned();
         });
     }
 
