@@ -32,7 +32,7 @@ Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], f
 |--------------------------------------------------------------------------
 */
 Route::post('/contract-information/store', 'ContractInformationController@store')->name('contract.store');
-Route::get('/hospital/contract-information', 'ContractInformationController@index')->name('hospital.contractInfo');
+Route::get('/hospital/contract-information', 'ContractInformationController@create')->name('hospital.contractInfo');
 
 
 Route::resource('/staff', 'StaffController')->except(['show']);

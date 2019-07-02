@@ -10,11 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class ContractInformationController extends Controller
 {
-    
-    public function index()
-    {
-      return view('hospital.create-contract-form');
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -23,7 +18,7 @@ class ContractInformationController extends Controller
      */
     public function create()
     {
-        //
+	    return view('hospital.create-contract-form');
     }
 
     /**

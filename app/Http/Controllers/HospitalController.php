@@ -79,7 +79,7 @@ class HospitalController extends Controller
      */
     public function create()
     {
-        return view('hospital.create-contract-form');
+        return view('hospital.create-hospital-form');
     }
 
     /**
@@ -90,7 +90,8 @@ class HospitalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+	    $hospital = new Hospital();
+	    $hospital->create(request()->all());
     }
 
     /**
