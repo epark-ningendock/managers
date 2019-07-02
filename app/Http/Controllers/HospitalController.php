@@ -6,6 +6,7 @@ use App\Enums\HospitalEnums;
 use App\Hospital;
 use App\ContractInformation;
 use App\HospitalStaff;
+use App\Prefecture;
 use Illuminate\Http\Request;
 use App\Http\Requests\HospitalFormRequest;
 use Illuminate\Support\Facades\Session;
@@ -79,7 +80,9 @@ class HospitalController extends Controller
      */
     public function create()
     {
-        return view('hospital.create-hospital-form');
+        $prefectures = Prefecture::all();
+
+        return view('hospital.create-hospital-form', ['prefectures' => $prefectures]);
     }
 
     /**

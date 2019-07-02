@@ -140,5 +140,6 @@ return [
     'tax_classification' => '税区分',
     'invalid_option_id' => '無効なオプションID',
     'option_sorting_updated' => 'オプションソートの更新',
-    'need_to_login' => 'あなたは最初にログインする必要があります'
+    'need_to_login' => 'あなたは最初にログインする必要があります',
+    'kana' => 'よみ',
 ];

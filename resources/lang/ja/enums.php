@@ -36,6 +36,8 @@ return [
 
     Status::class => [
         Status::Valid => '有効',
+        Status::Public => '公開中',
+        Status::Private => '非公開',
         Status::Deleted => '削除'
     ],
 
