@@ -34,7 +34,7 @@
 
 
 <div class="form-group @if( $errors->has('name'))  has-error @endif">
-    <label for="karada_dog_id" class="col-md-4">{{ trans('messages.name') }}</label>
+    <label for="name" class="col-md-4">{{ trans('messages.name') }}</label>
     <div class="col-md-8">
         <input type="text" class="form-control" id="name" name="name"  value="{{ old('name', (isset($hospital->name) ) ?: null) }}" />
         @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
@@ -43,7 +43,7 @@
 
 
 <div class="form-group @if( $errors->has('kana'))  has-error @endif">
-    <label for="karada_dog_id" class="col-md-4">{{ trans('messages.kana') }}</label>
+    <label for="kana" class="col-md-4">{{ trans('messages.kana') }}</label>
     <div class="col-md-8">
         <input type="text" class="form-control" id="kana" name="kana"  value="{{ old('kana', (isset($hospital->kana) ) ?: null) }}" />
         @if ($errors->has('kana')) <p class="help-block">{{ $errors->first('kana') }}</p> @endif
@@ -52,7 +52,7 @@
 
 
 <div class="form-group @if( $errors->has('postcode'))  has-error @endif">
-    <label for="karada_dog_id" class="col-md-4">{{ trans('messages.postcode') }}</label>
+    <label for="postcode" class="col-md-4">{{ trans('messages.postcode') }}</label>
     <div class="col-md-8">
         <input type="text" class="form-control" id="postcode" name="kana"  value="{{ old('postcode', (isset($hospital->postcode) ) ?: null) }}" />
         @if ($errors->has('postcode')) <p class="help-block">{{ $errors->first('postcode') }}</p> @endif
@@ -61,12 +61,12 @@
 
 
 <div class="form-group @if( $errors->has('prefecture'))  has-error @endif">
-    <label for="karada_dog_id" class="col-md-4">{{ trans('messages.postcode') }}</label>
+    <label for="prefecture" class="col-md-4">{{ trans('messages.prefectures') }}</label>
     <div class="col-md-8">
         <select name="prefecture" id="prefecture" class="form-control">
             @foreach($prefectures as $prefecture)
             <option value="{{ $prefecture->name }}"
-                    @if ( old('prefecture') && ($prefecture->name === old('$prefecture')))
+                    @if ( old('prefecture') && ($prefecture->name === old('prefecture')))
                         selected="selected"
                     @endif
             > {{ $prefecture->name }}</option>
@@ -77,6 +77,110 @@
 </div>
 
 
+<div class="form-group @if( $errors->has('district_code'))  has-error @endif">
+    <label for="district_code" class="col-md-4">{{ trans('messages.district_code') }}</label>
+    <div class="col-md-8">
+        <select name="district_code" id="prefecture" class="form-control">
+            @foreach($district_codes as $district_code)
+                <option value="{{ $district_code->id }}"
+                        @if ( old('district_code') && ($district_code->name === old('district_code')))
+                        selected="selected"
+                        @endif
+                > {{ $district_code->name }}</option>
+            @endforeach
+        </select>
+        @if ($errors->has('district_code')) <p class="help-block">{{ $errors->first('district_code') }}</p> @endif
+    </div>
+</div>
+
+
+<div class="form-group @if( $errors->has('address1'))  has-error @endif">
+    <label for="address1" class="col-md-4">{{ trans('messages.address') }} </label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="address1" name="address1"  value="{{ old('address1', (isset($hospital->address1) ) ?: null) }}" />
+        @if ($errors->has('address1')) <p class="help-block">{{ $errors->first('address1') }}</p> @endif
+    </div>
+</div>
+
+
+<div class="form-group @if( $errors->has('address2'))  has-error @endif">
+    <label for="address2" class="col-md-4">{{ trans('messages.building_name') }} </label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="address2" name="address2"  value="{{ old('address2', (isset($hospital->address2) ) ?: null) }}" />
+        @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
+    </div>
+</div>
+
+
+<div class="form-group @if( $errors->has('latitude'))  has-error @endif">
+    <label for="latitude" class="col-md-4">{{ trans('messages.latitude') }} </label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="latitude" name="latitude"  value="{{ old('latitude', (isset($hospital->latitude) ) ?: null) }}" />
+        @if ($errors->has('latitude')) <p class="help-block">{{ $errors->first('latitude') }}</p> @endif
+    </div>
+</div>
+
+
+<div class="form-group @if( $errors->has('longitude'))  has-error @endif">
+    <label for="longitude" class="col-md-4">{{ trans('messages.longitude') }} </label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="longitude" name="longitude"  value="{{ old('longitude', (isset($hospital->longitude) ) ?: null) }}" />
+        @if ($errors->has('longitude')) <p class="help-block">{{ $errors->first('longitude') }}</p> @endif
+    </div>
+</div>
+
+
+<div class="form-group @if( $errors->has('streetview_url'))  has-error @endif">
+    <label for="streetview_url" class="col-md-4">{{ trans('messages.streetview_url') }} </label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="streetview_url" name="streetview_url"  value="{{ old('streetview_url', (isset($hospital->streetview_url) ) ?: null) }}" />
+        @if ($errors->has('streetview_url')) <p class="help-block">{{ $errors->first('streetview_url') }}</p> @endif
+    </div>
+</div>
+
+
+<div class="form-group @if( $errors->has('tel'))  has-error @endif">
+    <label for="tel" class="col-md-4">{{ trans('messages.tel') }} </label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="tel" name="tel"  value="{{ old('tel', (isset($hospital->tel) ) ?: null) }}" />
+        @if ($errors->has('tel')) <p class="help-block">{{ $errors->first('tel') }}</p> @endif
+    </div>
+</div>
+
+
+<div class="form-group @if( $errors->has('paycall'))  has-error @endif">
+    <label for="paycall" class="col-md-4">{{ trans('messages.paycall') }} </label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="paycall" name="paycall"  value="{{ old('paycall', (isset($hospital->paycall) ) ?: null) }}" />
+        @if ($errors->has('paycall')) <p class="help-block">{{ $errors->first('paycall') }}</p> @endif
+    </div>
+</div>
 
 
 
+<div class="form-group @if( $errors->has('rail'))  has-error @endif">
+    <label for="rail" class="col-md-4">{{ trans('messages.rail') }} </label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="rail" name="rail"  value="{{ old('rail', (isset($hospital->rail) ) ?: null) }}" />
+        @if ($errors->has('rail')) <p class="help-block">{{ $errors->first('rail') }}</p> @endif
+    </div>
+</div>
+
+
+
+<div class="form-group @if( $errors->has('station'))  has-error @endif">
+    <label for="rail" class="col-md-4">{{ trans('messages.station') }} </label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="station" name="station"  value="{{ old('station', (isset($hospital->station) ) ?: null) }}" />
+        @if ($errors->has('station')) <p class="help-block">{{ $errors->first('station') }}</p> @endif
+    </div>
+</div>
+
+
+<div class="form-group @if( $errors->has('access'))  has-error @endif">
+    <label for="access" class="col-md-4">{{ trans('messages.access') }} </label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="access" name="access"  value="{{ old('access', (isset($hospital->access) ) ?: null) }}" />
+        @if ($errors->has('access')) <p class="help-block">{{ $errors->first('access') }}</p> @endif
+    </div>
+</div>

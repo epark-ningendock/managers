@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DistrictCode;
 use App\Enums\HospitalEnums;
 use App\Hospital;
 use App\ContractInformation;
@@ -81,8 +82,9 @@ class HospitalController extends Controller
     public function create()
     {
         $prefectures = Prefecture::all();
+        $district_codes = DistrictCode::all();
 
-        return view('hospital.create-hospital-form', ['prefectures' => $prefectures]);
+        return view('hospital.create-hospital-form', ['prefectures' => $prefectures, 'district_codes' => $district_codes]);
     }
 
     /**
