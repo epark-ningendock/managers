@@ -54,7 +54,7 @@
 <div class="form-group @if( $errors->has('postcode'))  has-error @endif">
     <label for="postcode" class="col-md-4">{{ trans('messages.postcode') }}</label>
     <div class="col-md-8">
-        <input type="text" class="form-control" id="postcode" name="kana"  value="{{ old('postcode', (isset($hospital->postcode) ) ?: null) }}" />
+        <input type="text" class="form-control" id="postcode" name="postcode"  value="{{ old('postcode', (isset($hospital->postcode) ) ?: null) }}" />
         @if ($errors->has('postcode')) <p class="help-block">{{ $errors->first('postcode') }}</p> @endif
     </div>
 </div>
@@ -184,3 +184,130 @@
         @if ($errors->has('access')) <p class="help-block">{{ $errors->first('access') }}</p> @endif
     </div>
 </div>
+
+
+
+<div class="form-group @if( $errors->has('access'))  has-error @endif">
+    <label for="access" class="col-md-4">{{ trans('messages.access') }} </label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="access" name="access"  value="{{ old('access', (isset($hospital->access) ) ?: null) }}" />
+        @if ($errors->has('access')) <p class="help-block">{{ $errors->first('access') }}</p> @endif
+    </div>
+</div>
+
+
+
+@for($i= 1; $i<= 4; $i++)
+
+    <div class="day-row" style="background: #f3f3f3;padding: 10px;margin-bottom: 3px;">
+
+        <div class="row">
+
+            <div class="col-md-4">
+                診療時間 {{ $i }}
+            </div>
+
+            <div class="col-md-8">
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label for="start{{ $i }}" class="col-md-2">{{ trans('messages.start') }} </label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="start{{ $i }}" name="medical_treatment_time[{{$i}}][start]"  value="{{ old('medical_treatment_time[' . $i . '][start]') }}" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+                            <label for="end{{ $i }}" class="col-md-2">{{ trans('messages.end') }} </label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" id="end{{ $i }}" name="medical_treatment_time[{{$i}}][end]"  value="{{ old('medical_treatment_time[' . $i . '][end]') }}" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="daybox">
+
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="medical_treatment_time[{{$i}}][mon]"  value="1">{{ trans('messages.mon') }}
+                        </label>
+
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="medical_treatment_time[{{$i}}][tue]"  value="1"> {{ trans('messages.tue') }}
+                        </label>
+
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="medical_treatment_time[{{$i}}][wed]"  value="1"> {{ trans('messages.wed') }}
+                        </label>
+
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="medical_treatment_time[{{$i}}][thu]"  value="1"> {{ trans('messages.thu') }}
+                        </label>
+
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="medical_treatment_time[{{$i}}][fri]"  value="1"> {{ trans('messages.fri') }}
+                        </label>
+
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="medical_treatment_time[{{$i}}][sat]"  value="1"> {{ trans('messages.sat') }}
+                        </label>
+
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="medical_treatment_time[{{$i}}][sun]"  value="1"> {{ trans('messages.sun') }}
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+@endfor
+
+
+
+<div class="form-group @if( $errors->has('consultation_note'))  has-error @endif">
+    <label for="consultation_note" class="col-md-4">{{ trans('messages.consultation_note') }} </label>
+    <div class="col-md-8">
+        <textarea name="consultation_note" id="consultation_note"   rows="5" class="form-control"></textarea>
+        @if ($errors->has('consultation_note')) <p class="help-block">{{ $errors->first('consultation_note') }}</p> @endif
+    </div>
+</div>
+
+
+
+<div class="form-group @if( $errors->has('memo'))  has-error @endif">
+    <label for="memo" class="col-md-4">{{ trans('messages.memo') }} </label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="memo" name="memo"  value="{{ old('memo', (isset($hospital->memo) ) ?: null) }}" />
+        @if ($errors->has('memo')) <p class="help-block">{{ $errors->first('memo') }}</p> @endif
+    </div>
+</div>
+
+
+<div class="form-group @if( $errors->has('medical_examination_system_id'))  has-error @endif">
+    <label for="medical_examination_system_id" class="col-md-4">{{ trans('messages.medical_examination_system_id') }} </label>
+    <div class="col-md-8">
+        <input type="text" class="form-control" id="medical_examination_system_id" name="medical_examination_system_id"  value="{{ old('medical_examination_system_id', (isset($hospital->medical_examination_system_id) ) ?: null) }}" />
+        @if ($errors->has('medical_examination_system_id')) <p class="help-block">{{ $errors->first('medical_examination_system_id') }}</p> @endif
+    </div>
+</div>
+
+<div class="col-md-12 pb-5">
+    <button type="submit" class="btn btn-success pull-right">登録</button>
+</div>
+<br/>

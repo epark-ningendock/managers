@@ -25,9 +25,23 @@ class HospitalFormRequest extends FormRequest
      */
     public function rules()
     {
+
         $status = HospitalEnums::getValues();
         return [
-            'status' => Rule::in($status),
+            'status' => ['required', Rule::in($status)],
+            'latitude' => 'longitude_latitude',
+            'longitude' => 'longitude_latitude',
+            'kana' => 'max:50',
+            'name' => 'max:50',
+            'postcode' => 'number_dash',
+            'address1' => 'max:256',
+            'address2' => 'max:256',
+            'tel' => 'number_dash',
+            'paycall' => 'number_dash',
+            'consultation_note' => 'max:256',
+//            'medical_treatment_time.[1].start' => 'date_format:H:i',
+//            'medical_treatment_time[1][start]' => 'date_format:H:i',
+//            'medical_treatment_time[1][end]' => 'date_format:H:i',
         ];
     }
 

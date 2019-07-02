@@ -10,6 +10,7 @@ class ValidatorExtended extends IlluminateValidator {
 
     private $_custom_messages = array(
         "number_dash" => 'Numbers and dash is allowed',
+        "longitude_latitude" => 'Value is invalid',
     );
 
     public function __construct( $translator, $data, $rules, $messages = array(), $customAttributes = array() ) {
@@ -74,6 +75,19 @@ class ValidatorExtended extends IlluminateValidator {
 	{
 		return preg_match("/^[A-Za-z][A-Za-z0-9]*$/", $value) ? true : false;
 	}
+
+
+    /**
+     * float number untill 7 places longitude_latitude
+     *
+     * @param $attribute
+     * @param string $value
+     * @return bool
+     */
+    protected function validateLongitudeLatitude($attribute, $value='')
+    {
+        return preg_match("/^\d*(\.\d{7})?$/", $value) ? true : false;
+    }
 
 
 } 

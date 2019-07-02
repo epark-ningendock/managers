@@ -42,6 +42,7 @@ Route::resource('/hospital', 'HospitalController')->except(['show']);
 Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search');
 Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
 Route::get('/hospital/search/contract-info', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');
+Route::get('/hospital/image-information', 'HospitalController@createImageInformation')->name('hospital.image.information');
 
 // 医療機関スタッフ系
 Route::get('/hospital-staff/edit-password', 'HospitalStaffController@editPassword'); // ログインユーザーのパスワード編集画面に遷移する

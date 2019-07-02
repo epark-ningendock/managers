@@ -7,6 +7,7 @@ use App\Enums\HospitalEnums;
 use App\Hospital;
 use App\ContractInformation;
 use App\HospitalStaff;
+use App\MedicalTreatmentTime;
 use App\Prefecture;
 use Illuminate\Http\Request;
 use App\Http\Requests\HospitalFormRequest;
@@ -93,10 +94,34 @@ class HospitalController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(HospitalFormRequest $request)
     {
+
+        $request->request->add([
+            'hospital_staff_id' => auth()->user()->id,
+        ]);
+
+
+
 	    $hospital = new Hospital();
-	    $hospital->create(request()->all());
+	    $hospital->create($request->all());
+
+        if ( !empty(request()->medical_treatment_time) ) {
+            $mtt_data = [];
+            foreach (request()->medical_treatment_time as $mtt ) {
+                $mtt_data[] = array_merge($mtt, ['hospital_id' => $hospital->id]);
+            }
+            $medicalTreatmentTime = MedicalTreatmentTime::create($mtt_data);
+        }
+
+        return redirect('/hospital/image-information');
+
+    }
+
+
+    public function createImageInformation()
+    {
+        return view('hospital.create-image-form');
     }
 
     /**
