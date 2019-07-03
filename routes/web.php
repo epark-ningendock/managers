@@ -142,6 +142,15 @@ Route::middleware('auth:staffs')->group(function () {
     Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search');
     Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
     Route::get('/hospital/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
+
+    Route::group(['prefix' => 'hospital'], function() {
+        Route::get('/{hospital}/images/create', 'HospitalImagesController@create')->name('hospital.image.create');
+        Route::post('/{hospital}/images/store', 'HospitalImagesController@store')->name('hospital.image.store');
+        /*
+        Route::get('/{hospital}/hospital_images/', function ($hospital_id) {
+            return $hospital_id;
+        });*/
+    });
     /*
     |--------------------------------------------------------------------------
     | Course Classification Routes
@@ -224,4 +233,21 @@ Route::middleware('auth:staffs,hospital_staffs')->group(function () {
     Route::post('customer/import', 'CustomerController@importData')->name('customer.import.data');
     Route::post('customer/email/{customer_id}', 'CustomerController@showEmailForm')->name('customer.show.email.form');
     Route::post('customer/email-send/{customer_id}', 'CustomerController@emailSend')->name('customer.email.send');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reception Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/reception/csv', 'ReservationController@reception_csv')->name('reception.csv');
+    Route::patch('/reception/reservation_status', 'ReservationController@reservation_status')->name('reservation.bulk_status');
+    Route::get('/reception', 'ReservationController@reception');
+    Route::patch('/reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
+    Route::delete('/reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');
+    Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
+    Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
+    Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
+
 });
+
+//Route::resource('hospital_images', 'HospitalImagesController');

@@ -2,9 +2,11 @@
 
 namespace App;
 
+use App\Enums\ReservationStatus;
+use App\Enums\PaymentStatus;
 use Carbon\Carbon;
 
-class Reservation extends BaseModel
+class Reservation extends SoftDeleteModel
 {
     const HOSPITAL = 1;
     const PC = 2;
@@ -16,12 +18,19 @@ class Reservation extends BaseModel
         'completed_date',
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
+        'reservation_date'
     ];
 
     public static $channel = [
         '0' => 'Tel',
         '1' => 'Web',
+    ];
+
+
+    protected $enums = [
+        'reservation_status' => ReservationStatus::class,
+        'payment_status' => PaymentStatus::class
     ];
 
     public static $is_billable = [
@@ -74,6 +83,11 @@ class Reservation extends BaseModel
     public function course()
     {
         return $this->belongsTo('App\Course');
+    }
+
+    public function reservation_options()
+    {
+        return $this->hasMany('App\ReservationOption');
     }
 
     public function scopeByRequest($query, $request)

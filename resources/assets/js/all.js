@@ -8,10 +8,11 @@
             let id = $(this).data('id');
             let targetForm = $(this).data('target-form') || '#delete-record-form';
             let message = $(this).data('message');
+            let btnText = $(this).data('button-text') || '削除';
             let targetFormAction = $(targetForm).attr('action').replace(':id', id);
             $(targetForm).attr('action', targetFormAction);
 
-            Modal.showConfirm(message, function() {
+            Modal.showConfirm(message, btnText, function() {
                 $(targetForm).submit();
             });
             return false;

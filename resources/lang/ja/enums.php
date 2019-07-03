@@ -13,6 +13,8 @@ use App\Enums\Permission;
 use App\Enums\Status;
 use App\Enums\WebReception;
 use App\Enums\CalendarDisplay;
+use App\Enums\ReservationStatus;
+use App\Enums\PaymentStatus;
 
 return [
     Authority::class => [
@@ -55,5 +57,19 @@ return [
     CalendarDisplay::class => [
         CalendarDisplay::Hide => '非表示',
         CalendarDisplay::Show => '表示'
+    ],
+
+    ReservationStatus::class => [
+        ReservationStatus::Pending => '仮受付',
+        ReservationStatus::ReceptionCompleted => '受付完了',
+        ReservationStatus::Completed => '完了',
+        ReservationStatus::Cancelled => 'キャンセル'
+    ],
+
+    PaymentStatus::class => [
+        PaymentStatus::TEMPORARY_SALE => '仮売上',
+        PaymentStatus::ACTUAL_SALE => '実売上',
+        PaymentStatus::CANCELLATION => '取消',
+        PaymentStatus::ERROR => 'エラー'
     ]
 ];

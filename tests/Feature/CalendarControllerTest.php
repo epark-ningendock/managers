@@ -9,6 +9,7 @@ use App\Course;
 use App\Calendar;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
+use App\HospitalStaff;
 
 class CalendarControllerTest extends TestCase
 {
@@ -19,8 +20,11 @@ class CalendarControllerTest extends TestCase
     {
         parent::setUp();
         Session::start();
-    }
 
+        //authentication
+        $hospital_staff = factory(HospitalStaff::class)->create();
+        $this->be($hospital_staff);
+    }
     /**
      * Test Calendar List
      * @return void
