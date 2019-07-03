@@ -62,11 +62,11 @@ class CreateHospitalsTable extends Migration
             $table->char('status')->default(0);
             $table->text('free_area')->nullable();
             $table->text('search_word')->nullable();
-            $table->char('plan_code', 2);
+            $table->char('plan_code', 2)->nullable();
             $table->char('hplink_contract_type', 1)->default(0)->nullable();
             $table->integer('hplink_count')->nullable();
             $table->integer('hplink_price')->nullable();
-            $table->char('is_pre_account');
+            $table->char('is_pre_account')->nullable();
             $table->integer('pre_account_discount_rate')->nullable();
             $table->decimal('pre_account_commission_rate', 5, 2)->nullable();
             $this->addCommonColumns($table);

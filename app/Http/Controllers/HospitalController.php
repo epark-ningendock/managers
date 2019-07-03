@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\DistrictCode;
 use App\Enums\HospitalEnums;
 use App\Hospital;
 use App\ContractInformation;
 use App\HospitalStaff;
+use App\MedicalTreatmentTime;
+use App\Prefecture;
 use Illuminate\Http\Request;
 use App\Http\Requests\HospitalFormRequest;
 use Illuminate\Support\Facades\Session;
@@ -79,7 +82,10 @@ class HospitalController extends Controller
      */
     public function create()
     {
-        return view('hospital.create-contract-form');
+        $prefectures = Prefecture::all();
+        $district_codes = DistrictCode::all();
+
+        return view('hospital.create-hospital-form', ['prefectures' => $prefectures, 'district_codes' => $district_codes]);
     }
 
     /**
@@ -88,9 +94,32 @@ class HospitalController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(HospitalFormRequest $request)
     {
-        //
+
+        $request->request->add([
+            'hospital_staff_id' => auth()->user()->id,
+        ]);
+
+
+
+	    $hospital = Hospital::create($request->all());
+
+        if ( !empty(request()->medical_treatment_time) ) {
+            foreach (request()->medical_treatment_time as $mtt ) {
+                $mtt = array_merge($mtt, ['hospital_id' => $hospital->id]);
+                MedicalTreatmentTime::create($mtt);
+            }
+        }
+
+        return redirect('/hospital/image-information');
+
+    }
+
+
+    public function createImageInformation()
+    {
+        return view('hospital.create-image-form');
     }
 
     /**

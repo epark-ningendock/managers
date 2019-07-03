@@ -1,6 +1,6 @@
-<div class="nav nav-pills">
-  <a class="btn @if ($selected_pages['name'] == 'contact-information') active @else bg-gray @endif" href="#contact-information" data-toggle="tab">契約情報</a>
-  <a class="btn @if ($selected_pages['name'] == 'basic-information') active @else bg-gray @endif" href="#basic-information" data-toggle="tab">基本情報</a>
-  <a class="btn @if ($selected_pages['name'] == 'image-information') active @else bg-gray @endif" href="#image-information" data-toggle="tab">画像情報</a>
-  <a class="btn @if ($selected_pages['name'] == 'detail-information') active @else bg-gray @endif" href="#detail-information" data-toggle="tab">こだわり情報</a>
-</div>
+<ul class="nav nav-pills" style="margin-bottom: 30px;">
+    <li class="@if( request()->routeIs('hospital.contractInfo') ) active @endif"><a href="{{ route('hospital.contractInfo') }}">契約情報</a></li>
+    <li class="@if( request()->routeIs('hospital.create') ) active @endif"><a href="{{ route('hospital.create') }}">基本情報</a></li>
+    <li class="@if( request()->routeIs('hospital.image.information') ) active @endif"><a href="{{ route('hospital.image.information') }}">画像情報</a></li>
+    <li><a href="#">こだわり情報</a></li>
+</ul>
