@@ -6,9 +6,7 @@
 
 @section('form')
 
-    @includeIf('hospital.partials.nav-bar', $selected_pages = [
-      'name' => 'contact-information'
-    ])
+    @includeIf('hospital.partials.nav-bar')
 
 
     {{--  need to update search-bar form when document screen is confirmed   --}}
