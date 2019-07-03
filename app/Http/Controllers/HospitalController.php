@@ -103,15 +103,13 @@ class HospitalController extends Controller
 
 
 
-	    $hospital = new Hospital();
-	    $hospital->create($request->all());
+	    $hospital = Hospital::create($request->all());
 
         if ( !empty(request()->medical_treatment_time) ) {
-            $mtt_data = [];
             foreach (request()->medical_treatment_time as $mtt ) {
-                $mtt_data[] = array_merge($mtt, ['hospital_id' => $hospital->id]);
+                $mtt = array_merge($mtt, ['hospital_id' => $hospital->id]);
+                MedicalTreatmentTime::create($mtt);
             }
-            $medicalTreatmentTime = MedicalTreatmentTime::create($mtt_data);
         }
 
         return redirect('/hospital/image-information');
