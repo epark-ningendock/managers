@@ -110,7 +110,7 @@
         <th>小分類</th>
       @endif
       <th>更新日時</th>
-      <th>医療機関管理</th>
+      <th>状態</th>
       <th>編集</th>
       <th>{{ isset($status) && $status == Status::Deleted ? '復元' : '削除' }}</th>
     </tr>
