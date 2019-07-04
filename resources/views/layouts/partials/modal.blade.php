@@ -13,7 +13,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
-        <button type="button" class="btn btn-primary">削除</button>
+        <button type="button" class="btn btn-primary" id="confirm-button">削除</button>
       </div>
     </div>
     <!-- /.modal-content -->

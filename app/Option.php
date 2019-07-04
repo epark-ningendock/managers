@@ -13,4 +13,11 @@ class Option extends SoftDeleteModel
     protected $fillable = [
             'hospital_id', 'name', 'confirm', 'price', 'tax_class_id', 'order', 'status'
         ];
+
+    public function reservation_options()
+    {
+        return $this->hasMany('App\ReservationOption');
+    }
+
+
 }

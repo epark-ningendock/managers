@@ -93,26 +93,18 @@ __webpack_require__(4);
  */
 module.exports.showConfirm = function () {
     var message = typeof arguments[0] != 'function' ? arguments[0] : null;
+    var btnText = typeof arguments[1] != 'function' ? arguments[1] : null;
     var callback = typeof arguments[arguments.length - 1] == 'function' ? arguments[arguments.length - 1] : function () {};
 
     if (message) {
         $('#confirm-modal .modal-body p').html(message);
     }
+    if (btnText) {
+        $('#confirm-modal #confirm-button').html(btnText);
+    }
     $('#confirm-modal .btn-primary').click(callback);
 
     $('#confirm-modal').modal('show');
-};
-
-module.exports.showSelectHospital = function () {
-    var message = typeof arguments[0] != 'function' ? arguments[0] : null;
-    var callback = typeof arguments[arguments.length - 1] == 'function' ? arguments[arguments.length - 1] : function () {};
-
-    if (message) {
-        $('#select-hospital-modal .modal-body p').html(message);
-    }
-    $('#select-hospital-modal .btn-primary').click(callback);
-
-    $('#select-hospital-modal').modal('show');
 };
 
 /**
@@ -201,31 +193,28 @@ module.exports.addScrollToTop = function () {
             var id = $(this).data('id');
             var targetForm = $(this).data('target-form') || '#delete-record-form';
             var message = $(this).data('message');
+            var btnText = $(this).data('button-text') || '削除';
             var targetFormAction = $(targetForm).attr('action').replace(':id', id);
             $(targetForm).attr('action', targetFormAction);
 
-            Modal.showConfirm(message, function () {
+            Modal.showConfirm(message, btnText, function () {
                 $(targetForm).submit();
             });
             return false;
         });
     })();
 
-    (function () {
-        $('.insert-hospital-id-popup-btn').on('click', function () {
-            var id = $(this).data('id');
-            var targetForm = $(this).data('target-form') || '#select-hospital-form';
-            var message = $(this).data('message');
-            var targetFormAction = $(targetForm).attr('action').replace(':id', id);
-            $(targetForm).attr('action', targetFormAction);
+    /* ---------------------------------------------------
+    Tab
+    -----------------------------------------------------*/
+    $('.tab-list').on('click', '.btn', function (e) {
 
-            Modal.showSelectHospital(message, function () {
-                $(targetForm).submit();
-            });
-            return false;
-        });
-    })();
+        e.preventDefault();
+        $(this).tab('show');
 
+        $(this).siblings('.btn').removeClass('active');
+        $(this).addClass('active');
+    });
 })(jQuery);
 
 /***/ }),

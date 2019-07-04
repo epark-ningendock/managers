@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\Hospital;
+use App\MedicalTreatmentTime;
+use Illuminate\Database\Seeder;
 use App\HospitalMajorClassification;
 use App\HospitalMiddleClassification;
 use App\HospitalMinorClassification;
@@ -28,13 +29,13 @@ class HospitalTableSeeder extends Seeder
         $minors = HospitalMinorClassification::all()->toArray();
 
         factory(Hospital::class, 50)->create()->each(function ($hospital) use ($minors) {
+            factory(MedicalTreatmentTime::class)->create(['hospital_id' => $hospital->id]);
             foreach ($minors as $minor) {
                 factory(HospitalDetail::class)->create([
                     'hospital_id' => $hospital->id,
                     'minor_classification_id' => $minor['id'],
                 ]);
             }
-        });
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         Hospital::reguard();

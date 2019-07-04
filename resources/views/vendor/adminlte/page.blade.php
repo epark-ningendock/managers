@@ -112,6 +112,7 @@
             <li><a href="#"><i class="fa fa-book"></i>請求管理</a></li>
             <li><a href="/course"><i class="fa fa-book"></i>検査コース管理</a></li>
             <li><a href="/option"><i class="fa fa-book"></i>検査コースオプション管理</a></li>
+            <li><a href="/reception"><i class="fa fa-list-alt"></i>受付一覧</a></li>
             <li><a href="/calendar"><i class="fa fa-calendar"></i>カレンダー管理</a></li>
             <li><a href="/email-template"><i class="fa fa-gear"></i>メールテンプレート管理</a></li>
             <li><a href="/reception-email-setting"><i class="fa fa-gear"></i>受付メール設定</a></li>

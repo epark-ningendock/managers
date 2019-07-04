@@ -10,6 +10,10 @@ return [
     | as the size rules. Feel free to tweak each of these messages.
     |
     */
+    'number_dash'     => ':attribute 数字またはダッシュを使用できます。',
+	'start_letter_k' => 'Kで始まる、20桁以内の英数列',
+	'start_alphabet_and_number' => 'アルファベットで始まる、2～20文字以内の英数列',
+    'strong_password' => ':attribute 半角英数字で、英小文字と数字を必ず使用し、8文字以上32文字以内',
     'accepted'        => ':attributeを承認してください。',
     'active_url'      => ':attributeは、有効なURLではありません。',
     'after'           => ':attributeには、:dateより後の日付を指定してください。',
@@ -19,6 +23,7 @@ return [
     'alpha_num'       => ":attributeには、英数字('A-Z','a-z','0-9')が使用できます。",
     'array'           => ':attributeには、配列を指定してください。',
     'before'          => ':attributeには、:dateより前の日付を指定してください。',
+    'longitude_latitude' => 'フォーマットが正しくありません',
     'before_or_equal' => ':attributeには、:date以前の日付を指定してください。',
     'between'         => [
         'numeric' => ':attributeには、:minから、:maxまでの数字を指定してください。',
@@ -149,7 +154,8 @@ return [
         ],
         'is_pre_account' => [
             'required' => ':attributeは必須です'
-        ]
+        ],
+        
     ],
     /*
     |--------------------------------------------------------------------------
@@ -183,6 +189,19 @@ return [
         'icon_name' => 'アイコン表示分',
         'is_fregist' => '登録区分',
         'max_length' => 'テキスト長',
+        'address' => '住所',
+        'application_date' => '出願日',
+        'billing_start_date' => '請求開始日',
+        'cancellation_date' => '退職日',
+        'postcode' => '郵便番号',
+        'tel' => '電話番号',
+        'fax' => 'FAX番号',
+        'docknet_id' => 'ドックネットID',
+        'docknet_medical_institution_id' => '医療機関ID',
+	    'medical_institution_name' => '医療機関ID *医療機関名*ポリシー所有者名',
+	    'contractor_name' => '契約者名',
+	    'old_karada_dog_id' => 'からだドックID',
+	    'karada_dog_id' => 'からだドック医療機関ID',
         'course_ids' => 'コースID',
         'course_name' => '検査コース名',
         'course_is_category' => 'コースの種別',
@@ -218,6 +237,11 @@ return [
         'reception_email4' => '受信メールアドレス4',
         'reception_email5' => '受信メールアドレス5',
         'epark_in_hospital_reception_mail_flg' => '受付メール（院内）受信フラグ(epark)',
-        'epark_web_reception_email_flg' => '受付メール（web）受信フラグ(epark)'
+        'epark_web_reception_email_flg' => '受付メール（web）受信フラグ(epark)',
+        'reservation_start_date' => '予約開始日',
+        'reservation_end_date' => '予約終了日',
+        'completed_start_date' => '受診開始日',
+        'completed_end_date' => '受診終了日',
+        'customer_name' => '受診者名'
     ],
 ];

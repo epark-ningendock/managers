@@ -8,10 +8,22 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\HospitalStaff;
+use Illuminate\Support\Facades\Session;
 
 class EmailTemplateControllerTest extends TestCase
 {
     use DatabaseMigrations, RefreshDatabase;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        Session::start();
+
+        //authentication
+        $hospital_staff = factory(HospitalStaff::class)->create();
+        $this->be($hospital_staff);
+    }
 
     public function testIndex()
     {

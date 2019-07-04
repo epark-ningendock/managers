@@ -12,6 +12,7 @@ use App\Enums\Status;
 use App\Enums\Permission;
 use App\Enums\WebReception;
 use App\Enums\CalendarDisplay;
+use App\Enums\PaymentStatus;
 
 return [
     Authority::class => [
@@ -46,6 +47,20 @@ return [
     CalendarDisplay::class => [
         CalendarDisplay::Hide => 'Hide',
         CalendarDisplay::Show => 'Show'
+    ],
+
+    ReservationStatus::class => [
+        ReservationStatus::Pending => 'Pending',
+        ReservationStatus::ReceptionCompleted => 'Reception Completed',
+        ReservationStatus::Completed => 'Completed',
+        ReservationStatus::Cancelled => 'Cancelled'
+    ],
+
+    PaymentStatus::class => [
+        PaymentStatus::TEMPORARY_SALE => 'Temporary Sale',
+        PaymentStatus::ACTUAL_SALE => 'Actual Sale',
+        PaymentStatus::CANCELLATION => 'Cancellation',
+        PaymentStatus::ERROR => 'Error'
     ]
 
 ];
