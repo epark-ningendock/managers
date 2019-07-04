@@ -36,7 +36,8 @@ class HospitalTableSeeder extends Seeder
                     'minor_classification_id' => $minor['id'],
                 ]);
             }
-
+        });
+        
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         Hospital::reguard();
     }

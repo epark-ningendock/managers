@@ -16,6 +16,6 @@ $factory->define(App\MedicalTreatmentTime::class, function (Faker $faker) {
         'sat' => $faker->numberBetween(1, 10),
         'sun' => $faker->numberBetween(1, 10),
         'hol' => $faker->numberBetween(1, 10),
-        'status' => $faker->numberBetween(0,1),
+        'status' => $faker->numberBetween(0, 1),
     ];
 });

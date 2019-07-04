@@ -77,13 +77,15 @@ Route::middleware('auth:staffs')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::resource('/hospital', 'HospitalController')->except(['show']);
-    Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search');
-    Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
-    Route::get('/hospital/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
-    Route::get('/hospital/attention-information/create', 'HospitalController@createAttentionInformation')->name('hospital.attention-information.show');
-    Route::post('/hospital/attention-information/store', 'HospitalController@storeAttentionInformation')->name('hospital.attention-information.store');
+    Route::group(['prefix' => 'hospital'], function () {
+        Route::get('/search', 'HospitalController@index')->name('hospital.search');
+        Route::get('/search/text', 'HospitalController@searchText')->name('hospital.search.text');
+        Route::get('/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
+        Route::get('/attention-information/create', 'HospitalController@createAttentionInformation')->name('hospital.attention-information.show');
+        Route::post('/attention-information/store', 'HospitalController@storeAttentionInformation')->name('hospital.attention-information.store');
+    });
 
-    Route::group(['prefix' => 'hospital'], function() {
+    Route::group(['prefix' => 'hospital'], function () {
         Route::get('/{hospital}/images/create', 'HospitalImagesController@create')->name('hospital.image.create');
         Route::post('/{hospital}/images/store', 'HospitalImagesController@store')->name('hospital.image.store');
         /*
@@ -187,5 +189,4 @@ Route::middleware('auth:staffs,hospital_staffs')->group(function () {
     Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
     Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
     Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
-
 });

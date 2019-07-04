@@ -29,8 +29,7 @@ class ReservationController extends Controller
         Customer $customer,
         Course $course,
         ReservationExportService $export_file
-    )
-    {
+    ) {
         $this->reservation = $reservation;
         $this->hospital = $hospital;
         $this->customer = $customer;
@@ -82,15 +81,15 @@ class ReservationController extends Controller
             $query->whereDate('reservation_date', '<=', $request->input('reservation_end_date'));
         }
 
-        if($request->has('completed_start_date') && $request->input('completed_start_date', '') != '') {
+        if ($request->has('completed_start_date') && $request->input('completed_start_date', '') != '') {
             $query->whereDate('completed_date', '>=', $request->input('completed_start_date'));
-        } else if(!$request->has('completed_start_date')){
+        } elseif (!$request->has('completed_start_date')) {
             $query->whereDate('completed_date', '>=', Carbon::now());
         }
 
         if ($request->has('completed_end_date') && $request->input('completed_end_date', '') != '') {
             $query->whereDate('completed_date', '<=', $request->input('completed_end_date'));
-        } else if(!$request->has('completed_end_date')) {
+        } elseif (!$request->has('completed_end_date')) {
             $query->whereDate('completed_date', '<=', Carbon::now());
         }
 
@@ -153,10 +152,10 @@ class ReservationController extends Controller
         $params = $request->input();
 
         // for initial default value if it has not been set empty purposely
-        if(!$request->has('completed_start_date')) {
+        if (!$request->has('completed_start_date')) {
             $params['completed_start_date'] = Carbon::now()->format('Y/m/d');
         }
-        if(!$request->has('completed_end_date')) {
+        if (!$request->has('completed_end_date')) {
             $params['completed_end_date'] = Carbon::now()->format('Y/m/d');
         }
 
@@ -211,7 +210,6 @@ class ReservationController extends Controller
 
 
         $reservations = $reservations->map(function ($reservation) use (&$question_count, $option_count) {
-
             $fee = $reservation->course->price + $reservation->adjustment_price;
             $options = collect();
 
@@ -314,7 +312,6 @@ class ReservationController extends Controller
 
 
         return $this->get_csv($headers, $reservations, 'reception.csv');
-
     }
 
     /**
@@ -339,7 +336,6 @@ class ReservationController extends Controller
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.reservation.accept_error'))->withInput();
         }
-
     }
 
     /**
@@ -389,7 +385,6 @@ class ReservationController extends Controller
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.reservation.complete_error'))->withInput();
         }
-
     }
 
     /**
@@ -404,11 +399,11 @@ class ReservationController extends Controller
             $ids = $request->input('ids');
             $reservation_status = ReservationStatus::getInstance($request->input('reservation_status'));
             $update_query = Reservation::whereIn('id', $ids);
-            if($reservation_status->is(ReservationStatus::ReceptionCompleted)) {
+            if ($reservation_status->is(ReservationStatus::ReceptionCompleted)) {
                 $update_query->where('reservation_status', ReservationStatus::Pending);
-            } else if($reservation_status->is(ReservationStatus::Completed)) {
+            } elseif ($reservation_status->is(ReservationStatus::Completed)) {
                 $update_query->where('reservation_status', ReservationStatus::ReceptionCompleted);
-            } else if($reservation_status->is(ReservationStatus::Cancelled)) {
+            } elseif ($reservation_status->is(ReservationStatus::Cancelled)) {
                 $update_query->where('reservation_status', ReservationStatus::Pending)
                     ->orWhere('reservation_status', ReservationStatus::ReceptionCompleted);
             }
@@ -421,5 +416,4 @@ class ReservationController extends Controller
             return redirect()->back()->withErrors(trans('messages.reservation.status_update_error'))->withInput();
         }
     }
-
 }

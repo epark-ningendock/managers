@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class HospitalMinorClassification extends Model
 {
-    protected $fillable = [
-        'middle_classification_id', 'name', 'status', 'order', 'is_icon', 'icon_name'
-    ];
+    protected $guarded = [];
 
     public function middle_classification()
     {
