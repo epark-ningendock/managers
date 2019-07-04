@@ -9,4 +9,9 @@ class HospitalMajorClassification extends Model
     protected $fillable = [
         'name', 'status', 'order', 'is_icon', 'icon_name'
     ];
+
+    public function middle_classifications()
+    {
+        return $this->hasMany('App\HospitalMiddleClassification')->orderBy('order');
+    }
 }

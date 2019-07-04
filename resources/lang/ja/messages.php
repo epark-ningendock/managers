@@ -74,7 +74,8 @@ return [
         'email_template' => 'メールテンプレート',
         'calendar_setting' => 'カレンダー管理',
         'reception_email_setting' => '受付メール設定',
-        'holiday_setting' => '休日設定'
+        'holiday_setting' => '休日設定',
+        'attetion_information' => '医療機関こだわり情報',
     ],
     'course'                               => '検査コース',
     'name'                                 => 'お名前',

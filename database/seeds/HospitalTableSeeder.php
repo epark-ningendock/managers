@@ -18,15 +18,22 @@ class HospitalTableSeeder extends Seeder
     {
         Hospital::unguard();
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        
-        factory(Hospital::class, 50)->create()->each(function ($hospital) {
-            $hospital_major_classification = factory(HospitalMajorClassification::class, 1)->create()->first();
-            $hospital_middle_classification = factory(HospitalMiddleClassification::class, 1)->create(['major_classification_id' => $hospital_major_classification->id])->first();
-            $hospital_minor_classification = factory(HospitalMinorClassification::class, 1)->create(['middle_classification_id' => $hospital_middle_classification->id])->first();
-            factory(HospitalDetail::class, 50)->create([
-                'hospital_id' => $hospital->id,
-                'minor_classification_id' => $hospital_minor_classification->id,
-            ]);
+
+        factory(HospitalMajorClassification::class, 1)->create()->each(function ($major) {
+            factory(HospitalMiddleClassification::class, 10)->create(['major_classification_id' => $major->id])->each(function ($middle) {
+                factory(HospitalMinorClassification::class, 3)->create(['middle_classification_id' => $middle->id]);
+            });
+        });
+
+        $minors = HospitalMinorClassification::all()->toArray();
+
+        factory(Hospital::class, 50)->create()->each(function ($hospital) use ($minors) {
+            foreach ($minors as $minor) {
+                factory(HospitalDetail::class)->create([
+                    'hospital_id' => $hospital->id,
+                    'minor_classification_id' => $minor['id'],
+                ]);
+            }
         });
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

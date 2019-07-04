@@ -1,262 +1,109 @@
-<div class="box-body">
-
-  {{-- PV・予約 --}}
-  <label for="name">PV・予約</label>
-  <div class="row">
-    <div class='col-sm-4'>
-        {{-- pv_countを使う --}}
-      <p>PV件数</p>
-    </div>
-    <div class="form-group col-sm-4 @if ($errors->has('pvad')) has-error @endif">
-      <input type="text" class="form-control" id="pvad" name="pvad" value="" placeholder="名前を入力">
-    </div>
-    @if ($errors->has('pvad')) <p class="help-block">{{ $errors->first('pvad') }}</p> @endif
-    <div class='col-sm-4 checkbox'>
-      <label class="ml-3">
-          {{ Form::hidden('is_pickup') }}
-          {{ Form::checkbox('is_pickup') }}
-          ピックアップ
-      </label>
-    </div>
-  </div>
-
-  {{-- アクセスのついて --}}
-  <label>アクセスについて</label>
-  <div class='checkbox'>
-    <label class="ml-3">
-      {{ Form::hidden('is_parking') }}
-      {{ Form::checkbox('is_parking') }}
-      駐車場あり
-    </label>
-  </div>
-  <div class="form-group @if ($errors->has('parking_supplement')) has-error @endif">
-      <textarea class="form-control" id="parking_supplement" name="parking_supplement" rows="5"> 
-      </textarea>
-    @if ($errors->has('parking_supplement')) <p class="help-block">{{ $errors->first('parking_supplement') }}</p> @endif
-  </div>
-  <div class='row'>
-    <div class='checkbox col-sm-6'>
-      <label class="ml-3">
-        {{ Form::hidden('is_transfer') }}
-        {{ Form::checkbox('is_transfer') }}
-        送迎サービスあり
-      </label>
-    </div>
-    <div class='checkbox col-sm-6'>
-      <label class="ml-3">
-        {{ Form::hidden('station1') }}
-        {{ Form::checkbox('station1') }}
-        駅近
-      </label>
-      <input type="email" class="form-control" id="email" name="email" value="" placeholder="メールアドレスを入力して">
-    </div>
-  </div>
-
-  <div class="form-group @if ($errors->has('credit_card_supplement')) has-error @endif">
-      <label for="credit_card_supplement">クレジットカード対応</label>
-      <textarea class="form-control" id="credit_card_supplement" name="credit_card_supplement" rows="5">
-          
-      </textarea>
-      @if ($errors->has('credit_card_supplement')) <p class="help-block">{{ $errors->first('credit_card_supplement') }}</p> @endif
-  </div>
-
-  {{-- 外国語対応 --}}
-  <label>外国語対応</label>
-  <div class='checkbox ml-3'>
-      <label>
-          {{ Form::hidden('foreign_language_correspondence') }}
-          {{ Form::checkbox('foreign_language_correspondence') }}
-          英語
-      </label>
-
-      <label class="ml-3">
-          {{ Form::hidden('foreign_language_correspondence') }}
-          {{ Form::checkbox('foreign_language_correspondence') }}
-          中国語
-      </label>
-
-      <label class="ml-3">
-          {{ Form::hidden('foreign_language_correspondence') }}
-          {{ Form::checkbox('foreign_language_correspondence') }}
-          韓国語
-      </label>
-  </div>
-  <div class="form-group @if ($errors->has('foreign_language_supplement')) has-error @endif">
-      <textarea class="form-control" id="foreign_language_supplement" name="foreign_language_supplement" rows="5" placeholder="HTMLで記述することも可能です">
-          
-      </textarea>
-    @if ($errors->has('foreign_language_supplement')) <p class="help-block">{{ $errors->first('foreign_language_supplement') }}</p> @endif
-  </div>
-
-  {{-- 認定施設について --}}
-  <div class="form-group @if ($errors->has('is_certification')) has-error @endif">
-    <label for="is_certification">認定施設について</label>
-    <div class='checkbox ml-3'>
-        <label>
-            {{ Form::hidden('is_certification') }}
-            {{ Form::checkbox('is_certification') }}
-            日本認定ドック学会 機能評価認定施設
-        </label>
-    </div>
-    @if ($errors->has('is_certification')) <p class="help-block">{{ $errors->first('is_certification') }}</p> @endif
-  </div>
-
-  {{-- 女性対応 --}}
-  <label for="login_id">女性対応</label>
-  <div class='checkbox ml-3'>
-      <label>
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          レディースデーあり
-      </label>
-
-      <label class="ml-3">
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          女性専用エリアあり
-      </label>
-
-      <label class="ml-3">
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          パウダールームあり
-      </label>
-  </div>
-
-  {{-- お子様対応 --}}
-  <label for="login_id">お子様対応</label>
-  <div class='checkbox ml-3'>
-      <label>
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          キッズスペースあり
-      </label>
-
-      <label class="ml-3">
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          託児所
-      </label>
-
-      <label class="ml-3">
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          子連れ対応可能
-      </label>
-  </div>
-  <textarea class="form-control" id="course_point" name="course_point" rows="5" placeholder="HTMLで記述することも可能です">
-          
-  </textarea>
-
-  {{-- 施設について --}}
-  <label for="login_id">施設について</label>
-  <div class='checkbox ml-3'>
-      <label>
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          検診専用施設
-      </label>
-
-      <label class="ml-3">
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          検診専用エリアあり
-      </label>
-
-      <label class="ml-3">
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          バリアフリー対応
-      </label>
-  </div>
-
-  {{-- 食事について --}}
-  <label for="login_id">食事について</label>
-  <div class='checkbox ml-3'>
-      <label>
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          院内食堂・レストランあり（予約なしで利用可能）
-      </label>
-  </div>
-
-  {{-- 併用施設について --}}
-  <label for="login_id">併用施設について</label>
-  <textarea class="form-control" id="course_point" name="course_point" rows="5" placeholder="HTMLで記述することも可能です">
-        
-  </textarea>
-
-  {{-- 周辺施設について --}}
-  <label for="login_id">周辺施設について</label>
-  <textarea class="form-control" id="course_point" name="course_point" rows="5" placeholder="HTMLで記述することも可能です">
-        
-  </textarea>
-
-  {{-- プライバシー配慮について --}}
-  <label for="login_id">プライバシー配慮</label>
-  <div class='checkbox ml-3'>
-      <label>
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          更衣室専有あり（一人着替えスペース）
-      </label>
-      <label>
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          個室採血室あり
-      </label>
-      <label>
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          個室採血室あり
-      </label>
-      <label>
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          呼び出し配慮あり
-      </label>
-  </div>
-
-  {{-- 検査結果 --}}
-  <label for="login_id">検索結果</label>
-  <div class='checkbox ml-3'>
-      <label>
-          {{ Form::hidden('in_hospital_confirmation_email_reception_flg') }}
-          {{ Form::checkbox('in_hospital_cancellation_email_reception_flg') }}
-          検査結果即日発行対応
-      </label>
-  </div>
-
-  {{-- フリーエリア --}}
-  <label for="login_id">フリーエリア</label>
-  <textarea class="form-control" id="course_point" name="course_point" rows="5" placeholder="HTMLで記述することも可能です">
-      
-  </textarea>
-
-  {{-- 検索ワード --}}
-  <label for="login_id">検索ワード</label>
-  <textarea class="form-control" id="course_point" name="course_point" rows="5" placeholder="HTMLで記述することも可能です">
-    
-  </textarea>
-
-  <div class="box-footer">
-      <a href="{{ route('hospital.index') }}" class="btn btn-default">戻る</a>
-      <button type="submit" class="btn btn-primary">保存する</button>
-  </div>
-
-</div>
-
-<style>
-.red {
-  color: red
-}
-/* webkit */
-::-webkit-input-placeholder {
-    color:    #999;
+@php
+if(isset($hospital)) {
+  $hospital_details = $hospital->hospital_details;
 }
 
-/* firefox */
-:-moz-placeholder {
-    color:    #999;
-}
-</style>
+$o_minor_ids = collect(old('minor_ids'));
+$o_minor_values = collect(old('minor_values'));
+@endphp
+  <div class="box box-primary">
+    <div class="box-body">
+      <label for="name">PV・予約</label>
+      <div class="row">
+          <div class='col-sm-4'>
+            <p>PV件数 {{ $hospital->pv_count }}件</p>
+          </div>
+          <div class="form-group col-sm-4 @if ($errors->has('pvad')) has-error @endif">
+            <input type="text" class="form-control" id="pvad" name="pvad" value="{{ isset($hospital->pvad) ? $hospital->pvad : 0 }}" placeholder="">
+          </div>
+          @if ($errors->has('pvad')) <p class="help-block">{{ $errors->first('pvad') }}</p> @endif
+          <div class='col-sm-4 checkbox'>
+            <label class="ml-3">
+                {{ Form::hidden('is_pickup') }}
+                {{ Form::checkbox('is_pickup', 1, $hospital->is_pickup) }}
+                ピックアップ
+            </label>
+          </div>
+        </div>
+      <table class="table table-bordered">
+        @foreach($middles as $middle)
+          <tr>
+            @if(!isset($last) || $middle != $last)
+              <td colspan="{{ count($middle->minor_classifications) }}">{{ $middle->name }}</td>
+              @php
+                $last = $middle
+              @endphp
+            @endif
+            <td>
+              @foreach($middle->minors_with_fregist_order as $index => $minor)
+                @php
+                  $minor_value = '';
+                  if($o_minor_ids->isNotEmpty()) {
+                    $search_index = $o_minor_ids->search(function($m_id) use ($minor) {
+                      return $m_id == $minor->id;
+                    });
+                    if ($search_index >= 0) {
+                      $minor_value = $o_minor_values[$search_index];
+                    }
+                  } else if (isset($hospital_details)) {
+                    $temp = $hospital_details->where('minor_classification_id', $minor->id)->flatten(1);
+                    if ($temp->isNotEmpty()) {
+                      $minor_value = $minor->is_fregist == '1' ? $temp[0]->select_status : $temp[0]->inputstring;
+                    }
+                  }
+                @endphp
+                <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
+                @if($minor->is_fregist == '1')
+                  <input type="checkbox" class="checkbox d-inline-block minor-checkbox" name="minor_values[]"
+                         id="{{ 'minor_id_'.$minor->id }}"
+                         {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
+                  <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label>
+                @else
+                  <input type="textarea" rows="5" name="minor_values[]"
+                         class="form-control minor-text @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
+                    value = "{{ $minor_value }}" />
+                  <span class="pull-right">0/{{ $minor->max_length }}文字</span>
+                @endif
+              @endforeach
+            </td>
+          </tr>
+        @endforeach
+      </table>
+    </div>
+  </div>
+
+  <div class="box-primary">
+    <div class="box-footer">
+      <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
+      <button type="submit" class="btn btn-primary">作成</button>
+    </div>
+  </div>
+
+  @section('script')
+  <script>
+      (function ($) {
+
+          /* ---------------------------------------------------
+          // minor checkbox values
+          -----------------------------------------------------*/
+          (function () {
+              const change = function(ele) {
+                  if (ele.prop('checked')) {
+                      ele.next('input:hidden').remove();
+                  } else {
+                      $('<input type="hidden" name="minor_values[]" value="0"/>').insertAfter(ele);
+                  }
+              };
+
+              $('.minor-checkbox').each(function(index, ele) {
+                  ele = $(ele);
+                  ele.change(function() {
+                      change(ele);
+                  });
+                  change(ele);
+              });
+          })();
+
+      })(jQuery);
+  </script>
+@stop

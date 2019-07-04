@@ -69,7 +69,7 @@ Route::middleware('auth:staffs')->group(function () {
     Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search');
     Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
     Route::get('/hospital/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
-    Route::get('/hospital/attention-information/show', 'HospitalController@showAttentionInformation')->name('hospital.attention-information.show');
+    Route::get('/hospital/attention-information/create', 'HospitalController@createAttentionInformation')->name('hospital.attention-information.show');
     Route::post('/hospital/attention-information/store', 'HospitalController@storeAttentionInformation')->name('hospital.attention-information.store');
     /*
     |--------------------------------------------------------------------------
