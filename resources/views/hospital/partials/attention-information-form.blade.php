@@ -32,7 +32,7 @@ $o_minor_values = collect(old('minor_values'));
         @foreach($middles as $middle)
           <tr>
             @if(!isset($last) || $middle != $last)
-              <td colspan="{{ count($middle->minor_classifications) }}">{{ $middle->name }}</td>
+              <td class='text-bold' colspan="{{ count($middle->minor_classifications) }}">{{ $middle->name }}</td>
               @php
                 $last = $middle
               @endphp
@@ -57,18 +57,15 @@ $o_minor_values = collect(old('minor_values'));
                 @endphp
                 <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
                 @if($minor->is_fregist == '1')
-                  <input type="checkbox" class="checkbox d-inline-block minor-checkbox" name="minor_values[]"
+                  <input type="checkbox" class="minor-checkbox" name="minor_values[]"
                          id="{{ 'minor_id_'.$minor->id }}"
                          {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
                   <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label>
                 @else
-                <div class="form-group">
+                <div class="form-group mt-3">
+                    <label>{{ $minor->name }}</label>
                     <textarea class="form-control minor-text @if ($index > 0) mt-2 @endif" name="minor_values[]" cols="30" rows="5">{{ $minor_value }}</textarea>
                 </div>
-                  {{-- <input type="textarea" rows="5" name="minor_values[]"
-                         class="form-control minor-text @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
-                    value = "{{ $minor_value }}" />
-                  <span class="pull-right">0/{{ $minor->max_length }}文字</span> --}}
                 @endif
               @endforeach
             </td>

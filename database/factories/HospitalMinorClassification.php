@@ -5,8 +5,21 @@ use App\HospitalMiddleClassification;
 use App\HospitalMinorClassification;
 
 $factory->define(App\HospitalMinorClassification::class, function (Faker $faker) {
+    $names = [
+        '駐車場あり',
+        'アクセスについて',
+        'その他',
+        '英語',
+        '中国語',
+        '韓国語',
+        '女性専用施設あり',
+        'レディースデーあり',
+        'パウダールームあり',
+        'キッズスペース'
+    ];
+
     $result = [
-        'name' => $faker->userName,
+        'name' => $names[rand(0, 9)],
         'is_fregist' => $faker->randomElement([0, 1]),
         'status' => '1',
         'order' => 0,
