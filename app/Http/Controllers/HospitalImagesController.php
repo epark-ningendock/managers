@@ -73,7 +73,7 @@ class HospitalImagesController extends Controller
         $hospital = Hospital::find($hospital_id);
 
         foreach($save_images as $img ){
-            $hospital->hospital_images()->saveMany([
+            $hospiますtal->hospital_images()->saveMany([
                 new HospitalImage($img),
             ]);
 
