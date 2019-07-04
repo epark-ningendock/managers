@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\DistrictCode;
 use App\Enums\HospitalEnums;
 use App\Hospital;
+use App\ContractInformation;
+use App\HospitalStaff;
+use App\MedicalTreatmentTime;
+use App\Prefecture;
 use Illuminate\Http\Request;
 use App\Http\Requests\HospitalFormRequest;
 use Illuminate\Support\Facades\Session;
@@ -27,7 +32,7 @@ class HospitalController extends Controller
             $query->where('status', HospitalEnums::Public);
         }
 
-        $hospitals = $query->orderBy('created_id', 'desc')->paginate(10)->appends(request()->query());
+        $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());
 
         return view('hospital.index', [ 'hospitals' => $hospitals ]);
     }
@@ -39,6 +44,37 @@ class HospitalController extends Controller
         return response()->json($hospitals);
     }
 
+    // TODO この関数は全体的に見直し必要
+    public function searchHospiralContractInfo(Request $request)
+    {
+        // returnさせる医療機関一覧
+        $contractInformations = [];
+        $inputText = $request->get('contract_info_search_word');
+        // 医療機関名ID検索 or 医療機関名検索
+
+        // ドグネット検索
+        $contractInformation = ContractInformation::select()->where('code', 'LIKE', "%" .$inputText . "%")->get();
+        // 医療機関名検索
+        // TODO 複数該当する可能性がある
+        // $hospitals = Hospital::select()->where('name', 'LIKE', "%" .$inputText . "%")->get();
+        // 契約者名検索
+        // TODO 複数該当する可能性がある
+        // $contractInformations = ContractInformation::select()->where('contractor_name', 'LIKE', "%" .$inputText . "%")->get();
+
+        // 関連する医療機関を追加
+        // array_push($hospitals, $contractInformations->hospital);
+
+        // 懸念点
+        // 複数一致する条件があった場合、どうするのか？
+        // 一旦、候補を複数検索させて、候補を表示する感じ？？
+        // $hospitals = Hospital::where(id, $inputText);
+        // $contractInformation = ContractInformation::find($inputText);
+
+        // $hospitals = Hospital::select('name', 'address1')->where('name', 'LIKE', "%" .$request->get('s_text') . "%")->get();
+        // return response()->json($responseJson);
+        return view('hospital.create-contract-form', [ 'contract_information' => $contractInformation[0] ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -46,7 +82,10 @@ class HospitalController extends Controller
      */
     public function create()
     {
-        //
+        $prefectures = Prefecture::all();
+        $district_codes = DistrictCode::all();
+
+        return view('hospital.create-hospital-form', ['prefectures' => $prefectures, 'district_codes' => $district_codes]);
     }
 
     /**
@@ -55,9 +94,32 @@ class HospitalController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(HospitalFormRequest $request)
     {
-        //
+
+        $request->request->add([
+            'hospital_staff_id' => auth()->user()->id,
+        ]);
+
+
+
+	    $hospital = Hospital::create($request->all());
+
+        if ( !empty(request()->medical_treatment_time) ) {
+            foreach (request()->medical_treatment_time as $mtt ) {
+                $mtt = array_merge($mtt, ['hospital_id' => $hospital->id]);
+                MedicalTreatmentTime::create($mtt);
+            }
+        }
+
+        return redirect('/hospital/image-information');
+
+    }
+
+
+    public function createImageInformation()
+    {
+        return view('hospital.create-image-form');
     }
 
     /**
@@ -71,15 +133,10 @@ class HospitalController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Hospital  $hospital
-     * @return \Illuminate\Http\Response
-     */
+    
     public function edit(Hospital $hospital)
     {
-        //
+        return view('hospital.create-contract-form');
     }
 
     /**
@@ -123,4 +180,5 @@ class HospitalController extends Controller
 
         return view('hospital.index', [ 'hospitals' => $hospitals ])->with('success', trans('messages.created', ['name' => trans('messages.names.email_template')]));
     }
+    
 }
