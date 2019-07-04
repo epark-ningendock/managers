@@ -10,18 +10,21 @@ $o_minor_values = collect(old('minor_values'));
     <div class="box-body">
       <label for="name">PV・予約</label>
       <div class="row">
-          <div class='col-sm-4'>
-            <p>PV件数 {{ $hospital->pv_count }}件</p>
+          <div class='col-sm-4 text-bold'>
+            <p>PV件数 
+              <span>{{ $hospital->pv_count }}</span> 件
+            </p>
           </div>
-          <div class="form-group col-sm-4 @if ($errors->has('pvad')) has-error @endif">
-            <input type="text" class="form-control" id="pvad" name="pvad" value="{{ isset($hospital->pvad) ? $hospital->pvad : 0 }}" placeholder="">
+          <div class="form-group col-sm-4 form-inline @if ($errors->has('pvad')) has-error @endif">
+            <label>PR</label>
+            <input type="text" class="form-control pr-input" id="pvad" name="pvad" value="{{ isset($hospital->pvad) ? $hospital->pvad : 0 }}" placeholder="">
           </div>
           @if ($errors->has('pvad')) <p class="help-block">{{ $errors->first('pvad') }}</p> @endif
           <div class='col-sm-4 checkbox'>
             <label class="ml-3">
                 {{ Form::hidden('is_pickup') }}
                 {{ Form::checkbox('is_pickup', 1, $hospital->is_pickup) }}
-                ピックアップ
+                <p class='text-bold'>ピックアップ</p>
             </label>
           </div>
         </div>
@@ -59,10 +62,13 @@ $o_minor_values = collect(old('minor_values'));
                          {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
                   <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label>
                 @else
-                  <input type="textarea" rows="5" name="minor_values[]"
+                <div class="form-group">
+                    <textarea class="form-control minor-text @if ($index > 0) mt-2 @endif" name="minor_values[]" cols="30" rows="5">{{ $minor_value }}</textarea>
+                </div>
+                  {{-- <input type="textarea" rows="5" name="minor_values[]"
                          class="form-control minor-text @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
                     value = "{{ $minor_value }}" />
-                  <span class="pull-right">0/{{ $minor->max_length }}文字</span>
+                  <span class="pull-right">0/{{ $minor->max_length }}文字</span> --}}
                 @endif
               @endforeach
             </td>
@@ -107,3 +113,9 @@ $o_minor_values = collect(old('minor_values'));
       })(jQuery);
   </script>
 @stop
+
+<style>
+.pr-input {
+  width: 50%
+}
+</style>
