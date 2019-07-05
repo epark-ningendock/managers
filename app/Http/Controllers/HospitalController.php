@@ -7,6 +7,7 @@ use App\Enums\HospitalEnums;
 use App\Hospital;
 use App\ContractInformation;
 use App\HospitalStaff;
+use App\Http\Requests\HospitalCreateFormRequest;
 use App\MedicalTreatmentTime;
 use App\Prefecture;
 use Illuminate\Http\Request;
@@ -92,9 +93,9 @@ class HospitalController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response\
      */
-    public function store(HospitalFormRequest $request)
+    public function store(HospitalCreateFormRequest $request)
     {
 
         $request->request->add([
