@@ -102,8 +102,6 @@ class HospitalController extends Controller
             'hospital_staff_id' => auth()->user()->id,
         ]);
 
-
-
 	    $hospital = Hospital::create($request->all());
 
         if ( !empty(request()->medical_treatment_time) ) {

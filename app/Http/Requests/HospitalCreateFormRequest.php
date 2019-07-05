@@ -25,8 +25,9 @@ class HospitalCreateFormRequest extends FormRequest
      */
     public function rules()
     {
+        
         $status = HospitalEnums::getValues();
-        return [
+        return  [
             'status' => ['required', Rule::in($status)],
             'latitude' => 'longitude_latitude',
             'longitude' => 'longitude_latitude',
@@ -38,9 +39,17 @@ class HospitalCreateFormRequest extends FormRequest
             'tel' => 'number_dash',
             'paycall' => 'number_dash',
             'consultation_note' => 'max:256',
-//            'medical_treatment_time.[1].start' => 'date_format:H:i',
-//            'medical_treatment_time[1][start]' => 'date_format:H:i',
-//            'medical_treatment_time[1][end]' => 'date_format:H:i',
+           'medical_treatment_time.*.start' => 'nullable|date_format:H:i',
+           'medical_treatment_time.*.end' => 'nullable|date_format:H:i',
+        ];
+    }
+
+
+    public function messages()
+    {
+        return [
+            'medical_treatment_time.*.start.date_format' => '時間はHH：MMにしてください',
+            'medical_treatment_time.*.end.date_format' => '時間はHH：MMにしてください'
         ];
     }
 }
