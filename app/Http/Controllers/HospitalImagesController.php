@@ -4,10 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Hospital;
 use App\HospitalImage;
+use App\HospitalCategory;
 use Illuminate\Http\Request;
 
 class HospitalImagesController extends Controller
 {
+    public function __construct(
+        HospitalImage $hospital_image,
+        HospitalCategory $hospital_category
+    )
+    {
+        $this->hospital_image = $hospital_image;
+        $this->hospital_category = $hospital_category;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -54,9 +63,8 @@ class HospitalImagesController extends Controller
             ->save(public_path().'/img/uploads/300-300-'.$file['main']->hashName())
             ->resize(500, 500)
             ->save(public_path().'/img/uploads/500-500-'.$file['main']->hashName());
-        //save用のArray
-
-        $save_images[] = ['extension' => str_replace('image/', '', $image->mime), 'name' => $file['main']->hashName(), 'path' => $file['main']->hashName(),'category' => 'main'];
+        $save_images[] = ['extension' => str_replace('image/', '', $image->mime), 'name' => $file['main']->hashName(), 'path' => $file['main']->hashName()];
+        $save_image_categories[] = [ 'order' => 1, 'order2' => HospitalCategory::FACILITY, 'is_display' => HospitalCategory::SHOW];
 
         //sub
         foreach($file['sub'] as $key => $sub){
@@ -67,16 +75,19 @@ class HospitalImagesController extends Controller
                 ->save(public_path().'/img/uploads/300-300-'.$sub->hashName())
                 ->resize(200, 200)
                 ->save(public_path().'/img/uploads/500-500-'.$sub->hashName());
-            $save_images[] = ['extension' => str_replace('image/', '', $sub_image->mime), 'name' => $sub->hashName(), 'path' => $sub->hashName(),'category' => 'sub','sort' => $key];
+            $save_images[] = ['extension' => str_replace('image/', '', $sub_image->mime), 'name' => $sub->hashName(), 'path' => $sub->hashName()];
+            $save_image_categories[] = [ 'order' => $key, 'order2' => HospitalCategory::FACILITY, 'is_display' => HospitalCategory::SHOW];
         }
 
         $hospital = Hospital::find($hospital_id);
 
-        foreach($save_images as $img ){
-            $hospiますtal->hospital_images()->saveMany([
-                new HospitalImage($img),
-            ]);
-
+        foreach($save_images as $key => $img ){
+            $hospital->hospital_images()->saveMany([
+                    $hospital_img = new HospitalImage($img)
+                ]
+            );
+            $save_image_categories[$key]['hospital_id'] = $hospital_id;
+            $hospital_img->hospital_category()->create($save_image_categories[$key]);
         }
         return redirect('/img/uploads/'.$file['main']->hashName());
     }

@@ -79,6 +79,6 @@ class Hospital extends Model
 
     public function hospital_categories()
     {
-        return $this->hasMany('App\Ho');
+        return $this->hasMany('App\HospitalCategory');
     }
 }
