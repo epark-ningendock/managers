@@ -35,7 +35,7 @@ class LoginController extends Controller
      */
     protected $staff_role = 'staffs';
     protected $hospital_staff_role = 'hospital_staffs';
-    protected $staff_redirectTo = '/staff';
+    protected $staff_redirectTo = '/hospital';
     protected $hospital_staff_redirectTo = '/hospital-staff';
 
     /**
