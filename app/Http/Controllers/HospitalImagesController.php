@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Hospital;
 use App\HospitalImage;
+use App\ImageOrder;
 use App\HospitalCategory;
 use Illuminate\Http\Request;
 
@@ -64,7 +65,7 @@ class HospitalImagesController extends Controller
             ->resize(500, 500)
             ->save(public_path().'/img/uploads/500-500-'.$file['main']->hashName());
         $save_images[] = ['extension' => str_replace('image/', '', $image->mime), 'name' => $file['main']->hashName(), 'path' => $file['main']->hashName()];
-        $save_image_categories[] = [ 'order' => 1, 'order2' => HospitalCategory::FACILITY, 'is_display' => HospitalCategory::SHOW];
+        //$save_image_categories[] = [ 'order' => 1, 'order2' => HospitalCategory::FACILITY, 'is_display' => HospitalCategory::SHOW];
 
         //sub
         foreach($file['sub'] as $key => $sub){

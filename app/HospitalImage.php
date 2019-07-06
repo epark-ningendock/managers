@@ -10,4 +10,9 @@ class HospitalImage extends SoftDeleteModel
     {
         return $this->hasOne('App\HospitalCategory');
     }
+
+    public function image_order()
+    {
+        return $this->hasOne('App\ImageOrder');
+    }
 }
