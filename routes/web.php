@@ -35,6 +35,7 @@ Route::get('/hospital/contract-information', 'ContractInformationController@crea
 Auth::routes();
 Route::get('/login', 'Auth\LoginController@getLogin')->name('login');
 Route::post('/login', 'Auth\LoginController@postLogin');
+// Route::post('/logout', 'Auth\LoginController@logout');
 
 /*
 |--------------------------------------------------------------------------
