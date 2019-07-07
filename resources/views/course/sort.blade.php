@@ -9,7 +9,11 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-  <h1>検査コース管理</h1>
+  <h1>
+      <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
+      -
+      <i class="fa fa-book"> 検査コース管理</i>
+  </h1>
 @stop
 @section('table')
   <form method="post" action="{{ route('course.updateSort') }}">
@@ -37,7 +41,7 @@
     </table>
     <div class="box-footer pull-right">
       <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
-      <button type="submit" class="btn btn-primary">作成</button>
+      <button type="submit" class="btn btn-primary">保存</button>
     </div>
   </form>
   <style>

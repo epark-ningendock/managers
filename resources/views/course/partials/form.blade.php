@@ -559,7 +559,7 @@
 <div class="box-primary">
   <div class="box-footer">
     <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
-    <button type="submit" class="btn btn-primary">作成</button>
+    <button type="submit" class="btn btn-primary">保存</button>
   </div>
 </div>
 

@@ -114,8 +114,8 @@
             <li><a href="/option"><i class="fa fa-book"></i>検査コースオプション管理</a></li>
             <li><a href="/reception"><i class="fa fa-list-alt"></i>受付一覧</a></li>
             <li><a href="/calendar"><i class="fa fa-calendar"></i>カレンダー管理</a></li>
-            <li><a href="/email-template"><i class="fa fa-gear"></i>メールテンプレート管理</a></li>
-            <li><a href="/reception-email-setting"><i class="fa fa-gear"></i>受付メール設定</a></li>
+            <li><a href="/email-template"><i class="fa fa-gears"></i>メールテンプレート管理</a></li>
+            <li><a href="/reception-email-setting"><i class="fa fa-gears"></i>受付メール設定</a></li>
           @endif
           {{-- 医療機関スタッフ固有の機能 --}}
           @if(Auth::user()->getTable() == "hospital_staffs" && request()->session()->get('hospital_id'))

@@ -15,7 +15,11 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-  <h1>検査コース管理 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
+  <h1>
+      <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
+      -
+      <i class="fa fa-book"> 検査コース管理</i>
+  </h1>
 @stop
 
 @section('button')
@@ -47,13 +51,13 @@
           <td>
             <a class="btn btn-primary"
                href="{{ route('course.edit', $course->id) }}">
-              編集
+               <i class="fa fa-edit text-bold"> 編集</i>
             </a>
             <button class="btn btn-danger delete-btn delete-popup-btn ml-3" data-id="{{ $course->id }}">
-              削除
+              <i class="fa fa-trash"></i>
             </button>
-            <a class="btn btn-default ml-3" href="{{ route('course.copy', $course->id) }}">
-              コピー
+            <a class="btn btn-success ml-3" href="{{ route('course.copy', $course->id) }}">
+                <i class="fa fa-copy text-bold"></i>
             </a>
             <button class="btn btn-default ml-3">
               プレビュー

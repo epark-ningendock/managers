@@ -11,7 +11,11 @@
 @section('title', 'Epark')
 
 @section('content_header')
-  <h1>テンプレート管理 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
+    <h1>    
+        <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
+        -
+        <i class="fa fa-gears"> テンプレート管理</i>
+    </h1>
 @stop
 
 @section('table')
@@ -31,10 +35,12 @@
               <td>{{ $email_template->title }}</td>
               <td>
                   <a href="{{ route('email-template.edit', $email_template->id) }}"
-                    class="btn btn-primary">編集</a>
+                    class="btn btn-primary">
+                    <i class="fa fa-edit text-bold"> 編集</i>
+                    </a>
               <td>
                   <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $email_template->id }}">
-                      削除
+                        <i class="fa fa-trash"></i>
                   </button>
               </td>
           </tr>

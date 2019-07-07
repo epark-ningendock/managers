@@ -11,7 +11,11 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-  <h1>受付一覧</h1>
+  <h1>    
+      <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
+      -
+      <i class="fa fa-book"> 受付一覧</i>
+  </h1>
 @stop
 
 <!-- search section -->
@@ -126,7 +130,9 @@
 
       <div class="col-md-12">
         <button type="button" id="clear" class="btn btn-default">検索条件のクリア</button>
-        <button type="submit" class="btn btn-primary ml-4">検索</button>
+        <button type="submit" class="btn btn-primary ml-4">
+            <i class="glyphicon glyphicon-search"></i> 検索
+        </button>
       </div>
       <div class="clearfix"></div>
       <div class="col-md-12">
