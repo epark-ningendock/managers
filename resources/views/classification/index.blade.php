@@ -103,11 +103,13 @@
     <thead>
     <tr>
       <th>大分類</th>
-      @if (!isset($classification) || $classification == 'minor' || $classification == 'middle')
-        <th>中分類</th>
-      @endif
-      @if (!isset($classification) || $classification == 'minor')
-        <th>小分類</th>
+      @if (isset($classification))
+        @if ($classification == 'minor' || $classification == 'middle')
+          <th>中分類</th>
+        @endif
+        @if ($classification == 'minor')
+          <th>小分類</th>
+        @endif
       @endif
       <th>更新日時</th>
       <th>状態</th>
@@ -119,11 +121,13 @@
     @foreach ($classifications as $item)
       <tr class="{{ $item['status']->is(Status::Deleted) ? 'dark-gray' : '' }}">
         <td>{{ $item['major_name'] }}</td>
-        @if (!isset($classification) || $classification == 'minor' || $classification == 'middle')
-          <td>{{ $item['middle_name'] }}</td>
-        @endif
-        @if (!isset($classification) || $classification == 'minor')
-          <td>{{ $item['minor_name'] }}</td>
+        @if (isset($classification))
+          @if (!isset($classification) || $classification == 'minor' || $classification == 'middle')
+            <td>{{ $item['middle_name'] }}</td>
+          @endif
+          @if (!isset($classification) || $classification == 'minor')
+            <td>{{ $item['minor_name'] }}</td>
+          @endif
         @endif
         <td>{!! $item['updated_at'] !!} </td>
         <td>{{ $item['status']->description }}</td>
