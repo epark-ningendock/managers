@@ -75,7 +75,7 @@ class HospitalStaffController extends Controller
         $hospital_staff = HospitalStaff::findOrFail($id);
         $hospital_staff->delete();
 
-        return redirect('hospital-staff')->with('success', trans('messages.deleted', ['name' => trans('messages.names.hospital_staff')]));
+        return redirect('hospital-staff')->with('error', trans('messages.deleted', ['name' => trans('messages.names.hospital_staff')]));
     }
 
     public function editPassword(Request $request)

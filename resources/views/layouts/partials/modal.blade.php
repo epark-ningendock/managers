@@ -58,8 +58,8 @@
         </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">キャンセル</button>
-        <button type="button" class="btn btn-primary">操作する</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">戻る</button>
+        <button type="button" class="btn btn-success">操作</button>
       </div>
     </div>
   </div>

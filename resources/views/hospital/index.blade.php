@@ -102,7 +102,7 @@
                         <td>{{ \App\Enums\HospitalEnums::getDescription($hospital->status) }}</td>
                         <td>
                             <a class="btn btn-success insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">
-                                <i class="fa fa-pencil"></i>    
+                                <span class="fa fa-pencil"></i>    
                             </a>
                             {{-- 医療機関の選択フォーム --}}
                             <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
