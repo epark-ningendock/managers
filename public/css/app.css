@@ -2260,3 +2260,52 @@ table tr td.gray-column {
   margin: 0;
 }
 
+tr:first-child>th {
+  text-align: center;
+}
+
+td {
+  text-align: center;
+}
+
+.skin-blue .sidebar-menu>li.header {
+  color: #fff !important;
+  background: #1a2226;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.skin-blue .main-header .logo {
+  background-color: #2A3F54 !important;
+  color: #fff;
+  border-bottom: 0 solid transparent;
+}
+
+.skin-blue .main-header .navbar {
+  background-color: #2A3F54 !important;
+}
+
+.btn-success {
+  background-color: #1ABB9C !important;
+  border-color: #1ABB9C !important;
+}
+
+.btn-primary {
+  background-color: #337ab7 !important;
+  border-color: #337ab7 !important;
+}
+
+.btn-danger {
+  background-color: #ed5565 !important;
+  border-color: #ed5565 !important;
+}
+
+.content-wrapper {
+  min-height: 100%;
+  background-color: #EDEDED !important;
+  z-index: 800;
+}
+
+h1 {
+  color: #73879C !important;
+}

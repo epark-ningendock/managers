@@ -15,7 +15,7 @@ class Hospital extends Model
         'postcode',
         'pref',
         'district_code_id',
-	      'course_meta_information_id',
+          'course_meta_information_id',
         'address1',
         'address2',
         'longitude',

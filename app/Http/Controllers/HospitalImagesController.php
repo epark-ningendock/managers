@@ -23,7 +23,6 @@ class HospitalImagesController extends Controller
      */
     public function create($hospital_id)
     {
-
         return view('hospital_images.create', compact('hospital_id'));
         return view('hospital_images.create');
     }

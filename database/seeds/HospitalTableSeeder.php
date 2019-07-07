@@ -16,7 +16,7 @@ class HospitalTableSeeder extends Seeder
         Hospital::unguard();
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        factory(Hospital::class, 50)->create()->each(function($hospital){
+        factory(Hospital::class, 50)->create()->each(function ($hospital) {
             factory(MedicalTreatmentTime::class)->create(['hospital_id' => $hospital->id]);
         });
 

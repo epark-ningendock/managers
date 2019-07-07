@@ -1,5 +1,4 @@
 <div class="box-body">
-    <p>※変更後、ログイン画面に遷移します</p>
     <br>
     <div class="form-group @if ($errors->has('old_password')) has-error @endif">
         <label for="old_password">現在のパスワード</label>
@@ -22,7 +21,7 @@
 
   <div class="box-footer">
       <a href="{{ route('hospital-staff.index') }}" class="btn btn-default">戻る</a>
-      <button type="submit" class="btn btn-primary">更新</button>
+      <button type="submit" class="btn btn-primary">保存</button>
   </div>
 
 </div>
