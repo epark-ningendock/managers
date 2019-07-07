@@ -16,7 +16,9 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-  <h1>検査コース分類管理</h1>
+  <h1>
+      <i class="fa fa-book"> 検査コース分類管理</i>
+  </h1>
 @stop
 
 <!-- search section -->
@@ -85,7 +87,10 @@
         </div>
       </div>
       <div class="col-md-1">
-        <button type="submit" class="btn btn-primary btn-search">検索</button>
+        <button type="submit" class="btn btn-primary btn-search">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            検索
+        </button>
       </div>
     </div>
   </form>
@@ -132,7 +137,7 @@
           @if($item['status']->is(Status::Valid))
             <a class="btn btn-primary"
                href="{{ route('classification.edit', $item['id']).'?classification='.(isset($classification)? $classification : 'minor') }}">
-              編集
+               <i class="fa fa-edit text-bold"> 編集</i>
             </a>
           @endif
         </td>
@@ -141,7 +146,7 @@
           @if($item['status']->is(Status::Valid))
             <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"
                     data-message="{{ trans('messages.classification_delete_popup_content') }}">
-              削除
+              <i class="fa fa-trash"></i>
             </button>
           @elseif($item['status']->is(Status::Deleted))
             <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"

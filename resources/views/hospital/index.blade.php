@@ -13,7 +13,9 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>医療機関</h1>
+    <h1>
+        <i class="fa fa-hospital-o"> 医療機関管理</i>
+    </h1>
 @stop
 
 @section('search')
@@ -48,7 +50,7 @@
                     <button type="reset" class="btn btn-default">検索用にクリア</button>
                     <button type="submit" class="btn btn-primary">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                        検索する
+                        検索
                     </button>
                 </div>
 
@@ -99,7 +101,9 @@
                         <td>{{ $hospital->tel }}</td>
                         <td>{{ \App\Enums\HospitalEnums::getDescription($hospital->status) }}</td>
                         <td>
-                            <a class="btn btn-primary insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">操作</a>
+                            <a class="btn btn-success insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">
+                                <i class="fa fa-pencil"></i>    
+                            </a>
                             {{-- 医療機関の選択フォーム --}}
                             <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
                                 {{ csrf_field() }}
@@ -108,14 +112,16 @@
                         <td>
                             @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
                                 <a href="{{ route('hospital.edit', $hospital->id) }}"
-                                   class="btn btn-primary">編集</a>
+                                   class="btn btn-primary">
+                                   <i class="fa fa-edit text-bold"> 編集</i>
+                                </a>
                             @endif
                         </td>
                         <td>
                             @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
                                 <button class="btn btn-danger delete-btn delete-popup-btn"
                                         data-id="{{ $hospital->id }}">
-                                    削除
+                                    <i class="fa fa-trash"></i>
                                 </button>
                             @endif
                         </td>

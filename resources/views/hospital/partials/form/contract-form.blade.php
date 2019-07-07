@@ -137,6 +137,6 @@
 </div>
 <div class="form-group @if( $errors->has('contract_info_search_word'))  has-error @endif">
     <div class="col-md-12">
-        <button type="submit" class="btn btn-success pull-right">登録</button>
+        <button type="submit" class="btn btn-primary pull-right">保存</button>
     </div>
 </div>

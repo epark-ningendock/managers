@@ -1,7 +1,9 @@
 @extends('layouts.form')
 
 @section('content_header')
-  <h1>スタッフ情報</h1>
+  <h1>
+      <i class="fa fa-users"> スタッフ管理</i>
+  </h1>
 @stop
 
 @section('form')

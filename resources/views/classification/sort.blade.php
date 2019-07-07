@@ -10,7 +10,9 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-  <h1>検査コース分類管理</h1>
+  <h1>
+      <i class="fa fa-book"> 検査コース分類管理</i>
+  </h1>
 @stop
 
 <!-- search section -->
@@ -69,7 +71,10 @@
       </div>
 
       <div class="col-md-1">
-        <button type="submit" class="btn btn-primary btn-search">検索</button>
+        <button type="submit" class="btn btn-primary btn-search">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            検索
+        </button>
       </div>
     </div>
   </form>
@@ -102,7 +107,7 @@
     </table>
     <div class="box-footer pull-right">
       <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
-      <button type="submit" class="btn btn-primary">作成</button>
+      <button type="submit" class="btn btn-primary">保存</button>
     </div>
   </form>
   <style>
