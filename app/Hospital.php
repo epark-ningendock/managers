@@ -81,4 +81,5 @@ class Hospital extends Model
     {
         return $this->hasMany('App\HospitalCategory');
     }
+
 }

@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\Helpers\DBCommonColumns;
 
 class CreateHospitalCategoriesTable extends Migration
 {
+    use DBCommonColumns;
     /**
      * Run the migrations.
      *
@@ -28,7 +30,7 @@ class CreateHospitalCategoriesTable extends Migration
             $table->tinyInteger('is_display')->default(0);
             $table->integer('order')->default(0);
             $table->integer('order2')->default(0);
-            $table->timestamps();
+            $this->addCommonColumns($table);
         });
     }
 

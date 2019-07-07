@@ -12,11 +12,14 @@ class HospitalImagesController extends Controller
 {
     public function __construct(
         HospitalImage $hospital_image,
-        HospitalCategory $hospital_category
+        HospitalCategory $hospital_category,
+        ImageOrder $image_order
+
     )
     {
         $this->hospital_image = $hospital_image;
         $this->hospital_category = $hospital_category;
+        $this->image_order = $image_order;
     }
     /**
      * Display a listing of the resource.
@@ -35,9 +38,11 @@ class HospitalImagesController extends Controller
      */
     public function create($hospital_id)
     {
+        $hospital = Hospital::with(['hospital_images', 'hospital_categories'])->find($hospital_id);
 
-        return view('hospital_images.create', compact('hospital_id'));
-        return view('hospital_images.create');
+        $image_order = $this->image_order;
+
+        return view('hospital_images.create', compact('hospital', 'hospital_id', 'image_order'));
     }
 
     /**
@@ -46,51 +51,82 @@ class HospitalImagesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $hospital_id)
+    public function store(Request $request, int $hospital_id)
     {
+        $hospital = Hospital::find($hospital_id);
+
         $params = $request->validate([
             'main' => 'file|image|max:4000',
-            'sub.*' => 'file|image|max:4000',
+            'sub_1' => 'file|image|max:4000',
+            'sub_2' => 'file|image|max:4000',
+            'sub_3' => 'file|image|max:4000',
+            'sub_4' => 'file|image|max:4000',
         ]);
         $file = $params;
 
-        $save_images = [];
+        //main画像の保存
+        if(isset($file['main'])) {
+            $image = \Image::make(file_get_contents($file['main']->getRealPath()));
+            $image
+                ->save(public_path().'/img/uploads/'.$file['main']->hashName())
+                ->resize(300, 300)
+                ->save(public_path().'/img/uploads/300-300-'.$file['main']->hashName())
+                ->resize(500, 500)
+                ->save(public_path().'/img/uploads/500-500-'.$file['main']->hashName());
 
-        //main
-        $image = \Image::make(file_get_contents($file['main']->getRealPath()));
-        $image
-            ->save(public_path().'/img/uploads/'.$file['main']->hashName())
-            ->resize(300, 300)
-            ->save(public_path().'/img/uploads/300-300-'.$file['main']->hashName())
-            ->resize(500, 500)
-            ->save(public_path().'/img/uploads/500-500-'.$file['main']->hashName());
-        $save_images[] = ['extension' => str_replace('image/', '', $image->mime), 'name' => $file['main']->hashName(), 'path' => $file['main']->hashName()];
-        //$save_image_categories[] = [ 'order' => 1, 'order2' => HospitalCategory::FACILITY, 'is_display' => HospitalCategory::SHOW];
+            //HospitalImage HospitalCategory 保存用array
+            $save_images = ['extension' => str_replace('image/', '', $image->mime), 'name' => $file['main']->getClientOriginalName(), 'path' => $file['main']->hashName()];
+            $save_image_categories = [ 'hospital_id' => $hospital_id, 'image_order' => ImageOrder::IMAGE_GROUP_FACILITY_MAIN ];
 
+
+            //メイン画像の登録確認
+            $image_category = $this->hospital_category->ByImageOrder($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 0)->first();
+
+            if(is_null($image_category)) {
+                $hospital->hospital_images()->saveMany([
+                        $hospital_img = new HospitalImage($save_images)
+                    ]
+                );
+                $hospital_img->hospital_category()->create($save_image_categories);
+            } else {
+                $hospital_img = $hospital->hospital_images()->find($image_category->hospital_image_id);
+                $hospital_img->update($save_images);
+                //dd($save_image_categories);
+                $hospital_img->hospital_category()->update($save_image_categories);
+            }
+        }
         //sub
-        foreach($file['sub'] as $key => $sub){
-            $sub_image = \Image::make(file_get_contents($sub->getRealPath()));
-            $sub_image
-                ->save(public_path().'/img/uploads/'.$sub->hashName())
-                ->resize(100, 100)
-                ->save(public_path().'/img/uploads/300-300-'.$sub->hashName())
-                ->resize(200, 200)
-                ->save(public_path().'/img/uploads/500-500-'.$sub->hashName());
-            $save_images[] = ['extension' => str_replace('image/', '', $sub_image->mime), 'name' => $sub->hashName(), 'path' => $sub->hashName()];
-            $save_image_categories[] = [ 'order' => $key, 'order2' => HospitalCategory::FACILITY, 'is_display' => HospitalCategory::SHOW];
-        }
+        for($i = 1; $i <= 4; $i++){
+            if(isset($file['sub_'.$i])) {
+                $sub_image = \Image::make(file_get_contents($file['sub_'.$i]->getRealPath()));
+                $sub_image
+                    ->save(public_path().'/img/uploads/'.$file['sub_'.$i]->hashName())
+                    ->resize(100, 100)
+                    ->save(public_path().'/img/uploads/300-300-'.$file['sub_'.$i]->hashName())
+                    ->resize(200, 200)
+                    ->save(public_path().'/img/uploads/500-500-'.$file['sub_'.$i]->hashName());
 
-        $hospital = Hospital::find($hospital_id);
+                $save_sub_images = ['extension' => str_replace('image/', '', $sub_image->mime), 'name' => $file['sub_'.$i]->getClientOriginalName(), 'path' => $file['sub_'.$i]->hashName()];
+                $save_sub_image_categories = [ 'hospital_id' => $hospital_id, 'image_order' => ImageOrder::IMAGE_GROUP_FACILITY_SUB, 'order2' => $i ];
 
-        foreach($save_images as $key => $img ){
-            $hospital->hospital_images()->saveMany([
-                    $hospital_img = new HospitalImage($img)
-                ]
-            );
-            $save_image_categories[$key]['hospital_id'] = $hospital_id;
-            $hospital_img->hospital_category()->create($save_image_categories[$key]);
+
+            //メイン画像の登録確認
+            $image_category = $this->hospital_category->ByImageOrder($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_SUB, $i)->first();
+
+            if(is_null($image_category)) {
+                $hospital->hospital_images()->saveMany([
+                        $hospital_img = new HospitalImage($save_sub_images)
+                    ]
+                );
+                $hospital_img->hospital_category()->create($save_sub_image_categories);
+            } else {
+                $hospital_img = $hospital->hospital_images()->find($image_category->hospital_image_id);
+                $hospital_img->update($save_sub_images);
+                $hospital_img->hospital_category()->update($save_sub_image_categories);
+                }
+            }
         }
-        return redirect('/img/uploads/'.$file['main']->hashName());
+        return redirect()->route('hospital.image.create', ['hospital_id' => $hospital_id])->with('success', trans('画像の更新が完了しました。'));
     }
 
     /**

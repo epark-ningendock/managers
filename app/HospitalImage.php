@@ -15,4 +15,13 @@ class HospitalImage extends SoftDeleteModel
     {
         return $this->hasOne('App\ImageOrder');
     }
+
+    public function scopeFindByid($query, $id)
+    {
+        $query->where('id',$id)->where('image_order',$image_order);
+
+        return $query;
+    }
+
+
 }
