@@ -19,13 +19,13 @@ class CustomersSeeder extends Seeder
         $faker = Factory::create();
         $options = Option::all();
 
-        factory(Customer::class, 50)->create()->each(function ($customer, $index) use($faker, $options) {
+        factory(Customer::class, 50)->create()->each(function ($customer, $index) use ($faker, $options) {
             $reservations = factory(Reservation::class, 3)->create([
                 'customer_id' => $customer->id
             ]);
 
-            $reservations->each(function($reservation) use ($faker, $options){
-                $reservation_options = collect($faker->randomElements($options, 3))->map(function($option){
+            $reservations->each(function ($reservation) use ($faker, $options) {
+                $reservation_options = collect($faker->randomElements($options, 3))->map(function ($option) {
                     $reservation_option = new ReservationOption();
                     $reservation_option->fill([ 'option_id' => $option->id, 'option_price' => $option->price ]);
                     return $reservation_option;

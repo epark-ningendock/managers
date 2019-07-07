@@ -143,7 +143,7 @@ Route::middleware('auth:staffs')->group(function () {
     Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
     Route::get('/hospital/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
 
-    Route::group(['prefix' => 'hospital'], function() {
+    Route::group(['prefix' => 'hospital'], function () {
         Route::get('/{hospital}/images/create', 'HospitalImagesController@create')->name('hospital.image.create');
         Route::post('/{hospital}/images/store', 'HospitalImagesController@store')->name('hospital.image.store');
         /*
@@ -247,7 +247,6 @@ Route::middleware('auth:staffs,hospital_staffs')->group(function () {
     Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
     Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
     Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
-
 });
 
 //Route::resource('hospital_images', 'HospitalImagesController');

@@ -25,11 +25,10 @@ class HospitalFormRequest extends FormRequest
      */
     public function rules()
     {
-
         $status = HospitalEnums::getValues();
 
 
-        if ( request()->route()->uri === 'hospital' ) {
+        if (request()->route()->uri === 'hospital') {
             return [
                 'status' => Rule::in($status),
             ];
@@ -51,8 +50,6 @@ class HospitalFormRequest extends FormRequest
 //            'medical_treatment_time[1][end]' => 'date_format:H:i',
             ];
         }
-
-
     }
 
     public function messages()

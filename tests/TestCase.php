@@ -12,9 +12,9 @@ abstract class TestCase extends BaseTestCase
 
     protected function hospitalStaffSignIn($user = null)
     {
-    	$user = $user ?: factory(HospitalStaff::class)->create();
-    	$this->actingAs($user);
+        $user = $user ?: factory(HospitalStaff::class)->create();
+        $this->actingAs($user);
 
-    	return $user;
+        return $user;
     }
 }

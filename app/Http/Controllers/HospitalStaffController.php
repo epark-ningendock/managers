@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Log;
 
 class HospitalStaffController extends Controller
 {
@@ -97,7 +98,8 @@ class HospitalStaffController extends Controller
         if (Hash::check($request->old_password, $hospital_staff->password)) {
             $hospital_staff->password = bcrypt($request->password);
             $hospital_staff->save();
-            return redirect('/login')->with('success', trans('messages.hospital_staff_update_passoword'));
+            $result = app('App\Http\Controllers\Auth\LoginController')->is_hospital_staff_login($hospital_staff->login_id, $request->password);
+            return redirect('hospital-staff')->with('success', trans('messages.hospital_staff_update_passoword'));
         } else {
             $validator = Validator::make([], []);
             $validator->errors()->add('old_password', '現在のパスワードが正しくありません');

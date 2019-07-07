@@ -25,5 +25,4 @@ class MedicalTreatmentTime extends Model
     {
         $this->attributes['status'] = is_null($value) ? '1' : $value;
     }
-
 }
