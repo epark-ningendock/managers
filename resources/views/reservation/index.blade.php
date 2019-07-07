@@ -104,7 +104,7 @@
 
     <div class="table-responsive">
         @if (count($reservations))
-        <table class="table table-bordered table-hover mb-5 mt-5">
+        <table class="table table-bordered table-hover table-striped mb-5 mt-5">
             <thead>
             <tr>
                 <th>予約日</th>

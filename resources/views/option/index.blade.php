@@ -37,7 +37,7 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table table-bordered table-hover mb-5 mt-5">
+        <table class="table table-bordered table-hover table-striped mb-5 mt-5">
             <thead>
             <tr>
                 <th>オプションID</th>

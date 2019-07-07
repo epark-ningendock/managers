@@ -29,7 +29,7 @@
 @section('table')
 
   <div class="table-responsive">
-    <table id="example2" class="table table-bordered table-hover">
+    <table id="example2" class="table table-bordered table-hover table-striped">
       <thead>
       <tr>
         <th>検査コースID</th>

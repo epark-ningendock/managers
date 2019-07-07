@@ -15,7 +15,7 @@
 @stop
 
 @section('table')
-    <table id="example2" class="table table-bordered table-hover mb-5 mt-5">
+    <table id="example2" class="table table-bordered table-hover table-striped mb-5 mt-5">
       <thead>
       <tr>
           <th>ID</th>
