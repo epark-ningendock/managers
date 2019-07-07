@@ -98,7 +98,7 @@ class HospitalStaffController extends Controller
         if (Hash::check($request->old_password, $hospital_staff->password)) {
             $hospital_staff->password = bcrypt($request->password);
             $hospital_staff->save();
-            $result = app('App\Http\Controllers\Auth\LoginController')->is_hospital_staff_login($hospital_staff->login_id, $request->password);
+            app('App\Http\Controllers\Auth\LoginController')->is_hospital_staff_login($hospital_staff->login_id, $request->password);
             return redirect('hospital-staff')->with('success', trans('messages.hospital_staff_update_passoword'));
         } else {
             $validator = Validator::make([], []);
