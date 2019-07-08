@@ -20,7 +20,7 @@ class AuthorityLevelThree
         $staff = Staff::findOrFail($request->staff_id);
 
         if ($staff->authority->value !== Authority::ExternalStaff) {
-            return redirect('/staff');
+            return redirect('/hospital');
         }
         return $next($request);
     }

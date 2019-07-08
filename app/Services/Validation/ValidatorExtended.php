@@ -6,15 +6,16 @@ namespace App\Services\Validation;
 
 use Illuminate\Validation\Validator as IlluminateValidator;
 
-class ValidatorExtended extends IlluminateValidator {
-
+class ValidatorExtended extends IlluminateValidator
+{
     private $_custom_messages = array(
         "number_dash" => 'Numbers and dash is allowed',
         "longitude_latitude" => 'Value is invalid',
     );
 
-    public function __construct( $translator, $data, $rules, $messages = array(), $customAttributes = array() ) {
-        parent::__construct( $translator, $data, $rules, $messages, $customAttributes );
+    public function __construct($translator, $data, $rules, $messages = array(), $customAttributes = array())
+    {
+        parent::__construct($translator, $data, $rules, $messages, $customAttributes);
 
         // $this->_set_custom_stuff();
     }
@@ -24,9 +25,10 @@ class ValidatorExtended extends IlluminateValidator {
      *
      * @return void
      */
-    protected function _set_custom_stuff() {
+    protected function _set_custom_stuff()
+    {
         //setup our custom error messages
-        $this->setCustomMessages( $this->_custom_messages );
+        $this->setCustomMessages($this->_custom_messages);
     }
 
 
@@ -37,7 +39,7 @@ class ValidatorExtended extends IlluminateValidator {
      */
     protected function validateNumberDash($attribute, $value='')
     {
-    	return preg_match("/(^[0-9- ]+$)+/", $value) ? true : false;
+        return preg_match("/(^[0-9- ]+$)+/", $value) ? true : false;
     }
 
     /**
@@ -50,31 +52,31 @@ class ValidatorExtended extends IlluminateValidator {
         return preg_match("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/", $value) ? true : false;
     }
 
-	/**
-	 * Start letter must be K. this code need to be improved to work any start letter
-	 *
-	 * @param $attribute
-	 * @param string $value
-	 *
-	 * @return bool
-	 */
-	protected function validateStartLetterK($attribute, $value='')
-	{
-		return preg_match("/^[K]/", $value) ? true : false;
-	}
+    /**
+     * Start letter must be K. this code need to be improved to work any start letter
+     *
+     * @param $attribute
+     * @param string $value
+     *
+     * @return bool
+     */
+    protected function validateStartLetterK($attribute, $value='')
+    {
+        return preg_match("/^[K]/", $value) ? true : false;
+    }
 
 
-	/**
-	 * Need to start with alphabet and follow numbers
-	 * @param $attribute
-	 * @param string $value
-	 *
-	 * @return bool
-	 */
-	protected function validateStartAlphabetAndNumber($attribute, $value='')
-	{
-		return preg_match("/^[A-Za-z][A-Za-z0-9]*$/", $value) ? true : false;
-	}
+    /**
+     * Need to start with alphabet and follow numbers
+     * @param $attribute
+     * @param string $value
+     *
+     * @return bool
+     */
+    protected function validateStartAlphabetAndNumber($attribute, $value='')
+    {
+        return preg_match("/^[A-Za-z][A-Za-z0-9]*$/", $value) ? true : false;
+    }
 
 
     /**
@@ -88,6 +90,4 @@ class ValidatorExtended extends IlluminateValidator {
     {
         return preg_match("/^\d*(\.\d{7})?$/", $value) ? true : false;
     }
-
-
-} 
+}

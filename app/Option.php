@@ -18,6 +18,4 @@ class Option extends SoftDeleteModel
     {
         return $this->hasMany('App\ReservationOption');
     }
-
-
 }

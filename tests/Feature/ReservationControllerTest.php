@@ -172,7 +172,9 @@ class ReservationControllerTest extends TestCase
     protected function validBulkReservationStatusUpdateFields($overwrites = [])
     {
         $reservations = factory(Reservation::class, 'with_all', 5)->create([ 'reservation_status' => ReservationStatus::ReceptionCompleted ]);
-        $ids = $reservations->map(function($reservation) { return $reservation->id; })->toArray();
+        $ids = $reservations->map(function ($reservation) {
+            return $reservation->id;
+        })->toArray();
         $fields = [
             'ids' => $ids,
             'reservation_status' => ReservationStatus::Completed,
