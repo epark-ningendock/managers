@@ -36,6 +36,5 @@ $factory->define(App\HospitalMinorClassification::class, function (Faker $faker)
 $factory->defineAs(HospitalMinorClassification::class, 'with_middle', function (Faker $faker) use ($factory) {
     $minor = $factory->raw(HospitalMinorClassification::class);
     $middle = factory(HospitalMiddleClassification::class, 'with_major')->create();
-    echo('this1');
     return array_merge($minor, ['middle_classification_id' => $middle->id]);
 });

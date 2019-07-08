@@ -14,6 +14,5 @@ $factory->define(App\HospitalMajorClassification::class, function (Faker $faker)
     if ($result['is_icon'] == '1') {
         $result['icon_name'] = $faker->userName;
     }
-    echo('this3');
     return $result;
 });
