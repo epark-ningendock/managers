@@ -9,11 +9,11 @@ use App\Customer;
 use App\Course;
 use App\Services\ReservationExportService;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Enums\ReservationStatus;
 use Illuminate\Support\Facades\Session;
-use Carbon\Carbon;
 
 class ReservationController extends Controller
 {
@@ -429,7 +429,8 @@ class ReservationController extends Controller
     public function create()
     {
         $courses = Course::all();
-        return view('reservation.create')->with('courses', $courses);
+        $customers = Customer::paginate(5);
+        return view('reservation.create')->with(['courses' => $courses, 'customers' => $customers]);
     }
 
 }
