@@ -428,5 +428,12 @@
     .answer-group {
       padding-left: 10px;
     }
+    .datepicker-days tbody tr {
+        display: none;
+    }
+
+    .datepicker-days tbody tr:first-child {
+        display: table-row;
+    }
   </style>
 @endpush
