@@ -40,11 +40,11 @@
         <div class="form-group">
           <label for="classification">分類</label>
           <select class="form-control" id="classification" name="classification">
-            <option value="major" {{ (isset($classification) && $classification == 'major') ? "selected" : "" }}>大分類
+            <option value="major" {{ (!isset($classification) || $classification == 'major') ? "selected" : "" }}>大分類
             </option>
             <option value="middle" {{ (isset($classification) && $classification == 'middle') ? "selected" : "" }}>中分類
             </option>
-            <option value="minor" {{ (!isset($classification) || $classification == 'minor') ? "selected" : "" }}>小分類
+            <option value="minor" {{ (isset($classification) && $classification == 'minor') ? "selected" : "" }}>小分類
             </option>
           </select>
         </div>
@@ -110,7 +110,7 @@
         <th>小分類</th>
       @endif
       <th>更新日時</th>
-      <th>医療機関管理</th>
+      <th>状態</th>
       <th>編集</th>
       <th>{{ isset($status) && $status == Status::Deleted ? '復元' : '削除' }}</th>
     </tr>

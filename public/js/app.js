@@ -193,7 +193,7 @@ module.exports.addScrollToTop = function () {
             var id = $(this).data('id');
             var targetForm = $(this).data('target-form') || '#delete-record-form';
             var message = $(this).data('message');
-            var btnText = $(this).data('button-text') || '削除';
+            var btnText = $(this).data('button-text') || 'OK';
             var targetFormAction = $(targetForm).attr('action').replace(':id', id);
             $(targetForm).attr('action', targetFormAction);
 

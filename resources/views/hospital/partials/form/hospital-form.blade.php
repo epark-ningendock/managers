@@ -55,7 +55,7 @@
               <label for="name">{{ trans('messages.location') }}</label>
           </td>
           <td>
-      
+
               <div class="form-group @if( $errors->has('postcode'))  has-error @endif">
                   <label for="postcode" class="col-md-4">{{ trans('messages.postcode') }}</label>
                   <div class="col-md-8">
@@ -131,7 +131,7 @@
                       <input type="text" class="form-control" id="streetview_url" name="streetview_url"  value="{{ old('streetview_url', (isset($hospital->streetview_url) ) ?: null) }}" />
                       @if ($errors->has('streetview_url')) <p class="help-block">{{ $errors->first('streetview_url') }}</p> @endif
                   </div>
-              </div>            
+              </div>
 
           </td>
       </tr>
@@ -140,7 +140,7 @@
           <td class="gray-column">
               <label for="tel">{{ trans('messages.contact_information') }} </label>
           </td>
-          <td>            
+          <td>
               <div class="form-group @if( $errors->has('tel'))  has-error @endif">
                   <label for="tel" class="col-md-4">{{ trans('messages.tel') }} </label>
                   <div class="col-md-8">
@@ -205,7 +205,7 @@
                   </div>
 
               </td>
-              
+
           </tr>
         @endfor
 
@@ -222,7 +222,7 @@
                                   <div class="col-md-9">
                                       <input type="text" class="form-control" id="start-time-{{ $i }}" name="medical_treatment_time[{{$i}}][start]"  value="{{ old('medical_treatment_time[' . $i . '][start]') }}" />
                                       @if( $errors->has("medical_treatment_time." .$i. ".start"))
-                                        <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".start") }}</p> 
+                                        <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".start") }}</p>
                                        @endif
                                   </div>
                               </div>
@@ -234,7 +234,7 @@
                                   <div class="col-md-9">
                                       <input type="text" class="form-control" id="end-time-{{$i}}" name="medical_treatment_time[{{$i}}][end]"  value="{{ old('medical_treatment_time[' . $i . '][end]') }}" />
                                       @if( $errors->has("medical_treatment_time." .$i. ".end"))
-                                        <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".end") }}</p> 
+                                        <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".end") }}</p>
                                        @endif
                                   </div>
                               </div>
