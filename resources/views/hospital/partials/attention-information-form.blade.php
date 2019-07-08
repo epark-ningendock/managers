@@ -7,27 +7,24 @@ $o_minor_ids = collect(old('minor_ids'));
 $o_minor_values = collect(old('minor_values'));
 @endphp
   <div class="box-body">
-    <label for="name">PV・予約</label>
-    <div class="row">
-        <div class='col-sm-4 text-bold'>
-          <p>PV件数 
-            <span>{{ $hospital->pv_count }}</span> 件
-          </p>
-        </div>
-        <div class="form-group col-sm-4 form-inline @if ($errors->has('pvad')) has-error @endif">
-          <label>PR</label>
-          <input type="text" class="form-control pr-input" id="pvad" name="pvad" value="{{ isset($hospital->pvad) ? $hospital->pvad : 0 }}" placeholder="">
-        </div>
-        @if ($errors->has('pvad')) <p class="help-block">{{ $errors->first('pvad') }}</p> @endif
-        <div class='col-sm-4 checkbox'>
-          <label class="ml-3">
-              {{ Form::hidden('is_pickup') }}
-              {{ Form::checkbox('is_pickup', 1, $hospital->is_pickup) }}
-              <p class='text-bold'>ピックアップ</p>
-          </label>
-        </div>
-      </div>
     <table class="table table-bordered">
+      <tr>
+        <td class='text-bold' colspan="3">
+          <label for="name">PV・予約</label>
+        </td>
+        <td colspan="3">
+          <p class="text-bold">PV件数 
+              <span>{{ $hospital->pv_count }}</span> 件
+          </p>
+          <label class="mt-5">PR</label>
+          <input type="text" id="pvad" name="pvad" value="{{ isset($hospital->pvad) ? $hospital->pvad : 0 }}" placeholder="">
+          <div class="mt-5">
+            {{ Form::hidden('is_pickup') }}
+            {{ Form::checkbox('is_pickup', 1, $hospital->is_pickup, array('id'=>'is_pickup')) }}
+            <label for="is_pickup">ピックアップ</label>
+          </div>
+        </td>
+      </tr>
       @foreach($middles as $middle)
         <tr>
           @if(!isset($last) || $middle != $last)
@@ -76,7 +73,7 @@ $o_minor_values = collect(old('minor_values'));
   <div class="box-primary">
     <div class="box-footer">
       <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
-      <button type="submit" class="btn btn-primary">作成</button>
+      <button type="submit" class="btn btn-primary">保存</button>
     </div>
   </div>
 
