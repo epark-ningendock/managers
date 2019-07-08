@@ -19,13 +19,6 @@ Route::get('/', function () {
 //
 //Route::resource('/staff', 'StaffController')->except(['show', 'index'])->middleware('can:edit-staff');
 
-// スタッフ系
-Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], function () {
-    Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password');
-    Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
-});
-
-
 /*
 |--------------------------------------------------------------------------
 | Contract Information
@@ -33,60 +26,6 @@ Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], f
 */
 Route::post('/contract-information/store', 'ContractInformationController@store')->name('contract.store');
 Route::get('/hospital/contract-information', 'ContractInformationController@create')->name('hospital.contractInfo');
-
-
-Route::resource('/staff', 'StaffController')->except(['show']);
-
-// 医療機関系
-Route::resource('/hospital', 'HospitalController')->except(['show']);
-Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search');
-Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
-Route::get('/hospital/search/contract-info', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');
-Route::get('/hospital/image-information', 'HospitalController@createImageInformation')->name('hospital.image.information');
-
-// 医療機関スタッフ系
-Route::get('/hospital-staff/edit-password', 'HospitalStaffController@editPassword'); // ログインユーザーのパスワード編集画面に遷移する
-Route::put('/hospital-staff/update-password/{hospital_staff_id}', 'HospitalStaffController@updatePassword')->name('hospital-staff.update.password'); // ログインユーザーのパスワードを更新する
-Route::get('/hospital-staff/show-password-resets-mail', 'HospitalStaffController@showPasswordResetsMail'); // パスワードのリセットメール送信画面に遷移する
-Route::get('/hospital-staff/send-password-resets-mail', 'HospitalStaffController@sendPasswordResetsMail')->name('hospital-staff.send.password-reset'); // パスワードのリセットメール送信を送信する
-Route::get('/hospital-staff/show-reset-password/{reset_token}/{email}', 'HospitalStaffController@showResetPassword'); // パスワードのリセット画面に遷移する
-Route::put('/hospital-staff/reset-password/{hospital_staff_id}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password'); // パスワードをリセットする
-Route::resource('hospital-staff', 'HospitalStaffController')->except([
-    'show',
-]);
-
-// 検査コース分類系
-Route::post('/classification/{id}/restore', 'ClassificationController@restore')->name('classification.restore');
-Route::get('/classification/sort', 'ClassificationController@sort')->name('classification.sort');
-Route::patch('/classification/sort/update', 'ClassificationController@updateSort')->name('classification.updateSort');
-Route::resource('/classification', 'ClassificationController')->except(['show']);
-
-// 検査コース系
-Route::resource('/course', 'CourseController')->except(['show']);
-Route::get('/course/sort', 'CourseController@sort')->name('course.sort');
-Route::get('/course/{id}/copy', 'CourseController@copy')->name('course.copy');
-Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course.updateSort');
-
-// メールテンプレート系
-Route::resource('/email-template', 'EmailTemplateController')->except(['show']);
-
-// 受付メール設定系
-Route::resource('/reception-email-setting', 'ReceptionEmailSettingController');
-
-// ログイン系
-Route::get('/login', function () {
-    return view('/vendor/adminlte/login');
-});
-
-Route::get('/register', function () {
-    return view('/vendor/adminlte/register');
-});
-
-// Calendar
-Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting');
-Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting');
-Route::resource('/calendar', 'CalendarController')->except(['show']);
-
 
 /*
 |--------------------------------------------------------------------------
@@ -142,6 +81,8 @@ Route::middleware('auth:staffs')->group(function () {
     Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search');
     Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
     Route::get('/hospital/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
+    Route::get('/hospital/search/contract-info', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');
+    Route::get('/hospital/image-information', 'HospitalController@createImageInformation')->name('hospital.image.information');
 
     Route::group(['prefix' => 'hospital'], function () {
         Route::get('/{hospital}/images/create', 'HospitalImagesController@create')->name('hospital.image.create');

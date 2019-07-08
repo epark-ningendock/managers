@@ -59,11 +59,6 @@
 
           <ul class="nav navbar-nav">
             <li>
-              @if(config('adminlte.logout_method') == 'GET' || !config('adminlte.logout_method') && version_compare(\Illuminate\Foundation\Application::VERSION, '5.3.0', '<'))
-                <a href="{{ url(config('adminlte.logout_url', 'auth/logout')) }}">
-                  <i class="fa fa-fw fa-power-off"></i> ログアウト
-                </a>
-              @else
                 <a href="{{ route('logout') }}"
                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                 >
@@ -75,7 +70,6 @@
                   @endif
                   {{ csrf_field() }}
                 </form>
-              @endif
             </li>
           </ul>
         </div>
