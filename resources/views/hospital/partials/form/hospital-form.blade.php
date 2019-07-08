@@ -7,18 +7,18 @@
             <div class="form-group @if( $errors->has('status'))  has-error @endif">
                 <div class="radio">
                     <label class="ml-5">
-                        <input type="radio" name="status" id="private_status" value="{{ \App\Enums\Status::Private }}">
-                        {{ \App\Enums\Status::getDescription('0') }}
+                        <input type="radio" name="status" id="private_status" value="{{ \App\Enums\HospitalEnums::Private }}">
+                        {{ \App\Enums\HospitalEnums::getDescription('0') }}
                     </label>
 
                     <label class="ml-3">
-                        <input type="radio" name="status" id="public_status" value="{{ \App\Enums\Status::Public }}">
-                        {{ \App\Enums\Status::getDescription('1') }}
+                        <input type="radio" name="status" id="public_status" value="{{ \App\Enums\HospitalEnums::Public }}">
+                        {{ \App\Enums\HospitalEnums::getDescription('1') }}
                     </label>
 
                     <label class="ml-3">
-                        <input type="radio" name="status" id="deleted_status" value="{{ \App\Enums\Status::Deleted }}">
-                        {{ \App\Enums\Status::getDescription('X') }}
+                        <input type="radio" name="status" id="deleted_status" value="{{ \App\Enums\HospitalEnums::Delete }}">
+                        {{ \App\Enums\HospitalEnums::getDescription('X') }}
                     </label>
                 </div>
                 @if ($errors->has('status')) <p class="help-block">{{ $errors->first('status') }}</p> @endif

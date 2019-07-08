@@ -13,6 +13,7 @@ use App\Enums\Permission;
 use App\Enums\WebReception;
 use App\Enums\CalendarDisplay;
 use App\Enums\PaymentStatus;
+use App\Enums\ReservationStatus;
 
 return [
     Authority::class => [
