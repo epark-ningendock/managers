@@ -7,7 +7,6 @@ use App\HospitalMinorClassification;
 $factory->define(App\HospitalMinorClassification::class, function (Faker $faker) {
     $names = [
         '駐車場あり',
-        'アクセスについて',
         'その他',
         '英語',
         '中国語',
@@ -19,7 +18,7 @@ $factory->define(App\HospitalMinorClassification::class, function (Faker $faker)
     ];
 
     $result = [
-        'name' => $names[rand(0, 9)],
+        'name' => $names[rand(0, 8)],
         'is_fregist' => $faker->randomElement([0, 1]),
         'status' => '1',
         'order' => 0,

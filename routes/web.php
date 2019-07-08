@@ -76,16 +76,18 @@ Route::middleware('auth:staffs')->group(function () {
     | Hospital Routes
     |--------------------------------------------------------------------------
     */
-    Route::resource('/hospital', 'HospitalController')->except(['show']);
     Route::group(['prefix' => 'hospital'], function () {
         Route::get('/search', 'HospitalController@index')->name('hospital.search');
         Route::get('/search/text', 'HospitalController@searchText')->name('hospital.search.text');
+        Route::get('/search/contract-info', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');
         Route::get('/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
         Route::get('/image-information', 'HospitalController@createImageInformation')->name('hospital.image.information');
         Route::get('/attention-information/create', 'HospitalController@createAttentionInformation')->name('hospital.attention-information.show');
         Route::post('/attention-information/store', 'HospitalController@storeAttentionInformation')->name('hospital.attention-information.store');
     });
 
+    Route::resource('/hospital', 'HospitalController')->except(['show']);
+    
     Route::group(['prefix' => 'hospital'], function () {
         Route::get('/{hospital}/images/create', 'HospitalImagesController@create')->name('hospital.image.create');
         Route::post('/{hospital}/images/store', 'HospitalImagesController@store')->name('hospital.image.store');
