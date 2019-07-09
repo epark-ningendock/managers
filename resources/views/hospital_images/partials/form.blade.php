@@ -32,7 +32,7 @@
             <th>TOP</th>
             <?php $title = $hospital->hospital_categories->firstWhere('image_order', $image_order::IMAGE_GROUP_TOP); ?>
             <td>
-                {{Form::text('title', $title->title)}}
+                {{Form::text('title', is_null($title) ? '' : $title->title)}}
                 @if ($errors->has('title'))
                     {{ $errors->first('title') }}
                 @endif
@@ -41,7 +41,7 @@
         <tr>
             <th>キャプション</th>
             <td>
-                {{Form::text('caption', $title->caption)}}
+                {{Form::text('caption', is_null($title) ? '' : $title->caption)}}
                 @if ($errors->has('caption'))
                     {{ $errors->first('caption') }}
                 @endif
