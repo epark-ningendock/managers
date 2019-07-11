@@ -47,5 +47,30 @@
                 @endif
             </td>
         </tr>
+        @for ($i = 1; $i <= 4; $i++)
+        <tr>
+            <th>こだわり{{$i}}</th>
+            <td>
+                <?php $image_speciality = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_SPECIALITY)->where('order2', $i)->first(); ?>
+                @if(!is_null($image_speciality))
+                    <img src="/img/uploads/300-300-{{$image_speciality->hospital_image->path}}" width="150">
+                @endif
+                {{Form::file("speciality_".$i, ['class' => 'field'])}}
+                @if ($errors->has('image'.$i))
+                    {{ $errors->first('image'.$i) }}
+                @endif
+            </td>
+        </tr>
+        @endfor
+        <tr>
+            <th>地図・アクセス</th>
+            <td>
+                <?php $map = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_MAP)->first(); ?>
+                    {{Form::text('map_url', is_null($map) ? '' : $map->hospital_image()->first()->memo1)}}
+                    @if ($errors->has('map_url'))
+                        {{ $errors->first('map_url') }}
+                    @endif
+            </td>
+        </tr>
     </table>
 </div>

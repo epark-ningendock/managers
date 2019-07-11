@@ -42,6 +42,7 @@ return [
     'classification_sort_updated' => '分類レコードの順序が更新されました。',
     'invalid_classification_id' => '分類IDが存在しません',
     'no_record' => 'レコードがありません',
+    'hospital_image_update' => '分類レコードの順序が更新されました。',
     'major_classification' => [
         'child_exist_error_on_delete' => '中分類の記録があります。 操作は完了できません。'
     ],
@@ -66,6 +67,7 @@ return [
         'policy_holder' => '保険契約者',
         'representative_name_kana' => '代表名（ふりがな',
         'representative_name' => '代表名',
+        'hospital_categories' => '医療機関画像',
         'classifications' => [
             'major' => '大分類',
         'password' => 'パスワード',
@@ -175,5 +177,8 @@ return [
         'status_update_success' => '予約ステータスが更新されました。',
         'status_update_error' => 'エラーが発生しました。',
         'invalid_reservation_status' => '無効な操作。'
+    ],
+    'image_category' =>[
+        'update_success' => '画像が更新されました。',
     ]
 ];

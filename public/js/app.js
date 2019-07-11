@@ -225,3 +225,14 @@ module.exports.addScrollToTop = function () {
 
 /***/ })
 /******/ ]);
+
+// フラッシュメッセージのfadeout
+(function() {
+    'use strict';
+
+    // フラッシュメッセージのfadeout
+    $(function(){
+        $('.alert-success').fadeOut(2000);
+    });
+
+})();
