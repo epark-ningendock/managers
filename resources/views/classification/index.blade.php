@@ -133,7 +133,7 @@
         <td>{!! $item['updated_at'] !!} </td>
         <td>{{ $item['status']->description }}</td>
         <td>
-          {{--@if($item['status']->is(Status::Valid) && auth()->check() && auth()->user()->hasPermission('is_item_category', Permission::Edit))--}}
+          {{--@if($item['status']->is(Status::Valid) && auth()->check() && auth()->user()->hasPermission('is_cource_classification', Permission::Edit))--}}
           @if($item['status']->is(Status::Valid))
             <a class="btn btn-primary"
                href="{{ route('classification.edit', $item['id']).'?classification='.(isset($classification)? $classification : 'minor') }}">
@@ -142,7 +142,7 @@
           @endif
         </td>
         <td>
-          {{--@if(auth()->check() && auth()->user()->hasPermission('is_item_category', Permission::Edit))--}}
+          {{--@if(auth()->check() && auth()->user()->hasPermission('is_cource_classification', Permission::Edit))--}}
           @if($item['status']->is(Status::Valid))
             <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"
                     data-message="{{ trans('messages.classification_delete_popup_content') }}">

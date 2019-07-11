@@ -19,17 +19,17 @@ class StaffsTableSeeder extends Seeder
             'name' => 'eparkdock01',
             'email' => 'epark01@example.com',
             'password' => Hash::make('password01'),
-            'authority' => '1',
+            'authority' => '3',
             'department_id' => rand(1, 10)
         ]);
         
         factory(StaffAuth::class)->create([
             'is_hospital' => 3,
             'is_staff' => 3,
-            'is_item_category' => 3,
+            'is_cource_classification' => 3,
             'is_invoice' => 3,
             'is_pre_account' => 7,
-            // 'is_contract' => 7,
+            'is_contract' => 7,
             "staff_id" => 1
         ]);
 

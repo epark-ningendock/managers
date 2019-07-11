@@ -94,29 +94,29 @@
     @if ($errors->has('is_staff')) <p class="help-block">{{ $errors->first('is_staff') }}</p> @endif
   </div>
 
-  <div class="form-group @if ($errors->has('is_item_category')) has-error @endif">
+  <div class="form-group @if ($errors->has('is_cource_classification')) has-error @endif">
     <label class="mb-0">検査コース分類</label>
     <div class="radio mt-0">
       <label>
-        <input type="radio" id="is_item_category_none" name="is_item_category" value="{{ Permission::None }}" class="permission-check"
-            {{ old('is_item_category', (isset($staff) ? $staff->staff_auth->is_item_category : -1)) == Permission::None ? 'checked' : '' }}
+        <input type="radio" id="is_cource_classification_none" name="is_cource_classification" value="{{ Permission::None }}" class="permission-check"
+            {{ old('is_cource_classification', (isset($staff) ? $staff->staff_auth->is_cource_classification : -1)) == Permission::None ? 'checked' : '' }}
         >
         {{ Permission::None()->description }}
       </label>
       <label>
-        <input type="radio" id="is_item_category_view" name="is_item_category" value="{{ Permission::View }}" class="permission-check"
-            {{ old('is_item_category', (isset($staff) ? $staff->staff_auth->is_item_category : -1)) == Permission::View ? 'checked' : '' }}
+        <input type="radio" id="is_cource_classification_view" name="is_cource_classification" value="{{ Permission::View }}" class="permission-check"
+            {{ old('is_cource_classification', (isset($staff) ? $staff->staff_auth->is_cource_classification : -1)) == Permission::View ? 'checked' : '' }}
         >
         {{ Permission::View()->description }}
       </label>
       <label class="ml-3">
-        <input type="radio" id="is_item_category_edit" name="is_item_category" value="{{ Permission::Edit }}" class="permission-check"
-            {{ old('is_item_category', (isset($staff) ? $staff->staff_auth->is_item_category : -1)) == Permission::Edit ? 'checked' : '' }}>
+        <input type="radio" id="is_cource_classification_edit" name="is_cource_classification" value="{{ Permission::Edit }}" class="permission-check"
+            {{ old('is_cource_classification', (isset($staff) ? $staff->staff_auth->is_cource_classification : -1)) == Permission::Edit ? 'checked' : '' }}>
         {{ Permission::Edit()->description }}
       </label>
     </div>
-    @if ($errors->has('is_item_category')) <p
-        class="help-block">{{ $errors->first('is_item_category') }}</p> @endif
+    @if ($errors->has('is_cource_classification')) <p
+        class="help-block">{{ $errors->first('is_cource_classification') }}</p> @endif
   </div>
 
   <div class="form-group @if ($errors->has('is_invoice')) has-error @endif">

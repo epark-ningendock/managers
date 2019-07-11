@@ -37,9 +37,10 @@ class StaffFormRequest extends FormRequest
             'status' => 'required|enum_value:' . StaffStatus::class . ',false',
             'is_hospital' => ['required', Rule::in([0, 1, 3])],
             'is_staff' => ['required', Rule::in([0, 1, 3])],
-            'is_item_category' => ['required', Rule::in([0, 1, 3, 7])],
+            'is_cource_classification' => ['required', Rule::in([0, 1, 3, 7])],
             'is_invoice' => ['required', Rule::in([0, 1, 3, 7])],
-            'is_pre_account' => ['required', Rule::in([0, 1, 3, 7])]
+            'is_pre_account' => ['required', Rule::in([0, 1, 3, 7])],
+            'is_contract' => ['required', Rule::in([0, 1, 3, 7])],
         ];
         return $rules;
     }

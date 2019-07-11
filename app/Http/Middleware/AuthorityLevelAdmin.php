@@ -6,7 +6,7 @@ use App\Enums\Authority;
 use App\Staff;
 use Closure;
 
-class AuthorityLevelThree
+class AuthorityLevelAdmin
 {
     /**
      * Handle an incoming request.
@@ -18,8 +18,8 @@ class AuthorityLevelThree
     public function handle($request, Closure $next)
     {
         $staff = Staff::findOrFail($request->staff_id);
-
-        if ($staff->authority->value !== Authority::ExternalStaff) {
+        
+        if ($staff->authority->value !== Authority::Admin) {
             return redirect('/hospital');
         }
         return $next($request);
