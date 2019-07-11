@@ -92,28 +92,28 @@
           {{-- EPARKスタッフの機能 --}}
           @if(Auth::user()->getTable() == "staffs")
               <li class="header">EPARKスタッフ機能</li>
-              <li><a href="/staff"><i class="fa fa-users"></i>スタッフ管理</a></li>
-              <li><a href="/hospital"><i class="fa fa-hospital-o"></i>医療機関管理</a></li>
-              <li><a href="/classification"><i class="fa fa-book"></i>検査コース分類管理</a></li>
-              <li><a href="/reservation"><i class="fa fa-book"></i>請求管理</a></li>
+              <li class="{{ Request::segment(1) === 'staff' ? 'active' : null }}"><a href="/staff"><i class="fa fa-users"></i>&nbsp;&nbsp;&nbsp;&nbsp;スタッフ管理</a></li>
+              <li class="{{ Request::segment(1) === 'hospital' ? 'active' : null }}"><a href="/hospital"><i class="fa fa-hospital-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;医療機関管理</a></li>
+              <li class="{{ Request::segment(1) === 'classification' ? 'active' : null }}"><a href="/classification"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コース分類管理</a></li>
+              <li class="{{ Request::segment(1) === 'reservation' ? 'active' : null }}"><a href="/reservation"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
           @endif
 
           {{-- 医療機関スタッフの機能 --}}
           @if(request()->session()->get('hospital_id'))
             <li class="header">医療機関スタッフ機能</li>
-            <li><a href="/hospital-staff"><i class="fa fa-users"></i>医療機関スタッフ管理</a></li>
-            <li><a href="/customer"><i class="fa fa-users"></i>顧客管理</a></li>
-            <li><a href="#"><i class="fa fa-book"></i>請求管理</a></li>
-            <li><a href="/course"><i class="fa fa-book"></i>検査コース管理</a></li>
-            <li><a href="/option"><i class="fa fa-book"></i>検査コースオプション管理</a></li>
-            <li><a href="/reception"><i class="fa fa-list-alt"></i>受付一覧</a></li>
-            <li><a href="/calendar"><i class="fa fa-calendar"></i>カレンダー管理</a></li>
-            <li><a href="/email-template"><i class="fa fa-gears"></i>メールテンプレート管理</a></li>
-            <li><a href="/reception-email-setting"><i class="fa fa-gears"></i>受付メール設定</a></li>
+            <li class="{{ request()->path()  !== 'hospital-staff/edit-password' && Request::segment(1) === 'hospital-staff' ? 'active' : null }}"><a href="/hospital-staff"><i class="fa fa-users"></i>&nbsp;&nbsp;&nbsp;&nbsp;医療機関スタッフ管理</a></li>
+            <li class="{{ Request::segment(1) === 'customer' ? 'active' : null }}"><a href="/customer"><i class="fa fa-users"></i>&nbsp;&nbsp;&nbsp;&nbsp;顧客管理</a></li>
+            <li class="{{ Request::segment(1) === '#' ? 'active' : null }}"><a href="#"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
+            <li class="{{ Request::segment(1) === 'course' ? 'active' : null }}"><a href="/course"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コース管理</a></li>
+            <li class="{{ Request::segment(1) === 'option' ? 'active' : null }}"><a href="/option"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コースオプション管理</a></li>
+            <li class="{{ Request::segment(1) === 'reception' ? 'active' : null }}"><a href="/reception"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付一覧</a></li>
+            <li class="{{ Request::segment(1) === 'calendar' ? 'active' : null }}"><a href="/calendar"><i class="fa fa-calendar"></i>&nbsp;&nbsp;&nbsp;&nbsp;カレンダー管理</a></li>
+            <li class="{{ Request::segment(1) === 'email-template' ? 'active' : null }}"><a href="/email-template"><i class="fa fa-gears"></i>&nbsp;&nbsp;&nbsp;&nbsp;メールテンプレート管理</a></li>
+            <li class="{{ Request::segment(1) === 'reception-email-setting' ? 'active' : null }}"><a href="/reception-email-setting"><i class="fa fa-gears"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付メール設定</a></li>
           @endif
           {{-- 医療機関スタッフ固有の機能 --}}
           @if(Auth::user()->getTable() == "hospital_staffs" && request()->session()->get('hospital_id'))
-          <li><a href="{{ route('hospital-staff.edit.password') }}"><i class="fa fa-user"></i>パスワードの変更</a></li>
+            <li class="{{ request()->path()  === 'hospital-staff/edit-password' ? 'active' : null }}"><a href="{{ route('hospital-staff.edit.password') }}"><i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;パスワードの変更</a></li>
           @endif
           {{-- デフォルトのサイドバー --}}
           @each('adminlte::partials.menu-item', $adminlte->menu(), 'item')
