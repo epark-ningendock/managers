@@ -19,7 +19,7 @@ class StaffsTableSeeder extends Seeder
             'name' => 'eparkdock01',
             'email' => 'epark01@example.com',
             'password' => Hash::make('password01'),
-            'authority' => '3',
+            'authority' => '1',
             'department_id' => rand(1, 10)
         ]);
         

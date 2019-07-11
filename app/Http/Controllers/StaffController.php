@@ -60,7 +60,7 @@ class StaffController extends Controller
     {
         try {
             DB::beginTransaction();
-            $staff_data = $request->only(['name', 'login_id', 'email', 'password', 'status']);
+            $staff_data = $request->only(['name', 'login_id', 'email', 'password', 'authority', 'status']);
             $staff_data['password'] = bcrypt($staff_data['password']);
             $staff_data['authority'] = Authority::Admin;
             $staff = new Staff($staff_data);
@@ -99,7 +99,7 @@ class StaffController extends Controller
         try {
             DB::beginTransaction();
             $staff = Staff::findOrFail($id);
-            $staff->update($request->only(['name', 'login_id', 'email', 'status']));
+            $staff->update($request->only(['name', 'login_id', 'email', 'authority', 'status']));
             $staff->save();
 
             $staff->staff_auth()->update($request->only(['is_hospital', 'is_staff', 'is_cource_classification', 'is_invoice', 'is_pre_account', 'is_contract']));
