@@ -3,6 +3,7 @@
 @section('adminlte_css')
   <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/iCheck/square/blue.css') }}">
   <link rel="stylesheet" href="{{ asset('vendor/adminlte/css/auth.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   @yield('css')
 @stop
 

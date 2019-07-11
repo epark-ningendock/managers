@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('index');
 })->middleware('auth:staffs,hospital_staffs');
 
+//Route::get('/staff', 'StaffController@index')->middleware('can:view-staff');
+//
+//Route::resource('/staff', 'StaffController')->except(['show', 'index'])->middleware('can:edit-staff');
+
 /*
 |--------------------------------------------------------------------------
 | Contract Information
@@ -22,9 +26,6 @@ Route::get('/', function () {
 */
 Route::post('/contract-information/store', 'ContractInformationController@store')->name('contract.store');
 Route::get('/hospital/contract-information', 'ContractInformationController@create')->name('hospital.contractInfo');
-
-
-Route::resource('/staff', 'StaffController')->except(['show']);
 
 /*
 |--------------------------------------------------------------------------

@@ -95,16 +95,22 @@ module.exports.showConfirm = function () {
     var message = typeof arguments[0] != 'function' ? arguments[0] : null;
     var btnText = typeof arguments[1] != 'function' ? arguments[1] : null;
     var callback = typeof arguments[arguments.length - 1] == 'function' ? arguments[arguments.length - 1] : function () {};
-
     if (message) {
         $('#confirm-modal .modal-body p').html(message);
     }
     if (btnText) {
         $('#confirm-modal #confirm-button').html(btnText);
     }
-    $('#confirm-modal .btn-primary').click(callback);
+    $('#confirm-modal .btn-danger').click(callback);
 
     $('#confirm-modal').modal('show');
+};
+
+module.exports.showHospitalOperation = function () {
+    var callback = typeof arguments[arguments.length - 1] == 'function' ? arguments[arguments.length - 1] : function () {};
+    $('#select-hospital-modal .btn-success').click(callback);
+
+    $('#select-hospital-modal').modal('show');
 };
 
 /**
@@ -193,14 +199,29 @@ module.exports.addScrollToTop = function () {
             var id = $(this).data('id');
             var targetForm = $(this).data('target-form') || '#delete-record-form';
             var message = $(this).data('message');
-            var btnText = $(this).data('button-text') || '削除';
+            var btnText = $(this).data('button-text') || 'OK';
             var targetFormAction = $(targetForm).attr('action').replace(':id', id);
             $(targetForm).attr('action', targetFormAction);
-
             Modal.showConfirm(message, btnText, function () {
                 $(targetForm).submit();
             });
             return false;
+        });
+    })();
+
+    (function () {
+        $('.insert-hospital-id-popup-btn').on('click', function(){
+            let id = $(this).data('id');
+            let targetForm = $(this).data('target-form') || '#select-hospital-form';
+            let targetFormAction = $(targetForm).attr('action').replace(':id', id);
+
+            $(targetForm).attr('action', targetFormAction);
+            Modal.showHospitalOperation(function () {
+                $(targetForm).submit();
+            });
+
+            return false;
+
         });
     })();
 

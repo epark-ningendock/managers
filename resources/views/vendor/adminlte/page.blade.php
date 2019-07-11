@@ -59,15 +59,10 @@
 
           <ul class="nav navbar-nav">
             <li>
-              @if(config('adminlte.logout_method') == 'GET' || !config('adminlte.logout_method') && version_compare(\Illuminate\Foundation\Application::VERSION, '5.3.0', '<'))
-                <a href="{{ url(config('adminlte.logout_url', 'auth/logout')) }}">
-                  <i class="fa fa-fw fa-power-off"></i> {{ trans('adminlte::adminlte.log_out') }}
-                </a>
-              @else
                 <a href="{{ route('logout') }}"
                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                 >
-                  <i class="fa fa-fw fa-power-off"></i> {{ trans('adminlte::adminlte.log_out') }}
+                  <i class="fa fa-fw fa-power-off"></i> ログアウト
                 </a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                   @if(config('adminlte.logout_method'))
@@ -75,7 +70,6 @@
                   @endif
                   {{ csrf_field() }}
                 </form>
-              @endif
             </li>
           </ul>
         </div>
@@ -98,7 +92,7 @@
           {{-- EPARKスタッフの機能 --}}
           @if(Auth::user()->getTable() == "staffs")
               <li class="header">EPARKスタッフ機能</li>
-              <li><a href="/staff"><i class="fa fa-user"></i>スタッフ管理</a></li>
+              <li><a href="/staff"><i class="fa fa-users"></i>スタッフ管理</a></li>
               <li><a href="/hospital"><i class="fa fa-hospital-o"></i>医療機関管理</a></li>
               <li><a href="/classification"><i class="fa fa-book"></i>検査コース分類管理</a></li>
               <li><a href="/reservation"><i class="fa fa-book"></i>請求管理</a></li>
@@ -107,15 +101,15 @@
           {{-- 医療機関スタッフの機能 --}}
           @if(request()->session()->get('hospital_id'))
             <li class="header">医療機関スタッフ機能</li>
-            <li><a href="/hospital-staff"><i class="fa fa-user"></i>医療機関スタッフ管理</a></li>
-            <li><a href="/customer"><i class="fa fa-user"></i>顧客管理</a></li>
+            <li><a href="/hospital-staff"><i class="fa fa-users"></i>医療機関スタッフ管理</a></li>
+            <li><a href="/customer"><i class="fa fa-users"></i>顧客管理</a></li>
             <li><a href="#"><i class="fa fa-book"></i>請求管理</a></li>
             <li><a href="/course"><i class="fa fa-book"></i>検査コース管理</a></li>
             <li><a href="/option"><i class="fa fa-book"></i>検査コースオプション管理</a></li>
             <li><a href="/reception"><i class="fa fa-list-alt"></i>受付一覧</a></li>
             <li><a href="/calendar"><i class="fa fa-calendar"></i>カレンダー管理</a></li>
-            <li><a href="/email-template"><i class="fa fa-gear"></i>メールテンプレート管理</a></li>
-            <li><a href="/reception-email-setting"><i class="fa fa-gear"></i>受付メール設定</a></li>
+            <li><a href="/email-template"><i class="fa fa-gears"></i>メールテンプレート管理</a></li>
+            <li><a href="/reception-email-setting"><i class="fa fa-gears"></i>受付メール設定</a></li>
           @endif
           {{-- 医療機関スタッフ固有の機能 --}}
           @if(Auth::user()->getTable() == "hospital_staffs" && request()->session()->get('hospital_id'))

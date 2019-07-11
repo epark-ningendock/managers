@@ -16,7 +16,9 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-  <h1>スタッフ管理</h1>
+  <h1>
+      <i class="fa fa-users"> スタッフ管理</i>
+  </h1>
 @stop
 
 <!-- search section -->
@@ -49,7 +51,9 @@
         </div>
       </div>
       <div class="col-md-3">
-        <button type="submit" class="btn btn-primary btn-search">サーチ</button>
+        <button type="submit" class="btn btn-primary btn-search">
+            <i class="glyphicon glyphicon-search"></i> 検索
+        </button>
       </div>
     </div>
   </form>
@@ -58,7 +62,7 @@
 @section('table')
 
   <div class="table-responsive">
-    <table id="example2" class="table table-bordered table-hover">
+    <table id="example2" class="table table-bordered table-hover table-striped">
       <thead>
       <tr>
         <th>No</th>
@@ -74,7 +78,7 @@
         <th>状態</th>
         <th>編集</th>
         <th>削除</th>
-        <th>パスワード</th>
+        <th>パスワード変更</th>
       </tr>
       </thead>
       <tbody>
@@ -95,20 +99,20 @@
 {{--          @if(!$staff->status->is(StaffStatus::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
             <a class="btn btn-primary"
                href="{{ route('staff.edit', $staff->id) }}">
-              編集
+               <i class="fa fa-edit text-bold"> 編集</i>
             </a>
             {{--@endif--}}
           </td>
           <td>
 {{--          @if(!$staff->status->is(StaffStatus::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
             <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $staff->id }}">
-              削除
+              <i class="fa fa-trash"></i>
             </button>
             {{--@endif--}}
           </td>
           <td>
-            <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-primary">
-              パスワードを変更する
+            <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-success">
+              <i class="fa fa-key"></i>
             </a>
           </td>
         </tr>

@@ -17,18 +17,19 @@ return [
     | as the size rules. Feel free to tweak each of these messages here.
     |
     */
-
+    
     'created' => ':nameが登録しました。',
     'updated' => ':nameを更新しました。',
     'remove' => '削除する',
-    'deleted' => ':nameを削除しました。',
+    'deleted' => '削除が完了しました。',
     'sent' => ':mailを送信しました。',
+    'operation' => '操作対象に指定しました。',
     'hospital_staff_update_passoword' => '医療機関スタッフのパスワードを更新しました',
     'token_expired' => 'トークンが期限切れです。再送信してください',
     'hospital_staff_does_not_exist' => 'この医療機関スタッフは存在しません。',
     'incorrect_token' => '不正なトークンです。',
     'not_correct' => ':name正しくない',
-    'restored' => ':nameが復元されます。',
+    'restored' => '復元が完了しました。',
     'invalid_format'                       => ':name 無効な形式',
     'staff_create_error' => '正しく登録されませんでした。',
     'create_error' => 'エラーが発生しました。',

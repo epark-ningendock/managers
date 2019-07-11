@@ -159,9 +159,9 @@ class HospitalController extends Controller
     {
     }
 
-    public function selectHospital(HospitalFormRequest $request, $id)
+    public function selectHospital(Request $request, $id)
     {
-        $hospital_name = Hospital::findOrFail(intval($id))->name;
+        $hospital_name = Hospital::findOrFail($id)->name;
         session()->put('hospital_id', $id);
         session()->put('hospital_name', $hospital_name);
 
@@ -179,9 +179,9 @@ class HospitalController extends Controller
             $query->where('status', HospitalEnums::Public);
         }
 
-        $hospitals = $query->orderBy('created_id', 'desc')->paginate(10)->appends(request()->query());
+        $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());
 
-        return view('hospital.index', [ 'hospitals' => $hospitals ])->with('success', trans('messages.created', ['name' => trans('messages.names.email_template')]));
+        return view('hospital.index', [ 'hospitals' => $hospitals ])->with('success', trans('messages.operation'));
     }
 
     public function createAttentionInformation()
