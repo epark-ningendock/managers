@@ -24,12 +24,14 @@ class Staff extends Authenticatable
         'authority' => Authority::class
     ];
 
-    /**
-     * ユーザーに関連する電話レコードを取得
-     */
     public function staff_auth()
     {
         return $this->hasOne('App\StaffAuth');
+    }
+
+    public function department()
+    {
+        return $this->belongsTo('App\Department');
     }
 
     /**

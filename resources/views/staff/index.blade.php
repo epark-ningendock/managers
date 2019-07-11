@@ -69,6 +69,7 @@
         <th>スタッフ名</th>
         <th>ログインID</th>
         <th>メールアドレス</th>
+        <th>部署</th>
         <th>権限</th>
         <th>医療機関管理</th>
         <th>スタッフ管理</th>
@@ -88,6 +89,7 @@
           <td>{{ $staff->name }}</td>
           <td>{{ $staff->login_id }}</td>
           <td>{{ $staff->email }}</td>
+          <td>{{ $staff->department->name }}</td>
           <td>{{ $staff->authority->description }}</td>
           <td>{{ Permission::getInstance($staff->staff_auth->is_hospital)->description }}</td>
           <td>{{ Permission::getInstance($staff->staff_auth->is_staff)->description }}</td>
