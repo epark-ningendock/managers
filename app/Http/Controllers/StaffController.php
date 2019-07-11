@@ -16,9 +16,9 @@ use Illuminate\Validation\ValidationException;
 
 class StaffController extends Controller
 {
-    public function __construct()
+    public function __construct(Request $request)
     {
-//        $this->authorizeResource(Staff::class);
+        request()->session()->forget('hospital_id');
     }
 
     /**

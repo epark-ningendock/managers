@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\DB;
 
 class ClassificationController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        request()->session()->forget('hospital_id');
+    }
+    
     /**
      * classification list
      * @param Request $request
