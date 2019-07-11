@@ -65,8 +65,7 @@ class StaffController extends Controller
             $staff_data['authority'] = Authority::Admin;
             $staff = new Staff($staff_data);
             $staff->save();
-
-            $staff_auth = new StaffAuth($request->only(['is_hospital', 'is_staff', 'is_cource_classification', 'is_invoice', 'is_pre_account']));
+            $staff_auth = new StaffAuth($request->only(['is_hospital', 'is_staff', 'is_cource_classification', 'is_invoice', 'is_pre_account', 'is_contract']));
             $staff->staff_auth()->save($staff_auth);
 
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.staff')]));
@@ -103,7 +102,7 @@ class StaffController extends Controller
             $staff->update($request->only(['name', 'login_id', 'email', 'status']));
             $staff->save();
 
-            $staff->staff_auth()->update($request->only(['is_hospital', 'is_staff', 'is_cource_classification', 'is_invoice', 'is_pre_account']));
+            $staff->staff_auth()->update($request->only(['is_hospital', 'is_staff', 'is_cource_classification', 'is_invoice', 'is_pre_account', 'is_contract']));
 
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.staff')]));
             DB::commit();

@@ -6,23 +6,6 @@
 <div class="box-body">
   {!! csrf_field() !!}
   <div class="form-group @if ($errors->has('status')) has-error @endif">
-    <label for="status">状態</label>
-    <div class="radio">
-      <label>
-        <input type="radio" name="status"
-               {{ old('status', (isset($staff) ? $staff->status->value : null) ) == StaffStatus::Valid ? 'checked' : '' }}
-               value="{{ StaffStatus::Valid }}">
-        {{ StaffStatus::Valid()->description }}
-      </label>
-      <label class="ml-3">
-        <input type="radio" name="status"
-               {{ old('status', (isset($staff) ? $staff->status->value : null)) == StaffStatus::Invalid ? 'checked' : '' }}
-               value="{{ StaffStatus::Invalid }}">
-        {{ StaffStatus::Invalid()->description }}
-      </label>
-    </div>
-    @if ($errors->has('status')) <p class="help-block">{{ $errors->first('status') }}</p> @endif
-  </div>
 
   <div class="form-group @if ($errors->has('name')) has-error @endif">
     <label for="name">スタッフ名</label>
@@ -171,6 +154,33 @@
       </label>
     </div>
     @if ($errors->has('is_pre_account')) <p class="help-block">{{ $errors->first('is_pre_account') }}</p> @endif
+  </div>
+
+  <div class="form-group @if ($errors->has('is_contract')) has-error @endif">
+    <label class="mb-0">契約管理</label>
+    <div class="radio mt-0">
+      <label>
+        <input type="radio" id="is_contract_none" name="is_contract" value="{{ Permission::None }}" class="permission-check"
+            {{ old('is_contract', (isset($staff) ? $staff->staff_auth->is_contract : -1)) == Permission::None ? 'checked' : '' }}>
+        {{ Permission::None()->description }}
+      </label>
+      <label>
+        <input type="radio" id="is_contract_view" name="is_contract" value="{{ Permission::View }}" class="permission-check"
+            {{ old('is_contract', (isset($staff) ? $staff->staff_auth->is_contract : -1)) == Permission::View ? 'checked' : '' }}>
+        {{ Permission::View()->description }}
+      </label>
+      <label class="ml-3">
+        <input type="radio" id="is_contract_edit" name="is_contract" value="{{ Permission::Edit }}" class="permission-check"
+            {{ old('is_contract', (isset($staff) ? $staff->staff_auth->is_contract : -1)) == Permission::Edit ? 'checked' : '' }}>
+        {{ Permission::Edit()->description }}
+      </label>
+      <label class="ml-3">
+        <input type="radio" id="is_contract_upload" name="is_contract" value="{{ Permission::Upload }}" class="permission-check"
+            {{ old('is_contract', (isset($staff) ? $staff->staff_auth->is_contract : -1)) == Permission::Upload ? 'checked' : '' }}>
+        {{ Permission::Upload()->description }}
+      </label>
+    </div>
+    @if ($errors->has('is_contract')) <p class="help-block">{{ $errors->first('is_contract') }}</p> @endif
   </div>
 
 
