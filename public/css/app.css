@@ -2321,3 +2321,13 @@ h1 {
 .bg-red, .callout.callout-danger, .alert-danger, .alert-error, .label-danger, .modal-danger .modal-body {
   background-color: #ed5565 !important;
 }
+
+b {
+  font-weight: 600;
+  font-family: none;
+  font-size: 2.0rem;
+}
+
+.login-box {
+  width: 380px !important;
+}
