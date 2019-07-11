@@ -28,7 +28,7 @@ $o_minor_values = collect(old('minor_values'));
       @foreach($middles as $middle)
         <tr>
           @if(!isset($last) || $middle != $last)
-            <td class='text-bold' colspan="{{ collect($middle->minor_classifications)->count() }}">{{ $middle->name }}</td>
+            <td class='text-bold' colspan="3">{{ $middle->name }}</td>
             @php
               $last = $middle
             @endphp
