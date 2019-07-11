@@ -110,4 +110,8 @@ $o_minor_values = collect(old('minor_values'));
 .pr-input {
   width: 50%
 }
+
+tr, td {
+  text-align: left !important;
+}
 </style>
