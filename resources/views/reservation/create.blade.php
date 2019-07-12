@@ -6,6 +6,7 @@
 
 @section('form')
   <form method="POST" action="{{ route('reservation.store') }}">
+  	{!! csrf_field() !!}
     @include('reservation.partials.form')
   </form>
 @stop
