@@ -223,6 +223,16 @@ return [
         'reservation_end_date' => '予約終了日',
         'completed_start_date' => '受診開始日',
         'completed_end_date' => '受診終了日',
-        'customer_name' => '受診者名'
+        'customer_name' => '受診者名',
+        //Reservation
+        'regular_price' => 'コース料金',
+        'adjustment_price' => '調整額',
+        'reservation_memo' => '受付・予約メモ',
+        'registration_card_number' => '診察券番号',
+        'tel' => '電話番号',
+        'family_name_kana' => 'お名前 かな ( 姓 )',
+        'first_name_kana' => 'お名前 かな ( 名 )',
+        'family_name' => 'お名前 ( 姓 )',
+        'first_name' => 'お名前 ( 名 )',
     ],
 ];

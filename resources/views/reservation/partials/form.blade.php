@@ -29,7 +29,7 @@
     </div>
 
 
-    <div class="row form-group">
+    <div class="row">
     
         <div class="col-md-3">
             <label for="regular_price">コース料金</label>
@@ -151,12 +151,14 @@
 
         <div class="col-md-9">
             <div class="row" style="max-width: 300px;">
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <select class="form-control" name="start_time_hour" id="start_time_hour">
                         <option value=""></option>
+                        <option value="01">01</option>
                     </select>
                 </div>
-                <div class="col-md-6">
+                <div class="col-sm-2 col-2"> : </div>
+                <div class="col-md-5">
                     <select class="form-control" name="start_time_min" id="start_time_min">
                         <option value=""></option>
                     </select>
@@ -196,7 +198,7 @@
                 <div class="col-md-4">
                     <div class="form-group @if ($errors->has('family_name')) has-error @endif">
                         <label for="family_name">姓</label>
-                        <input type="number" class="form-control" name="family_name" style="width: 90%;display: inline-block"
+                        <input type="text" class="form-control" name="family_name" style="width: 90%;display: inline-block"
                                id="family_name" placeholder=""
                                value="{{ old('family_name', isset($reservation) ? $reservation->family_name : null) }}"/>
                         @if ($errors->has('family_name')) <p class="help-block">{{ $errors->first('family_name') }}</p> @endif
@@ -205,7 +207,7 @@
                 <div class="col-md-8">
                     <div class="form-group @if ($errors->has('first_name')) has-error @endif">
                         <label for="first_name">名</label>
-                        <input type="number" class="form-control" name="first_name" style="width: 90%;display: inline-block"
+                        <input type="text" class="form-control" name="first_name" style="width: 90%;display: inline-block"
                                id="first_name" placeholder=""
                                value="{{ old('first_name', isset($reservation) ? $reservation->first_name : null) }}"/>
                         @if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
@@ -228,7 +230,7 @@
                 <div class="col-md-4">
                     <div class="form-group @if ($errors->has('family_name_kana')) has-error @endif">
                         <span>姓</span>
-                        <input type="number" class="form-control" name="family_name_kana" style="width: 90%;display: inline-block"
+                        <input type="text" class="form-control" name="family_name_kana" style="width: 90%;display: inline-block"
                                id="family_name_kana" placeholder=""
                                value="{{ old('family_name_kana', isset($reservation) ? $reservation->family_name_kana : null) }}"/>
                         @if ($errors->has('family_name_kana')) <p class="help-block">{{ $errors->first('family_name_kana') }}</p> @endif
@@ -237,7 +239,7 @@
                 <div class="col-md-8">
                     <div class="form-group @if ($errors->has('first_name_kana')) has-error @endif">
                         <span>名</span>
-                        <input type="number" class="form-control" name="first_name_kana" style="width: 90%;display: inline-block"
+                        <input type="text" class="form-control" name="first_name_kana" style="width: 90%;display: inline-block"
                                id="first_name_kana" placeholder=""
                                value="{{ old('first_name_kana', isset($reservation) ? $reservation->first_name_kana : null) }}"/>
                         @if ($errors->has('first_name_kana')) <p class="help-block">{{ $errors->first('first_name_kana') }}</p> @endif
@@ -258,7 +260,7 @@
         <div class="col-md-9">
             <div class="form-group @if ($errors->has('tel')) has-error @endif">
                 <span>名</span>
-                <input type="number" class="form-control" name="tel" style="width: 90%;display: inline-block"
+                <input type="text" class="form-control" name="tel" style="width: 90%;display: inline-block"
                        id="tel" placeholder=""
                        value="{{ old('tel', isset($reservation) ? $reservation->tel : null) }}"/>
                 @if ($errors->has('tel')) <p class="help-block">{{ $errors->first('tel') }}</p> @endif
@@ -276,7 +278,7 @@
         <div class="col-md-9">
             <div class="form-group @if ($errors->has('registration_card_number')) has-error @endif">
                 <span>名</span>
-                <input type="number" class="form-control" name="registration_card_number" style="width: 90%;display: inline-block"
+                <input type="text" class="form-control" name="registration_card_number" style="width: 90%;display: inline-block"
                        id="registration_card_number" placeholder=""
                        value="{{ old('registration_card_number', isset($reservation) ? $reservation->registration_card_number : null) }}"/>
                 @if ($errors->has('registration_card_number')) <p class="help-block">{{ $errors->first('registration_card_number') }}</p> @endif

@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Course;
+use App\Customer;
+use App\Enums\ReservationStatus;
+use App\Hospital;
+use App\Http\Requests\ReservationCreateFormRequest;
 use App\Http\Requests\ReservationFormRequest;
 use App\Reservation;
-use App\Hospital;
-use App\Customer;
-use App\Course;
 use App\Services\ReservationExportService;
-
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Enums\ReservationStatus;
 use Illuminate\Support\Facades\Session;
 
 class ReservationController extends Controller
@@ -431,6 +431,13 @@ class ReservationController extends Controller
         $courses = Course::all();
         $customers = Customer::paginate(5);
         return view('reservation.create')->with(['courses' => $courses, 'customers' => $customers]);
+    }
+
+
+
+    public function store(ReservationCreateFormRequest $request)
+    {
+        dd($request);
     }
 
 }
