@@ -1,13 +1,11 @@
 
 
 <div class="box-body">
-
     
     <h3 class="section-title">受付情報</h3>
     <br/><br/>
 
-
-    <div class="row form-group">
+    <div class="row">
     
         <div class="col-md-3">
             <label for="course_id">検査コース</label>
@@ -70,7 +68,7 @@
             </div>        
         </div>
 
-    </div>
+    </div>   
 
 
     <div class="row form-group">
@@ -80,13 +78,13 @@
         </div>
 
         <div class="col-md-9">
-            <div class="col-md-6 question-container">
+            <div class="question-container">
                 <div class="form-group ml-4">
                 </div>
             </div>  
         </div>
 
-    </div>
+    </div>    
 
 
     <div class="row form-group">
@@ -119,28 +117,21 @@
 
     </div>
 
-    <div class="row form-group">
+
+    <div class="row">
     
         <div class="col-md-3">
             <label for="reservation_date">受診日</label>
         </div>
 
         <div class="col-md-9">
-            <div class="form-group @if ($errors->has('reservation_date')) has-error @endif">
-                <div class="input-group date" data-provide="datepicker" data-date-format="yyyy/mm/dd"
-                     data-date-autoclose="true" data-date-language="ja">
-                    <input type="text" class="form-control"
-                           id="reservation_date" name="reservation_date"
-                           placeholder="yyyy/mm/dd" value="{{ $reservation_date or '' }}">
-                    <div class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </div>
-                </div>
-                @if ($errors->has('reservation_date')) <p class="help-block">{{ $errors->first('reservation_date') }}</p> @endif
-            </div>
+            <div class="calendar-box">
+                
+            </div>   
+            @if ($errors->has('reservation_date')) <p class="help-block">{{ $errors->first('reservation_date') }}</p> @endif        
         </div>
 
-    </div>
+    </div> 
 
 
     <div class="row form-group">
@@ -154,13 +145,18 @@
                 <div class="col-md-5">
                     <select class="form-control" name="start_time_hour" id="start_time_hour">
                         <option value=""></option>
-                        <option value="01">01</option>
+                        @for ( $x = 0; $x < 24; $x++)
+                        <option value="{{ ( $x < 10 ) ? '0'.$x :  $x }}">{{ ( $x < 10 ) ? '0'.$x :  $x }}</option>
+                        @endfor
                     </select>
                 </div>
                 <div class="col-sm-2 col-2"> : </div>
                 <div class="col-md-5">
                     <select class="form-control" name="start_time_min" id="start_time_min">
                         <option value=""></option>
+                        @for ( $x = 0; $x < 61; $x++)
+                        <option value="{{ ( $x < 10 ) ? '0'.$x :  $x }}">{{ ( $x < 10 ) ? '0'.$x :  $x }}</option>
+                        @endfor
                     </select>
                 </div>
             </div>
@@ -183,8 +179,8 @@
 
     </div>   
 
-    <h3 id="Examinee-information" class="section-title">受診者情報</h3>
-    <br/><a id="#Examinee-information" href="#">受診者検索</a>
+    <h3 class="section-title">受診者情報</h3>
+    <br/><a id="examinee-information" href="#">受診者検索</a>
     <br/><br/>    
 
     <div class="row">
@@ -286,7 +282,7 @@
         </div>
 
     </div>  
-
+<input type="hidden" name="selected_customer" id="selected_customer" />
 
 
     <div class="box-footer">
@@ -294,70 +290,11 @@
         <button type="submit" class="btn btn-primary">作成</button>
     </div>                                              
 
-    <table class="table">
-
-
-        <tr>
-            <td></td>
-            <td>
-                <table class="table">
-                    <tr>
-                        <td>
-                            <h3>顧客一覧</h3>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>顧客ID</td>
-                        <td>名前</td>
-                        <td>電話番号</td>
-                        <td>診察券番号</td>
-                    </tr>
-                    @foreach($customers as $customer)
-
-                        <tr>
-                            <td>{{ $customer-> id}}</td>
-                            <td>{{ $customer->first_name }}</td>
-                            <td>{{ $customer->tel }}</td>
-                            <td>{{ $customer->registration_card_number }}</td>
-                        </tr>
-                    @endforeach
-                    {{--            {{ $customer->links() }}--}}
-                </table>
-            </td>
-
-
-        </tr>
-
-
-
-        <tr>
-            <td>
-                
-            </td>
-            <td>
-                <div style="width: 100%;">
-
-                </div>
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                
-            </td>
-            <td>
-                <div style="width: 100%;">
-
-                </div>
-            </td>
-        </tr>
-    </table>
-
 </div>
 
 
 @include('commons.datepicker')
-
+@include('calendar.partials.horizontal-dateselector')
 @section('script')
     <script>
         (function ($) {
@@ -477,5 +414,41 @@
         .answer-group label input {
             margin-right: 8px;
         }
+
+        /* ---------------------------------------------------
+        Daybox
+        -----------------------------------------------------*/
+        .date-row, .date-row.table td, .date-row.table th {
+            border-color: #847f7f !important;
+            border-width: 2px;
+        }
+
+        .daybox .des-box {
+            border-top: 2px solid #847f7f;
+            margin: 0 -8px;
+            text-align: center;
+        }
+
+        .date-row .daybox .txt {
+            font-size: 11px;
+            padding: 15px;
+        }
+        .year-label th {
+            background: transparent url({{ asset('img/calendar.png') }}) 10px 3px/30px no-repeat;
+        }        
+        td.daybox.is-holiday {
+            background: #ddd;
+        }
+
+        td.daybox.it-can-reserve  {
+            cursor: pointer;
+        }
+        td.daybox.it-would-reserve {
+            background: #1a7def;
+            color: #fff;
+        }        
+        
     </style>
 @endpush
+
+@includeIf('commons.std-modal-box');

@@ -379,7 +379,7 @@ class CalendarController extends Controller
 
                 if ($is_holiday && !isset($holiday)) {
                     //TODO to add hospital_id from logined user
-                    $new_holidays->push([ 'date' => $start->copy(), 'created_at' => Carbon::now(), 'updated_at'=> Carbon::now() ]);
+                    $new_holidays->push([ 'hospital_id' => auth()->user()->hospital_id, 'date' => $start->copy(), 'created_at' => Carbon::now(), 'updated_at'=> Carbon::now() ]);
                 } elseif (isset($holiday)) {
                     $holiday->forceDelete();
                 }
@@ -395,5 +395,17 @@ class CalendarController extends Controller
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
         }
+    }
+
+    public function reservationDays($course_id)
+    {
+        $course = Course::findOrFail($course_id);
+        $calendars = $course->calendar->calendar_days()->paginate(7);
+        $holidays = Holiday::where('hospital_id', $course->hospital_id)->get()->pluck('date')->toArray();
+        $calendars->setPath(route('course.reservation.days', ['course_id' => $course_id]));
+
+        return response()->json([
+            'data' => view('calendar.partials.daybox', ['calendars' => $calendars, 'holidays' => $holidays])->render()
+        ]);
     }
 }

@@ -81,4 +81,16 @@ class Hospital extends Model
     {
         return $this->hasOne('App\ReceptionEmailSetting');
     }
+
+
+    public function holidays()
+    {
+        return $this->hasMany('App\Holiday');
+    }
+
+    public function calendars()
+    {
+        return $this->hasMany('App\Calendar');
+    }
+
 }

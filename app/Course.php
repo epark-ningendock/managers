@@ -69,6 +69,7 @@ class Course extends SoftDeleteModel
 
     public function calendar()
     {
-        return $this->hasOne('App\Calendar');
+        // return $this->hasOne('App\Calendar');
+        return $this->belongsTo('App\Calendar');
     }
 }

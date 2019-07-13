@@ -22,4 +22,10 @@ class Calendar extends SoftDeleteModel
     {
         return $this->hasMany('App\CalendarDay');
     }
+
+
+    public function hospital()
+    {
+        return $this->belongsTo('App\Hospital');
+    }
 }

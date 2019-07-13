@@ -140,4 +140,14 @@ class CustomerController extends Controller
 
         return redirect('/customer');
     }
+
+
+    public function customerSearch()
+    {
+        $customers = Customer::where('registration_card_number', 'LIKE', '%'. request()->registration_card_number . '%')->get();
+
+        return response()->json([
+            'data' => view('reservation.partials.create.customer-list', ['customers' => $customers])->render()
+        ]);  
+    }
 }

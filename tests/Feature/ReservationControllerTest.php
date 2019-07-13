@@ -145,6 +145,72 @@ class ReservationControllerTest extends TestCase
         $this->validateBulkReservationStatusUpdate(['reservation_status' => -1 ])->assertSessionHasErrors('reservation_status');
     }
 
+
+
+
+    public function testCreateRoute()
+    {
+        $response = $this->get('/reservation/create');
+        $response->assertStatus(200);
+    }
+
+    public function testRegularPriceValidationMax()
+    {
+        $this->validateReservationCreateFields(['regular_price' => 123456789])->assertSessionHasErrors('regular_price');
+    }
+
+    public function validateReservationCreateFields($attributes)
+    {
+
+        $this->withExceptionHandling();
+        return $this->post('/reservation', $attributes);
+    }    
+
+    public function testCreatingReservation()
+    {
+
+        $this->post('/reservation', $this->reservationFields());
+
+        request()->merge($this->setDefaultValidForRequestInReservation());
+
+        $reservation = new Reservation();
+        $reservation->create(request()->all());
+
+        $this->assertDatabaseHas('reservations', [
+            'hospital_id' => auth()->user()->hospital_id
+        ]);
+    }
+
+
+    public function setDefaultValidForRequestInReservation()
+    {
+        return [
+            'hospital_id' => auth()->user()->hospital_id,
+            'reservation_status' => ReservationStatus::Pending,
+            'terminal_type' => 1,
+            'is_repeat' => 0,
+            'is_representative' => 0,
+            'timezone_pattern_id' => 3233,
+            'timezone_id' => 3322,
+            'order' => 231,
+            'mail_type' => 0,
+            'payment_status' => 0,
+            'trade_id' => 'mbxrfidstwzvaheonugckljypq',
+            'payment_method' => '現金',
+        ];
+    }
+
+
+    public function reservationFields($attributes = [])
+    {
+        return array_merge([
+            '_token' => csrf_token(),
+            'course_id' => factory('App\Course')->create()->id,
+            'reservation_date' => date('Y-m-d'),
+            'regular_price' => 3930
+        ], $attributes);
+    }
+
     /**
      * validate fields process for reservation status bulk update
      *
@@ -180,4 +246,5 @@ class ReservationControllerTest extends TestCase
         ];
         return array_merge($fields, $overwrites);
     }
+
 }

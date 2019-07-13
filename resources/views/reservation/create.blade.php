@@ -9,4 +9,5 @@
   	{!! csrf_field() !!}
     @include('reservation.partials.form')
   </form>
+  @includeIf('reservation.partials.customer-script')
 @stop

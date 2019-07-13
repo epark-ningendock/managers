@@ -140,18 +140,20 @@ Route::middleware('auth:staffs,hospital_staffs')->group(function () {
     Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting');
     Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting');
     Route::resource('/calendar', 'CalendarController')->except(['show']);
+    Route::get('courses/{course_id}/reservation-days', 'CalendarController@reservationDays')->name('course.reservation.days');
 
     /*
     |--------------------------------------------------------------------------
     | Customer Routes
     |--------------------------------------------------------------------------
     */
-    Route::resource('customer', 'CustomerController');
+    Route::resource('customer', 'CustomerController')->except(['show']);
     Route::post('customer/detail', 'CustomerController@detail')->name('customer.detail');
     //Route::get('customer/basic-information', 'CustomerController@basicInformationCreate');
     Route::post('customer/import', 'CustomerController@importData')->name('customer.import.data');
     Route::post('customer/email/{customer_id}', 'CustomerController@showEmailForm')->name('customer.show.email.form');
     Route::post('customer/email-send/{customer_id}', 'CustomerController@emailSend')->name('customer.email.send');
+    Route::post('customer/search', 'CustomerController@customerSearch')->name('customer.search');
 
     /*
     |--------------------------------------------------------------------------

@@ -46,6 +46,24 @@ class Reservation extends SoftDeleteModel
         self::TEL_PPC => '電話予約(PPC)'
     ];
 
+
+    protected $fillable = [
+        'hospital_id',
+        'course_id',
+        'reservation_date',
+        'reservation_status',
+        'terminal_type', //need to confirm initial value
+        'is_repeat', // need to confirm 
+        'is_representative', // need to confirm
+        'timezone_pattern_id', //not sure what field need to add
+        'timezone_id', //not sure what field need to add
+        'order', //not sure what field need to add
+        'mail_type', //not sure what field need to add
+        'payment_status', //not sure what field need to add
+        'trade_id', //not sure what field need to add
+        'payment_method', //not sure what field need to add
+    ];
+
     //todo channelがどういうケースが発生するのか未定なので、とりあえず仮で
     public static function getChannel($channel)
     {
