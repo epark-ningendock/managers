@@ -1,7 +1,13 @@
 @extends('layouts.form')
 
 @section('content_header')
-    <h1>医療機関スタッフ名 ： {{ $hospital_staff->name }}</h1>
+    <h1>
+        <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
+        - 
+        <i class="fa fa-user"> パスワードの変更</i>
+        - 
+        <i class="fa fa-user"> {{ $hospital_staff->name }}</i>
+    </h1>
 @stop
 
 @section('form')

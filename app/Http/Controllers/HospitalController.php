@@ -16,6 +16,11 @@ use Illuminate\Auth\SessionGuard;
 
 class HospitalController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        request()->session()->forget('hospital_id');
+    }
+    
     public function index(HospitalFormRequest $request)
     {
         $query = Hospital::query();
@@ -96,24 +101,22 @@ class HospitalController extends Controller
      */
     public function store(HospitalFormRequest $request)
     {
-
         $request->request->add([
             'hospital_staff_id' => auth()->user()->id,
         ]);
 
 
 
-	    $hospital = Hospital::create($request->all());
+        $hospital = Hospital::create($request->all());
 
-        if ( !empty(request()->medical_treatment_time) ) {
-            foreach (request()->medical_treatment_time as $mtt ) {
+        if (!empty(request()->medical_treatment_time)) {
+            foreach (request()->medical_treatment_time as $mtt) {
                 $mtt = array_merge($mtt, ['hospital_id' => $hospital->id]);
                 MedicalTreatmentTime::create($mtt);
             }
         }
 
         return redirect('/hospital/image-information');
-
     }
 
 
@@ -156,9 +159,9 @@ class HospitalController extends Controller
     {
     }
 
-    public function selectHospital(HospitalFormRequest $request, $id)
+    public function selectHospital(Request $request, $id)
     {
-        $hospital_name = Hospital::findOrFail(intval($id))->name;
+        $hospital_name = Hospital::findOrFail($id)->name;
         session()->put('hospital_id', $id);
         session()->put('hospital_name', $hospital_name);
 
@@ -176,9 +179,8 @@ class HospitalController extends Controller
             $query->where('status', HospitalEnums::Public);
         }
 
-        $hospitals = $query->orderBy('created_id', 'desc')->paginate(10)->appends(request()->query());
+        $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());
 
-        return view('hospital.index', [ 'hospitals' => $hospitals ])->with('success', trans('messages.created', ['name' => trans('messages.names.email_template')]));
+        return view('hospital.index', [ 'hospitals' => $hospitals ])->with('success', trans('messages.operation'));
     }
-    
 }

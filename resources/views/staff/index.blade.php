@@ -16,9 +16,10 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-  <h1>スタッフ管理</h1>
+  <h1>
+      <i class="fa fa-users"> スタッフ管理</i>
+  </h1>
 @stop
-
 <!-- search section -->
 @section('search')
   <form role="form">
@@ -27,7 +28,7 @@
       <div class="col-md-3">
         <div class="form-group">
           <label for="name">スタッフ名</label>
-          <input type="text" class="form-control" id="name" name="name" placeholder="スタッフ名" value="{{ $name or '' }}">
+          <input type="text" class="form-control" id="name" name="name" placeholder="" value="{{ $name or '' }}">
         </div>
       </div>
       <div class="col-md-3">
@@ -49,7 +50,9 @@
         </div>
       </div>
       <div class="col-md-3">
-        <button type="submit" class="btn btn-primary btn-search">サーチ</button>
+        <button type="submit" class="btn btn-primary btn-search">
+            <i class="glyphicon glyphicon-search"></i> 検索
+        </button>
       </div>
     </div>
   </form>
@@ -58,23 +61,29 @@
 @section('table')
 
   <div class="table-responsive">
-    <table id="example2" class="table table-bordered table-hover">
+    <table id="example2" class="table table-bordered table-hover table-striped">
       <thead>
       <tr>
-        <th>No</th>
+        <th>ID</th>
         <th>スタッフ名</th>
         <th>ログインID</th>
         <th>メールアドレス</th>
+        <th>部署</th>
         <th>権限</th>
         <th>医療機関管理</th>
         <th>スタッフ管理</th>
         <th>検査コース分類</th>
         <th>請求管理</th>
         <th>事前決済管理</th>
+        <th>契約管理</th>
         <th>状態</th>
-        <th>編集</th>
-        <th>削除</th>
-        <th>パスワード</th>
+        @if (Auth::user()->staff_auth->is_staff === 3)
+          <th>編集</th>
+          <th>削除</th>
+        @endif
+        @if (Auth::user()->authority->description === 'システム管理者')
+          <th>パスワード変更</th>
+        @endif
       </tr>
       </thead>
       <tbody>
@@ -84,33 +93,40 @@
           <td>{{ $staff->name }}</td>
           <td>{{ $staff->login_id }}</td>
           <td>{{ $staff->email }}</td>
+          <td>{{ $staff->department->name }}</td>
           <td>{{ $staff->authority->description }}</td>
           <td>{{ Permission::getInstance($staff->staff_auth->is_hospital)->description }}</td>
           <td>{{ Permission::getInstance($staff->staff_auth->is_staff)->description }}</td>
-          <td>{{ Permission::getInstance($staff->staff_auth->is_item_category)->description }}</td>
+          <td>{{ Permission::getInstance($staff->staff_auth->is_cource_classification)->description }}</td>
           <td>{{ Permission::getInstance($staff->staff_auth->is_invoice)->description }}</td>
           <td>{{ Permission::getInstance($staff->staff_auth->is_pre_account)->description }}</td>
+          <td>{{ Permission::getInstance($staff->staff_auth->is_contract)->description }}</td>
           <td>{{ $staff->status->description  }}</td>
-          <td>
-{{--          @if(!$staff->status->is(StaffStatus::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
-            <a class="btn btn-primary"
-               href="{{ route('staff.edit', $staff->id) }}">
-              編集
-            </a>
-            {{--@endif--}}
-          </td>
-          <td>
-{{--          @if(!$staff->status->is(StaffStatus::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
-            <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $staff->id }}">
-              削除
-            </button>
-            {{--@endif--}}
-          </td>
-          <td>
-            <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-primary">
-              パスワードを変更する
-            </a>
-          </td>
+          @if (Auth::user()->staff_auth->is_staff === 3)
+            <td>
+  {{--          @if(!$staff->status->is(StaffStatus::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
+              <a class="btn btn-primary"
+                href="{{ route('staff.edit', $staff->id) }}">
+                <i class="fa fa-edit text-bold"> 編集</i>
+              </a>
+              {{--@endif--}}
+            </td>
+            <td>
+  {{--          @if(!$staff->status->is(StaffStatus::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
+              <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $staff->id }}">
+                <i class="fa fa-trash"></i>
+              </button>
+              {{--@endif--}}
+            </td>
+          @endif
+          
+          @if (Auth::user()->authority->description === 'システム管理者')
+            <td>
+              <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-success">
+                <i class="fa fa-key"></i>
+              </a>
+            </td>
+          @endif
         </tr>
       @endforeach
       </tbody>

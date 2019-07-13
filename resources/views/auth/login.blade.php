@@ -3,6 +3,7 @@
 @section('adminlte_css')
   <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/iCheck/square/blue.css') }}">
   <link rel="stylesheet" href="{{ asset('vendor/adminlte/css/auth.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   @yield('css')
 @stop
 
@@ -30,21 +31,11 @@
           <input type="text" name="login_id" class="form-control" value="{{ old('login_id') }}"
                placeholder="ログインIDを入力してください">
           <!-- <span class="glyphicon glyphicon-envelope form-control-feedback"></span> -->
-          @if ($errors->has('login_id'))
-            <span class="help-block">
-              <strong>{{ $errors->first('login_id') }}</strong>
-            </span>
-          @endif
         </div>
         <div class="form-group has-feedback {{ $errors->has('password') ? 'has-error' : '' }}">
           <input type="password" name="password" class="form-control"
                placeholder="パスワードを入力してください">
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-          @if ($errors->has('password'))
-            <span class="help-block">
-              <strong>{{ $errors->first('password') }}</strong>
-            </span>
-          @endif
         </div>
         <div class="row">
           <div class="col-xs-8">

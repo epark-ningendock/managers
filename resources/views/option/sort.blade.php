@@ -9,7 +9,11 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>オプション管理 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
+    <h1>    
+        <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
+        -
+        <i class="fa fa-book"> オプション管理</i>
+    </h1>
 @stop
 @section('table')
     <form method="post" action="{{ route('option.updateSort') }}">
