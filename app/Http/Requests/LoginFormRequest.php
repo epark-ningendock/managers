@@ -25,7 +25,7 @@ class LoginFormRequest extends FormRequest
     public function rules()
     {
         $rules = [
-          'login_id' => 'required|between:8,50|regex:/^[-_ @\. a-zA-Z0-9]+$/',
+          'login_id' => 'required|between:8,50|regex:/^[-_ @\.a-zA-Z0-9]+$/',
           'password' => 'required|between:8,20|regex:/^[a-zA-Z0-9]+$/'
         ];
         return $rules;
