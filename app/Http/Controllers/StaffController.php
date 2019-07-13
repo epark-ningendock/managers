@@ -7,6 +7,7 @@ use App\Enums\StaffStatus;
 use App\Http\Requests\StaffFormRequest;
 use App\Http\Requests\StaffSearchFormRequest;
 use App\Staff;
+use App\HospitalStaff;
 use App\StaffAuth;
 use App\Department;
 use App\Mail\Staff\RegisteredMail;
@@ -51,6 +52,8 @@ class StaffController extends Controller
 
     public function store(StaffFormRequest $request)
     {
+        $this->staffEmailValidation($request->email);
+
         try {
             DB::beginTransaction();
             $staff_data = $request->only([
@@ -96,6 +99,8 @@ class StaffController extends Controller
 
     public function update(StaffFormRequest $request, $id)
     {
+        $this->staffEmailValidation($request->email);
+
         try {
             DB::beginTransaction();
             $staff = Staff::findOrFail($id);
@@ -166,6 +171,18 @@ class StaffController extends Controller
         } else {
             $validator = Validator::make([], []);
             $validator->errors()->add('old_password', '現在のパスワードが正しくありません');
+            throw new ValidationException($validator);
+            return redirect()->back();
+        }
+    }
+
+    public function staffEmailValidation($email)
+    {
+        $hospital_staff = HospitalStaff::where('email', $email)->first();
+
+        if ($hospital_staff) {
+            $validator = Validator::make([], []);
+            $validator->errors()->add('email', '指定のメールアドレスは既に使用されています。');
             throw new ValidationException($validator);
             return redirect()->back();
         }

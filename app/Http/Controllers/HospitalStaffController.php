@@ -31,6 +31,8 @@ class HospitalStaffController extends Controller
 
     public function store(HospitalStaffFormRequest $request)
     {
+        $this->hospitalStaffEmailValidation($request->email);
+
         $request->request->add([
             'hospital_id' => session()->get('hospital_id'),
         ]);
@@ -61,6 +63,8 @@ class HospitalStaffController extends Controller
 
     public function update(HospitalStaffFormRequest $request, $id)
     {
+        $this->hospitalStaffEmailValidation($request->email);
+        
         $request->request->add([
             'hospital_id' => session()->get('hospital_id'),
         ]);
@@ -181,5 +185,17 @@ class HospitalStaffController extends Controller
         Mail::to($staff->email)
             ->send(new PasswordResetConfirmMail());
         return redirect('/login')->with('success', 'パスワードを更新しました');
+    }
+
+    public function hospitalStaffEmailValidation($email)
+    {
+        $staff = Staff::where('email', $email)->first();
+
+        if ($staff) {
+            $validator = Validator::make([], []);
+            $validator->errors()->add('email', '指定のメールアドレスは既に使用されています。');
+            throw new ValidationException($validator);
+            return redirect()->back();
+        }
     }
 }
