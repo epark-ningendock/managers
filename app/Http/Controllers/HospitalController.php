@@ -21,6 +21,11 @@ use Illuminate\Support\Facades\DB;
 
 class HospitalController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        request()->session()->forget('hospital_id');
+    }
+    
     public function index(HospitalFormRequest $request)
     {
         $query = Hospital::query();

@@ -105,12 +105,12 @@ class StaffInputFieldsTest extends TestCase
 
     public function testRequiredIsItemCategory()
     {
-        $this->validateFields(['is_item_category' => null])->assertSessionHasErrors('is_item_category');
+        $this->validateFields(['is_cource_classification' => null])->assertSessionHasErrors('is_cource_classification');
     }
 
     public function testInvalidIsItemCategory()
     {
-        $this->validateFields(['is_item_category' => 9])->assertSessionHasErrors('is_item_category');
+        $this->validateFields(['is_cource_classification' => 9])->assertSessionHasErrors('is_cource_classification');
     }
 
     public function testRequiredIsInvoice()

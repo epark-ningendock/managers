@@ -146,7 +146,7 @@ return [
         'is_staff' => [
             'required' => ':attributeは必須です'
         ],
-        'is_item_category' => [
+        'is_cource_classification' => [
             'required' => ':attributeは必須です'
         ],
         'is_invoice' => [
@@ -174,11 +174,13 @@ return [
         'password' => 'パスワード',
         'password_confirmation' => 'パスワード確認',
         'status' => '状態',
+        'authority' => 'スタッフ権限',
         'is_hospital' => '医療機関管理',
         'is_staff' => 'スタッフ管理',
-        'is_item_category' => '検査コース分類',
+        'is_cource_classification' => '検査コース分類',
         'is_invoice' => '請求管理',
         'is_pre_account' => '事前決済管理',
+        'is_contract' => '請求管理',
         'classification' => '分類',
         'classification_ids' => '分類ID',
         'classification_type_id' => '分数種別',

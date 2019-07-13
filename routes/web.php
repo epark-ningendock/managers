@@ -67,7 +67,7 @@ Route::middleware('auth:staffs')->group(function () {
     | Staff Routes
     |--------------------------------------------------------------------------
     */
-    Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], function () {
+    Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.admin']], function () {
         Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password');
         Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
     });

@@ -82,9 +82,11 @@
                 <th>所在地</th>
                 <th>連絡先</th>
                 <th>状態</th>
-                <th>操作</th>
-                <th>編集</th>
-                <th>削除</th>
+                @if (Auth::user()->staff_auth->is_hospital === 3)
+                    <th>操作</th>
+                    <th>編集</th>
+                    <th>削除</th>
+                @endif
             </tr>
             </thead>
             <tbody>
@@ -100,31 +102,32 @@
                         <td>{{ $hospital->address1 }}</td>
                         <td>{{ $hospital->tel }}</td>
                         <td>{{ \App\Enums\HospitalEnums::getDescription($hospital->status) }}</td>
-                        <td>
-                            <a class="btn btn-success insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">
-                                <span class="fa fa-pencil"></i>    
-                            </a>
-                            {{-- 医療機関の選択フォーム --}}
-                            <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
-                                {{ csrf_field() }}
-                            </form>
-                        </td>
-                        <td>
-                            @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
-                                <a href="{{ route('hospital.edit', $hospital->id) }}"
-                                   class="btn btn-primary">
-                                   <i class="fa fa-edit text-bold"> 編集</i>
+                        @if (Auth::user()->staff_auth->is_hospital === 3)
+                            <td>
+                                <a class="btn btn-success insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">
+                                    <span class="fa fa-pencil"></i>    
                                 </a>
-                            @endif
-                        </td>
-                        <td>
-                            @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
-                                <button class="btn btn-danger delete-btn delete-popup-btn"
-                                        data-id="{{ $hospital->id }}">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            @endif
-                        </td>
+                                <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
+                                    {{ csrf_field() }}
+                                </form>
+                            </td>
+                            <td>
+                                @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
+                                    <a href="{{ route('hospital.edit', $hospital->id) }}"
+                                    class="btn btn-primary">
+                                    <i class="fa fa-edit text-bold"> 編集</i>
+                                    </a>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
+                                    <button class="btn btn-danger delete-btn delete-popup-btn"
+                                            data-id="{{ $hospital->id }}">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                @endif
+                            </td>
+                        @endif
                     </tr>
                 @endforeach
             @else
