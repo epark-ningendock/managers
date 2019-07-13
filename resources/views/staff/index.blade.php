@@ -5,7 +5,8 @@
 
   $params = [
               'delete_route' => 'staff.destroy',
-              'create_route' => 'staff.create'
+              'create_route' => 'staff.create',
+              'route' => 'staff'
             ];
 @endphp
 
@@ -81,7 +82,7 @@
           <th>編集</th>
           <th>削除</th>
         @endif
-        @if (Auth::user()->authority->description === 'システム管理者')
+        @if (Auth::user()->authority->value === Authority::Admin && Auth::user()->staff_auth->is_staff === 3)
           <th>パスワード変更</th>
         @endif
       </tr>
@@ -93,7 +94,7 @@
           <td>{{ $staff->name }}</td>
           <td>{{ $staff->login_id }}</td>
           <td>{{ $staff->email }}</td>
-          <td>{{ $staff->department->name }}</td>
+          <td>{{ isset($staff->department->name) ? $staff->department->name : '' }}</td>
           <td>{{ $staff->authority->description }}</td>
           <td>{{ Permission::getInstance($staff->staff_auth->is_hospital)->description }}</td>
           <td>{{ Permission::getInstance($staff->staff_auth->is_staff)->description }}</td>
@@ -120,10 +121,10 @@
             </td>
           @endif
           
-          @if (Auth::user()->authority->description === 'システム管理者')
+          @if (Auth::user()->authority->value === Authority::Admin && Auth::user()->staff_auth->is_staff === 3)
             <td>
               <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-success">
-                <i class="fa fa-key"></i>
+                <i class="fa fa-key text-bold">パスワード</i>
               </a>
             </td>
           @endif

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnDepartmentId extends Migration
+class AddResetTokenToStaffTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,8 @@ class AddColumnDepartmentId extends Migration
     public function up()
     {
         Schema::table('staffs', function (Blueprint $table) {
-            $table->integer('department_id')->unsigned()->nullable();
-            $table->foreign('department_id')->references('id')->on('departments');
+            $table->string('reset_token_digest')->nullable();
+            $table->dateTime('reset_sent_at')->nullable();
         });
     }
 
@@ -27,8 +27,8 @@ class AddColumnDepartmentId extends Migration
     public function down()
     {
         Schema::table('staffs', function (Blueprint $table) {
-            $table->dropForeign('staffs_department_id_foreign');
-            $table->dropColumn('department_id');
+            $table->dropColumn('reset_token_digest');
+            $table->dropColumn('reset_sent_at');
         });
     }
 }

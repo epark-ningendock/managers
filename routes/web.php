@@ -34,7 +34,7 @@ Route::get('/hospital/contract-information', 'ContractInformationController@crea
 */
 Auth::routes();
 Route::get('/login', 'Auth\LoginController@getLogin')->name('login');
-Route::post('/login', 'Auth\LoginController@postLogin');
+Route::post('/login', 'Auth\LoginController@postLogin')->name('postLogin');
 
 /*
 |--------------------------------------------------------------------------
@@ -54,7 +54,7 @@ Route::middleware('auth:hospital_staffs')->group(function () {
 Route::get('/hospital-staff/show-password-resets-mail', 'HospitalStaffController@showPasswordResetsMail')->name('hospital-staff.show.password-reset');
 Route::get('/hospital-staff/send-password-resets-mail', 'HospitalStaffController@sendPasswordResetsMail')->name('hospital-staff.send.password-reset');
 Route::get('/hospital-staff/show-reset-password/{reset_token}/{email}', 'HospitalStaffController@showResetPassword');
-Route::put('/hospital-staff/reset-password/{hospital_staff_id}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password');
+Route::put('/hospital-staff/reset-password/{email}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password');
 
 /*
 |--------------------------------------------------------------------------
@@ -72,6 +72,8 @@ Route::middleware('auth:staffs')->group(function () {
         Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
     });
     Route::resource('/staff', 'StaffController')->except(['show']);
+    Route::get('/staff/edit-password-personal', 'StaffController@editPersonalPassword')->name('staff.edit.password-personal');
+    Route::post('/staff/update-password-personal', 'StaffController@updatePersonalPassword')->name('staff.update.password-personal');
     /*
     |--------------------------------------------------------------------------
     | Hospital Routes
@@ -120,7 +122,7 @@ Route::middleware('auth:staffs')->group(function () {
 | Staff, Hospital staff authentication required
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth:staffs,hospital_staffs')->group(function () {
+Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->group(function () {
     /*
     |--------------------------------------------------------------------------
     | Hospital staff Routes

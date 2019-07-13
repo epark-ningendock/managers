@@ -59,5 +59,11 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'authority.level.admin' => \App\Http\Middleware\AuthorityLevelAdmin::class,
+        'permission.hospital.edit' => \App\Http\Middleware\isHospitalEdit::class,
+        'permission.staff.edit' => \App\Http\Middleware\isStaffEdit::class,
+        'permission.pre-account.edit' => \App\Http\Middleware\isPreAccountEdit::class,
+        'permission.cource-classification.edit' => \App\Http\Middleware\isCourceClassificationEdit::class,
+        'permission.invoice.edit' => \App\Http\Middleware\isInvoiceEdit::class,
+        'permission.contract.edit' => \App\Http\Middleware\isContractEdit::class,
     ];
 }

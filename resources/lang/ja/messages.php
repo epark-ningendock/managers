@@ -31,7 +31,7 @@ return [
     'not_correct' => ':name正しくない',
     'restored' => '復元が完了しました。',
     'invalid_format'                       => ':name 無効な形式',
-    'staff_create_error' => '正しく登録されませんでした。',
+    'staff_create_error' => '登録の際にエラーが発生しました。',
     'create_error' => 'エラーが発生しました。',
     'update_error' => 'エラーが発生しました。',
     'select_hospital_confirmation' => 'この医療機関を操作します。<br/>よろしいですか？',

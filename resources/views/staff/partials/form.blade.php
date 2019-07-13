@@ -5,7 +5,7 @@
 @endphp
 <div class="box-body">
   {!! csrf_field() !!}
-  <div class="form-group @if ($errors->has('status')) has-error @endif">
+  <div class="form-group">
     <label for="status">状態</label>
     <div class="radio">
       <label>
@@ -23,58 +23,70 @@
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('name')) has-error @endif">
+  <div class="form-group">
     <label for="name">スタッフ名</label>
-    <input type="text" class="form-control" id="name" name="name"
+    <input type="text" class="form-control text" id="name" name="name"
            value="{{ old('name', (isset($staff) ? $staff->name : null)) }}"
            placeholder="スタッフ名">
   </div>
 
-  <div class="form-group @if ($errors->has('login_id')) has-error @endif">
+  <div class="form-group">
     <label for="login_id">ログインID</label>
-    <input type="text" class="form-control" id="login_id" name="login_id"
+    <input type="text" class="form-control text" id="login_id" name="login_id"
            value="{{ old('login_id', (isset($staff) ? $staff->login_id : null)) }}"
            placeholder="ログインID"> 
   </div>
 
-  <div class="form-group @if ($errors->has('email')) has-error @endif">
+  <div class="form-group">
     <label for="email">メールアドレス</label>
-    <input type="email" class="form-control" id="email" name="email"
+    <input type="email" class="form-control text" id="email" name="email"
            value="{{ old('email', (isset($staff) ? $staff->email : null)) }}"
            placeholder="メールアドレス">
   </div>
 
-  <div class="form-group @if ($errors->has('authority')) has-error @endif">
+  <label for="department">部署</label>
+  <select name="department_id" id="department_id" class="form-control select-box">
+      <option value=""></option>
+      @foreach($departments as $department)
+          <option value="{{ $department->id }}"
+              @if(old('department_id', (isset($staff) ? $staff->department_id : null)) == $department->id)
+                  selected="selected"
+              @endif
+          >{{ $department->name }}</option>
+      @endforeach
+  </select>
+
+  <div class="form-group mt-3">
     <label class="mb-0">スタッフ権限</label>
     <div class="radio mt-0">
-      @if (Auth::user()->authority->description === 'システム管理者')
+      @if (Auth::user()->authority->value === Authority::Admin)
         <label>
             <input type="radio" id="authority_admin" name="authority" value="{{ Authority::Admin }}" class="permission-check"
-                {{ old('authority', (isset($staff) ? $staff->authority->description : -1)) == 'システム管理者' ? 'checked' : '' }}>
+                {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::Admin ? 'checked' : '' }}>
             {{ Authority::Admin()->description }}
         </label>
       @endif
       <label class="ml-3">
         <input type="radio" name="authority" id="authority_member" value="{{ Authority::Member }}"
-                {{ old('authority', (isset($staff) ? $staff->authority->description : -1)) == 'メンバー' ? 'checked' : '' }}
+                {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::Member ? 'checked' : '' }}
                 class="permission-check">
         {{ Authority::Member()->description }}
       </label>
       <label class="ml-3">
         <input type="radio" name="authority" id="authority_external_staff" value="{{ Authority::ExternalStaff }}"
-                {{ old('authority', (isset($staff) ? $staff->authority->description : -1)) == '外部スタッフ' ? 'checked' : '' }}
+                {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::ExternalStaff ? 'checked' : '' }}
                 class="permission-check">
         {{ Authority::ExternalStaff()->description }}
       </label>
       <label class="ml-3">
         <input type="radio" id="authority_contract_staff" name="authority" value="{{ Authority::ContractStaff }}" class="permission-check"
-            {{ old('authority', (isset($staff) ? $staff->authority->description : -1)) == '契約管理者' ? 'checked' : '' }}>
+            {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::ContractStaff ? 'checked' : '' }}>
         {{ Authority::ContractStaff()->description }}
       </label>
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('is_hospital')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">医療機関管理</label>
     <div class="radio mt-0">
       <label>
@@ -97,7 +109,7 @@
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('is_staff')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">スタッフ管理</label>
     <div class="radio mt-0">
       <label>
@@ -118,7 +130,7 @@
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('is_cource_classification')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">検査コース分類</label>
     <div class="radio mt-0">
       <label>
@@ -141,7 +153,7 @@
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('is_invoice')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">請求管理</label>
     <div class="radio mt-0">
       <label>
@@ -167,7 +179,7 @@
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">事前決済管理</label>
     <div class="radio mt-0">
       <label>
@@ -193,7 +205,7 @@
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('is_contract')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">契約管理</label>
     <div class="radio mt-0">
       <label>
@@ -230,5 +242,12 @@
 <style>
 .text-left {
   text-align: center !important;
+}
+
+.text {
+  width: 600px;
+}
+.select-box {
+  width: 400px;
 }
 </style>

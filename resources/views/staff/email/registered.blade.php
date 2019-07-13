@@ -1,6 +1,6 @@
 <html>
     <body>
-      <p>{{ $data['hospital_staff']['name'] }}さん ご登録ありがとうございます。</p>
+      <p>{{ $data['staff']['name'] }}さん ご登録ありがとうございます。</p>
       <br>
       <p>あなたのパスワードは</p>
       <p>{{ $data['password'] }} です</p>
