@@ -17,6 +17,7 @@ class ClassificationController extends Controller
     public function __construct(Request $request)
     {
         request()->session()->forget('hospital_id');
+        $this->middleware('permission.cource-classification.edit')->except('index');
     }
     
     /**
