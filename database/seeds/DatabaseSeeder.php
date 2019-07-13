@@ -12,10 +12,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            ClassificationTypeSeeder::class,
             DepartmentsTableSeeder::class,
             StaffsTableSeeder::class,
             HospitalStaffsTableSeeder::class,
-            MinorClassificationsTableSeeder::class,
             DistrictCodeSeeder::class,
             ContractInformationTableSeeder::class, // comment off if you need it
             HospitalTableSeeder::class,
