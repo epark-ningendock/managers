@@ -8,6 +8,7 @@ use App\Http\Requests\StaffFormRequest;
 use App\Http\Requests\StaffSearchFormRequest;
 use App\Staff;
 use App\StaffAuth;
+use App\Department;
 use App\Mail\Staff\RegisteredMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
@@ -24,11 +25,6 @@ class StaffController extends Controller
         $this->middleware('permission.staff.edit')->except('index');
     }
 
-    /**
-     * スタッフ一覧の表示
-     * @param StaffSearchFormRequest $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
     public function index(StaffSearchFormRequest $request)
     {
         $query = Staff::query();
@@ -46,20 +42,12 @@ class StaffController extends Controller
             ->with($request->input());
     }
 
-    /**
-     * Display staff form
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
     public function create()
     {
-        return view('staff.create');
+        $departments = Department::all();
+        return view('staff.create', ['departments' => $departments ]);
     }
 
-    /**
-     * Create staff
-     * @param StaffFormRequest $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
     public function store(StaffFormRequest $request)
     {
         try {
@@ -70,14 +58,12 @@ class StaffController extends Controller
                 'email',
                 'authority',
                 'status',
-                'department_id' // TODO: departmentをviewに追加する
+                'department_id'
             ]);
             
             $staff = new Staff($staff_data);
             $password = str_random(8);
             $staff->password = bcrypt($password);
-            $staff->department_id =1;
-            // dd($staff);
             $staff->save();
 
             $staff_auth = new StaffAuth($request->only(['is_hospital', 'is_staff', 'is_cource_classification', 'is_invoice', 'is_pre_account', 'is_contract']));
@@ -88,7 +74,6 @@ class StaffController extends Controller
                 'password' => $password
             ];
             
-            // 登録メールを送信する
             Mail::to($staff->email)
                 ->send(new RegisteredMail($data));
 
@@ -101,29 +86,19 @@ class StaffController extends Controller
         }
     }
 
-    /**
-     * Display staff edit form to edit
-     * @param $id Staff ID
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
     public function edit($id)
     {
         $staff = Staff::findOrFail($id);
-        return view('staff.edit', ['staff' => $staff]);
+        $departments = Department::all();
+        return view('staff.edit', ['staff' => $staff, 'departments' => $departments]);
     }
 
-    /**
-     * Update staff
-     * @param StaffFormRequest $request
-     * @param $id Staff ID
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
     public function update(StaffFormRequest $request, $id)
     {
         try {
             DB::beginTransaction();
             $staff = Staff::findOrFail($id);
-            $staff->update($request->only(['name', 'login_id', 'email', 'authority', 'status']));
+            $staff->update($request->only(['name', 'login_id', 'email', 'authority', 'status', 'department_id']));
             $staff->save();
 
             $staff->staff_auth()->update($request->only(['is_hospital', 'is_staff', 'is_cource_classification', 'is_invoice', 'is_pre_account', 'is_contract']));
@@ -137,12 +112,6 @@ class StaffController extends Controller
         }
     }
 
-    /**
-     * Update Staff status to Deleted
-     * @param $id Staff ID
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function destroy($id, Request $request)
     {
         $staff = Staff::find($id);

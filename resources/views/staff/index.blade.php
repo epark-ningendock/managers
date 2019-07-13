@@ -94,7 +94,7 @@
           <td>{{ $staff->name }}</td>
           <td>{{ $staff->login_id }}</td>
           <td>{{ $staff->email }}</td>
-          <td>{{ $staff->department->name }}</td>
+          <td>{{ isset($staff->department->name) ? $staff->department->name : '' }}</td>
           <td>{{ $staff->authority->description }}</td>
           <td>{{ Permission::getInstance($staff->staff_auth->is_hospital)->description }}</td>
           <td>{{ Permission::getInstance($staff->staff_auth->is_staff)->description }}</td>

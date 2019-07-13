@@ -25,26 +25,38 @@
 
   <div class="form-group @if ($errors->has('name')) has-error @endif">
     <label for="name">スタッフ名</label>
-    <input type="text" class="form-control" id="name" name="name"
+    <input type="text" class="form-control text" id="name" name="name"
            value="{{ old('name', (isset($staff) ? $staff->name : null)) }}"
            placeholder="スタッフ名">
   </div>
 
   <div class="form-group @if ($errors->has('login_id')) has-error @endif">
     <label for="login_id">ログインID</label>
-    <input type="text" class="form-control" id="login_id" name="login_id"
+    <input type="text" class="form-control text" id="login_id" name="login_id"
            value="{{ old('login_id', (isset($staff) ? $staff->login_id : null)) }}"
            placeholder="ログインID"> 
   </div>
 
   <div class="form-group @if ($errors->has('email')) has-error @endif">
     <label for="email">メールアドレス</label>
-    <input type="email" class="form-control" id="email" name="email"
+    <input type="email" class="form-control text" id="email" name="email"
            value="{{ old('email', (isset($staff) ? $staff->email : null)) }}"
            placeholder="メールアドレス">
   </div>
 
-  <div class="form-group @if ($errors->has('authority')) has-error @endif">
+  <label for="department">部署</label>
+  <select name="department_id" id="department_id" class="form-control select-box">
+      <option value=""></option>
+      @foreach($departments as $department)
+          <option value="{{ $department->id }}"
+              @if(isset($staff) && $staff->department_id === $department->id )
+                  selected="selected"
+              @endif
+          >{{ $department->name }}</option>
+      @endforeach
+  </select>
+
+  <div class="form-group mt-3 @if ($errors->has('authority')) has-error @endif">
     <label class="mb-0">スタッフ権限</label>
     <div class="radio mt-0">
       @if (Auth::user()->authority->description === 'システム管理者')
@@ -226,3 +238,12 @@
   </div>
 
 </div>
+
+<style>
+.text {
+  width: 600px;
+}
+.select-box {
+  width: 400px;
+}
+</style>
