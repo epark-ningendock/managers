@@ -19,6 +19,7 @@ class StaffController extends Controller
     public function __construct(Request $request)
     {
         request()->session()->forget('hospital_id');
+        $this->middleware('permission.staff.edit')->except('index');
     }
 
     /**
