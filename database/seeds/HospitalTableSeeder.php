@@ -21,7 +21,7 @@ class HospitalTableSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         factory(HospitalMajorClassification::class, 1)->create()->each(function ($major) {
-            for ($i = 1; $i <= 10; $i++) {
+            for ($i = 1; $i <= 14; $i++) {
                 if ($i === 1) {
                     $middle = factory(HospitalMiddleClassification::class)->create([
                         'major_classification_id' => $major->id,

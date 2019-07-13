@@ -212,6 +212,10 @@ class HospitalController extends Controller
 
     protected function saveAttentionInformation(Request $request)
     {
+        $this->validate($request, [
+            'pvad' => 'digits_between:1,11'
+        ]);
+
         try {
             DB::beginTransaction();
 

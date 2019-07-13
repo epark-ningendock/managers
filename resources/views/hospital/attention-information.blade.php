@@ -5,6 +5,8 @@
 @stop
 
 @section('form')
+  @includeIf('hospital.partials.nav-bar')
+  
   {{ Form::open(['route' => 'hospital.attention-information.store', 'method' => 'post']) }}
     @include('hospital.partials.attention-information-form')
 @stop
