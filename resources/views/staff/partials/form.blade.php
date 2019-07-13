@@ -5,7 +5,7 @@
 @endphp
 <div class="box-body">
   {!! csrf_field() !!}
-  <div class="form-group @if ($errors->has('status')) has-error @endif">
+  <div class="form-group">
     <label for="status">状態</label>
     <div class="radio">
       <label>
@@ -23,21 +23,21 @@
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('name')) has-error @endif">
+  <div class="form-group">
     <label for="name">スタッフ名</label>
     <input type="text" class="form-control text" id="name" name="name"
            value="{{ old('name', (isset($staff) ? $staff->name : null)) }}"
            placeholder="スタッフ名">
   </div>
 
-  <div class="form-group @if ($errors->has('login_id')) has-error @endif">
+  <div class="form-group">
     <label for="login_id">ログインID</label>
     <input type="text" class="form-control text" id="login_id" name="login_id"
            value="{{ old('login_id', (isset($staff) ? $staff->login_id : null)) }}"
            placeholder="ログインID"> 
   </div>
 
-  <div class="form-group @if ($errors->has('email')) has-error @endif">
+  <div class="form-group">
     <label for="email">メールアドレス</label>
     <input type="email" class="form-control text" id="email" name="email"
            value="{{ old('email', (isset($staff) ? $staff->email : null)) }}"
@@ -56,7 +56,7 @@
       @endforeach
   </select>
 
-  <div class="form-group mt-3 @if ($errors->has('authority')) has-error @endif">
+  <div class="form-group mt-3">
     <label class="mb-0">スタッフ権限</label>
     <div class="radio mt-0">
       @if (Auth::user()->authority->description === 'システム管理者')
@@ -86,7 +86,7 @@
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('is_hospital')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">医療機関管理</label>
     <div class="radio mt-0">
       <label>
@@ -109,7 +109,7 @@
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('is_staff')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">スタッフ管理</label>
     <div class="radio mt-0">
       <label>
@@ -130,7 +130,7 @@
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('is_cource_classification')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">検査コース分類</label>
     <div class="radio mt-0">
       <label>
@@ -153,7 +153,7 @@
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('is_invoice')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">請求管理</label>
     <div class="radio mt-0">
       <label>
@@ -179,7 +179,7 @@
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">事前決済管理</label>
     <div class="radio mt-0">
       <label>
@@ -205,7 +205,7 @@
     </div>
   </div>
 
-  <div class="form-group @if ($errors->has('is_contract')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">契約管理</label>
     <div class="radio mt-0">
       <label>

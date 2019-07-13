@@ -123,7 +123,7 @@ class StaffController extends Controller
         $staff = Staff::find($id);
         $staff->status = StaffStatus::Deleted;
         $staff->save();
-        $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.staff')]));
+        $request->session()->flash('error', trans('messages.deleted', ['name' => trans('messages.names.staff')]));
         return redirect()->back();
     }
 
@@ -136,8 +136,8 @@ class StaffController extends Controller
     public function updatePassword($staff_id, Request $request)
     {
         $this->validate($request, [
-            'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
-            'password_confirmation' => 'min:6'
+            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:8|max:20'
         ]);
 
         $staff = Staff::findOrFail($staff_id);
@@ -157,8 +157,8 @@ class StaffController extends Controller
     {
         $this->validate($request, [
             'old_password' => 'required',
-            'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
-            'password_confirmation' => 'min:6'
+            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:8|max:20'
         ]);
 
         $staff = Staff::findOrFail(Auth::user()->id);

@@ -94,8 +94,8 @@ class HospitalStaffController extends Controller
     {
         $this->validate($request, [
             'old_password' => 'required',
-            'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
-            'password_confirmation' => 'min:6'
+            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:8|max:20'
         ]);
 
         $hospital_staff = HospitalStaff::findOrFail($hospital_staff_id);
@@ -171,8 +171,8 @@ class HospitalStaffController extends Controller
     public function resetPassword($email, Request $request)
     {
         $this->validate($request, [
-            'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
-            'password_confirmation' => 'min:6'
+            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:8|max:20'
         ]);
                 
         $staff = Staff::where('email', $email)->first();
