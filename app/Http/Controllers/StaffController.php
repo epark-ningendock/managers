@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
 
 class StaffController extends Controller
 {
@@ -123,7 +124,8 @@ class StaffController extends Controller
 
     public function editPassword($staff_id)
     {
-        return view('staff.edit-password', ['staff_id' => $staff_id]);
+        $staff = Staff::find($staff_id);
+        return view('staff.edit-password', ['staff' => $staff]);
     }
 
     public function updatePassword($staff_id, Request $request)
@@ -139,7 +141,36 @@ class StaffController extends Controller
         if (Hash::check($request->old_password, $staff->password)) {
             $staff->password = bcrypt($request->password);
             $staff->save();
-            return redirect('staff')->with('success', trans('messages.updated', ['name' => trans('messages.names.password')]));
+            app('App\Http\Controllers\Auth\LoginController')->is_staff_login($staff->login_id, $request->password);
+            return redirect('staff')->with('success', 'パスワードを更新しました');
+        } else {
+            $validator = Validator::make([], []);
+            $validator->errors()->add('old_password', '現在のパスワードが正しくありません');
+            throw new ValidationException($validator);
+            return redirect()->back();
+        }
+    }
+
+    public function editPersonalPassword()
+    {
+        return view('staff.edit-password-personal');
+    }
+
+    public function updatePersonalPassword(Request $request)
+    {
+        $this->validate($request, [
+            'old_password' => 'required',
+            'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:6'
+        ]);
+
+        $staff = Staff::findOrFail(Auth::user()->id);
+
+        if (Hash::check($request->old_password, $staff->password)) {
+            $staff->password = bcrypt($request->password);
+            $staff->save();
+            app('App\Http\Controllers\Auth\LoginController')->is_staff_login($staff->login_id, $request->password);
+            return redirect('staff')->with('success', 'パスワードを更新しました');
         } else {
             $validator = Validator::make([], []);
             $validator->errors()->add('old_password', '現在のパスワードが正しくありません');

@@ -4,14 +4,13 @@
   <h1>
       <i class="fa fa-user"> パスワード設定</i>
         - 
-      {{ $staff->name }}
+      {{ Auth::user()->name }}
   </h1>
 @stop
 
 @section('form')
-  <form method="POST" action="{{ route('staff.update.password', ['staff_id' => $staff->id]) }}">
+  <form method="POST" action="{{ route('staff.update.password-personal') }}">
     {{ csrf_field() }}
-    {{ method_field('PUT') }}
     @include('staff.partials.edit-password-form')
   </form>
 @stop

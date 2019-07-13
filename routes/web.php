@@ -72,6 +72,8 @@ Route::middleware('auth:staffs')->group(function () {
         Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
     });
     Route::resource('/staff', 'StaffController')->except(['show']);
+    Route::get('/staff/edit-password-personal', 'StaffController@editPersonalPassword')->name('staff.edit.password-personal');
+    Route::post('/staff/update-password-personal', 'StaffController@updatePersonalPassword')->name('staff.update.password-personal');
     /*
     |--------------------------------------------------------------------------
     | Hospital Routes

@@ -124,7 +124,7 @@
           @if (Auth::user()->authority->description === 'システム管理者' && Auth::user()->staff_auth->is_staff === 3)
             <td>
               <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-success">
-                <i class="fa fa-key"></i>
+                <i class="fa fa-key text-bold">パスワード</i>
               </a>
             </td>
           @endif
