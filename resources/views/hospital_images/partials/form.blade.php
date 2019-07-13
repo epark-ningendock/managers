@@ -13,7 +13,7 @@
                 @endif
             </td>
         </tr>
-        @for ($i = 1; $i <= 4; $i++)
+        @for ($i = 1; $i <= 5; $i++)
             <tr>
                 <th>施設サブ画像 {{ $i }}
                 <td>
@@ -70,6 +70,96 @@
                     @if ($errors->has('map_url'))
                         {{ $errors->first('map_url') }}
                     @endif
+            </td>
+        </tr>
+        <tr>
+            <th>写真タブ</th>
+            <td>
+                @for ($i = 1; $i <= 5; $i++)
+                <div>
+                    <h2>{{$tab_name_list[$i]}}</h2>
+                    <?php $tab = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('order2', $i)->first();
+
+                    ?>
+                    @if(!is_null($tab))
+                        <img src="/img/uploads/300-300-{{$tab->hospital_image->path}}" width="150">
+                    @endif
+                    {{Form::file("tab_".$i, ['class' => 'field'])}}
+                    @if ($errors->has('tab_'.$i))
+                        {{ $errors->first('tab_').$i }}
+                    @endif
+                    <div>
+                        {{Form::label('tab_'.$i.'_order1', '表示順')}}
+                        {{Form::text('tab_'.$i.'_order1', is_null($tab) ? '' : $tab->order)}}
+                        @if ($errors->has('tab_'.$i.'_order1'))
+                            {{ $errors->first('tab_'.$i.'_order1') }}
+                        @endif
+                    </div>
+                    <div>
+                        {{Form::label('tab_'.$i.'_memo1', 'alt')}}
+                        {{Form::text('tab_'.$i.'_memo1', is_null($tab) ? '' : $tab->hospital_image->memo1)}}
+                        @if ($errors->has('tab_'.$i.'_memo1'))
+                            {{ $errors->first('tab_'.$i.'_memo1') }}
+                        @endif
+                    </div>
+                    <div>
+                        {{Form::label('tab_'.$i.'_memo2', '説明')}}
+                        {{Form::textarea('tab_'.$i.'_memo2', is_null($tab) ? '' : $tab->hospital_image->memo2)}}
+                        @if ($errors->has('tab_'.$i.'_memo2'))
+                            {{ $errors->first('tab_'.$i.'_memo2') }}
+                        @endif
+                    </div>
+                </div>
+                @endfor
+            </td>
+        </tr>
+        <tr>
+            <th>スタッフ</th>
+            <td>
+                @for ($i = 1; $i <= 10; $i++)
+                    <div>
+                        <h2>スタッフ{{$i}}</h2>
+                        <?php $staff = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_STAFF)->where('order2', $i)->first();
+
+                        ?>
+                        @if(!is_null($staff))
+                            <img src="/img/uploads/300-300-{{$staff->hospital_image->path}}" width="150">
+                        @endif
+                        {{Form::file("staff_".$i, ['class' => 'field'])}}
+                        @if ($errors->has('staff_'.$i))
+                            {{ $errors->first('staff_').$i }}
+                        @endif
+                        <div>
+                            {{Form::label('staff_'.$i.'_memo1', 'alt')}}
+                            {{Form::text('staff_'.$i.'_memo1', is_null($staff) ? '' : $staff->hospital_image->memo1)}}
+                            @if ($errors->has('staff_'.$i.'_memo1'))
+                                {{ $errors->first('staff_'.$i.'_memo1') }}
+                            @endif
+
+                        </div>
+                        <div>
+                            {{Form::label('staff_'.$i.'_name', '名前')}}
+                            {{Form::text('staff_'.$i.'_name', is_null($staff) ? '' : $staff->name)}}
+                            @if ($errors->has('staff_'.$i.'_name'))
+                                {{ $errors->first('staff_'.$i.'_name') }}
+                            @endif
+                        </div>
+                        <div>
+                            {{Form::label('staff_'.$i.'_career', '経歴')}}
+                            {{Form::text('staff_'.$i.'_career', is_null($staff) ? '' : $staff->career)}}
+                            @if ($errors->has('staff_'.$i.'_career'))
+                                {{ $errors->first('staff_'.$i.'_career') }}
+                            @endif
+                        </div>
+                        <div>
+                            {{Form::label('staff_'.$i.'_memo', 'コメント')}}
+                            {{Form::textarea('staff_'.$i.'_memo', is_null($staff) ? '' : $staff->memo)}}
+                            @if ($errors->has('staff_'.$i.'_memo'))
+                                {{ $errors->first('staff_'.$i.'_memo') }}
+                            @endif
+                        </div>
+                    </div>
+                @endfor
             </td>
         </tr>
     </table>

@@ -28,7 +28,7 @@ class CreateHospitalCategoriesTable extends Migration
             $table->text('career')->nullable();
             $table->text('interview')->nullable();
             $table->tinyInteger('is_display')->default(0);
-            $table->integer('order')->default(0);
+            $table->integer('order')->default(0)->nullable();
             $table->integer('order2')->default(0);
             $this->addCommonColumns($table);
         });

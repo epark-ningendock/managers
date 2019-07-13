@@ -12,7 +12,7 @@ class ImageOrder extends SoftDeleteModel
     const IMAGE_GROUP_SPECIALITY = 5;// こだわり
     const IMAGE_GROUP_INTERVIEW = 6;// インタビュー
     const IMAGE_GROUP_STAFF = 7;// スタッフ
-    const IMAGE_GROUP_ANOTHER = 8;// スタッフ
+    const IMAGE_GROUP_TAB = 8;// 写真タブ
 
     protected $fillable = [ 'image_group_number', 'image_location_number', 'name', 'order', 'status' ];
 

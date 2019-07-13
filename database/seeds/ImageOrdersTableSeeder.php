@@ -89,35 +89,35 @@ class ImageOrdersTableSeeder extends Seeder
         }
 
         ImageOrder::create([
-            'image_group_number' => ImageOrder::IMAGE_GROUP_ANOTHER,
+            'image_group_number' => ImageOrder::IMAGE_GROUP_TAB,
             'image_location_number' => 1,
             'name' => '施設写真　－　スタッフ１',
             'order' => 1,
         ]);
 
         ImageOrder::create([
-            'image_group_number' => ImageOrder::IMAGE_GROUP_ANOTHER,
+            'image_group_number' => ImageOrder::IMAGE_GROUP_TAB,
             'image_location_number' => 2,
             'name' => '施設写真　－　設備１',
             'order' => 2,
         ]);
 
         ImageOrder::create([
-            'image_group_number' => ImageOrder::IMAGE_GROUP_ANOTHER,
+            'image_group_number' => ImageOrder::IMAGE_GROUP_TAB,
             'image_location_number' => 3,
             'name' => '施設写真　－　院内１',
             'order' => 3,
         ]);
 
         ImageOrder::create([
-            'image_group_number' => ImageOrder::IMAGE_GROUP_ANOTHER,
+            'image_group_number' => ImageOrder::IMAGE_GROUP_TAB,
             'image_location_number' => 4,
             'name' => '施設写真　－　外観１',
             'order' => 4,
         ]);
 
         ImageOrder::create([
-            'image_group_number' => ImageOrder::IMAGE_GROUP_ANOTHER,
+            'image_group_number' => ImageOrder::IMAGE_GROUP_TAB,
             'image_location_number' => 5,
             'name' => '施設写真　－　その他１',
             'order' => 5,
