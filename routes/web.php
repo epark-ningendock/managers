@@ -54,7 +54,7 @@ Route::middleware('auth:hospital_staffs')->group(function () {
 Route::get('/hospital-staff/show-password-resets-mail', 'HospitalStaffController@showPasswordResetsMail')->name('hospital-staff.show.password-reset');
 Route::get('/hospital-staff/send-password-resets-mail', 'HospitalStaffController@sendPasswordResetsMail')->name('hospital-staff.send.password-reset');
 Route::get('/hospital-staff/show-reset-password/{reset_token}/{email}', 'HospitalStaffController@showResetPassword');
-Route::put('/hospital-staff/reset-password/{hospital_staff_id}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password');
+Route::put('/hospital-staff/reset-password/{email}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password');
 
 /*
 |--------------------------------------------------------------------------
