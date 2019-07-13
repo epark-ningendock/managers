@@ -73,6 +73,33 @@
             </td>
         </tr>
         <tr>
+            <th>インタビュー</th>
+            <td>
+                <?php $interview = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_INTERVIEW)->first(); ?>
+                    @if(!is_null($interview))
+                        <img src="/img/uploads/300-300-{{$interview->hospital_image->path}}" width="150">
+                    @endif
+                    {{Form::file("interview_1", ['class' => 'field'])}}
+                    @if ($errors->has('interview_1'))
+                        {{ $errors->first('interview_1') }}
+                    @endif
+                @if ($errors->has('interview_1'))
+                    {{ $errors->first('interview_1') }}
+                @endif
+                    {{Form::label('interview_1_title', 'タイトル')}}
+                    {{Form::text('interview_1_title', is_null($interview) ? '' : $interview->title)}}
+                    @if ($errors->has('interview_1_title'))
+                        {{ $errors->first('interview_1_title') }}
+                    @endif
+
+                    {{Form::label('interview_1_caption', 'キャプション')}}
+                    {{Form::text('interview_1_caption', is_null($interview) ? '' : $interview->caption)}}
+                    @if ($errors->has('interview_1_caption'))
+                        {{ $errors->first('interview_1_caption') }}
+                    @endif
+            </td>
+        </tr>
+        <tr>
             <th>写真タブ</th>
             <td>
                 @for ($i = 1; $i <= 5; $i++)

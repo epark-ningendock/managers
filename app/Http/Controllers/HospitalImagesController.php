@@ -156,6 +156,9 @@ class HospitalImagesController extends Controller
             'staff_10_memo' => 'nullable',
             'staff_10_memo1' => 'nullable|max:200',
 
+            'interview_1' => 'file|image|max:4000',
+            'interview_1_title' => 'nullable|max:100',
+            'interview_1_caption' => 'nullable|max:200',
         ]);
         $file = $params;
 
@@ -222,6 +225,10 @@ class HospitalImagesController extends Controller
         for($i = 1; $i <= 10; $i++){
             $this->hospitalImageUploader($file, 'staff_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_STAFF,$file['staff_'.$i.'_name'],$file['staff_'.$i.'_career'],$file['staff_'.$i.'_memo'] );
         }
+
+        //インタビュー
+        $this->hospitalImageUploader($file, 'interview_', 1, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_INTERVIEW,null,null,null,$file['interview_1_title'],$file['interview_1_caption']);
+
         if(isset($file['map_url'])) {
             $this->hospitalImageUploader($file, 'map_url', 1, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_MAP);
         }
@@ -273,7 +280,7 @@ class HospitalImagesController extends Controller
         //
     }
 
-    private function hospitalImageUploader (array $file, string $image_prefix, int $i, object $hospital, int $hospital_id, int $image_order, string $name = null, $career = null, string $memo = null) {
+    private function hospitalImageUploader (array $file, string $image_prefix, int $i, object $hospital, int $hospital_id, int $image_order, string $name = null, $career = null, string $memo = null, string $title = null, string $caption = null) {
         //地図も画像情報として保存されるが、画像の実態はないのでダミーで保存するっぽい。
         if ($image_order != ImageOrder::IMAGE_GROUP_MAP) {
 
@@ -293,10 +300,10 @@ class HospitalImagesController extends Controller
                 ->resize(500, 500)
                 ->save(public_path().'/img/uploads/500-500-'.$file[$image_prefix.$i]->hashName());
             $save_sub_images = ['extension' => str_replace('image/', '', $sub_image->mime), 'name' => $file[$image_prefix.$i]->getClientOriginalName(), 'path' => $file[$image_prefix.$i]->hashName(), 'memo1' => $memo1, 'memo2' => $memo2];
-            $save_sub_image_categories = [ 'name' => $name,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order ];
+            $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order ];
             } else {
                 $save_sub_images = ['memo1' => $memo1, 'memo2' => $memo2];
-                $save_sub_image_categories = [ 'name' => $name,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order ];
+                $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order ];
             }
 
             if(is_null($image_order_exists)) {
@@ -313,7 +320,7 @@ class HospitalImagesController extends Controller
             }
         } else {
             $save_sub_images = ['extension' => 'dummy', 'name' => 'dummy', 'path' => 'dummy', 'memo1' => $file['map_url']];
-            $save_sub_image_categories = [ 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i ];
+            $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i ];
             //メイン画像の登録確認
             $image_category = $this->hospital_category->ByImageOrder($hospital_id, $image_order, $i)->first();
             if(is_null($image_category)) {
