@@ -34,7 +34,7 @@ class HospitalStaffController extends Controller
             'hospital_id' => session()->get('hospital_id'),
         ]);
 
-        $hospital_staff           = new HospitalStaff($request->all());
+        $hospital_staff = new HospitalStaff($request->all());
         $password = str_random(8);
         $hospital_staff->password = bcrypt($password);
         $hospital_staff->save();

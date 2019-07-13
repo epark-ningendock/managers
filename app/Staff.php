@@ -12,11 +12,15 @@ class Staff extends Authenticatable
 {
     use EnumTrait;
 
-    // Larvelの設定だと、staffの複数形はstaffなので、規約に合っていないが、
-    // facility_staffsテーブルと粒度を揃えるために、カスタムテーブルを使用し、staffsで扱えるようにする
     protected $table = 'staffs';
     protected $fillable = [
-        'name', 'login_id', 'password', 'authority', 'email', 'status'
+        'name',
+        'login_id',
+        'password',
+        'authority',
+        'email',
+        'status',
+        'department_id'
     ];
 
     protected $enums = [

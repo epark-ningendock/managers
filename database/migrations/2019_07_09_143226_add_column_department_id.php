@@ -14,7 +14,7 @@ class AddColumnDepartmentId extends Migration
     public function up()
     {
         Schema::table('staffs', function (Blueprint $table) {
-            $table->integer('department_id')->unsigned();
+            $table->integer('department_id')->unsigned()->nullable();
             $table->foreign('department_id')->references('id')->on('departments');
         });
     }

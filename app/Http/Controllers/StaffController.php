@@ -8,6 +8,8 @@ use App\Http\Requests\StaffFormRequest;
 use App\Http\Requests\StaffSearchFormRequest;
 use App\Staff;
 use App\StaffAuth;
+use App\Mail\Staff\RegisteredMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -35,7 +37,8 @@ class StaffController extends Controller
             $query->whereRaw("UPPER(name) LIKE '%$name%'");
         }
         if ($request->input('login_id', '') != '') {
-            $query->where('login_id', $request->input('login_id'));
+            $loginId = strtolower($request->input('login_id'));
+            $query->whereRaw("UPPER(login_id) LIKE '%$loginId%'");
         }
         $query->where('status', $request->input('status', StaffStatus::Valid))->with(['staff_auth']);
 
@@ -61,13 +64,33 @@ class StaffController extends Controller
     {
         try {
             DB::beginTransaction();
-            $staff_data = $request->only(['name', 'login_id', 'email', 'password', 'authority', 'status']);
-            $staff_data['password'] = bcrypt($staff_data['password']);
-            $staff_data['authority'] = Authority::Admin;
+            $staff_data = $request->only([
+                'name',
+                'login_id',
+                'email',
+                'authority',
+                'status',
+                'department_id' // TODO: departmentをviewに追加する
+            ]);
+            
             $staff = new Staff($staff_data);
+            $password = str_random(8);
+            $staff->password = bcrypt($password);
+            $staff->department_id =1;
+            // dd($staff);
             $staff->save();
+
             $staff_auth = new StaffAuth($request->only(['is_hospital', 'is_staff', 'is_cource_classification', 'is_invoice', 'is_pre_account', 'is_contract']));
             $staff->staff_auth()->save($staff_auth);
+            
+            $data = [
+                'staff' => $staff,
+                'password' => $password
+            ];
+            
+            // 登録メールを送信する
+            Mail::to($staff->email)
+                ->send(new RegisteredMail($data));
 
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.staff')]));
             DB::commit();
