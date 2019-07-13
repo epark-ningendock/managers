@@ -12,6 +12,6 @@
   <form method="POST" action="{{ route('staff.update.password', ['staff_id' => $staff->id]) }}">
     {{ csrf_field() }}
     {{ method_field('PUT') }}
-    @include('staff.partials.edit-password-form')
+    @include('staff.partials.edit-password-form-admin')
   </form>
 @stop

@@ -131,24 +131,16 @@ class StaffController extends Controller
     public function updatePassword($staff_id, Request $request)
     {
         $this->validate($request, [
-            'old_password' => 'required',
             'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
             'password_confirmation' => 'min:6'
         ]);
 
         $staff = Staff::findOrFail($staff_id);
 
-        if (Hash::check($request->old_password, $staff->password)) {
-            $staff->password = bcrypt($request->password);
-            $staff->save();
-            app('App\Http\Controllers\Auth\LoginController')->is_staff_login($staff->login_id, $request->password);
-            return redirect('staff')->with('success', 'パスワードを更新しました');
-        } else {
-            $validator = Validator::make([], []);
-            $validator->errors()->add('old_password', '現在のパスワードが正しくありません');
-            throw new ValidationException($validator);
-            return redirect()->back();
-        }
+        $staff->password = bcrypt($request->password);
+        $staff->save();
+        app('App\Http\Controllers\Auth\LoginController')->is_staff_login($staff->login_id, $request->password);
+        return redirect('staff')->with('success', 'パスワードを更新しました');
     }
 
     public function editPersonalPassword()
