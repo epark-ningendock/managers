@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Enums\Permission;
 use App\Staff;
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class isHospitalEdit
 {
@@ -17,11 +18,16 @@ class isHospitalEdit
      */
     public function handle($request, Closure $next)
     {
-        $staff = Staff::findOrFail($request->staff_id);
-        
-        if ($staff->staff_auth->is_hospital === Permission::None) {
-            return redirect('/hospital');
+        if (Auth::user()->getTable() == "staffs") {
+            $staff = Staff::findOrFail(request()->session()->get('staffs'));
+            
+            if ($staff->staff_auth->is_hospital !== Permission::Edit) {
+                request()->session()->forget('hospital_id');
+                return redirect('/hospital');
+            }
+            return $next($request);
+        } else {
+            return $next($request);
         }
-        return $next($request);
     }
 }
