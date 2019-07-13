@@ -29,6 +29,11 @@ class HospitalCategory extends SoftDeleteModel
         return $this->belongsTo('App\HospitalImage');
     }
 
+    public function interview_details()
+    {
+        return $this->hasMany('App\InterviewDetail');
+    }
+
     public function scopeByImageOrder($query, $hospital_id, $image_order, $order2)
     {
         $query->where('hospital_id',$hospital_id)->where('image_order',$image_order)->where('order2',$order2);

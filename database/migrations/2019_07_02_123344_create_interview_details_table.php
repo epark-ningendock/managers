@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\Helpers\DBCommonColumns;
 
 class CreateInterviewDetailsTable extends Migration
 {
+    use DBCommonColumns;
     /**
      * Run the migrations.
      *
@@ -20,7 +22,7 @@ class CreateInterviewDetailsTable extends Migration
             $table->string('question');
             $table->string('answer');
             $table->integer('order')->default(0);
-            $table->timestamps();
+            $this->addCommonColumns($table);
         });
     }
 

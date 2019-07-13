@@ -91,12 +91,24 @@
                     @if ($errors->has('interview_1_title'))
                         {{ $errors->first('interview_1_title') }}
                     @endif
-
                     {{Form::label('interview_1_caption', 'キャプション')}}
                     {{Form::text('interview_1_caption', is_null($interview) ? '' : $interview->caption)}}
                     @if ($errors->has('interview_1_caption'))
                         {{ $errors->first('interview_1_caption') }}
                     @endif
+                <h2>インタビュー詳細</h2>
+                @foreach($interviews as $interview)
+                <div class="interview_detail_{{$loop->iteration}}">
+                    <div>
+                        {{Form::label('interview['. $interview->id .']', '質問')}}
+                        {{Form::textarea('interview['. $interview->id .'][question]', is_null($interview) ? '' : $interview->question)}}
+                    </div>
+                    <div>
+                        {{Form::label('interview['. $interview->id .']', '回答')}}
+                        {{Form::textarea('interview['. $interview->id .'][answer]', is_null($interview) ? '' : $interview->answer)}}
+                    </div>
+                </div>
+                @endforeach
             </td>
         </tr>
         <tr>

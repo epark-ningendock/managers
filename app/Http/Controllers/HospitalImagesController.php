@@ -6,6 +6,7 @@ use App\Hospital;
 use App\HospitalImage;
 use App\ImageOrder;
 use App\HospitalCategory;
+use App\InterviewDetail;
 use Illuminate\Http\Request;
 
 class HospitalImagesController extends Controller
@@ -13,12 +14,14 @@ class HospitalImagesController extends Controller
     public function __construct(
         HospitalImage $hospital_image,
         HospitalCategory $hospital_category,
-        ImageOrder $image_order
+        ImageOrder $image_order,
+        InterviewDetail $interview_detail
     )
     {
         $this->hospital_image = $hospital_image;
         $this->hospital_category = $hospital_category;
         $this->image_order = $image_order;
+        $this->interview_detail = $interview_detail;
     }
     /**
      * Display a listing of the resource.
@@ -38,12 +41,13 @@ class HospitalImagesController extends Controller
     public function create($hospital_id)
     {
         $hospital = Hospital::with(['hospital_images', 'hospital_categories'])->find($hospital_id);
+        $interviews = $hospital->hospital_categories()->where('image_order', ImageOrder::IMAGE_GROUP_INTERVIEW)->first()->interview_details()->interviewOrder()->get();
 
         $image_order = $this->image_order;
 
         $tab_name_list = [ 1 => 'スタッフ',  2 => '設備',  3 => '院内' , 4 => '外観',  5 => 'その他'];
 
-        return view('hospital_images.create', compact('hospital', 'hospital_id', 'image_order', 'tab_name_list'));
+        return view('hospital_images.create', compact('hospital', 'hospital_id', 'image_order', 'tab_name_list', 'interviews'));
     }
 
     /**
@@ -159,6 +163,9 @@ class HospitalImagesController extends Controller
             'interview_1' => 'file|image|max:4000',
             'interview_1_title' => 'nullable|max:100',
             'interview_1_caption' => 'nullable|max:200',
+
+            'interview.*.question' => 'nullable|max:100',
+            'interview.*.answer' => 'nullable|max:100',
         ]);
         $file = $params;
 
@@ -174,7 +181,10 @@ class HospitalImagesController extends Controller
             ]
         );
 
-        //tab1
+        $interviews = $params['interview'];
+        foreach ($interviews as $key => $interview) {
+            $this->interview_detail->where('id', $key)->update($interview);
+        }
 
         //main画像の保存
         if(isset($file['main'])) {
@@ -335,6 +345,10 @@ class HospitalImagesController extends Controller
                 $hospital_img->hospital_category()->update($save_sub_image_categories);
             }
         }
+
+    }
+
+    private function save_interview_details(){
 
     }
 }

@@ -12,4 +12,9 @@ class InterviewDetail extends SoftDeleteModel
 
     protected $guarded = ['id'];
 
+    public function scopeInterviewOrder($query)
+    {
+        return $query->orderBy('order', 'asc');
+    }
+
 }
