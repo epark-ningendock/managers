@@ -115,7 +115,7 @@ Route::middleware('auth:staffs')->group(function () {
 | Staff, Hospital staff authentication required
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth:staffs,hospital_staffs')->group(function () {
+Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->group(function () {
     /*
     |--------------------------------------------------------------------------
     | Hospital staff Routes
