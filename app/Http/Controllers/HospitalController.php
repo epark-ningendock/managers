@@ -13,16 +13,23 @@ use Illuminate\Http\Request;
 use App\Http\Requests\HospitalFormRequest;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Auth\SessionGuard;
+use Illuminate\Support\Facades\Auth;
+use App\Enums\Permission;
 
 class HospitalController extends Controller
 {
     public function __construct(Request $request)
     {
         request()->session()->forget('hospital_id');
+        $this->middleware('permission.hospital.edit')->except('index');
     }
     
     public function index(HospitalFormRequest $request)
     {
+        if (Auth::user()->staff_auth->is_hospital === Permission::None) {
+            return view('staff.edit-password-personal');
+        }
+
         $query = Hospital::query();
 
         if ($request->get('s_text')) {

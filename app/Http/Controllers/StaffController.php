@@ -18,17 +18,22 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Auth;
+use App\Enums\Permission;
 
 class StaffController extends Controller
 {
     public function __construct(Request $request)
     {
         request()->session()->forget('hospital_id');
-        $this->middleware('permission.staff.edit')->except('index');
+        $this->middleware('permission.staff.edit')->except(['index', 'editPersonalPassword', 'updatePersonalPassword']);
     }
 
     public function index(StaffSearchFormRequest $request)
     {
+        if (Auth::user()->staff_auth->is_staff === Permission::None) {
+            return view('staff.edit-password-personal');
+        }
+
         $query = Staff::query();
         if ($request->input('name', '') != '') {
             $name = strtolower($request->input('name'));
@@ -52,6 +57,7 @@ class StaffController extends Controller
 
     public function store(StaffFormRequest $request)
     {
+        $this->staffLoginIdValidation($request->login_id);
         $this->staffEmailValidation($request->email);
 
         try {
@@ -99,6 +105,7 @@ class StaffController extends Controller
 
     public function update(StaffFormRequest $request, $id)
     {
+        $this->staffLoginIdValidation($request->login_id);
         $this->staffEmailValidation($request->email);
 
         try {
@@ -183,6 +190,18 @@ class StaffController extends Controller
         if ($hospital_staff) {
             $validator = Validator::make([], []);
             $validator->errors()->add('email', '指定のメールアドレスは既に使用されています。');
+            throw new ValidationException($validator);
+            return redirect()->back();
+        }
+    }
+
+    public function staffLoginIdValidation($login_id)
+    {
+        $hospital_staff = HospitalStaff::where('login_id', $login_id)->first();
+
+        if ($hospital_staff) {
+            $validator = Validator::make([], []);
+            $validator->errors()->add('login_id', '指定のログインIDは既に使用されています。');
             throw new ValidationException($validator);
             return redirect()->back();
         }

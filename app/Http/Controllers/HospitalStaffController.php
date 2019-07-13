@@ -31,6 +31,7 @@ class HospitalStaffController extends Controller
 
     public function store(HospitalStaffFormRequest $request)
     {
+        $this->hospitalStaffLoginIdValidation($request->login_id);
         $this->hospitalStaffEmailValidation($request->email);
 
         $request->request->add([
@@ -63,6 +64,7 @@ class HospitalStaffController extends Controller
 
     public function update(HospitalStaffFormRequest $request, $id)
     {
+        $this->hospitalStaffLoginIdValidation($request->login_id);
         $this->hospitalStaffEmailValidation($request->email);
         
         $request->request->add([
@@ -194,6 +196,18 @@ class HospitalStaffController extends Controller
         if ($staff) {
             $validator = Validator::make([], []);
             $validator->errors()->add('email', '指定のメールアドレスは既に使用されています。');
+            throw new ValidationException($validator);
+            return redirect()->back();
+        }
+    }
+
+    public function hospitalStaffLoginIdValidation($login_id)
+    {
+        $staff = Staff::where('login_id', $login_id)->first();
+
+        if ($staff) {
+            $validator = Validator::make([], []);
+            $validator->errors()->add('login_id', '指定のログインIDは既に使用されています。');
             throw new ValidationException($validator);
             return redirect()->back();
         }
