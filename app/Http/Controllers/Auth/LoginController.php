@@ -50,8 +50,8 @@ class LoginController extends Controller
 
     public function logout()
     {
-        // Auth::logout()
-        session()->invalidate();
+        session()->flush();
+        Auth::logout();
         return redirect('/login');
     }
 
@@ -64,19 +64,16 @@ class LoginController extends Controller
     {
         $data = $req->all();
 
-        // スタッフに該当するかの判定
         $is_staff = self::is_staff_login($data['login_id'], $data['password']);
         if ($is_staff) {
             return redirect($this->staff_redirectTo);
         }
 
-        // 医療機関スタッフに該当するかの判定
         $is_hospital_staff = self::is_hospital_staff_login($data['login_id'], $data['password']);
         if ($is_hospital_staff) {
             return redirect($this->hospital_staff_redirectTo);
         }
 
-        // 該当ユーザーが存在しない場合
         $validator = Validator::make([], []);
         $validator->errors()->add('fail_login', 'ログインIDまたはパスワードが正しくありません。');
         throw new ValidationException($validator);
