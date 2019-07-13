@@ -1,6 +1,6 @@
 @php
   use App\Enums\Status;
-  $classification = !isset($classification) ? 'minor' : $classification;
+  $classification = !isset($classification) ? 'major' : $classification;
 @endphp
 
 @extends('layouts.list')
@@ -24,7 +24,6 @@
         <div class="form-group">
           <label for="type">分類種別</label>
           <select class="form-control" id="type" name="type">
-            <option value="">なし</option>
             @foreach($c_types as $c_type)
               <option
                   value="{{ $c_type->id }}" {{ (isset($type) && $type == $c_type->id) ? "selected" : "" }}>{{ $c_type->name }}</option>
@@ -48,8 +47,7 @@
       <div class="col-md-2">
         <div class="form-group">
           <label for="major">大分類</label>
-          <select class="form-control" id="major" name="major">
-            <option value="">なし</option>
+          <select class="form-control" id="major" name="major" disabled:disabled>
             @foreach($c_majors as $c_major)
               <option data-type-id="{{ $c_major->classification_type_id }}"
                   value="{{ $c_major->id }}" {{ (isset($major) && $major == $c_major->id) ? "selected" : "" }}>{{ $c_major->name }}</option>
@@ -61,7 +59,6 @@
         <div class="form-group">
           <label for="middle">中分類</label>
           <select class="form-control" id="middle" name="middle">
-            <option value="">なし</option>
             @foreach($c_middles as $c_middle)
               <option data-major-id="{{$c_middle->major_classification_id}}"
                   value="{{ $c_middle->id }}" {{ (isset($middle) && $middle == $c_middle->id) ? "selected" : "" }}>{{ $c_middle->name }}</option>
@@ -141,8 +138,15 @@
                       $('#middle').attr('disabled', 'disabled');
                       $('#middle').val('');
                       $('#major').removeAttr('disabled');
+                      const typeId = $('#type').val();
+                      const majorTopRecord = $(`#major option[data-type-id=${typeId}]:first`);
+                      const majorValue = $(`#major`).val();
+                      if (majorTopRecord && !majorValue) {
+                        majorTopRecord.prop('selected', true);
+                      }
                   } else {
                       $('#major, #middle').removeAttr('disabled');
+                      onMajorChange();
                   }
               };
               cEle.change(onChange);
@@ -166,42 +170,53 @@
                           }
                       });
                   }
+                  onChange();
                   onMajorChange();
               };
               typeEle.change(onTypeChange);
 
               const majorEle = $('#major');
               const onMajorChange = function() {
-                  const selected = majorEle.val();
-                  if (selected == '' && typeEle.val() == ''){
-                      $('#middle option').show();
-                  } else {
-                      let ids = []
-                      if (selected == '') {
-                          //:visible selector doesn't work
-                          const options = majorEle.find('option:not([style*="display: none"])');
-                          options.each(function(i, option) {
-                              option = $(option);
-                             if (option.val() != '') {
-                                 ids.push(option.val());
-                             }
-                          });
-                      } else {
-                          ids = [ selected ];
-                      }
-                      $('#middle option').each(function(i, option) {
-                          option = $(option);
-                          if (option.val() == '' || ids.includes(option.data('major-id').toString())) {
-                              option.show();
-                          } else {
-                              option.hide();
-                              if (option.is(':selected')){
-                                  option.removeAttr('selected');
-                                  $('#middle').val('');
-                              }
-                          }
-                      });
+                  const typeId = $('#type').val();
+                  const majorTopRecord = $(`#major option[data-type-id=${typeId}]:first`);
+                  const majorDisabledFlg = $(`#major`).is(':disabled');
+                  const majorValue = $(`#major`).val();
+                  if (majorTopRecord && !majorValue && !majorDisabledFlg) {
+                    majorTopRecord.prop('selected', true);
                   }
+                  const selected = majorEle.val();
+                  let ids = []
+                  if (selected == '') {
+                      //:visible selector doesn't work
+                      const options = majorEle.find('option:not([style*="display: none"])');
+                      options.each(function(i, option) {
+                          option = $(option);
+                         if (option.val() != '') {
+                             ids.push(option.val());
+                         }
+                      });
+                  } else {
+                      ids = [ selected ];
+                  }
+                  $('#middle option').each(function(i, option) {
+                      option = $(option);
+                      if (option.val() == '' || ids.includes(option.data('major-id').toString())) {
+                          const majorSelectedId = $(`#major option:selected`).val();
+                          const middleSelectedRecord = $(`#middle option:selected`).val();
+                          const middleDisabledFlg = $(`#middle`).is(':disabled');
+                          const middleTopRecord = $(`#middle option[data-major-id=${majorSelectedId}]:first`);
+                          if (middleSelectedRecord == null && middleTopRecord && !middleDisabledFlg) {
+                            middleTopRecord.prop('selected', true);
+                          }
+                          option.show();
+                      } else {
+                          option.hide();
+                          if (option.is(':selected')){
+                              option.removeAttr('selected');
+                              $('#middle').val('');
+                          }
+                      }
+                  });
               };
               majorEle.change(onMajorChange);
 
