@@ -123,7 +123,7 @@ class StaffController extends Controller
         $staff = Staff::find($id);
         $staff->status = StaffStatus::Deleted;
         $staff->save();
-        $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.staff')]));
+        $request->session()->flash('error', trans('messages.deleted', ['name' => trans('messages.names.staff')]));
         return redirect()->back();
     }
 

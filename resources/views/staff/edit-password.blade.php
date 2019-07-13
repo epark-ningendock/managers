@@ -4,7 +4,7 @@
   <h1>
       <i class="fa fa-user"> パスワード設定</i>
         - 
-      {{ $staff->name }}
+      <i class="fa fa-user"> {{ $staff->name }}</i>
   </h1>
 @stop
 
