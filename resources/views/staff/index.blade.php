@@ -82,7 +82,7 @@
           <th>編集</th>
           <th>削除</th>
         @endif
-        @if (Auth::user()->authority->description === 'システム管理者' && Auth::user()->staff_auth->is_staff === 3)
+        @if (Auth::user()->authority->value === Authority::Admin && Auth::user()->staff_auth->is_staff === 3)
           <th>パスワード変更</th>
         @endif
       </tr>
@@ -121,7 +121,7 @@
             </td>
           @endif
           
-          @if (Auth::user()->authority->description === 'システム管理者' && Auth::user()->staff_auth->is_staff === 3)
+          @if (Auth::user()->authority->value === Authority::Admin && Auth::user()->staff_auth->is_staff === 3)
             <td>
               <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-success">
                 <i class="fa fa-key text-bold">パスワード</i>

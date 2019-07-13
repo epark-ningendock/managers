@@ -10,5 +10,5 @@ final class Authority extends Enum implements LocalizedEnum
     const Admin = 1;
     const Member = 2;
     const ExternalStaff = 3;
-    const ContractStaff = 3;
+    const ContractStaff = 4;
 }

@@ -49,7 +49,7 @@
       <option value=""></option>
       @foreach($departments as $department)
           <option value="{{ $department->id }}"
-              @if(isset($staff) && $staff->department_id === $department->id )
+              @if(old('department_id', (isset($staff) ? $staff->department_id : null)) == $department->id)
                   selected="selected"
               @endif
           >{{ $department->name }}</option>
@@ -59,28 +59,28 @@
   <div class="form-group mt-3">
     <label class="mb-0">スタッフ権限</label>
     <div class="radio mt-0">
-      @if (Auth::user()->authority->description === 'システム管理者')
+      @if (Auth::user()->authority->value === Authority::Admin)
         <label>
             <input type="radio" id="authority_admin" name="authority" value="{{ Authority::Admin }}" class="permission-check"
-                {{ old('authority', (isset($staff) ? $staff->authority->description : -1)) == 'システム管理者' ? 'checked' : '' }}>
+                {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::Admin ? 'checked' : '' }}>
             {{ Authority::Admin()->description }}
         </label>
       @endif
       <label class="ml-3">
         <input type="radio" name="authority" id="authority_member" value="{{ Authority::Member }}"
-                {{ old('authority', (isset($staff) ? $staff->authority->description : -1)) == 'メンバー' ? 'checked' : '' }}
+                {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::Member ? 'checked' : '' }}
                 class="permission-check">
         {{ Authority::Member()->description }}
       </label>
       <label class="ml-3">
         <input type="radio" name="authority" id="authority_external_staff" value="{{ Authority::ExternalStaff }}"
-                {{ old('authority', (isset($staff) ? $staff->authority->description : -1)) == '外部スタッフ' ? 'checked' : '' }}
+                {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::ExternalStaff ? 'checked' : '' }}
                 class="permission-check">
         {{ Authority::ExternalStaff()->description }}
       </label>
       <label class="ml-3">
         <input type="radio" id="authority_contract_staff" name="authority" value="{{ Authority::ContractStaff }}" class="permission-check"
-            {{ old('authority', (isset($staff) ? $staff->authority->description : -1)) == '契約管理者' ? 'checked' : '' }}>
+            {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::ContractStaff ? 'checked' : '' }}>
         {{ Authority::ContractStaff()->description }}
       </label>
     </div>
