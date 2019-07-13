@@ -78,7 +78,7 @@ class LoginController extends Controller
 
         // 該当ユーザーが存在しない場合
         $validator = Validator::make([], []);
-        $validator->errors()->add('fail_login', 'IDまたはpasswordが正しくありません');
+        $validator->errors()->add('fail_login', 'ログインIDまたはパスワードが正しくありません。');
         throw new ValidationException($validator);
         return redirect()->back();
     }
