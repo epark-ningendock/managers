@@ -12,7 +12,7 @@
 @section('body')
   <div class="login-box">
     <!-- /.login-logo -->
-    <div class="login-box-body font-size">
+    <div class="login-box-body width-400 font-size">
       @include('layouts.partials.message')
       @include('layouts.partials.errorbag')
       <div class="login-logo">
@@ -82,3 +82,9 @@
   </script>
   @yield('js')
 @stop
+
+<style>
+.width-400 {
+  width: 400px;
+}
+</style>

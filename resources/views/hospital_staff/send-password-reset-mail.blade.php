@@ -11,7 +11,9 @@
 
 @section('body')
     <div class="login-box">
-        <div class="login-box-body">
+        <div class="login-box-body width-400">
+            @include('layouts.partials.message')
+            @include('layouts.partials.errorbag')
             <div class="login-logo">
                 <a href="{{ url(config('adminlte.dashboard_url', 'home')) }}">{!! config('adminlte.logo', '<b>Admin</b>LTE') !!}</a>
             </div>
@@ -19,10 +21,9 @@
             <div class="box-body">
                 <form method="GET"  action="{{ route('hospital-staff.send.password-reset') }}">
                     {{ csrf_field() }}
-                    <div class="form-group @if ($errors->has('email')) has-error @endif">
+                    <div class="form-group">
                         <label for="email">・メールアドレスを入力してください</label>
                         <input type="email" class="form-control" id="email" name="email" value="{{ Input::old('email') }}" placeholder="メールアドレスを入力してください">
-                        @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
                     </div>
                     
                     <div class="box-footer">
@@ -48,3 +49,9 @@
   </script>
   @yield('js')
 @stop
+
+<style>
+  .width-400 {
+    width: 400px;
+  }
+</style>
