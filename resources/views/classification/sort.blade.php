@@ -88,7 +88,7 @@
     <table class="table table-bordered table-hover">
       <thead>
       <tr>
-        <th class="text-center">分類分</th>
+        <th class="text-center">分類名</th>
         <th></th>
       </tr>
       </thead>
