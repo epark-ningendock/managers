@@ -47,7 +47,7 @@
       <div class="col-md-2">
         <div class="form-group">
           <label for="major">大分類</label>
-          <select class="form-control" id="major" name="major" disabled:disabled>
+          <select class="form-control" id="major" name="major" disabled>
             @foreach($c_majors as $c_major)
               <option data-type-id="{{ $c_major->classification_type_id }}"
                   value="{{ $c_major->id }}" {{ (isset($major) && $major == $c_major->id) ? "selected" : "" }}>{{ $c_major->name }}</option>
@@ -58,7 +58,7 @@
       <div class="col-md-2">
         <div class="form-group">
           <label for="middle">中分類</label>
-          <select class="form-control" id="middle" name="middle">
+          <select class="form-control" id="middle" name="middle" disabled>
             @foreach($c_middles as $c_middle)
               <option data-major-id="{{$c_middle->major_classification_id}}"
                   value="{{ $c_middle->id }}" {{ (isset($middle) && $middle == $c_middle->id) ? "selected" : "" }}>{{ $c_middle->name }}</option>
