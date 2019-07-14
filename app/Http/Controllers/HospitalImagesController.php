@@ -41,13 +41,32 @@ class HospitalImagesController extends Controller
     public function create($hospital_id)
     {
         $hospital = Hospital::with(['hospital_images', 'hospital_categories'])->find($hospital_id);
+        //$interview_detail = $hospital->hospital_categories()->where('image_order', ImageOrder::IMAGE_GROUP_INTERVIEW)->first()->interview_details()->interviewOrder()->get();
+
+        $interview_top = $hospital->hospital_categories()->where('image_order', ImageOrder::IMAGE_GROUP_INTERVIEW)->first();
+
+        if(is_null($interview_top)){
+
+            $save_sub_images = ['extension' => 'dummy', 'name' => 'dummy', 'path' => 'dummy', 'memo1' => 'dummy'];
+            $hospital_dummy_img = $hospital->hospital_images()->saveMany([
+                    new HospitalImage($save_sub_images)
+                ]
+            );
+
+            $hospital->hospital_categories()->create(
+                ['hospital_image_id' => $hospital_dummy_img[0]->id,'image_order' => ImageOrder::IMAGE_GROUP_INTERVIEW,'image_order' => ImageOrder::IMAGE_GROUP_INTERVIEW,'order2' => 1]
+            );
+
+        }
+
         $interviews = $hospital->hospital_categories()->where('image_order', ImageOrder::IMAGE_GROUP_INTERVIEW)->first()->interview_details()->interviewOrder()->get();
+
 
         $image_order = $this->image_order;
 
         $tab_name_list = [ 1 => 'スタッフ',  2 => '設備',  3 => '院内' , 4 => '外観',  5 => 'その他'];
 
-        return view('hospital_images.create', compact('hospital', 'hospital_id', 'image_order', 'tab_name_list', 'interviews'));
+        return view('hospital_images.create', compact('hospital', 'hospital_id', 'image_order', 'tab_name_list', 'interview_top', 'interviews'));
     }
 
     /**
@@ -166,8 +185,12 @@ class HospitalImagesController extends Controller
 
             'interview.*.question' => 'nullable|max:100',
             'interview.*.answer' => 'nullable|max:100',
+
+            'interview_new.*.question' => 'nullable|max:100',
+            'interview_new.*.answer' => 'nullable|max:100',
         ]);
         $file = $params;
+
 
         //TOPの保存
         $hospital->hospital_categories()->updateOrCreate(
@@ -180,11 +203,6 @@ class HospitalImagesController extends Controller
                 'order2' => 1
             ]
         );
-
-        $interviews = $params['interview'];
-        foreach ($interviews as $key => $interview) {
-            $this->interview_detail->where('id', $key)->update($interview);
-        }
 
         //main画像の保存
         if(isset($file['main'])) {
@@ -238,6 +256,28 @@ class HospitalImagesController extends Controller
 
         //インタビュー
         $this->hospitalImageUploader($file, 'interview_', 1, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_INTERVIEW,null,null,null,$file['interview_1_title'],$file['interview_1_caption']);
+
+        //インタビュートップ取得
+        $image_category_interview = $this->hospital_category->ByImageOrder($hospital_id, ImageOrder::IMAGE_GROUP_INTERVIEW, 1)->first();
+
+        //interview 詳細　update
+        if(isset($params['interview'])) {
+            $interviews = $params['interview'];
+            foreach ($interviews as $key => $interview) {
+                $this->interview_detail->where('id', $key)->update($interview);
+            }
+        }
+
+        //interview 詳細　insert
+        $new_interviews = $params['interview_new'];
+        foreach ($new_interviews as $key => $new_interviews) {
+            if(!is_null($new_interviews['answer']) && !is_null($new_interviews['question'])) {
+                $image_category_interview->interview_details()->saveMany([
+                        new InterviewDetail($new_interviews)
+                    ]
+                );
+            }
+        }
 
         if(isset($file['map_url'])) {
             $this->hospitalImageUploader($file, 'map_url', 1, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_MAP);
@@ -298,7 +338,7 @@ class HospitalImagesController extends Controller
             $memo2 = isset($file[$image_prefix.$i.'_memo2']) ? $file[$image_prefix.$i.'_memo2'] : '' ;
             $order = isset($file[$image_prefix.$i.'_order1']) ? $file[$image_prefix.$i.'_order1'] : 0 ;
 
-            //メイン画像の登録確認
+            //画像の登録確認
             $image_order_exists = $this->hospital_category->ByImageOrder($hospital_id, $image_order, $i)->first();
 
             if(isset($file[$image_prefix.$i])) {
@@ -321,9 +361,8 @@ class HospitalImagesController extends Controller
                         $hospital_img = new HospitalImage($save_sub_images)
                     ]
                 );
-                $hospital_img->hospital_category()->create($save_sub_image_categories);
+                return $hospital_img->hospital_category()->create($save_sub_image_categories);
             } else {
-
                 $hospital_img = $hospital->hospital_images()->find($image_order_exists->hospital_image_id);
                 $hospital_img->update($save_sub_images);
                 $hospital_img->hospital_category()->update($save_sub_image_categories);

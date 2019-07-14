@@ -13,7 +13,7 @@
                 @endif
             </td>
         </tr>
-        @for ($i = 1; $i <= 5; $i++)
+        @for ($i = 1; $i <= 4; $i++)
             <tr>
                 <th>施設サブ画像 {{ $i }}
                 <td>
@@ -75,9 +75,9 @@
         <tr>
             <th>インタビュー</th>
             <td>
-                <?php $interview = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_INTERVIEW)->first(); ?>
-                    @if(!is_null($interview))
-                        <img src="/img/uploads/300-300-{{$interview->hospital_image->path}}" width="150">
+                <?php //$interview = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_INTERVIEW)->first(); ?>
+                    @if(!is_null($interview_top))
+                        <img src="/img/uploads/300-300-{{$interview_top->hospital_image->path}}" width="150">
                     @endif
                     {{Form::file("interview_1", ['class' => 'field'])}}
                     @if ($errors->has('interview_1'))
@@ -87,12 +87,12 @@
                     {{ $errors->first('interview_1') }}
                 @endif
                     {{Form::label('interview_1_title', 'タイトル')}}
-                    {{Form::text('interview_1_title', is_null($interview) ? '' : $interview->title)}}
+                    {{Form::text('interview_1_title', is_null($interview_top) ? '' : $interview_top->title)}}
                     @if ($errors->has('interview_1_title'))
                         {{ $errors->first('interview_1_title') }}
                     @endif
                     {{Form::label('interview_1_caption', 'キャプション')}}
-                    {{Form::text('interview_1_caption', is_null($interview) ? '' : $interview->caption)}}
+                    {{Form::text('interview_1_caption', is_null($interview_top) ? '' : $interview_top->caption)}}
                     @if ($errors->has('interview_1_caption'))
                         {{ $errors->first('interview_1_caption') }}
                     @endif
@@ -102,13 +102,29 @@
                     <div>
                         {{Form::label('interview['. $interview->id .']', '質問')}}
                         {{Form::textarea('interview['. $interview->id .'][question]', is_null($interview) ? '' : $interview->question)}}
+                        @if ($errors->has('interview['. $interview->id .'][question]'))
+                            {{ $errors->first('interview['. $interview->id .'][question]') }}
+                        @endif
                     </div>
                     <div>
                         {{Form::label('interview['. $interview->id .']', '回答')}}
                         {{Form::textarea('interview['. $interview->id .'][answer]', is_null($interview) ? '' : $interview->answer)}}
+                        @if ($errors->has('interview['. $interview->id .'][answer]'))
+                            {{ $errors->first('interview['. $interview->id .'][answer]') }}
+                        @endif
                     </div>
                 </div>
                 @endforeach
+                <div class="interview_detail_new">
+                    <div>
+                        {{Form::label('interview_new[1][question]', '質問')}}
+                        {{Form::textarea('interview_new[1][question]', '')}}
+                    </div>
+                    <div>
+                        {{Form::label('interview_new[1][answer]', '回答')}}
+                        {{Form::textarea('interview_new[1][answer]', '')}}
+                    </div>
+                </div>
             </td>
         </tr>
         <tr>
