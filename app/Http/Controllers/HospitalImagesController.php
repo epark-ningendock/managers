@@ -119,7 +119,7 @@ class HospitalImagesController extends Controller
             'tab_5_memo1' => 'nullable|max:200',
             'tab_5_memo2' => 'nullable|max:200',
 
-            'staff_' => 'file|image|max:4000',
+            'staff_1' => 'file|image|max:4000',
             'staff_1_name' => 'nullable|max:100',
             'staff_1_career' => 'nullable|max:300',
             'staff_1_memo' => 'nullable',
@@ -190,7 +190,6 @@ class HospitalImagesController extends Controller
             'interview_new.*.answer' => 'nullable|max:100',
         ]);
         $file = $params;
-
 
         //TOPの保存
         $hospital->hospital_categories()->updateOrCreate(

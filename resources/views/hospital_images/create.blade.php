@@ -1,4 +1,4 @@
-@extends('layouts.form')
+@extends('layouts.hospital_image_form')
 
 @section('content_header')
     <h1>画像登録 {{ request()->session()->get('hospital_name') }}</h1>
@@ -8,12 +8,6 @@
     @if (session('success'))
         @include('layouts.partials.message')
     @endif
-    <h3 class="std-title">施設画像登録</h3>
-
-
-    <p class="sub-title text-bold">
-        </b><span class="text-danger">(*)</span>以下の項目を入力してください。
-    </p>
     {!! Form::open(['url' => route('hospital.image.store', $hospital_id), 'files' => true]) !!}
         {{ csrf_field() }}
 

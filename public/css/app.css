@@ -2259,4 +2259,73 @@ table tr td.gray-column {
   text-align: center;
   margin: 0;
 }
+.form_title {
+  padding-bottom: 8px;
+}
+.form-mini-title {
+  font-size: 16px;
+  margin-left: 5px;
+}
 
+.input_title {
+  font-size: 16px;
+  margin-left: 5px;
+}
+
+.number_circle {
+  width: 24px;
+  height: 24px;
+  background: #757575;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #FFF;
+  float: left;
+  text-align: center;
+  line-height: 24px;
+  vertical-align: middle;
+}
+
+.form-box {
+  padding: 20px;
+}
+
+.form_required {
+  display: inline-block;
+  padding: 1px 3px;
+  margin-left: 9px;
+  background-color: #ea3f60;
+  color: #FFF;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: bold;
+  vertical-align: text-bottom;
+  margin-bottom: -2px;
+}
+.form_label {
+  margin-top: 20px;
+  color: #8C8C8C;
+  font-weight: bolder;
+  display: block;
+}
+
+.interview_list {
+  border-top: 1px dotted #666666;
+  margin: 30px 0 0px 0;
+  padding: 0 0 20px 0;
+}
+
+.tab_name {
+  background: #eeeeee;
+  line-height: 36px;
+  text-indent: 20px;
+  font-weight: 500;
+  margin: 20px 15px 20px 15px;
+}
+
+.box_staff_title {
+  background: #eeeeee;
+  line-height: 36px;
+  text-indent: 20px;
+  font-weight: 500;
+  margin: 20px 0px 20px 0px;
+}
