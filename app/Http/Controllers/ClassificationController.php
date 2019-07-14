@@ -11,9 +11,17 @@ use App\MiddleClassification;
 use Illuminate\Http\Request;
 use App\MinorClassification;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Enums\Permission;
 
 class ClassificationController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        request()->session()->forget('hospital_id');
+        $this->middleware('permission.cource-classification.edit')->except('index');
+    }
+    
     /**
      * classification list
      * @param Request $request
@@ -21,6 +29,10 @@ class ClassificationController extends Controller
      */
     public function index(ClassificationSearchFormRequest $request)
     {
+        if (Auth::user()->staff_auth->is_cource_classification === Permission::None) {
+            return view('staff.edit-password-personal');
+        }
+
         $c_types = ClassificationType::withTrashed()->get();
         $c_majors = MajorClassification::withTrashed()->get();
         $c_middles = MiddleClassification::withTrashed()->get();

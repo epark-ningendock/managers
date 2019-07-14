@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 use App\Enums\ReservationStatus;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use App\Enums\Permission;
 
 class ReservationController extends Controller
 {
@@ -24,12 +26,15 @@ class ReservationController extends Controller
     protected $export_file;
 
     public function __construct(
+        Request $request,
         Reservation $reservation,
         Hospital $hospital,
         Customer $customer,
         Course $course,
         ReservationExportService $export_file
     ) {
+        request()->session()->forget('hospital_id');
+        $this->middleware('permission.invoice.edit')->except('index');
         $this->reservation = $reservation;
         $this->hospital = $hospital;
         $this->customer = $customer;
@@ -46,6 +51,10 @@ class ReservationController extends Controller
      */
     public function index(Request $request)
     {
+        if (Auth::user()->staff_auth->is_invoice === Permission::None) {
+            return view('staff.edit-password-personal');
+        }
+
         $params = $request->all();
 
         $query = $this->reservation

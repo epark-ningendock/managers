@@ -12,7 +12,11 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>{{ trans('messages.names.customers') }} &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
+    <h1>
+        <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
+        -
+        <i class="fa fa-users"> 顧客管理</i>
+    </h1>
 @stop
 
 @section('search')
@@ -30,7 +34,7 @@
     @includeIf('customer.partials.count-pagination-bar')
 
     <div class="table-responsive">
-        <table id="example2" class="table table-bordered table-hover mb-5 mt-5">
+        <table id="example2" class="table table-bordered table-hover table-striped mb-5 mt-5">
             <thead>
             <tr>
                 <th>{{ trans('messages.customer_id') }}</th>
@@ -92,12 +96,12 @@
                         <td>
                             <a class="btn btn-primary"
                                href="{{ route('customer.edit', $customer->id) }}">
-                                編集
+                               <i class="fa fa-edit text-bold"> 編集</i>
                             </a>
                         </td>
                         <td>
                             <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $customer->id }}">
-                                削除
+                                <i class="fa fa-trash"></i>
                             </button>
                         </td>
 

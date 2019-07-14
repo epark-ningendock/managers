@@ -95,7 +95,7 @@ return [
     'not_regex'            => ':attributeの形式が無効です。',
     'numeric'              => ':attributeには、数字を指定してください。',
     'present'              => ':attributeが存在している必要があります。',
-    'regex'                => ':attributeには、有効な正規表現を指定してください。',
+    'regex'                => ':attributeには、有効な形式を指定してください。',
     'required'             => ':attributeは、必ず指定してください。',
     'required_if'          => ':otherが:valueの場合、:attributeを指定してください。',
     'required_unless'      => ':otherが:values以外の場合、:attributeを指定してください。',
@@ -130,15 +130,18 @@ return [
     */
     'custom' => [
         'login_id' => [
-            'between' => 'スタッフ名は、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。',
-            'regex' => 'スタッフ名は、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。'
+            'between' => 'ログインIDは、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。',
+            'regex' => 'ログインIDは、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。'
         ],
         'password' => [
             'between' => 'パスワードは、8~50文字以内の半角英数字でご入力ください。',
-            'alpha_num' => 'パスワードは、8~50文字以内の半角英数字でご入力ください。'
+            'alpha_num' => 'パスワードは、8~20文字以内の半角英数字でご入力ください。'
         ],
         'email' => [
             'email' => '正しいメールアドレスの書式でご入力ください。'
+        ],
+        'authority' => [
+            'required' => ':attributeは必須です'
         ],
         'is_hospital' => [
             'required' => ':attributeは必須です'
@@ -146,7 +149,7 @@ return [
         'is_staff' => [
             'required' => ':attributeは必須です'
         ],
-        'is_item_category' => [
+        'is_cource_classification' => [
             'required' => ':attributeは必須です'
         ],
         'is_invoice' => [
@@ -155,7 +158,10 @@ return [
         'is_pre_account' => [
             'required' => ':attributeは必須です'
         ],
-        
+        'is_contract' => [
+            'required' => ':attributeは必須です'
+        ],
+
     ],
     /*
     |--------------------------------------------------------------------------
@@ -174,11 +180,13 @@ return [
         'password' => 'パスワード',
         'password_confirmation' => 'パスワード確認',
         'status' => '状態',
+        'authority' => 'スタッフ権限',
         'is_hospital' => '医療機関管理',
         'is_staff' => 'スタッフ管理',
-        'is_item_category' => '検査コース分類',
+        'is_cource_classification' => '検査コース分類',
         'is_invoice' => '請求管理',
         'is_pre_account' => '事前決済管理',
+        'is_contract' => '請求管理',
         'classification' => '分類',
         'classification_ids' => '分類ID',
         'classification_type_id' => '分数種別',
@@ -242,6 +250,7 @@ return [
         'reservation_end_date' => '予約終了日',
         'completed_start_date' => '受診開始日',
         'completed_end_date' => '受診終了日',
-        'customer_name' => '受診者名'
+        'customer_name' => '受診者名',
+        'pvad' => 'PV数'
     ],
 ];

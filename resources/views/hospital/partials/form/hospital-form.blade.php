@@ -308,6 +308,6 @@
 </div>
 
 <div class="col-md-12 pb-5">
-    <button type="submit" class="btn btn-success pull-right">登録</button>
+    <button type="submit" class="btn btn-primary pull-right">保存</button>
 </div>
 <br/>

@@ -13,7 +13,9 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>医療機関</h1>
+    <h1>
+        <i class="fa fa-hospital-o"> 医療機関管理</i>
+    </h1>
 @stop
 
 @section('search')
@@ -48,7 +50,7 @@
                     <button type="reset" class="btn btn-default">検索用にクリア</button>
                     <button type="submit" class="btn btn-primary">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                        検索する
+                        検索
                     </button>
                 </div>
 
@@ -62,7 +64,9 @@
 @section('button')
 @include('hospital.partials.record-management-modal-box')
   <div class="pull-right">
-    <a class="btn btn-success btn-create" href="{{ route('hospital.contractInfo') }}">新規作成</a>
+    @if (Auth::user()->staff_auth->is_hospital === 3)
+        <a class="btn btn-success btn-create" href="{{ route('hospital.contractInfo') }}">新規作成</a>
+    @endif  
   </div>
 @stop
 
@@ -72,7 +76,7 @@
 @section('table')
 
     <div class="table-responsive">
-        <table id="example2" class="table table-bordered table-hover mb-5 mt-5">
+        <table id="example2" class="table table-bordered table-hover table-striped mb-5 mt-5">
             <thead>
             <tr>
                 <th>ID</th>
@@ -80,9 +84,11 @@
                 <th>所在地</th>
                 <th>連絡先</th>
                 <th>状態</th>
-                <th>操作</th>
-                <th>編集</th>
-                <th>削除</th>
+                @if (Auth::user()->staff_auth->is_hospital === 3)
+                    <th>操作</th>
+                    <th>編集</th>
+                    <th>削除</th>
+                @endif
             </tr>
             </thead>
             <tbody>
@@ -98,27 +104,32 @@
                         <td>{{ $hospital->address1 }}</td>
                         <td>{{ $hospital->tel }}</td>
                         <td>{{ \App\Enums\HospitalEnums::getDescription($hospital->status) }}</td>
-                        <td>
-                            <a class="btn btn-primary insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">操作</a>
-                            {{-- 医療機関の選択フォーム --}}
-                            <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
-                                {{ csrf_field() }}
-                            </form>
-                        </td>
-                        <td>
-                            @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
-                                <a href="{{ route('hospital.edit', $hospital->id) }}"
-                                   class="btn btn-primary">編集</a>
-                            @endif
-                        </td>
-                        <td>
-                            @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
-                                <button class="btn btn-danger delete-btn delete-popup-btn"
-                                        data-id="{{ $hospital->id }}">
-                                    削除
-                                </button>
-                            @endif
-                        </td>
+                        @if (Auth::user()->staff_auth->is_hospital === 3)
+                            <td>
+                                <a class="btn btn-success insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">
+                                    <span class="fa fa-pencil"></i>    
+                                </a>
+                                <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
+                                    {{ csrf_field() }}
+                                </form>
+                            </td>
+                            <td>
+                                @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
+                                    <a href="{{ route('hospital.edit', $hospital->id) }}"
+                                    class="btn btn-primary">
+                                    <i class="fa fa-edit text-bold"> 編集</i>
+                                    </a>
+                                @endif
+                            </td>
+                            <td>
+                                @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
+                                    <button class="btn btn-danger delete-btn delete-popup-btn"
+                                            data-id="{{ $hospital->id }}">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                @endif
+                            </td>
+                        @endif
                     </tr>
                 @endforeach
             @else

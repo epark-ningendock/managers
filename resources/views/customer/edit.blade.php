@@ -1,7 +1,11 @@
 @extends('layouts.form')
 
 @section('content_header')
-  <h1>{{ trans('messages.update') }} &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
+  <h1>
+      <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
+      -
+      <i class="fa fa-users"> 顧客管理</i>
+  </h1>
 @stop
 
 @section('form')
@@ -16,7 +20,7 @@
         @includeIf('customer.partials.form')
 
       <div class="text-center mb-5 pb-5">
-        <button type="submit" class="btn btn-primary btn-lg">{{trans('messages.update') }}</button>
+        <button type="submit" class="btn btn-primary btn-lg">保存</button>
         {{-- Because there is "「削除」（Delete）" in the list, "「戻る」（Return）" is added here --}}
           <a href="{{ route('customer.index') }}" class="btn btn-default btn-lg">戻る</a>
       </div>
