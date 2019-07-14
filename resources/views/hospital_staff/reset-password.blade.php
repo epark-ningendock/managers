@@ -17,7 +17,7 @@
             </div>
             {{-- <p class="text-bold text-center">パスワードリセットメール送信</p> --}}
             <div class="box-body">
-                <form method="POST"  action="{{ route('hospital-staff.reset.password', ['hospital_staff_id' => $hospital_staff_id]) }}">
+                <form method="POST"  action="{{ route('hospital-staff.reset.password', ['email' => $email]) }}">
                     {{ csrf_field() }}
                     {{ method_field('PUT') }}
                     <div class="form-group @if ($errors->has('password')) has-error @endif">

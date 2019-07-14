@@ -64,7 +64,9 @@
 @section('button')
 @include('hospital.partials.record-management-modal-box')
   <div class="pull-right">
-    <a class="btn btn-success btn-create" href="{{ route('hospital.contractInfo') }}">新規作成</a>
+    @if (Auth::user()->staff_auth->is_hospital === 3)
+        <a class="btn btn-success btn-create" href="{{ route('hospital.contractInfo') }}">新規作成</a>
+    @endif  
   </div>
 @stop
 

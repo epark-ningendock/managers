@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Enums\Authority;
 use App\Staff;
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class AuthorityLevelAdmin
 {
@@ -17,9 +18,7 @@ class AuthorityLevelAdmin
      */
     public function handle($request, Closure $next)
     {
-        $staff = Staff::findOrFail($request->staff_id);
-        
-        if ($staff->authority->value !== Authority::Admin) {
+        if (Auth::user()->authority->value !== Authority::Admin) {
             return redirect('/hospital');
         }
         return $next($request);

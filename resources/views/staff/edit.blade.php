@@ -3,6 +3,8 @@
 @section('content_header')
   <h1>
       <i class="fa fa-users"> スタッフ管理</i>
+      -
+      <i class="fa fa-user"> {{ $staff->name }}</i>
   </h1>
 @stop
 
