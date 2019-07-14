@@ -65,7 +65,7 @@
     <table id="example2" class="table table-bordered table-hover table-striped">
       <thead>
       <tr>
-        <th>ID</th>
+        <th>スタッフID</th>
         <th>スタッフ名</th>
         <th>ログインID</th>
         <th>メールアドレス</th>
