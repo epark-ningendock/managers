@@ -35,7 +35,7 @@ return [
     'create_error' => 'エラーが発生しました。',
     'update_error' => 'エラーが発生しました。',
     'select_hospital_confirmation' => 'この医療機関を操作します。<br/>よろしいですか？',
-    'delete_confirmation' => '本当に削除しても宜しいですか？<br/>この処理は取り消せません。',
+    'delete_confirmation' => '本当に削除してもよろしいですか？<br/>この処理は取り消せません。',
     'delete_popup_title' => '確認を削除',
     'delete_popup_content' => 'これを削除してよろしいです :name？',
     'classification_delete_popup_content' => 'この分類を削除します。よろしいですか？',
