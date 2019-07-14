@@ -86,6 +86,7 @@ class LoginController extends Controller
         if (Auth::guard($this->staff_role)->attempt(['login_id' => $login_id, 'password' => $password])) {
             $staff = Auth::guard($this->staff_role)->user();
             session()->put('staffs', $staff->id);
+            session()->put('login_id', $staff->login_id);
             session()->put('staff_email', $staff->email);
             return true;
         }
@@ -98,6 +99,7 @@ class LoginController extends Controller
         if (Auth::guard($this->hospital_staff_role)->attempt(['login_id' => $login_id, 'password' => $password])) {
             $hospital_staff = Auth::guard($this->hospital_staff_role)->user();
             session()->put('staffs', $hospital_staff->id);
+            session()->put('login_id', $hospital_staff->login_id);
             session()->put('staff_email', $hospital_staff->email);
             session()->put('hospital_id', $hospital_staff->hospital_id);
             session()->put('hospital_name', Hospital::findOrFail($hospital_staff->hospital_id)->name);

@@ -137,6 +137,11 @@ class StaffController extends Controller
     public function editPassword($staff_id)
     {
         $staff = Staff::find($staff_id);
+        $operator_staff = Staff::where('login_id', session()->get('login_id'))->first();
+        // 自分のパスワード変更の場合、遷移先変更
+        if ($staff->login_id == $operator_staff->login_id) {
+          return view('staff.edit-password-personal');
+        }
         return view('staff.edit-password', ['staff' => $staff]);
     }
 
@@ -151,7 +156,6 @@ class StaffController extends Controller
 
         $staff->password = bcrypt($request->password);
         $staff->save();
-        app('App\Http\Controllers\Auth\LoginController')->is_staff_login($staff->login_id, $request->password);
         return redirect('staff')->with('success', 'パスワードを更新しました');
     }
 
