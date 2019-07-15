@@ -140,7 +140,7 @@ class StaffController extends Controller
         $operator_staff = Staff::where('login_id', session()->get('login_id'))->first();
         // 自分のパスワード変更の場合、遷移先変更
         if ($staff->login_id == $operator_staff->login_id) {
-          return view('staff.edit-password-personal');
+            return view('staff.edit-password-personal');
         }
         return view('staff.edit-password', ['staff' => $staff]);
     }
