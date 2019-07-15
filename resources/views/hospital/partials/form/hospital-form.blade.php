@@ -209,13 +209,28 @@
           </tr>
         @endfor
 
-          <tr>
-              <td class="gray-column">
-                  <label for="tel">{{ trans('messages.business_hours') }}</label>
-              </td>
-              <td>
+      <tr>
+        
+        <td class="gray-column">
+          {{ trans('messages.business_hours') }}
+        </td>
+
+        <td>
+            
+            <div class="wrapbox" style="padding: 20px;">
+
+                <h6>hh:mm形式　fromよりも遅い時間</h6>
+                <table class="table table-bordered">
+                  
                   @for($i= 1; $i<= 3; $i++)
-                      <div class="timebox" style="padding: 10px;">
+                      <tr class="timebox">
+
+                        <td>
+                          診療時間 {{  $i }}
+                        </td>
+                        
+                        <td>
+
                           <div class="col-md-6">
                               <div class="form-group  @if( $errors->has("medical_treatment_time." .$i. ".start")) has-error @endif">
                                   <label for="start-time-{{ $i }}" class="col-md-3">{{ trans('messages.start') }} </label>
@@ -268,37 +283,35 @@
                               <label class="checkbox-inline">
                                   <input type="checkbox" name="medical_treatment_time[{{$i}}][sun]"  value="1"> {{ trans('messages.sun') }}
                               </label>
-                          </div>
-                      </div>
+                          </div>                          
+
+                        </td>
+
+                      </tr>
                       @endfor
-              </td>
-          </tr>
 
-      <tr>
-          <td class="gray-column">
-                  <label for="tel">{{ trans('messages.consultation_note') }}</label>
-              </td>
-          <td>
-              <div class="form-group @if( $errors->has('consultation_note'))  has-error @endif">
-                  <label for="consultation_note" class="col-md-2">{{ trans('messages.consultation_note') }} </label>
-                  <div class="col-md-10">
-                      <textarea name="consultation_note" id="consultation_note"   rows="5" class="form-control"></textarea>
-                      @if ($errors->has('consultation_note')) <p class="help-block">{{ $errors->first('consultation_note') }}</p> @endif
-                  </div>
-              </div>
-          </td>
-      </tr>
+                </table>
 
-      <tr>
-        <td class="gray-column">
-          <label for="memo">{{ trans('messages.remarks') }} </label>
+                <div class="form-group @if( $errors->has('consultation_note'))  has-error @endif">
+                    <label for="consultation_note" class="col-md-2">{{ trans('messages.consultation_note') }} </label>
+                    <div class="col-md-10">
+                        <textarea name="consultation_note" id="consultation_note"   rows="5" class="form-control"></textarea>
+                        @if ($errors->has('consultation_note')) <p class="help-block">{{ $errors->first('consultation_note') }}</p> @endif
+                    </div>
+                </div>              
+                
+                <div class="form-group @if( $errors->has('memo'))  has-error @endif">
+                    <label for="memo" class="col-md-2">備考</label>
+                    <div class="col-md-10">
+                        <textarea name="memo" id="memo"   rows="5" class="form-control">{{ old('memo', (isset($hospital->memo) ) ?: null) }}</textarea>
+                        @if ($errors->has('memo')) <p class="help-block">{{ $errors->first('memo') }}</p> @endif
+                    </div>
+                </div>              
+
+            </div>  
+
         </td>
-          <td>
-            <div class="form-group ml-2 mr-2 @if( $errors->has('memo'))  has-error @endif">
-              <input type="text" class="form-control" id="memo" name="memo"  value="{{ old('memo', (isset($hospital->memo) ) ?: null) }}" />
-                  @if ($errors->has('memo')) <p class="help-block">{{ $errors->first('memo') }}</p> @endif
-            </div>
-          </td>
+
       </tr>
 
       <tr>
@@ -306,12 +319,19 @@
               <label for="medical_examination_system_id">{{ trans('messages.examination_system_name') }} </label>
           </td>
           <td>
-              <div class="form-group @if( $errors->has('medical_examination_system_id'))  has-error @endif">
-                  <label for="medical_examination_system_id" class="col-md-2">{{ trans('messages.medical_examination_system_id') }} </label>
-                  <div class="col-md-10">
-                      <input type="text" class="form-control" id="medical_examination_system_id" name="medical_examination_system_id"  value="{{ old('medical_examination_system_id', (isset($hospital->medical_examination_system_id) ) ?: null) }}" />
-                      @if ($errors->has('medical_examination_system_id')) <p class="help-block">{{ $errors->first('medical_examination_system_id') }}</p> @endif
-                  </div>
+              <div class="form-group ml-2 mr-2  @if( $errors->has('medical_examination_system_id'))  has-error @endif">
+                <select name="medical_examination_system_id" id="medical_examination_system_id" class="form-control">
+                    <option value=""></option>
+                    @foreach($medical_examination_systems as $medical_examination_system)
+                    <option value="{{ $medical_examination_system->id }}"
+                            @if ( old('medical_examination_system_id') && ($medical_examination_system->id === old('medical_examination_system_id')))
+                                selected="selected"
+                            @endif
+                    > {{ $medical_examination_system->name }}</option>
+                    @endforeach
+                </select>
+
+                @if ($errors->has('medical_examination_system_id')) <p class="help-block">{{ $errors->first('medical_examination_system_id') }}</p> @endif
               </div>
           </td>
       </tr>

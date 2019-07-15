@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
             EmailTemplatesTableSeeder::class,
             ReceprionEmailSettingsTableSeeder::class,
             CustomersSeeder::class,
-            PrefecturesSeeder::class
+            PrefecturesSeeder::class,
+            MedicalExaminationSystemTableSeeder::class
         ]);
     }
 }

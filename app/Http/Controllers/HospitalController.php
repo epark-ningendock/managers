@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\ContractInformation;
 use App\DistrictCode;
 use App\Enums\HospitalEnums;
 use App\Hospital;
-use App\ContractInformation;
 use App\HospitalStaff;
 use App\Http\Requests\HospitalCreateFormRequest;
+use App\Http\Requests\HospitalFormRequest;
+use App\MedicalExaminationSystem;
 use App\MedicalTreatmentTime;
 use App\Prefecture;
-use Illuminate\Http\Request;
-use App\Http\Requests\HospitalFormRequest;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Auth\SessionGuard;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class HospitalController extends Controller
 {
@@ -85,8 +86,9 @@ class HospitalController extends Controller
     {
         $prefectures = Prefecture::all();
         $district_codes = DistrictCode::all();
+        $medical_examination_systems = MedicalExaminationSystem::all();
 
-        return view('hospital.create-hospital-form', ['prefectures' => $prefectures, 'district_codes' => $district_codes]);
+        return view('hospital.create-hospital-form', ['prefectures' => $prefectures, 'district_codes' => $district_codes, 'medical_examination_systems' => $medical_examination_systems]);
     }
 
     /**
