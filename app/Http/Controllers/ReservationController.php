@@ -438,7 +438,37 @@ class ReservationController extends Controller
 
     public function store(ReservationCreateFormRequest $request)
     {
-        // dd($request->all());
+
+    	try {
+		    DB::beginTransaction();
+
+		    request()->merge([
+			    'hospital_id' => auth()->user()->hospital_id,
+			    'reservation_status' => ReservationStatus::Pending,
+			    'terminal_type' => 1,
+			    'is_repeat' => 0,
+			    'is_representative' => 0,
+			    'timezone_pattern_id' => 3233,
+			    'timezone_id' => 3322,
+			    'order' => 231,
+			    'mail_type' => 0,
+			    'payment_status' => 0,
+			    'trade_id' => 'mbxrfidstwzvaheonugckljypq',
+			    'payment_method' => '現金',
+		    ]);
+
+		    $reservation = new Reservation();
+		    $reservation->create(request()->all());
+
+		    DB::commit();
+
+		    return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
+
+	    } catch (\Exception $i) {
+		    DB::rollback();
+		    return redirect()->back()->withErrors(trans('messages.complete_error'))->withInput();
+	    }
+
     }
 
 }
