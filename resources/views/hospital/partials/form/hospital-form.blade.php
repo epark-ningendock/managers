@@ -222,7 +222,7 @@
                 <h6>hh:mm形式　fromよりも遅い時間</h6>
                 <table class="table table-bordered">
                   
-                  @for($i= 1; $i<= 3; $i++)
+                  @for($i= 1; $i<= 4; $i++)
                       <tr class="timebox">
 
                         <td>

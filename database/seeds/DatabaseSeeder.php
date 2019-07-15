@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             EmailTemplatesTableSeeder::class,
             ReceprionEmailSettingsTableSeeder::class,
             CustomersSeeder::class,
-            PrefecturesSeeder::class,
+            StationsTableSeeder::class, //it would also create prefecture seeding.
             MedicalExaminationSystemTableSeeder::class
         ]);
     }
