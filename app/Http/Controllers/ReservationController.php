@@ -460,6 +460,9 @@ class ReservationController extends Controller
 		    $reservation = new Reservation();
 		    $reservation->create(request()->all());
 
+
+		    
+
 		    DB::commit();
 
 		    return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));

@@ -34,12 +34,12 @@
         </div>
 
         <div class="col-md-9">
-            <div class="form-group sm-form-group @if ($errors->has('regular_price')) has-error @endif" style="margin-right: 21px;">
-                <input type="number" class="form-control" name="regular_price" 
-                       id="regular_price" placeholder="コース料金"
-                       value="{{ old('regular_price', isset($reservation) ? $reservation->regular_price : null) }}"/> <span
+            <div class="form-group sm-form-group @if ($errors->has('tax_included_price')) has-error @endif" style="margin-right: 21px;">
+                <input type="number" class="form-control" name="tax_included_price"
+                       id="tax_included_price" placeholder="コース料金"
+                       value="{{ old('tax_included_price', isset($reservation) ? $reservation->tax_included_price : null) }}"/> <span
                         class="ml-2" style="position: absolute;top: 0;right: -20px;">円</span>
-                @if ($errors->has('regular_price')) <p class="help-block">{{ $errors->first('regular_price') }}</p> @endif
+                @if ($errors->has('tax_included_price')) <p class="help-block">{{ $errors->first('tax_included_price') }}</p> @endif
             </div>          
         </div>
 
