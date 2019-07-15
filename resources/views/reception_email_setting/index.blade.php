@@ -6,7 +6,11 @@
 
 @section('content_header')
   @include('layouts.partials.message')
-  <h1>受付メール設定 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
+  <h1>    
+      <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
+      -
+      <i class="fa fa-gears"> 受付メール設定</i>
+  </h1>
 @stop
 
 @section('form')

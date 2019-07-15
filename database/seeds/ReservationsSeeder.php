@@ -17,8 +17,8 @@ class ReservationsSeeder extends Seeder
         $options = Option::all();
         $reservations = factory(App\Reservation::class, 50)->create();
 
-        $reservations->each(function($reservation) use ($faker, $options){
-            $reservation_options = collect($faker->randomElements($options, 3)).map(function($option){
+        $reservations->each(function ($reservation) use ($faker, $options) {
+            $reservation_options = collect($faker->randomElements($options, 3)).map(function ($option) {
                 $reservation_option = new ReservationOption();
                 $reservation_option->fill([ 'option_id' => $option->id, 'option_price' => $option->price ]);
                 return $reservation_option;

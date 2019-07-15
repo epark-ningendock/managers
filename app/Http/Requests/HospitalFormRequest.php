@@ -25,15 +25,11 @@ class HospitalFormRequest extends FormRequest
      */
     public function rules()
     {
-
         $status = HospitalEnums::getValues();
-
 
         return [
             'status' => Rule::in($status),
         ];
-
-
     }
 
     public function messages()

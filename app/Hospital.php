@@ -72,4 +72,9 @@ class Hospital extends Model
     {
         return $this->hasOne('App\ReceptionEmailSetting');
     }
+
+    public function hospital_details()
+    {
+        return $this->hasMany('App\HospitalDetail');
+    }
 }

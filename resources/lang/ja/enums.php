@@ -20,7 +20,8 @@ return [
     Authority::class => [
         Authority::Admin => 'システム管理者',
         Authority::Member => 'メンバー',
-        Authority::ExternalStaff => '外部スタッフ'
+        Authority::ExternalStaff => '外部スタッフ',
+        Authority::ContractStaff => '契約管理者'
     ],
 
     StaffStatus::class => [

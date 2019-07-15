@@ -28,7 +28,7 @@ $factory->define(App\Hospital::class, function (Faker $faker) {
         'url'                         => $faker->url,
         'consultation_note'           => $faker->text(),
         'memo'                        => $faker->text(100),
-        'medical_examination_system_id'              => rand(1,100),
+        'medical_examination_system_id'              => rand(1, 100),
         'rail1'                       => $faker->randomNumber(),
         'station1'                    => $faker->randomNumber(),
         'access1'                     => $faker->randomElement([
