@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             ReceprionEmailSettingsTableSeeder::class,
             CustomersSeeder::class,
             StationsTableSeeder::class, //it would also create prefecture seeding.
+            RailsTableSeeder::class,
             MedicalExaminationSystemTableSeeder::class
         ]);
     }

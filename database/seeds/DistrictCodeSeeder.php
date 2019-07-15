@@ -12,6 +12,6 @@ class DistrictCodeSeeder extends Seeder
      */
     public function run()
     {
-        factory(DistrictCode::class, 'with_major_class_id', 50)->create();
+        factory(DistrictCode::class, 50)->create();
     }
 }

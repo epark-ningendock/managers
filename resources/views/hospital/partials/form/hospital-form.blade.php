@@ -56,43 +56,9 @@
           </td>
           <td>
 
-              <div class="form-group @if( $errors->has('postcode'))  has-error @endif">
-                  <label for="postcode" class="col-md-4">{{ trans('messages.postcode') }}</label>
-                  <div class="col-md-8">
-                      <input type="text" class="form-control" id="postcode" name="postcode"  value="{{ old('postcode', (isset($hospital->postcode) ) ?: null) }}" />
-                      @if ($errors->has('postcode')) <p class="help-block">{{ $errors->first('postcode') }}</p> @endif
-                  </div>
-              </div>
-              <div class="form-group @if( $errors->has('prefectures'))  has-error @endif">
-                  <label for="prefecture" class="col-md-4">{{ trans('messages.prefectures') }}</label>
-                  <div class="col-md-8">
-                      <select name="prefecture" id="prefecture" class="form-control">
-                          @foreach($prefectures as $prefecture)
-                          <option value="{{ $prefecture->name }}"
-                                  @if ( old('prefecture') && ($prefecture->name === old('prefecture')))
-                                      selected="selected"
-                                  @endif
-                          > {{ $prefecture->name }}</option>
-                          @endforeach
-                      </select>
-                      @if ($errors->has('prefecture')) <p class="help-block">{{ $errors->first('prefecture') }}</p> @endif
-                  </div>
-              </div>
-              <div class="form-group @if( $errors->has('district_code'))  has-error @endif">
-                  <label for="district_code" class="col-md-4">{{ trans('messages.district_code') }}</label>
-                  <div class="col-md-8">
-                      <select name="district_code" id="prefecture" class="form-control">
-                          @foreach($district_codes as $district_code)
-                              <option value="{{ $district_code->id }}"
-                                      @if ( old('district_code') && ($district_code->name === old('district_code')))
-                                      selected="selected"
-                                      @endif
-                              > {{ $district_code->name }}</option>
-                          @endforeach
-                      </select>
-                      @if ($errors->has('district_code')) <p class="help-block">{{ $errors->first('district_code') }}</p> @endif
-                  </div>
-              </div>
+
+
+
               <div class="form-group @if( $errors->has('address1'))  has-error @endif">
                   <label for="address1" class="col-md-4">{{ trans('messages.address') }} </label>
                   <div class="col-md-8">
@@ -136,25 +102,122 @@
           </td>
       </tr>
 
+
+    <tr>
+
+        <td class="gray-column"><label for="">{{ __('所在地') }}</label></td>
+        <td>
+
+            <span  class="p-country-name"  style="display : none ;"> Japan </span>
+
+            <div class="wrapbox" style="padding: 20px;">
+
+                <div class="form-inline">
+                    <div class="form-group @if( $errors->has('postcode'))  has-error @endif">
+                        <label for="postcode" class="col-md-4 text-right"> 〒</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="postcode" name="postcode"  value="{{ old('postcode', (isset($hospital->postcode) ) ?: null) }}" />
+                            @if ($errors->has('postcode')) <p class="help-block">{{ $errors->first('postcode') }}</p> @endif
+                        </div>
+                    </div>
+                    &nbsp; &nbsp; &nbsp;
+                    <button type="click" class="btn btn-default">{{ __('アドレス検索') }}</button>
+                </div>
+
+                <br/>
+
+
+                <div class="row">
+
+                    <div class="col-sm-6">
+
+                        <div class="form-group @if( $errors->has('prefectures'))  has-error @endif">
+                            <label for="prefecture" class="col-md-4">{{ trans('messages.prefectures') }}</label>
+                            <div class="col-md-8">
+                                <select name="prefecture" id="prefecture" class="form-control">
+                                    @foreach($prefectures as $prefecture)
+                                        <option value="{{ $prefecture->name }}"
+                                                @if ( old('prefecture') && ($prefecture->name === old('prefecture')))
+                                                selected="selected"
+                                                @endif
+                                        > {{ $prefecture->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('prefecture')) <p class="help-block">{{ $errors->first('prefecture') }}</p> @endif
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-sm-6">
+
+                        <div class="form-group @if( $errors->has('district_code'))  has-error @endif">
+                            <div class="col-md-8">
+                                <select name="district_code" id="prefecture" class="form-control">
+                                    @foreach($district_codes as $district_code)
+                                        <option value="{{ $district_code->id }}"
+                                                @if ( old('district_code') && ($district_code->name === old('district_code')))
+                                                selected="selected"
+                                                @endif
+                                        > {{ $district_code->name }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('district_code')) <p class="help-block">{{ $errors->first('district_code') }}</p> @endif
+                            </div>
+                            <label for="district_code" class="col-md-4">{{ trans('messages.district_code') }}</label>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </td>
+
+    </tr>
+
       <tr>
           <td class="gray-column">
               <label for="tel">{{ trans('messages.contact_information') }} </label>
           </td>
           <td>
-              <div class="form-group @if( $errors->has('tel'))  has-error @endif">
-                  <label for="tel" class="col-md-4">{{ trans('messages.tel') }} </label>
-                  <div class="col-md-8">
-                      <input type="text" class="form-control" id="tel" name="tel"  value="{{ old('tel', (isset($hospital->tel) ) ?: null) }}" />
-                      @if ($errors->has('tel')) <p class="help-block">{{ $errors->first('tel') }}</p> @endif
-                  </div>
-              </div>
 
-              <div class="form-group @if( $errors->has('paycall'))  has-error @endif">
-                  <label for="paycall" class="col-md-4">{{ trans('messages.paycall') }} </label>
-                  <div class="col-md-8">
-                      <input type="text" class="form-control" id="paycall" name="paycall"  value="{{ old('paycall', (isset($hospital->paycall) ) ?: null) }}" />
-                      @if ($errors->has('paycall')) <p class="help-block">{{ $errors->first('paycall') }}</p> @endif
+              <div class="row">
+
+
+                  <div class="col-sm-6">
+
+
+                      <div class="form-group @if( $errors->has('tel'))  has-error @endif">
+                          <label for="tel" class="col-md-4">{{ trans('messages.tel') }} </label>
+                          <div class="col-md-8">
+                              <input type="text" class="form-control" id="tel" name="tel"  value="{{ old('tel', (isset($hospital->tel) ) ?: null) }}" />
+                              @if ($errors->has('tel')) <p class="help-block">{{ $errors->first('tel') }}</p> @endif
+                          </div>
+                      </div>
+
+
                   </div>
+
+
+                  <div class="col-sm-6">
+
+                      <div class="form-group @if( $errors->has('paycall'))  has-error @endif">
+                          <label for="paycall" class="col-md-4">{{ trans('messages.paycall') }} </label>
+                          <div class="col-md-8">
+                              <input type="text" class="form-control" id="paycall" name="paycall"  value="{{ old('paycall', (isset($hospital->paycall) ) ?: null) }}" />
+                              @if ($errors->has('paycall')) <p class="help-block">{{ $errors->first('paycall') }}</p> @endif
+                          </div>
+                      </div>
+
+
+                  </div>
+
+
               </div>
 
           </td>
@@ -165,44 +228,70 @@
                   <label for="tel">最寄り駅 {{ $i }} </label>
               </td>
               <td>
-                  <div class="form-group">
-                      <label for="rail" class="col-md-4">{{ trans('messages.rail') }}  </label>
-                      <div class="col-md-8">
-                          <input type="text" class="form-control" id="rail{{$i}}" name="rail{{$i}}"
-                                 value="
+
+                  <div class="wrapbox" style="padding: 20px;">
+
+                      <div class="row">
+
+
+                          <div class="col-md-4">
+
+                              <div class="form-group ml-0 mr-0">
+
+                                  <select id="rail{{$i}}" name="rail{{$i}}" class="custom-select form-control">
+                                      <option value="">路線を選択</option>
+                                      @foreach($rails as $rail)
+                                          <option value="{{ $rail->id }}"
+                                                  @if ( old('rail' . $i) === $rail->id)
+                                                  selected="selected"
+                                                  @endif
+                                          >{{ $rail->name }}</option>
+                                      @endforeach
+                                  </select>
+
+                              </div>
+
+                          </div>
+
+                          <div class="col-md-4">
+
+                              <div class="form-group ml-0 mr-0">
+
+                                  <select id="station{{$i}}" name="station{{$i}}" class="custom-select form-control">
+                                      <option value="">路線を選択</option>
+                                      @foreach($stations as $station)
+                                          <option value="{{ $station->id }}"
+                                                  @if ( old('station' . $i) === $station->id)
+                                                  selected="selected"
+                                                  @endif
+                                          >{{ $station->name }}</option>
+                                      @endforeach
+                                  </select>
+
+                              </div>
+
+                          </div>
+
+                          <div class="col-md-4">
+
+                              <div class="form-group ml-0 mr-0">
+
+                                  <input type="text" class="form-control" id="access{{$i}}" name="access{{$i}}"
+                                         value="
                                 @php
-                                     $field_name = `rail{$i}`;
-                                     $field_value_from_db = (!empty($hospital->$field_name) ) ?: null;
-                                     old($field_name, $field_value_from_db );
-                                 @endphp" />
+                                             $field_name = `access{$i}`;
+                                             $field_value_from_db = (!empty($hospital->$field_name) ) ?: null;
+                                             old($field_name, $field_value_from_db );
+                                         @endphp" />
+
+                              </div>
+
+                          </div>
+
                       </div>
+
                   </div>
 
-                  <div class="form-group">
-                      <label for="rail" class="col-md-4">{{ trans('messages.station') }} </label>
-                      <div class="col-md-8">
-                          <input type="text" class="form-control" id="station{{$i}}" name="station{{$i}}"
-                                 value="
-                                @php
-                                     $field_name = `station{$i}`;
-                                     $field_value_from_db = (!empty($hospital->$field_name) ) ?: null;
-                                     old($field_name, $field_value_from_db );
-                                 @endphp" />
-                      </div>
-                  </div>
-
-                  <div class="form-group @if( $errors->has('access'))  has-error @endif">
-                      <label for="access" class="col-md-4">{{ trans('messages.access') }} </label>
-                      <div class="col-md-8">
-                          <input type="text" class="form-control" id="access{{$i}}" name="access{{$i}}"
-                                 value="
-                                @php
-                                     $field_name = `access{$i}`;
-                                     $field_value_from_db = (!empty($hospital->$field_name) ) ?: null;
-                                     old($field_name, $field_value_from_db );
-                                 @endphp" />
-                      </div>
-                  </div>
 
               </td>
 
@@ -343,3 +432,9 @@
     <button type="submit" class="btn btn-success pull-right">登録</button>
 </div>
 <br/>
+
+@push('js')
+
+    <script  src="https://yubinbango.github.io/yubinbango/yubinbango.js"  charset="UTF-8" ></script>
+
+@endpush

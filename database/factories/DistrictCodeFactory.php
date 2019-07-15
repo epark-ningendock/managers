@@ -1,20 +1,15 @@
 <?php
 
 use App\MajorClassification;
+use App\Prefecture;
 use Faker\Generator as Faker;
 
 $factory->define(App\DistrictCode::class, function (Faker $faker) {
     return [
-//        '' => $faker->randomNumber(), //let's create this factory after majorclassification
+        'district_code' => $faker->numberBetween(0000000,9999999),
+        'prefecture_id' => factory(Prefecture::class)->create()->id,
         'name' => $faker->streetName,
-        'order' => $faker->randomElement(['0', '1']),
-        'is_icon' => $faker->randomElement(['0', '1']),
-        'icon_name' => $faker->streetName
+        'kana' => $faker->streetName,
+        'status' => $faker->randomElement(['1', 'X'])
     ];
-});
-
-$factory->defineAs(\App\DistrictCode::class, 'with_major_class_id', function(Faker $faker) use ($factory) {
-    $districtCode = $factory->raw(\App\DistrictCode::class);
-    $majorClassification = factory(MajorClassification::class, 'with_type')->create();
-    return array_merge($districtCode, ['major_classification_id' => $majorClassification->id]);
 });

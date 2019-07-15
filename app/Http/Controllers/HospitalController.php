@@ -12,6 +12,8 @@ use App\Http\Requests\HospitalFormRequest;
 use App\MedicalExaminationSystem;
 use App\MedicalTreatmentTime;
 use App\Prefecture;
+use App\Rail;
+use App\Station;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -87,8 +89,16 @@ class HospitalController extends Controller
         $prefectures = Prefecture::all();
         $district_codes = DistrictCode::all();
         $medical_examination_systems = MedicalExaminationSystem::all();
+        $stations = Station::all();
+        $rails = Rail::all();
 
-        return view('hospital.create-hospital-form', ['prefectures' => $prefectures, 'district_codes' => $district_codes, 'medical_examination_systems' => $medical_examination_systems]);
+        return view('hospital.create-hospital-form', [
+            'prefectures' => $prefectures,
+            'district_codes' => $district_codes,
+            'medical_examination_systems' => $medical_examination_systems,
+            'stations' => $stations,
+            'rails' => $rails,
+        ]);
     }
 
     /**
