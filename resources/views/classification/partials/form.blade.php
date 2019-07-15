@@ -19,7 +19,6 @@
       <label for="classification_type_id">分類種別 </label>
       @if(!isset($classification))
         <select name="classification_type_id" id="classification_type_id" class="form-control">
-          <option value="">なし</option>
           @foreach ($classification_types as $c_type)
             <option {{ old('classification_type_id') == $c_type->id ? 'selected' : '' }}
                 value="{{ $c_type->id }}"> {{ $c_type->name }}</option>
@@ -44,7 +43,6 @@
       <label for="major_classification_id">大分類</label>
       @if(!isset($classification))
         <select name="major_classification_id" id="major_classification_id" class="form-control">
-          <option value="">なし</option>
           @foreach ($c_majors as $c_major)
             <option {{ old('major_classification_id') == $c_major->id ? 'selected' : '' }}
                 value="{{ $c_major->id }}"> {{ $c_major->name }}</option>
@@ -62,7 +60,6 @@
       <label for="middle_classification_id">中分類名</label>
       @if(!isset($classification))
         <select name="middle_classification_id" id="middle_classification_id" class="form-control">
-          <option value="">なし</option>
           @foreach ($c_middles as $c_middle)
             <option {{ old('middle_classification_id') == $c_middle->id ? 'selected' : '' }}
                 data-major-id="{{$c_middle->major_classification_id}}" value="{{ $c_middle->id }}"> {{ $c_middle->name }}</option>
@@ -164,7 +161,7 @@
 
   <div class="box-footer">
     <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
-    <button type="submit" class="btn btn-primary">保存</button>
+    <button type="submit" class="btn btn-primary">登録</button>
   </div>
 
 </div>
@@ -212,10 +209,15 @@
                   if (selected == ''){
                       $('#middle_classification_id option').show();
                   } else {
+                      const middleSelectedFlg = true;
                       $('#middle_classification_id option').each(function(i, option) {
                           option = $(option);
                           if (option.val() == '' || selected == option.data('major-id')) {
                               option.show();
+                              if (middleSelectedFlg) {
+                                option.prop('selected', true);
+                                middleSelectedFlg = false;
+                              }
                           } else {
                               option.hide();
                               if (option.is(':selected')){
