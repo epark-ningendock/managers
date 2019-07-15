@@ -5,7 +5,7 @@ use Faker\Generator as Faker;
 $factory->define(App\Department::class, function (Faker $faker) {
 
     return [
-        'name' => $faker->randomElements([
+        'name' => $faker->randomElement([
 		        '営業部',
 		        '情報部',
 		        '人事部',
