@@ -14,6 +14,6 @@
     <form method="POST"  action="{{ route('hospital-staff.update', $hospital_staff->id) }}">
         {{ csrf_field() }}
         {{ method_field('PUT') }}
-        @include('hospital_staff.partials.form')
+        @include('hospital_staff.partials.form', ['submit' => '更新'])
     </form>
 @stop

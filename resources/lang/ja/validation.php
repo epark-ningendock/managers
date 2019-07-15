@@ -140,6 +140,9 @@ return [
         'email' => [
             'email' => '正しいメールアドレスの書式でご入力ください。'
         ],
+        'authority' => [
+            'required' => ':attributeは必須です'
+        ],
         'is_hospital' => [
             'required' => ':attributeは必須です'
         ],
@@ -155,7 +158,10 @@ return [
         'is_pre_account' => [
             'required' => ':attributeは必須です'
         ],
-        
+        'is_contract' => [
+            'required' => ':attributeは必須です'
+        ],
+
     ],
     /*
     |--------------------------------------------------------------------------
