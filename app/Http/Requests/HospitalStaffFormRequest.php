@@ -28,7 +28,7 @@ class HospitalStaffFormRequest extends FormRequest
         $login_id         = ($this->method() == 'PUT' || $this->method() == 'PATCH') ? 'required|between:8,50|regex:/^[-_ @\.a-zA-Z0-9]+$/|unique:hospital_staffs,login_id, '. $this->hospital_staff : 'required|between:8,50|regex:/^[-_ @\.a-zA-Z0-9]+$/|unique:hospital_staffs';
 
         return [
-            'name'     => 'required|between:1,50',
+            'name'     => 'required|between:1,25',
             'email'    => $email_validation,
             'login_id' => $login_id,
         ];
