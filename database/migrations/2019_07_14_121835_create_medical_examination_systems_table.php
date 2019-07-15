@@ -20,7 +20,7 @@ class CreateMedicalExaminationSystemsTable extends Migration
             $table->string('name');
             $table->string('company_name');
             $table->string('postcode')->nullable();
-            $table->tinyInteger('prefecture_id')->nullable();
+            $table->unsignedBigInteger('prefecture_id')->nullable();
             $table->string('address1')->nullable();
             $table->string('address2')->nullable();
             $table->string('tel')->nullable();
