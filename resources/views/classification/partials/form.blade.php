@@ -4,11 +4,11 @@
   use \App\Enums\Permission;
 
   if ($type == 'major')
-    $type_label = '大分数';
+    $type_label = '大分類';
   else if ($type == 'middle')
-    $type_label = '中分数';
+    $type_label = '中分類';
   else
-    $type_label = '小分数';
+    $type_label = '小分類';
 
 @endphp
 <div class="box-body">
@@ -16,7 +16,7 @@
   <input type="hidden" name="classification" value="{{ $type }}">
   @if ($type == 'major')
     <div class="form-group @if ($errors->has('classification_type_id')) has-error @endif" >
-      <label for="classification_type_id">分数種別 </label>
+      <label for="classification_type_id">分類種別 </label>
       @if(!isset($classification))
         <select name="classification_type_id" id="classification_type_id" class="form-control">
           <option value="">なし</option>
@@ -41,7 +41,7 @@
 
   @if ($type != 'major')
     <div class="form-group @if ($errors->has('major_classification_id')) has-error @endif" >
-      <label for="major_classification_id">大分数</label>
+      <label for="major_classification_id">大分類</label>
       @if(!isset($classification))
         <select name="major_classification_id" id="major_classification_id" class="form-control">
           <option value="">なし</option>
@@ -59,7 +59,7 @@
 
   @if ($type == 'minor')
     <div class="form-group @if ($errors->has('middle_classification_id')) has-error @endif" >
-      <label for="middle_classification_id">中分数名</label>
+      <label for="middle_classification_id">中分類名</label>
       @if(!isset($classification))
         <select name="middle_classification_id" id="middle_classification_id" class="form-control">
           <option value="">なし</option>
