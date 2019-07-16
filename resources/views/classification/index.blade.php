@@ -30,7 +30,7 @@
         <div class="form-group">
           <label for="type">分類種別</label>
           <select class="form-control" id="type" name="type">
-            <option value="">なし</option>
+            <option value=""></option>
             @foreach($c_types as $c_type)
               <option
                   value="{{ $c_type->id }}" {{ (isset($type) && $type == $c_type->id) ? "selected" : "" }}>{{ $c_type->name }}</option>
@@ -55,7 +55,7 @@
         <div class="form-group">
           <label for="major">大分類</label>
           <select class="form-control" id="major" name="major">
-            <option value="">なし</option>
+            <option value=""></option>
             @foreach($c_majors as $c_major)
               <option data-type-id="{{$c_major->classification_type_id}}"
                   value="{{ $c_major->id }}" {{ (isset($major) && $major == $c_major->id) ? "selected" : "" }}>{{ $c_major->name }}</option>
@@ -67,7 +67,7 @@
         <div class="form-group">
           <label for="middle">中分類</label>
           <select class="form-control" id="middle" name="middle">
-            <option value="">なし</option>
+            <option value=""></option>
             @foreach($c_middles as $c_middle)
               <option data-major-id="{{$c_middle->major_classification_id}}"
                   value="{{ $c_middle->id }}" {{ (isset($middle) && $middle == $c_middle->id) ? "selected" : "" }}>{{ $c_middle->name }}</option>
