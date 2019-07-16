@@ -13,26 +13,25 @@
   <div class="login-box">
     <div class="login-box-body width-400 font-size">
       @include('layouts.partials.message')
-      @include('layouts.partials.errorbag')
+
       <div class="login-logo">
         <a href="{{ route('login') }}">{!! config('adminlte.logo', '<b>Admin</b>LTE') !!}</a>
       </div>
       <form action="{{ route('postLogin') }}" method="post">
         {!! csrf_field() !!}
-
-        <div class="form-group has-feedback">
-          @if ($errors->has('fail_login'))
-            <span class="help-block">
-              <strong>{{ $errors->first('fail_login') }}</strong>
-            </span>
-          @endif
+        <div class="form-group has-feedback @if ($errors->has('fail_login')) has-error @endif">
+          @if ($errors->has('fail_login')) <p class="help-block strong">{{ $errors->first('fail_login') }}</p> @endif
+        </div>
+        <div class="form-group has-feedback @if ($errors->has('login_id')) has-error @endif">
           <input type="text" name="login_id" class="form-control" value="{{ old('login_id') }}"
                placeholder="ログインIDを入力してください">
+          @if ($errors->has('password')) <p class="help-block strong">{{ $errors->first('login_id') }}</p> @endif
         </div>
-        <div class="form-group has-feedback">
+        <div class="form-group has-feedback @if ($errors->has('password')) has-error @endif">
           <input type="password" name="password" class="form-control"
                placeholder="パスワードを入力してください">
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+          @if ($errors->has('password')) <p class="help-block strong">{{ $errors->first('password') }}</p> @endif
         </div>
         <div class="row">
           <div class="col-xs-8">

@@ -2331,3 +2331,13 @@ b {
 .login-box {
   width: 380px !important;
 }
+
+.form-group.has-error .form-control, .form-group.has-error .input-group-addon {
+  border-color: #ed5565;
+  box-shadow: none;
+}
+
+.form-group.has-error .help-block {
+  color: #ed5565;
+  font-weight: 600
+}

@@ -13,17 +13,16 @@
     <div class="login-box">
         <div class="login-box-body width-400">
             @include('layouts.partials.message')
-            @include('layouts.partials.errorbag')
             <div class="login-logo">
                 <a href="{{ url(config('adminlte.dashboard_url', 'home')) }}">{!! config('adminlte.logo', '<b>Admin</b>LTE') !!}</a>
             </div>
-            {{-- <p class="text-bold text-center">パスワードリセットメール送信</p> --}}
             <div class="box-body">
                 <form method="GET"  action="{{ route('hospital-staff.send.password-reset') }}">
                     {{ csrf_field() }}
-                    <div class="form-group">
-                        <label for="email">・メールアドレスを入力してください</label>
+                    <label for="email">・メールアドレスを入力してください</label>
+                    <div class="form-group @if ($errors->has('email')) has-error @endif">
                         <input type="email" class="form-control" id="email" name="email" value="{{ Input::old('email') }}" placeholder="メールアドレスを入力してください">
+                        @if ($errors->has('email')) <p class="help-block strong">{{ $errors->first('email') }}</p> @endif
                     </div>
                     
                     <div class="row mt-5">
