@@ -156,7 +156,7 @@ class StaffController extends Controller
 
         $staff->password = bcrypt($request->password);
         $staff->save();
-        return redirect('staff')->with('success', 'パスワードを更新しました');
+        return redirect('staff')->with('success', 'パスワードを更新しました。');
     }
 
     public function editPersonalPassword()
@@ -178,10 +178,10 @@ class StaffController extends Controller
             $staff->password = bcrypt($request->password);
             $staff->save();
             app('App\Http\Controllers\Auth\LoginController')->is_staff_login($staff->login_id, $request->password);
-            return redirect('staff')->with('success', 'パスワードを更新しました');
+            return redirect('staff')->with('success', 'パスワードを更新しました。');
         } else {
             $validator = Validator::make([], []);
-            $validator->errors()->add('old_password', '現在のパスワードが正しくありません');
+            $validator->errors()->add('old_password', '現在のパスワードが正しくありません。');
             throw new ValidationException($validator);
             return redirect()->back();
         }

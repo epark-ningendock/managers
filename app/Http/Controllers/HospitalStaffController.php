@@ -186,7 +186,7 @@ class HospitalStaffController extends Controller
         $staff->save();
         Mail::to($staff->email)
             ->send(new PasswordResetConfirmMail());
-        return redirect('/login')->with('success', 'パスワードを更新しました');
+        return redirect('/login')->with('success', 'パスワードを更新しました。');
     }
 
     public function hospitalStaffEmailValidation($email)
