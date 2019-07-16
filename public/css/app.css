@@ -2401,3 +2401,76 @@ b {
   font-weight: 500;
   margin: 20px 0px 20px 0px;
 }
+
+.staff_box {
+  height: 680px;
+
+}
+
+.no_image_area {
+  width: 50%;
+  background: #eee;
+  text-align: center;
+  margin: 0 auto;
+  height: 150px;
+  padding: 50px 0 0 0;
+}
+
+.image_area {
+  height: 150px;
+  text-align: center;
+}
+
+.no_image_area img {
+  text-align: center;
+}
+
+label.file-upload {
+  position: relative;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+label.file-upload input[type="file"] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-size: 10px;
+}
+
+.staff_box.show {
+  display:none;
+}
+
+.staff_box.show {
+  display:block;
+}
+
+#staff_add {
+  margin-top: 30px;
+}
+
+#staff_section {
+  position: relative;
+  padding-bottom: 100px;
+}
+
+.staff_add {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}

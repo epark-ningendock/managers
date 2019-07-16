@@ -94,6 +94,7 @@ Route::middleware('auth:staffs')->group(function () {
     Route::group(['prefix' => 'hospital'], function () {
         Route::get('/{hospital}/images/create', 'HospitalImagesController@create')->name('hospital.image.create');
         Route::post('/{hospital}/images/store', 'HospitalImagesController@store')->name('hospital.image.store');
+        Route::get('/{hospital}/images/{hospital_category_id}/{hospital_image_id}/delete', 'HospitalImagesController@delete')->name('hospital.image.delete');
         /*
         Route::get('/{hospital}/hospital_images/', function ($hospital_id) {
             return $hospital_id;

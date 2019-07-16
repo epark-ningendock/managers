@@ -86,10 +86,23 @@ class HospitalImagesController extends Controller
             'sub_3' => 'file|image|max:4000',
             'sub_4' => 'file|image|max:4000',
             'sub_5' => 'file|image|max:4000',
+
             'speciality_1' => 'file|image|max:4000',
+            'speciality_1_title' => 'nullable|max:100',
+            'speciality_1_caption' => 'nullable|max:200',
+
             'speciality_2' => 'file|image|max:4000',
+            'speciality_2_title' => 'nullable|max:100',
+            'speciality_2_caption' => 'nullable|max:200',
+
             'speciality_3' => 'file|image|max:4000',
+            'speciality_3_title' => 'nullable|max:100',
+            'speciality_3_caption' => 'nullable|max:200',
+
             'speciality_4' => 'file|image|max:4000',
+            'speciality_4_title' => 'nullable|max:100',
+            'speciality_4_caption' => 'nullable|max:200',
+
             'title' => 'nullable|max:100',
             'caption' => 'nullable|max:200',
             'map_url' => 'nullable|max:200',
@@ -189,6 +202,8 @@ class HospitalImagesController extends Controller
             'interview_new.*.question' => 'nullable|max:100',
             'interview_new.*.answer' => 'nullable|max:100',
         ]);
+
+
         $file = $params;
 
         //TOPの保存
@@ -208,10 +223,14 @@ class HospitalImagesController extends Controller
             $image = \Image::make(file_get_contents($file['main']->getRealPath()));
             $image
                 ->save(public_path().'/img/uploads/'.$file['main']->hashName())
-                ->resize(300, 300)
-                ->save(public_path().'/img/uploads/300-300-'.$file['main']->hashName())
-                ->resize(500, 500)
-                ->save(public_path().'/img/uploads/500-500-'.$file['main']->hashName());
+                ->resize(300, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->save(public_path().'/img/uploads/300-auto-'.$file['main']->hashName())
+                ->resize(500, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->save(public_path().'/img/uploads/500-auto-'.$file['main']->hashName());
 
             //HospitalImage HospitalCategory 保存用array
             $save_images = ['extension' => str_replace('image/', '', $image->mime), 'name' => $file['main']->getClientOriginalName(), 'path' => $file['main']->hashName()];
@@ -240,17 +259,21 @@ class HospitalImagesController extends Controller
         }
         //こだわり
         for($i = 1; $i <= 4; $i++){
-            if(isset($file['speciality_'.$i])) {
-                $this->hospitalImageUploader($file, 'speciality_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_SPECIALITY);
+            if(isset($file['speciality_'.$i]) or isset($file['speciality_'.$i.'_title']) or isset($file['speciality_'.$i.'_caption'])) {
+                $this->hospitalImageUploader($file, 'speciality_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_SPECIALITY,null,null,null,$file['speciality_'.$i.'_caption'],$file['speciality_'.$i.'_caption'] );
             }
         }
         //タブ
         for($i = 1; $i <= 5; $i++){
-            $this->hospitalImageUploader($file, 'tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
+            if(isset($file['tab_'.$i]) or isset($file['tab_'.$i.'_order1']) or isset($file['tab_'.$i.'_memo2'])) {
+                $this->hospitalImageUploader($file, 'tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
+            }
         }
         //スタッフ
         for($i = 1; $i <= 10; $i++){
+            if(isset($file['staff_'.$i]) or isset($file['staff_'.$i.'_name']) or isset($file['staff_'.$i.'_career']) or isset($file['staff_'.$i.'_memo'])) {
             $this->hospitalImageUploader($file, 'staff_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_STAFF,$file['staff_'.$i.'_name'],$file['staff_'.$i.'_career'],$file['staff_'.$i.'_memo'] );
+            }
         }
 
         //インタビュー
@@ -269,10 +292,10 @@ class HospitalImagesController extends Controller
 
         //interview 詳細　insert
         $new_interviews = $params['interview_new'];
-        foreach ($new_interviews as $key => $new_interviews) {
-            if(!is_null($new_interviews['answer']) && !is_null($new_interviews['question'])) {
+        foreach ($new_interviews as $key => $new_interview) {
+            if(!is_null($new_interview['answer']) && !is_null($new_interview['question'])) {
                 $image_category_interview->interview_details()->saveMany([
-                        new InterviewDetail($new_interviews)
+                        new InterviewDetail($new_interview)
                     ]
                 );
             }
@@ -320,13 +343,26 @@ class HospitalImagesController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
+     * @param  int  $hospital_id
+     * @param  int  $hospital_category_id
+     * @param  int  $hospital_image_id
      * @return \Illuminate\Http\Response
+     * todo deleteがdeleteメソッドじゃなくて、getメソッドで削除してるので、直したほうがいいかも。
      */
-    public function destroy($id)
+    public function delete(int $hospital_id, int $hospital_category_id, int $hospital_image_id)
     {
-        //
+        $hospital_image = $this->hospital_image->find($hospital_image_id);
+
+        $hospital_image_file_sp = public_path().'/img/uploads/300-auto-'.$hospital_image->path;
+        $hospital_image_file_pc = public_path().'/img/uploads/500-auto-'.$hospital_image->path;
+        $hospital_image_default = public_path().'/img/uploads/'.$hospital_image->path;
+
+        \File::delete($hospital_image_file_sp, $hospital_image_file_pc, $hospital_image_default);
+
+        $this->hospital_category->where('id', $hospital_category_id)->delete();
+        $this->hospital_image->where('id', $hospital_image_id)->delete();
+
+        return redirect()->route('hospital.image.create', ['hospital_id' => $hospital_id])->with('success', trans('messages.deleted', ['name' => trans('messages.names.hospital_categories')]));
     }
 
     private function hospitalImageUploader (array $file, string $image_prefix, int $i, object $hospital, int $hospital_id, int $image_order, string $name = null, $career = null, string $memo = null, string $title = null, string $caption = null) {
@@ -344,10 +380,14 @@ class HospitalImagesController extends Controller
             $sub_image = \Image::make(file_get_contents($file[$image_prefix.$i]->getRealPath()));
             $sub_image
                 ->save(public_path().'/img/uploads/'.$file[$image_prefix.$i]->hashName())
-                ->resize(300, 300)
-                ->save(public_path().'/img/uploads/300-300-'.$file[$image_prefix.$i]->hashName())
-                ->resize(500, 500)
-                ->save(public_path().'/img/uploads/500-500-'.$file[$image_prefix.$i]->hashName());
+                ->resize(300, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->save(public_path().'/img/uploads/300-auto-'.$file[$image_prefix.$i]->hashName())
+                ->resize(500, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->save(public_path().'/img/uploads/500-auto-'.$file[$image_prefix.$i]->hashName());
             $save_sub_images = ['extension' => str_replace('image/', '', $sub_image->mime), 'name' => $file[$image_prefix.$i]->getClientOriginalName(), 'path' => $file[$image_prefix.$i]->hashName(), 'memo1' => $memo1, 'memo2' => $memo2];
             $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order ];
             } else {
@@ -383,10 +423,6 @@ class HospitalImagesController extends Controller
                 $hospital_img->hospital_category()->update($save_sub_image_categories);
             }
         }
-
-    }
-
-    private function save_interview_details(){
 
     }
 }

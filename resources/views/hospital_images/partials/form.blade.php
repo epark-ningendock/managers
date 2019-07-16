@@ -3,12 +3,27 @@
     <div class="form-group ">
         {{Form::label('main', '施設メイン画像',['class' => 'form_label'])}}
         <?php $main_image_category = $hospital->hospital_categories->firstWhere('image_order', $image_order::IMAGE_GROUP_FACILITY_MAIN); ?>
-        @if (!is_null($main_image_category))
-            <div><img src="/img/uploads/300-300-{{$main_image_category->hospital_image->path}}" width="150"></div>
+
+        @if(!is_null($main_image_category))
+            <div class="image_area">
+                <img src="/img/uploads/500-auto-{{$main_image_category->hospital_image->path}}" height="200">
+                <p>
+                    <a onclick="return confirm('削除します、よろしいですか？')" class="btn btn-danger" href="{{ route('hospital.image.delete', ['hospital' => $hospital->id, 'hospital_category_id' => $main_image_category->id, 'hospital_image_id' => $main_image_category->hospital_image_id]) }}">
+                        <i class="icon-trash icon-white"></i>
+                        削除
+                    </a>
+                </p>
+            </div>
+        @else
+            <div class="no_image_area">
+                <img src="/img/icon_noimage.png" width="50">
+            </div>
         @endif
-        {{Form::file("main", ['class' => 'field'])}}
-        @if ($errors->has('image'))
-            {{ $errors->first('image') }}
+        <label class="file-upload btn btn-primary">
+            ファイル選択 {{Form::file("main", ['class' => 'field'])}}
+        </label>
+        @if ($errors->has('main'))
+            {{ $errors->first('main') }}
         @endif
     </div>
 
@@ -24,8 +39,8 @@
     </div>
 
     <div class="form-group">
-        {{Form::label('caption', 'キャプション',['class' => 'form_label'])}}
-        {{Form::text('caption', is_null($title) ? '' : $title->caption, ['class' => 'form-control'])}}
+        {{Form::label('caption', '本文',['class' => 'form_label'])}}
+        {{Form::textarea('caption', is_null($title) ? '' : $title->caption, ['class' => 'form-control', 'rows' => 4])}}
         @if ($errors->has('caption'))
             <div class="error_message">
                 {{ $errors->first('caption') }}
@@ -42,9 +57,17 @@
             {{Form::label('sub_'.$i, '施設サブ画像'.$i,['class' => 'form_label'])}}
             <?php $sub_image_category = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_FACILITY_SUB)->where('order2', $i)->first(); ?>
             @if (!is_null($sub_image_category))
-                <div><img src="/img/uploads/300-300-{{$sub_image_category->hospital_image->path}}" width="150"></div>
+                <div class="image_area">
+                    <img src="/img/uploads/300-auto-{{$sub_image_category->hospital_image->path}}" width="150">
+                </div>
+            @else
+                <div class="no_image_area">
+                    <img src="/img/icon_noimage.png" width="50">
+                </div>
             @endif
-            {{Form::file("sub_".$i, ['class' => 'field'])}}
+            <label class="file-upload btn btn-primary">
+                ファイル選択 {{Form::file("sub_".$i, ['class' => 'field'])}}
+            </label>
             @if ($errors->has('image'))
                 {{ $errors->first('image') }}
             @endif
@@ -61,16 +84,46 @@
             <div class="col-sm-6">
                 {{Form::label('interview_1_caption', 'こだわり'.$i,['class' => 'form_label'])}}
                 <?php $image_speciality = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_SPECIALITY)->where('order2', $i)->first(); ?>
-                @if (!is_null($image_speciality))
-                    <div><img src="/img/uploads/300-300-{{$image_speciality->hospital_image->path}}" width="150"></div>
+
+                @if (!is_null($image_speciality) && !is_null($image_speciality->hospital_image->path))
+                    <div class="image_area">
+                        <img src="/img/uploads/300-auto-{{$image_speciality->hospital_image->path}}" width="150">
+                    </div>
+                @else
+                    <div class="no_image_area">
+                        <img src="/img/icon_noimage.png" width="50">
+                    </div>
                 @endif
 
-                {{Form::file("speciality_".$i, ['class' => 'field'])}}
+                <label class="file-upload btn btn-primary">
+                    ファイル選択 {{Form::file("speciality_".$i, ['class' => 'field'])}}
+                </label>
+
                 @if ($errors->has('speciality_'.$i))
                     <div class="error_message">
                     {{ $errors->first('speciality_'.$i) }}
                     </div>
                 @endif
+
+                <div class="form-group">
+                    {{Form::label('interview_1_caption', 'タイトル',['class' => 'form_label'])}}
+                    {{Form::text('speciality_'.$i.'_title', is_null($image_speciality) ? '' : $image_speciality->title, ['class' => 'form-control'])}}
+                    @if ($errors->has('speciality_'.$i.'_title'))
+                        <div class="error_message">
+                            {{ $errors->first('speciality_'.$i.'_title') }}
+                        </div>
+                    @endif
+                </div>
+
+                <div class="form-group">
+                    {{Form::label('caption', '本文',['class' => 'form_label'])}}
+                    {{Form::textarea('speciality_'.$i.'_caption', is_null($image_speciality) ? '' : $image_speciality->caption, ['class' => 'form-control', 'rows' => 4])}}
+                    @if ($errors->has('speciality_'.$i.'caption'))
+                        <div class="error_message">
+                            {{ $errors->first('speciality_'.$i.'caption') }}
+                        </div>
+                    @endif
+                </div>
             </div>
         @endfor
     </div>
@@ -91,15 +144,26 @@
     </div>
 </div>
 
-<div class="box box-primary form-box">
+<div class="box box-primary form-box" id="interview_section">
     <div class="form_title"><div class="number_circle">6</div> <span class="input_title">インタビュー</span></div>
     <div class="row">
         <div class="col-sm-6">
             {{Form::label('interview_1', 'インタビューメイン画像',['class' => 'form_label'])}}
-            @if(!is_null($interview_top))
-                <img src="/img/uploads/300-300-{{$interview_top->hospital_image->path}}" width="150">
+
+            @if(!is_null($interview_top) && !is_null($interview_top->path))
+                <div class="image_area">
+                    <img src="/img/uploads/300-auto-{{$interview_top->path}}" width="150">
+                </div>
+            @else
+                <div class="no_image_area">
+                    <img src="/img/icon_noimage.png" width="50">
+                </div>
             @endif
-            {{Form::file("interview_1", ['class' => 'field'])}}
+
+            <label class="file-upload btn btn-primary">
+                ファイル選択 {{Form::file("interview_1", ['class' => 'field'])}}
+            </label>
+
             @if ($errors->has('interview_1'))
                 <div class="error_message">
                 {{ $errors->first('interview_1') }}
@@ -149,15 +213,19 @@
         @endforeach
             <div class="interview_list interview_detail_new">
                 <div>
-                    {{Form::label('interview_new[1][question]', '質問',['class' => 'form_label'])}}
-                    {{Form::text('interview_new[1][question]', '', ['class' => 'form-control'])}}
+                    {{Form::label('interview_new[0][question]', '質問',['class' => 'form_label'])}}
+                    {{Form::text('interview_new[0][question]', '', ['class' => 'form-control'])}}
                 </div>
                 <div>
-                    {{Form::label('interview_new[1][answer]', '回答',['class' => 'form_label'])}}
-                    {{Form::text('interview_new[1][answer]', '', ['class' => 'form-control'])}}
+                    {{Form::label('interview_new[0][answer]', '回答',['class' => 'form_label'])}}
+                    {{Form::text('interview_new[0][answer]', '', ['class' => 'form-control'])}}
                 </div>
             </div>
     </div>
+    <a href="javascript:void(0)" id="interview_add" class="btn btn-info">
+        <i class="icon-trash icon-white"></i>
+        追加
+    </a>
 </div>
 
 <div class="box box-primary form-box">
@@ -167,10 +235,18 @@
         <p class="tab_name">{{$tab_name_list[$i]}}</p>
         <div class="col-sm-6">
             <?php $tab = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('order2', $i)->first();?>
-            @if(!is_null($tab))
-                <img src="/img/uploads/300-300-{{$tab->hospital_image->path}}" width="150">
+            @if(!is_null($tab) && !is_null($tab->hospital_image->path))
+                <div class="image_area">
+                    <img src="/img/uploads/300-auto-{{$tab->hospital_image->path}}" width="150">
+                </div>
+            @else
+                <div class="no_image_area">
+                    <img src="/img/icon_noimage.png" width="50">
+                </div>
             @endif
-            {{Form::file("tab_".$i, ['class' => 'field'])}}
+            <label class="file-upload btn btn-primary">
+                ファイル選択 {{Form::file("tab_".$i, ['class' => 'field'])}}
+            </label>
             @if ($errors->has('tab_'.$i))
                 <div class="error_message">
                 {{ $errors->first('tab_').$i }}
@@ -189,7 +265,7 @@
                 {{ $errors->first('tab_'.$i.'_memo1') }}
             @endif
             {{Form::label('tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
-            {{Form::textarea('tab_'.$i.'_memo2', is_null($tab) ? '' : $tab->hospital_image->memo2, ['class' => 'form-control'])}}
+            {{Form::textarea('tab_'.$i.'_memo2', is_null($tab) ? '' : $tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
             @if ($errors->has('tab_'.$i.'_memo2'))
                 {{ $errors->first('tab_'.$i.'_memo2') }}
             @endif
@@ -198,17 +274,25 @@
     @endfor
 </div>
 
-<div class="box box-primary form-box">
+<div class="box box-primary form-box" id="staff_section">
     <div class="form_title"><div class="number_circle">8</div> <span class="input_title">スタッフ</span></div>
-    <div class="row staff_box">
+    <div class="row">
     @for ($i = 1; $i <= 10; $i++)
-        <div class="col-sm-6">
+        <?php $staff = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_STAFF)->where('order2', $i)->first();?>
+        <div class="col-sm-6 staff_box" data-order="{{$i}}" @if(is_null($staff)) style="display: none" @endif>
             <p class="box_staff_title">スタッフ{{$i}}</p>
-            <?php $staff = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_STAFF)->where('order2', $i)->first();?>
-            @if(!is_null($staff))
-                <img src="/img/uploads/300-300-{{$staff->hospital_image->path}}" width="150">
+            @if(!is_null($staff) && !is_null($staff->hospital_image->path))
+                <div class="image_area">
+                    <img src="/img/uploads/300-auto-{{$staff->hospital_image->path}}" width="150">
+                </div>
+            @else
+                <div class="no_image_area">
+                    <img src="/img/icon_noimage.png" width="50">
+                </div>
             @endif
-            {{Form::file("staff_".$i, ['class' => 'field'])}}
+            <label class="file-upload btn btn-primary">
+                ファイル選択 {{Form::file("staff_".$i, ['class' => 'field'])}}
+            </label>
             @if ($errors->has('staff_'.$i))
                 {{ $errors->first('staff_').$i }}
             @endif
@@ -223,16 +307,20 @@
                 {{ $errors->first('staff_'.$i.'_name') }}
             @endif
             {{Form::label('staff_'.$i.'_career', '経歴',['class' => 'form_label'])}}
-            {{Form::text('staff_'.$i.'_career', is_null($staff) ? '' : $staff->career, ['class' => 'form-control'])}}
+            {{Form::textarea('staff_'.$i.'_career', is_null($staff) ? '' : $staff->career, ['class' => 'form-control', 'rows'=> 2])}}
             @if ($errors->has('staff_'.$i.'_career'))
                 {{ $errors->first('staff_'.$i.'_career') }}
             @endif
             {{Form::label('staff_'.$i.'_memo', 'コメント',['class' => 'form_label'])}}
-            {{Form::textarea('staff_'.$i.'_memo', is_null($staff) ? '' : $staff->memo, ['class' => 'form-control'])}}
+            {{Form::textarea('staff_'.$i.'_memo', is_null($staff) ? '' : $staff->memo, ['class' => 'form-control', 'rows'=> 4])}}
             @if ($errors->has('staff_'.$i.'_memo'))
                 {{ $errors->first('staff_'.$i.'_memo') }}
             @endif
         </div>
+        <a href="javascript:void(0)" class="staff_add btn btn-info" style="@if(!is_null($staff))display: none; @endif z-index: {{ 100 - $i}}">
+            <i class="icon-trash icon-white"></i>
+            追加
+        </a>
     @endfor
     </div>
 </div>
