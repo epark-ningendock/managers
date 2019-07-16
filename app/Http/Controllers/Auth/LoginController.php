@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
 use App\Hospital;
+use App\Enums\StaffStatus;
 
 class LoginController extends Controller
 {
@@ -88,8 +89,17 @@ class LoginController extends Controller
             session()->put('staffs', $staff->id);
             session()->put('login_id', $staff->login_id);
             session()->put('staff_email', $staff->email);
-            return true;
+            // 1:Validのユーザーのみログイン
+            if ($staff->status->value == StaffStatus::Valid) {
+                return true;
+            } else {
+                $validator = Validator::make([], []);
+                $validator->errors()->add('fail_login', 'スタッフが無効です。');
+                throw new ValidationException($validator);
+                return redirect()->back();
+            }
         }
+
         return false;
     }
 

@@ -143,7 +143,7 @@ class HospitalStaffController extends Controller
             );
             Mail::to($request->email)
                 ->send(new PasswordResetMail($data));
-            return redirect('/login')->with('success', trans('messages.sent', ['mail' => trans('messages.mails.reset_passoword')]));
+            return redirect('/login')->with('success', "メールを送信しました。\nメールに記載されたURLを開き、パスワード初期化手続きを続行してください。");
         } else {
             $validator = Validator::make([], []);
             $validator->errors()->add('email', 'メールアドレスが存在しません。');
@@ -159,7 +159,7 @@ class HospitalStaffController extends Controller
             $staff = HospitalStaff::where('email', $email)->first();
         }
         $expired_date = new Carbon($staff->reset_sent_at);
-        if (!($expired_date->addHour(3)->gt(Carbon::now()))) {
+        if (!($expired_date->addHour(1)->gt(Carbon::now()))) {
             return redirect('/login')->with('error', trans('messages.token_expired'));
         } elseif (!$staff) {
             return redirect('/login')->with('error', 'スタッフが存在しません');

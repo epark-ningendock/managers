@@ -26,9 +26,15 @@
                         <input type="email" class="form-control" id="email" name="email" value="{{ Input::old('email') }}" placeholder="メールアドレスを入力してください">
                     </div>
                     
-                    <div class="box-footer">
-                        <a href="/login" class="btn btn-default">戻る</a>
-                        <button type="submit" class="btn btn-primary">送信</button>
+                    <div class="row mt-5">
+                      <div class="col-xs-6">
+                      </div>
+                      <div class="col-xs-3">
+                        <a href="/login" class="btn btn-default btn-block btn-flat margin-right-30">戻る</a>
+                      </div>
+                      <div class="col-xs-3">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">送信</button>
+                      </div>
                     </div>
                 </form>
             </div>
@@ -51,7 +57,11 @@
 @stop
 
 <style>
-  .width-400 {
-    width: 400px;
-  }
+.width-400 {
+  width: 400px;
+}
+
+.margin-right-30 {
+  margin-left: 30%;
+}
 </style>
