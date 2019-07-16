@@ -3,14 +3,8 @@
 
         (function ($) {
 
-            /* ---------------------------------------------------
-            Show datepicker depending on course id
-            -----------------------------------------------------*/
-            
-            $(document).on('change', '#course_id', function(){
 
-                let thisValue = $(this).val();
-                let ajaxRoute = "{{  route('course.reservation.days', ['course_id' => ':1']) }}".replace(":1", thisValue);
+            function dateLoader(ajaxRoute) {
 
                 $.ajax({
                     url: ajaxRoute,
@@ -22,9 +16,34 @@
                         $('.calendar-box').html(response.data);
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
-                         alert("Reservation days showing error");
-                    }                    
+                        alert("Reservation days showing error");
+                    }
                 });
+
+            }
+
+
+            $(document).ready(function(){
+
+                let thisValue = $('#course_id').val();
+
+                if ( thisValue ) {
+                    let ajaxRoute = "{{  route('course.reservation.days', ['course_id' => ':1']) }}".replace(":1", thisValue);
+                    dateLoader(ajaxRoute);
+                }
+
+
+            });
+
+            /* ---------------------------------------------------
+            Show datepicker depending on course id
+            -----------------------------------------------------*/
+            $(document).on('change', '#course_id', function(){
+
+                let thisValue = $(this).val();
+                let ajaxRoute = "{{  route('course.reservation.days', ['course_id' => ':1']) }}".replace(":1", thisValue);
+
+                dateLoader(ajaxRoute);
                 
             });
 

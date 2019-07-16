@@ -282,7 +282,7 @@
         </div>
 
     </div>  
-<input type="hidden" name="selected_customer" id="selected_customer" />
+    <input type="hidden" name="customer_id" id="customer_id" />
 
 
     <div class="box-footer">

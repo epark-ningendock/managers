@@ -461,7 +461,7 @@ class ReservationController extends Controller
 		    $reservation->create(request()->all());
 
 
-		    
+
 
 		    DB::commit();
 

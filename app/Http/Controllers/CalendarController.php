@@ -399,10 +399,16 @@ class CalendarController extends Controller
 
     public function reservationDays($course_id)
     {
-        $course = Course::findOrFail($course_id);
-        $calendars = $course->calendar->calendar_days()->paginate(7);
-        $holidays = Holiday::where('hospital_id', $course->hospital_id)->get()->pluck('date')->toArray();
-        $calendars->setPath(route('course.reservation.days', ['course_id' => $course_id]));
+        $calendars = [];
+        $holidays = [];
+    	$course = Course::find($course_id);
+        if ( $course ) {
+
+	        $calendars = $course->calendar->calendar_days()->paginate(7);
+	        $holidays = Holiday::where('hospital_id', $course->hospital_id)->get()->pluck('date')->toArray();
+	        $calendars->setPath(route('course.reservation.days', ['course_id' => $course_id]));
+
+        }
 
         return response()->json([
             'data' => view('calendar.partials.daybox', ['calendars' => $calendars, 'holidays' => $holidays])->render()
