@@ -2339,5 +2339,10 @@ b {
 
 .form-group.has-error .help-block {
   color: #ed5565;
-  font-weight: 600
+  font-weight: 600;
+}
+
+.has-error {
+  color: #ed5565;
+  font-weight: 600;
 }
