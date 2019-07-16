@@ -118,6 +118,7 @@ return [
     'url'                  => ':attributeは、有効なURL形式で指定してください。',
     'uuid'                 => ':attributeは、有効なUUIDでなければなりません。',
     'enum_value'                => '入力した値:attributeのは無効です',
+    'invalid'              => ':attributeが無効です。',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
@@ -251,6 +252,8 @@ return [
         'completed_start_date' => '受診開始日',
         'completed_end_date' => '受診終了日',
         'customer_name' => '受診者名',
-        'pvad' => 'PV数'
+        'pvad' => 'PV数',
+        'birthday' => '生年月日',
+        'memo' => '顧客メモ'
     ],
 ];

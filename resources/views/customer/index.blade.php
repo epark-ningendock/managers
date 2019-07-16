@@ -65,7 +65,6 @@
                         {{ trans('messages.updated_at') }}
                     </a>
                 </th>
-                <th>{{ trans('messages.registration_form') }}</th>
                 <th>{{ trans('messages.edit') }}</th>
                 <th>{{ trans('messages.delete') }}</th>
             </tr>
@@ -90,9 +89,8 @@
                                 {{ $customer->email }}
                             </a>
                         </td>
-                        <td>{{ \App\Enums\Gender::getKey($customer->sex) }}</td>
+                        <td>{{ $customer->sex->description }}</td>
                         <td>{{ date('Y/m/d', strtotime($customer->updated_at)) }}</td>
-                        <td>{{ $customer->parent_customer_id }}</td>
                         <td>
                             <a class="btn btn-primary"
                                href="{{ route('customer.edit', $customer->id) }}">

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Enums\Gender;
 use App\Filters\Filterable;
 
 class Customer extends SoftDeleteModel
@@ -35,6 +36,10 @@ class Customer extends SoftDeleteModel
 
     protected $guarded = [
         'id',
+    ];
+
+    protected $enums = [
+        'sex' => Gender::class
     ];
 
     const MALE = 'M';
