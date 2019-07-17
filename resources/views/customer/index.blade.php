@@ -30,9 +30,6 @@
 
 
 @section('table')
-
-    @includeIf('customer.partials.count-pagination-bar')
-
     <div class="table-responsive">
         <table id="example2" class="table table-bordered table-hover table-striped mb-5 mt-5">
             <thead>
@@ -115,6 +112,7 @@
 
             </tbody>
         </table>
+        {{ $customers->appends(request()->input())->links() }}
     </div>
 
     @includeIf('customer.partials.detail.detail-popup')
