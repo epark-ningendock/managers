@@ -68,7 +68,7 @@
         </tr>
         <tr>
             <td class="gray-cell-bg"><label for="gender">{{ trans('messages.gender') }}</label></td>
-            <td>
+            <td class="text-left">
                 <div class="form-group @if ($errors->has('sex')) has-error @endif">
                     <label for="sex">状態</label>
                     <div class="radio">
@@ -76,7 +76,7 @@
                             <label>
                                 <input type="radio" name="sex"
                                        value="{{ $gender }}"
-                                       @if ( isset($customer_detail) && $customer_detail->sex->is($gender) )
+                                       @if ( old('sex', (isset($customer_detail) && $customer_detail->sex->value)) == $gender)
                                        checked="checked"
                                     @endif
                                 />
@@ -247,4 +247,11 @@
 
         })(jQuery);
     </script>
+@endpush
+@push('css')
+    <style>
+        p.help-block {
+            text-align: left;
+        }
+    </style>
 @endpush

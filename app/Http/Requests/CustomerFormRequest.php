@@ -33,7 +33,7 @@ class CustomerFormRequest extends FormRequest
             'sex' => 'required|enum_value:' . Gender::class . ',false',
             'birthday' => 'nullable|date',
             'postcode' => 'nullable|digits:7',
-//            'prefecture_id' => 'required',
+            'prefecture_id' => 'nullable|exists:prefectures,id',
 //            'city_or_country' => 'required',
 //            'address' => 'required',
             'email' => 'nullable|email',

@@ -254,6 +254,7 @@ return [
         'customer_name' => '受診者名',
         'pvad' => 'PV数',
         'birthday' => '生年月日',
-        'memo' => '顧客メモ'
+        'memo' => '顧客メモ',
+        'prefecture_id' => '都道府県'
     ],
 ];
