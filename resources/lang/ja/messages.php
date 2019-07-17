@@ -37,6 +37,7 @@ return [
     'select_hospital_confirmation' => 'この医療機関を操作します。<br/>よろしいですか？',
     'delete_confirmation' => '本当に削除してもよろしいですか？<br/>この処理は取り消せません。',
     'delete_popup_title' => '確認を削除',
+    'delete_image_popup_content' => 'この画像を削除してもよろしいですか？',
     'delete_popup_content' => 'これを削除してよろしいです :name？',
     'classification_delete_popup_content' => 'この分類を削除します。よろしいですか？',
     'classification_restore_popup_content' => 'この分類を復元します。よろしいですか？',
@@ -69,6 +70,7 @@ return [
         'representative_name_kana' => '代表名（ふりがな',
         'representative_name' => '代表名',
         'hospital_categories' => '医療機関画像',
+        'hospital_interview' => 'インタビュー',
         'classifications' => [
             'major' => '大分類',
         'password' => 'パスワード',

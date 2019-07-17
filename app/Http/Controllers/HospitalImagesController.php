@@ -280,8 +280,9 @@ class HospitalImagesController extends Controller
         $this->hospitalImageUploader($file, 'interview_', 1, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_INTERVIEW,null,null,null,$file['interview_1_title'],$file['interview_1_caption']);
 
         //インタビュートップ取得
-        $image_category_interview = $this->hospital_category->ByImageOrder($hospital_id, ImageOrder::IMAGE_GROUP_INTERVIEW, 1)->first();
-
+        if(isset($file['interview_1']) or isset($file['interview_1_title']) or isset($file['interview_1_caption'])) {
+            $image_category_interview = $this->hospital_category->ByImageOrder($hospital_id, ImageOrder::IMAGE_GROUP_INTERVIEW, 1)->first();
+        }
         //interview 詳細　update
         if(isset($params['interview'])) {
             $interviews = $params['interview'];
@@ -342,7 +343,7 @@ class HospitalImagesController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * hospital_category hospital_image レコード削除
      * @param  int  $hospital_id
      * @param  int  $hospital_category_id
      * @param  int  $hospital_image_id
@@ -364,6 +365,46 @@ class HospitalImagesController extends Controller
 
         return redirect()->route('hospital.image.create', ['hospital_id' => $hospital_id])->with('success', trans('messages.deleted', ['name' => trans('messages.names.hospital_categories')]));
     }
+
+    /**
+     * hospital_category hospital_image レコード削除
+     * @param  int  $hospital_id
+     * @param  int  $interview_id
+     * @return \Illuminate\Http\Response
+     * todo deleteがdeleteメソッドじゃなくて、getメソッドで削除してるので、直したほうがいいかも。
+     */
+    public function deleteInterview(int $hospital_id, int $interview_id)
+    {
+        $this->interview_detail->where('id', $interview_id)->delete();
+
+        return redirect()->route('hospital.image.create', ['hospital_id' => $hospital_id])->with('success', trans('messages.deleted', ['name' => trans('messages.names.hospital_interview')]));
+    }
+
+    /**
+     * 画像ファイルの削除（レコードの削除はせずに、画像ファイルの削除と画像のパスをNULLにする）
+     * @param  int  $hospital_id
+     * @param  int  $hospital_category_id
+     * @param  int  $hospital_image_id
+     * @return \Illuminate\Http\Response
+     * todo deleteメソッドじゃなくて、getメソッド 直したほうがいいかも。
+     */
+    public function deleteImage(int $hospital_id, int $hospital_image_id)
+    {
+        $hospital_image = $this->hospital_image->find($hospital_image_id);
+
+        $hospital_image_file_sp = public_path().'/img/uploads/300-auto-'.$hospital_image->path;
+        $hospital_image_file_pc = public_path().'/img/uploads/500-auto-'.$hospital_image->path;
+        $hospital_image_default = public_path().'/img/uploads/'.$hospital_image->path;
+
+        \File::delete($hospital_image_file_sp, $hospital_image_file_pc, $hospital_image_default);
+
+        $hospital_image->path = null;
+        $hospital_image->save();
+
+        return redirect()->route('hospital.image.create', ['hospital_id' => $hospital_id])->with('success', trans('messages.deleted', ['name' => trans('messages.names.hospital_categories')]));
+    }
+
+
 
     private function hospitalImageUploader (array $file, string $image_prefix, int $i, object $hospital, int $hospital_id, int $image_order, string $name = null, $career = null, string $memo = null, string $title = null, string $caption = null) {
         //地図も画像情報として保存されるが、画像の実態はないのでダミーで保存するっぽい。

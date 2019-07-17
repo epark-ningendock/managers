@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    $('.file-upload').file_upload();
     $('.staff_add').click(function() {[]
         $(this).hide();
         $(this).prev().show();

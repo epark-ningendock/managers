@@ -2474,3 +2474,14 @@ label.file-upload input[type="file"] {
   bottom: 10px;
   left: 10px;
 }
+
+.btn-mini {
+  padding: 5px;
+  font-size: 12px;
+}
+
+.file_delete_text {
+  text-align: left;
+  padding: 10px 0 0 0;
+  font-size: 12px;
+}
