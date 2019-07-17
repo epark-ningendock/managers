@@ -172,7 +172,7 @@
 
         <div class="col-md-9">
             <div class=" @if ($errors->has('reservation_memo')) has-error @endif">
-                <textarea class="form-control" name="reservation_memo" id="reservation_memo"  value="{{ old('reservation_memo', isset($reservation) ? $reservation->reservation_memo : null) }}"> </textarea>
+                <textarea class="form-control" name="reservation_memo" id="reservation_memo"  value="{{ old('reservation_memo') }}"> </textarea>
                 @if ($errors->has('reservation_memo')) <p class="help-block">{{ $errors->first('reservation_memo') }}</p> @endif
             </div>
         </div>
@@ -330,7 +330,7 @@
                                 $('.option-container').show();
                                 courseOptions.forEach(function (courseOption) {
                                     $('<tr></tr>')
-                                        .append($(`<td><input type="checkbox" class="checkbox option" data-price="${courseOption.option.price}" name="course_options"/></td>`))
+                                        .append($(`<td><input type="checkbox" class="checkbox option" data-price="${courseOption.option.price}" name="course_options[${courseOption.option.id}]" value="${courseOption.option.price}"/></td>`))
                                         .append($(`<td>${courseOption.option.name}</td>`))
                                         .append($(`<td>${courseOption.option.price}円</td>`))
                                         .appendTo(tbody);

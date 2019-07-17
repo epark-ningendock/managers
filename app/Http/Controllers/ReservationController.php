@@ -458,18 +458,31 @@ class ReservationController extends Controller
 		    ]);
 
 		    $reservation = new Reservation();
-		    $reservation->create(request()->all());
-
-
-
+		    $reservation = $reservation->create(request()->all());
 
 		    DB::commit();
+
+		    if ( !empty($request->course_options) && isset($request->course_options) ) {
+			    $options = [];
+			    foreach( $request->course_options as $key => $option ) {
+				    $options[] = [
+					    'reservation_id' =>$reservation->id,
+					    'option_id' => $key,
+					    'option_price' => $option
+
+				    ];
+			    }
+
+			    if ( !empty($options ) ) {
+				    $reservation->reservation_options()->createMany($options);
+			    }
+		    }
 
 		    return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
 
 	    } catch (\Exception $i) {
 		    DB::rollback();
-		    return redirect()->back()->withErrors(trans('messages.complete_error'))->withInput();
+		    return redirect()->back()->withErrors(trans('messages.reservation.complete_error'))->withInput();
 	    }
 
     }
