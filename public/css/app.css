@@ -2404,7 +2404,7 @@ b {
 
 .staff_box {
   height: 680px;
-
+  margin-top: 20px;
 }
 
 .no_image_area {
@@ -2484,4 +2484,8 @@ label.file-upload input[type="file"] {
   text-align: left;
   padding: 10px 0 0 0;
   font-size: 12px;
+}
+
+.error_message {
+  color: red;
 }

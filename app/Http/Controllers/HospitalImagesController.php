@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Hospital;
 use App\HospitalImage;
+use App\Http\Requests\HospitalImageFormRequest;
 use App\ImageOrder;
 use App\HospitalCategory;
 use App\InterviewDetail;
@@ -47,7 +48,7 @@ class HospitalImagesController extends Controller
 
         if(is_null($interview_top)){
 
-            $save_sub_images = ['extension' => 'dummy', 'name' => 'dummy', 'path' => 'dummy', 'memo1' => 'dummy'];
+            $save_sub_images = ['extension' => 'dummy', 'name' => 'dummy', 'path' => null, 'memo1' => 'dummy'];
             $hospital_dummy_img = $hospital->hospital_images()->saveMany([
                     new HospitalImage($save_sub_images)
                 ]
@@ -75,136 +76,11 @@ class HospitalImagesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, int $hospital_id)
+    public function store(HospitalImageFormRequest $request, int $hospital_id)
     {
         $hospital = Hospital::find($hospital_id);
 
-        $params = $request->validate([
-            'main' => 'file|image|max:4000',
-            'sub_1' => 'file|image|max:4000',
-            'sub_2' => 'file|image|max:4000',
-            'sub_3' => 'file|image|max:4000',
-            'sub_4' => 'file|image|max:4000',
-            'sub_5' => 'file|image|max:4000',
-
-            'speciality_1' => 'file|image|max:4000',
-            'speciality_1_title' => 'nullable|max:100',
-            'speciality_1_caption' => 'nullable|max:200',
-
-            'speciality_2' => 'file|image|max:4000',
-            'speciality_2_title' => 'nullable|max:100',
-            'speciality_2_caption' => 'nullable|max:200',
-
-            'speciality_3' => 'file|image|max:4000',
-            'speciality_3_title' => 'nullable|max:100',
-            'speciality_3_caption' => 'nullable|max:200',
-
-            'speciality_4' => 'file|image|max:4000',
-            'speciality_4_title' => 'nullable|max:100',
-            'speciality_4_caption' => 'nullable|max:200',
-
-            'title' => 'nullable|max:100',
-            'caption' => 'nullable|max:200',
-            'map_url' => 'nullable|max:200',
-
-            'tab_1' => 'file|image|max:4000',
-            'tab_1_order1' => 'nullable|max:99|numeric',
-            'tab_1_memo1' => 'nullable|max:200',
-            'tab_1_memo2' => 'nullable|max:200',
-
-            'tab_2' => 'file|image|max:4000',
-            'tab_2_order1' => 'nullable|max:99|numeric',
-            'tab_2_memo1' => 'nullable|max:200',
-            'tab_2_memo2' => 'nullable|max:200',
-
-            'tab_3' => 'file|image|max:4000',
-            'tab_3_order1' => 'nullable|max:99|numeric',
-            'tab_3_memo1' => 'nullable|max:200',
-            'tab_3_memo2' => 'nullable|max:200',
-
-            'tab_4' => 'file|image|max:4000',
-            'tab_4_order1' => 'nullable|max:99|numeric',
-            'tab_4_memo1' => 'nullable|max:200',
-            'tab_4_memo2' => 'nullable|max:200',
-
-            'tab_5' => 'file|image|max:4000',
-            'tab_5_order1' => 'nullable|max:99|numeric',
-            'tab_5_memo1' => 'nullable|max:200',
-            'tab_5_memo2' => 'nullable|max:200',
-
-            'staff_1' => 'file|image|max:4000',
-            'staff_1_name' => 'nullable|max:100',
-            'staff_1_career' => 'nullable|max:300',
-            'staff_1_memo' => 'nullable',
-            'staff_1_memo1' => 'nullable|max:200',
-
-            'staff_2' => 'file|image|max:4000',
-            'staff_2_name' => 'nullable|max:100',
-            'staff_2_career' => 'nullable|max:300',
-            'staff_2_memo' => 'nullable',
-            'staff_2_memo1' => 'nullable|max:200',
-
-            'staff_3' => 'file|image|max:4000',
-            'staff_3_name' => 'nullable|max:100',
-            'staff_3_career' => 'nullable|max:300',
-            'staff_3_memo' => 'nullable',
-            'staff_3_memo1' => 'nullable|max:200',
-
-            'staff_4' => 'file|image|max:4000',
-            'staff_4_name' => 'nullable|max:100',
-            'staff_4_career' => 'nullable|max:300',
-            'staff_4_memo' => 'nullable',
-            'staff_4_memo1' => 'nullable|max:200',
-
-            'staff_5' => 'file|image|max:4000',
-            'staff_5_name' => 'nullable|max:100',
-            'staff_5_career' => 'nullable|max:300',
-            'staff_5_memo' => 'nullable',
-            'staff_5_memo1' => 'nullable|max:200',
-
-            'staff_6' => 'file|image|max:4000',
-            'staff_6_name' => 'nullable|max:100',
-            'staff_6_career' => 'nullable|max:300',
-            'staff_6_memo' => 'nullable',
-            'staff_6_memo1' => 'nullable|max:200',
-
-            'staff_7' => 'file|image|max:4000',
-            'staff_7_name' => 'nullable|max:100',
-            'staff_7_career' => 'nullable|max:300',
-            'staff_7_memo' => 'nullable',
-            'staff_7_memo1' => 'nullable|max:200',
-
-            'staff_8' => 'file|image|max:4000',
-            'staff_8_name' => 'nullable|max:100',
-            'staff_8_career' => 'nullable|max:300',
-            'staff_8_memo' => 'nullable',
-            'staff_8_memo1' => 'nullable|max:200',
-
-            'staff_9' => 'file|image|max:4000',
-            'staff_9_name' => 'nullable|max:100',
-            'staff_9_career' => 'nullable|max:300',
-            'staff_9_memo' => 'nullable',
-            'staff_9_memo1' => 'nullable|max:200',
-
-            'staff_10' => 'file|image|max:4000',
-            'staff_10_name' => 'nullable|max:100',
-            'staff_10_career' => 'nullable|max:300',
-            'staff_10_memo' => 'nullable',
-            'staff_10_memo1' => 'nullable|max:200',
-
-            'interview_1' => 'file|image|max:4000',
-            'interview_1_title' => 'nullable|max:100',
-            'interview_1_caption' => 'nullable|max:200',
-
-            'interview.*.question' => 'nullable|max:100',
-            'interview.*.answer' => 'nullable|max:100',
-
-            'interview_new.*.question' => 'nullable|max:100',
-            'interview_new.*.answer' => 'nullable|max:100',
-        ]);
-
-
-        $file = $params;
+        $file = $request->all();
 
         //TOPの保存
         $hospital->hospital_categories()->updateOrCreate(
@@ -212,11 +88,12 @@ class HospitalImagesController extends Controller
             [
                 'hospital_id' => $hospital_id,
                 'image_order' => ImageOrder::IMAGE_GROUP_TOP,
-                'title' => $params['title'],
-                'caption' => $params['caption'],
+                'title' => $file['title'],
+                'caption' => $file['caption'],
                 'order2' => 1
             ]
         );
+
 
         //main画像の保存
         if(isset($file['main'])) {
@@ -280,19 +157,21 @@ class HospitalImagesController extends Controller
         $this->hospitalImageUploader($file, 'interview_', 1, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_INTERVIEW,null,null,null,$file['interview_1_title'],$file['interview_1_caption']);
 
         //インタビュートップ取得
-        if(isset($file['interview_1']) or isset($file['interview_1_title']) or isset($file['interview_1_caption'])) {
+        //(isset($file['interview_1']) or isset($file['interview_1_title']) or isset($file['interview_1_caption'])) {
             $image_category_interview = $this->hospital_category->ByImageOrder($hospital_id, ImageOrder::IMAGE_GROUP_INTERVIEW, 1)->first();
-        }
+        //}
         //interview 詳細　update
-        if(isset($params['interview'])) {
-            $interviews = $params['interview'];
+        if(isset($file['interview'])) {
+            $interviews = $file['interview'];
             foreach ($interviews as $key => $interview) {
-                $this->interview_detail->where('id', $key)->update($interview);
+                if(!is_null($interview['answer']) && !is_null($interview['question'])) {
+                    $this->interview_detail->where('id', $key)->update($interview);
+                }
             }
         }
 
         //interview 詳細　insert
-        $new_interviews = $params['interview_new'];
+        $new_interviews = $file['interview_new'];
         foreach ($new_interviews as $key => $new_interview) {
             if(!is_null($new_interview['answer']) && !is_null($new_interview['question'])) {
                 $image_category_interview->interview_details()->saveMany([
@@ -412,9 +291,6 @@ class HospitalImagesController extends Controller
             $memo1 = isset($file[$image_prefix.$i.'_memo1']) ? $file[$image_prefix.$i.'_memo1'] : '' ;
             $memo2 = isset($file[$image_prefix.$i.'_memo2']) ? $file[$image_prefix.$i.'_memo2'] : '' ;
             $order = isset($file[$image_prefix.$i.'_order1']) ? $file[$image_prefix.$i.'_order1'] : 0 ;
-            if($image_order == 8) {
-                dd($order);
-            }
             //画像の登録確認
             $image_order_exists = $this->hospital_category->ByImageOrder($hospital_id, $image_order, $i)->first();
 

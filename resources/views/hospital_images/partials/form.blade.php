@@ -73,8 +73,10 @@
             <label class="file-upload btn btn-primary">
                 ファイル選択 {{Form::file("sub_".$i, ['class' => 'field'])}}
             </label>
-            @if ($errors->has('image'))
-                {{ $errors->first('image') }}
+            @if ($errors->has('sub_'.$i))
+                <div class="error_message">
+                    {{ $errors->first('sub_'.$i) }}
+                </div>
             @endif
         </div>
         @endfor
@@ -128,9 +130,9 @@
                 <div class="form-group">
                     {{Form::label('caption', '本文',['class' => 'form_label'])}}
                     {{Form::textarea('speciality_'.$i.'_caption', is_null($image_speciality) ? '' : $image_speciality->caption, ['class' => 'form-control', 'rows' => 4])}}
-                    @if ($errors->has('speciality_'.$i.'caption'))
+                    @if ($errors->has('speciality_'.$i.'_caption'))
                         <div class="error_message">
-                            {{ $errors->first('speciality_'.$i.'caption') }}
+                            {{ $errors->first('speciality_'.$i.'_caption') }}
                         </div>
                     @endif
                 </div>
@@ -145,7 +147,7 @@
     <div class="form-group">
         {{Form::label('map_url', '地図・アクセス',['class' => 'form_label'])}}
         <?php $map = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_MAP)->first(); ?>
-        {{Form::text('map_url', is_null($map) ? '' : $map->hospital_image()->first()->memo1, ['class' => 'form-control'])}}
+        {{Form::text('map_url', is_null($map) ? '' : $map->hospital_image()->first()->memo1, ['class' => 'form-control','placeholder'=>'https://example.com/access'])}}
         @if ($errors->has('map_url'))
             <div class="error_message">
             {{ $errors->first('map_url') }}
@@ -194,8 +196,8 @@
                 </div>
             @endif
 
-            {{Form::label('interview_1_caption', 'キャプション',['class' => 'form_label'])}}
-            {{Form::text('interview_1_caption', is_null($interview_top) ? '' : $interview_top->caption,['class' => 'form-control'])}}
+            {{Form::label('interview_1_caption', '本文',['class' => 'form_label'])}}
+            {{Form::textarea('interview_1_caption', is_null($interview_top) ? '' : $interview_top->caption,['class' => 'form-control'])}}
             @if ($errors->has('interview_1_caption'))
                 <div class="error_message">
                 {{ $errors->first('interview_1_caption') }}
@@ -204,23 +206,23 @@
         </div>
     </div>
     <div id="interview_detail_box">
-        @foreach($interviews as $interview)
+        @foreach($interviews as $key => $interview)
             <div class="interview_detail_{{$loop->iteration}} interview_list">
                 <div>
-                    {{Form::label('interview['. $interview->id .']', '質問',['class' => 'form_label'])}}
-                    {{Form::text('interview['. $interview->id .'][question]', is_null($interview) ? '' : $interview->question, ['class' => 'form-control'])}}
-                    @if ($errors->has('interview['. $interview->id .'][question]'))
+                    {{Form::label('interview['. $key .']', '質問',['class' => 'form_label'])}}
+                    {{Form::text('interview['. $key .'][question]', is_null($interview) ? '' : $interview->question, ['class' => 'form-control'])}}
+                    @if ($errors->has('interview['. $key .'][question]'))
                         <div class="error_message">
-                        {{ $errors->first('interview['. $interview->id .'][question]') }}
+                        {{ $errors->first('interview['. $key .'][question]') }}
                         </div>
                     @endif
                 </div>
                 <div>
-                    {{Form::label('interview['. $interview->id .'][answer]', '回答',['class' => 'form_label'])}}
-                    {{Form::text('interview['. $interview->id .'][answer]', is_null($interview) ? '' : $interview->answer, ['class' => 'form-control'])}}
-                    @if ($errors->has('interview['. $interview->id .'][answer]'))
+                    {{Form::label('interview['. $key .'][answer]', '回答',['class' => 'form_label'])}}
+                    {{Form::text('interview['. $key .'][answer]', is_null($interview) ? '' : $interview->answer, ['class' => 'form-control'])}}
+                    @if ($errors->has('interview['. $key .'][answer]'))
                         <div class="error_message">
-                            {{ $errors->first('interview['. $interview->id .'][answer]') }}
+                            {{ $errors->first('interview['. $key .'][answer]') }}
                         </div>
                     @endif
                 </div>
@@ -236,6 +238,11 @@
                 <div>
                     {{Form::label('interview_new[0][question]', '質問',['class' => 'form_label'])}}
                     {{Form::text('interview_new[0][question]', '', ['class' => 'form-control'])}}
+                    @if ($errors->has('interview[0][answer]'))
+                        <div class="error_message">
+                            {{ $errors->first('interview[0][answer]') }}
+                        </div>
+                    @endif
                 </div>
                 <div>
                     {{Form::label('interview_new[0][answer]', '回答',['class' => 'form_label'])}}
@@ -256,6 +263,7 @@
         <p class="tab_name">{{$tab_name_list[$i]}}</p>
         <div class="col-sm-6">
             <?php $tab = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('order2', $i)->first();?>
+            <?php $tab_order = is_null($tab) or $tab->order == 0 ? null : $tab->order;?>
             @if(!is_null($tab) && !is_null($tab->hospital_image->path))
                 <div class="image_area">
                     <img src="/img/uploads/300-auto-{{$tab->hospital_image->path}}" width="150">
@@ -282,14 +290,9 @@
         </div>
         <div class="col-sm-6">
             {{Form::label('tab_'.$i.'_order1', '表示順',['class' => 'form_label'])}}
-            {{Form::text('tab_'.$i.'_order1', is_null($tab) ? '' : $tab->order, ['class' => 'form-control'])}}
+            {{Form::text('tab_'.$i.'_order1', $tab_order, ['class' => 'form-control'])}}
             @if ($errors->has('tab_'.$i.'_order1'))
                 {{ $errors->first('tab_'.$i.'_order1') }}
-            @endif
-            {{Form::label('tab_'.$i.'_memo1', 'alt',['class' => 'form_label'])}}
-            {{Form::text('tab_'.$i.'_memo1', is_null($tab) ? '' : $tab->hospital_image->memo1, ['class' => 'form-control'])}}
-            @if ($errors->has('tab_'.$i.'_memo1'))
-                {{ $errors->first('tab_'.$i.'_memo1') }}
             @endif
             {{Form::label('tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
             {{Form::textarea('tab_'.$i.'_memo2', is_null($tab) ? '' : $tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
@@ -327,16 +330,14 @@
                 ファイル選択 {{Form::file("staff_".$i, ['class' => 'field'])}}
             </label>
             @if ($errors->has('staff_'.$i))
-                {{ $errors->first('staff_').$i }}
-            @endif
-            {{Form::label('staff_'.$i.'_memo1', 'alt',['class' => 'form_label'])}}
-            {{Form::text('staff_'.$i.'_memo1', is_null($staff) ? '' : $staff->hospital_image->memo1, ['class' => 'form-control'])}}
-            @if ($errors->has('staff_'.$i.'_memo1'))
-                {{ $errors->first('staff_'.$i.'_memo1') }}
+                <div class="error_message">
+                {{ $errors->first('staff_'.$i) }}
+                </div>
             @endif
             {{Form::label('staff_'.$i.'_name', '名前',['class' => 'form_label'])}}
             {{Form::text('staff_'.$i.'_name', is_null($staff) ? '' : $staff->name, ['class' => 'form-control'])}}
             @if ($errors->has('staff_'.$i.'_name'))
+
                 {{ $errors->first('staff_'.$i.'_name') }}
             @endif
             {{Form::label('staff_'.$i.'_career', '経歴',['class' => 'form_label'])}}

@@ -19,8 +19,8 @@ class CreateInterviewDetailsTable extends Migration
             $table->increments('id');
             $table->integer('hospital_category_id')->unsigned();
             $table->foreign('hospital_category_id')->references('id')->on('hospital_categories');
-            $table->string('question');
-            $table->string('answer');
+            $table->text('question');
+            $table->text('answer');
             $table->integer('order')->default(0);
             $this->addCommonColumns($table);
         });
