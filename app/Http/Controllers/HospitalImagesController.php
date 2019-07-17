@@ -264,11 +264,11 @@ class HospitalImagesController extends Controller
             }
         }
         //タブ
-        for($i = 1; $i <= 5; $i++){
+        for($i = 1; $i <= 5; $i++)
             if(isset($file['tab_'.$i]) or isset($file['tab_'.$i.'_order1']) or isset($file['tab_'.$i.'_memo2'])) {
                 $this->hospitalImageUploader($file, 'tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
             }
-        }
+
         //スタッフ
         for($i = 1; $i <= 10; $i++){
             if(isset($file['staff_'.$i]) or isset($file['staff_'.$i.'_name']) or isset($file['staff_'.$i.'_career']) or isset($file['staff_'.$i.'_memo'])) {
@@ -409,11 +409,12 @@ class HospitalImagesController extends Controller
     private function hospitalImageUploader (array $file, string $image_prefix, int $i, object $hospital, int $hospital_id, int $image_order, string $name = null, $career = null, string $memo = null, string $title = null, string $caption = null) {
         //地図も画像情報として保存されるが、画像の実態はないのでダミーで保存するっぽい。
         if ($image_order != ImageOrder::IMAGE_GROUP_MAP) {
-
             $memo1 = isset($file[$image_prefix.$i.'_memo1']) ? $file[$image_prefix.$i.'_memo1'] : '' ;
             $memo2 = isset($file[$image_prefix.$i.'_memo2']) ? $file[$image_prefix.$i.'_memo2'] : '' ;
             $order = isset($file[$image_prefix.$i.'_order1']) ? $file[$image_prefix.$i.'_order1'] : 0 ;
-
+            if($image_order == 8) {
+                dd($order);
+            }
             //画像の登録確認
             $image_order_exists = $this->hospital_category->ByImageOrder($hospital_id, $image_order, $i)->first();
 

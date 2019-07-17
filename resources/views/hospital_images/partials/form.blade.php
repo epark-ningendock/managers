@@ -282,7 +282,7 @@
         </div>
         <div class="col-sm-6">
             {{Form::label('tab_'.$i.'_order1', '表示順',['class' => 'form_label'])}}
-            {{Form::text('tab_'.$i.'_order1', is_null($tab) or $tab->order == 0 ? '' : $tab->order, ['class' => 'form-control'])}}
+            {{Form::text('tab_'.$i.'_order1', is_null($tab) ? '' : $tab->order, ['class' => 'form-control'])}}
             @if ($errors->has('tab_'.$i.'_order1'))
                 {{ $errors->first('tab_'.$i.'_order1') }}
             @endif
