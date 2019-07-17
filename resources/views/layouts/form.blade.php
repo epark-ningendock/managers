@@ -7,7 +7,8 @@
     <div class="inner-box">
 
       <!-- Error -->
-      {{--@include('layouts.partials.errorbag')--}}
+      {{-- @include('layouts.partials.errorbag') --}}
+
 
       @yield('form')
 
