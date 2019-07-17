@@ -19,8 +19,8 @@
       </div>
       <form action="{{ route('postLogin') }}" method="post">
         {!! csrf_field() !!}
-        <div class="form-group has-feedback @if ($errors->has('exclusive_lock_exception')) has-error @endif">
-          @if ($errors->has('exclusive_lock_exception')) <p class="help-block strong">{{ $errors->first('exclusive_lock_exception') }}</p> @endif
+        <div class="form-group has-feedback @if ($errors->has('fail_login')) has-error @endif">
+          @if ($errors->has('fail_login')) <p class="help-block strong">{{ $errors->first('fail_login') }}</p> @endif
         </div>
         <div class="form-group has-feedback @if ($errors->has('login_id')) has-error @endif">
           <input type="text" name="login_id" class="form-control" value="{{ old('login_id') }}"
