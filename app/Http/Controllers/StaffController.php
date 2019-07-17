@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use App\Exceptions\ExclusiveLockException;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\Permission;
 
@@ -108,9 +109,14 @@ class StaffController extends Controller
         $this->staffLoginIdValidation($request->login_id);
         $this->staffEmailValidation($request->email);
 
+        $staff = Staff::findOrFail($id);
+        
         try {
             DB::beginTransaction();
-            $staff = Staff::findOrFail($id);
+            if ($staff->updated_at > $request['updated_at']) {
+                throw new ExclusiveLockException;
+            }
+
             $staff->update($request->only(['name', 'login_id', 'email', 'authority', 'status', 'department_id']));
             $staff->save();
 
@@ -119,9 +125,9 @@ class StaffController extends Controller
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.staff')]));
             DB::commit();
             return redirect('staff');
-        } catch (\Exception $e) {
+        } catch (ExclusiveLockException $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(trans('messages.staff_create_error'))->withInput();
+            throw $e;
         }
     }
 
@@ -138,9 +144,10 @@ class StaffController extends Controller
     {
         $staff = Staff::find($staff_id);
         $operator_staff = Staff::where('login_id', session()->get('login_id'))->first();
+
         // 自分のパスワード変更の場合、遷移先変更
         if ($staff->login_id == $operator_staff->login_id) {
-            return view('staff.edit-password-personal');
+            return view('staff.edit-password-personal', ['staff' => $staff]);
         }
         return view('staff.edit-password', ['staff' => $staff]);
     }
@@ -154,14 +161,31 @@ class StaffController extends Controller
 
         $staff = Staff::findOrFail($staff_id);
 
-        $staff->password = bcrypt($request->password);
-        $staff->save();
-        return redirect('staff')->with('success', 'パスワードを更新しました。');
+        try {
+            DB::beginTransaction();
+
+            if ($staff->updated_at > $request['updated_at']) {
+                throw new ExclusiveLockException;
+            }
+
+            $password = bcrypt($request->password);
+            $staff->update(['password' => $password]);
+
+            DB::commit();
+
+            return redirect('staff')->with('success', 'パスワードを更新しました。');
+        } catch (ExclusiveLockException $e) {
+            DB::rollback();
+
+            throw $e;
+        }
     }
 
     public function editPersonalPassword()
     {
-        return view('staff.edit-password-personal');
+        $staff = Staff::findOrFail(Auth::user()->id);
+
+        return view('staff.edit-password-personal', ['staff' => $staff]);
     }
 
     public function updatePersonalPassword(Request $request)
@@ -175,10 +199,23 @@ class StaffController extends Controller
         $staff = Staff::findOrFail(Auth::user()->id);
 
         if (Hash::check($request->old_password, $staff->password)) {
-            $staff->password = bcrypt($request->password);
-            $staff->save();
-            app('App\Http\Controllers\Auth\LoginController')->is_staff_login($staff->login_id, $request->password);
-            return redirect('staff')->with('success', 'パスワードを更新しました。');
+            try {
+                DB::beginTransaction();
+                if ($staff->updated_at > $request['updated_at']) {
+                    throw new ExclusiveLockException;
+                }
+                
+                $password = bcrypt($request->password);
+                $staff->update(['password' => $password]);
+                app('App\Http\Controllers\Auth\LoginController')->is_staff_login($staff->login_id, $request->password);
+
+                DB::commit();
+
+                return redirect('staff')->with('success', 'パスワードを更新しました。');
+            } catch (ExclusiveLockException $e) {
+                DB::rollback();
+                throw $e;
+            }
         } else {
             $validator = Validator::make([], []);
             $validator->errors()->add('old_password', '現在のパスワードが正しくありません。');

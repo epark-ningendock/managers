@@ -3,9 +3,11 @@
   use App\Enums\Authority;
   use \App\Enums\Permission;
 @endphp
+@include('layouts.partials.message')
 <div class="box-body">
   {!! csrf_field() !!}
   <div class="form-group">
+    <input type="hidden" name="updated_at" value="{{ isset($staff) ? $staff->updated_at : null }}">
     <label for="status">状態</label>
     <div class="radio">
       <label>
