@@ -151,7 +151,7 @@ class HospitalController extends Controller
     
     public function edit(Hospital $hospital)
     {
-        return view('hospital.create-contract-form');
+        return view('hospital.create-contract-form', compact('hospital'));
     }
 
     /**

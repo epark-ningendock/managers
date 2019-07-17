@@ -1,4 +1,5 @@
 <div class="box box-primary form-box">
+    @includeIf('hospital.partials.nav-bar')
     <div class="form_title"><div class="number_circle">1</div> <span class="input_title">施設画像登録</span></div>
     <div class="form-group ">
         {{Form::label('main', '施設メイン画像',['class' => 'form_label'])}}
