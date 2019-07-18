@@ -183,7 +183,7 @@ class ReservationController extends Controller
     {
         $headers = [
             "Content-Encoding" => "UTF-8",
-            "Content-type" => "text/csv",
+            "Content-type" => "text/csv;charset=UTF-8",
             "Content-Disposition" => "attachment; filename=" . $fileName,
             "Pragma" => "no-cache",
             "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
@@ -260,16 +260,16 @@ class ReservationController extends Controller
                     continue;
                 }
                 $questions->push($course_question->question_title);
-                $questions->push($course_question->answer01);
-                $questions->push($course_question->answer02);
-                $questions->push($course_question->answer03);
-                $questions->push($course_question->answer04);
-                $questions->push($course_question->answer05);
-                $questions->push($course_question->answer06);
-                $questions->push($course_question->answer07);
-                $questions->push($course_question->answer08);
-                $questions->push($course_question->answer09);
-                $questions->push($course_question->answer10);
+                $answers = collect();
+                for($i = 1; $i <= 10; $i++) {
+                    $temp = $course_question['answer'.($i != 10 ? '0' : '').$i];
+                    if (!is_null($temp) && !empty($temp)) {
+                        $answers->push($temp);
+                    }
+
+                }
+
+                $questions->push($answers->implode(", "));
                 $q_count++;
             }
 
@@ -306,16 +306,7 @@ class ReservationController extends Controller
         for ($i = 0; $i < $question_count; $i++) {
             $headers = array_merge($headers, [
                 '受付質問',
-                '回答01',
-                '回答02',
-                '回答03',
-                '回答04',
-                '回答05',
-                '回答06',
-                '回答07',
-                '回答08',
-                '回答09',
-                '回答10'
+                '回答'
             ]);
         }
 
