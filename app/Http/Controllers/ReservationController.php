@@ -54,7 +54,8 @@ class ReservationController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->staff_auth->is_invoice === Permission::None) {
+
+        if (isset(Auth::user()->staff_auth->is_invoice) && Auth::user()->staff_auth->is_invoice === Permission::None) {
             return view('staff.edit-password-personal');
         }
 

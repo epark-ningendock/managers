@@ -451,4 +451,4 @@
     </style>
 @endpush
 
-@includeIf('commons.std-modal-box');
+@includeIf('commons.std-modal-box')

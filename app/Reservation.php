@@ -51,6 +51,8 @@ class Reservation extends SoftDeleteModel
         'hospital_id',
         'course_id',
         'reservation_date',
+	    'start_time_hour',
+	    'start_time_min',
         'reservation_status',
         'terminal_type', //need to confirm initial value
         'is_repeat', // need to confirm 

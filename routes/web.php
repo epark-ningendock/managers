@@ -108,13 +108,7 @@ Route::middleware('auth:staffs')->group(function () {
     Route::get('/classification/sort', 'ClassificationController@sort')->name('classification.sort');
     Route::patch('/classification/sort/update', 'ClassificationController@updateSort')->name('classification.updateSort');
     Route::resource('/classification', 'ClassificationController')->except(['show']);
-    /*
-    |--------------------------------------------------------------------------
-    | Reservation Routes
-    |--------------------------------------------------------------------------
-    */
-    Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
-    Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
+
 });
 
 /*
@@ -198,4 +192,12 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
     Route::resource('/reservation', 'ReservationController')->except(['show', 'delete']);
     Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
+	/*
+	|--------------------------------------------------------------------------
+	| Reservation Routes
+	|--------------------------------------------------------------------------
+	*/
+	Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
+	Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
+
 });
