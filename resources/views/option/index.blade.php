@@ -1,8 +1,7 @@
 @php
     use \App\Enums\HospitalEnums;
     $params = [
-        'delete_route' => 'option.destroy',
-        'create_route' => 'option.create'
+        'delete_route' => 'option.destroy'
     ];
 @endphp
 
@@ -13,12 +12,14 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>オプション管理 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
+    <h1>    
+        <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
+        -
+        <i class="fa fa-book"> オプション管理</i>
+    </h1>
 @stop
 
-
-@section('table')
-
+@section('search')
     <p>一覧表示と編集オプション<br/>
                  オプションの並べ替えボタンを押すと、オプションの順序を並べ替えることができます。
     </p>
@@ -26,7 +27,7 @@
 
     <div class="action-btn-wrapper text-right m-4">
 
-        <a href="{{ route('option.create') }}" class="btn btn-primary">
+        <a href="{{ route('option.create') }}" class="btn btn-success">
             オプション登録
         </a>
 
@@ -35,9 +36,11 @@
         </a>
 
     </div>
+@stop
 
+@section('table')
     <div class="table-responsive">
-        <table class="table table-bordered table-hover mb-5 mt-5">
+        <table class="table table-bordered table-hover table-striped mb-5 mt-5">
             <thead>
             <tr>
                 <th>オプションID</th>
@@ -57,7 +60,9 @@
                         <td>{{ $option->price }}</td>
                         <td>
                             <a href="{{ route('option.edit', $option->id) }}"
-                               class="btn btn-primary">編集</a>
+                               class="btn btn-primary">
+                               <i class="fa fa-edit text-bold"> 編集</i>
+                            </a>
                         </td>
                     </tr>
                 @endforeach

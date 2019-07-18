@@ -18,7 +18,8 @@ return [
     Authority::class => [
         Authority::Admin => 'System Administrator',
         Authority::Member => 'Member',
-        Authority::ExternalStaff => 'External Staff'
+        Authority::ExternalStaff => 'External Staff',
+        Authority::ContractStaff => 'Contract Staff'
     ],
 
     StaffStatus::class => [

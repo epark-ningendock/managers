@@ -25,8 +25,9 @@ class LoginFormRequest extends FormRequest
     public function rules()
     {
         $rules = [
-          'login_id' => 'required|between:8,50|regex:/^[-_ a-zA-Z0-9]+$/',
-          'password' => 'required|between:8,20|regex:/^[a-zA-Z0-9]+$/'
+            'login_id' => 'required|between:8,50|regex:/^[-_ @\.a-zA-Z0-9]+$/',
+            // レビューで文字数制限のメッセージが「ログインIDまたはパスワードが正しくありません。」と同じで良いときたので|between:8,20|を削除
+            'password' => 'required|regex:/^[a-zA-Z0-9]+$/'
         ];
         return $rules;
     }

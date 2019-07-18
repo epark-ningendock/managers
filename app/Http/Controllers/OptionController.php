@@ -10,11 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class OptionController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:hospital_staffs', ['except' => 'index', 'edit']);
-    }
-
     public function index()
     {
         $pagination = config('epark.pagination.option_index');

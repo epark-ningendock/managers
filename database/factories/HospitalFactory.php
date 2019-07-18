@@ -4,12 +4,9 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Hospital::class, function (Faker $faker) {
     return [
-        'karada_dog_id'               => $faker->randomNumber(),
-        'code'                        => $faker->randomNumber(),
-        'old_karada_dog_id'           => $faker->randomNumber(),
         'name'                        => 'Hospital ' . $faker->company,
         'kana'                        => $faker->randomElement([ 'asc', 'desc' ]),
-        'zip_code'                    => $faker->randomElement([
+        'postcode'                    => $faker->randomElement([
             '95050',
             '92053',
             '92050',
@@ -18,7 +15,6 @@ $factory->define(App\Hospital::class, function (Faker $faker) {
             '25050',
             '92050',
         ]),
-        'pref'                        => $faker->randomElement([ '0001', '0003', '0004', '0005', '0008', '0006' ]),
         'district_code_id'            => $faker->randomNumber(),
         'address1'                    => $faker->address,
         'address2'                    => $faker->address,
@@ -29,11 +25,10 @@ $factory->define(App\Hospital::class, function (Faker $faker) {
         'tel'                         => $faker->phoneNumber,
         'paycall'                     => $faker->phoneNumber,
         'fax'                         => $faker->phoneNumber,
-        'email'                       => $faker->email,
         'url'                         => $faker->url,
         'consultation_note'           => $faker->text(),
         'memo'                        => $faker->text(100),
-        'business_hours'              => $faker->time(),
+        'medical_examination_system_id'              => rand(1, 100),
         'rail1'                       => $faker->randomNumber(),
         'station1'                    => $faker->randomNumber(),
         'access1'                     => $faker->randomElement([
@@ -90,20 +85,14 @@ $factory->define(App\Hospital::class, function (Faker $faker) {
         'pvad'                        => $faker->numberBetween(0, 1),
         'is_pickup'                   => $faker->numberBetween(0, 1),
         'hospital_staff_id'           => 1,
-        'login_id'                    => $faker->userName,
-        'login_psw'                   => bcrypt('123456'),
-        'login_status'                => $faker->numberBetween(0, 1),
         'status'                      => $faker->randomElement([ '0', '1', 'X' ]),
-        'certified_facility'          => $faker->numberBetween(0, 1),
         'free_area'                   => $faker->text,
         'search_word'                 => $faker->text,
         'plan_code'                   => $faker->numberBetween(1, 9),
         'hplink_contract_type'        => $faker->numberBetween(0, 2),
         'hplink_count'                => $faker->randomNumber(),
         'hplink_price'                => $faker->randomNumber(),
-        'created_id'                  => $faker->userName,
-        'updated_id'                  => $faker->userName,
-        'pre_account_flg'             => $faker->numberBetween(0, 1),
+        'is_pre_account'             => $faker->numberBetween(0, 1),
         'pre_account_discount_rate'   => $faker->randomNumber(),
         'pre_account_commission_rate' => $faker->randomElement([ '0.5', '1.9', '3.9', '4.6' ]),
     ];

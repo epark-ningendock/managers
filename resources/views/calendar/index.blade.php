@@ -11,7 +11,11 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-<h1>カレンダー管理 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
+  <h1>    
+    <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
+    -
+    <i class="fa fa-calendar"> カレンダー管理</i>
+  </h1>
 @stop
 
 <!-- search section -->
@@ -37,7 +41,9 @@
                 「カレンダー受付可否 : {{ $calendar->is_calendar_display->description }}」
               </h4>
               <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('calendar.edit', $calendar->id) }}">編集</a>
+                <a class="btn btn-primary" href="{{ route('calendar.edit', $calendar->id) }}">
+                    <i class="fa fa-edit text-bold"> 編集</i>
+                </a>
                 <a class="btn btn-primary ml-2" href="{{ route('calendar.setting', $calendar->id) }}">カレンダー設定</a>
               </div>
             </div>

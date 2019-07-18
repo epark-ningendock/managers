@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Staff;
 use App\HospitalStaff;
 use App\Mail\HospitalStaff\RegisteredMail;
 use App\Mail\HospitalStaff\PasswordResetMail;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Log;
 
 class HospitalStaffController extends Controller
 {
@@ -29,11 +31,14 @@ class HospitalStaffController extends Controller
 
     public function store(HospitalStaffFormRequest $request)
     {
+        $this->hospitalStaffLoginIdValidation($request->login_id);
+        $this->hospitalStaffEmailValidation($request->email);
+
         $request->request->add([
             'hospital_id' => session()->get('hospital_id'),
         ]);
 
-        $hospital_staff           = new HospitalStaff($request->all());
+        $hospital_staff = new HospitalStaff($request->all());
         $password = str_random(8);
         $hospital_staff->password = bcrypt($password);
         $hospital_staff->save();
@@ -59,6 +64,9 @@ class HospitalStaffController extends Controller
 
     public function update(HospitalStaffFormRequest $request, $id)
     {
+        $this->hospitalStaffLoginIdValidation($request->login_id);
+        $this->hospitalStaffEmailValidation($request->email);
+        
         $request->request->add([
             'hospital_id' => session()->get('hospital_id'),
         ]);
@@ -75,7 +83,7 @@ class HospitalStaffController extends Controller
         $hospital_staff = HospitalStaff::findOrFail($id);
         $hospital_staff->delete();
 
-        return redirect('hospital-staff')->with('success', trans('messages.deleted', ['name' => trans('messages.names.hospital_staff')]));
+        return redirect('hospital-staff')->with('error', trans('messages.deleted', ['name' => trans('messages.names.hospital_staff')]));
     }
 
     public function editPassword(Request $request)
@@ -88,8 +96,8 @@ class HospitalStaffController extends Controller
     {
         $this->validate($request, [
             'old_password' => 'required',
-            'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
-            'password_confirmation' => 'min:6'
+            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:8|max:20'
         ]);
 
         $hospital_staff = HospitalStaff::findOrFail($hospital_staff_id);
@@ -97,7 +105,8 @@ class HospitalStaffController extends Controller
         if (Hash::check($request->old_password, $hospital_staff->password)) {
             $hospital_staff->password = bcrypt($request->password);
             $hospital_staff->save();
-            return redirect('/login')->with('success', trans('messages.hospital_staff_update_passoword'));
+            app('App\Http\Controllers\Auth\LoginController')->is_hospital_staff_login($hospital_staff->login_id, $request->password);
+            return redirect('hospital-staff')->with('success', trans('messages.hospital_staff_update_passoword'));
         } else {
             $validator = Validator::make([], []);
             $validator->errors()->add('old_password', '現在のパスワードが正しくありません');
@@ -111,24 +120,30 @@ class HospitalStaffController extends Controller
         return view('hospital_staff.send-password-reset-mail');
     }
 
+    // スタッフ、医療機関スタッフ共通のメソッド
     public function sendPasswordResetsMail(Request $request)
     {
         $this->validate($request, [
             'email' => 'required|email',
         ]);
-        $hospital_staff = HospitalStaff::where('email', $request->email)->first();
-        if ($hospital_staff) {
+        
+        $staff = Staff::where('email', $request->email)->first();
+        if (!$staff) {
+            $staff = HospitalStaff::where('email', $request->email)->first();
+        }
+
+        if ($staff) {
             $reset_token = str_random(32);
-            $hospital_staff->reset_token_digest = bcrypt($reset_token);
-            $hospital_staff->reset_sent_at = Carbon::now();
-            $hospital_staff->save();
+            $staff->reset_token_digest = bcrypt($reset_token);
+            $staff->reset_sent_at = Carbon::now();
+            $staff->save();
             $data = array(
-                'hospital_staff'  => $hospital_staff,
+                'staff'  => $staff,
                 'reset_token'   => $reset_token
             );
             Mail::to($request->email)
                 ->send(new PasswordResetMail($data));
-            return redirect('/login')->with('success', trans('messages.sent', ['mail' => trans('messages.mails.reset_passoword')]));
+            return redirect('/login')->with('success', "メールを送信しました。\nメールに記載されたURLを開き、パスワード初期化手続きを続行してください。");
         } else {
             $validator = Validator::make([], []);
             $validator->errors()->add('email', 'メールアドレスが存在しません。');
@@ -139,31 +154,62 @@ class HospitalStaffController extends Controller
 
     public function showResetPassword($reset_token, $email)
     {
-        $hospital_staff = HospitalStaff::where('email', $email)->first();
-        $expired_date = new Carbon($hospital_staff->reset_sent_at);
-        if (!($expired_date->addHour(3)->gt(Carbon::now()))) {
+        $staff = Staff::where('email', $email)->first();
+        if (!$staff) {
+            $staff = HospitalStaff::where('email', $email)->first();
+        }
+        $expired_date = new Carbon($staff->reset_sent_at);
+        if (!($expired_date->addHour(1)->gt(Carbon::now()))) {
             return redirect('/login')->with('error', trans('messages.token_expired'));
-        } elseif (!$hospital_staff) {
-            return redirect('/login')->with('error', trans('messages.hospital_staff_does_not_exist'));
-        } elseif (!(Hash::check($reset_token, $hospital_staff->reset_token_digest))) {
+        } elseif (!$staff) {
+            return redirect('/login')->with('error', 'スタッフが存在しません');
+        } elseif (!(Hash::check($reset_token, $staff->reset_token_digest))) {
             return redirect('/login')->with('error', trans('messages.incorrect_token'));
         } else {
-            return view('hospital_staff.reset-password', ['hospital_staff_id' => $hospital_staff->id]);
+            return view('hospital_staff.reset-password', ['email' => $staff->email]);
         }
     }
 
-    public function resetPassword($hospital_staff_id, Request $request)
+    public function resetPassword($email, Request $request)
     {
         $this->validate($request, [
-            'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
-            'password_confirmation' => 'min:6'
+            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:8|max:20'
         ]);
+                
+        $staff = Staff::where('email', $email)->first();
+        if (!$staff) {
+            $staff = HospitalStaff::where('email', $email)->first();
+        }
 
-        $hospital_staff = HospitalStaff::findOrFail($hospital_staff_id);
-        $hospital_staff->password = bcrypt($request->password);
-        $hospital_staff->save();
-        Mail::to($hospital_staff->email)
+        $staff->password = bcrypt($request->password);
+        $staff->save();
+        Mail::to($staff->email)
             ->send(new PasswordResetConfirmMail());
-        return redirect('/login')->with('success', trans('messages.hospital_staff_update_passoword'));
+        return redirect('/login')->with('success', 'パスワードを更新しました。');
+    }
+
+    public function hospitalStaffEmailValidation($email)
+    {
+        $staff = Staff::where('email', $email)->first();
+
+        if ($staff) {
+            $validator = Validator::make([], []);
+            $validator->errors()->add('email', '指定のメールアドレスは既に使用されています。');
+            throw new ValidationException($validator);
+            return redirect()->back();
+        }
+    }
+
+    public function hospitalStaffLoginIdValidation($login_id)
+    {
+        $staff = Staff::where('login_id', $login_id)->first();
+
+        if ($staff) {
+            $validator = Validator::make([], []);
+            $validator->errors()->add('login_id', '指定のログインIDは既に使用されています。');
+            throw new ValidationException($validator);
+            return redirect()->back();
+        }
     }
 }

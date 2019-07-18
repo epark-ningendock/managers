@@ -2,7 +2,6 @@
 
 namespace App;
 
-
 class ReservationOption extends SoftDeleteModel
 {
     protected $fillable = ['reservation_id', 'option_id', 'option_price'];

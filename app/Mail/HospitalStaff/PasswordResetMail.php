@@ -32,7 +32,7 @@ class PasswordResetMail extends Mailable
     {
         return $this
         ->from('epark@example.com')
-        ->subject('[Epark]パスワードをリセットしてください')
+        ->subject('[EPARK人間ドック]パスワード初期化手続きのお知らせ')
         ->view('hospital_staff.email.password-reset');
     }
 }

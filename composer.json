@@ -11,6 +11,7 @@
         "bensampo/laravel-enum": "^1.17",
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "~3.3",
+        "intervention/image": "^2.5",
         "jeroennoten/laravel-adminlte": "^1.25",
         "kyslik/column-sortable": "^5.8",
         "laracasts/flash": "^3.0",

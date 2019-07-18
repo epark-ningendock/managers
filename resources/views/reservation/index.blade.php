@@ -5,7 +5,10 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>予約一覧 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
+    {{-- <h1>予約一覧 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1> --}}
+    <h1>
+        <i class="fa fa-book"> 請求管理</i>
+    </h1>
 @stop
 
 @section('search')
@@ -94,7 +97,7 @@
                 <button type="reset" class="btn btn-default">検索用にクリア</button>
                 <button type="submit" class="btn btn-primary">
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                    検索する
+                    検索
                 </button>
             </div>
         </div>
@@ -108,7 +111,7 @@
 
     <div class="table-responsive">
         @if (count($reservations))
-        <table class="table table-bordered table-hover mb-5 mt-5">
+        <table class="table table-bordered table-hover table-striped mb-5 mt-5">
             <thead>
             <tr>
                 <th>予約日</th>

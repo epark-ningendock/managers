@@ -2170,6 +2170,10 @@
 Custom CSS
 -----------------------------------------------------*/
 
+.inner-box {
+  padding: 30px;
+}
+
 .btn-search {
   margin-top: 25px;
 }
@@ -2195,12 +2199,30 @@ Custom CSS
   background: #e9e9e9;
 }
 
+body .no-border {
+  border: 0 none;
+}
+
+.tab-list .btn {
+  background: #868686;
+  color: #fff;
+}
+
+.tab-list .btn.active {
+  background: #f3f3f3;
+  color: #222;
+}
+
 .form-group {
   position: relative;
 }
 
 .form-group .typeahead {
   width: 100%;
+}
+
+.contract-form-alert {
+  display: none;
 }
 
 table tr td.gray-column {
@@ -2238,3 +2260,89 @@ table tr td.gray-column {
   margin: 0;
 }
 
+tr:first-child>th {
+  text-align: center;
+}
+
+td {
+  text-align: center;
+}
+
+.skin-blue .sidebar-menu>li.header {
+  color: #fff !important;
+  background: #1a2226;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.skin-blue .main-header .logo {
+  background-color: #2A3F54 !important;
+  color: #fff;
+  border-bottom: 0 solid transparent;
+}
+
+.skin-blue .main-header .navbar {
+  background-color: #2A3F54 !important;
+}
+
+.btn-success {
+  background-color: #1ABB9C !important;
+  border-color: #1ABB9C !important;
+}
+
+.btn-primary {
+  background-color: #337ab7 !important;
+  border-color: #337ab7 !important;
+}
+
+.btn-danger {
+  background-color: #ed5565 !important;
+  border-color: #ed5565 !important;
+}
+
+.content-wrapper {
+  min-height: 100%;
+  background-color: #EDEDED !important;
+  z-index: 800;
+}
+
+h1 {
+  color: #73879C !important;
+}
+
+.bg-green, .callout.callout-success, .alert-success, .label-success, .modal-success .modal-body {
+  background-color: #1ABB9C !important;
+}
+
+.bg-green, .callout.callout-primary, .alert-primary, .label-primary, .modal-primary .modal-body {
+  background-color: #337ab7 !important;
+}
+
+.bg-red, .callout.callout-danger, .alert-danger, .alert-error, .label-danger, .modal-danger .modal-body {
+  background-color: #ed5565 !important;
+}
+
+b {
+  font-weight: 600;
+  font-family: none;
+  font-size: 2.0rem;
+}
+
+.login-box {
+  width: 380px !important;
+}
+
+.form-group.has-error .form-control, .form-group.has-error .input-group-addon {
+  border-color: #ed5565;
+  box-shadow: none;
+}
+
+.form-group.has-error .help-block {
+  color: #ed5565;
+  font-weight: 600;
+}
+
+.has-error {
+  color: #ed5565;
+  font-weight: 600;
+}

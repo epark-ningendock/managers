@@ -23,4 +23,9 @@ class HospitalStaff extends Authenticatable
     protected $fillable = [
         'name', 'email', 'login_id', 'password','remember_token', 'hospital_id', 'reset_token_digest', 'reset_sent_at'
     ];
+
+    public function contract_information()
+    {
+        return $this->hasOne('App\ContractInformation');
+    }
 }

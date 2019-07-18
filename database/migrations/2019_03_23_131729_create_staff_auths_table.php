@@ -19,9 +19,10 @@ class CreateStaffAuthsTable extends Migration
             $table->increments('id');
             $table->tinyInteger('is_hospital', false, 1)->default(0);
             $table->tinyInteger('is_staff', false, 1)->default(0);
-            $table->tinyInteger('is_item_category', false, 1)->default(0);
+            $table->tinyInteger('is_cource_classification', false, 1)->default(0);
             $table->tinyInteger('is_invoice', false, 1)->default(0);
             $table->tinyInteger('is_pre_account', false, 1)->default(0);
+            $table->tinyInteger('is_contract', false, 1)->default(0);
             $table->integer('staff_id')->unsigned()->unique();
             $table->foreign('staff_id')->references('id')->on('staffs');
             $this->addCommonColumns($table);

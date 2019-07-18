@@ -30,7 +30,7 @@ return [
     |
     */
 
-    'logo' => '<b>EPARK</b>',
+    'logo' => '<b>EPARK人間ドック</b>',
 
     'logo_mini' => '<b>E</b>',
 

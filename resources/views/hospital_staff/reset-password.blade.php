@@ -3,6 +3,7 @@
 @section('adminlte_css')
   <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/iCheck/square/blue.css') }}">
   <link rel="stylesheet" href="{{ asset('vendor/adminlte/css/auth.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   @yield('css')
 @stop
 
@@ -16,18 +17,17 @@
             </div>
             {{-- <p class="text-bold text-center">パスワードリセットメール送信</p> --}}
             <div class="box-body">
-                <form method="POST"  action="{{ route('hospital-staff.reset.password', ['hospital_staff_id' => $hospital_staff_id]) }}">
+                <form method="POST"  action="{{ route('hospital-staff.reset.password', ['email' => $email]) }}">
                     {{ csrf_field() }}
                     {{ method_field('PUT') }}
+                    <label for="password">新しいパスワード</label>
                     <div class="form-group @if ($errors->has('password')) has-error @endif">
-                        <label for="password">新しいパスワード</label>
                         <input id="password" type="password" class="form-control" name="password" required>
                         @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
                     </div>
                     
-                    
+                    <label for="password-confirm">新しいパスワード（確認用）</label>
                     <div class="form-group @if ($errors->has('password_confirmation')) has-error @endif">
-                        <label for="password-confirm">新しいパスワード（確認用）</label>
                         <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
                         @if ($errors->has('password_confirmation')) <p class="help-block">{{ $errors->first('password_confirmation') }}</p> @endif
                     </div>

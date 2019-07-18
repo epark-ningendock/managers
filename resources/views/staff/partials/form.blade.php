@@ -5,7 +5,7 @@
 @endphp
 <div class="box-body">
   {!! csrf_field() !!}
-  <div class="form-group @if ($errors->has('status')) has-error @endif">
+  <div class="form-group">
     <label for="status">状態</label>
     <div class="radio">
       <label>
@@ -21,34 +21,79 @@
         {{ StaffStatus::Invalid()->description }}
       </label>
     </div>
-    @if ($errors->has('status')) <p class="help-block">{{ $errors->first('status') }}</p> @endif
+    @if ($errors->has('status')) <p class="help-block has-error">{{ $errors->first('status') }}</p> @endif
   </div>
 
+  <label for="name">スタッフ名</label>  
   <div class="form-group @if ($errors->has('name')) has-error @endif">
-    <label for="name">スタッフ名</label>
-    <input type="text" class="form-control" id="name" name="name"
+    <input type="text" class="form-control text" id="name" name="name"
            value="{{ old('name', (isset($staff) ? $staff->name : null)) }}"
            placeholder="スタッフ名">
     @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
   </div>
 
-  <div class="form-group @if ($errors->has('login_id')) has-error @endif">
-    <label for="login_id">ログインID</label>
-    <input type="text" class="form-control" id="login_id" name="login_id"
+  <label for="login_id">ログインID</label>
+  <div class="form-group  @if ($errors->has('login_id')) has-error @endif">
+    <input type="text" class="form-control text" id="login_id" name="login_id"
            value="{{ old('login_id', (isset($staff) ? $staff->login_id : null)) }}"
-           placeholder="ログインID">
+           placeholder="ログインID"> 
     @if ($errors->has('login_id')) <p class="help-block">{{ $errors->first('login_id') }}</p> @endif
   </div>
 
-  <div class="form-group @if ($errors->has('email')) has-error @endif">
-    <label for="email">メールアドレス</label>
-    <input type="email" class="form-control" id="email" name="email"
+  <label for="email">メールアドレス</label>
+  <div class="form-group  @if ($errors->has('email')) has-error @endif">
+    <input type="email" class="form-control text" id="email" name="email"
            value="{{ old('email', (isset($staff) ? $staff->email : null)) }}"
            placeholder="メールアドレス">
     @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
   </div>
 
-  <div class="form-group @if ($errors->has('is_hospital')) has-error @endif">
+  <label for="department">部署</label>
+  <select name="department_id" id="department_id" class="form-control select-box  @if ($errors->has('department_id')) has-error @endif">
+      <option value=""></option>
+      @foreach($departments as $department)
+          <option value="{{ $department->id }}"
+              @if(old('department_id', (isset($staff) ? $staff->department_id : null)) == $department->id)
+                  selected="selected"
+              @endif
+          >{{ $department->name }}</option>
+      @endforeach
+  </select>
+  @if ($errors->has('department_id')) <p class="help-block">{{ $errors->first('department_id') }}</p> @endif
+
+  <label class="mt-3">スタッフ権限</label>
+  <div class="form-group mt-3">
+    <div class="radio mt-0">
+      @if (Auth::user()->authority->value === Authority::Admin)
+        <label>
+            <input type="radio" id="authority_admin" name="authority" value="{{ Authority::Admin }}" class="permission-check"
+                {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::Admin ? 'checked' : '' }}>
+            {{ Authority::Admin()->description }}
+        </label>
+      @endif
+      <label class="ml-3">
+        <input type="radio" name="authority" id="authority_member" value="{{ Authority::Member }}"
+                {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::Member ? 'checked' : '' }}
+                class="permission-check">
+        {{ Authority::Member()->description }}
+      </label>
+      <label class="ml-3">
+        <input type="radio" name="authority" id="authority_external_staff" value="{{ Authority::ExternalStaff }}"
+                {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::ExternalStaff ? 'checked' : '' }}
+                class="permission-check">
+        {{ Authority::ExternalStaff()->description }}
+      </label>
+      <label class="ml-3">
+        <input type="radio" id="authority_contract_staff" name="authority" value="{{ Authority::ContractStaff }}" class="permission-check"
+            {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::ContractStaff ? 'checked' : '' }}>
+        {{ Authority::ContractStaff()->description }}
+      </label>
+    </div>
+    @if ($errors->has('authority')) <p class="help-block has-error">{{ $errors->first('authority') }}</p> @endif
+  </div>
+
+
+  <div class="form-group">
     <label class="mb-0">医療機関管理</label>
     <div class="radio mt-0">
       <label>
@@ -57,7 +102,7 @@
                class="permission-check">
         {{ Permission::None()->description }}
       </label>
-      <label>
+      <label class="ml-3">
         <input type="radio" name="is_hospital" id="is_hospital_view" value="{{ Permission::View }}"
                {{ old('is_hospital', (isset($staff) ? $staff->staff_auth->is_hospital : -1)) == Permission::View ? 'checked' : '' }}
                class="permission-check">
@@ -69,10 +114,10 @@
         {{ Permission::Edit()->description }}
       </label>
     </div>
-    @if ($errors->has('is_hospital')) <p class="help-block">{{ $errors->first('is_hospital') }}</p> @endif
+    @if ($errors->has('is_hospital')) <p class="help-block has-error">{{ $errors->first('is_hospital') }}</p> @endif
   </div>
 
-  <div class="form-group @if ($errors->has('is_staff')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">スタッフ管理</label>
     <div class="radio mt-0">
       <label>
@@ -80,7 +125,7 @@
             {{ old('is_staff', (isset($staff) ? $staff->staff_auth->is_staff : -1)) == Permission::None ? 'checked' : '' }}>
         {{ Permission::None()->description }}
       </label>
-      <label>
+      <label class="ml-3">
         <input type="radio" id="is_staff_view" name="is_staff" class="permission-check" value="{{ Permission::View  }}"
             {{ old('is_staff', (isset($staff) ? $staff->staff_auth->is_staff : -1)) == Permission::View ? 'checked' : '' }}>
         {{ Permission::View()->description }}
@@ -91,35 +136,34 @@
         {{ Permission::Edit()->description }}
       </label>
     </div>
-    @if ($errors->has('is_staff')) <p class="help-block">{{ $errors->first('is_staff') }}</p> @endif
+    @if ($errors->has('is_staff')) <p class="help-block has-error">{{ $errors->first('is_staff') }}</p> @endif
   </div>
 
-  <div class="form-group @if ($errors->has('is_item_category')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">検査コース分類</label>
     <div class="radio mt-0">
       <label>
-        <input type="radio" id="is_item_category_none" name="is_item_category" value="{{ Permission::None }}" class="permission-check"
-            {{ old('is_item_category', (isset($staff) ? $staff->staff_auth->is_item_category : -1)) == Permission::None ? 'checked' : '' }}
+        <input type="radio" id="is_cource_classification_none" name="is_cource_classification" value="{{ Permission::None }}" class="permission-check"
+            {{ old('is_cource_classification', (isset($staff) ? $staff->staff_auth->is_cource_classification : -1)) == Permission::None ? 'checked' : '' }}
         >
         {{ Permission::None()->description }}
       </label>
-      <label>
-        <input type="radio" id="is_item_category_view" name="is_item_category" value="{{ Permission::View }}" class="permission-check"
-            {{ old('is_item_category', (isset($staff) ? $staff->staff_auth->is_item_category : -1)) == Permission::View ? 'checked' : '' }}
+      <label class="ml-3">
+        <input type="radio" id="is_cource_classification_view" name="is_cource_classification" value="{{ Permission::View }}" class="permission-check"
+            {{ old('is_cource_classification', (isset($staff) ? $staff->staff_auth->is_cource_classification : -1)) == Permission::View ? 'checked' : '' }}
         >
         {{ Permission::View()->description }}
       </label>
       <label class="ml-3">
-        <input type="radio" id="is_item_category_edit" name="is_item_category" value="{{ Permission::Edit }}" class="permission-check"
-            {{ old('is_item_category', (isset($staff) ? $staff->staff_auth->is_item_category : -1)) == Permission::Edit ? 'checked' : '' }}>
+        <input type="radio" id="is_cource_classification_edit" name="is_cource_classification" value="{{ Permission::Edit }}" class="permission-check"
+            {{ old('is_cource_classification', (isset($staff) ? $staff->staff_auth->is_cource_classification : -1)) == Permission::Edit ? 'checked' : '' }}>
         {{ Permission::Edit()->description }}
       </label>
     </div>
-    @if ($errors->has('is_item_category')) <p
-        class="help-block">{{ $errors->first('is_item_category') }}</p> @endif
+    @if ($errors->has('is_cource_classification')) <p class="help-block has-error">{{ $errors->first('is_cource_classification') }}</p> @endif
   </div>
 
-  <div class="form-group @if ($errors->has('is_invoice')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">請求管理</label>
     <div class="radio mt-0">
       <label>
@@ -127,7 +171,7 @@
             {{ old('is_invoice', (isset($staff) ? $staff->staff_auth->is_invoice : -1)) == Permission::None ? 'checked' : '' }}>
         {{ Permission::None()->description }}
       </label>
-      <label>
+      <label class="ml-3">
         <input type="radio" id="is_invoice_view" name="is_invoice" value="{{ Permission::View }}" class="permission-check"
             {{ old('is_invoice', (isset($staff) ? $staff->staff_auth->is_invoice : -1)) == Permission::View ? 'checked' : '' }}>
         {{ Permission::View()->description }}
@@ -143,10 +187,10 @@
         {{ Permission::Upload()->description }}
       </label>
     </div>
-    @if ($errors->has('is_invoice')) <p class="help-block">{{ $errors->first('is_invoice') }}</p> @endif
+    @if ($errors->has('is_invoice')) <p class="help-block has-error">{{ $errors->first('is_invoice') }}</p> @endif
   </div>
 
-  <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif">
+  <div class="form-group">
     <label class="mb-0">事前決済管理</label>
     <div class="radio mt-0">
       <label>
@@ -154,7 +198,7 @@
             {{ old('is_pre_account', (isset($staff) ? $staff->staff_auth->is_pre_account : -1)) == Permission::None ? 'checked' : '' }}>
         {{ Permission::None()->description }}
       </label>
-      <label>
+      <label class="ml-3">
         <input type="radio" id="is_pre_account_view" name="is_pre_account" value="{{ Permission::View }}" class="permission-check"
             {{ old('is_pre_account', (isset($staff) ? $staff->staff_auth->is_pre_account : -1)) == Permission::View ? 'checked' : '' }}>
         {{ Permission::View()->description }}
@@ -170,13 +214,53 @@
         {{ Permission::Upload()->description }}
       </label>
     </div>
-    @if ($errors->has('is_pre_account')) <p class="help-block">{{ $errors->first('is_pre_account') }}</p> @endif
+    @if ($errors->has('is_pre_account')) <p class="help-block has-error">{{ $errors->first('is_pre_account') }}</p> @endif
+  </div>
+
+  <div class="form-group">
+    <label class="mb-0">契約管理</label>
+    <div class="radio mt-0">
+      <label>
+        <input type="radio" id="is_contract_none" name="is_contract" value="{{ Permission::None }}" class="permission-check"
+            {{ old('is_contract', (isset($staff) ? $staff->staff_auth->is_contract : -1)) == Permission::None ? 'checked' : '' }}>
+        {{ Permission::None()->description }}
+      </label>
+      <label class="ml-3">
+        <input type="radio" id="is_contract_view" name="is_contract" value="{{ Permission::View }}" class="permission-check"
+            {{ old('is_contract', (isset($staff) ? $staff->staff_auth->is_contract : -1)) == Permission::View ? 'checked' : '' }}>
+        {{ Permission::View()->description }}
+      </label>
+      <label class="ml-3">
+        <input type="radio" id="is_contract_edit" name="is_contract" value="{{ Permission::Edit }}" class="permission-check"
+            {{ old('is_contract', (isset($staff) ? $staff->staff_auth->is_contract : -1)) == Permission::Edit ? 'checked' : '' }}>
+        {{ Permission::Edit()->description }}
+      </label>
+      <label class="ml-3">
+        <input type="radio" id="is_contract_upload" name="is_contract" value="{{ Permission::Upload }}" class="permission-check"
+            {{ old('is_contract', (isset($staff) ? $staff->staff_auth->is_contract : -1)) == Permission::Upload ? 'checked' : '' }}>
+        {{ Permission::Upload()->description }}
+      </label>
+    </div>
+    @if ($errors->has('is_contract')) <p class="help-block has-error">{{ $errors->first('is_contract') }}</p> @endif
   </div>
 
 
   <div class="box-footer">
-    <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
-    <button type="submit" class="btn btn-primary">作成</button>
+    <a href="{{ route('staff.index') }}" class="btn btn-default">戻る</a>
+    <button type="submit" class="btn btn-primary">保存</button>
   </div>
 
 </div>
+
+<style>
+.text-left {
+  text-align: center !important;
+}
+
+.text {
+  width: 600px;
+}
+.select-box {
+  width: 400px;
+}
+</style>

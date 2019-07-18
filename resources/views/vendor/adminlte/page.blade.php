@@ -59,15 +59,10 @@
 
           <ul class="nav navbar-nav">
             <li>
-              @if(config('adminlte.logout_method') == 'GET' || !config('adminlte.logout_method') && version_compare(\Illuminate\Foundation\Application::VERSION, '5.3.0', '<'))
-                <a href="{{ url(config('adminlte.logout_url', 'auth/logout')) }}">
-                  <i class="fa fa-fw fa-power-off"></i> {{ trans('adminlte::adminlte.log_out') }}
-                </a>
-              @else
                 <a href="{{ route('logout') }}"
                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                 >
-                  <i class="fa fa-fw fa-power-off"></i> {{ trans('adminlte::adminlte.log_out') }}
+                  <i class="fa fa-fw fa-power-off"></i> ログアウト
                 </a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                   @if(config('adminlte.logout_method'))
@@ -75,7 +70,6 @@
                   @endif
                   {{ csrf_field() }}
                 </form>
-              @endif
             </li>
           </ul>
         </div>
@@ -86,45 +80,70 @@
     </header>
 
     @if(config('adminlte.layout') != 'top-nav')
-    <!-- Left side column. contains the logo and sidebar -->
     <aside class="main-sidebar">
-
-      <!-- sidebar: style can be found in sidebar.less -->
       <section class="sidebar">
-
-        <!-- Sidebar Menu -->
         <ul class="sidebar-menu" data-widget="tree">
-
           {{-- EPARKスタッフの機能 --}}
           @if(Auth::user()->getTable() == "staffs")
-              <li class="header">EPARKスタッフ機能</li>
-              <li><a href="/staff"><i class="fa fa-user"></i>スタッフ管理</a></li>
-              <li><a href="/hospital"><i class="fa fa-hospital-o"></i>医療機関管理</a></li>
-              <li><a href="/classification"><i class="fa fa-book"></i>検査コース分類管理</a></li>
-              <li><a href="/reservation"><i class="fa fa-book"></i>請求管理</a></li>
+            <li class="treeview @if (!request()->session()->get('hospital_id')) active @endif">
+              <a href="#">
+                <i class="fa fa-list-ul"></i> <span>EPARKスタッフ機能</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                @if (Auth::user()->staff_auth->is_hospital !== 0)
+                  <li class="{{ Request::segment(1) === 'hospital' ? 'active' : null }}"><a href="/hospital"><i class="fa fa-hospital-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;医療機関管理</a></li>
+                @endif
+                @if (Auth::user()->staff_auth->is_staff !== 0)
+                  <li class="{{ Request::segment(1) === 'staff' && request()->path() !== 'staff/edit-password-personal' ? 'active' : null }}"><a href="/staff"><i class="fa fa-users"></i>&nbsp;&nbsp;&nbsp;&nbsp;スタッフ管理</a></li>
+                @endif
+                @if (Auth::user()->staff_auth->is_cource_classification !== 0)
+                  <li class="{{ Request::segment(1) === 'classification' ? 'active' : null }}"><a href="/classification"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コース分類管理</a></li>
+                @endif
+                @if (Auth::user()->staff_auth->is_invoice !== 0)
+                  <li class="{{ Request::segment(1) === 'reservation' ? 'active' : null }}"><a href="/reservation"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
+                @endif
+                @if (Auth::user()->staff_auth->is_pre_account !== 0)
+                  <li class="{{ Request::segment(1) === '#' ? 'active' : null }}"><a href="/#"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;事前決済管理</a></li>
+                @endif
+                @if (Auth::user()->staff_auth->is_contract !== 0)
+                  <li class="{{ Request::segment(1) === '#' ? 'active' : null }}"><a href="/#"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;契約管理</a></li>
+                @endif
+                @if(Auth::user()->getTable() == "staffs")
+                  <li class="{{ request()->path()  === 'staff/edit-password-personal' ? 'active' : null }}"><a href="/staff/edit-password-personal"><i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;パスワードの変更</a></li>
+                @endif
+              </ul>
           @endif
-
           {{-- 医療機関スタッフの機能 --}}
+          {{-- TODO: 編集権限がない場合、非表示 --}}
           @if(request()->session()->get('hospital_id'))
-            <li class="header">医療機関スタッフ機能</li>
-            <li><a href="/hospital-staff"><i class="fa fa-user"></i>医療機関スタッフ管理</a></li>
-            <li><a href="/customer"><i class="fa fa-user"></i>顧客管理</a></li>
-            <li><a href="#"><i class="fa fa-book"></i>請求管理</a></li>
-            <li><a href="/course"><i class="fa fa-book"></i>検査コース管理</a></li>
-            <li><a href="/option"><i class="fa fa-book"></i>検査コースオプション管理</a></li>
-            <li><a href="/reception"><i class="fa fa-list-alt"></i>受付一覧</a></li>
-            <li><a href="/calendar"><i class="fa fa-calendar"></i>カレンダー管理</a></li>
-            <li><a href="/email-template"><i class="fa fa-gear"></i>メールテンプレート管理</a></li>
-            <li><a href="/reception-email-setting"><i class="fa fa-gear"></i>受付メール設定</a></li>
+            <li class="treeview @if (request()->session()->get('hospital_id')) active @endif">
+                <a href="#">
+                  <i class="fa fa-list-ul"></i> <span>医療機関スタッフ機能</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+                </a>
+                <ul class="treeview-menu">
+                  <li class="{{ request()->path()  !== 'hospital-staff/edit-password' && Request::segment(1) === 'hospital-staff' ? 'active' : null }}"><a href="/hospital-staff"><i class="fa fa-users"></i>&nbsp;&nbsp;&nbsp;&nbsp;医療機関スタッフ管理</a></li>
+                  <li class="{{ Request::segment(1) === 'customer' ? 'active' : null }}"><a href="/customer"><i class="fa fa-users"></i>&nbsp;&nbsp;&nbsp;&nbsp;顧客管理</a></li>
+                  <li class="{{ Request::segment(1) === '#' ? 'active' : null }}"><a href="#"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
+                  <li class="{{ Request::segment(1) === 'course' ? 'active' : null }}"><a href="/course"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コース管理</a></li>
+                  <li class="{{ Request::segment(1) === 'option' ? 'active' : null }}"><a href="/option"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コースオプション管理</a></li>
+                  <li class="{{ Request::segment(1) === 'reception' ? 'active' : null }}"><a href="/reception"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付一覧</a></li>
+                  <li class="{{ Request::segment(1) === 'calendar' ? 'active' : null }}"><a href="/calendar"><i class="fa fa-calendar"></i>&nbsp;&nbsp;&nbsp;&nbsp;カレンダー管理</a></li>
+                  <li class="{{ Request::segment(1) === 'email-template' ? 'active' : null }}"><a href="/email-template"><i class="fa fa-gears"></i>&nbsp;&nbsp;&nbsp;&nbsp;メールテンプレート管理</a></li>
+                  <li class="{{ Request::segment(1) === 'reception-email-setting' ? 'active' : null }}"><a href="/reception-email-setting"><i class="fa fa-gears"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付メール設定</a></li>
+                  @if(Auth::user()->getTable() == "hospital_staffs" && request()->session()->get('hospital_id'))
+                    <li class="{{ request()->path()  === 'hospital-staff/edit-password' ? 'active' : null }}"><a href="{{ route('hospital-staff.edit.password') }}"><i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;パスワードの変更</a></li>
+                  @endif
+                </ul>
+                {{-- デフォルトのサイドバー --}}
+                {{-- @each('adminlte::partials.menu-item', $adminlte->menu(), 'item') --}}
+            </li>
           @endif
-          {{-- 医療機関スタッフ固有の機能 --}}
-          @if(Auth::user()->getTable() == "hospital_staffs" && request()->session()->get('hospital_id'))
-          <li><a href="{{ route('hospital-staff.edit.password') }}"><i class="fa fa-user"></i>パスワードの変更</a></li>
-          @endif
-          {{-- デフォルトのサイドバー --}}
-          @each('adminlte::partials.menu-item', $adminlte->menu(), 'item')
-          
-        </ul>
         <!-- /.sidebar-menu -->
       </section>
       <!-- /.sidebar -->

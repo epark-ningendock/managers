@@ -16,7 +16,9 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-  <h1>検査コース分類管理</h1>
+  <h1>
+      <i class="fa fa-book"> 検査コース分類管理</i>
+  </h1>
 @stop
 
 <!-- search section -->
@@ -40,11 +42,11 @@
         <div class="form-group">
           <label for="classification">分類</label>
           <select class="form-control" id="classification" name="classification">
-            <option value="major" {{ (isset($classification) && $classification == 'major') ? "selected" : "" }}>大分類
+            <option value="major" {{ (!isset($classification) || $classification == 'major') ? "selected" : "" }}>大分類
             </option>
             <option value="middle" {{ (isset($classification) && $classification == 'middle') ? "selected" : "" }}>中分類
             </option>
-            <option value="minor" {{ (!isset($classification) || $classification == 'minor') ? "selected" : "" }}>小分類
+            <option value="minor" {{ (isset($classification) && $classification == 'minor') ? "selected" : "" }}>小分類
             </option>
           </select>
         </div>
@@ -85,7 +87,10 @@
         </div>
       </div>
       <div class="col-md-1">
-        <button type="submit" class="btn btn-primary btn-search">検索</button>
+        <button type="submit" class="btn btn-primary btn-search">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            検索
+        </button>
       </div>
     </div>
   </form>
@@ -93,8 +98,10 @@
 
 @section('button')
   <div class="pull-right">
-    <a class="btn btn-primary mr-2" href="{{ route('classification.sort') }}">並び替え</a>
-    <a class="btn btn-success btn-create" href="{{ route('classification.create') }}">新規作成</a>
+    @if (Auth::user()->staff_auth->is_cource_classification === 3)
+      <a class="btn btn-primary mr-2" href="{{ route('classification.sort') }}">並び替え</a>
+      <a class="btn btn-success btn-create" href="{{ route('classification.create') }}">新規作成</a>
+    @endif
   </div>
 @stop
 
@@ -110,9 +117,11 @@
         <th>小分類</th>
       @endif
       <th>更新日時</th>
-      <th>医療機関管理</th>
-      <th>編集</th>
-      <th>{{ isset($status) && $status == Status::Deleted ? '復元' : '削除' }}</th>
+      <th>状態</th>
+      @if (Auth::user()->staff_auth->is_cource_classification === 3)
+        <th>編集</th>
+        <th>{{ isset($status) && $status == Status::Deleted ? '復元' : '削除' }}</th>
+      @endif
     </tr>
     </thead>
     <tbody>
@@ -127,30 +136,32 @@
         @endif
         <td>{!! $item['updated_at'] !!} </td>
         <td>{{ $item['status']->description }}</td>
-        <td>
-          {{--@if($item['status']->is(Status::Valid) && auth()->check() && auth()->user()->hasPermission('is_item_category', Permission::Edit))--}}
-          @if($item['status']->is(Status::Valid))
-            <a class="btn btn-primary"
-               href="{{ route('classification.edit', $item['id']).'?classification='.(isset($classification)? $classification : 'minor') }}">
-              編集
-            </a>
-          @endif
-        </td>
-        <td>
-          {{--@if(auth()->check() && auth()->user()->hasPermission('is_item_category', Permission::Edit))--}}
-          @if($item['status']->is(Status::Valid))
-            <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"
-                    data-message="{{ trans('messages.classification_delete_popup_content') }}">
-              削除
-            </button>
-          @elseif($item['status']->is(Status::Deleted))
-            <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"
-                    data-target-form="#restore-record-form" data-message="{{ trans('messages.classification_restore_popup_content') }}">
-              復元
-            </button>
-          @endif
-          {{--@endif--}}
-        </td>
+        @if (Auth::user()->staff_auth->is_cource_classification === 3)
+          <td>
+            {{--@if($item['status']->is(Status::Valid) && auth()->check() && auth()->user()->hasPermission('is_cource_classification', Permission::Edit))--}}
+            @if($item['status']->is(Status::Valid))
+              <a class="btn btn-primary"
+                href="{{ route('classification.edit', $item['id']).'?classification='.(isset($classification)? $classification : 'minor') }}">
+                <i class="fa fa-edit text-bold"> 編集</i>
+              </a>
+            @endif
+          </td>
+          <td>
+            {{--@if(auth()->check() && auth()->user()->hasPermission('is_cource_classification', Permission::Edit))--}}
+            @if($item['status']->is(Status::Valid))
+              <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"
+                      data-message="{{ trans('messages.classification_delete_popup_content') }}">
+                <i class="fa fa-trash"></i>
+              </button>
+            @elseif($item['status']->is(Status::Deleted))
+              <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"
+                      data-target-form="#restore-record-form" data-message="{{ trans('messages.classification_restore_popup_content') }}">
+                復元
+              </button>
+            @endif
+            {{--@endif--}}
+          </td>
+        @endif
       </tr>
     @endforeach
     @if($classifications->isEmpty())

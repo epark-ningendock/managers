@@ -15,6 +15,18 @@ Route::get('/', function () {
     return view('index');
 })->middleware('auth:staffs,hospital_staffs');
 
+//Route::get('/staff', 'StaffController@index')->middleware('can:view-staff');
+//
+//Route::resource('/staff', 'StaffController')->except(['show', 'index'])->middleware('can:edit-staff');
+
+/*
+|--------------------------------------------------------------------------
+| Contract Information
+|--------------------------------------------------------------------------
+*/
+Route::post('/contract-information/store', 'ContractInformationController@store')->name('contract.store');
+Route::get('/hospital/contract-information', 'ContractInformationController@create')->name('hospital.contractInfo');
+
 /*
 |--------------------------------------------------------------------------
 | Login Routes
@@ -22,7 +34,7 @@ Route::get('/', function () {
 */
 Auth::routes();
 Route::get('/login', 'Auth\LoginController@getLogin')->name('login');
-Route::post('/login', 'Auth\LoginController@postLogin');
+Route::post('/login', 'Auth\LoginController@postLogin')->name('postLogin');
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +54,7 @@ Route::middleware('auth:hospital_staffs')->group(function () {
 Route::get('/hospital-staff/show-password-resets-mail', 'HospitalStaffController@showPasswordResetsMail')->name('hospital-staff.show.password-reset');
 Route::get('/hospital-staff/send-password-resets-mail', 'HospitalStaffController@sendPasswordResetsMail')->name('hospital-staff.send.password-reset');
 Route::get('/hospital-staff/show-reset-password/{reset_token}/{email}', 'HospitalStaffController@showResetPassword');
-Route::put('/hospital-staff/reset-password/{hospital_staff_id}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password');
+Route::put('/hospital-staff/reset-password/{email}', 'HospitalStaffController@resetPassword')->name('hospital-staff.reset.password');
 
 /*
 |--------------------------------------------------------------------------
@@ -55,20 +67,38 @@ Route::middleware('auth:staffs')->group(function () {
     | Staff Routes
     |--------------------------------------------------------------------------
     */
-    Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.three']], function () {
+    Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.admin']], function () {
         Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password');
         Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
     });
     Route::resource('/staff', 'StaffController')->except(['show']);
+    Route::get('/staff/edit-password-personal', 'StaffController@editPersonalPassword')->name('staff.edit.password-personal');
+    Route::post('/staff/update-password-personal', 'StaffController@updatePersonalPassword')->name('staff.update.password-personal');
     /*
     |--------------------------------------------------------------------------
     | Hospital Routes
     |--------------------------------------------------------------------------
     */
+    Route::group(['prefix' => 'hospital'], function () {
+        Route::get('/search', 'HospitalController@index')->name('hospital.search');
+        Route::get('/search/text', 'HospitalController@searchText')->name('hospital.search.text');
+        Route::get('/search/contract-info', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');
+        Route::get('/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
+        Route::get('/image-information', 'HospitalController@createImageInformation')->name('hospital.image.information');
+        Route::get('/attention-information/create', 'HospitalController@createAttentionInformation')->name('hospital.attention-information.show');
+        Route::post('/attention-information/store', 'HospitalController@storeAttentionInformation')->name('hospital.attention-information.store');
+    });
+
     Route::resource('/hospital', 'HospitalController')->except(['show']);
-    Route::get('/hospital/search', 'HospitalController@index')->name('hospital.search');
-    Route::get('/hospital/search/text', 'HospitalController@searchText')->name('hospital.search.text');
-    Route::get('/hospital/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
+    
+    Route::group(['prefix' => 'hospital'], function () {
+        Route::get('/{hospital}/images/create', 'HospitalImagesController@create')->name('hospital.image.create');
+        Route::post('/{hospital}/images/store', 'HospitalImagesController@store')->name('hospital.image.store');
+        /*
+        Route::get('/{hospital}/hospital_images/', function ($hospital_id) {
+            return $hospital_id;
+        });*/
+    });
     /*
     |--------------------------------------------------------------------------
     | Course Classification Routes
@@ -92,7 +122,7 @@ Route::middleware('auth:staffs')->group(function () {
 | Staff, Hospital staff authentication required
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth:staffs,hospital_staffs')->group(function () {
+Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->group(function () {
     /*
     |--------------------------------------------------------------------------
     | Hospital staff Routes
@@ -168,5 +198,4 @@ Route::middleware('auth:staffs,hospital_staffs')->group(function () {
     Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
     Route::resource('/reservation', 'ReservationController')->except(['show', 'delete']);
     Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
-
 });

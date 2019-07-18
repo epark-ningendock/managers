@@ -2,6 +2,7 @@
 
 <!-- ページの内容を入力 -->
 @section('main-content')
+  
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
@@ -12,7 +13,13 @@
           @yield('search')
           @section('button')
             @if(isset($create_route))
-              <a class="btn btn-success pull-right" href="{{ route($create_route) }}">新規作成</a>
+              @if(isset($route) && $route === "staff")
+                @if (Auth::user()->staff_auth->is_staff === 3)
+                  <a class="btn btn-success pull-right" href="{{ route($create_route) }}">新規作成</a>
+                @endif
+              @else
+                <a class="btn btn-success pull-right" href="{{ route($create_route) }}">新規作成</a>
+              @endif
             @endif
           @show
         </div>

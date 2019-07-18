@@ -13,13 +13,17 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>医療機関スタッフ &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
+    <h1>
+        <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
+        - 
+        <i class="fa fa-users"> 医療機関スタッフ管理</i>
+    </h1>
 @stop
 
 
 
 @section('table')
-    <table id="example2" class="table table-bordered table-hover mb-5 mt-5">
+    <table id="example2" class="table table-bordered table-hover table-striped mb-5 mt-5">
         <thead>
         <tr>
             <th>ログインID</th>
@@ -37,10 +41,12 @@
                 <td>{{ $hospital_staff->email }}</td>
                 <td>
                     <a href="{{ route('hospital-staff.edit', $hospital_staff->id) }}"
-                       class="btn btn-primary">編集</a>
+                       class="btn btn-primary">
+                       <i class="fa fa-edit text-bold"> 編集</i>
+                    </a>
                 <td>
                     <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $hospital_staff->id }}">
-                        削除
+                        <i class="fa fa-trash"></i>
                     </button>
                 </td>
             </tr>
