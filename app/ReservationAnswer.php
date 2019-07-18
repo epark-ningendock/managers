@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReservationAnswer extends Model
 {
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
     protected $fillable = [
         'reservation_id',
         'course_id',
@@ -32,4 +39,11 @@ class ReservationAnswer extends Model
         'answer09',
         'answer10',
     ];
+
+
+    public function reservation()
+    {
+        return $this->belongsTo('App\Reservation');
+    }
+
 }

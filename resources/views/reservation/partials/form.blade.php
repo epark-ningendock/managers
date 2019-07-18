@@ -341,12 +341,12 @@
                                 courseQuestions.forEach(function (question) {
                                     if (question.question_title) {
                                         flag = true;
-                                        questionGroup.append($(`<label>${question.question_title}</label>`))
+                                        questionGroup.append($(`<label>${question.question_title}</label><input type="hidden" name="course_question_ids[]" value="${question.id}" />`))
                                         const answerGroup = $('<div class="answer-group"></div>').appendTo(questionGroup);
                                         for (let i = 1; i <= 10; i++) {
                                             let key = 'answer' + (i < 10 ? '0' : '') + i;
                                             if (question[key]) {
-                                                answerGroup.append($(`<label><input type="checkbox" class="checkbox" name="questions_${question.id}[]"><span>${question[key]}</span></label>`))
+                                                answerGroup.append($(`<label><input type="checkbox" class="checkbox" name="questions_${question.id}[${key}]" value="${question[key]}"><span>${question[key]}</span></label>`))
                                             }
                                         }
                                     }

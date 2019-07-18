@@ -108,6 +108,13 @@ class Reservation extends SoftDeleteModel
         return $this->hasMany('App\ReservationOption');
     }
 
+    public function reservation_answers()
+    {
+        return $this->hasMany('App\ReservationAnswer');
+    }
+
+
+
     public function scopeByRequest($query, $request)
     {
         if (isset($request->claim_month)) {

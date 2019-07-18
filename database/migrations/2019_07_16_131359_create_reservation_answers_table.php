@@ -20,7 +20,7 @@ class CreateReservationAnswersTable extends Migration
             $table->unsignedInteger('reservation_id');
             $table->unsignedInteger('course_id');
             $table->integer('course_question_id');
-            $table->integer('question_title')->nullable();
+            $table->string('question_title')->nullable();
             $table->string('question_answer01')->nullable();
             $table->string('question_answer02')->nullable();
             $table->string('question_answer03')->nullable();

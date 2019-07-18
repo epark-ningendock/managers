@@ -439,6 +439,7 @@ class ReservationController extends Controller
     public function store(ReservationCreateFormRequest $request)
     {
 
+
     	try {
 		    DB::beginTransaction();
 
@@ -477,6 +478,53 @@ class ReservationController extends Controller
 				    $reservation->reservation_options()->createMany($options);
 			    }
 		    }
+
+
+            if ( isset(request()->course_id) && !empty(request()->course_id) ) {
+
+                $course = Course::find($request->course_id);
+
+                if ( isset($course->course_questions) && !empty($course->course_questions) ) {
+
+                    $reservation_option_values = [];
+
+                    foreach( $course->course_questions as $question  ) {
+
+                        $question_id_values = collect(request()->get('questions_'. $question->id));
+                        $answer_columns = ['answer01', 'answer02', 'answer03', 'answer04', 'answer05', 'answer06', 'answer07', 'answer08', 'answer09', 'answer10'];
+                        foreach( $answer_columns as $answer_column ) {
+                            $answer_values[$answer_column] = (  $question_id_values->get($answer_column) ) ? 1 : 0;
+                        }
+
+                        $reservation_option_values[] = array_merge([
+                            'reservation_id' => $reservation->id,
+                            'course_id' => request()->course_id,
+                            'course_question_id' => $question->id,
+                            'question_title' => $question->question_title,
+                            'question_answer01' => $question->answer01,
+                            'question_answer02' => $question->answer02,
+                            'question_answer03' => $question->answer03,
+                            'question_answer04' => $question->answer04,
+                            'question_answer05' => $question->answer05,
+                            'question_answer06' => $question->answer06,
+                            'question_answer07' => $question->answer07,
+                            'question_answer08' => $question->answer08,
+                            'question_answer09' => $question->answer09,
+                            'question_answer10' => $question->answer10,
+
+                        ], $answer_values);
+
+                    }
+
+
+                    if ( isset($reservation_option_values) && !empty($reservation_option_values) ) { // make it verified it has value
+                        $reservation->reservation_answers()->createMany($reservation_option_values);
+                    }
+
+
+                }
+
+            }
 
 		    return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
 
