@@ -115,7 +115,6 @@
                            value="{{ old('postcode2', ( isset($customer_detail) ? substr($customer_detail->postcode, 3) : '')) }}" style="display: inline-block; width: 80px;"/>
                     <input type="hidden" name="postcode" id="postcode" class="p-postal-code" size="8" maxlength="8" value="{{ old('postcode', (isset($customer_detail) ? $customer_detail->postcode : '')) }}" />
                     <button type="button" class="btn btn-primary ml-4" id="postcode-search" style="margin-top:-4px;">郵便番号で住所を検索する</button>
-                    <input type="text" id="region" class="p-region" style="display: none">
                     @if ($errors->has('postcode')) <p class="help-block">{{ $errors->first('postcode') }}</p> @endif
                 </div>
 
@@ -126,7 +125,7 @@
             <td class="gray-cell-bg">{{ trans('messages.prefectures') }}</td>
             <td colspan="3">
                 <div class="form-group @if ($errors->has('prefecture_id')) has-error @endif">
-                    <select name="prefecture_id" id="prefecture_id" class="form-control">
+                    <select name="prefecture_id" id="prefecture_id" class="form-control p-region-id">
                         <option value=""></option>
                         @foreach($prefectures as $prefecture)
                             <option value="{{ $prefecture->id }}"
@@ -147,7 +146,7 @@
             <td class="gray-cell-bg">{{ trans('messages.address1') }}</td>
             <td colspan="3">
                 <div class="form-group @if ($errors->has('address1')) has-error @endif">
-                    <input type="text" class="form-control p-street-address p-extended-address" name="address1" id="address1"
+                    <input type="text" class="form-control p-street-address" name="address1" id="address1"
                            value="{{ old('address1', ( isset($customer_detail) ? $customer_detail->address1 : '')) }}"/>
                     @if ($errors->has('address1')) <p class="help-block">{{ $errors->first('address1') }}</p> @endif
                 </div>
@@ -158,7 +157,7 @@
             <td class="gray-cell-bg">{{ trans('messages.address2') }}</td>
             <td colspan="3">
                 <div class="form-group @if ($errors->has('address2')) has-error @endif">
-                    <input type="text" class="form-control" name="address2" id="address2"
+                    <input type="text" class="form-control p-extended-address" name="address2" id="address2"
                            value="{{ old('address2', ( isset($customer_detail) ? $customer_detail->address2 : '')) }}"/>
                     @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
                 </div>
@@ -233,18 +232,6 @@
                 //to trigger native keyup event
                 $('.p-postal-code')[0].dispatchEvent(new KeyboardEvent('keyup', {'key': ''}));
             });
-
-            $('#region').change(function() {
-                const region = $('#region').val();
-                if (region) {
-                    $('#prefecture_id option').each(function(i, o){
-                       if (region == $(o).html()) {
-                           $(o).prop('selected', true);
-                       }
-                    });
-                }
-            });
-
         })(jQuery);
     </script>
 @endpush
