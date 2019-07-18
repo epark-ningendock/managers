@@ -80,7 +80,7 @@ class ReservationController extends Controller
      */
     protected function get_reception_list_query(Request $request)
     {
-        $query = Reservation::with(['course', 'customer', 'reservation_options', 'reservation_options.option', 'course.course_questions']);
+        $query = Reservation::with(['course', 'customer', 'reservation_options', 'reservation_options.option', 'reservation_answers']);
 
         if ($request->input('reservation_start_date', '') != '') {
             $query->whereDate('reservation_date', '>=', $request->input('reservation_start_date'));
@@ -255,16 +255,16 @@ class ReservationController extends Controller
             $questions = collect();
             $q_count = 0;
 
-            foreach ($reservation->course->course_questions as $course_question) {
-                if (empty($course_question->question_title)) {
+            foreach ($reservation->reservation_answers as $answer) {
+                if (empty($answer->question_title)) {
                     continue;
                 }
-                $questions->push($course_question->question_title);
+                $questions->push($answer->question_title);
                 $answers = collect();
                 for($i = 1; $i <= 10; $i++) {
-                    $temp = $course_question['answer'.($i != 10 ? '0' : '').$i];
+                    $temp = $answer['answer'.($i != 10 ? '0' : '').$i];
                     if (!is_null($temp) && !empty($temp)) {
-                        $answers->push($temp);
+                        $answers->push($answer['question_answer'.($i != 10 ? '0' : '').$i]);
                     }
 
                 }
