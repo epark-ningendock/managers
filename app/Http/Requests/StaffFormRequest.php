@@ -34,6 +34,8 @@ class StaffFormRequest extends FormRequest
             'name' => 'required|between:1,25',
             'login_id' => $login_id,
             'email' => $email,
+            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:8|max:20',
             'status' => 'required|enum_value:' . StaffStatus::class . ',false',
             'authority' => 'required',
             'is_hospital' => ['required', Rule::in([0, 1, 3])],
