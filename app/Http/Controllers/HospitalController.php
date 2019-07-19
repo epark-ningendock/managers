@@ -44,6 +44,8 @@ class HospitalController extends Controller
             } elseif (Auth::user()->staff_auth->is_pre_account !== Permission::None) {
                 return redirect('/pre_account');
             } else {
+                session()->flush();
+                Auth::logout();
                 return redirect('/login')->with('error', '権限がありません。');
             }
         }
