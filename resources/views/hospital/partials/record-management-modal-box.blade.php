@@ -10,7 +10,6 @@
 
                     <a class="btn active" href="#contact-information" data-toggle="tab">連絡先</a>
                     <a class="btn" href="#basic-information" data-toggle="tab">基本情報</a>
-                    <a class="btn" href="/hospital/{{ $hospital_id }}}/edit" data-toggle="tab">画像情報</a>
                     <a class="btn" href="#attention-information" data-toggle="tab">良い情報</a>
 
                 </div>

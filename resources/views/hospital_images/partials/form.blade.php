@@ -260,46 +260,51 @@
 <div class="box box-primary form-box">
     <div class="form_title"><div class="number_circle">7</div> <span class="input_title">写真タブ</span></div>
     @for ($i = 1; $i <= 5; $i++)
+    <?php $tab = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('order2', $i)->first();?>
+    <?php $tab_order = is_null($tab) or $tab->order == 0 ? null : $tab->order;?>
     <div class="row">
-        <p class="tab_name">{{$tab_name_list[$i]}}</p>
-        <div class="col-sm-6">
-            <?php $tab = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('order2', $i)->first();?>
-            <?php $tab_order = is_null($tab) or $tab->order == 0 ? null : $tab->order;?>
-            @if(!is_null($tab) && !is_null($tab->hospital_image->path))
-                <div class="image_area">
-                    <img src="/img/uploads/300-auto-{{$tab->hospital_image->path}}" width="150">
-                    <p class="file_delete_text">
-                        <a onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $tab->hospital_image_id]) }}">
-                            <i class="icon-trash icon-white"></i>
-                            ファイル削除
-                        </a>
-                    </p>
-                </div>
-            @else
-                <div class="no_image_area">
-                    <img src="/img/icon_noimage.png" width="50">
-                </div>
-            @endif
-            <label class="file-upload btn btn-primary">
-                ファイル選択 {{Form::file("tab_".$i, ['class' => 'field'])}}
-            </label>
-            @if ($errors->has('tab_'.$i))
-                <div class="error_message">
-                {{ $errors->first('tab_').$i }}
-                </div>
-            @endif
-        </div>
-        <div class="col-sm-6">
-            {{Form::label('tab_'.$i.'_order1', '表示順',['class' => 'form_label'])}}
-            {{Form::text('tab_'.$i.'_order1', $tab_order, ['class' => 'form-control'])}}
-            @if ($errors->has('tab_'.$i.'_order1'))
-                {{ $errors->first('tab_'.$i.'_order1') }}
-            @endif
-            {{Form::label('tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
-            {{Form::textarea('tab_'.$i.'_memo2', is_null($tab) ? '' : $tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
-            @if ($errors->has('tab_'.$i.'_memo2'))
-                {{ $errors->first('tab_'.$i.'_memo2') }}
-            @endif
+        <p class="tab_name">
+            {{$tab_name_list[$i]}}
+            <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
+        </p>
+        <div @if(!is_null($tab) && !is_null($tab->hospital_image->path)) style="display: block;" @else style="display: none;" @endif>
+            <div class="col-sm-6">
+                @if(!is_null($tab) && !is_null($tab->hospital_image->path))
+                    <div class="image_area">
+                        <img class="object-fit" src="/img/uploads/300-auto-{{$tab->hospital_image->path}}" width="150">
+                        <p class="file_delete_text">
+                            <a onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $tab->hospital_image_id]) }}">
+                                <i class="icon-trash icon-white"></i>
+                                ファイル削除
+                            </a>
+                        </p>
+                    </div>
+                @else
+                    <div class="no_image_area">
+                        <img src="/img/icon_noimage.png" width="50">
+                    </div>
+                @endif
+                <label class="file-upload btn btn-primary">
+                    ファイル選択 {{Form::file("tab_".$i, ['class' => 'field'])}}
+                </label>
+                @if ($errors->has('tab_'.$i))
+                    <div class="error_message">
+                    {{ $errors->first('tab_').$i }}
+                    </div>
+                @endif
+            </div>
+            <div class="col-sm-6">
+                {{Form::label('tab_'.$i.'_order1', '表示順',['class' => 'form_label'])}}
+                {{Form::text('tab_'.$i.'_order1', $tab_order, ['class' => 'form-control'])}}
+                @if ($errors->has('tab_'.$i.'_order1'))
+                    {{ $errors->first('tab_'.$i.'_order1') }}
+                @endif
+                {{Form::label('tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
+                {{Form::textarea('tab_'.$i.'_memo2', is_null($tab) ? '' : $tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
+                @if ($errors->has('tab_'.$i.'_memo2'))
+                    {{ $errors->first('tab_'.$i.'_memo2') }}
+                @endif
+            </div>
         </div>
     </div>
     @endfor

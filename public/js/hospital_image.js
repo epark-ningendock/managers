@@ -19,6 +19,9 @@ $(document).ready(function() {
             '                </div>\n' +
             '            </div>'
         );
-    })
-
+    });
+    $('.select-tab').on("click", function() {
+        $(this).next().slideToggle();
+        $(this).parent().next().slideToggle();
+    });
 });

@@ -2412,12 +2412,12 @@ b {
   background: #eee;
   text-align: center;
   margin: 0 auto;
-  height: 150px;
-  padding: 50px 0 0 0;
+  height: 120px;
+  padding: 36px 0 0 0;
 }
 
 .image_area {
-  height: 150px;
+  height: 120px;
   text-align: center;
 }
 
@@ -2485,7 +2485,25 @@ label.file-upload input[type="file"] {
   padding: 10px 0 0 0;
   font-size: 12px;
 }
-
+.btn-normal{
+  color: #777;
+  background-color: #fff;
+  border-color: #777;
+  text-align: center;
+}
 .error_message {
   color: red;
+}
+
+.object-fit {
+  width: 50%;
+  height: 100px;
+  object-fit: cover;
+}
+
+.select-tab {
+  background: #fff;
+  padding: 4px 10px 4px 10px;
+  float: right;
+  margin: 3px 6px 0 0;
 }
