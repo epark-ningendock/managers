@@ -26,6 +26,7 @@ class HospitalController extends Controller
     public function __construct(Request $request)
     {
         request()->session()->forget('hospital_id');
+        // TODO: middlewareでindexだけにかけるものを作る
         $this->middleware('permission.hospital.edit')->except('index');
     }
     
@@ -34,15 +35,16 @@ class HospitalController extends Controller
         if (Auth::user()->staff_auth->is_hospital === Permission::None) {
             // TODO: 医療機関のコントローラーのindex()で、権限を見て、不可でない権限があれば、そこに遷移する。無ければ、ログアウトし、メッセージを表示する。
             // TODO: 権限で契約管理者を選択した際に、ラジオボタンに不可を選択させ、入力不可にする。 or 入力フォームを消し、Controllerで値を入れる。
-            // TODO: サイドバーで、契約管理者以外は、契約管理を見れないようにする。また、契約管理者は、契約管理しか見れない。
             if (Auth::user()->staff_auth->is_staff !== Permission::None) {
-                return view('staff.index');
+                return redirect('/staff');
             } elseif (Auth::user()->staff_auth->is_cource_classification !== Permission::None) {
-                return view('classification.index');
+                return redirect('/classification');
             } elseif (Auth::user()->staff_auth->is_invoice !== Permission::None) {
-                return view('reservation.index');
+                return redirect('/reservation');
             } elseif (Auth::user()->staff_auth->is_pre_account !== Permission::None) {
-                return view('login');
+                return redirect('/pre_account');
+            } else {
+                return redirect('/login')->with('error', '権限がありません。');
             }
         }
 
