@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
 use App\Hospital;
+use App\Enums\Authority;
 use App\Enums\StaffStatus;
 
 class LoginController extends Controller
@@ -35,8 +36,9 @@ class LoginController extends Controller
      * @var string
      */
     protected $staff_role = 'staffs';
-    protected $hospital_staff_role = 'hospital_staffs';
-    protected $staff_redirectTo = '/hospital';
+    protected $staff_redirectTo = '/hospital'; // スタッフ
+    protected $contract_staff_redirectTo = '/contract'; // 契約管理者
+    protected $hospital_staff_role = 'hospital_staffs'; // 医療機関スタッフ
     protected $hospital_staff_redirectTo = '/hospital-staff';
 
     /**
@@ -67,6 +69,10 @@ class LoginController extends Controller
 
         $is_staff = self::is_staff_login($data['login_id'], $data['password']);
         if ($is_staff) {
+            // スタッフの権限が契約管理者だった場合、契約管理に遷移する
+            if (Auth::user()->authority->value === Authority::ContractStaff) {
+                return redirect($this->contract_staff_redirectTo);
+            }
             return redirect($this->staff_redirectTo);
         }
 
