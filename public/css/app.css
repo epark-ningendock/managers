@@ -2507,3 +2507,17 @@ label.file-upload input[type="file"] {
   float: right;
   margin: 3px 6px 0 0;
 }
+.form-group.has-error .form-control, .form-group.has-error .input-group-addon {
+  border-color: #ed5565;
+  box-shadow: none;
+}
+
+.form-group.has-error .help-block {
+  color: #ed5565;
+  font-weight: 600;
+}
+
+.has-error {
+  color: #ed5565;
+  font-weight: 600;
+}
