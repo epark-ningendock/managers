@@ -3,7 +3,7 @@
 @endphp
 <div class="table-responsive">
 
-    <table class="table table-bordered">
+    <table class="table table-bordered form-table">
         <tr>
             <td class="gray-cell-bg">{{ trans('messages.customer_id') }}</td>
             <td> {{ $customer_detail->id or '' }} </td>
@@ -19,40 +19,51 @@
         <tr>
             <td  class="gray-cell-bg"><label for="name">{{ trans('messages.name') }}<span class="text-danger">(*)</span></label></td>
             <td>
-
-                <div class="form-group @if ($errors->has('family_name')) has-error @endif">
-                    <input type="text" class="form-control" name="family_name" id="family_name"
+                <div class="form-group row @if ($errors->has('family_name')) has-error @endif">
+                    <label for="family_name" class="col-sm-2 mt-2">姓</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="family_name" id="family_name"
                            value="{{ old('family_name', ( isset($customer_detail) ? $customer_detail->family_name : '')) }}"/>
-                    @if ($errors->has('family_name')) <p class="help-block">{{ $errors->first('family_name') }}</p> @endif
+                        @if ($errors->has('family_name')) <p class="help-block">{{ $errors->first('family_name') }}</p> @endif
+                    </div>
+
                 </div>
 
-                <div class="form-group @if ($errors->has('first_name')) has-error @endif">
-                    <input type="text" class="form-control" name="first_name" id="first_name"
-                           value="{{ old('first_name', ( isset($customer_detail) ? $customer_detail->first_name : '')) }}"/>
-                    @if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
+                <div class="form-group row mt-4 @if ($errors->has('first_name')) has-error @endif">
+                    <label for="first_name" class="col-sm-2 mt-2">名</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="first_name" id="first_name"
+                               value="{{ old('first_name', ( isset($customer_detail) ? $customer_detail->first_name : '')) }}"/>
+                        @if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
+                    </div>
                 </div>
-
             </td>
             <td class="gray-cell-bg"><label for="name_kana">{{ trans('messages.name_kana') }}</label></td>
             <td>
 
-                <div class="form-group @if ($errors->has('family_name_kana')) has-error @endif">
-                    <input type="text" class="form-control" name="family_name_kana" id="family_name_kana"
-                           value="{{ old('family_name_kana', ( isset($customer_detail) ? $customer_detail->family_name_kana : '')) }}"/>
-                    @if ($errors->has('family_name_kana')) <p class="help-block">{{ $errors->first('family_name_kana') }}</p> @endif
+                <div class="form-group row @if ($errors->has('family_name_kana')) has-error @endif">
+                    <label for="family_name_kana" class="col-sm-2 mt-2">姓</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="family_name_kana" id="family_name_kana"
+                               value="{{ old('family_name_kana', ( isset($customer_detail) ? $customer_detail->family_name_kana : '')) }}"/>
+                        @if ($errors->has('family_name_kana')) <p class="help-block">{{ $errors->first('family_name_kana') }}</p> @endif
+                    </div>
                 </div>
 
-                <div class="form-group @if ($errors->has('first_name_kana')) has-error @endif">
-                    <input type="text" class="form-control" name="first_name_kana" id="first_name_kana"
-                           value="{{ old('first_name_kana', ( isset($customer_detail) ? $customer_detail->first_name_kana : '')) }}"/>
-                    @if ($errors->has('first_name_kana')) <p class="help-block">{{ $errors->first('first_name_kana') }}</p> @endif
+                <div class="form-group row mt-4 @if ($errors->has('first_name_kana')) has-error @endif">
+                    <label for="first_name_kana" class="col-sm-2 mt-2">名</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name="first_name_kana" id="first_name_kana"
+                               value="{{ old('first_name_kana', ( isset($customer_detail) ? $customer_detail->first_name_kana : '')) }}"/>
+                        @if ($errors->has('first_name_kana')) <p class="help-block">{{ $errors->first('first_name_kana') }}</p> @endif
+                    </div>
                 </div>
 
             </td>
         </tr>
         <tr>
             <td class="gray-cell-bg"><label for="tel">{{ trans('messages.tel') }}</label></td>
-            <td colspan="3">
+            <td colspan="3" class="text-left">
 
                 <p>
                     ハイフンなどを付けずに数字だけを入力します（例）031234 ****
@@ -70,7 +81,6 @@
             <td class="gray-cell-bg"><label for="gender">{{ trans('messages.gender') }}</label></td>
             <td class="text-left">
                 <div class="form-group @if ($errors->has('sex')) has-error @endif">
-                    <label for="sex">状態</label>
                     <div class="radio">
                         @foreach(Gender::getValues() as $gender)
                             <label>
@@ -189,7 +199,7 @@
             </td>
         </tr>
         <tr>
-            <td class="gray-cell-bg">{{ trans('messages.claim_count') }}<span class="text-danger">(*)</span></td>
+            <td class="gray-cell-bg">{{ trans('messages.claim_count') }}</td>
             <td>
                 <div class="form-group @if ($errors->has('claim_count')) has-error @endif">
                     <input type="text" class="form-control" name="claim_count" id="claim_count"
@@ -197,7 +207,7 @@
                     @if ($errors->has('claim_count')) <p class="help-block">{{ $errors->first('claim_count') }}</p> @endif
                 </div>
             </td>
-            <td class="gray-cell-bg">{{ trans('messages.recall_count') }}<span class="text-danger">(*)</span></td>
+            <td class="gray-cell-bg">{{ trans('messages.recall_count') }}</td>
             <td>
                 <div class="form-group @if ($errors->has('recall_count')) has-error @endif">
                     <input type="text" class="form-control" name="recall_count" id="recall_count"
@@ -239,6 +249,18 @@
     <style>
         p.help-block {
             text-align: left;
+        }
+        table.form-table td>div.row{
+            margin-left: -5px;
+            margin-right: -5px;
+        }
+        table.form-table>tbody>tr>td {
+            vertical-align: middle;
+            padding: 15px 8px;
+
+        }
+        td>.form-group {
+            margin-bottom: 0px;
         }
     </style>
 @endpush
