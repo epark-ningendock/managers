@@ -7,7 +7,7 @@
 
         @if(!is_null($main_image_category) && !is_null($main_image_category->hospital_image->path))
             <div class="image_area">
-                <img src="/img/uploads/500-auto-{{$main_image_category->hospital_image->path}}" height="200">
+                <img class="object-fit" src="/img/uploads/500-auto-{{$main_image_category->hospital_image->path}}" height="200">
                 <p class="file_delete_text">
                     <a onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $main_image_category->hospital_image_id]) }}">
                         <i class="icon-trash icon-white"></i>
@@ -59,7 +59,7 @@
             <?php $sub_image_category = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_FACILITY_SUB)->where('order2', $i)->first(); ?>
             @if (!is_null($sub_image_category))
                 <div class="image_area">
-                    <img src="/img/uploads/300-auto-{{$sub_image_category->hospital_image->path}}" width="150">
+                    <img class="object-fit" src="/img/uploads/300-auto-{{$sub_image_category->hospital_image->path}}" width="150">
                 </div>
                 <p style="text-align: center; margin-top: 10px">
                     <a onclick="return confirm('この施設画像を削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.image.delete', ['hospital' => $hospital->id, 'hospital_category_id' => $sub_image_category->id, 'hospital_image_id' => $sub_image_category->hospital_image_id]) }}">
@@ -94,7 +94,7 @@
                 <?php $image_speciality = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_SPECIALITY)->where('order2', $i)->first(); ?>
                 @if (!is_null($image_speciality) && !is_null($image_speciality->hospital_image->path))
                     <div class="image_area">
-                        <img src="/img/uploads/300-auto-{{$image_speciality->hospital_image->path}}" width="150">
+                        <img class="object-fit" src="/img/uploads/300-auto-{{$image_speciality->hospital_image->path}}" width="150">
                         <p class="file_delete_text">
                             <a onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $image_speciality->hospital_image_id]) }}">
                                 <i class="icon-trash icon-white"></i>
@@ -319,7 +319,7 @@
             <p class="box_staff_title">スタッフ{{$i}}</p>
             @if(!is_null($staff) && !is_null($staff->hospital_image->path))
                 <div class="image_area">
-                    <img src="/img/uploads/300-auto-{{$staff->hospital_image->path}}" width="150">
+                    <img class="object-fit" src="/img/uploads/300-auto-{{$staff->hospital_image->path}}" width="150">
                     <p class="file_delete_text">
                         <a onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $staff->hospital_image_id]) }}">
                             <i class="icon-trash icon-white"></i>
