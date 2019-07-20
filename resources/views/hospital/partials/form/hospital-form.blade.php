@@ -21,7 +21,7 @@
                         {{ \App\Enums\HospitalEnums::getDescription('X') }}
                     </label>
                 </div>
-                @if ($errors->has('status')) <p class="help-block">{{ $errors->first('status') }}</p> @endif
+                @if ($errors->has('status')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('status') }}</p> @endif
             </div>
           </td>
       </tr>
@@ -62,16 +62,17 @@
                         <label for="postcode" class="col-md-4 text-right"> 〒</label>
                         <div class="col-md-8">
                             <span class="p-country-name" style="display:none;">Japan</span>
-                            <input type="text" class="form-control" id="postcode1"  value="{{ old('postcode', (isset($hospital->postcode) ) ?: null) }}" placeholder="8380222" />
+                            <input type="text" class="form-control" id="postcode1" name="postcode" value="{{ old('postcode', (isset($hospital->postcode) ) ?: null) }}" placeholder="8380222" />
                             <input type="hidden" name="postcode" id="postcode" class="p-postal-code" size="8" value="{{ old('postcode', (isset($hospital->postcode) ) ?: null) }}" />
-                            @if ($errors->has('postcode')) <p class="help-block">{{ $errors->first('postcode') }}</p> @endif
                         </div>
+
                     </div>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     <button type="button" class="btn btn-default" id="postcode-search" style="margin-left: 20px;">
                         <img width="20px;" src="{{ asset('img/search.png') }}" alt="">
                         {{ __('アドレス検索') }}
                     </button>
+                    @if ($errors->has('postcode')) <p class="help-block text-danger" style="text-align: center; color: #dd4d3b;">{{ $errors->first('postcode') }}</p> @endif
                 </div>
 
                 <br/>
@@ -84,11 +85,11 @@
                         <div class="form-group @if( $errors->has('prefectures'))  has-error @endif">
                             <label for="prefecture" class="col-md-4">{{ trans('messages.prefectures') }}</label>
                             <div class="col-md-8">
-                                <select name="prefecture" id="prefecture" class="form-control p-region">
+                                <select name="prefecture" id="prefecture" class="form-control p-region-id">
                                     <option value="">都道府県を選択</option>
                                     @foreach($prefectures as $prefecture)
-                                        <option value="{{ $prefecture->name }}"
-                                                @if ( old('prefecture') && ($prefecture->name === old('prefecture')))
+                                        <option value="{{ $prefecture->id }}"
+                                                @if ( old('prefecture') && ($prefecture->id == old('prefecture')))
                                                 selected="selected"
                                                 @endif
                                         > {{ $prefecture->name }}</option>
@@ -108,7 +109,7 @@
                                     <option value="">市町村区を選択</option>
                                     @foreach($district_codes as $district_code)
                                         <option value="{{ $district_code->id }}"
-                                                @if ( old('district_code_id') && ($district_code->name === old('district_code_id')))
+                                                @if ( old('district_code_id') && ($district_code->id == old('district_code_id')))
                                                 selected="selected"
                                                 @endif
                                         > {{ $district_code->name }}</option>
@@ -248,7 +249,7 @@
                                       <option value="">路線を選択</option>
                                       @foreach($rails as $rail)
                                           <option value="{{ $rail->id }}"
-                                                  @if ( old('rail' . $i) === $rail->id)
+                                                  @if ( old('rail' . $i) == $rail->id)
                                                   selected="selected"
                                                   @endif
                                           >{{ $rail->name }}</option>
@@ -264,10 +265,10 @@
                               <div class="form-group ml-0 mr-0">
 
                                   <select id="station{{$i}}" name="station{{$i}}" class="custom-select form-control">
-                                      <option value="">路線を選択</option>
+                                      <option value="">駅を選択</option>
                                       @foreach($stations as $station)
                                           <option value="{{ $station->id }}"
-                                                  @if ( old('station' . $i) === $station->id)
+                                                  @if ( old('station' . $i) == $station->id)
                                                   selected="selected"
                                                   @endif
                                           >{{ $station->name }}</option>
@@ -282,13 +283,7 @@
 
                               <div class="form-group ml-0 mr-0">
 
-                                  <input type="text" class="form-control" id="access{{$i}}" name="access{{$i}}"
-                                         value="
-                                @php
-                                             $field_name = `access{$i}`;
-                                             $field_value_from_db = (!empty($hospital->$field_name) ) ?: null;
-                                             old($field_name, $field_value_from_db );
-                                         @endphp" />
+                                  <input type="text" class="form-control" id="access{{$i}}" name="access{{$i}}" value="{{ old("access{$i}") }}" />
 
                               </div>
 
@@ -330,7 +325,7 @@
                               <div class="form-group  @if( $errors->has("medical_treatment_time." .$i. ".start")) has-error @endif">
                                   <label for="start-time-{{ $i }}" class="col-md-3">{{ trans('messages.start') }} </label>
                                   <div class="col-md-9">
-                                      <input type="text" class="form-control" id="start-time-{{ $i }}" name="medical_treatment_time[{{$i}}][start]"  value="{{ old('medical_treatment_time[' . $i . '][start]') }}" />
+                                      <input size="5" type="text" class="form-control time-picker" id="start-time-{{ $i }}" name="medical_treatment_time[{{$i}}][start]"  value="{{ old('medical_treatment_time.' . $i . '.start') }}" />
                                       @if( $errors->has("medical_treatment_time." .$i. ".start"))
                                         <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".start") }}</p>
                                        @endif
@@ -342,7 +337,7 @@
                               <div class="form-group   @if( $errors->has("medical_treatment_time." .$i. ".end")) has-error @endif">
                                   <label for="end-time-{{$i}}" class="col-md-3">〜</label>
                                   <div class="col-md-9">
-                                      <input type="text" class="form-control" id="end-time-{{$i}}" name="medical_treatment_time[{{$i}}][end]"  value="{{ old('medical_treatment_time[' . $i . '][end]') }}" />
+                                      <input size="5" type="text" class="form-control time-picker" id="end-time-{{$i}}" name="medical_treatment_time[{{$i}}][end]"  value="{{ old('medical_treatment_time.' . $i . '.end') }}" />
                                       @if( $errors->has("medical_treatment_time." .$i. ".end"))
                                         <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".end") }}</p>
                                        @endif
@@ -352,31 +347,31 @@
 
                           <div class="daybox">
                               <label class="checkbox-inline">
-                                  <input type="checkbox" name="medical_treatment_time[{{$i}}][mon]"  value="1">{{ trans('messages.mon') }}
+                                  <input type="checkbox" name="medical_treatment_time[{{$i}}][mon]"  value="1" @if ( old('medical_treatment_time.' . $i . '.mon') == 1 ) checked @endif>{{ trans('messages.mon') }}
                               </label>
 
                               <label class="checkbox-inline">
-                                  <input type="checkbox" name="medical_treatment_time[{{$i}}][tue]"  value="1"> {{ trans('messages.tue') }}
+                                  <input type="checkbox" name="medical_treatment_time[{{$i}}][tue]"  value="1" @if ( old('medical_treatment_time.' . $i . '.tue') == 1 ) checked @endif> {{ trans('messages.tue') }}
                               </label>
 
                               <label class="checkbox-inline">
-                                  <input type="checkbox" name="medical_treatment_time[{{$i}}][wed]"  value="1"> {{ trans('messages.wed') }}
+                                  <input type="checkbox" name="medical_treatment_time[{{$i}}][wed]"  value="1" @if ( old('medical_treatment_time.' . $i . '.wed') == 1 ) checked @endif> {{ trans('messages.wed') }}
                               </label>
 
                               <label class="checkbox-inline">
-                                  <input type="checkbox" name="medical_treatment_time[{{$i}}][thu]"  value="1"> {{ trans('messages.thu') }}
+                                  <input type="checkbox" name="medical_treatment_time[{{$i}}][thu]"  value="1" @if ( old('medical_treatment_time.' . $i . '.thu') == 1 ) checked @endif> {{ trans('messages.thu') }}
                               </label>
 
                               <label class="checkbox-inline">
-                                  <input type="checkbox" name="medical_treatment_time[{{$i}}][fri]"  value="1"> {{ trans('messages.fri') }}
+                                  <input type="checkbox" name="medical_treatment_time[{{$i}}][fri]"  value="1" @if ( old('medical_treatment_time.' . $i . '.fri') == 1 ) checked @endif> {{ trans('messages.fri') }}
                               </label>
 
                               <label class="checkbox-inline">
-                                  <input type="checkbox" name="medical_treatment_time[{{$i}}][sat]"  value="1"> {{ trans('messages.sat') }}
+                                  <input type="checkbox" name="medical_treatment_time[{{$i}}][sat]"  value="1" @if ( old('medical_treatment_time.' . $i . '.sat') == 1 ) checked @endif> {{ trans('messages.sat') }}
                               </label>
 
                               <label class="checkbox-inline">
-                                  <input type="checkbox" name="medical_treatment_time[{{$i}}][sun]"  value="1"> {{ trans('messages.sun') }}
+                                  <input type="checkbox" name="medical_treatment_time[{{$i}}][sun]"  value="1" @if ( old('medical_treatment_time.' . $i . '.sun') == 1 ) checked @endif> {{ trans('messages.sun') }}
                               </label>
                           </div>                          
 
@@ -390,7 +385,7 @@
                 <div class="form-group @if( $errors->has('consultation_note'))  has-error @endif">
                     <label for="consultation_note" class="col-md-2">{{ trans('messages.consultation_note') }} </label>
                     <div class="col-md-10">
-                        <textarea name="consultation_note" id="consultation_note"   rows="5" class="form-control"></textarea>
+                        <textarea name="consultation_note" id="consultation_note"   rows="5" class="form-control">{{ old('consultation_note', (isset($hospital->consultation_note) ) ?: null) }}</textarea>
                         @if ($errors->has('consultation_note')) <p class="help-block">{{ $errors->first('consultation_note') }}</p> @endif
                     </div>
                 </div>              
@@ -419,7 +414,7 @@
                     <option value=""></option>
                     @foreach($medical_examination_systems as $medical_examination_system)
                     <option value="{{ $medical_examination_system->id }}"
-                            @if ( old('medical_examination_system_id') && ($medical_examination_system->id === old('medical_examination_system_id')))
+                            @if ( old('medical_examination_system_id') && ($medical_examination_system->id == old('medical_examination_system_id')))
                                 selected="selected"
                             @endif
                     > {{ $medical_examination_system->name }}</option>
@@ -464,3 +459,5 @@
         }
     </style>
 @endpush
+
+@includeIf('commons.timepicker')

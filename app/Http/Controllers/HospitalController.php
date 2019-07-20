@@ -133,6 +133,7 @@ class HospitalController extends Controller
     {
         $request->request->add([
             'hospital_staff_id' => auth()->user()->id,
+	        'prefecture' => Prefecture::findOrFail($request->prefecture)->name
         ]);
 
         $hospital = Hospital::create($request->all());
