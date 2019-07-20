@@ -7,17 +7,17 @@
             <div class="form-group @if( $errors->has('status'))  has-error @endif">
                 <div class="radio">
                     <label class="ml-5">
-                        <input type="radio" name="status" id="private_status" value="{{ \App\Enums\HospitalEnums::Private }}">
+                        <input type="radio" name="status" id="private_status" value="{{ \App\Enums\HospitalEnums::Private }}" @if( old('status') == \App\Enums\HospitalEnums::Private ) checked @endif>
                         {{ \App\Enums\HospitalEnums::getDescription('0') }}
                     </label>
 
                     <label class="ml-3">
-                        <input type="radio" name="status" id="public_status" value="{{ \App\Enums\HospitalEnums::Public }}">
+                        <input type="radio" name="status" id="public_status" value="{{ \App\Enums\HospitalEnums::Public }}"  @if( old('status') == \App\Enums\HospitalEnums::Public ) checked @endif>
                         {{ \App\Enums\HospitalEnums::getDescription('1') }}
                     </label>
 
                     <label class="ml-3">
-                        <input type="radio" name="status" id="deleted_status" value="{{ \App\Enums\HospitalEnums::Delete }}">
+                        <input type="radio" name="status" id="deleted_status" value="{{ \App\Enums\HospitalEnums::Delete }}"  @if( old('status') == \App\Enums\HospitalEnums::Delete ) checked @endif>
                         {{ \App\Enums\HospitalEnums::getDescription('X') }}
                     </label>
                 </div>

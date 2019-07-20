@@ -25,7 +25,6 @@ class HospitalCreateFormRequest extends FormRequest
      */
     public function rules()
     {
-        
         $status = HospitalEnums::getValues();
         return  [
             'status' => ['required', Rule::in($status)],
@@ -36,11 +35,11 @@ class HospitalCreateFormRequest extends FormRequest
             'postcode' => 'number_dash',
             'address1' => 'max:256',
             'address2' => 'max:256',
-            'tel' => 'number_dash',
-            'paycall' => 'number_dash',
+            'tel' => 'digits_between:5,30',
+            'paycall' => 'digits_between:5,19',
             'consultation_note' => 'max:256',
            'medical_treatment_time.*.start' => 'nullable|date_format:H:i',
-           'medical_treatment_time.*.end' => 'nullable|date_format:H:i',
+           'medical_treatment_time.*.end' => 'nullable|date_format:H:i|after:medical_treatment_time.*.start',
         ];
     }
 
@@ -49,7 +48,8 @@ class HospitalCreateFormRequest extends FormRequest
     {
         return [
             'medical_treatment_time.*.start.date_format' => '時間はHH：MMにしてください',
-            'medical_treatment_time.*.end.date_format' => '時間はHH：MMにしてください'
+            'medical_treatment_time.*.end.date_format' => '時間はHH：MMにしてください',
+	        'medical_treatment_time.*.end.after' => trans('messages.time_invalid')
         ];
     }
 }

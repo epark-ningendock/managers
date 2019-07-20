@@ -169,6 +169,7 @@ return [
     'option_sorting_updated' => 'オプションソートの更新',
     'need_to_login' => 'あなたは最初にログインする必要があります',
     'kana' => 'よみ',
+	'time_invalid' => '時間が無効です',
     'reservation' =>[
         'accept_confirmation' => '予約を受け入れますか？',
         'cancel_confirmation' => '予約をキャンセルしますか？',
