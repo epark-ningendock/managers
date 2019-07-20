@@ -67,7 +67,7 @@
                         </div>
                     </div>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <button type="button" class="btn btn-default" style="margin-left: 20px;">
+                    <button type="button" class="btn btn-default postcode-search" style="margin-left: 20px;">
                         <img width="20px;" src="{{ asset('img/search.png') }}" alt="">
                         {{ __('アドレス検索') }}
                     </button>
@@ -438,4 +438,26 @@
 
 @push('js')
     <script src="{{ asset('js/yubinbango.js') }}" charset="UTF-8"></script>
+    <script>
+        (function ($) {
+
+            /* ---------------------------------------------------
+             combine postcode before submit
+            -----------------------------------------------------*/
+            $('#postcode-search').click(function(event){
+                event.preventDefault();
+                event.stopPropagation();
+                // $('#postcode').val(`${$('#postcode1').val()}${$('#postcode2').val()}`);
+                //to trigger native keyup event
+                $('#postcode')[0].dispatchEvent(new KeyboardEvent('keyup', {'key': ''}));
+            });
+        })(jQuery);
+    </script>
+@endpush
+@push('css')
+    <style>
+        p.help-block {
+            text-align: left;
+        }
+    </style>
 @endpush
