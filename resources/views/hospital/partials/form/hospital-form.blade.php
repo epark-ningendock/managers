@@ -62,12 +62,13 @@
                         <label for="postcode" class="col-md-4 text-right"> 〒</label>
                         <div class="col-md-8">
                             <span class="p-country-name" style="display:none;">Japan</span>
-                            <input type="text" class="form-control p-postal-code" id="postcode" name="postcode"  value="{{ old('postcode', (isset($hospital->postcode) ) ?: null) }}" placeholder="8380222" />
+                            <input type="text" class="form-control" id="postcode1"  value="{{ old('postcode', (isset($hospital->postcode) ) ?: null) }}" placeholder="8380222" />
+                            <input type="hidden" name="postcode" id="postcode" class="p-postal-code" size="8" value="{{ old('postcode', (isset($hospital->postcode) ) ?: null) }}" />
                             @if ($errors->has('postcode')) <p class="help-block">{{ $errors->first('postcode') }}</p> @endif
                         </div>
                     </div>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                    <button type="button" class="btn btn-default postcode-search" style="margin-left: 20px;">
+                    <button type="button" class="btn btn-default" id="postcode-search" style="margin-left: 20px;">
                         <img width="20px;" src="{{ asset('img/search.png') }}" alt="">
                         {{ __('アドレス検索') }}
                     </button>
@@ -83,7 +84,8 @@
                         <div class="form-group @if( $errors->has('prefectures'))  has-error @endif">
                             <label for="prefecture" class="col-md-4">{{ trans('messages.prefectures') }}</label>
                             <div class="col-md-8">
-                                <select name="prefecture" id="prefecture" class="form-control">
+                                <select name="prefecture" id="prefecture" class="form-control p-region">
+                                    <option value="">都道府県を選択</option>
                                     @foreach($prefectures as $prefecture)
                                         <option value="{{ $prefecture->name }}"
                                                 @if ( old('prefecture') && ($prefecture->name === old('prefecture')))
@@ -103,6 +105,7 @@
                         <div class="form-group @if( $errors->has('district_code'))  has-error @endif">
                             <div class="col-md-8">
                                 <select name="district_code_id" id="district_code_id" class="form-control">
+                                    <option value="">市町村区を選択</option>
                                     @foreach($district_codes as $district_code)
                                         <option value="{{ $district_code->id }}"
                                                 @if ( old('district_code_id') && ($district_code->name === old('district_code_id')))
@@ -447,7 +450,7 @@
             $('#postcode-search').click(function(event){
                 event.preventDefault();
                 event.stopPropagation();
-                // $('#postcode').val(`${$('#postcode1').val()}${$('#postcode2').val()}`);
+                $('#postcode').val($('#postcode1').val());
                 //to trigger native keyup event
                 $('#postcode')[0].dispatchEvent(new KeyboardEvent('keyup', {'key': ''}));
             });
