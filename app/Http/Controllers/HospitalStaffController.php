@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Exceptions\ExclusiveLockException;
 use Log;
 
 class HospitalStaffController extends Controller
@@ -81,16 +82,28 @@ class HospitalStaffController extends Controller
     {
         $this->hospitalStaffLoginIdValidation($request->login_id);
         $this->hospitalStaffEmailValidation($request->email);
-        
+
         $request->request->add([
             'hospital_id' => session()->get('hospital_id'),
         ]);
 
         $hospital_staff     = HospitalStaff::findOrFail($id);
-        $inputs             = request()->all();
-        $hospital_staff->update($inputs);
+        try {
+            DB::beginTransaction();
+            if ($hospital_staff->updated_at > $request['updated_at']) {
+                throw new ExclusiveLockException;
+            }
+            
+            $inputs  = request()->all();
+            $hospital_staff->update($inputs);
 
-        return redirect('hospital-staff')->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_staff')]));
+            DB::commit();
+
+            return redirect('hospital-staff')->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_staff')]));
+        } catch (ExclusiveLockException $e) {
+            DB::rollback();
+            throw $e;
+        }
     }
 
     public function destroy($id)
@@ -116,17 +129,27 @@ class HospitalStaffController extends Controller
         ]);
 
         $hospital_staff = HospitalStaff::findOrFail($hospital_staff_id);
-
-        if (Hash::check($request->old_password, $hospital_staff->password)) {
-            $hospital_staff->password = bcrypt($request->password);
-            $hospital_staff->save();
-            app('App\Http\Controllers\Auth\LoginController')->is_hospital_staff_login($hospital_staff->login_id, $request->password);
-            return redirect('hospital-staff')->with('success', trans('messages.hospital_staff_update_passoword'));
-        } else {
-            $validator = Validator::make([], []);
-            $validator->errors()->add('old_password', '現在のパスワードが正しくありません');
-            throw new ValidationException($validator);
-            return redirect()->back();
+        
+        try {
+            DB::beginTransaction();
+            if ($hospital_staff->updated_at > $request['updated_at']) {
+                throw new ExclusiveLockException;
+            }
+            if (Hash::check($request->old_password, $hospital_staff->password)) {
+                $hospital_staff->password = bcrypt($request->password);
+                $hospital_staff->update(['password' => $password]);
+                app('App\Http\Controllers\Auth\LoginController')->is_hospital_staff_login($hospital_staff->login_id, $request->password);
+                return redirect('hospital-staff')->with('success', trans('messages.hospital_staff_update_passoword'));
+            } else {
+                $validator = Validator::make([], []);
+                $validator->errors()->add('old_password', '現在のパスワードが正しくありません');
+                throw new ValidationException($validator);
+                return redirect()->back();
+            }
+            DB::commit();
+        } catch (ExclusiveLockException $e) {
+            DB::rollback();
+            throw $e;
         }
     }
 
