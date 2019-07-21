@@ -44,6 +44,7 @@ class HospitalStaffController extends Controller
             ]);
 
             $hospital_staff_data = $request->only([
+                'name',
                 'login_id',
                 'email',
                 'hospital_id',
