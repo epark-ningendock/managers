@@ -64,7 +64,6 @@ class HospitalController extends Controller
         }
 
         $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());
-
         return view('hospital.index', [ 'hospitals' => $hospitals ]);
     }
 
