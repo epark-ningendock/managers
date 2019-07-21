@@ -38,14 +38,20 @@ class HospitalStaffController extends Controller
             'hospital_id' => session()->get('hospital_id'),
         ]);
 
-        $hospital_staff = new HospitalStaff($request->all());
-        $password = str_random(8);
-        $hospital_staff->password = bcrypt($password);
+        $hospital_staff_data = $request->only([
+            'login_id',
+            'email',
+            'hospital_id',
+            'password',
+            'password_confirmation',
+        ]);
+        $hospital_staff = new HospitalStaff($hospital_staff_data);
+        $hospital_staff->password = bcrypt($hospital_staff_data['password']);
         $hospital_staff->save();
 
         $data = [
             'hospital_staff' => $hospital_staff,
-            'password' => $password
+            'password' => $hospital_staff_data['password']
         ];
         
         // 登録メールを送信する
