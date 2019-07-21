@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use App\Hospital;
 use App\Enums\Authority;
 use App\Enums\StaffStatus;
+use App\Enums\Permission;
 
 class LoginController extends Controller
 {
@@ -72,15 +73,46 @@ class LoginController extends Controller
 
         $is_staff = self::is_staff_login($data['login_id'], $data['password']);
         if ($is_staff) {
-            // 初回ログイン時は、遷移先を変える
-            if (!Auth::user()->first_login_at) {
-                return redirect($this->staff_first_login_redirectTo);
-            }
             // スタッフの権限が契約管理者だった場合、契約管理に遷移する
             if (Auth::user()->authority->value === Authority::ContractStaff) {
+                if (!Auth::user()->first_login_at) {
+                    return redirect($this->staff_first_login_redirectTo);
+                }
                 return redirect($this->contract_staff_redirectTo);
+            } else {
+                // staff_auths権限によって遷移先を変える
+                if (Auth::user()->staff_auth->is_hospital === Permission::None) {
+                    if (Auth::user()->staff_auth->is_staff !== Permission::None) {
+                        if (!Auth::user()->first_login_at) {
+                            return redirect($this->staff_first_login_redirectTo);
+                        }
+                        return redirect('/staff');
+                    } elseif (Auth::user()->staff_auth->is_cource_classification !== Permission::None) {
+                        if (!Auth::user()->first_login_at) {
+                            return redirect($this->staff_first_login_redirectTo);
+                        }
+                        return redirect('/classification');
+                    } elseif (Auth::user()->staff_auth->is_invoice !== Permission::None) {
+                        if (!Auth::user()->first_login_at) {
+                            return redirect($this->staff_first_login_redirectTo);
+                        }
+                        return redirect('/staff');
+                    } elseif (Auth::user()->staff_auth->is_pre_account !== Permission::None) {
+                        if (!Auth::user()->first_login_at) {
+                            return redirect($this->staff_first_login_redirectTo);
+                        }
+                        return redirect('/staff');
+                    } else {
+                        session()->flush();
+                        Auth::logout();
+                        return redirect('/login')->with('error', 'スタッフ権限がありません。');
+                    }
+                }
+                if (!Auth::user()->first_login_at) {
+                    return redirect($this->staff_first_login_redirectTo);
+                }
+                return redirect($this->staff_redirectTo);
             }
-            return redirect($this->staff_redirectTo);
         }
 
         $is_hospital_staff = self::is_hospital_staff_login($data['login_id'], $data['password']);
