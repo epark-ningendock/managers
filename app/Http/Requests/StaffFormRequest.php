@@ -35,13 +35,7 @@ class StaffFormRequest extends FormRequest
             'login_id' => $login_id,
             'email' => $email,
             'status' => 'required|enum_value:' . StaffStatus::class . ',false',
-            'authority' => 'required',
-            'is_hospital' => ['required', Rule::in([0, 1, 3])],
-            'is_staff' => ['required', Rule::in([0, 1, 3])],
-            'is_cource_classification' => ['required', Rule::in([0, 1, 3, 7])],
-            'is_invoice' => ['required', Rule::in([0, 1, 3, 7])],
-            'is_pre_account' => ['required', Rule::in([0, 1, 3, 7])],
-            'is_contract' => ['required', Rule::in([0, 1, 3, 7])],
+            'authority' => 'required'
         ];
         return $rules;
     }

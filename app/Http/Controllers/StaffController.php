@@ -20,6 +20,8 @@ use Illuminate\Validation\ValidationException;
 use App\Exceptions\ExclusiveLockException;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\Permission;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\In;
 
 class StaffController extends Controller
 {
@@ -58,6 +60,34 @@ class StaffController extends Controller
 
     public function store(StaffFormRequest $request)
     {
+        if (intval($request->authority) === Authority::ContractStaff) {
+            $staff_auths = [
+                'is_hospital' => 0,
+                'is_staff' => 0,
+                'is_cource_classification' => 0,
+                'is_invoice' => 0,
+                'is_pre_account' => 0,
+                'is_contract' => 7
+            ];
+        } else {
+            $this->validate($request, [
+                'is_hospital' => ['required', Rule::in([0, 1, 3])],
+                'is_staff' => ['required', Rule::in([0, 1, 3])],
+                'is_cource_classification' => ['required', Rule::in([0, 1, 3, 7])],
+                'is_invoice' => ['required', Rule::in([0, 1, 3, 7])],
+                'is_pre_account' => ['required', Rule::in([0, 1, 3, 7])]
+            ]);
+            
+            $staff_auths = [
+                'is_hospital' => $request->is_hospital,
+                'is_staff' => $request->is_staff,
+                'is_cource_classification' => $request->is_cource_classification,
+                'is_invoice' => $request->is_invoice,
+                'is_pre_account' => $request->is_pre_account,
+                'is_contract' => 0
+            ];
+        }
+
         $this->staffLoginIdValidation($request->login_id);
         $this->staffEmailValidation($request->email);
 
@@ -77,7 +107,7 @@ class StaffController extends Controller
             $staff->password = bcrypt($password);
             $staff->save();
 
-            $staff_auth = new StaffAuth($request->only(['is_hospital', 'is_staff', 'is_cource_classification', 'is_invoice', 'is_pre_account', 'is_contract']));
+            $staff_auth = new StaffAuth($staff_auths);
             $staff->staff_auth()->save($staff_auth);
             
             $data = [
@@ -106,9 +136,37 @@ class StaffController extends Controller
 
     public function update(StaffFormRequest $request, $id)
     {
+        if (intval($request->authority) === Authority::ContractStaff) {
+            $staff_auths = [
+                'is_hospital' => 0,
+                'is_staff' => 0,
+                'is_cource_classification' => 0,
+                'is_invoice' => 0,
+                'is_pre_account' => 0,
+                'is_contract' => 7
+            ];
+        } else {
+            $this->validate($request, [
+                'is_hospital' => ['required', Rule::in([0, 1, 3])],
+                'is_staff' => ['required', Rule::in([0, 1, 3])],
+                'is_cource_classification' => ['required', Rule::in([0, 1, 3, 7])],
+                'is_invoice' => ['required', Rule::in([0, 1, 3, 7])],
+                'is_pre_account' => ['required', Rule::in([0, 1, 3, 7])]
+            ]);
+            
+            $staff_auths = [
+                'is_hospital' => $request->is_hospital,
+                'is_staff' => $request->is_staff,
+                'is_cource_classification' => $request->is_cource_classification,
+                'is_invoice' => $request->is_invoice,
+                'is_pre_account' => $request->is_pre_account,
+                'is_contract' => 0
+            ];
+        }
+
         $this->staffLoginIdValidation($request->login_id);
         $this->staffEmailValidation($request->email);
-
+        
         $staff = Staff::findOrFail($id);
         
         try {
