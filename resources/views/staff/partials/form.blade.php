@@ -28,23 +28,23 @@
 
   <label for="name">スタッフ名</label>  
   <div class="form-group @if ($errors->has('name')) has-error @endif">
-    <input type="text" class="form-control text" id="name" name="name"
+    <input type="text" class="form-control" id="name" name="name"
            value="{{ old('name', (isset($staff) ? $staff->name : null)) }}"
            placeholder="スタッフ名">
     @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
   </div>
 
   <label for="login_id">ログインID</label>
-  <div class="form-group  @if ($errors->has('login_id')) has-error @endif">
-    <input type="text" class="form-control text" id="login_id" name="login_id"
+  <div class="form-group @if ($errors->has('login_id')) has-error @endif">
+    <input type="text" class="form-control" id="login_id" name="login_id"
            value="{{ old('login_id', (isset($staff) ? $staff->login_id : null)) }}"
            placeholder="ログインID"> 
     @if ($errors->has('login_id')) <p class="help-block">{{ $errors->first('login_id') }}</p> @endif
   </div>
 
   <label for="email">メールアドレス</label>
-  <div class="form-group  @if ($errors->has('email')) has-error @endif">
-    <input type="email" class="form-control text" id="email" name="email"
+  <div class="form-group @if ($errors->has('email')) has-error @endif">
+    <input type="email" class="form-control" id="email" name="email"
            value="{{ old('email', (isset($staff) ? $staff->email : null)) }}"
            placeholder="メールアドレス">
     @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
@@ -66,7 +66,7 @@
   @endif
 
   <label for="department">部署</label>
-  <select name="department_id" id="department_id" class="form-control select-box  @if ($errors->has('department_id')) has-error @endif">
+  <select name="department_id" id="department_id" class="form-control @if ($errors->has('department_id')) has-error @endif">
       <option value=""></option>
       @foreach($departments as $department)
           <option value="{{ $department->id }}"
@@ -381,16 +381,3 @@
     </script>
 
 @endpush
-
-<style>
-.text-left {
-  text-align: center !important;
-}
-
-.text {
-  width: 600px;
-}
-.select-box {
-  width: 400px;
-}
-</style>
