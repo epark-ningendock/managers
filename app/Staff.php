@@ -20,7 +20,8 @@ class Staff extends Authenticatable
         'authority',
         'email',
         'status',
-        'department_id'
+        'department_id',
+        'first_login_at'
     ];
 
     protected $enums = [

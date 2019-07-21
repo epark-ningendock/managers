@@ -127,7 +127,7 @@ class HospitalStaffController extends Controller
             'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
             'password_confirmation' => 'min:8|max:20'
         ]);
-
+        
         $hospital_staff = HospitalStaff::findOrFail($hospital_staff_id);
         
         try {
@@ -137,7 +137,16 @@ class HospitalStaffController extends Controller
             }
             if (Hash::check($request->old_password, $hospital_staff->password)) {
                 $hospital_staff->password = bcrypt($request->password);
-                $hospital_staff->update(['password' => $password]);
+
+                if (!$hospital_staff->first_login_at) {
+                    $hospital_staff->update([
+                        'password' => $password,
+                        'first_login_at' => Carbon::now()
+                    ]);
+                } else {
+                    $hospital_staff->update(['password' => $password]);
+                }
+
                 app('App\Http\Controllers\Auth\LoginController')->is_hospital_staff_login($hospital_staff->login_id, $request->password);
                 return redirect('hospital-staff')->with('success', trans('messages.hospital_staff_update_passoword'));
             } else {
