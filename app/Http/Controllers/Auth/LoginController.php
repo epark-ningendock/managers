@@ -112,7 +112,7 @@ class LoginController extends Controller
                 return true;
             } else {
                 $validator = Validator::make([], []);
-                $validator->errors()->add('fail_login', 'スタッフが無効です。');
+                $validator->errors()->add('fail_login', 'スタッフが無効または、削除されています。');
                 throw new ValidationException($validator);
                 return redirect()->back();
             }
