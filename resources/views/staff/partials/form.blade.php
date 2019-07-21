@@ -50,6 +50,21 @@
     @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
   </div>
 
+  @if (!isset($staff))
+    <label for="password" class="required">パスワード</label>
+    <div class="form-group @if( $errors->has('password'))  has-error @endif">
+        <input type="password" class="form-control" id="password" name="password"
+               placeholder="パスワード">
+        @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
+    </div>
+    <label for="password-confirm">パスワード（確認用）</label>
+    <div class="form-group @if ($errors->has('password_confirmation')) has-error @endif">
+        <input type="password" class="form-control" id="password-confirm" name="password_confirmation"
+               placeholder="パスワード（確認用）">
+        @if ($errors->has('password_confirmation')) <p class="help-block">{{ $errors->first('password_confirmation') }}</p> @endif
+    </div>
+  @endif
+
   <label for="department">部署</label>
   <select name="department_id" id="department_id" class="form-control select-box  @if ($errors->has('department_id')) has-error @endif">
       <option value=""></option>

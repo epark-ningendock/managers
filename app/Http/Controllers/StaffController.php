@@ -97,14 +97,15 @@ class StaffController extends Controller
                 'name',
                 'login_id',
                 'email',
+                'password',
+                'password_confirmation',
                 'authority',
                 'status',
                 'department_id'
             ]);
             
             $staff = new Staff($staff_data);
-            $password = str_random(8);
-            $staff->password = bcrypt($password);
+            $staff->password = bcrypt($staff_data['password']);
             $staff->save();
 
             $staff_auth = new StaffAuth($staff_auths);
@@ -112,7 +113,7 @@ class StaffController extends Controller
             
             $data = [
                 'staff' => $staff,
-                'password' => $password
+                'password' => $staff_data['password']
             ];
             
             Mail::to($staff->email)
