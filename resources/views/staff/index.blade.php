@@ -60,12 +60,14 @@
 @stop
 
 @section('table')
-
+  <div class="paginate-box">
+    {{ $staffs->links() }}
+  </div>
   <div class="table-responsive">
-    <table id="example2" class="table table-bordered table-hover table-striped">
+    <table id="example2" class="table table-bordered table-hover table-striped no-border">
       <thead>
       <tr>
-        <th>スタッフID</th>
+        <th>ID</th>
         <th>スタッフ名</th>
         <th>ログインID</th>
         <th>メールアドレス</th>
@@ -79,11 +81,11 @@
         <th>契約管理</th>
         <th>状態</th>
         @if (Auth::user()->staff_auth->is_staff === 3)
-          <th>編集</th>
-          <th>削除</th>
+          <th></th>
+          <th></th>
         @endif
         @if (Auth::user()->authority->value === Authority::Admin && Auth::user()->staff_auth->is_staff === 3)
-          <th>パスワード変更</th>
+          <th></th>
         @endif
       </tr>
       </thead>
@@ -124,7 +126,7 @@
           @if (Auth::user()->authority->value === Authority::Admin && Auth::user()->staff_auth->is_staff === 3)
             <td>
               <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-success">
-                <i class="fa fa-key text-bold">パスワード</i>
+                <i class="fa fa-key text-bold">変更</i>
               </a>
             </td>
           @endif
@@ -133,8 +135,9 @@
       </tbody>
     </table>
   </div>
-
+  <div class="paginate-box">
   {{ $staffs->links() }}
+  </div>
   <style>
     tr.light-gray td {
       background-color: lightgray;
