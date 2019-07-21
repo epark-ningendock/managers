@@ -22,7 +22,7 @@ class HospitalStaffController extends Controller
     public function index()
     {
         $hospital_staffs = HospitalStaff::where('hospital_id', session()->get('hospital_id'));
-        return view('hospital_staff.index', [ 'hospital_staffs' => $hospital_staffs->paginate(20)]);
+        return view('hospital_staff.index', [ 'hospital_staffs' => $hospital_staffs->paginate(10)]);
     }
 
     public function create()
