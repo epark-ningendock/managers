@@ -49,7 +49,7 @@ class StaffController extends Controller
         }
         $query->where('status', $request->input('status', StaffStatus::Valid))->with(['staff_auth']);
 
-        return view('staff.index', ['staffs' => $query->paginate(20)])
+        return view('staff.index', ['staffs' => $query->paginate(10)])
             ->with($request->input());
     }
 
