@@ -23,6 +23,23 @@
 
 
 @section('table')
+    <div class="count-paginate-bar">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="display-total text-left mr-5 ">
+                    全{{ $hospital_staffs->total() }} 件中
+                    {{ ( $hospital_staffs->currentPage() * $hospital_staffs->perPage() ) - $hospital_staffs->perPage() + 1 }}件
+                    @if ($hospital_staffs->currentPage() === $hospital_staffs->lastPage())
+                      ~ {{ $hospital_staffs->total() }} 件を表示
+                    @else
+                      ~ {{ $hospital_staffs->currentPage() * $hospital_staffs->perPage() }} 件を表示
+                    @endif
+                </div>
+            </div>
+            <div class="col-sm-6">
+            </div>
+        </div>
+    </div>
     <table id="example2" class="table table-bordered table-hover table-striped mb-5 mt-5">
         <thead>
         <tr>

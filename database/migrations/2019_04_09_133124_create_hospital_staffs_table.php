@@ -22,6 +22,7 @@ class CreateHospitalStaffsTable extends Migration
             $table->string('login_id', 100)->unique()->nullable();
             $table->string('password', 256)->nullable();
             $table->string('remember_token', 100)->nullable();
+            $table->dateTime('first_login_at')->nullable();
             $this->addCommonColumns($table);
         });
     }

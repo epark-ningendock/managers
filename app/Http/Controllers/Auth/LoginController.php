@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\HospitalStaff;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginFormRequest;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -40,6 +41,8 @@ class LoginController extends Controller
     protected $contract_staff_redirectTo = '/contract'; // 契約管理者
     protected $hospital_staff_role = 'hospital_staffs'; // 医療機関スタッフ
     protected $hospital_staff_redirectTo = '/hospital-staff';
+    protected $staff_first_login_redirectTo = '/staff/edit-password-personal';
+    protected $hospital_staff_first_login_redirectTo = '/hospital-staff/edit-password';
 
     /**
      * Create a new controller instance.
@@ -69,6 +72,10 @@ class LoginController extends Controller
 
         $is_staff = self::is_staff_login($data['login_id'], $data['password']);
         if ($is_staff) {
+            // 初回ログイン時は、遷移先を変える
+            if (!Auth::user()->first_login_at) {
+                return redirect($this->staff_first_login_redirectTo);
+            }
             // スタッフの権限が契約管理者だった場合、契約管理に遷移する
             if (Auth::user()->authority->value === Authority::ContractStaff) {
                 return redirect($this->contract_staff_redirectTo);
@@ -78,6 +85,11 @@ class LoginController extends Controller
 
         $is_hospital_staff = self::is_hospital_staff_login($data['login_id'], $data['password']);
         if ($is_hospital_staff) {
+            // 初回ログイン時は、遷移先を変える
+            $hospital_staff = HospitalStaff::findOrFail(session()->get('staffs'));
+            if (!$hospital_staff->first_login_at) {
+                return redirect($this->hospital_staff_first_login_redirectTo);
+            }
             return redirect($this->hospital_staff_redirectTo);
         }
 

@@ -1,5 +1,6 @@
+@include('layouts.partials.message')
 <div class="box-body">
-
+    <input type="hidden" name="updated_at" value="{{ isset($hospital_staff) ? $hospital_staff->updated_at : null }}">
     <div class="form-group">
         <label for="name">医療機関スタッフ名</label>
         <div class="form-group @if( $errors->has('name'))  has-error @endif">

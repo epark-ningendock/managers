@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Enums\Permission;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\In;
+use Carbon\Carbon;
 
 class StaffController extends Controller
 {
@@ -265,7 +266,16 @@ class StaffController extends Controller
                 }
                 
                 $password = bcrypt($request->password);
-                $staff->update(['password' => $password]);
+
+                if (!$staff->first_login_at) {
+                    $staff->update([
+                        'password' => $password,
+                        'first_login_at' => Carbon::now()
+                    ]);
+                } else {
+                    $staff->update(['password' => $password]);
+                }
+
                 app('App\Http\Controllers\Auth\LoginController')->is_staff_login($staff->login_id, $request->password);
 
                 DB::commit();
