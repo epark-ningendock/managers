@@ -39,7 +39,8 @@ class LoginController extends Controller
      */
     protected $staff_role = 'staffs';
     protected $staff_redirectTo = '/hospital'; // スタッフ
-    protected $contract_staff_redirectTo = '/contract'; // 契約管理者
+    // TODO: 契約管理作成時に変更する
+    protected $contract_staff_redirectTo = '/'; // 契約管理者
     protected $hospital_staff_role = 'hospital_staffs'; // 医療機関スタッフ
     protected $hospital_staff_redirectTo = '/hospital-staff';
     protected $staff_first_login_redirectTo = '/staff/edit-password-personal';
@@ -96,12 +97,13 @@ class LoginController extends Controller
                         if (!Auth::user()->first_login_at) {
                             return redirect($this->staff_first_login_redirectTo);
                         }
-                        return redirect('/staff');
+                        return redirect('/reservation');
                     } elseif (Auth::user()->staff_auth->is_pre_account !== Permission::None) {
                         if (!Auth::user()->first_login_at) {
                             return redirect($this->staff_first_login_redirectTo);
                         }
-                        return redirect('/staff');
+                        // TODO: 事前決済機能が出来次第実装する
+                        return redirect('/');
                     } else {
                         session()->flush();
                         Auth::logout();

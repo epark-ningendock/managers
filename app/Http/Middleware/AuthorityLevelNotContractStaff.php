@@ -23,7 +23,8 @@ class AuthorityLevelNotContractStaff
             
             if ($staff->authority->value === Authority::ContractStaff) {
                 request()->session()->forget('hospital_id');
-                return redirect('/contract');
+                // TODO: 契約管理が出来次第実装する
+                return redirect('/');
             }
             return $next($request);
         } else {

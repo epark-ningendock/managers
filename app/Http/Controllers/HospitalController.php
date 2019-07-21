@@ -40,7 +40,8 @@ class HospitalController extends Controller
             } elseif (Auth::user()->staff_auth->is_invoice !== Permission::None) {
                 return redirect('/reservation');
             } elseif (Auth::user()->staff_auth->is_pre_account !== Permission::None) {
-                return redirect('/pre_account');
+                // TODO: 事前決済機能が出来次第実装する
+                return redirect('/');
             } else {
                 session()->flush();
                 Auth::logout();

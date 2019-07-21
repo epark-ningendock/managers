@@ -62,6 +62,8 @@ Route::put('/hospital-staff/reset-password/{email}', 'HospitalStaffController@re
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth:staffs')->group(function () {
+    Route::get('/staff/edit-password-personal', 'StaffController@editPersonalPassword')->name('staff.edit.password-personal');
+    Route::post('/staff/update-password-personal', 'StaffController@updatePersonalPassword')->name('staff.update.password-personal');
     Route::middleware('authority.level.not-contract-staff')->group(function () {
         /*
         |--------------------------------------------------------------------------
@@ -73,8 +75,6 @@ Route::middleware('auth:staffs')->group(function () {
             Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
         });
         Route::resource('/staff', 'StaffController')->except(['show']);
-        Route::get('/staff/edit-password-personal', 'StaffController@editPersonalPassword')->name('staff.edit.password-personal');
-        Route::post('/staff/update-password-personal', 'StaffController@updatePersonalPassword')->name('staff.update.password-personal');
         /*
         |--------------------------------------------------------------------------
         | Hospital Routes
@@ -114,6 +114,9 @@ Route::middleware('auth:staffs')->group(function () {
         | Reservation Routes
         |--------------------------------------------------------------------------
         */
+        Route::patch('/reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
+        Route::delete('/reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');
+        Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
         Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
         Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
     });
@@ -192,9 +195,4 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     Route::get('/reception/csv', 'ReservationController@reception_csv')->name('reception.csv');
     Route::patch('/reception/reservation_status', 'ReservationController@reservation_status')->name('reservation.bulk_status');
     Route::get('/reception', 'ReservationController@reception');
-    Route::patch('/reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
-    Route::delete('/reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');
-    Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
-    Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
-    Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
 });
