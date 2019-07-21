@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    @if (!isset($staff))
+    @if (!isset($hospital_staff))
         <label for="password">パスワード</label>
         <div class="form-group @if( $errors->has('password'))  has-error @endif">
             <input type="password" class="form-control" id="password" name="password"
