@@ -131,7 +131,7 @@
             </td>
             <td>
               @if ( $staff->status->value !== StaffStatus::Deleted)
-                <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $staff->id }}">
+                <button class="btn btn-primary delete-btn delete-popup-btn" data-id="{{ $staff->id }}">
                   <i class="fa fa-trash"></i>
                 </button>
               @endif
@@ -141,8 +141,8 @@
           @if (Auth::user()->authority->value === Authority::Admin && Auth::user()->staff_auth->is_staff === 3)
             <td>
               @if ( $staff->status->value !== StaffStatus::Deleted)
-                <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-success">
-                  <i class="fa fa-key text-bold">パスワード</i>
+                <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-primary">
+                  <i class="fa fa-key text-bold"> 変更</i>
                 </a>
               @endif
             </td>
