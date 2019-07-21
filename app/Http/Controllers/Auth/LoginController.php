@@ -74,7 +74,7 @@ class LoginController extends Controller
         if ($is_staff) {
             // 初回ログイン時は、遷移先を変える
             if (!Auth::user()->first_login_at) {
-                return redirect($this->staff_first_login_redirectTo)->with('error', "パスワードが初期発行時から変更されていません。");
+                return redirect($this->staff_first_login_redirectTo);
             }
             // スタッフの権限が契約管理者だった場合、契約管理に遷移する
             if (Auth::user()->authority->value === Authority::ContractStaff) {
@@ -88,7 +88,7 @@ class LoginController extends Controller
             // 初回ログイン時は、遷移先を変える
             $hospital_staff = HospitalStaff::findOrFail(session()->get('staffs'));
             if (!$hospital_staff->first_login_at) {
-                return redirect($this->hospital_staff_first_login_redirectTo)->with('error', "パスワードが初期発行時から変更されていません。");
+                return redirect($this->hospital_staff_first_login_redirectTo);
             }
             return redirect($this->hospital_staff_redirectTo);
         }

@@ -136,7 +136,7 @@ class HospitalStaffController extends Controller
                 throw new ExclusiveLockException;
             }
             if (Hash::check($request->old_password, $hospital_staff->password)) {
-                $hospital_staff->password = bcrypt($request->password);
+                $password = bcrypt($request->password);
 
                 if (!$hospital_staff->first_login_at) {
                     $hospital_staff->update([
@@ -148,6 +148,9 @@ class HospitalStaffController extends Controller
                 }
 
                 app('App\Http\Controllers\Auth\LoginController')->is_hospital_staff_login($hospital_staff->login_id, $request->password);
+
+                DB::commit();
+
                 return redirect('hospital-staff')->with('success', trans('messages.hospital_staff_update_passoword'));
             } else {
                 $validator = Validator::make([], []);
@@ -155,7 +158,6 @@ class HospitalStaffController extends Controller
                 throw new ValidationException($validator);
                 return redirect()->back();
             }
-            DB::commit();
         } catch (ExclusiveLockException $e) {
             DB::rollback();
             throw $e;
