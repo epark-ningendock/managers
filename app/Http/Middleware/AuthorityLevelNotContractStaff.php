@@ -2,12 +2,12 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\Permission;
+use App\Enums\Authority;
 use App\Staff;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class isContractEdit
+class AuthorityLevelNotContractStaff
 {
     /**
      * Handle an incoming request.
@@ -21,9 +21,9 @@ class isContractEdit
         if (Auth::user()->getTable() == "staffs") {
             $staff = Staff::findOrFail(request()->session()->get('staffs'));
             
-            if ($staff->staff_auth->is_contract !== Permission::Edit) {
+            if ($staff->authority->value === Authority::ContractStaff) {
                 request()->session()->forget('hospital_id');
-                return redirect('/hospital');
+                return redirect('/contract');
             }
             return $next($request);
         } else {

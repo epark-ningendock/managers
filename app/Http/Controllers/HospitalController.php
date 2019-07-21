@@ -33,7 +33,6 @@ class HospitalController extends Controller
     public function index(HospitalFormRequest $request)
     {
         if (Auth::user()->staff_auth->is_hospital === Permission::None) {
-            // TODO: 医療機関のコントローラーのindex()で、権限を見て、不可でない権限があれば、そこに遷移する。無ければ、ログアウトし、メッセージを表示する。
             // TODO: 権限で契約管理者を選択した際に、ラジオボタンに不可を選択させ、入力不可にする。 or 入力フォームを消し、Controllerで値を入れる。
             if (Auth::user()->staff_auth->is_staff !== Permission::None) {
                 return redirect('/staff');
