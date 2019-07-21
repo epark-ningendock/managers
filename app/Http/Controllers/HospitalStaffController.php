@@ -9,6 +9,7 @@ use App\Mail\HospitalStaff\PasswordResetMail;
 use App\Mail\HospitalStaff\PasswordResetConfirmMail;
 use App\Http\Requests\HospitalStaffFormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
@@ -35,25 +36,38 @@ class HospitalStaffController extends Controller
         $this->hospitalStaffLoginIdValidation($request->login_id);
         $this->hospitalStaffEmailValidation($request->email);
 
-        $request->request->add([
-            'hospital_id' => session()->get('hospital_id'),
-        ]);
+        try {
+            DB::beginTransaction();
+            $request->request->add([
+                'hospital_id' => session()->get('hospital_id'),
+            ]);
 
-        $hospital_staff = new HospitalStaff($request->all());
-        $password = str_random(8);
-        $hospital_staff->password = bcrypt($password);
-        $hospital_staff->save();
+            $hospital_staff_data = $request->only([
+                'login_id',
+                'email',
+                'hospital_id',
+                'password',
+                'password_confirmation',
+            ]);
+            $hospital_staff = new HospitalStaff($hospital_staff_data);
+            $hospital_staff->password = bcrypt($hospital_staff_data['password']);
+            $hospital_staff->save();
 
-        $data = [
-            'hospital_staff' => $hospital_staff,
-            'password' => $password
-        ];
-        
-        // 登録メールを送信する
-        Mail::to($hospital_staff->email)
-            ->send(new RegisteredMail($data));
-        
-        return redirect('hospital-staff')->with('success', trans('messages.created', ['name' => trans('messages.names.hospital_staff')]));
+            $data = [
+                'hospital_staff' => $hospital_staff,
+                'password' => $hospital_staff_data['password']
+            ];
+            
+            // 登録メールを送信する
+            Mail::to($hospital_staff->email)
+                ->send(new RegisteredMail($data));
+            
+            DB::commit();
+            return redirect('hospital-staff')->with('success', trans('messages.created', ['name' => trans('messages.names.hospital_staff')]));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(trans('messages.staff_create_error'))->withInput();
+        }
     }
 
     public function edit($id)
