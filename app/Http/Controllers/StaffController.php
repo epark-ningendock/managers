@@ -17,8 +17,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use App\Exceptions\ExclusiveLockException;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\Permission;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\In;
+use Carbon\Carbon;
 
 class StaffController extends Controller
 {
@@ -45,7 +49,7 @@ class StaffController extends Controller
         }
         $query->where('status', $request->input('status', StaffStatus::Valid))->with(['staff_auth']);
 
-        return view('staff.index', ['staffs' => $query->paginate(20)])
+        return view('staff.index', ['staffs' => $query->paginate(10)])
             ->with($request->input());
     }
 
@@ -57,6 +61,34 @@ class StaffController extends Controller
 
     public function store(StaffFormRequest $request)
     {
+        if (intval($request->authority) === Authority::ContractStaff) {
+            $staff_auths = [
+                'is_hospital' => 0,
+                'is_staff' => 0,
+                'is_cource_classification' => 0,
+                'is_invoice' => 0,
+                'is_pre_account' => 0,
+                'is_contract' => 7
+            ];
+        } else {
+            $this->validate($request, [
+                'is_hospital' => ['required', Rule::in([0, 1, 3])],
+                'is_staff' => ['required', Rule::in([0, 1, 3])],
+                'is_cource_classification' => ['required', Rule::in([0, 1, 3, 7])],
+                'is_invoice' => ['required', Rule::in([0, 1, 3, 7])],
+                'is_pre_account' => ['required', Rule::in([0, 1, 3, 7])]
+            ]);
+            
+            $staff_auths = [
+                'is_hospital' => $request->is_hospital,
+                'is_staff' => $request->is_staff,
+                'is_cource_classification' => $request->is_cource_classification,
+                'is_invoice' => $request->is_invoice,
+                'is_pre_account' => $request->is_pre_account,
+                'is_contract' => 0
+            ];
+        }
+
         $this->staffLoginIdValidation($request->login_id);
         $this->staffEmailValidation($request->email);
 
@@ -66,22 +98,23 @@ class StaffController extends Controller
                 'name',
                 'login_id',
                 'email',
+                'password',
+                'password_confirmation',
                 'authority',
                 'status',
                 'department_id'
             ]);
             
             $staff = new Staff($staff_data);
-            $password = str_random(8);
-            $staff->password = bcrypt($password);
+            $staff->password = bcrypt($staff_data['password']);
             $staff->save();
 
-            $staff_auth = new StaffAuth($request->only(['is_hospital', 'is_staff', 'is_cource_classification', 'is_invoice', 'is_pre_account', 'is_contract']));
+            $staff_auth = new StaffAuth($staff_auths);
             $staff->staff_auth()->save($staff_auth);
             
             $data = [
                 'staff' => $staff,
-                'password' => $password
+                'password' => $staff_data['password']
             ];
             
             Mail::to($staff->email)
@@ -105,12 +138,45 @@ class StaffController extends Controller
 
     public function update(StaffFormRequest $request, $id)
     {
+        if (intval($request->authority) === Authority::ContractStaff) {
+            $staff_auths = [
+                'is_hospital' => 0,
+                'is_staff' => 0,
+                'is_cource_classification' => 0,
+                'is_invoice' => 0,
+                'is_pre_account' => 0,
+                'is_contract' => 7
+            ];
+        } else {
+            $this->validate($request, [
+                'is_hospital' => ['required', Rule::in([0, 1, 3])],
+                'is_staff' => ['required', Rule::in([0, 1, 3])],
+                'is_cource_classification' => ['required', Rule::in([0, 1, 3, 7])],
+                'is_invoice' => ['required', Rule::in([0, 1, 3, 7])],
+                'is_pre_account' => ['required', Rule::in([0, 1, 3, 7])]
+            ]);
+            
+            $staff_auths = [
+                'is_hospital' => $request->is_hospital,
+                'is_staff' => $request->is_staff,
+                'is_cource_classification' => $request->is_cource_classification,
+                'is_invoice' => $request->is_invoice,
+                'is_pre_account' => $request->is_pre_account,
+                'is_contract' => 0
+            ];
+        }
+
         $this->staffLoginIdValidation($request->login_id);
         $this->staffEmailValidation($request->email);
-
+        
+        $staff = Staff::findOrFail($id);
+        
         try {
             DB::beginTransaction();
-            $staff = Staff::findOrFail($id);
+            if ($staff->updated_at > $request['updated_at']) {
+                throw new ExclusiveLockException;
+            }
+
             $staff->update($request->only(['name', 'login_id', 'email', 'authority', 'status', 'department_id']));
             $staff->save();
 
@@ -119,9 +185,9 @@ class StaffController extends Controller
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.staff')]));
             DB::commit();
             return redirect('staff');
-        } catch (\Exception $e) {
+        } catch (ExclusiveLockException $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(trans('messages.staff_create_error'))->withInput();
+            throw $e;
         }
     }
 
@@ -138,9 +204,10 @@ class StaffController extends Controller
     {
         $staff = Staff::find($staff_id);
         $operator_staff = Staff::where('login_id', session()->get('login_id'))->first();
+
         // 自分のパスワード変更の場合、遷移先変更
         if ($staff->login_id == $operator_staff->login_id) {
-            return view('staff.edit-password-personal');
+            return view('staff.edit-password-personal', ['staff' => $staff]);
         }
         return view('staff.edit-password', ['staff' => $staff]);
     }
@@ -154,14 +221,31 @@ class StaffController extends Controller
 
         $staff = Staff::findOrFail($staff_id);
 
-        $staff->password = bcrypt($request->password);
-        $staff->save();
-        return redirect('staff')->with('success', 'パスワードを更新しました。');
+        try {
+            DB::beginTransaction();
+
+            if ($staff->updated_at > $request['updated_at']) {
+                throw new ExclusiveLockException;
+            }
+
+            $password = bcrypt($request->password);
+            $staff->update(['password' => $password]);
+
+            DB::commit();
+
+            return redirect('staff')->with('success', 'パスワードを更新しました。');
+        } catch (ExclusiveLockException $e) {
+            DB::rollback();
+
+            throw $e;
+        }
     }
 
     public function editPersonalPassword()
     {
-        return view('staff.edit-password-personal');
+        $staff = Staff::findOrFail(Auth::user()->id);
+
+        return view('staff.edit-password-personal', ['staff' => $staff]);
     }
 
     public function updatePersonalPassword(Request $request)
@@ -175,10 +259,32 @@ class StaffController extends Controller
         $staff = Staff::findOrFail(Auth::user()->id);
 
         if (Hash::check($request->old_password, $staff->password)) {
-            $staff->password = bcrypt($request->password);
-            $staff->save();
-            app('App\Http\Controllers\Auth\LoginController')->is_staff_login($staff->login_id, $request->password);
-            return redirect('staff')->with('success', 'パスワードを更新しました。');
+            try {
+                DB::beginTransaction();
+                if ($staff->updated_at > $request['updated_at']) {
+                    throw new ExclusiveLockException;
+                }
+                
+                $password = bcrypt($request->password);
+
+                if (!$staff->first_login_at) {
+                    $staff->update([
+                        'password' => $password,
+                        'first_login_at' => Carbon::now()
+                    ]);
+                } else {
+                    $staff->update(['password' => $password]);
+                }
+
+                app('App\Http\Controllers\Auth\LoginController')->is_staff_login($staff->login_id, $request->password);
+
+                DB::commit();
+
+                return redirect('staff')->with('success', 'パスワードを更新しました。');
+            } catch (ExclusiveLockException $e) {
+                DB::rollback();
+                throw $e;
+            }
         } else {
             $validator = Validator::make([], []);
             $validator->errors()->add('old_password', '現在のパスワードが正しくありません。');

@@ -4,10 +4,13 @@
   use \App\Enums\Permission;
 @endphp
 @include('layouts.partials.error_pan')
+
+@include('layouts.partials.message')
 <div class="box-body staff-form">
   {!! csrf_field() !!}
   <h2>スタッフ情報</h2>
   <div class="form-group py-sm-2">
+    <input type="hidden" name="updated_at" value="{{ isset($staff) ? $staff->updated_at : null }}">
     <label for="status">状態</label>
     <group class="inline-radio two-option">
       <div>
@@ -21,19 +24,19 @@
     @if ($errors->has('status')) <p class="help-block has-error">{{ $errors->first('status') }}</p> @endif
   </div>
 
+
   <div class="form-group py-sm-1 @if ($errors->has('name')) has-error @endif">
-    <label for="name">
-      スタッフ名
+    <label for="name">スタッフ名
       <span class="form_required">必須</span>
     </label>
-    <input type="text" class="form-control text w16em" id="name" name="name"
+    <input type="text" class="form-control w16em" id="name" name="name"
            value="{{ old('name', (isset($staff) ? $staff->name : null)) }}"
            placeholder="スタッフ名">
     @if ($errors->has('name')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('name') }}</p> @endif
   </div>
 
   <div class="form-group py-sm-1 @if ($errors->has('login_id')) has-error @endif">
-    <label for="login_id">ログインID<span class="form_required">必須</span></label>
+  <label for="login_id">ログインID<span class="form_required">必須</span></label>
     <input type="text" class="form-control text w16em" id="login_id" name="login_id"
            value="{{ old('login_id', (isset($staff) ? $staff->login_id : null)) }}"
            placeholder="ログインID"> 
@@ -41,30 +44,50 @@
   </div>
 
   <div class="form-group py-sm-1 @if ($errors->has('email')) has-error @endif">
-    <label for="email">メールアドレス<span class="form_required">必須</span></label>
+  <label for="email">メールアドレス<span class="form_required">必須</span></label>
     <input type="email" class="form-control text w20em" id="email" name="email"
            value="{{ old('email', (isset($staff) ? $staff->email : null)) }}"
            placeholder="メールアドレス">
     @if ($errors->has('email')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('email') }}</p> @endif
   </div>
 
+
+  @if (!isset($staff))
+    <div class="form-group py-sm-1 @if ($errors->has('password')) has-error @endif">
+      <label for="password">パスワード<span class="form_required">必須</span></label>
+      <input type="password" class="form-control w16em" id="password" name="password"
+             placeholder="パスワード">
+      @if ($errors->has('password')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('password') }}</p> @endif
+    </div>
+
+    <div class="form-group py-sm-1 @if ($errors->has('password_confirmation')) has-error @endif">
+      <label for="password-confirm">パスワード（確認用）<span class="form_required">必須</span></label>
+      <input type="password" class="form-control w16em" id="password-confirm" name="password_confirmation"
+             placeholder="パスワード">
+      @if ($errors->has('password_confirmation')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('password_confirmation') }}</p> @endif
+    </div>
+  @endif
+
   <div class="form-group py-sm-1 @if ($errors->has('department_id')) has-error @endif">
     <label for="department">部署</label>
-    <select name="department_id" id="department_id" class="form-control select-box  @if ($errors->has('department_id')) has-error @endif">
-        <option value=""></option>
-        @foreach($departments as $department)
-            <option value="{{ $department->id }}"
+    <select name="department_id" id="department_id" class="form-control select-box w16em">
+      <option value=""></option>
+      @foreach($departments as $department)
+        <option value="{{ $department->id }}"
                 @if(old('department_id', (isset($staff) ? $staff->department_id : null)) == $department->id)
-                    selected="selected"
+                selected="selected"
                 @endif
-            >{{ $department->name }}</option>
-        @endforeach
+        >{{ $department->name }}</option>
+      @endforeach
     </select>
-    @if ($errors->has('department_id')) <p class="help-block">{{ $errors->first('department_id') }}</p> @endif
+    @if ($errors->has('department_id')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('department_id') }}</p> @endif
   </div>
+
+
   <h2>権限</h2>
   <fieldset class="form-group mt-3">
     <legend class="mt-3">スタッフ権限</legend>
+    <div class="radio mt-0">
       @if (Auth::user()->authority->value === Authority::Admin)
         <div class="radio">
           <input  value="{{ Authority::Admin }}" id="authority_admin" name="authority" type="radio" checked
@@ -134,7 +157,6 @@
     </div>
     @if ($errors->has('is_staff')) <p class="help-block has-error">{{ $errors->first('is_staff') }}</p> @endif
   </div>
-
   <fieldset class="form-group">
     <legend class="mb-0">検査コース分類</legend>
       <div class="radio">
@@ -241,15 +263,114 @@
 
 </div>
 
-<style>
-.text-left {
-  text-align: center !important;
-}
 
-.text {
-  width: 600px;
-}
-.select-box {
-  width: 400px;
-}
-</style>
+@push('js')
+    <script type="text/javascript">
+      (function ($) {
+        (function () {
+          $(document).ready( function(){
+            if ($('#authority_admin').prop("checked")) {
+              resetStaffValue()
+            }
+
+            if ($('#authority_member').prop("checked")) {
+              resetStaffValue()
+            }
+
+            if ($('#authority_external_staff').prop("checked")) {
+              resetStaffValue()
+            }
+
+            if ($('#authority_contract_staff').prop("checked")) {
+              resetContractStaffValue()
+            }
+          });
+
+          $('#authority_admin').change(function() {
+            if ($('#authority_admin').prop("checked")) {
+              resetStaffValue()
+            }
+          });
+
+          $('#authority_admin').change(function() {
+            if ($('#authority_member').prop("checked")) {
+              resetStaffValue()
+            }
+          });
+
+          $('#authority_external_staff').change(function() {
+            if ($('#authority_external_staff').prop("checked")) {
+              resetStaffValue()
+            }
+          });
+
+          $('#authority_contract_staff').change(function() {
+            if ($('#authority_contract_staff').prop("checked")) {
+              resetContractStaffValue()
+            }
+          });
+
+          function resetStaffValue() {
+            $('#is_contract_none').prop('checked', true);
+
+            $('#is_hospital_none').prop('disabled', false);
+            $('#is_hospital_view').prop('disabled', false);
+            $('#is_hospital_edit').prop('disabled', false);
+            $('#is_staff_none').prop('disabled', false);
+            $('#is_staff_view').prop('disabled', false);
+            $('#is_staff_edit').prop('disabled', false);
+            $('#is_cource_classification_none').prop('disabled', false);
+            $('#is_cource_classification_view').prop('disabled', false);
+            $('#is_cource_classification_edit').prop('disabled', false);
+            $('#is_invoice_none').prop('disabled', false);
+            $('#is_invoice_view').prop('disabled', false);
+            $('#is_invoice_edit').prop('disabled', false);
+            $('#is_invoice_upload').prop('disabled', false);
+            $('#is_pre_account_none').prop('disabled', false);
+            $('#is_pre_account_view').prop('disabled', false);
+            $('#is_pre_account_edit').prop('disabled', false);
+            $('#is_pre_account_upload').prop('disabled', false);
+            $('#is_contract_none').prop('disabled', true);
+            $('#is_contract_view').prop('disabled', true);
+            $('#is_contract_edit').prop('disabled', true);
+            $('#is_contract_upload').prop('disabled', true);
+          }
+
+          function resetContractStaffValue() {
+            $('#is_hospital_none').prop("checked", true);
+            $('#is_staff_none').prop("checked", true);
+            $('#is_cource_classification_none').prop("checked", true);
+            $('#is_invoice_none').prop("checked", true);
+            $('#is_pre_account_none').prop("checked", true);
+            $('#is_contract_upload').prop("checked", true);
+
+            $('#is_hospital_none').prop('disabled', true);
+            $('#is_hospital_view').prop('disabled', true);
+            $('#is_hospital_edit').prop('disabled', true);
+            $('#is_staff_none').prop('disabled', true);
+            $('#is_staff_view').prop('disabled', true);
+            $('#is_staff_edit').prop('disabled', true);
+            $('#is_cource_classification_none').prop('disabled', true);
+            $('#is_cource_classification_view').prop('disabled', true);
+            $('#is_cource_classification_edit').prop('disabled', true);
+            $('#is_invoice_none').prop('disabled', true);
+            $('#is_invoice_view').prop('disabled', true);
+            $('#is_invoice_edit').prop('disabled', true);
+            $('#is_invoice_upload').prop('disabled', true);
+            $('#is_pre_account_none').prop('disabled', true);
+            $('#is_pre_account_view').prop('disabled', true);
+            $('#is_pre_account_edit').prop('disabled', true);
+            $('#is_pre_account_upload').prop('disabled', true);
+            $('#is_contract_none').prop('disabled', true);
+            $('#is_contract_view').prop('disabled', true);
+            $('#is_contract_edit').prop('disabled', true);
+            $('#is_contract_upload').prop('disabled', true);
+          }
+        })();
+
+      })(jQuery);
+
+
+    </script>
+
+@endpush
