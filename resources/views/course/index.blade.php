@@ -47,7 +47,7 @@
       <tr>
           <td>{{ $course->id }}</td>
           <td>{{ $course->name }}</td>
-          <td>{{ $course->web_reception == '1' ? '受け付ける' : '受け付けない' }}</td>
+          <td>{{ $course->web_reception->description }}</td>
           <td>
             <a class="btn btn-primary"
                href="{{ route('course.edit', $course->id) }}">

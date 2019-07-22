@@ -27,7 +27,8 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::orderBy('order')->paginate(10);
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))
+            ->orderBy('order')->paginate(10);
         return view('course.index', ['courses' => $courses]);
     }
 
@@ -337,7 +338,8 @@ class CourseController extends Controller
      */
     public function sort()
     {
-        $courses = Course::orderBy('order')->get();
+
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))->orderBy('order')->get();
         return view('course.sort')->with('courses', $courses);
     }
 
@@ -349,7 +351,8 @@ class CourseController extends Controller
     public function updateSort(CourseFormRequest $request)
     {
         $ids = $request->input('course_ids');
-        $courses = Course::whereIn('id', $ids)->get();
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))
+            ->whereIn('id', $ids)->get();
 
         if (count($ids) != $courses->count()) {
             $request->session()->flash('error', trans('messages.invalid_course_id'));

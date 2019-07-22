@@ -49,8 +49,8 @@ return [
     ],
 
     WebReception::class => [
-        WebReception::NotAccept => '受け付けない',
-        WebReception::Accept => '受け付ける'
+        WebReception::NotAccept => '受付不可',
+        WebReception::Accept => '受付'
     ],
 
     CalendarDisplay::class => [
