@@ -2,7 +2,7 @@
     use \App\Enums\HospitalEnums;
     $params = [
         'delete_route' => 'hospital.destroy',
-        'create_route' => 'hospital.create'
+        'create_route' => 'contract.information.create'
     ];
 @endphp
 
@@ -65,7 +65,7 @@
 @include('hospital.partials.record-management-modal-box')
   <div class="pull-right">
     @if (Auth::user()->staff_auth->is_hospital === 3)
-        <a class="btn btn-success btn-create" href="{{ route('hospital.contractInfo') }}">新規作成</a>
+        <a class="btn btn-success btn-create" href="{{ route('contract.information.create') }}">新規作成</a>
     @endif  
   </div>
 @stop
@@ -107,7 +107,7 @@
                         @if (Auth::user()->staff_auth->is_hospital === 3)
                             <td>
                                 <a class="btn btn-success insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">
-                                    <span class="fa fa-pencil"></i>    
+                                    <span class="fa fa-pencil"></span>
                                 </a>
                                 <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
                                     {{ csrf_field() }}
@@ -115,7 +115,7 @@
                             </td>
                             <td>
                                 @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
-                                    <a href="{{ route('hospital.edit', $hospital->id) }}"
+                                    <a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}?tab=contractor-information"
                                     class="btn btn-primary">
                                     <i class="fa fa-edit text-bold"> 編集</i>
                                     </a>

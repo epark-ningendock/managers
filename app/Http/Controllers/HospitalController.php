@@ -114,7 +114,7 @@ class HospitalController extends Controller
         $stations = Station::all();
         $rails = Rail::all();
 
-        return view('hospital.create-hospital-form', [
+        return view('hospital.create', [
             'prefectures' => $prefectures,
             'district_codes' => $district_codes,
             'medical_examination_systems' => $medical_examination_systems,
@@ -168,7 +168,7 @@ class HospitalController extends Controller
     
     public function edit(Hospital $hospital)
     {
-        return view('hospital.create-contract-form');
+        return view('hospital.create-contract-form', ['hospital' => $hospital]);
     }
 
     /**
