@@ -11,7 +11,8 @@
             $('.time-picker').each(function() {
                 $(this).datetimepicker({
                     locale: 'ja',
-                    format: 'LT'
+                    format: 'LT',
+                    stepping: 5
                 });
             });
         });
