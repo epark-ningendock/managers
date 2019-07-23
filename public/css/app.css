@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 .m-0 {
   margin: 0 !important;
 }
@@ -2646,5 +2648,21 @@ legend {
 
 .paginate-box {
   text-align: center;
+}
+
+.staff-table-responsive {
+  overflow-x: auto;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.staff-table {
+  /* 横スクロール用 */
+  display: inline-block;
+  width: 100%;
+}
+
+.staff-table td {
+  vertical-align: middle !important;
 }
 

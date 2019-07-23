@@ -78,8 +78,8 @@
           </div>
       </div>
   </div>
-  <div class="table-responsive mt-3">
-    <table id="example2" class="table table-bordered table-hover table-striped">
+  <div class="staff-table-responsive table-responsive mt-3">
+    <table id="example2" class="table table-bordered table-hover table-striped no-border staff-table">
       <thead>
       <tr>
         <th>ID</th>
@@ -125,7 +125,7 @@
               @if ( $staff->status->value !== StaffStatus::Deleted)
                 <a class="btn btn-primary"
                   href="{{ route('staff.edit', $staff->id) }}">
-                  <i class="fa fa-edit text-bold"> 編集</i>
+                  <i class="fa fa-edit"> 編集</i>
                 </a>
               @endif
             </td>
@@ -142,7 +142,7 @@
             <td>
               @if ( $staff->status->value !== StaffStatus::Deleted)
                 <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-primary">
-                  <i class="fa fa-key text-bold"> 変更</i>
+                  <i class="fa fa-key"> 変更</i>
                 </a>
               @endif
             </td>
