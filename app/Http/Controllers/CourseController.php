@@ -11,6 +11,7 @@ use App\HospitalImage;
 use App\Http\Requests\CourseFormRequest;
 use App\MajorClassification;
 use App\MinorClassification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Option;
@@ -38,16 +39,18 @@ class CourseController extends Controller
      */
     public function create()
     {
-        $images = HospitalImage::all();
+        $hospital_id = session()->get('hospital_id');
+        $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('order')->get();
-        $options = Option::orderBy('order')->get();
+        $options = Option::where('hospital_id', $hospital_id)->orderBy('order')->get();
         $image_orders = ImageOrder::orderBy('order')->get();
-        $tax_classes = TaxClass::all();
-        $calendars = Calendar::all();
+        $calendars = Calendar::where('hospital_id', $hospital_id)->get();
+        $tax_class = TaxClass::whereDate('life_time_from', '<=', Carbon::today())
+            ->whereDate('life_time_to', '>=', Carbon::today())->get()->first();
 
         return view('course.create')
             ->with('calendars', $calendars)
-            ->with('tax_classes', $tax_classes)
+            ->with('tax_class', $tax_class)
             ->with('image_orders', $image_orders)
             ->with('options', $options)
             ->with('majors', $majors)
@@ -102,16 +105,18 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
-        $images = HospitalImage::all();
+        $hospital_id = session()->get('hospital_id');
+        $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('order')->get();
-        $options = Option::orderBy('order')->get();
+        $options = Option::where('hospital_id', $hospital_id)->orderBy('order')->get();
         $image_orders = ImageOrder::orderBy('order')->get();
-        $tax_classes = TaxClass::all();
-        $calendars = Calendar::all();
+        $calendars = Calendar::where('hospital_id', $hospital_id)->get();
+        $tax_class = TaxClass::whereDate('life_time_from', '<=', Carbon::today())
+            ->whereDate('life_time_to', '>=', Carbon::today())->get()->first();
 
         return view('course.edit')
             ->with('calendars', $calendars)
-            ->with('tax_classes', $tax_classes)
+            ->with('tax_class', $tax_class)
             ->with('image_orders', $image_orders)
             ->with('options', $options)
             ->with('majors', $majors)
@@ -138,7 +143,6 @@ class CourseController extends Controller
                 'price',
                 'is_price_memo',
                 'price_memo',
-                'tax_class',
                 'is_pre_account_price'
             ]);
             $reception_start_day = $request->input('reception_start_day');
@@ -150,7 +154,6 @@ class CourseController extends Controller
             $course_data['reception_start_date'] = $reception_start_month * 1000 + $reception_start_day;
             $course_data['reception_end_date'] = $reception_end_month * 1000 + $reception_end_day;
             $course_data['reception_acceptance_date'] = $reception_acceptance_month * 1000 + $reception_acceptance_day;
-            $course_data['course_cancel'] = '0';
             $course_data['order'] = 0;
 
             if (isset($course_param)) {
