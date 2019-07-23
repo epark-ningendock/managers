@@ -115,7 +115,7 @@
                             </td>
                             <td>
                                 @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
-                                    <a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}?tab=contractor-information"
+                                    <a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}?tab=hospital-information"
                                     class="btn btn-primary">
                                     <i class="fa fa-edit text-bold"> 編集</i>
                                     </a>

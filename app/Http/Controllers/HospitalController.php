@@ -146,7 +146,6 @@ class HospitalController extends Controller
     {
         $request->request->add([
             'hospital_staff_id' => auth()->user()->id,
-	        'prefecture' => Prefecture::findOrFail($request->prefecture)->name
         ]);
 
         $hospital = Hospital::create($request->all());
@@ -181,7 +180,22 @@ class HospitalController extends Controller
     
     public function edit(Hospital $hospital)
     {
-        return view('hospital.create-contract-form', ['hospital' => $hospital]);
+        $prefectures = Prefecture::all();
+        $district_codes = DistrictCode::all();
+        $medical_examination_systems = MedicalExaminationSystem::all();
+        $medical_treatment_times = MedicalTreatmentTime::where('hospital_id', $hospital->id)->get();
+        $stations = Station::all();
+        $rails = Rail::all();
+
+        return view('hospital.edit', [
+            'hospital' => $hospital,
+            'prefectures' => $prefectures,
+            'district_codes' => $district_codes,
+            'medical_examination_systems' => $medical_examination_systems,
+            'stations' => $stations,
+            'rails' => $rails,
+            'medical_treatment_times' => $medical_treatment_times,
+        ]);
     }
 
     /**
@@ -191,9 +205,23 @@ class HospitalController extends Controller
      * @param  \App\Hospital  $hospital
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Hospital $hospital)
+    public function update(HospitalCreateFormRequest $request, Hospital $hospital)
     {
-        //
+
+        $hospital = Hospital::findOrFail($hospital->id);
+        $hospital->update($request->all());
+
+
+        if (!empty(request()->medical_treatment_time)) {
+            foreach (request()->medical_treatment_time as $mtt) {
+
+                $medical_treatment_times = MedicalTreatmentTime::findOrFail($mtt['id']);
+                $medical_treatment_times->update(MedicalTreatmentTime::getDefaultFieldValues($mtt));
+
+            }
+        }
+
+        return redirect('/hospital')->with('success', '更新成功');
     }
 
 

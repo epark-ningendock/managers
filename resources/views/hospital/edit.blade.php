@@ -8,7 +8,8 @@
 
     @includeIf('hospital.partials.nav-bar')
 
-    <form id="contract-form" class="form-horizontal h-adr" method="post" action="{{ route('hospital.store') }}">
+    <form id="contract-form" class="form-horizontal h-adr" method="POST" action="{{ route('hospital.update',['hospital' => $hospital]) }}">
+        {{method_field('PUT')}}
         {{ csrf_field() }}
         <h5 class="sm-title">基本情報</h5>
         @includeIf('hospital.partials.form.hospital-form')
