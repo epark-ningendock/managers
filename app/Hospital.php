@@ -13,7 +13,7 @@ class Hospital extends Model
         'name',
         'kana',
         'postcode',
-        'pref',
+        'prefecture_id',
         'district_code_id',
 	    'course_meta_information_id',
 	    'medical_examination_system_id',

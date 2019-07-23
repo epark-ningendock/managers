@@ -20,6 +20,7 @@ class CreateHospitalsTable extends Migration
             $table->string('name', 200);
             $table->string('kana', 100);
             $table->char('postcode', 8)->nullable();
+            $table->tinyInteger('prefecture_id')->nullable();
             $table->integer('district_code_id')->nullable();
             $table->unsignedInteger('course_meta_information_id')->nullable();
             $table->string('address1', 256)->nullable();
