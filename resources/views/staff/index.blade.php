@@ -21,6 +21,7 @@
       <i class="fa fa-users"> スタッフ管理</i>
   </h1>
 @stop
+
 <!-- search section -->
 @section('search')
   <form role="form">
@@ -60,12 +61,28 @@
 @stop
 
 @section('table')
-
-  <div class="table-responsive">
-    <table id="example2" class="table table-bordered table-hover table-striped">
+  <div class="count-paginate-bar">
+      <div class="row">
+          <div class="col-sm-6">
+              <div class="display-total text-left mr-5 ">
+                  全{{ $staffs->total() }} 件中
+                  {{ ( $staffs->currentPage() * $staffs->perPage() ) - $staffs->perPage() + 1 }}件
+                  @if ($staffs->currentPage() === $staffs->lastPage())
+                    ~ {{ $staffs->total() }} 件を表示
+                  @else
+                    ~ {{ $staffs->currentPage() * $staffs->perPage() }} 件を表示
+                  @endif
+              </div>
+          </div>
+          <div class="col-sm-6">
+          </div>
+      </div>
+  </div>
+  <div class="staff-table-responsive table-responsive mt-3">
+    <table id="example2" class="table table-bordered table-hover table-striped no-border staff-table">
       <thead>
       <tr>
-        <th>スタッフID</th>
+        <th>ID</th>
         <th>スタッフ名</th>
         <th>ログインID</th>
         <th>メールアドレス</th>
@@ -79,11 +96,11 @@
         <th>契約管理</th>
         <th>状態</th>
         @if (Auth::user()->staff_auth->is_staff === 3)
-          <th>編集</th>
-          <th>削除</th>
+          <th></th>
+          <th></th>
         @endif
         @if (Auth::user()->authority->value === Authority::Admin && Auth::user()->staff_auth->is_staff === 3)
-          <th>パスワード変更</th>
+          <th></th>
         @endif
       </tr>
       </thead>
@@ -105,27 +122,29 @@
           <td>{{ $staff->status->description  }}</td>
           @if (Auth::user()->staff_auth->is_staff === 3)
             <td>
-  {{--          @if(!$staff->status->is(StaffStatus::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
-              <a class="btn btn-primary"
-                href="{{ route('staff.edit', $staff->id) }}">
-                <i class="fa fa-edit text-bold"> 編集</i>
-              </a>
-              {{--@endif--}}
+              @if ( $staff->status->value !== StaffStatus::Deleted)
+                <a class="btn btn-primary"
+                  href="{{ route('staff.edit', $staff->id) }}">
+                  <i class="fa fa-edit"> 編集</i>
+                </a>
+              @endif
             </td>
             <td>
-  {{--          @if(!$staff->status->is(StaffStatus::Deleted) && auth()->check() && auth()->user()->hasPermission('is_staff', Permission::Edit))--}}
-              <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $staff->id }}">
-                <i class="fa fa-trash"></i>
-              </button>
-              {{--@endif--}}
+              @if ( $staff->status->value !== StaffStatus::Deleted)
+                <button class="btn btn-primary delete-btn delete-popup-btn" data-id="{{ $staff->id }}">
+                  <i class="fa fa-trash"></i>
+                </button>
+              @endif
             </td>
           @endif
           
           @if (Auth::user()->authority->value === Authority::Admin && Auth::user()->staff_auth->is_staff === 3)
             <td>
-              <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-success">
-                <i class="fa fa-key text-bold">パスワード</i>
-              </a>
+              @if ( $staff->status->value !== StaffStatus::Deleted)
+                <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-primary">
+                  <i class="fa fa-key"> 変更</i>
+                </a>
+              @endif
             </td>
           @endif
         </tr>
@@ -133,8 +152,9 @@
       </tbody>
     </table>
   </div>
-
+  <div class="paginate-box">
   {{ $staffs->links() }}
+  </div>
   <style>
     tr.light-gray td {
       background-color: lightgray;

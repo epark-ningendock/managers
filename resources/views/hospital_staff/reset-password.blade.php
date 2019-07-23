@@ -20,23 +20,28 @@
                 <form method="POST"  action="{{ route('hospital-staff.reset.password', ['email' => $email]) }}">
                     {{ csrf_field() }}
                     {{ method_field('PUT') }}
+                    <label for="password">新しいパスワード</label>
                     <div class="form-group @if ($errors->has('password')) has-error @endif">
-                        <label for="password">新しいパスワード</label>
                         <input id="password" type="password" class="form-control" name="password" required>
                         @if ($errors->has('password')) <p class="help-block">{{ $errors->first('password') }}</p> @endif
                     </div>
                     
-                    
+                    <label for="password-confirm">新しいパスワード（確認用）</label>
                     <div class="form-group @if ($errors->has('password_confirmation')) has-error @endif">
-                        <label for="password-confirm">新しいパスワード（確認用）</label>
                         <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
                         @if ($errors->has('password_confirmation')) <p class="help-block">{{ $errors->first('password_confirmation') }}</p> @endif
                     </div>
                     
                     
-                    <div class="box-footer">
-                        <a href="{{ url('/staff') }}" class="btn btn-default">戻る</a>
-                        <button type="submit" class="btn btn-primary">更新</button>
+                    <div class="row mt-2">
+                      <div class="col-xs-6">
+                      </div>
+                      <div class="col-xs-3">
+                        <a href="/login" class="btn btn-default btn-block btn-flat margin-right-30">戻る</a>
+                      </div>
+                      <div class="col-xs-3">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">更新</button>
+                      </div>
                     </div>
                 </form>
             </div>
@@ -57,3 +62,13 @@
   </script>
   @yield('js')
 @stop
+
+<style>
+    .width-400 {
+        width: 400px;
+    }
+
+    .margin-right-30 {
+        margin-left: 30%;
+    }
+</style>

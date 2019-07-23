@@ -9,19 +9,22 @@ use App\Mail\HospitalStaff\PasswordResetMail;
 use App\Mail\HospitalStaff\PasswordResetConfirmMail;
 use App\Http\Requests\HospitalStaffFormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Exceptions\ExclusiveLockException;
 use Log;
 
 class HospitalStaffController extends Controller
 {
     public function index()
     {
-        return view('hospital_staff.index', [ 'hospital_staffs' => HospitalStaff::paginate(20) ]);
+        $hospital_staffs = HospitalStaff::where('hospital_id', session()->get('hospital_id'));
+        return view('hospital_staff.index', [ 'hospital_staffs' => $hospital_staffs->paginate(10)]);
     }
 
     public function create()
@@ -34,25 +37,39 @@ class HospitalStaffController extends Controller
         $this->hospitalStaffLoginIdValidation($request->login_id);
         $this->hospitalStaffEmailValidation($request->email);
 
-        $request->request->add([
-            'hospital_id' => session()->get('hospital_id'),
-        ]);
+        try {
+            DB::beginTransaction();
+            $request->request->add([
+                'hospital_id' => session()->get('hospital_id'),
+            ]);
 
-        $hospital_staff = new HospitalStaff($request->all());
-        $password = str_random(8);
-        $hospital_staff->password = bcrypt($password);
-        $hospital_staff->save();
+            $hospital_staff_data = $request->only([
+                'name',
+                'login_id',
+                'email',
+                'hospital_id',
+                'password',
+                'password_confirmation',
+            ]);
+            $hospital_staff = new HospitalStaff($hospital_staff_data);
+            $hospital_staff->password = bcrypt($hospital_staff_data['password']);
+            $hospital_staff->save();
 
-        $data = [
-            'hospital_staff' => $hospital_staff,
-            'password' => $password
-        ];
-        
-        // 登録メールを送信する
-        Mail::to($hospital_staff->email)
-            ->send(new RegisteredMail($data));
-        
-        return redirect('hospital-staff')->with('success', trans('messages.created', ['name' => trans('messages.names.hospital_staff')]));
+            $data = [
+                'hospital_staff' => $hospital_staff,
+                'password' => $hospital_staff_data['password']
+            ];
+            
+            // 登録メールを送信する
+            Mail::to($hospital_staff->email)
+                ->send(new RegisteredMail($data));
+            
+            DB::commit();
+            return redirect('hospital-staff')->with('success', trans('messages.created', ['name' => trans('messages.names.hospital_staff')]));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(trans('messages.staff_create_error'))->withInput();
+        }
     }
 
     public function edit($id)
@@ -66,16 +83,28 @@ class HospitalStaffController extends Controller
     {
         $this->hospitalStaffLoginIdValidation($request->login_id);
         $this->hospitalStaffEmailValidation($request->email);
-        
+
         $request->request->add([
             'hospital_id' => session()->get('hospital_id'),
         ]);
 
         $hospital_staff     = HospitalStaff::findOrFail($id);
-        $inputs             = request()->all();
-        $hospital_staff->update($inputs);
+        try {
+            DB::beginTransaction();
+            if ($hospital_staff->updated_at > $request['updated_at']) {
+                throw new ExclusiveLockException;
+            }
+            
+            $inputs  = request()->all();
+            $hospital_staff->update($inputs);
 
-        return redirect('hospital-staff')->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_staff')]));
+            DB::commit();
+
+            return redirect('hospital-staff')->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_staff')]));
+        } catch (ExclusiveLockException $e) {
+            DB::rollback();
+            throw $e;
+        }
     }
 
     public function destroy($id)
@@ -99,19 +128,40 @@ class HospitalStaffController extends Controller
             'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
             'password_confirmation' => 'min:8|max:20'
         ]);
-
+        
         $hospital_staff = HospitalStaff::findOrFail($hospital_staff_id);
+        
+        try {
+            DB::beginTransaction();
+            if ($hospital_staff->updated_at > $request['updated_at']) {
+                throw new ExclusiveLockException;
+            }
+            if (Hash::check($request->old_password, $hospital_staff->password)) {
+                $password = bcrypt($request->password);
 
-        if (Hash::check($request->old_password, $hospital_staff->password)) {
-            $hospital_staff->password = bcrypt($request->password);
-            $hospital_staff->save();
-            app('App\Http\Controllers\Auth\LoginController')->is_hospital_staff_login($hospital_staff->login_id, $request->password);
-            return redirect('hospital-staff')->with('success', trans('messages.hospital_staff_update_passoword'));
-        } else {
-            $validator = Validator::make([], []);
-            $validator->errors()->add('old_password', '現在のパスワードが正しくありません');
-            throw new ValidationException($validator);
-            return redirect()->back();
+                if (!$hospital_staff->first_login_at) {
+                    $hospital_staff->update([
+                        'password' => $password,
+                        'first_login_at' => Carbon::now()
+                    ]);
+                } else {
+                    $hospital_staff->update(['password' => $password]);
+                }
+
+                app('App\Http\Controllers\Auth\LoginController')->is_hospital_staff_login($hospital_staff->login_id, $request->password);
+
+                DB::commit();
+
+                return redirect('hospital-staff')->with('success', trans('messages.hospital_staff_update_passoword'));
+            } else {
+                $validator = Validator::make([], []);
+                $validator->errors()->add('old_password', '現在のパスワードが正しくありません');
+                throw new ValidationException($validator);
+                return redirect()->back();
+            }
+        } catch (ExclusiveLockException $e) {
+            DB::rollback();
+            throw $e;
         }
     }
 
@@ -143,7 +193,7 @@ class HospitalStaffController extends Controller
             );
             Mail::to($request->email)
                 ->send(new PasswordResetMail($data));
-            return redirect('/login')->with('success', trans('messages.sent', ['mail' => trans('messages.mails.reset_passoword')]));
+            return redirect('/login')->with('success', "メールを送信しました。\nメールに記載されたURLを開き、パスワード初期化手続きを続行してください。");
         } else {
             $validator = Validator::make([], []);
             $validator->errors()->add('email', 'メールアドレスが存在しません。');
@@ -159,7 +209,7 @@ class HospitalStaffController extends Controller
             $staff = HospitalStaff::where('email', $email)->first();
         }
         $expired_date = new Carbon($staff->reset_sent_at);
-        if (!($expired_date->addHour(3)->gt(Carbon::now()))) {
+        if (!($expired_date->addHour(1)->gt(Carbon::now()))) {
             return redirect('/login')->with('error', trans('messages.token_expired'));
         } elseif (!$staff) {
             return redirect('/login')->with('error', 'スタッフが存在しません');
@@ -186,7 +236,7 @@ class HospitalStaffController extends Controller
         $staff->save();
         Mail::to($staff->email)
             ->send(new PasswordResetConfirmMail());
-        return redirect('/login')->with('success', 'パスワードを更新しました');
+        return redirect('/login')->with('success', 'パスワードを更新しました。');
     }
 
     public function hospitalStaffEmailValidation($email)

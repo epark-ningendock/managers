@@ -35,13 +35,27 @@ class HospitalController extends Controller
     public function __construct(Request $request)
     {
         request()->session()->forget('hospital_id');
+        // TODO: middlewareでindexだけにかけるものを作る
         $this->middleware('permission.hospital.edit')->except('index');
     }
     
     public function index(HospitalFormRequest $request)
     {
         if (Auth::user()->staff_auth->is_hospital === Permission::None) {
-            return view('staff.edit-password-personal');
+            if (Auth::user()->staff_auth->is_staff !== Permission::None) {
+                return redirect('/staff');
+            } elseif (Auth::user()->staff_auth->is_cource_classification !== Permission::None) {
+                return redirect('/classification');
+            } elseif (Auth::user()->staff_auth->is_invoice !== Permission::None) {
+                return redirect('/reservation');
+            } elseif (Auth::user()->staff_auth->is_pre_account !== Permission::None) {
+                // TODO: 事前決済機能が出来次第実装する
+                return redirect('/');
+            } else {
+                session()->flush();
+                Auth::logout();
+                return redirect('/login')->with('error', 'スタッフ権限がありません。');
+            }
         }
 
         $query = Hospital::query();
@@ -59,7 +73,6 @@ class HospitalController extends Controller
         }
 
         $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());
-
         return view('hospital.index', [ 'hospitals' => $hospitals ]);
     }
 
