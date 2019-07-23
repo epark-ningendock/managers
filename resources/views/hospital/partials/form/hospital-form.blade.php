@@ -69,7 +69,7 @@
                     </div>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     <button type="button" class="btn btn-default" id="postcode-search" style="margin-left: 20px;">
-                        <img width="20px;" src="{{ asset('img/search.png') }}" alt="">
+                        <img width="20px;" src="{{ asset('images/search.png') }}" alt="">
                         {{ __('アドレス検索') }}
                     </button>
                     @if ($errors->has('postcode')) <p class="help-block text-danger" style="text-align: center; color: #dd4d3b;">{{ $errors->first('postcode') }}</p> @endif
