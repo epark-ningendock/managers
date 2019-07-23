@@ -16,7 +16,7 @@ $factory->define( App\Hospital::class, function ( Faker $faker ) {
 			'25050',
 			'92050',
 		] ),
-		'prefecture_id'                 => $faker->numberBetween(1,10),
+		'prefecture_id'                 => $faker->numberBetween(1,47),
 		'district_code_id'              => $faker->randomNumber(),
 		'address1'                      => $faker->address,
 		'address2'                      => $faker->address,

@@ -108,7 +108,11 @@
                                 <select name="district_code_id" id="district_code_id" class="form-control">
                                     <option value="">市町村区を選択</option>
                                     @foreach($district_codes as $district_code)
-                                        <option value="{{ $district_code->id }}"
+                                        <option data-prefecture_id="{{ $district_code->prefecture_id }}"
+                                                value="{{ $district_code->id }}"
+                                                @if ( old('prefecture') && ( old('prefecture') == $district_code->prefecture_id ) )
+                                                    style="display: block;"
+                                                @endif
                                                 @if ( old('district_code_id') && ($district_code->id == old('district_code_id')))
                                                 selected="selected"
                                                 @endif
@@ -448,7 +452,27 @@
                 $('#postcode').val($('#postcode1').val());
                 //to trigger native keyup event
                 $('#postcode')[0].dispatchEvent(new KeyboardEvent('keyup', {'key': ''}));
+
+                //select distict code id
+                setTimeout(function(){
+                    distict_code_selector($('#prefecture').val());
+                }, 500);
             });
+
+            function distict_code_selector($option_id) {
+                $('#district_code_id option').hide();
+                let district_code_option = $('select#district_code_id option[data-prefecture_id="' + $option_id +'"]');
+                district_code_option.first().attr('selected', true);
+                district_code_option.show();
+            }
+
+            /* ---------------------------------------------------
+            Select district_code_id by prefecture id
+            -----------------------------------------------------*/
+            $(document).on('change', '#prefecture', function(){
+                distict_code_selector($(this).val());
+            });
+
         })(jQuery);
     </script>
 @endpush
@@ -456,6 +480,9 @@
     <style>
         p.help-block {
             text-align: left;
+        }
+        select#district_code_id option {
+            display: none;
         }
     </style>
 @endpush
