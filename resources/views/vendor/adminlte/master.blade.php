@@ -38,14 +38,14 @@
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
-<body class="hold-transition @yield('body_class')">
+<body class="hold-transition @yield('body_class') @if (isset($_COOKIE["menu_close"])) sidebar-collapse @endif">
 
 @yield('body')
 
 <script src="{{ asset('vendor/adminlte/vendor/jquery/dist/jquery.min.js') }}"></script>
 <script src="{{ asset('vendor/adminlte/vendor/jquery/dist/jquery.slimscroll.min.js') }}"></script>
 <script src="{{ asset('vendor/adminlte/vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-
+<script src="{{ asset('vendor/adminlte/vendor/jquery/dist/jquery.cookie.js') }}"></script>
 @if(config('adminlte.plugins.select2'))
   <!-- Select2 -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
@@ -62,6 +62,9 @@
 @endif
 
 @yield('adminlte_js')
+
+@section('js')
+@stop
 
 </body>
 </html>

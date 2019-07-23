@@ -257,3 +257,13 @@ module.exports.addScrollToTop = function () {
     });
 
 })();
+
+$(function () {
+    $('.sidebar-toggle').click(function() {
+        if($.cookie('menu_close') == 1) {
+            $.removeCookie('menu_close');
+        } else {
+            $.cookie('menu_close', 1);
+        }
+    });
+});
