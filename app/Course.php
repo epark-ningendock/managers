@@ -4,10 +4,11 @@ namespace App;
 
 use App\Enums\WebReception;
 use App\Helpers\EnumTrait;
+use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class Course extends SoftDeleteModel
 {
-    use EnumTrait;
+    use EnumTrait, OptimisticLocking;
 
     protected $fillable = [
         'hospital_id',
@@ -28,7 +29,8 @@ class Course extends SoftDeleteModel
         'is_price_memo',
         'price_memo',
         'order',
-        'status'
+        'status',
+        'lock_version'
     ];
 
     protected $attributes = [

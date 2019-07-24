@@ -37,6 +37,7 @@
     <h1 class="box-title">検査コースの登録</h1>
   </div>
   <div class="box-body">
+    <input type="hidden" name="lock_version" value="{{ $course->lock_version or ''}}" />
     <div class="form-group @if ($errors->has('name')) has-error @endif">
       <label for="name">検査コース名 <span class="text-red">必須</span></label>
       <input type="text" class="form-control" id="name" name="name"

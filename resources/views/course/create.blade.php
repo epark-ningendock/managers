@@ -10,6 +10,7 @@
 
 <!-- ページの内容を入力 -->
 @section('main-content')
+  @include('layouts.partials.message')
   <form method="POST" action="{{ route('course.store') }}">
     {!! csrf_field() !!}
     @include('course.partials.form')

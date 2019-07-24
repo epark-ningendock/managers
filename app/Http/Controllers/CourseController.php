@@ -19,6 +19,7 @@ use App\ImageOrder;
 use App\TaxClass;
 use App\Calendar;
 use Mockery\Exception;
+use Reshadman\OptimisticLocking\StaleModelLockingException;
 
 class CourseController extends Controller
 {
@@ -81,7 +82,8 @@ class CourseController extends Controller
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.course')]));
             return redirect('course');
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(trans('messages.create_error'))->withInput();
+            $request->session()->flash('error', trans('messages.create_error'));
+            return redirect()->back()->withInput();
         }
     }
 
@@ -143,7 +145,8 @@ class CourseController extends Controller
                 'price',
                 'is_price_memo',
                 'price_memo',
-                'is_pre_account_price'
+                'is_pre_account_price',
+                'lock_version'
             ]);
             $reception_start_day = $request->input('reception_start_day');
             $reception_start_month = $request->input('reception_start_month');
@@ -162,6 +165,8 @@ class CourseController extends Controller
                 $course = new Course();
             }
             $course->fill($course_data);
+            //force to update updated_at. otherwise version will not be updated
+            $course->touch();
             $course->save();
 
             //Course Image
@@ -313,7 +318,11 @@ class CourseController extends Controller
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.course')]));
             return redirect('course');
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
+            $request->session()->flash('error', trans('messages.update_error'));
+            return redirect()->back()->withInput();
+        }  catch(StaleModelLockingException $e) {
+            $request->session()->flash('error', trans('messages.model_changed_error'));
+            return redirect()->back();
         }
     }
 
