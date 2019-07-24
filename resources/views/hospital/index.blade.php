@@ -59,13 +59,8 @@
 
     </form>
 
-@sto
-@include('hospital.partials.record-management-modal-box')
-  <div class="pull-right">
-    @if (Auth::user()->staff_auth->is_hospital === 3)
-        <a class="btn btn-success btn-create" href="{{ route('hospital.contractInfo') }}">新規作成</a>
-    @endif  
-  </div>
+    @include('hospital.partials.record-management-modal-box')
+
 @stop
 
 
