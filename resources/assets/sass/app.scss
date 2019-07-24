@@ -266,7 +266,8 @@ label {
 }
 
 .inline-radio.two-option {width: 30%;
-  height: 40px;
+  height: 34px;
+  width: 150px;
   font-size: 1em;
 }
 
@@ -306,8 +307,12 @@ label {
   label {
     font-weight: normal;
     color: #737373;
-
   }
+}
+
+.box-body {
+  width: 80%;
+  margin: 0 auto;
 }
 
 $color1: #f4f4f4;
@@ -407,5 +412,15 @@ legend {
   width: 100%;
   td{
     vertical-align: middle !important;
+  }
+}
+
+.content-header {
+  h1 {
+    span {
+      font-size: 0.8em;
+      font-weight: normal;
+      line-height: 1.5em;
+    }
   }
 }
