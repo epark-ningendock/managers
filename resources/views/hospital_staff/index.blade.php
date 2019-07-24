@@ -46,7 +46,7 @@
                        <i class="fa fa-edit text-bold"> 編集</i>
                     </a>
                 <td>
-                    <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $hospital_staff->id }}">
+                    <button class="btn btn-primary delete-btn delete-popup-btn" data-id="{{ $hospital_staff->id }}">
                         <i class="fa fa-trash"></i>
                     </button>
                 </td>

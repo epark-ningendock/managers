@@ -31,6 +31,8 @@ class HospitalStaffFormRequest extends FormRequest
             'name'     => 'required|between:1,25',
             'email'    => $email_validation,
             'login_id' => $login_id,
+            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'min:8|max:20',
         ];
     }
 }

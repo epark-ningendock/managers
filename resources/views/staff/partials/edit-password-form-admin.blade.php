@@ -1,3 +1,4 @@
+@include('layouts.partials.message')
 <div class="box-body">
     <div class="form-group @if ($errors->has('password')) has-error @endif">
         <label for="password">新しいパスワード</label>

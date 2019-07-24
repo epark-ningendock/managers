@@ -62,59 +62,64 @@ Route::put('/hospital-staff/reset-password/{email}', 'HospitalStaffController@re
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth:staffs')->group(function () {
-    /*
-    |--------------------------------------------------------------------------
-    | Staff Routes
-    |--------------------------------------------------------------------------
-    */
-    Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.admin']], function () {
-        Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password');
-        Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
-    });
-    Route::resource('/staff', 'StaffController')->except(['show']);
     Route::get('/staff/edit-password-personal', 'StaffController@editPersonalPassword')->name('staff.edit.password-personal');
     Route::post('/staff/update-password-personal', 'StaffController@updatePersonalPassword')->name('staff.update.password-personal');
-    /*
-    |--------------------------------------------------------------------------
-    | Hospital Routes
-    |--------------------------------------------------------------------------
-    */
-    Route::group(['prefix' => 'hospital'], function () {
-        Route::get('/search', 'HospitalController@index')->name('hospital.search');
-        Route::get('/search/text', 'HospitalController@searchText')->name('hospital.search.text');
-        Route::get('/search/contract-info', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');
-        Route::get('/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
-        Route::get('/image-information', 'HospitalController@createImageInformation')->name('hospital.image.information');
-        Route::get('/attention-information/create', 'HospitalController@createAttentionInformation')->name('hospital.attention-information.show');
-        Route::post('/attention-information/store', 'HospitalController@storeAttentionInformation')->name('hospital.attention-information.store');
-    });
-
-    Route::resource('/hospital', 'HospitalController')->except(['show']);
-    
-    Route::group(['prefix' => 'hospital'], function () {
-        Route::get('/{hospital}/images/create', 'HospitalImagesController@create')->name('hospital.image.create');
-        Route::post('/{hospital}/images/store', 'HospitalImagesController@store')->name('hospital.image.store');
+    Route::middleware('authority.level.not-contract-staff')->group(function () {
         /*
-        Route::get('/{hospital}/hospital_images/', function ($hospital_id) {
-            return $hospital_id;
-        });*/
+        |--------------------------------------------------------------------------
+        | Staff Routes
+        |--------------------------------------------------------------------------
+        */
+        Route::group(['prefix' => 'staff', 'middleware' => ['authority.level.admin']], function () {
+            Route::get('edit-password/{staff_id}', 'StaffController@editPassword')->name('staff.edit.password');
+            Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
+        });
+        Route::resource('/staff', 'StaffController')->except(['show']);
+        /*
+        |--------------------------------------------------------------------------
+        | Hospital Routes
+        |--------------------------------------------------------------------------
+        */
+        Route::group(['prefix' => 'hospital'], function () {
+            Route::get('/search', 'HospitalController@index')->name('hospital.search');
+            Route::get('/search/text', 'HospitalController@searchText')->name('hospital.search.text');
+            Route::get('/search/contract-info', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');
+            Route::get('/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
+            Route::get('/image-information', 'HospitalController@createImageInformation')->name('hospital.image.information');
+            Route::get('/attention-information/create', 'HospitalController@createAttentionInformation')->name('hospital.attention-information.show');
+            Route::post('/attention-information/store', 'HospitalController@storeAttentionInformation')->name('hospital.attention-information.store');
+        });
+
+        Route::resource('/hospital', 'HospitalController')->except(['show']);
+        
+        Route::group(['prefix' => 'hospital'], function () {
+            Route::get('/{hospital}/images/create', 'HospitalImagesController@create')->name('hospital.image.create');
+            Route::post('/{hospital}/images/store', 'HospitalImagesController@store')->name('hospital.image.store');
+            /*
+            Route::get('/{hospital}/hospital_images/', function ($hospital_id) {
+                return $hospital_id;
+            });*/
+        });
+        /*
+        |--------------------------------------------------------------------------
+        | Course Classification Routes
+        |--------------------------------------------------------------------------
+        */
+        Route::post('/classification/{id}/restore', 'ClassificationController@restore')->name('classification.restore');
+        Route::get('/classification/sort', 'ClassificationController@sort')->name('classification.sort');
+        Route::patch('/classification/sort/update', 'ClassificationController@updateSort')->name('classification.updateSort');
+        Route::resource('/classification', 'ClassificationController')->except(['show']);
+        /*
+        |--------------------------------------------------------------------------
+        | Reservation Routes
+        |--------------------------------------------------------------------------
+        */
+        Route::patch('/reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
+        Route::delete('/reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');
+        Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
+        Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
+        Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
     });
-    /*
-    |--------------------------------------------------------------------------
-    | Course Classification Routes
-    |--------------------------------------------------------------------------
-    */
-    Route::post('/classification/{id}/restore', 'ClassificationController@restore')->name('classification.restore');
-    Route::get('/classification/sort', 'ClassificationController@sort')->name('classification.sort');
-    Route::patch('/classification/sort/update', 'ClassificationController@updateSort')->name('classification.updateSort');
-    Route::resource('/classification', 'ClassificationController')->except(['show']);
-    /*
-    |--------------------------------------------------------------------------
-    | Reservation Routes
-    |--------------------------------------------------------------------------
-    */
-    Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
-    Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
 });
 
 /*
@@ -190,9 +195,4 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     Route::get('/reception/csv', 'ReservationController@reception_csv')->name('reception.csv');
     Route::patch('/reception/reservation_status', 'ReservationController@reservation_status')->name('reservation.bulk_status');
     Route::get('/reception', 'ReservationController@reception');
-    Route::patch('/reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
-    Route::delete('/reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');
-    Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
-    Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
-    Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
 });
