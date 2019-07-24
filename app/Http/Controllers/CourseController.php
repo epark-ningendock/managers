@@ -317,12 +317,12 @@ class CourseController extends Controller
             $this->saveCourse($request, $course);
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.course')]));
             return redirect('course');
-        } catch (Exception $e) {
-            $request->session()->flash('error', trans('messages.update_error'));
-            return redirect()->back()->withInput();
         }  catch(StaleModelLockingException $e) {
             $request->session()->flash('error', trans('messages.model_changed_error'));
             return redirect()->back();
+        } catch (Exception $e) {
+            $request->session()->flash('error', trans('messages.update_error'));
+            return redirect()->back()->withInput();
         }
     }
 
