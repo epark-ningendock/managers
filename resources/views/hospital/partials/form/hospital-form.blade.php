@@ -1,3 +1,4 @@
+<input type="hidden" name="lock_version" value="{{ $hospital->lock_version or ''}}" />
 <table class="table table-bordered mb-5 mt-5">
       <tr>
           <td class="gray-column">

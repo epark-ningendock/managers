@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\Permission;
+use Reshadman\OptimisticLocking\StaleModelLockingException;
 
 
 class HospitalController extends Controller
@@ -164,7 +165,7 @@ class HospitalController extends Controller
 
             DB::commit();
             return redirect('/hospital/image-information');
-        } catch (ExclusiveLockException $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             throw $e;
         }
@@ -222,6 +223,7 @@ class HospitalController extends Controller
             DB::beginTransaction();
 
             $hospital = Hospital::findOrFail($hospital->id);
+            $hospital->touch();
             $hospital->update($request->all());
 
 
@@ -236,9 +238,12 @@ class HospitalController extends Controller
 
             DB::commit();
             return redirect('/hospital')->with('success', '更新成功');
-        } catch (ExclusiveLockException $e) {
+        } catch (\Exception $e) {
             DB::rollback();
             throw $e;
+        }  catch(StaleModelLockingException $e) {
+            $request->session()->flash('error', trans('messages.model_changed_error'));
+            return redirect()->back();
         }
     }
 

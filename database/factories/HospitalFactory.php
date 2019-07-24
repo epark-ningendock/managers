@@ -97,5 +97,6 @@ $factory->define( App\Hospital::class, function ( Faker $faker ) {
 		'is_pre_account'                => $faker->numberBetween( 0, 1 ),
 		'pre_account_discount_rate'     => $faker->randomNumber(),
 		'pre_account_commission_rate'   => $faker->randomElement( [ '0.5', '1.9', '3.9', '4.6' ] ),
+        'lock_version' => 1,
 	];
 } );

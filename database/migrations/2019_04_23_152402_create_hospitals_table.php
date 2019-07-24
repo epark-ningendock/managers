@@ -70,6 +70,7 @@ class CreateHospitalsTable extends Migration
             $table->char('is_pre_account')->nullable();
             $table->integer('pre_account_discount_rate')->nullable();
             $table->decimal('pre_account_commission_rate', 5, 2)->nullable();
+            $table->unsignedInteger('lock_version')->default(1);
             $this->addCommonColumns($table);
         });
     }

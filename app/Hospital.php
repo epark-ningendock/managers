@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class Hospital extends Model
 {
+    use OptimisticLocking;
+
     protected $table = 'hospitals';
 
     //Note $fillable is temporary for factory, make it realistic field when business logic
@@ -63,6 +66,7 @@ class Hospital extends Model
         'is_pre_account',
         'pre_account_discount_rate',
         'pre_account_commission_rate',
+        'lock_version',
     ];
 
     /**
