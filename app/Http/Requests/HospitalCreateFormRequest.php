@@ -35,7 +35,7 @@ class HospitalCreateFormRequest extends FormRequest
             'postcode' => 'number_dash',
             'address1' => 'max:256',
             'address2' => 'max:256',
-            'tel' => 'digits_between:5,30',
+            'tel' => 'digits_between:8,13',
             'paycall' => 'digits_between:5,19',
             'consultation_note' => 'max:256',
            'medical_treatment_time.*.start' => 'nullable|date_format:H:i',

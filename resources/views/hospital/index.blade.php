@@ -36,11 +36,12 @@
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="status">状態</label>
+
                         <select name="status" id="status" class="form-control">
-                            @foreach(\App\Enums\HospitalEnums::toArray() as $key)
+                            @foreach(\App\Enums\HospitalEnums::toArray() as $key => $value)
 
                                 <option
-                                        value="{{ $key }}" {{ ( request('status') == $key) ? "selected" : "" }}>{{ \App\Enums\HospitalEnums::getDescription($key) }}</option>
+                                        value="{{ $value }}" {{ ( request('status') == $value) ? "selected" : "" }}>{{ \App\Enums\HospitalEnums::getDescription($value) }}</option>
                             @endforeach
                         </select>
                     </div>

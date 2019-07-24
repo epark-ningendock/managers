@@ -251,6 +251,8 @@ return [
         'completed_start_date' => '受診開始日',
         'completed_end_date' => '受診終了日',
         'customer_name' => '受診者名',
-        'pvad' => 'PV数'
+        'pvad' => 'PV数',
+        'paycall' => 'ペイパーコール',
+        'kana' => '仮名',
     ],
 ];
