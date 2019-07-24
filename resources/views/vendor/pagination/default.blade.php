@@ -1,11 +1,4 @@
 <div class="text-center">
-    <span class="pull-right" style="margin-top:28px;">
-        {{ ( ($paginator->currentPage() - 1) * $paginator->perPage() ) + 1 }}
-        -
-        {{ $paginator->currentPage() == $paginator->lastPage() ? $paginator->total() : ($paginator->currentPage() * $paginator->perPage()) }}
-        /
-        {{ $paginator->total() }}件
-    </span>
     @if ($paginator->hasPages())
         <ul class="pagination">
             {{-- Previous Page Link --}}

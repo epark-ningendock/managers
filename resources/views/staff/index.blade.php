@@ -62,6 +62,7 @@
 @section('table')
 
   <div class="table-responsive">
+    @include('layouts.partials.pagination-label', ['paginator' => $staffs])
     <table id="example2" class="table table-bordered table-hover table-striped">
       <thead>
       <tr>

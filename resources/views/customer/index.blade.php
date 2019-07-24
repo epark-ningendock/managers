@@ -31,7 +31,8 @@
 
 @section('table')
     <div class="table-responsive">
-        <table id="example2" class="table table-bordered table-hover table-striped mb-5 mt-5">
+        @include('layouts.partials.pagination-label', ['paginator' => $customers])
+        <table id="example2" class="table table-bordered table-hover table-striped mb-5">
             <thead>
             <tr>
                 <th>{{ trans('messages.customer_id') }}</th>
