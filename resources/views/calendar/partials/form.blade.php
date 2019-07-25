@@ -4,6 +4,7 @@
 
 <div class="box-body">
   {!! csrf_field() !!}
+  <input type="hidden" name="lock_version" value="{{ $calendar->lock_version or '' }}" />
   <div class="form-group @if ($errors->has('name')) has-error @endif">
     <label for="name">カレンダー名</label>
     <input type="text" class="form-control" name="name" id="name" placeholder="カレンダー名"

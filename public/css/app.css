@@ -2640,13 +2640,6 @@ legend {
   color: #737373;
 }
 
-.alert-danger {
-  position: absolute;
-  left: 200px;
-  top: 30px;
-  width: 40%;
-}
-
 .footer-submit {
   width: 20%;
   margin: 0 auto;

@@ -17,7 +17,6 @@ $factory->define(App\ContractInformation::class, function (Faker $faker) {
         'fax' => $faker->phoneNumber,
         'karada_dog_id' => $faker->randomNumber(),
         'code' => $faker->randomNumber(),
-        'old_karada_dog_id' => $faker->randomNumber(),
-        'hospital_staff_id' => factory(\App\HospitalStaff::class)->create()->id,
+        'old_karada_dog_id' => $faker->randomNumber()
     ];
 });

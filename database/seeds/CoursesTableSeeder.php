@@ -10,10 +10,11 @@ use App\CourseImage;
 use App\MinorClassification;
 use App\CourseOption;
 use App\Option;
-use App\TaxClass;
 use App\Calendar;
 use App\HospitalImage;
 use App\ImageOrder;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class CoursesTableSeeder extends Seeder
 {
@@ -26,20 +27,23 @@ class CoursesTableSeeder extends Seeder
     {
         $faker = Factory::create();
         $hospitals = Hospital::all();
-        $hospital_images = HospitalImage::all();
+        $hospital_images = HospitalImage::all()->groupBy('hospital_id');
         $image_orders = ImageOrder::all();
         $minors = MinorClassification::all();
-        $options = Option::all();
-        $tax_classes = TaxClass::all();
-        $calendars = Calendar::all();
-        factory(Course::class, 50)->make()->each(function ($course, $index) use ($faker, $hospitals, $minors, $options, $tax_classes, $calendars, $hospital_images, $image_orders) {
+        $options = Option::all()->groupBy('hospital_id');
+        $calendars = Calendar::all()->groupBy('hospital_id');
+
+        $courses = factory(Course::class, 50)->make();
+        foreach($courses as $index => $course) {
             $hospital = $faker->randomElement($hospitals);
             $course->hospital_id = $hospital->id;
             $course->code = 'C'.$index.'H'.$hospital->id;
-            $course->tax_class = $faker->randomElement($tax_classes)->id;
-            $course->calendar_id = $faker->randomElement($calendars)->id;
+            $course->calendar_id = $faker->randomElement($calendars->get($hospital->id))->id;
             $course->save();
 
+            factory(CourseQuestion::class, 5)->create([
+                'course_id' => $course->id
+            ]);
 
             foreach ($minors as $minor) {
                 $detail = [
@@ -58,12 +62,7 @@ class CoursesTableSeeder extends Seeder
                 factory(CourseDetail::class)->create($detail);
             }
 
-
-            factory(CourseQuestion::class, 5)->create([
-                'course_id' => $course->id
-            ]);
-
-            $images = $faker->randomElements($hospital_images, 5);
+            $images = $faker->randomElements($hospital_images->get($hospital->id), 1);
             foreach ($images as $image) {
                 factory(CourseImage::class)->create([
                     'course_id' => $course->id,
@@ -72,7 +71,7 @@ class CoursesTableSeeder extends Seeder
                 ]);
             }
 
-            foreach ($options as $option) {
+            foreach ($options->get($hospital->id) as $option) {
                 //random option
                 if ($faker->randomElement([0, 1]) == 1) {
                     $course_option = new CourseOption();
@@ -83,6 +82,7 @@ class CoursesTableSeeder extends Seeder
                     $course_option->save();
                 }
             }
-        });
+        }
+
     }
 }

@@ -19,6 +19,7 @@
   <form method="POST" action="{{ route('calendar.setting', $calendar->id) }}">
     {!! csrf_field() !!}
     {!! method_field('PATCH') !!}
+    <input type="hidden" name="lock_version" value="{{ $calendar->lock_version or '' }}" />
     <div class="box-body">
       <div class="form-group">
         <h4>カレンダー名 <span class="ml-2 mr-2"> : </span> {{ $calendar->name }}</h4>
@@ -170,12 +171,12 @@
                             {{ $day['date']->day }}
                           </span>
 
-                          <div class="data-box @if($day['is_holiday']) holiday @elseif($day['date']->isPast())) bg-gray @endif">
+                          <div class="data-box @if($day['is_holiday']) holiday @elseif($day['date']->isPast() || (isset($day['calendar_day']) && $day['calendar_day']->reservation_frames  === 0)) bg-gray @endif">
                             <!-- holiday and reservation acceptance -->
                             @if($day['is_holiday'])
                               <span class="day-label text-red">休</span>
                             @elseif(!$day['date']->isPast())
-                              <a class="is_reservation_acceptance day-label">
+                              <a class="is_reservation_acceptance day-label @if(isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0') text-gray @endif">
                                 {{ isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0' ? '✕' : '◯' }}
                               </a>
                             @else
@@ -277,6 +278,9 @@
     .saturday {
       background-color: #CBE0F8;
     }
+    .text-gray {
+      color: #A9A9A9 !important;
+    }
   </style>
 @stop
 
@@ -290,9 +294,11 @@
               $('.is_reservation_acceptance').click(function() {
                   if($(this).html() == '✕') {
                       $(this).html('◯');
+                      $(this).removeClass('text-gray');
                       $(this).next('input:hidden').val('1');
                   } else {
                       $(this).html('✕');
+                      $(this).addClass('text-gray');
                       $(this).next('input:hidden').val('0');
                   }
               });
@@ -397,6 +403,20 @@
                   $('.calendar-frame').each(function(i, ele){
                       $(ele).val($(ele).data('origin'));
                   });
+              });
+          })();
+
+          /* ---------------------------------------------------
+          // reservation frame change
+          -----------------------------------------------------*/
+          (function () {
+              $('.calendar-frame').change(function() {
+                  const parentDiv = $(this).parents('.data-box')
+                  if ($(this).val() == 0) {
+                      parentDiv.addClass('bg-gray');
+                  } else {
+                      parentDiv.removeClass('bg-gray');
+                  }
               });
           })();
       })(jQuery);
