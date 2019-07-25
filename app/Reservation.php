@@ -5,9 +5,11 @@ namespace App;
 use App\Enums\ReservationStatus;
 use App\Enums\PaymentStatus;
 use Carbon\Carbon;
+use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class Reservation extends SoftDeleteModel
 {
+    use OptimisticLocking;
     const HOSPITAL = 1;
     const PC = 2;
     const SP = 3;
@@ -64,6 +66,7 @@ class Reservation extends SoftDeleteModel
         'payment_status', //not sure what field need to add
         'trade_id', //not sure what field need to add
         'payment_method', //not sure what field need to add
+        'lock_version',
     ];
 
     //todo channelがどういうケースが発生するのか未定なので、とりあえず仮で

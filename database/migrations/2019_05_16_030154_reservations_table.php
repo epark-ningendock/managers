@@ -70,6 +70,7 @@ class ReservationsTable extends Migration
             $table->foreign('hospital_id')->references('id')->on('hospitals');
             $table->foreign('course_id')->references('id')->on('courses');
             $table->foreign('customer_id')->references('id')->on('customers');
+            $table->unsignedInteger('lock_version')->default(1);
             $this->addCommonColumns($table);
         });
     }
