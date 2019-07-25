@@ -220,30 +220,31 @@ class HospitalController extends Controller
     {
 
         try {
-            DB::beginTransaction();
+	        DB::beginTransaction();
 
-            $hospital = Hospital::findOrFail($hospital->id);
-            $hospital->touch();
-            $hospital->update($request->all());
+	        $hospital = Hospital::findOrFail( $hospital->id );
+	        $hospital->fill( $request->all() );
+	        $hospital->touch();
+	        $hospital->save();
 
 
-            if (!empty(request()->medical_treatment_time)) {
-                foreach (request()->medical_treatment_time as $mtt) {
+	        if ( ! empty( request()->medical_treatment_time ) ) {
+		        foreach ( request()->medical_treatment_time as $mtt ) {
 
-                    $medical_treatment_times = MedicalTreatmentTime::findOrFail($mtt['id']);
-                    $medical_treatment_times->update(MedicalTreatmentTime::getDefaultFieldValues($mtt));
+			        $medical_treatment_times = MedicalTreatmentTime::findOrFail( $mtt['id'] );
+			        $medical_treatment_times->update( MedicalTreatmentTime::getDefaultFieldValues( $mtt ) );
 
-                }
-            }
+		        }
+	        }
 
-            DB::commit();
-            return redirect('/hospital')->with('success', '更新成功');
-        } catch (\Exception $e) {
-            DB::rollback();
-            throw $e;
+	        DB::commit();
+
+	        return redirect( '/hospital' )->with( 'success', '更新成功' );
         }  catch(StaleModelLockingException $e) {
-            $request->session()->flash('error', trans('messages.model_changed_error'));
-            return redirect()->back();
+            return redirect()->back()->with('error', trans('messages.model_changed_error'));
+        } catch (\Exception $e) {
+	        DB::rollback();
+	        throw $e;
         }
     }
 
