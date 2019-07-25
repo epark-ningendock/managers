@@ -176,6 +176,7 @@
       {{ csrf_field() }}
       {{ method_field('PATCH') }}
       <input type="hidden" id="reservation_status" name="reservation_status" />
+      @include('layouts.partials.pagination-label', ['paginator' => $reservations])
       <table id="example2" class="table table-bordered table-hover">
         <thead>
         <tr>

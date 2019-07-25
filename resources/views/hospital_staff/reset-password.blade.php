@@ -33,9 +33,15 @@
                     </div>
                     
                     
-                    <div class="box-footer">
-                        <a href="{{ url('/staff') }}" class="btn btn-default">戻る</a>
-                        <button type="submit" class="btn btn-primary">更新</button>
+                    <div class="row mt-2">
+                      <div class="col-xs-6">
+                      </div>
+                      <div class="col-xs-3">
+                        <a href="/login" class="btn btn-default btn-block btn-flat margin-right-30">戻る</a>
+                      </div>
+                      <div class="col-xs-3">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">更新</button>
+                      </div>
                     </div>
                 </form>
             </div>
@@ -56,3 +62,13 @@
   </script>
   @yield('js')
 @stop
+
+<style>
+    .width-400 {
+        width: 400px;
+    }
+
+    .margin-right-30 {
+        margin-left: 30%;
+    }
+</style>

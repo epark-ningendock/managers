@@ -15,10 +15,10 @@
             @if(isset($create_route))
               @if(isset($route) && $route === "staff")
                 @if (Auth::user()->staff_auth->is_staff === 3)
-                  <a class="btn btn-success pull-right" href="{{ route($create_route) }}">新規作成</a>
+                  <a class="btn btn-primary pull-right" href="{{ route($create_route) }}">新規作成</a>
                 @endif
               @else
-                <a class="btn btn-success pull-right" href="{{ route($create_route) }}">新規作成</a>
+                <a class="btn btn-primary pull-right" href="{{ route($create_route) }}">新規作成</a>
               @endif
             @endif
           @show

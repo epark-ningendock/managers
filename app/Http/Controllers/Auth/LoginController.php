@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\HospitalStaff;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginFormRequest;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -12,7 +13,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
 use App\Hospital;
+use App\Enums\Authority;
 use App\Enums\StaffStatus;
+use App\Enums\Permission;
 
 class LoginController extends Controller
 {
@@ -35,9 +38,13 @@ class LoginController extends Controller
      * @var string
      */
     protected $staff_role = 'staffs';
-    protected $hospital_staff_role = 'hospital_staffs';
-    protected $staff_redirectTo = '/hospital';
+    protected $staff_redirectTo = '/hospital'; // スタッフ
+    // TODO: 契約管理作成時に変更する
+    protected $contract_staff_redirectTo = '/'; // 契約管理者
+    protected $hospital_staff_role = 'hospital_staffs'; // 医療機関スタッフ
     protected $hospital_staff_redirectTo = '/hospital-staff';
+    protected $staff_first_login_redirectTo = '/staff/edit-password-personal';
+    protected $hospital_staff_first_login_redirectTo = '/hospital-staff/edit-password';
 
     /**
      * Create a new controller instance.
@@ -67,11 +74,56 @@ class LoginController extends Controller
 
         $is_staff = self::is_staff_login($data['login_id'], $data['password']);
         if ($is_staff) {
-            return redirect($this->staff_redirectTo);
+            // スタッフの権限が契約管理者だった場合、契約管理に遷移する
+            if (Auth::user()->authority->value === Authority::ContractStaff) {
+                if (!Auth::user()->first_login_at) {
+                    return redirect($this->staff_first_login_redirectTo);
+                }
+                return redirect($this->contract_staff_redirectTo);
+            } else {
+                // staff_auths権限によって遷移先を変える
+                if (Auth::user()->staff_auth->is_hospital === Permission::None) {
+                    if (Auth::user()->staff_auth->is_staff !== Permission::None) {
+                        if (!Auth::user()->first_login_at) {
+                            return redirect($this->staff_first_login_redirectTo);
+                        }
+                        return redirect('/staff');
+                    } elseif (Auth::user()->staff_auth->is_cource_classification !== Permission::None) {
+                        if (!Auth::user()->first_login_at) {
+                            return redirect($this->staff_first_login_redirectTo);
+                        }
+                        return redirect('/classification');
+                    } elseif (Auth::user()->staff_auth->is_invoice !== Permission::None) {
+                        if (!Auth::user()->first_login_at) {
+                            return redirect($this->staff_first_login_redirectTo);
+                        }
+                        return redirect('/reservation');
+                    } elseif (Auth::user()->staff_auth->is_pre_account !== Permission::None) {
+                        if (!Auth::user()->first_login_at) {
+                            return redirect($this->staff_first_login_redirectTo);
+                        }
+                        // TODO: 事前決済機能が出来次第実装する
+                        return redirect('/');
+                    } else {
+                        session()->flush();
+                        Auth::logout();
+                        return redirect('/login')->with('error', 'スタッフ権限がありません。');
+                    }
+                }
+                if (!Auth::user()->first_login_at) {
+                    return redirect($this->staff_first_login_redirectTo);
+                }
+                return redirect($this->staff_redirectTo);
+            }
         }
 
         $is_hospital_staff = self::is_hospital_staff_login($data['login_id'], $data['password']);
         if ($is_hospital_staff) {
+            // 初回ログイン時は、遷移先を変える
+            $hospital_staff = HospitalStaff::findOrFail(session()->get('staffs'));
+            if (!$hospital_staff->first_login_at) {
+                return redirect($this->hospital_staff_first_login_redirectTo);
+            }
             return redirect($this->hospital_staff_redirectTo);
         }
 
@@ -94,7 +146,7 @@ class LoginController extends Controller
                 return true;
             } else {
                 $validator = Validator::make([], []);
-                $validator->errors()->add('fail_login', 'スタッフが無効です。');
+                $validator->errors()->add('fail_login', 'スタッフが無効または、削除されています。');
                 throw new ValidationException($validator);
                 return redirect()->back();
             }

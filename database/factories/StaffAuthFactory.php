@@ -11,7 +11,7 @@ $factory->define(StaffAuth::class, function (Faker $faker) {
         'is_cource_classification' => $faker->randomElement([0, 1]),
         'is_invoice' => $faker->randomElement([0, 1]),
         'is_pre_account' => $faker->randomElement([0, 1]),
-        'is_contract' => $faker->randomElement([0, 1])
+        'is_contract' => 0
     ];
 });
 
