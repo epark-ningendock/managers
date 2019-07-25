@@ -254,6 +254,8 @@ return [
 
         //Reservation
         'regular_price' => 'コース料金',
+        'course_id' => '検査コース',
+        'course_options' => 'オプション',
         'adjustment_price' => '調整額',
         'reservation_memo' => '受付・予約メモ',
         'registration_card_number' => '診察券番号',

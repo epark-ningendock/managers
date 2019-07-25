@@ -65,7 +65,7 @@
                     <tbody>
                     </tbody>
                 </table>
-            </div>        
+            </div>
         </div>
 
     </div>   
@@ -112,7 +112,7 @@
         </div>
 
         <div class="col-md-9">
-            <span class="ml-2"> 0円</span>
+            <span id="total" class="ml-2"> 0円</span>
         </div>
 
     </div>
@@ -146,7 +146,13 @@
                     <select class="form-control" name="start_time_hour" id="start_time_hour">
                         <option value=""></option>
                         @for ( $x = 0; $x < 24; $x++)
-                        <option value="{{ ( $x < 10 ) ? '0'.$x :  $x }}">{{ ( $x < 10 ) ? '0'.$x :  $x }}</option>
+                        <option
+                                value="{{ ( $x < 10 ) ? '0'.$x :  $x }}"
+                                @if ( old('start_time_hour') == (( $x < 10 ) ? '0'.$x :  $x))
+                                    selected="selected"
+                                @endif
+
+                        >{{ ( $x < 10 ) ? '0'.$x :  $x }}</option>
                         @endfor
                     </select>
                 </div>
@@ -155,7 +161,12 @@
                     <select class="form-control" name="start_time_min" id="start_time_min">
                         <option value=""></option>
                         @for ( $x = 0; $x < 61; $x++)
-                        <option value="{{ ( $x < 10 ) ? '0'.$x :  $x }}">{{ ( $x < 10 ) ? '0'.$x :  $x }}</option>
+                        <option
+                                value="{{ ( $x < 10 ) ? '0'.$x :  $x }}"
+                                @if ( old('start_time_min') == (( $x < 10 ) ? '0'.$x :  $x))
+                                selected="selected"
+                                @endif
+                        >{{ ( $x < 10 ) ? '0'.$x :  $x }}</option>
                         @endfor
                     </select>
                 </div>
@@ -172,7 +183,7 @@
 
         <div class="col-md-9">
             <div class=" @if ($errors->has('reservation_memo')) has-error @endif">
-                <textarea class="form-control" name="reservation_memo" id="reservation_memo"  value="{{ old('reservation_memo') }}"> </textarea>
+                <textarea class="form-control" name="reservation_memo" id="reservation_memo">{{ old('reservation_memo') }}</textarea>
                 @if ($errors->has('reservation_memo')) <p class="help-block">{{ $errors->first('reservation_memo') }}</p> @endif
             </div>
         </div>
@@ -282,11 +293,11 @@
         </div>
 
     </div>  
-    <input type="hidden" name="customer_id" id="customer_id" />
+    <input type="hidden" name="customer_id" id="customer_id" value="{{ old('customer_id') }}" />
 
 
     <div class="box-footer">
-        <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
+        <a href="{{ url('/reception') }}" class="btn btn-default">戻る</a>
         <button type="submit" class="btn btn-primary">作成</button>
     </div>                                              
 
@@ -329,6 +340,13 @@
 
                                 $('.option-container').show();
                                 courseOptions.forEach(function (courseOption) {
+
+
+                                    $field_name = '{{ in_array(3,old('course_options', [])) }}';
+                                    console.log($field_name);
+                                    let checkedOldValue = ( $field_name ) ? 'checked' : '';
+                                    // console.log(courseOption.option.id);
+
                                     $('<tr></tr>')
                                         .append($(`<td><input type="checkbox" class="checkbox option" data-price="${courseOption.option.price}" name="course_options[${courseOption.option.id}]" value="${courseOption.option.price}"/></td>`))
                                         .append($(`<td>${courseOption.option.name}</td>`))

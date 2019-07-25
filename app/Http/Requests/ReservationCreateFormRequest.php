@@ -24,6 +24,7 @@ class ReservationCreateFormRequest extends FormRequest
     public function rules()
     {
         return [
+            'course_id' => 'required',
             'regular_price' => 'max:8',
             'adjustment_price' => 'max:8',
             'start_time_hour' => 'between:0,23',
@@ -33,7 +34,7 @@ class ReservationCreateFormRequest extends FormRequest
             'first_name' => 'max:32',
             'family_name_kana' => 'max:32',
             'first_name_kana' => 'max:32',
-            'tel' => 'max:11',
+            'tel' => 'digits_between:8,13',
             'registration_card_number' => 'max:32',
         ];
     }
