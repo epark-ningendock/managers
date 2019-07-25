@@ -231,8 +231,17 @@ class HospitalController extends Controller
 	        if ( ! empty( request()->medical_treatment_time ) ) {
 		        foreach ( request()->medical_treatment_time as $mtt ) {
 
-			        $medical_treatment_times = MedicalTreatmentTime::findOrFail( $mtt['id'] );
-			        $medical_treatment_times->update( MedicalTreatmentTime::getDefaultFieldValues( $mtt ) );
+		            if ( isset($mtt['id']) && !empty($mtt['id']) ) {
+
+                        $medical_treatment_times = MedicalTreatmentTime::findOrFail( $mtt['id'] );
+                        $medical_treatment_times->update( MedicalTreatmentTime::getDefaultFieldValues( $mtt ) );
+
+                    } else {
+
+                        $mtt = array_merge($mtt, ['hospital_id' => $hospital->id]);
+                        MedicalTreatmentTime::create($mtt);
+
+                    }
 
 		        }
 	        }

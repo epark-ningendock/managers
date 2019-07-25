@@ -326,7 +326,7 @@
                         
                         <td>
 
-                            @if ( isset($medical_treatment_times[$i-1]) )
+                            @if ( isset($medical_treatment_times[$i-1]) && !empty($medical_treatment_times[$i-1]) )
                                 <input type="hidden" name="medical_treatment_time[{{$i}}][id]" value="{{ $medical_treatment_times[$i-1]->id }}">
                             @endif
 
