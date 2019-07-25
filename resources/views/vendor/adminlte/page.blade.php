@@ -1,3 +1,8 @@
+@php
+  use \App\Enums\Authority;
+  use \App\Enums\Permission;
+@endphp
+
 @extends('adminlte::master')
 
 @section('adminlte_css')
@@ -93,22 +98,23 @@
                 </span>
               </a>
               <ul class="treeview-menu">
-                @if (Auth::user()->staff_auth->is_hospital !== 0)
+                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_hospital !== Permission::None)
                   <li class="{{ Request::segment(1) === 'hospital' ? 'active' : null }}"><a href="/hospital"><i class="fa fa-hospital-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;医療機関管理</a></li>
                 @endif
-                @if (Auth::user()->staff_auth->is_staff !== 0)
+                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_staff !== Permission::None)
                   <li class="{{ Request::segment(1) === 'staff' && request()->path() !== 'staff/edit-password-personal' ? 'active' : null }}"><a href="/staff"><i class="fa fa-users"></i>&nbsp;&nbsp;&nbsp;&nbsp;スタッフ管理</a></li>
                 @endif
-                @if (Auth::user()->staff_auth->is_cource_classification !== 0)
+                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_cource_classification !== Permission::None)
                   <li class="{{ Request::segment(1) === 'classification' ? 'active' : null }}"><a href="/classification"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コース分類管理</a></li>
                 @endif
-                @if (Auth::user()->staff_auth->is_invoice !== 0)
+                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_invoice !== Permission::None)
                   <li class="{{ Request::segment(1) === 'reservation' ? 'active' : null }}"><a href="/reservation"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
                 @endif
-                @if (Auth::user()->staff_auth->is_pre_account !== 0)
+                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_pre_account !== Permission::None)
                   <li class="{{ Request::segment(1) === '#' ? 'active' : null }}"><a href="/#"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;事前決済管理</a></li>
                 @endif
-                @if (Auth::user()->staff_auth->is_contract !== 0)
+                {{-- 契約管理者のみ表示する --}}
+                @if (Auth::user()->authority->value === Authority::ContractStaff)
                   <li class="{{ Request::segment(1) === '#' ? 'active' : null }}"><a href="/#"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;契約管理</a></li>
                 @endif
                 @if(Auth::user()->getTable() == "staffs")
