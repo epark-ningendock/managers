@@ -43,49 +43,49 @@
             <tr>
               <td>
                 <select id="sunday">
-                  <option></option>
+                  <option value="0"></option>
                   <option value="1">休</option>
                 </select>
               </td>
               <td>
                 <select id="monday">
-                  <option></option>
+                  <option value="0"></option>
                   <option value="1">休</option>
                 </select>
               </td>
               <td>
                 <select id="tuesday">
-                  <option></option>
+                  <option value="0"></option>
                   <option value="1">休</option>
                 </select>
               </td>
               <td>
                 <select id="wednesday">
-                  <option></option>
+                  <option value="0"></option>
                   <option value="1">休</option>
                 </select>
               </td>
               <td>
                 <select id="thursday">
-                  <option></option>
+                  <option value="0"></option>
                   <option value="1">休</option>
                 </select>
               </td>
               <td>
                 <select id="friday">
-                  <option></option>
+                  <option value="0"></option>
                   <option value="1">休</option>
                 </select>
               </td>
               <td>
                 <select id="saturday">
-                  <option></option>
+                  <option value="0"></option>
                   <option value="1">休</option>
                 </select>
               </td>
               <td>
                 <select id="holiday">
-                  <option></option>
+                  <option value="0"></option>
                   <option value="1">休</option>
                 </select>
               </td>
@@ -97,15 +97,15 @@
         <div class="col-md-3">
           <table class="table table-borderless">
             <tr class="month-week">
-              <td>
-                <h4>対象月</h4>
+              <td class="text-left">
+                <h4 class="text-center">対象月</h4>
                 <label><input type="checkbox" id="all-month"/> すべて選択</label>
                 @foreach($months->keys() as $index => $month)
                   <label><input type="checkbox" id="month-{{ $index }}" class="month" data-index="{{ $index }}"/> {{ $month }}</label>
                 @endforeach
               </td>
-              <td>
-                <h4>対象週</h4>
+              <td class="text-left">
+                <h4 class="text-center">対象週</h4>
                 <label><input type="checkbox" class="week" id="all-week" /> すべて選択</label>
                 <label><input type="checkbox" class="week" id="week-1" /> 第1 (1日~7日)</label>
                 <label><input type="checkbox" class="week" id="week-2" /> 第2 (8日~14日)</label>
@@ -152,6 +152,7 @@
                         <td class="@if($day['date']->isSunday() || (isset($day['date']) && $day['is_holiday'])) holiday @elseif($day['date']->isSaturday()) saturday @endif">
                           <!-- date -->
                           <input type="hidden" name="days[]" value="{{ $day['date']->format('Ymd') }}" />
+                          <input type="hidden" name="lock_versions[]" value="{{ $day['lock_version'] or '' }}" />
                           <span class="day-label @if($day['date']->isSunday() || ($day['is_holiday'])) text-red @elseif($day['date']->isSaturday()) text-blue @endif">
                             {{ $day['date']->day }}
                           </span>
@@ -162,7 +163,7 @@
                             <select name="is_holidays[]" class='is-holiday mt-1' data-day="{{ $day['date']->day }}"
                                     @if($day['is_holiday']) data-holiday="true" @endif
                                     data-origin="{{ $day['is_holiday'] }}">
-                              <option></option>
+                              <option value="0"></option>
                               <option value="1" @if($day['is_holiday']) selected @endif>休</option>
                             </select>
 
@@ -198,7 +199,7 @@
 
       </div>
       <div class="box-footer">
-        <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
+        <a href="{{ route('calendar.index') }}" class="btn btn-default">戻る</a>
         <button class="btn btn-primary" id="reset-data">設定のクリア</button>
         <button class="btn btn-primary" id="clear-data">登録する</button>
       </div>
@@ -339,7 +340,7 @@
                   event.preventDefault();
                   event.stopPropagation();
                   $('.is-holiday').each(function(i, ele){
-                      $(ele).val($(ele).data('origin'));
+                      $(ele).val('0');
                   });
               });
           })();

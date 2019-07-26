@@ -197,8 +197,8 @@ class CalendarController extends Controller
             });
 
             $reservation = $reservation_counts->get($start->format('Ymd'));
-
-            $month->push([ 'date' => $start->copy(), 'is_holiday' => isset($holiday), 'calendar_day' => $calendar_day, 'reservation_count' => $reservation ]);
+            $is_holiday = isset($holiday) ? $holiday->is_holiday : 0;
+            $month->push([ 'date' => $start->copy(), 'is_holiday' => $is_holiday, 'calendar_day' => $calendar_day, 'reservation_count' => $reservation ]);
 
             if ($start->isLastOfMonth() && !$start->isSaturday()) {
                 for ($i = $start->dayOfWeek; $i < 6; $i++) {
@@ -332,7 +332,10 @@ class CalendarController extends Controller
             $p_holiday = $public_holidays->first(function ($h) use ($start) {
                 return $start->isSameDay($h);
             });
-            $month->push([ 'date' => $start->copy(), 'is_holiday' => isset($p_holiday) || isset($holiday), 'holiday' =>  $p_holiday]);
+
+            $is_holiday = isset($holiday) ? $holiday->is_holiday == 1 : isset($p_holiday);
+            $lock_version = isset($holiday) ? $holiday->lock_version : '';
+            $month->push([ 'date' => $start->copy(), 'is_holiday' => $is_holiday , 'holiday' =>  $p_holiday, 'lock_version' => $lock_version]);
 
             if ($start->isLastOfMonth() && !$start->isSaturday()) {
                 for ($i = $start->dayOfWeek; $i < 6; $i++) {
@@ -371,8 +374,16 @@ class CalendarController extends Controller
 
             $days = collect($request->input('days'));
             $is_holidays = collect($request->input('is_holidays'));
+            $lock_versions = collect($request->input('lock_versions'));
 
             $new_holidays = collect();
+
+            $public_holidays = collect(Yasumi::create('Japan', $start->year, 'ja_JP')->getHolidays())->flatten(1);
+
+            if ($start->year != $end->year) {
+                $temp = collect(Yasumi::create('Japan', $end->year, 'ja_JP')->getHolidays())->flatten(1);
+                $public_holidays = $public_holidays->merge($temp);
+            }
 
             while ($start->lt($end)) {
                 $key = $start->format('Y年m月');
@@ -386,16 +397,35 @@ class CalendarController extends Controller
                 $index = $days->search(function ($d) use ($start) {
                     return $start->format('Ymd') == $d;
                 });
+
                 $is_holiday = $is_holidays->get($index);
+                $lock_version = $lock_versions->get($index);
 
                 $holiday = $holidays->first(function ($day) use ($start) {
                     return $day->date->isSameDay($start);
                 });
 
-                if ($is_holiday && !isset($holiday)) {
-                    $new_holidays->push([ 'hospital_id' => $hospital_id, 'date' => $start->copy(), 'created_at' => Carbon::now(), 'updated_at'=> Carbon::now() ]);
+                $p_holiday = $public_holidays->first(function ($h) use ($start) {
+                    return $start->isSameDay($h);
+                });
+
+
+                if (!isset($holiday) && ($is_holiday == 1 || isset($p_holiday))) {
+                    $new_holidays->push([
+                        'hospital_id' => $hospital_id,
+                        'date' => $start->copy(),
+                        'is_holiday' => $is_holiday,
+                        'created_at' => Carbon::now(),
+                        'updated_at'=> Carbon::now()
+                    ]);
                 } elseif (isset($holiday)) {
-                    $holiday->forceDelete();
+                    if (!isset($p_holiday) && $is_holiday == 0) {
+                        $holiday->forceDelete();
+                    } else {
+                        $holiday->lock_version = $lock_version;
+                        $holiday->is_holiday = $is_holiday;
+                        $holiday->save();
+                    }
                 }
                 $start->addDay(1);
             }
@@ -405,9 +435,14 @@ class CalendarController extends Controller
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.holiday_setting')]));
             DB::commit();
             return redirect('calendar');
+        } catch(StaleModelLockingException $e) {
+            DB::rollback();
+            Session::flash('error', trans('messages.model_changed_error'));
+            return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
+            Session::flash('error', trans('messages.update_error'));
+            return redirect()->back();
         }
     }
 }
