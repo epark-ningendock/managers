@@ -303,7 +303,6 @@
 
 </div>
 
-
 @include('commons.datepicker')
 @include('calendar.partials.horizontal-dateselector')
 @section('script')
@@ -341,14 +340,12 @@
                                 $('.option-container').show();
                                 courseOptions.forEach(function (courseOption) {
 
-
-                                    $field_name = '{{ in_array(3,old('course_options', [])) }}';
-                                    console.log($field_name);
-                                    let checkedOldValue = ( $field_name ) ? 'checked' : '';
-                                    // console.log(courseOption.option.id);
+                                    let $courseOptionOldData = @json(old('course_options'), JSON_PRETTY_PRINT);
+                                    let $courseOptionOldValue = ( $courseOptionOldData ) ? $courseOptionOldData : {};
+                                    let checkedOldValue = ($courseOptionOldValue.hasOwnProperty(courseOption.option.id)  ) ? 'checked' : '';
 
                                     $('<tr></tr>')
-                                        .append($(`<td><input type="checkbox" class="checkbox option" data-price="${courseOption.option.price}" name="course_options[${courseOption.option.id}]" value="${courseOption.option.price}"/></td>`))
+                                        .append($(`<td><input ${checkedOldValue} type="checkbox" class="checkbox option" data-price="${courseOption.option.price}" name="course_options[${courseOption.option.id}]" value="${courseOption.option.price}"/></td>`))
                                         .append($(`<td>${courseOption.option.name}</td>`))
                                         .append($(`<td>${courseOption.option.price}円</td>`))
                                         .appendTo(tbody);
@@ -358,13 +355,21 @@
                                 let flag = false;
                                 courseQuestions.forEach(function (question) {
                                     if (question.question_title) {
+
                                         flag = true;
+
                                         questionGroup.append($(`<label>${question.question_title}</label><input type="hidden" name="course_question_ids[]" value="${question.id}" />`))
                                         const answerGroup = $('<div class="answer-group"></div>').appendTo(questionGroup);
                                         for (let i = 1; i <= 10; i++) {
                                             let key = 'answer' + (i < 10 ? '0' : '') + i;
                                             if (question[key]) {
-                                                answerGroup.append($(`<label><input type="checkbox" class="checkbox" name="questions_${question.id}[${key}]" value="${question[key]}"><span>${question[key]}</span></label>`))
+
+                                                let input_name = `questions_${question.id}`;
+                                                let $questionGroupOldData = @json(old(), JSON_PRETTY_PRINT);
+                                                let $questionGroupOldValue = ( $questionGroupOldData ) ? $questionGroupOldData : {};
+                                                let checkedOldValue = ( $questionGroupOldValue.hasOwnProperty(input_name) && ($questionGroupOldValue[input_name].hasOwnProperty(key))  ) ? 'checked' : '';
+
+                                                answerGroup.append($(`<label><input ${checkedOldValue} type="checkbox" class="checkbox" name="questions_${question.id}[${key}]" value="${question[key]}"><span>${question[key]}</span></label>`))
                                             }
                                         }
                                     }

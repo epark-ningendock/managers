@@ -447,7 +447,6 @@ class ReservationController extends Controller
     public function store(ReservationCreateFormRequest $request)
     {
 
-
     	try {
 		    DB::beginTransaction();
 
