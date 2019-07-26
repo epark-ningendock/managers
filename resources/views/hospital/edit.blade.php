@@ -6,6 +6,9 @@
 
 @section('form')
 
+    <div class="temp-fixed-alert">
+        @include('layouts.partials.message')
+    </div>
     @includeIf('hospital.partials.nav-bar')
 
     <form id="contract-form" class="form-horizontal h-adr" method="POST" action="{{ route('hospital.update',['hospital' => $hospital]) }}">
@@ -16,3 +19,14 @@
     </form>
 
 @stop
+
+@push('css')
+    <style>
+        .temp-fixed-alert .alert {
+            position: relative;
+            width: 100%;
+            left: 0;
+            top: 0;
+        }
+    </style>
+@endpush
