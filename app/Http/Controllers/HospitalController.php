@@ -249,11 +249,13 @@ class HospitalController extends Controller
 	        DB::commit();
 
 	        return redirect( '/hospital' )->with( 'success', '更新成功' );
-        }  catch(StaleModelLockingException $e) {
-            return redirect()->back()->with('error', trans('messages.model_changed_error'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 	        DB::rollback();
-	        throw $e;
+	        $request->session()->flash('error', trans('messages.update_error'));
+	        return redirect()->back()->withInput();
+        }  catch(StaleModelLockingException $e) {
+	        $request->session()->flash('error', trans('messages.model_changed_error'));
+	        return redirect()->back();
         }
     }
 
