@@ -20,7 +20,6 @@ class CreateHospitalsTable extends Migration
             $table->string('name', 200);
             $table->string('kana', 100);
             $table->char('postcode', 8)->nullable();
-            $table->tinyInteger('prefecture_id')->nullable();
             $table->integer('district_code_id')->nullable();
             $table->unsignedInteger('course_meta_information_id')->nullable();
             $table->string('address1', 256)->nullable();
@@ -70,7 +69,6 @@ class CreateHospitalsTable extends Migration
             $table->char('is_pre_account')->nullable();
             $table->integer('pre_account_discount_rate')->nullable();
             $table->decimal('pre_account_commission_rate', 5, 2)->nullable();
-            $table->unsignedInteger('lock_version')->default(1);
             $this->addCommonColumns($table);
         });
     }
