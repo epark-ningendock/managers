@@ -28,8 +28,17 @@
                 let thisValue = $('#course_id').val();
 
                 if ( thisValue ) {
-                    let ajaxRoute = "{{  route('course.reservation.days', ['course_id' => ':1']) }}".replace(":1", thisValue);
+                    let ajaxRoute = "{{  route('course.reservation.days', ['course_id' => ':1', 'page' => old('page_number', 1) ]) }}".replace(":1", thisValue);
                     dateLoader(ajaxRoute);
+
+                    $reserveDate = '{{ old('reservation_date') }}';
+
+                    if ( $reserveDate ) {
+                        setTimeout(function(){
+                            $('td[data-date="' + $reserveDate + '"]').addClass('it-would-reserve');
+                        }, 500);
+                    }
+
                 }
 
 

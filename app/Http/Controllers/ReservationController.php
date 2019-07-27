@@ -537,7 +537,7 @@ class ReservationController extends Controller
 
 	    } catch (\Exception $i) {
 		    DB::rollback();
-		    return redirect()->back()->withErrors(trans('messages.reservation.complete_error'))->withInput();
+		    return redirect()->back()->with('error', trans('messages.reservation.complete_error'))->withInput();
 	    }
 
     }

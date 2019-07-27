@@ -16,7 +16,8 @@
 			<tr class="year-label">
 				<th colspan="7" class="text-center">{{  $calendars[0]->date->format('Y') }}</th>
 				<input type="hidden" name="reservation_date" id="reservation_date">
-			</tr>			
+				<input type="hidden" name="page_number" id="page_number" value="{{ $calendars->currentPage() }}">
+			</tr>
 		</thead>
 
 		<tbody>
