@@ -22,6 +22,11 @@
 
 @push('css')
     <style>
+        .temp-fixed-alert {
+            margin-left: -30px;
+            margin-top: -30px;
+            margin-right: -30px;
+        }
         .temp-fixed-alert .alert {
             position: relative;
             width: 100%;
