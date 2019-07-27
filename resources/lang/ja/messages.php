@@ -177,5 +177,7 @@ return [
         'status_update_success' => '予約ステータスが更新されました。',
         'status_update_error' => 'エラーが発生しました。',
         'invalid_reservation_status' => '無効な操作。'
-    ]
+    ],
+    'address1' => '市区郡',
+    'address2' => 'それ以降の住所'
 ];

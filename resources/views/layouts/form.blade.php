@@ -9,6 +9,7 @@
       <!-- Error -->
       {{-- @include('layouts.partials.errorbag') --}}
 
+
       @yield('form')
 
     </div>
