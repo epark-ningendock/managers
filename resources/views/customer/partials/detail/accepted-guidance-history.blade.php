@@ -23,11 +23,11 @@
                         @foreach( $reservations as $reservation )
                             <tr>
                                 <td>{{ $reservation->reservation_date }}</td>
-                                <td>{{ $customer_detail->getName() }}</td>
+                                <td>{{ $customer_detail->name }}</td>
                                 <td>
                                     {{ ( !empty($reservation->course->name) ?? '-') }}
                                 </td>
-                                <td>{{ $reservation->reservation_status }}</td>
+                                <td>{{ $reservation->reservation_status->description }}</td>
                             </tr>
                         @endforeach
 

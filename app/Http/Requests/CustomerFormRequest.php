@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\Gender;
 
 class CustomerFormRequest extends FormRequest
 {
@@ -28,18 +29,18 @@ class CustomerFormRequest extends FormRequest
             'family_name' => 'required',
             'first_name' => 'required',
 //            'name_kana' => 'required',
-//            'tel' => 'required',
-            'sex' => 'required',
-//            'birthday' => 'required',
-//            'postcode' => 'required',
-//            'prefecture_id' => 'required',
+            'tel' => 'nullable|digits_between:8, 11',
+            'sex' => 'required|enum_value:' . Gender::class . ',false',
+            'birthday' => 'nullable|date',
+            'postcode' => 'nullable|digits:7',
+            'prefecture_id' => 'nullable|exists:prefectures,id',
 //            'city_or_country' => 'required',
 //            'address' => 'required',
-//            'email' => 'required|email',
-//            'memo' => 'required',
+            'email' => 'nullable|email',
+            'memo' => 'nullable|max:255',
 //            'reservation_memo' => 'required',
-            'claim_count' => 'required|integer',
-            'recall_count' => 'required|integer',
+            'claim_count' => 'nullable|integer',
+            'recall_count' => 'nullable|integer',
         ];
     }
 
@@ -53,6 +54,8 @@ class CustomerFormRequest extends FormRequest
             'sex.required' => trans('validation.required', ['attribute' => trans('messages.gender')]),
             'family_name.required' => trans('validation.required', ['attribute' => trans('messages.family_name')]),
             'first_name.required' => trans('validation.required', ['attribute' => trans('messages.first_name')]),
+            'tel.digits_between' => trans('validation.invalid', ['attribute' => trans('validation.attributes.tel')]),
+            'postcode.digits' => trans('validation.invalid', ['attribute' => trans('validation.attributes.postcode')])
         ];
     }
 }

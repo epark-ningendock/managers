@@ -42,7 +42,6 @@ class HospitalImagesController extends Controller
     public function create($hospital_id)
     {
         $hospital = Hospital::with(['hospital_images', 'hospital_categories'])->find($hospital_id);
-        //$interview_detail = $hospital->hospital_categories()->where('image_order', ImageOrder::IMAGE_GROUP_INTERVIEW)->first()->interview_details()->interviewOrder()->get();
 
         $interview_top = $hospital->hospital_categories()->where('image_order', ImageOrder::IMAGE_GROUP_INTERVIEW)->first();
 
@@ -157,9 +156,7 @@ class HospitalImagesController extends Controller
         $this->hospitalImageUploader($file, 'interview_', 1, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_INTERVIEW,null,null,null,$file['interview_1_title'],$file['interview_1_caption']);
 
         //インタビュートップ取得
-        //(isset($file['interview_1']) or isset($file['interview_1_title']) or isset($file['interview_1_caption'])) {
-            $image_category_interview = $this->hospital_category->ByImageOrder($hospital_id, ImageOrder::IMAGE_GROUP_INTERVIEW, 1)->first();
-        //}
+        $image_category_interview = $this->hospital_category->ByImageOrder($hospital_id, ImageOrder::IMAGE_GROUP_INTERVIEW, 1)->first();
         //interview 詳細　update
         if(isset($file['interview'])) {
             $interviews = $file['interview'];

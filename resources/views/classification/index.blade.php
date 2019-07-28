@@ -100,12 +100,13 @@
   <div class="pull-right">
     @if (Auth::user()->staff_auth->is_cource_classification === 3)
       <a class="btn btn-primary mr-2" href="{{ route('classification.sort') }}">並び替え</a>
-      <a class="btn btn-success btn-create" href="{{ route('classification.create') }}">新規作成</a>
+      <a class="btn btn-primary btn-create" href="{{ route('classification.create') }}">新規作成</a>
     @endif
   </div>
 @stop
 
 @section('table')
+  @include('layouts.partials.pagination-label', ['paginator' => $result])
   <table class="table table-bordered table-hover">
     <thead>
     <tr>

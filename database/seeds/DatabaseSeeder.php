@@ -14,11 +14,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             DepartmentsTableSeeder::class,
             StaffsTableSeeder::class,
-            HospitalStaffsTableSeeder::class,
             MinorClassificationsTableSeeder::class,
             DistrictCodeSeeder::class,
-            ContractInformationTableSeeder::class, // comment off if you need it
             HospitalTableSeeder::class,
+            HospitalStaffsTableSeeder::class,
+            ContractInformationTableSeeder::class, // comment off if you need it
             HospitalImagesTableSeeder::class,
             OptionsTableSeeder::class,
             TaxClassesTableSeeder::class,

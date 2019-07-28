@@ -250,10 +250,20 @@ module.exports.addScrollToTop = function () {
 // フラッシュメッセージのfadeout
 (function() {
     'use strict';
-
     // フラッシュメッセージのfadeout
     $(function(){
         $('.alert-success').fadeOut(2000);
+        $('.alert-danger').fadeOut(2000);
     });
 
 })();
+
+$(function () {
+    $('.sidebar-toggle').click(function() {
+        if($.cookie('menu_close') == 1) {
+            $.removeCookie('menu_close');
+        } else {
+            $.cookie('menu_close', 1);
+        }
+    });
+});

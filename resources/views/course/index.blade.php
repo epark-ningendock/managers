@@ -25,14 +25,14 @@
 @section('button')
   <div class="pull-right">
     <a class="btn btn-primary mr-2" href="{{ route('course.sort') }}">並び替え</a>
-    <a class="btn btn-success btn-create" href="{{ route('course.create') }}">新規作成</a>
+    <a class="btn btn-primary btn-create" href="{{ route('course.create') }}">新規作成</a>
   </div>
 @stop
 
 <!-- search section -->
 @section('table')
-
   <div class="table-responsive">
+    @include('layouts.partials.pagination-label', ['paginator' => $courses])
     <table id="example2" class="table table-bordered table-hover table-striped">
       <thead>
       <tr>

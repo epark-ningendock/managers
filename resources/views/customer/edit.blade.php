@@ -13,7 +13,7 @@
     <div class="note-msg m-4">
       <span class="text-danger">(*)</span>必ず列を入力してください
     </div>
-    <form method="post" action="{{ route('customer.update', ['id' => $customer_detail->id]) }}">
+    <form method="post" action="{{ route('customer.update', ['id' => $customer_detail->id]) }}" class="h-adr">
       {{ csrf_field() }}
         {{ method_field('PATCH') }}
 

@@ -6,30 +6,30 @@
         <?php $main_image_category = $hospital->hospital_categories->firstWhere('image_order', $image_order::IMAGE_GROUP_FACILITY_MAIN); ?>
 
         @if(!is_null($main_image_category) && !is_null($main_image_category->hospital_image->path))
-            <div class="image_area">
+            <div class="main_image_area">
                 <img class="object-fit" src="/img/uploads/500-auto-{{$main_image_category->hospital_image->path}}" height="200">
+
                 <p class="file_delete_text">
-                    <a onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $main_image_category->hospital_image_id]) }}">
-                        <i class="icon-trash icon-white"></i>
+                    <a onclick="return confirm('この施設画像を削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $main_image_category->hospital_image_id]) }}">
                         ファイル削除
                     </a>
                 </p>
             </div>
         @else
-            <div class="no_image_area">
-                <img src="/img/icon_noimage.png" width="50">
+            <div class="main_image_area">
+                <img src="/img/no_image.png">
             </div>
         @endif
-        <label class="file-upload btn btn-primary">
-            ファイル選択 {{Form::file("main", ['class' => 'field'])}}
-        </label>
+            <label class="file-upload btn btn-primary">
+                ファイル選択 {{Form::file("main", ['class' => 'field'])}}
+            </label>
         @if ($errors->has('main'))
             {{ $errors->first('main') }}
         @endif
     </div>
 
     <div class="form-group">
-        {{Form::label('interview_1_caption', 'TOP',['class' => 'form_label'])}}
+        {{Form::label('interview_1_caption', 'タイトル',['class' => 'form_label'])}}
         <?php $title = $hospital->hospital_categories->firstWhere('image_order', $image_order::IMAGE_GROUP_TOP); ?>
         {{Form::text('title', is_null($title) ? '' : $title->title, ['class' => 'form-control'])}}
         @if ($errors->has('title'))
@@ -58,17 +58,17 @@
             {{Form::label('sub_'.$i, '施設サブ画像'.$i,['class' => 'form_label'])}}
             <?php $sub_image_category = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_FACILITY_SUB)->where('order2', $i)->first(); ?>
             @if (!is_null($sub_image_category))
-                <div class="image_area">
-                    <img class="object-fit" src="/img/uploads/300-auto-{{$sub_image_category->hospital_image->path}}" width="150">
+                <div class="sub_image_area">
+                    <img class="object-fit" src="/img/uploads/300-auto-{{$sub_image_category->hospital_image->path}}">
+                    <p class="file_delete_text">
+                        <a onclick="return confirm('この施設画像を削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.image.delete', ['hospital' => $hospital->id, 'hospital_category_id' => $sub_image_category->id, 'hospital_image_id' => $sub_image_category->hospital_image_id]) }}">
+                            ファイル削除
+                        </a>
+                    </p>
                 </div>
-                <p style="text-align: center; margin-top: 10px">
-                    <a onclick="return confirm('この施設画像を削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.image.delete', ['hospital' => $hospital->id, 'hospital_category_id' => $sub_image_category->id, 'hospital_image_id' => $sub_image_category->hospital_image_id]) }}">
-                        削除
-                    </a>
-                </p>
             @else
-                <div class="no_image_area">
-                    <img src="/img/icon_noimage.png" width="50">
+                <div class="sub_image_area">
+                    <img src="/img/no_image.png">
                 </div>
             @endif
             <label class="file-upload btn btn-primary">
@@ -90,24 +90,23 @@
     <div class="row">
         @for ($i = 1; $i <= 4; $i++)
             <div class="col-sm-6">
-                {{Form::label('interview_1_caption', 'こだわり'.$i,['class' => 'form_label'])}}
+                {{Form::label('speciality_1_caption', 'こだわり'.$i,['class' => 'form_label'])}}
                 <?php $image_speciality = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_SPECIALITY)->where('order2', $i)->first(); ?>
                 @if (!is_null($image_speciality) && !is_null($image_speciality->hospital_image->path))
-                    <div class="image_area">
+                    <div class="speciality_image_area">
                         <img class="object-fit" src="/img/uploads/300-auto-{{$image_speciality->hospital_image->path}}" width="150">
                         <p class="file_delete_text">
-                            <a onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $image_speciality->hospital_image_id]) }}">
+                            <a class="btn btn-mini btn-danger" onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $image_speciality->hospital_image_id]) }}">
                                 <i class="icon-trash icon-white"></i>
                                 ファイル削除
                             </a>
                         </p>
                     </div>
                 @else
-                    <div class="no_image_area">
-                        <img src="/img/icon_noimage.png" width="50">
+                    <div class="speciality_image_area">
+                        <img src="/img/no_image.png">
                     </div>
                 @endif
-
                 <label class="file-upload btn btn-primary">
                     ファイル選択 {{Form::file("speciality_".$i, ['class' => 'field'])}}
                 </label>
@@ -144,7 +143,7 @@
 
 
 <div class="box box-primary form-box">
-    <div class="form_title"><div class="number_circle">5</div> <span class="input_title">地図・アクセス</span></div>
+    <div class="form_title"><div class="number_circle">4</div> <span class="input_title">地図・アクセス</span></div>
     <div class="form-group">
         {{Form::label('map_url', '地図・アクセス',['class' => 'form_label'])}}
         <?php $map = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_MAP)->first(); ?>
@@ -158,27 +157,26 @@
 </div>
 
 <div class="box box-primary form-box" id="interview_section">
-    <div class="form_title"><div class="number_circle">6</div> <span class="input_title">インタビュー</span></div>
+    <div class="form_title"><div class="number_circle">5</div> <span class="input_title">インタビュー</span></div>
     <div class="row">
         <div class="col-sm-6">
             {{Form::label('interview_1', 'インタビューメイン画像',['class' => 'form_label'])}}
 
             @if(!is_null($interview_top) && !is_null($interview_top->hospital_image->path))
-                <div class="image_area">
+                <div class="interview_image_area">
                     <img src="/img/uploads/300-auto-{{$interview_top->hospital_image->path}}" width="150">
                     <p class="file_delete_text">
-                        <a onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $interview_top->hospital_image_id]) }}">
+                        <a class="btn btn-mini btn-danger" onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $interview_top->hospital_image_id]) }}">
                             <i class="icon-trash icon-white"></i>
                             ファイル削除
                         </a>
                     </p>
                 </div>
             @else
-                <div class="no_image_area">
-                    <img src="/img/icon_noimage.png" width="50">
+                <div class="interview_image_area">
+                    <img src="/img/no_image.png">
                 </div>
             @endif
-
             <label class="file-upload btn btn-primary">
                 ファイル選択 {{Form::file("interview_1", ['class' => 'field'])}}
             </label>
@@ -227,6 +225,9 @@
                         </div>
                     @endif
                 </div>
+
+
+
                 <p class="file_delete_text">
                     <a onclick="return confirm('このインタビューを削除しますか？')" href="{{ route('hospital.delete_interview', ['hospital' => $hospital->id, 'interview_id' => $interview->id]) }}">
                         <i class="icon-trash icon-white"></i>
@@ -258,7 +259,7 @@
 </div>
 
 <div class="box box-primary form-box">
-    <div class="form_title"><div class="number_circle">7</div> <span class="input_title">写真タブ</span></div>
+    <div class="form_title"><div class="number_circle">6</div> <span class="input_title">写真タブ</span></div>
     @for ($i = 1; $i <= 5; $i++)
     <?php $tab = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('order2', $i)->first();?>
     <?php $tab_order = is_null($tab) or $tab->order == 0 ? null : $tab->order;?>
@@ -270,18 +271,18 @@
         <div @if(!is_null($tab) && !is_null($tab->hospital_image->path)) style="display: block;" @else style="display: none;" @endif>
             <div class="col-sm-6">
                 @if(!is_null($tab) && !is_null($tab->hospital_image->path))
-                    <div class="image_area">
-                        <img class="object-fit" src="/img/uploads/300-auto-{{$tab->hospital_image->path}}" width="150">
+                    <div class="tab_image_area">
+                        <img class="object-fit" src="/img/uploads/300-auto-{{$tab->hospital_image->path}}">
                         <p class="file_delete_text">
-                            <a onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $tab->hospital_image_id]) }}">
+                            <a class="btn btn-mini btn-danger" onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $tab->hospital_image_id]) }}">
                                 <i class="icon-trash icon-white"></i>
                                 ファイル削除
                             </a>
                         </p>
                     </div>
                 @else
-                    <div class="no_image_area">
-                        <img src="/img/icon_noimage.png" width="50">
+                    <div class="tab_image_area">
+                        <img src="/img/no_image.png">
                     </div>
                 @endif
                 <label class="file-upload btn btn-primary">
@@ -311,25 +312,25 @@
 </div>
 
 <div class="box box-primary form-box" id="staff_section">
-    <div class="form_title"><div class="number_circle">8</div> <span class="input_title">スタッフ</span></div>
+    <div class="form_title"><div class="number_circle">7</div> <span class="input_title">スタッフ</span></div>
     <div class="row">
     @for ($i = 1; $i <= 10; $i++)
         <?php $staff = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_STAFF)->where('order2', $i)->first();?>
         <div class="col-sm-6 staff_box" data-order="{{$i}}" @if(is_null($staff) && $i != 1) style="display: none" @endif>
             <p class="box_staff_title">スタッフ{{$i}}</p>
             @if(!is_null($staff) && !is_null($staff->hospital_image->path))
-                <div class="image_area">
-                    <img class="object-fit" src="/img/uploads/300-auto-{{$staff->hospital_image->path}}" width="150">
+                <div class="staff_image_area">
+                    <img class="object-fit" src="/img/uploads/300-auto-{{$staff->hospital_image->path}}">
                     <p class="file_delete_text">
-                        <a onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $staff->hospital_image_id]) }}">
+                        <a class="btn btn-mini btn-danger" onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $staff->hospital_image_id]) }}">
                             <i class="icon-trash icon-white"></i>
                             ファイル削除
                         </a>
                     </p>
                 </div>
             @else
-                <div class="no_image_area">
-                    <img src="/img/icon_noimage.png" width="50">
+                <div class="staff_image_area">
+                    <img src="/img/no_image.png">
                 </div>
             @endif
             <label class="file-upload btn btn-primary">

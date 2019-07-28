@@ -29,7 +29,7 @@ class StaffsTableSeeder extends Seeder
             'is_cource_classification' => 3,
             'is_invoice' => 3,
             'is_pre_account' => 7,
-            'is_contract' => 7,
+            'is_contract' => 0,
             "staff_id" => 1
         ]);
 
