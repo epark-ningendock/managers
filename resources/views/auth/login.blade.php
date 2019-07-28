@@ -23,23 +23,20 @@
           @if ($errors->has('fail_login')) <p class="help-block strong">{{ $errors->first('fail_login') }}</p> @endif
         </div>
         <div class="form-group has-feedback @if ($errors->has('login_id')) has-error @endif">
+          <label for="login_id">ログインID</label>
           <input type="text" name="login_id" class="form-control" value="{{ old('login_id') }}"
                placeholder="ログインIDを入力してください">
           @if ($errors->has('password')) <p class="help-block strong">{{ $errors->first('login_id') }}</p> @endif
         </div>
         <div class="form-group has-feedback @if ($errors->has('password')) has-error @endif">
+          <label for="login_id">パスワード</label>
           <input type="password" name="password" class="form-control"
                placeholder="パスワードを入力してください">
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           @if ($errors->has('password')) <p class="help-block strong">{{ $errors->first('password') }}</p> @endif
         </div>
-        <div class="row">
-          <div class="col-xs-8">
-          </div>
-          <div class="col-xs-4">
-            <button type="submit"
-                class="btn btn-primary btn-block btn-flat">ログイン</button>
-          </div>
+        <div class="login-form-submit">
+          <button type="submit" class="btn btn-primary">ログイン</button>
         </div>
       </form>
       <div class="auth-links">

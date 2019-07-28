@@ -310,14 +310,14 @@ label {
   }
 }
 
-.box-body {
+.form-entry {
   width: 80%;
   margin: 0 auto;
 }
 
 $color1: #f4f4f4;
 $color2: #3197EE;
-.staff-form {
+.form-entry {
   .radio {
     margin: 0.5rem;
     input[type="radio"] {
@@ -422,5 +422,15 @@ legend {
       font-weight: normal;
       line-height: 1.5em;
     }
+  }
+}
+
+.login-form-submit {
+  text-align: center;
+}
+
+.login-box-body {
+  .has-feedback label~.form-control-feedback {
+    top: 20px;
   }
 }
