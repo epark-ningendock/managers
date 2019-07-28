@@ -1,12 +1,12 @@
 <?php
 
 namespace App;
+
 use Reshadman\OptimisticLocking\OptimisticLocking;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
 
 class Holiday extends SoftDeleteModel
 {
-
     use OptimisticLocking;
 
     protected $fillable = [ 'date', 'hospital_id', 'lock_version' ];

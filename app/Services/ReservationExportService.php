@@ -70,7 +70,7 @@ class ReservationExportService
                 '',//会員番号
                 $reservation_lists->customer->name,//顧客名（受診者名）
                 $reservation_lists->customer->name_kana,//ふりがな
-                Customer::$sex[$reservation_lists->customer->sex],//性別
+                $reservation_lists->customer->sex->description,//性別
                 $reservation_lists->customer->tel,//連絡先
                 $reservation_lists->customer->birthday,
                 Carbon::parse($reservation_lists->customer->birthday)->age,//年齢

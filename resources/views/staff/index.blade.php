@@ -61,24 +61,8 @@
 @stop
 
 @section('table')
-  <div class="count-paginate-bar">
-      <div class="row">
-          <div class="col-sm-6">
-              <div class="display-total text-left mr-5 ">
-                  全{{ $staffs->total() }} 件中
-                  {{ ( $staffs->currentPage() * $staffs->perPage() ) - $staffs->perPage() + 1 }}件
-                  @if ($staffs->currentPage() === $staffs->lastPage())
-                    ~ {{ $staffs->total() }} 件を表示
-                  @else
-                    ~ {{ $staffs->currentPage() * $staffs->perPage() }} 件を表示
-                  @endif
-              </div>
-          </div>
-          <div class="col-sm-6">
-          </div>
-      </div>
-  </div>
   <div class="staff-table-responsive table-responsive mt-3">
+    @include('layouts.partials.pagination-label', ['paginator' => $staffs])
     <table id="example2" class="table table-bordered table-hover table-striped no-border staff-table">
       <thead>
       <tr>

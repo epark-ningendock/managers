@@ -126,7 +126,7 @@ class CalendarController extends Controller
             $this->saveCalendar($request, $calendar);
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar')]));
             return redirect('calendar');
-        } catch(StaleModelLockingException $e) {
+        } catch (StaleModelLockingException $e) {
             Session::flash('error', trans('messages.model_changed_error'));
             return redirect()->back();
         } catch (\Exception $e) {
@@ -279,7 +279,7 @@ class CalendarController extends Controller
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar_setting')]));
             DB::commit();
             return redirect('calendar');
-        } catch(StaleModelLockingException $e) {
+        } catch (StaleModelLockingException $e) {
             DB::rollback();
             Session::flash('error', trans('messages.model_changed_error'));
             return redirect()->back();
@@ -435,7 +435,7 @@ class CalendarController extends Controller
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.holiday_setting')]));
             DB::commit();
             return redirect('calendar');
-        } catch(StaleModelLockingException $e) {
+        } catch (StaleModelLockingException $e) {
             DB::rollback();
             Session::flash('error', trans('messages.model_changed_error'));
             return redirect()->back();

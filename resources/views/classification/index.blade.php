@@ -106,6 +106,7 @@
 @stop
 
 @section('table')
+  @include('layouts.partials.pagination-label', ['paginator' => $result])
   <table class="table table-bordered table-hover">
     <thead>
     <tr>

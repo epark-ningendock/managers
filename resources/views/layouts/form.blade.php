@@ -8,6 +8,10 @@
     @include('layouts.partials.message')
     <div class="inner-box">
 
+      <!-- Error -->
+      {{-- @include('layouts.partials.errorbag') --}}
+
+
       @yield('form')
 
     </div>

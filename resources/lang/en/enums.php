@@ -13,6 +13,7 @@ use App\Enums\Permission;
 use App\Enums\WebReception;
 use App\Enums\CalendarDisplay;
 use App\Enums\PaymentStatus;
+use App\Enums\Gender;
 
 return [
     Authority::class => [
@@ -62,6 +63,11 @@ return [
         PaymentStatus::ACTUAL_SALE => 'Actual Sale',
         PaymentStatus::CANCELLATION => 'Cancellation',
         PaymentStatus::ERROR => 'Error'
+    ],
+
+    Gender::class =>[
+        Gender::Male => 'Male',
+        Gender::Female => 'Female'
     ]
 
 ];

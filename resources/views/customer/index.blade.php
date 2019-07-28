@@ -30,11 +30,9 @@
 
 
 @section('table')
-
-    @includeIf('customer.partials.count-pagination-bar')
-
     <div class="table-responsive">
-        <table id="example2" class="table table-bordered table-hover table-striped mb-5 mt-5">
+        @include('layouts.partials.pagination-label', ['paginator' => $customers])
+        <table id="example2" class="table table-bordered table-hover table-striped mb-5">
             <thead>
             <tr>
                 <th>{{ trans('messages.customer_id') }}</th>
@@ -65,7 +63,6 @@
                         {{ trans('messages.updated_at') }}
                     </a>
                 </th>
-                <th>{{ trans('messages.registration_form') }}</th>
                 <th>{{ trans('messages.edit') }}</th>
                 <th>{{ trans('messages.delete') }}</th>
             </tr>
@@ -90,9 +87,8 @@
                                 {{ $customer->email }}
                             </a>
                         </td>
-                        <td>{{ \App\Enums\Gender::getKey($customer->sex) }}</td>
+                        <td>{{ $customer->sex->description }}</td>
                         <td>{{ date('Y/m/d', strtotime($customer->updated_at)) }}</td>
-                        <td>{{ $customer->parent_customer_id }}</td>
                         <td>
                             <a class="btn btn-primary"
                                href="{{ route('customer.edit', $customer->id) }}">
@@ -115,6 +111,7 @@
 
             </tbody>
         </table>
+        {{ $customers->appends(request()->input())->links() }}
     </div>
 
     @includeIf('customer.partials.detail.detail-popup')
