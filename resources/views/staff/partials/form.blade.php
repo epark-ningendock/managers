@@ -46,7 +46,8 @@
           @if ($errors->has('login_id')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('login_id') }}</p> @endif
         </div>
       </div>
-
+    </div>
+    <div class="row">
       <div class="col-md-6">
         <div class="form-group py-sm-1 @if ($errors->has('email')) has-error @endif">
           <label for="email">メールアドレス<span class="form_required">必須</span></label>
