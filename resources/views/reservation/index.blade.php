@@ -106,8 +106,9 @@
 @section('table')
 
     <div class="table-responsive">
+        @include('layouts.partials.pagination-label', ['paginator' => $reservations])
         @if (count($reservations))
-        <table class="table table-bordered table-hover table-striped mb-5 mt-5">
+        <table class="table table-bordered table-hover table-striped mb-5">
             <thead>
             <tr>
                 <th>予約日</th>

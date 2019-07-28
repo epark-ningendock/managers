@@ -12,6 +12,7 @@
 
 @section('form')
     <form method="POST"  action="{{ route('hospital-staff.update.password', $hospital_staff->id) }}">
+        <input type="hidden" name="updated_at" value="{{ isset($hospital_staff) ? $hospital_staff->updated_at : null }}">
         {{ csrf_field() }}
         {{ method_field('PUT') }}
         @include('hospital_staff.partials.edit-password-form')

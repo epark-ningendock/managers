@@ -15,11 +15,6 @@
     <p>welcome</p>
   @stop
 
-  <!-- 読み込ませるCSSを入力 -->
-  @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
-  @stop
-
   <!-- 読み込ませるJSを入力 -->
   @section('js')
     <script> console.log('Hi!'); </script>

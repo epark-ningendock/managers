@@ -1,8 +1,7 @@
 @php
     use \App\Enums\HospitalEnums;
     $params = [
-        'delete_route' => 'option.destroy',
-        'create_route' => 'option.create'
+        'delete_route' => 'option.destroy'
     ];
 @endphp
 
@@ -20,9 +19,7 @@
     </h1>
 @stop
 
-
-@section('table')
-
+@section('search')
     <p>一覧表示と編集オプション<br/>
                  オプションの並べ替えボタンを押すと、オプションの順序を並べ替えることができます。
     </p>
@@ -30,7 +27,7 @@
 
     <div class="action-btn-wrapper text-right m-4">
 
-        <a href="{{ route('option.create') }}" class="btn btn-primary">
+        <a href="{{ route('option.create') }}" class="btn btn-success">
             オプション登録
         </a>
 
@@ -39,9 +36,12 @@
         </a>
 
     </div>
+@stop
 
+@section('table')
     <div class="table-responsive">
-        <table class="table table-bordered table-hover table-striped mb-5 mt-5">
+        @include('layouts.partials.pagination-label', ['paginator' => $options])
+        <table class="table table-bordered table-hover table-striped mb-5">
             <thead>
             <tr>
                 <th>オプションID</th>

@@ -118,6 +118,7 @@ return [
     'url'                  => ':attributeは、有効なURL形式で指定してください。',
     'uuid'                 => ':attributeは、有効なUUIDでなければなりません。',
     'enum_value'                => '入力した値:attributeのは無効です',
+    'invalid'              => ':attributeが無効です。',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
@@ -134,7 +135,7 @@ return [
             'regex' => 'ログインIDは、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。'
         ],
         'password' => [
-            'between' => 'パスワードは、8~50文字以内の半角英数字でご入力ください。',
+            'between' => 'パスワードは、8~20文字以内の半角英数字でご入力ください。',
             'alpha_num' => 'パスワードは、8~20文字以内の半角英数字でご入力ください。'
         ],
         'email' => [
@@ -251,6 +252,9 @@ return [
         'completed_start_date' => '受診開始日',
         'completed_end_date' => '受診終了日',
         'customer_name' => '受診者名',
-        'pvad' => 'PV数'
+        'pvad' => 'PV数',
+        'birthday' => '生年月日',
+        'memo' => '顧客メモ',
+        'prefecture_id' => '都道府県'
     ],
 ];

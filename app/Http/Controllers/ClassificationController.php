@@ -154,11 +154,11 @@ class ClassificationController extends Controller
         }
 
         if ($request->has('type')) {
-          $selectType = $request->input('type');
+            $selectType = $request->input('type');
         } elseif ($initClassificationTypeId !== null) {
-          $selectType = $initClassificationTypeId;
+            $selectType = $initClassificationTypeId;
         } else {
-          $selectType = '';
+            $selectType = '';
         }
 
         if ($selectType != '') {
@@ -223,9 +223,9 @@ class ClassificationController extends Controller
         $c_middles = MiddleClassification::withTrashed()->get();
 
         if (count($c_types) > 0) {
-          $initClassificationTypeId = $c_types[0]->id;
+            $initClassificationTypeId = $c_types[0]->id;
         } else {
-          $initClassificationTypeId = '';
+            $initClassificationTypeId = '';
         }
 
         [$sortCollections, $result] = $this->getClassifications($request, false, false, $initClassificationTypeId);

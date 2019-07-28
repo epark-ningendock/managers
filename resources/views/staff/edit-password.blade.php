@@ -10,6 +10,7 @@
 
 @section('form')
   <form method="POST" action="{{ route('staff.update.password', ['staff_id' => $staff->id]) }}">
+    <input type="hidden" name="updated_at" value="{{ isset($staff) ? $staff->updated_at : null }}">
     {{ csrf_field() }}
     {{ method_field('PUT') }}
     @include('staff.partials.edit-password-form-admin')

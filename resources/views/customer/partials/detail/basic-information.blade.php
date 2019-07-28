@@ -7,7 +7,7 @@
     <div class="modal-body">
         <div class="table-responsive">
 
-            <table class="table table-bordered">
+            <table class="table table-bordered basic-info">
                 <tr>
                     <td class="gray-cell-bg">{{ trans('messages.customer_id') }}</td>
                     <td>{{ $customer_detail->id }}</td>
@@ -15,27 +15,13 @@
                     <td>{{ $customer_detail->registration_card_number }}</td>
                 </tr>
                 <tr>
-                    <td  class="gray-cell-bg"><label for="name">{{ trans('messages.family_name') }}</label></td>
+                    <td  class="gray-cell-bg"><label for="name">{{ trans('messages.name') }}</label></td>
                     <td>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="family_name" value="{{ ( !empty($customer_detail->family_name )) ? $customer_detail->family_name : old('family_name') }}" />
-                        </div>
+                        {{ $customer_detail->name }}
                     </td>
-                    <td  class="gray-cell-bg"><label for="name">{{ trans('messages.first_name') }}</label></td>
+                    <td  class="gray-cell-bg"><label for="name">{{ trans('messages.name_kana') }}</label></td>
                     <td>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="first_name" value="{{ ( !empty($customer_detail->first_name )) ? $customer_detail->first_name : old('first_name') }}" />
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td  class="gray-cell-bg"><label for="name">{{ trans('messages.family_name_kana') }}</label></td>
-                    <td>
-                        {{ $customer_detail->family_name_kana }}
-                    </td>
-                    <td  class="gray-cell-bg"><label for="name">{{ trans('messages.first_name_kana') }}</label></td>
-                    <td>
-                        {{ $customer_detail->first_name_kana }}
+                        {{ $customer_detail->name_kana }}
                     </td>
                 </tr>
                 <tr>
@@ -47,7 +33,7 @@
                 <tr>
                     <td class="gray-cell-bg"><label for="gender">{{ trans('messages.gender') }}</label></td>
                     <td>
-                        {{ \App\Enums\Gender::getKey($customer_detail->gender) }}
+                        {{ $customer_detail->sex->description }}
                     </td>
                     <td class="gray-cell-bg">{{ trans('messages.birthday') }}</td>
                     <td>{{ $customer_detail->birthday }}</td>
@@ -95,3 +81,13 @@
     </form>
 
 </div>
+<style>
+    table.basic-info>tbody>tr>td {
+        text-align: left;
+        vertical-align: middle;
+    }
+    table.basic-info td.gray-cell-bg {
+        background-color:  #e5e2e2;
+        text-align: right;
+    }
+</style>

@@ -15,10 +15,10 @@ class DatabaseSeeder extends Seeder
             ClassificationTypeSeeder::class,
             DepartmentsTableSeeder::class,
             StaffsTableSeeder::class,
-            HospitalStaffsTableSeeder::class,
             DistrictCodeSeeder::class,
-            ContractInformationTableSeeder::class, // comment off if you need it
             HospitalTableSeeder::class,
+            HospitalStaffsTableSeeder::class,
+            ContractInformationTableSeeder::class, // comment off if you need it
             HospitalImagesTableSeeder::class,
             OptionsTableSeeder::class,
             TaxClassesTableSeeder::class,

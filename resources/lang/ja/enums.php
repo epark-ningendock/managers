@@ -15,6 +15,7 @@ use App\Enums\WebReception;
 use App\Enums\CalendarDisplay;
 use App\Enums\ReservationStatus;
 use App\Enums\PaymentStatus;
+use App\Enums\Gender;
 
 return [
     Authority::class => [
@@ -70,5 +71,10 @@ return [
         PaymentStatus::ACTUAL_SALE => '実売上',
         PaymentStatus::CANCELLATION => '取消',
         PaymentStatus::ERROR => 'エラー'
+    ],
+
+    Gender::class =>[
+        Gender::Male => '男性',
+        Gender::Female => '女性'
     ]
 ];

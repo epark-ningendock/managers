@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Exception;
+use App\Exceptions\ExclusiveLockException;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -48,10 +50,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        // TokenMismatchException発生時
         if ($exception instanceof TokenMismatchException) {
-            // TokenMismatchException発生時はindexへリダイレクトさせる
             return redirect('/login');
+        }
+
+        if ($exception instanceof ExclusiveLockException) {
+            return redirect()->back()->with('error', ' 他のユーザーが操作しています。');
         }
 
         return parent::render($request, $exception);

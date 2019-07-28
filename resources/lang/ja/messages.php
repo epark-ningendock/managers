@@ -34,10 +34,12 @@ return [
     'staff_create_error' => '登録の際にエラーが発生しました。',
     'create_error' => 'エラーが発生しました。',
     'update_error' => 'エラーが発生しました。',
+    'model_changed_error' => '更新中にモデルが変更されました。',
     'select_hospital_confirmation' => 'この医療機関を操作します。<br/>よろしいですか？',
     'delete_confirmation' => '本当に削除してもよろしいですか？<br/>この処理は取り消せません。',
     'delete_popup_title' => '確認を削除',
     'delete_popup_content' => 'これを削除してよろしいです :name？',
+    'course_delete_popup_content' => 'この分類を削除します。よろしいですか？',
     'classification_delete_popup_content' => 'この分類を削除します。よろしいですか？',
     'classification_restore_popup_content' => 'この分類を復元します。よろしいですか？',
     'classification_sort_updated' => '分類レコードの順序が更新されました。',
@@ -54,7 +56,7 @@ return [
         'parent_deleted_error_on_restore' => '親の中分類レコードが削除されます。 操作は完了できません。'
     ],
     'invalid_course_id' => 'コースIDが存在しません',
-    'course_sort_updated' => '講座記録の順序が更新されました。',
+    'course_sort_updated' => '並べ替えが完了しました。',
     'names' => [
         'customers'       => '顧客管理',
         'customer'        => '顧客',
@@ -177,5 +179,7 @@ return [
         'status_update_success' => '予約ステータスが更新されました。',
         'status_update_error' => 'エラーが発生しました。',
         'invalid_reservation_status' => '無効な操作。'
-    ]
+    ],
+    'address1' => '市区郡',
+    'address2' => 'それ以降の住所'
 ];

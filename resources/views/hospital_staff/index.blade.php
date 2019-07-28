@@ -23,7 +23,8 @@
 
 
 @section('table')
-    <table id="example2" class="table table-bordered table-hover table-striped mb-5 mt-5">
+    @include('layouts.partials.pagination-label', ['paginator' => $hospital_staffs])
+    <table id="example2" class="table table-bordered table-hover table-striped mb-5">
         <thead>
         <tr>
             <th>ログインID</th>
@@ -45,7 +46,7 @@
                        <i class="fa fa-edit text-bold"> 編集</i>
                     </a>
                 <td>
-                    <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $hospital_staff->id }}">
+                    <button class="btn btn-primary delete-btn delete-popup-btn" data-id="{{ $hospital_staff->id }}">
                         <i class="fa fa-trash"></i>
                     </button>
                 </td>

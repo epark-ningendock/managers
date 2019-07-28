@@ -25,6 +25,7 @@ class CreateStaffsTable extends Migration
             $table->char('status', 2)->default('1');
             $table->string('email', 256)->unique()->nullable();
             $table->string('remember_token', 100)->nullable();
+            $table->dateTime('first_login_at')->nullable();
             $this->addCommonColumns($table);
         });
     }

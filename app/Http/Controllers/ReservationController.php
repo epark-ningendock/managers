@@ -34,7 +34,7 @@ class ReservationController extends Controller
         ReservationExportService $export_file
     ) {
         request()->session()->forget('hospital_id');
-        $this->middleware('permission.invoice.edit')->except('index');
+        $this->middleware('permission.invoice.edit')->except(['index', 'reception', 'reception_csv', 'reservation_status']);
         $this->reservation = $reservation;
         $this->hospital = $hospital;
         $this->customer = $customer;
