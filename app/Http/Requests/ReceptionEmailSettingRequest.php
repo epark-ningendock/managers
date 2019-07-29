@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Enums\ReceptionEmailSetting;
+use App\Rules\OneOfThemWithIf;
 
 class ReceptionEmailSettingRequest extends FormRequest
 {
@@ -40,6 +41,17 @@ class ReceptionEmailSettingRequest extends FormRequest
             'reception_email5' => 'nullable|email',
             'epark_in_hospital_reception_mail_flg' => 'nullable|enum_value:' . ReceptionEmailSetting::class . ',false',
             'epark_web_reception_email_flg' => 'nullable|enum_value:' . ReceptionEmailSetting::class . ',false'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'reception_email1.email' => trans('messages.invalid_email'),
+            'reception_email2.email' => trans('messages.invalid_email'),
+            'reception_email3.email' => trans('messages.invalid_email'),
+            'reception_email4.email' => trans('messages.invalid_email'),
+            'reception_email5.email' => trans('messages.invalid_email')
         ];
     }
 }

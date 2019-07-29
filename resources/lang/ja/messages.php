@@ -181,5 +181,6 @@ return [
         'invalid_reservation_status' => '無効な操作。'
     ],
     'address1' => '市区郡',
-    'address2' => 'それ以降の住所'
+    'address2' => 'それ以降の住所',
+    'invalid_email' => '正しいメールアドレスの書式でご入力ください'
 ];
