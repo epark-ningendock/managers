@@ -24,7 +24,7 @@
 
 @section('table')
     @include('layouts.partials.pagination-label', ['paginator' => $hospital_staffs])
-    <table id="example2" class="table table-bordered table-hover table-striped mb-5">
+    <table id="example2" class="table table-bordered table-hover no-border table-striped mb-5">
         <thead>
         <tr>
             <th>ログインID</th>
