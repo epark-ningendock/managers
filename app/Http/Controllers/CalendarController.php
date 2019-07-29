@@ -333,7 +333,7 @@ class CalendarController extends Controller
                 return $start->isSameDay($h);
             });
 
-            $is_holiday = isset($holiday) ? $holiday->is_holiday == 1 : isset($p_holiday);
+            $is_holiday = isset($holiday) && $holiday->is_holiday == 1;
             $lock_version = isset($holiday) ? $holiday->lock_version : '';
             $month->push([ 'date' => $start->copy(), 'is_holiday' => $is_holiday , 'holiday' =>  $p_holiday, 'lock_version' => $lock_version]);
 
