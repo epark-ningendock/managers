@@ -2642,7 +2642,7 @@ legend {
 
 .alert-danger {
   position: absolute;
-  left: 370px;
+  left: 200px;
   top: 30px;
   width: 40%;
 }
@@ -2664,7 +2664,6 @@ legend {
 
 .staff-table {
   /* 横スクロール用 */
-  display: inline-block;
   width: 100%;
 }
 
