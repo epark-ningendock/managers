@@ -114,9 +114,9 @@ class ClassificationController extends Controller
      * @param bool $isPaginate
      * @return array
      */
-    protected function getClassifications(Request $request, $filterByStatus=true, $isPaginate=true)
+    protected function getClassifications(Request $request, $filterByStatus=true, $isPaginate=true, $initClassificationTypeId='')
     {
-        $classification = $request->input('classification', 'minor');
+        $classification = $request->input('classification', 'major');
         if ($classification == 'major') {
             $query = MajorClassification::query();
             $query->select(
@@ -153,8 +153,16 @@ class ClassificationController extends Controller
             $main_table = 'minor_classifications';
         }
 
-        if ($request->input('type', '') != '') {
-            $type = (int)$request->input('type');
+        if ($request->has('type')) {
+            $selectType = $request->input('type');
+        } elseif ($initClassificationTypeId !== null) {
+            $selectType = $initClassificationTypeId;
+        } else {
+            $selectType = '';
+        }
+
+        if ($selectType != '') {
+            $type = (int)$selectType;
             $query->where('major_classifications.classification_type_id', $type);
         }
 
@@ -214,9 +222,14 @@ class ClassificationController extends Controller
         $c_majors = MajorClassification::withTrashed()->get();
         $c_middles = MiddleClassification::withTrashed()->get();
 
-        [$classifications, $result] = $this->getClassifications($request, false, false);
+        if (count($c_types) > 0) {
+            $initClassificationTypeId = $c_types[0]->id;
+        } else {
+            $initClassificationTypeId = '';
+        }
 
-        return view('classification.sort')->with('classifications', $classifications)
+        [$sortCollections, $result] = $this->getClassifications($request, false, false, $initClassificationTypeId);
+        return view('classification.sort')->with('classifications', $sortCollections)
             ->with('c_types', $c_types)
             ->with('c_majors', $c_majors)
             ->with('c_middles', $c_middles)
