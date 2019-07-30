@@ -25,6 +25,7 @@ class ReservationCreateFormRequest extends FormRequest
     {
         return [
             'course_id' => 'required',
+            'reservation_date' => 'required',
             'regular_price' => 'max:8',
             'adjustment_price' => 'max:8',
             'start_time_hour' => 'between:0,23',

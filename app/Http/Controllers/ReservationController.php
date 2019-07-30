@@ -448,8 +448,8 @@ class ReservationController extends Controller
     public function store(ReservationCreateFormRequest $request)
     {
 
-    	try {
-		    DB::beginTransaction();
+//    	try {
+//		    DB::beginTransaction();
 
 		    request()->merge([
 			    'hospital_id' => session()->get('hospital_id'),
@@ -468,7 +468,7 @@ class ReservationController extends Controller
 
 		    $reservation = new Reservation();
 		    $reservation = $reservation->create(request()->all());
-
+dd($reservation->id);
 		    DB::commit();
 
 		    if ( !empty($request->course_options) && isset($request->course_options) ) {
@@ -534,12 +534,12 @@ class ReservationController extends Controller
 
             }
 
-		    return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
-
-	    } catch (\Exception $i) {
-		    DB::rollback();
-		    return redirect()->back()->with('error', trans('messages.reservation.complete_error'))->withInput();
-	    }
+//		    return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
+//
+//	    } catch (\Exception $i) {
+//		    DB::rollback();
+//		    return redirect()->back()->with('error', trans('messages.reservation.complete_error'))->withInput();
+//	    }
 
     }
 

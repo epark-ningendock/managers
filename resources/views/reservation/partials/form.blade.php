@@ -1,5 +1,3 @@
-
-
 <div class="box-body">
     
     <h3 class="section-title">受付情報</h3>
@@ -38,7 +36,7 @@
             <div class="form-group sm-form-group @if ($errors->has('tax_included_price')) has-error @endif" style="margin-right: 21px;">
                 <input type="number" class="form-control" name="tax_included_price"
                        id="tax_included_price" placeholder="コース料金"
-                       value="{{ old('tax_included_price', isset($reservation) ? $reservation->tax_included_price : null) }}"/> <span
+                       value="{{ old('tax_included_price', isset($reservation->tax_included_price) ? $reservation->tax_included_price : null) }}"/> <span
                         class="ml-2" style="position: absolute;top: 0;right: -20px;">円</span>
                 @if ($errors->has('tax_included_price')) <p class="help-block">{{ $errors->first('tax_included_price') }}</p> @endif
             </div>          
@@ -129,7 +127,7 @@
             <div class="calendar-box">
                 
             </div>   
-            @if ($errors->has('reservation_date')) <p class="help-block">{{ $errors->first('reservation_date') }}</p> @endif        
+            @if ($errors->has('reservation_date')) <p class="help-block text-danger" style="color: #ed5565;">{{ $errors->first('reservation_date') }}</p> @endif
         </div>
 
     </div> 
@@ -186,7 +184,7 @@
             <div class=" @if ($errors->has('reservation_memo')) has-error @endif">
                 <textarea class="form-control" name="reservation_memo" id="reservation_memo">{{ old('reservation_memo') }}</textarea>
                 @if ($errors->has('reservation_memo')) <p class="help-block">{{ $errors->first('reservation_memo') }}</p> @endif
-            </div>1
+            </div>
         </div>
 
     </div>   
