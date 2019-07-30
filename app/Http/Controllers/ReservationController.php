@@ -64,6 +64,7 @@ class ReservationController extends Controller
         $query = $this->reservation
             ->byRequest($request)
             ->with(['hospital', 'course', 'customer'])
+	        ->where('hospital_id', session('hospital_id'))
             ->orderBy('created_at', 'desc');
 
         $reservations = $query->paginate(env('PAGINATE_NUMBER'));
@@ -451,7 +452,7 @@ class ReservationController extends Controller
 		    DB::beginTransaction();
 
 		    request()->merge([
-			    'hospital_id' => auth()->user()->hospital_id,
+			    'hospital_id' => session()->get('hospital_id'),
 			    'reservation_status' => ReservationStatus::Pending,
 			    'terminal_type' => 1,
 			    'is_repeat' => 0,

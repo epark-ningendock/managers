@@ -186,7 +186,7 @@
             <div class=" @if ($errors->has('reservation_memo')) has-error @endif">
                 <textarea class="form-control" name="reservation_memo" id="reservation_memo">{{ old('reservation_memo') }}</textarea>
                 @if ($errors->has('reservation_memo')) <p class="help-block">{{ $errors->first('reservation_memo') }}</p> @endif
-            </div>
+            </div>1
         </div>
 
     </div>   
