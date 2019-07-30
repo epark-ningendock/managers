@@ -277,7 +277,7 @@ class ReservationController extends Controller
                 $question_count = $q_count;
             }
 
-            return array_merge($result, $options->toArray(), $questions->toArray());
+            return array_merge($result, $questions->toArray(), $options->toArray());
         });
 
         $headers = [
@@ -299,15 +299,15 @@ class ReservationController extends Controller
             '医療機関備考'
         ];
 
-        for ($i = 0; $i < $option_count; $i++) {
-            $headers = array_merge($headers, ['オプション', 'オプション金額']);
-        }
-
         for ($i = 0; $i < $question_count; $i++) {
             $headers = array_merge($headers, [
                 '受付質問',
                 '回答'
             ]);
+        }
+
+        for ($i = 0; $i < $option_count; $i++) {
+            $headers = array_merge($headers, ['オプション', 'オプション金額']);
         }
 
 
