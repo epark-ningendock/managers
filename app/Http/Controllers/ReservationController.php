@@ -541,5 +541,13 @@ class ReservationController extends Controller
 	    }
 
     }
+
+
+	public function edit(Reservation $reservation) {
+
+		$courses = Course::all();
+    	return view('reservation.edit', ['reservation' => $reservation, 'courses' => $courses]);
+
+    }
     
 }
