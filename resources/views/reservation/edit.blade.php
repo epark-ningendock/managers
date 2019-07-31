@@ -10,8 +10,9 @@
         @include('layouts.partials.message')
     </div>
 
-  <form method="POST" action="{{ route('reservation.store') }}">
+  <form method="POST" action="{{ route('reservation.update', ['reservation' => $reservation->id]) }}">
   	{!! csrf_field() !!}
+      {{ method_field('PUT') }}
     @include('reservation.partials.form')
   </form>
   @includeIf('reservation.partials.customer-script')

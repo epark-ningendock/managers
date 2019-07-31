@@ -307,6 +307,20 @@
 @section('script')
     <script>
         (function ($) {
+
+            function checkNested(obj /*, level1, level2, ... levelN*/) {
+                var args = Array.prototype.slice.call(arguments, 1);
+
+                for (var i = 0; i < args.length; i++) {
+                    if (!obj || !obj.hasOwnProperty(args[i])) {
+                        return false;
+                    }
+                    obj = obj[args[i]];
+                }
+                return true;
+            }
+
+
             /* ---------------------------------------------------
             // course options and questions
             // calculate total
@@ -340,7 +354,13 @@
                                 courseOptions.forEach(function (courseOption) {
 
                                     let $courseOptionOldData = @json(old('course_options'), JSON_PRETTY_PRINT);
+
+                                    if ( ! $courseOptionOldData ) {
+                                         $courseOptionOldData = @json($course_options, JSON_PRETTY_PRINT);                                
+                                    }
+
                                     let $courseOptionOldValue = ( $courseOptionOldData ) ? $courseOptionOldData : {};
+
                                     let checkedOldValue = ($courseOptionOldValue.hasOwnProperty(courseOption.option.id)  ) ? 'checked' : '';
 
                                     $('<tr></tr>')
@@ -365,8 +385,13 @@
 
                                                 let input_name = `questions_${question.id}`;
                                                 let $questionGroupOldData = @json(old(), JSON_PRETTY_PRINT);
-                                                let $questionGroupOldValue = ( $questionGroupOldData ) ? $questionGroupOldData : {};
-                                                let checkedOldValue = ( $questionGroupOldValue.hasOwnProperty(input_name) && ($questionGroupOldValue[input_name].hasOwnProperty(key))  ) ? 'checked' : '';
+
+                                                if ( ! $questionGroupOldData.length > 0) {
+                                                     $questionGroupOldData = @json($questions, JSON_PRETTY_PRINT);
+                                                }
+
+                                                $questionGroupOldValue = ( $questionGroupOldData ) ? $questionGroupOldData : {};
+                                                checkedOldValue = ( $questionGroupOldValue.hasOwnProperty(input_name) && ($questionGroupOldValue[input_name].hasOwnProperty(key))  ) ? 'checked' : '';
 
                                                 answerGroup.append($(`<label><input ${checkedOldValue} type="checkbox" class="checkbox" name="questions_${question.id}[${key}]" value="${question[key]}"><span>${question[key]}</span></label>`))
                                             }

@@ -23,6 +23,7 @@ class ReservationCreateFormRequest extends FormRequest
      */
     public function rules()
     {
+        dd(request()->all());
         return [
             'course_id' => 'required',
             'reservation_date' => 'required',

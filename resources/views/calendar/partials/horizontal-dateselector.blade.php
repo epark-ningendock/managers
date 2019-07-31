@@ -33,6 +33,10 @@
 
                     $reserveDate = '{{ old('reservation_date') }}';
 
+                    if ( ! $reserveDate ) {
+                        $reserveDate = '{{ (isset($reservation->reservation_date) ) ? $reservation->reservation_date->format('Y-m-d') : '' }}';
+                    }
+
                     if ( $reserveDate ) {
                         setTimeout(function(){
                             $('td[data-date="' + $reserveDate + '"]').addClass('it-would-reserve');
