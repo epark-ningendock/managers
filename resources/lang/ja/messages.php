@@ -20,6 +20,7 @@ return [
     
     'created' => ':nameを登録しました。',
     'updated' => ':nameを更新しました。',
+    'updated_common' => '更新しました。',
     'remove' => '削除する',
     'deleted' => '削除が完了しました。',
     'sent' => ':mailを送信しました。',
