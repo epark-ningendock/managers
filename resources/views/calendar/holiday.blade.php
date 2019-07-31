@@ -149,7 +149,7 @@
                   <tr>
                     @foreach($week as $day)
                       @if($day != null)
-                        <td class="@if($day['date']->isSunday()) holiday @elseif($day['date']->isSaturday()) saturday @endif">
+                        <td class="@if($day['date']->isSaturday()) saturday @elseif($day['date']->isSunday() || isset($day['holiday'])) holiday @endif">
                           <!-- date -->
                           <input type="hidden" name="days[]" value="{{ $day['date']->format('Ymd') }}" />
                           <input type="hidden" name="lock_versions[]" value="{{ $day['lock_version'] or '' }}" />
