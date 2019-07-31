@@ -209,12 +209,15 @@ class ReservationController extends Controller
             'completed_end_date' => 'nullable|date',
         ]);
         $query = $this->get_reception_list_query($request);
-        $question_count = 0;
 
         $reservations = $query->get();
 
         $option_count = $reservations->max(function ($reservation) {
             return $reservation->reservation_options->count();
+        });
+
+        $question_count = $reservations->max(function ($reservation) {
+            return $reservation->reservation_answers->count();
         });
 
 
@@ -229,8 +232,8 @@ class ReservationController extends Controller
             }
 
             // fill to fix maximum option count
-            for ($i = $reservation->reservation_options->count(); $i <= $option_count; $i++) {
-                $options->merge(['', '']);
+            for ($i = $reservation->reservation_options->count(); $i < $option_count; $i++) {
+                $options = $options->merge(['', '']);
             }
 
             $result = [
@@ -253,7 +256,6 @@ class ReservationController extends Controller
             ];
 
             $questions = collect();
-            $q_count = 0;
 
             foreach ($reservation->reservation_answers as $answer) {
                 if (empty($answer->question_title)) {
@@ -263,18 +265,18 @@ class ReservationController extends Controller
                 $answers = collect();
                 for($i = 1; $i <= 10; $i++) {
                     $temp = $answer['answer'.($i != 10 ? '0' : '').$i];
-                    if (!is_null($temp) && !empty($temp)) {
+                    if (!is_null($temp) && $temp == '1') {
                         $answers->push($answer['question_answer'.($i != 10 ? '0' : '').$i]);
                     }
 
                 }
 
                 $questions->push($answers->implode(", "));
-                $q_count++;
             }
 
-            if ($q_count > $question_count) {
-                $question_count = $q_count;
+            // fill to fix maximum question count
+            for ($i = $reservation->reservation_answers->count(); $i < $question_count; $i++) {
+                $questions = $questions->merge(['', '']);
             }
 
             return array_merge($result, $questions->toArray(), $options->toArray());
