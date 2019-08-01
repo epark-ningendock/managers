@@ -23,14 +23,14 @@ class HospitalImageFormRequest extends FormRequest
      */
     public function rules()
     {
-        $tag_staff_valid = [];
+        $tab_staff_valid = [];
         $tab_facility_valid = [];
         $tab_internal_valid = [];
         $tab_external_valid = [];
         $tab_another_valid = [];
 
         for ($i = 1; $i <= 30; $i++) {
-            $tag_staff_valid += [
+            $tab_staff_valid += [
             "staff_tab_{$i}" => 'file|image|max:4000',
             "staff_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
             "staff_tab_{$i}_memo2" => 'nullable|max:200',
@@ -188,7 +188,7 @@ class HospitalImageFormRequest extends FormRequest
             'interview_new.*.answer' => 'max:5000',
         ];
 
-        $valid = array_merge($valid, $tag_staff_valid);
+        $valid = array_merge($valid, $tab_staff_valid);
         $valid = array_merge($valid, $tab_facility_valid);
         $valid = array_merge($valid, $tab_internal_valid);
         $valid = array_merge($valid, $tab_external_valid);

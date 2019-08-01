@@ -257,6 +257,7 @@
         </p>
     <?php $staff_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_STAFF);?>
     <?php $staff_tab_box = $staff_tab_box->sortBy('order');?>
+    <?php $staff_show_order2 = $staff_tab_box->pluck('order2')->toArray();?>
     <!--登録済のタブ画像フォーム-->
     <div class="open_close_tab">
     @foreach($staff_tab_box as $staff_tab)
@@ -316,6 +317,7 @@
     <!--//登録済のタブ画像フォーム-->
     <!--未登録のタブ画像フォーム-->
     @for ($i = 1; $i <= 30; $i++)
+        @if(!in_array($i, $staff_show_order2))
         <div class="row photo-tab" data-order="{{$i}}" @if($i != 1) style="display: none" @endif>
             <div class="col-sm-6">
                 <div class="tab_image_area">
@@ -346,6 +348,7 @@
             <i class="icon-trash icon-white"></i>
             追加
         </a>
+        @endif
     @endfor
     <!--//未登録のタブ画像フォーム-->
     </div>
