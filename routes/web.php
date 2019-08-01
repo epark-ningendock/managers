@@ -215,12 +215,6 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
     Route::resource('/reservation', 'ReservationController')->except(['show', 'delete']);
     Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
-	/*
-	|--------------------------------------------------------------------------
-	| Reservation Routes
-	|--------------------------------------------------------------------------
-	*/
-	Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
 	Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
 
 

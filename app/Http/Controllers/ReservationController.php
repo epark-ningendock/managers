@@ -35,7 +35,7 @@ class ReservationController extends Controller {
 		Course $course,
 		ReservationExportService $export_file
 	) {
-		request()->session()->forget( 'hospital_id' );
+//		request()->session()->forget( 'hospital_id' );
 		$this->middleware( 'permission.invoice.edit' )->except( [
 			'index',
 			'reception',
