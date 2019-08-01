@@ -148,14 +148,12 @@ class HospitalImagesController extends Controller
         for($i = 1; $i <= 30; $i++){
             if(isset($file['staff_tab_'.$i]) or isset($file['staff_tab_'.$i.'_memo2']) or isset($file['staff_tab_'.$i.'_order'])) {
                 $this->hospitalImageUploader($file, 'staff_tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
-                //\Log::info($file['staff_tab_'.$i.'_memo2']);
             }
         }
         //タブ facility
         for($i = 1; $i <= 30; $i++){
             if(isset($file['facility_tab_'.$i]) or isset($file['facility_tab_'.$i.'_memo2']) or isset($file['facility_tab_'.$i.'_order'])) {
                 $this->hospitalImageUploader($file, 'facility_tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
-                //\Log::info($file['facility_tab_'.$i.'_memo2']);
             }
         }
 
@@ -342,8 +340,6 @@ class HospitalImagesController extends Controller
                 $save_sub_images = ['memo1' => $memo1, 'memo2' => $memo2];
                 $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order , 'file_location_no' => $location_no];
             }
-
-            \Log::info($image_order_exists);
 
             if(is_null($image_order_exists)) {
                 $hospital->hospital_images()->saveMany([
