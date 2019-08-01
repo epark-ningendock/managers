@@ -3,26 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\ReceptionEmailSetting;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\ReceptionEmailSettingRequest;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
+use Reshadman\OptimisticLocking\StaleModelLockingException;
 
 class ReceptionEmailSettingController extends Controller
 {
     public function index()
     {
-        // TODO: セッションの医療機関IDに変更する
-        // return view('reception_email_setting.index', [ 'reception_email_setting' => ReceptionEmailSetting::where('hospital_id', 1)->first() ]);
-        return view('reception_email_setting.index', [ 'reception_email_setting' => ReceptionEmailSetting::findOrFail(1) ]);
+         return view('reception_email_setting.index', [ 'reception_email_setting' => ReceptionEmailSetting::where('hospital_id', session()->get('hospital_id'))->first() ]);
     }
 
     public function update(ReceptionEmailSettingRequest $request, $id)
     {
-        $reception_email_setting = ReceptionEmailSetting::findOrFail($id);
-        $inputs = request()->all();
-        $reception_email_setting->update($inputs);
+        try {
+            DB::beginTransaction();
 
-        return redirect('reception-email-setting')->with('success', trans('messages.updated', ['name' => trans('messages.names.reception_email_setting')]));
+            if($request->get('in_hospital_email_reception_flg') == '1'
+                && ($request->get('in_hospital_confirmation_email_reception_flg') != '1'
+                    && $request->get('in_hospital_change_email_reception_flg') != '1'
+                && $request->get('in_hospital_cancellation_email_reception_flg') != '1')) {
+                DB::rollback();
+
+                $message = trans('validation.required', ['attribute' => trans('validation.attributes.hospital_reception_email_transmission_setting')]);
+                return redirect()->back()->withErrors(['hospital_reception_email_transmission_setting' => $message ]);
+            }
+
+            $reception_email_setting = ReceptionEmailSetting::findOrFail($id);
+            $inputs = request()->all();
+            $reception_email_setting->update($inputs);
+            DB::commit();
+            return redirect('reception-email-setting')->with('success', trans('messages.updated', ['name' => trans('messages.names.reception_email_setting')]));
+        } catch (StaleModelLockingException $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', trans('messages.model_changed_error'));
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', trans('messages.update_error'));
+        }
     }
 }
