@@ -125,8 +125,8 @@ class HospitalStaffController extends Controller
     {
         $this->validate($request, [
             'old_password' => 'required',
-            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
-            'password_confirmation' => 'min:8|max:20'
+            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation|regex:/^[-_@\.a-zA-Z0-9]+$/',
+            'password_confirmation' => 'min:8|max:20|regex:/^[-_@\.a-zA-Z0-9]+$/'
         ]);
         
         $hospital_staff = HospitalStaff::findOrFail($hospital_staff_id);
@@ -145,7 +145,10 @@ class HospitalStaffController extends Controller
                         'first_login_at' => Carbon::now()
                     ]);
                 } else {
-                    $hospital_staff->update(['password' => $password]);
+                    $hospital_staff->update([
+                        'password' => $password,
+                        'first_login_at' => Carbon::now()
+                    ]);
                 }
 
                 app('App\Http\Controllers\Auth\LoginController')->is_hospital_staff_login($hospital_staff->login_id, $request->password);
@@ -223,8 +226,8 @@ class HospitalStaffController extends Controller
     public function resetPassword($email, Request $request)
     {
         $this->validate($request, [
-            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
-            'password_confirmation' => 'min:8|max:20'
+            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation|regex:/^[-_@\.a-zA-Z0-9]+$/',
+            'password_confirmation' => 'min:8|max:20|regex:/^[-_@\.a-zA-Z0-9]+$/'
         ]);
                 
         $staff = Staff::where('email', $email)->first();
@@ -232,8 +235,10 @@ class HospitalStaffController extends Controller
             $staff = HospitalStaff::where('email', $email)->first();
         }
 
-        $staff->password = bcrypt($request->password);
-        $staff->save();
+        $staff->update([
+            'password' => bcrypt($request->password),
+            'first_login_at' => Carbon::now()
+        ]);
         Mail::to($staff->email)
             ->send(new PasswordResetConfirmMail());
         return redirect('/login')->with('success', 'パスワードを更新しました。');
