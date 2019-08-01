@@ -23,7 +23,58 @@ class HospitalImageFormRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $tag_staff_valid = [];
+        $tab_facility_valid = [];
+        $tab_internal_valid = [];
+        $tab_external_valid = [];
+        $tab_another_valid = [];
+
+        for ($i = 1; $i <= 30; $i++) {
+            $tag_staff_valid += [
+            "staff_tab_{$i}" => 'file|image|max:4000',
+            "staff_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+            "staff_tab_{$i}_memo2" => 'nullable|max:200',
+            "staff_tab_{$i}_location" => 'nullable',
+         ];
+        }
+
+        for ($i = 1; $i <= 30; $i++) {
+            $tab_facility_valid += [
+                "facility_tab_{$i}" => 'file|image|max:4000',
+                "facility_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+                "facility_tab_{$i}_memo2" => 'nullable|max:200',
+                "facility_tab_{$i}_location" => 'nullable',
+            ];
+        }
+
+        for ($i = 1; $i <= 30; $i++) {
+            $tab_internal_valid += [
+                "internal_tab_{$i}" => 'file|image|max:4000',
+                "internal_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+                "internal_tab_{$i}_memo2" => 'nullable|max:200',
+                "internal_tab_{$i}_location" => 'nullable',
+            ];
+        }
+
+        for ($i = 1; $i <= 30; $i++) {
+            $tab_external_valid += [
+                "external_tab_{$i}" => 'file|image|max:4000',
+                "external_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+                "external_tab_{$i}_memo2" => 'nullable|max:200',
+                "external_tab_{$i}_location" => 'nullable',
+            ];
+        }
+
+        for ($i = 1; $i <= 30; $i++) {
+            $tab_another_valid += [
+                "another_tab_{$i}" => 'file|image|max:4000',
+                "another_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+                "another_tab_{$i}_memo2" => 'nullable|max:200',
+                "another_tab_{$i}_location" => 'nullable',
+            ];
+        }
+
+        $valid = [
             'main' => 'file|image|max:4000',
             'sub_1' => 'file|image|max:4000',
             'sub_2' => 'file|image|max:4000',
@@ -135,9 +186,15 @@ class HospitalImageFormRequest extends FormRequest
 
             'interview_new.*.question' => 'max:5000',
             'interview_new.*.answer' => 'max:5000',
-
-
         ];
+
+        $valid = array_merge($valid, $tag_staff_valid);
+        $valid = array_merge($valid, $tab_facility_valid);
+        $valid = array_merge($valid, $tab_internal_valid);
+        $valid = array_merge($valid, $tab_external_valid);
+        $valid = array_merge($valid, $tab_another_valid);
+
+        return $valid;
     }
 
     /**
@@ -147,7 +204,47 @@ class HospitalImageFormRequest extends FormRequest
      */
     public function attributes()
     {
-        return [
+        $tab_facility_attributes = [];
+        for ($i = 1; $i <= 30; $i++) {
+            $tab_facility_attributes += [
+                "facility_tab_{$i}_order" => '表示順',
+                "facility_tab_{$i}_memo2" => '説明',
+            ];
+        }
+
+        $tab_staff_attributes = [];
+        for ($i = 1; $i <= 30; $i++) {
+            $tab_staff_attributes += [
+                "staff_tab_{$i}_order" => '表示順',
+                "staff_tab_{$i}_memo2" => '説明',
+            ];
+        }
+
+        $tab_internal_attributes = [];
+        for ($i = 1; $i <= 30; $i++) {
+            $tab_internal_attributes += [
+                "internal_tab_{$i}_order" => '表示順',
+                "internal_tab_{$i}_memo2" => '説明',
+            ];
+        }
+
+        $tab_external_attributes = [];
+        for ($i = 1; $i <= 30; $i++) {
+            $tab_external_attributes += [
+                "external_tab_{$i}_order" => '表示順',
+                "external_tab_{$i}_memo2" => '説明',
+            ];
+        }
+
+        $tab_another_attributes = [];
+        for ($i = 1; $i <= 30; $i++) {
+            $tab_another_attributes += [
+                "another_tab_{$i}_order" => '表示順',
+                "another_tab_{$i}_memo2" => '説明',
+            ];
+        }
+
+        $attributes = [
             'main' => '施設メイン画像',
             'title' => 'タイトル',
             'caption' => '本文',
@@ -185,6 +282,12 @@ class HospitalImageFormRequest extends FormRequest
             'staff_1_career' => '経歴',
             'staff_1_memo' => 'コメント',
         ];
+        $attributes = array_merge($attributes, $tab_facility_attributes);
+        $attributes = array_merge($attributes, $tab_staff_attributes);
+        $attributes = array_merge($attributes, $tab_internal_attributes);
+        $attributes = array_merge($attributes, $tab_external_attributes);
+        $attributes = array_merge($attributes, $tab_another_attributes);
+        return $attributes;
     }
 
     public function messages()

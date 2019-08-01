@@ -8,7 +8,6 @@
         @if(!is_null($main_image_category) && !is_null($main_image_category->hospital_image->path))
             <div class="main_image_area">
                 <img class="object-fit" src="/img/uploads/500-auto-{{$main_image_category->hospital_image->path}}" height="200">
-
                 <p class="file_delete_text">
                     <a onclick="return confirm('この施設画像を削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $main_image_category->hospital_image_id]) }}">
                         ファイル削除
@@ -21,7 +20,7 @@
             </div>
         @endif
             <label class="file-upload btn btn-primary">
-                ファイル選択 {{Form::file("main", ['class' => 'field'])}}
+                ファイル選択 {{Form::file("main", ['class' => 'field', 'accept' => 'image/*'])}}
             </label>
         @if ($errors->has('main'))
             {{ $errors->first('main') }}
@@ -72,7 +71,7 @@
                 </div>
             @endif
             <label class="file-upload btn btn-primary">
-                ファイル選択 {{Form::file("sub_".$i, ['class' => 'field'])}}
+                ファイル選択 {{Form::file("sub_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
             </label>
             @if ($errors->has('sub_'.$i))
                 <div class="error_message">
@@ -83,8 +82,6 @@
         @endfor
     </div>
 </div>
-
-
 <div class="box box-primary form-box">
     <div class="form_title"><div class="number_circle">3</div> <span class="input_title">こだわり</span></div>
     <div class="row">
@@ -108,7 +105,7 @@
                     </div>
                 @endif
                 <label class="file-upload btn btn-primary">
-                    ファイル選択 {{Form::file("speciality_".$i, ['class' => 'field'])}}
+                    ファイル選択 {{Form::file("speciality_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
                 </label>
 
                 @if ($errors->has('speciality_'.$i))
@@ -140,8 +137,6 @@
         @endfor
     </div>
 </div>
-
-
 <div class="box box-primary form-box">
     <div class="form_title"><div class="number_circle">4</div> <span class="input_title">地図・アクセス</span></div>
     <div class="form-group">
@@ -161,7 +156,6 @@
     <div class="row">
         <div class="col-sm-6">
             {{Form::label('interview_1', 'インタビューメイン画像',['class' => 'form_label'])}}
-
             @if(!is_null($interview_top) && !is_null($interview_top->hospital_image->path))
                 <div class="interview_image_area">
                     <img src="/img/uploads/300-auto-{{$interview_top->hospital_image->path}}" width="150">
@@ -178,7 +172,7 @@
                 </div>
             @endif
             <label class="file-upload btn btn-primary">
-                ファイル選択 {{Form::file("interview_1", ['class' => 'field'])}}
+                ファイル選択 {{Form::file("interview_1", ['class' => 'field', 'accept' => 'image/*'])}}
             </label>
             @if ($errors->has('interview_1'))
                 <div class="error_message">
@@ -225,9 +219,6 @@
                         </div>
                     @endif
                 </div>
-
-
-
                 <p class="file_delete_text">
                     <a onclick="return confirm('このインタビューを削除しますか？')" href="{{ route('hospital.delete_interview', ['hospital' => $hospital->id, 'interview_id' => $interview->id]) }}">
                         <i class="icon-trash icon-white"></i>
@@ -257,24 +248,26 @@
         追加
     </a>
 </div>
-
 <div class="box box-primary form-box">
+    <!--スタッフタブ-->
     <div class="form_title"><div class="number_circle">6</div> <span class="input_title">写真タブ</span></div>
-    @for ($i = 1; $i <= 5; $i++)
-    <?php $tab = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('order2', $i)->first();?>
-    <?php $tab_order = is_null($tab) or $tab->order == 0 ? null : $tab->order;?>
-    <div class="row">
         <p class="tab_name">
-            {{$tab_name_list[$i]}}
+            スタッフ
             <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
         </p>
-        <div @if(!is_null($tab) && !is_null($tab->hospital_image->path)) style="display: block;" @else style="display: none;" @endif>
+    <?php $staff_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_STAFF);?>
+    <?php $staff_tab_box = $staff_tab_box->sortBy('order');?>
+    <!--登録済のタブ画像フォーム-->
+    <div class="open_close_tab">
+    @foreach($staff_tab_box as $staff_tab)
+        <?php $i = $staff_tab['order2'];?>
+        <div class="row photo-tab" data-order="{{$i}}" @if(is_null($staff_tab) && $i != 1) style="display: none" @endif>
             <div class="col-sm-6">
-                @if(!is_null($tab) && !is_null($tab->hospital_image->path))
+                @if(!is_null($staff_tab) && !is_null($staff_tab->hospital_image->path))
                     <div class="tab_image_area">
-                        <img class="object-fit" src="/img/uploads/300-auto-{{$tab->hospital_image->path}}">
+                        <img class="object-fit" src="/img/uploads/300-auto-{{$staff_tab->hospital_image->path}}">
                         <p class="file_delete_text">
-                            <a class="btn btn-mini btn-danger" onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $tab->hospital_image_id]) }}">
+                            <a class="btn btn-mini btn-danger" onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $staff_tab->hospital_image_id]) }}">
                                 <i class="icon-trash icon-white"></i>
                                 ファイル削除
                             </a>
@@ -286,29 +279,523 @@
                     </div>
                 @endif
                 <label class="file-upload btn btn-primary">
-                    ファイル選択 {{Form::file("tab_".$i, ['class' => 'field'])}}
+                    ファイル選択 {{Form::file("staff_tab_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
                 </label>
-                @if ($errors->has('tab_'.$i))
+                @if ($errors->has('staff_tab_'.$i))
                     <div class="error_message">
-                    {{ $errors->first('tab_').$i }}
+                        {{ $errors->first('staff_tab_').$i }}
                     </div>
                 @endif
+                    {{Form::hidden('staff_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_STAFF )}}
             </div>
             <div class="col-sm-6">
-                {{Form::label('tab_'.$i.'_order1', '表示順',['class' => 'form_label'])}}
-                {{Form::text('tab_'.$i.'_order1', $tab_order, ['class' => 'form-control'])}}
-                @if ($errors->has('tab_'.$i.'_order1'))
-                    {{ $errors->first('tab_'.$i.'_order1') }}
+                {{Form::label('staff_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
+                {{Form::text('staff_tab_'.$i.'_order', is_null($staff_tab) ? null : $staff_tab['order'], ['class' => 'form-control'])}}
+                @if ($errors->has('staff_tab_'.$i.'_order'))
+                    {{ $errors->first('staff_tab_'.$i.'_order') }}
                 @endif
-                {{Form::label('tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
-                {{Form::textarea('tab_'.$i.'_memo2', is_null($tab) ? '' : $tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
-                @if ($errors->has('tab_'.$i.'_memo2'))
-                    {{ $errors->first('tab_'.$i.'_memo2') }}
+                {{Form::label('staff_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
+                {{Form::textarea('staff_tab_'.$i.'_memo2', is_null($staff_tab) ? '' : $staff_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
+                @if ($errors->has('staff_tab_'.$i.'_memo2'))
+                    {{ $errors->first('staff_tab_'.$i.'_memo2') }}
+                @endif
+            </div>
+            @if(!is_null($staff_tab))
+                <p style="text-align: center; margin-top: 10px">
+                    <a onclick="return confirm('スタッフタブを削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.image.delete', ['hospital' => $hospital->id, 'hospital_category_id' => $staff_tab->id, 'hospital_image_id' => $staff_tab->hospital_image_id]) }}">
+                        削除
+                    </a>
+                </p>
+            @endif
+        </div>
+        <a href="javascript:void(0)" class="staff_add btn btn-info" style="@if(!is_null($staff_tab) OR $i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+            <i class="icon-trash icon-white"></i>
+            追加
+        </a>
+    @endforeach
+    <!--//登録済のタブ画像フォーム-->
+    <!--未登録のタブ画像フォーム-->
+    @for ($i = 1; $i <= 30; $i++)
+        <div class="row photo-tab" data-order="{{$i}}" @if($i != 1) style="display: none" @endif>
+            <div class="col-sm-6">
+                <div class="tab_image_area">
+                    <img src="/img/no_image.png">
+                </div>
+                <label class="file-upload btn btn-primary">
+                    ファイル選択 {{Form::file("staff_tab_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
+                </label>
+                @if ($errors->has('staff_tab_'.$i))
+                <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('staff_tab_').$i }}</p>
+                @endif
+                {{Form::hidden('staff_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_STAFF )}}
+            </div>
+            <div class="col-sm-6">
+                {{Form::label('staff_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
+                {{Form::text('staff_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
+                @if ($errors->has('staff_tab_'.$i.'_order'))
+                    {{ $errors->first('staff_tab_'.$i.'_order') }}
+                @endif
+                {{Form::label('staff_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
+                {{Form::textarea('staff_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
+                @if ($errors->has('staff_tab_'.$i.'_memo2'))
+                    {{ $errors->first('staff_tab_'.$i.'_memo2') }}
                 @endif
             </div>
         </div>
-    </div>
+        <a href="javascript:void(0)" class="staff_add btn btn-info" style="@if($i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+            <i class="icon-trash icon-white"></i>
+            追加
+        </a>
     @endfor
+    <!--//未登録のタブ画像フォーム-->
+    </div>
+    <!--・//スタッフタブ-->
+
+    <!--設備タブ-->
+    <p class="tab_name">
+        設備
+        <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
+    </p>
+    <?php $facility_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_FACILITY);?>
+    <?php $facility_tab_box = $facility_tab_box->sortBy('order');?>
+    <?php $facility_show_order2 = $facility_tab_box->pluck('order2')->toArray();?>
+
+    <!--未登録のタブ画像フォーム-->
+    <div class="open_close_tab">
+        @foreach($facility_tab_box as $facility_tab)
+            <?php $i = $facility_tab['order2'];?>
+            <div class="row photo-tab" data-order="{{$i}}" @if(is_null($facility_tab) && $i != 1) style="display: none" @endif>
+                <div class="col-sm-6">
+                    @if(!is_null($facility_tab) && !is_null($facility_tab->hospital_image->path))
+                        <div class="tab_image_area">
+                            <img class="object-fit" src="/img/uploads/300-auto-{{$facility_tab->hospital_image->path}}">
+                            <p class="file_delete_text">
+                                <a class="btn btn-mini btn-danger" onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $facility_tab->hospital_image_id]) }}">
+                                    <i class="icon-trash icon-white"></i>
+                                    ファイル削除
+                                </a>
+                            </p>
+                        </div>
+                    @else
+                        <div class="tab_image_area">
+                            <img src="/img/no_image.png">
+                        </div>
+                    @endif
+                    <label class="file-upload btn btn-primary">
+                        ファイル選択 {{Form::file("facility_tab_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
+                    </label>
+                    @if ($errors->has('facility_tab_'.$i))
+                        <div class="error_message">
+                            {{ $errors->first('facility_tab_').$i }}
+                        </div>
+                    @endif
+                        {{Form::hidden('facility_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_FACILITY )}}
+                </div>
+                <div class="col-sm-6">
+                    {{Form::label('facility_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
+                    {{Form::text('facility_tab_'.$i.'_order', is_null($facility_tab) ? null : $facility_tab['order'], ['class' => 'form-control'])}}
+                    @if ($errors->has('facility_tab_'.$i.'_order'))
+                        {{ $errors->first('facility_tab_'.$i.'_order') }}
+                    @endif
+                    {{Form::label('facility_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
+                    {{Form::textarea('facility_tab_'.$i.'_memo2', is_null($facility_tab) ? null : $facility_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
+                    @if ($errors->has('facility_tab_'.$i.'_memo2'))
+                        {{ $errors->first('facility_tab_'.$i.'_memo2') }}
+                    @endif
+                </div>
+                @if(!is_null($facility_tab))
+                    <p style="text-align: center; margin-top: 10px">
+                        <a onclick="return confirm('設備タブを削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.image.delete', ['hospital' => $hospital->id, 'hospital_category_id' => $facility_tab->id, 'hospital_image_id' => $facility_tab->hospital_image_id]) }}">
+                            削除
+                        </a>
+                    </p>
+                @endif
+            </div>
+            <a href="javascript:void(0)" class="facility_add btn btn-info" style="@if(!is_null($facility_tab) OR $i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+                <i class="icon-trash icon-white"></i>
+                追加
+            </a>
+        @endforeach
+    <!--//登録済のタブ画像フォーム-->
+        <!--未登録のタブ画像フォーム-->
+        @for ($i = 1; $i <= 30; $i++)
+            @if(!in_array($i, $facility_show_order2))
+            <div class="row photo-tab" data-order="{{$i}}" @if($i != 1) style="display: none" @endif>
+                <div class="col-sm-6">
+                    <div class="tab_image_area">
+                        <img src="/img/no_image.png">
+                    </div>
+                    <label class="file-upload btn btn-primary">
+                        ファイル選択 {{Form::file("facility_tab_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
+                    </label>
+                    @if ($errors->has('facility_tab_'.$i))
+                        <div class="error_message">
+                            {{ $errors->first('facility_tab_').$i }}
+                        </div>
+                    @endif
+                    {{Form::hidden('facility_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_FACILITY )}}
+                </div>
+                <div class="col-sm-6">
+                    {{Form::label('facility_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
+                    {{Form::text('facility_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
+                    @if ($errors->has('facility_tab_'.$i.'_order'))
+                        {{ $errors->first('facility_tab_'.$i.'_order') }}
+                    @endif
+                    {{Form::label('facility_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
+                    {{Form::textarea('facility_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
+                    @if ($errors->has('facility_tab_'.$i.'_memo2'))
+                        {{ $errors->first('facility_tab_'.$i.'_memo2') }}
+                    @endif
+                </div>
+            </div>
+            <a href="javascript:void(0)" class="facility_add btn btn-info" style="@if($i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+                <i class="icon-trash icon-white"></i>
+                追加
+            </a>
+            @endif
+    @endfor
+    <!--//未登録のタブ画像フォーム-->
+    </div>
+    <!--・//設備タブ-->
+
+
+
+
+
+
+    <!--院内タブ-->
+    <p class="tab_name">
+        院内
+        <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
+    </p>
+    <?php $internal_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_INTERNAL);?>
+    <?php $internal_tab_box = $internal_tab_box->sortBy('order');?>
+    <?php $internal_show_order2 = $internal_tab_box->pluck('order2')->toArray();?>
+
+    <!--登録済院内タブ画像フォーム-->
+    <div class="open_close_tab">
+        @foreach($internal_tab_box as $internal_tab)
+            <?php $i = $internal_tab['order2'];?>
+            <div class="row photo-tab" data-order="{{$i}}" @if(is_null($internal_tab) && $i != 1) style="display: none" @endif>
+                <div class="col-sm-6">
+                    @if(!is_null($internal_tab) && !is_null($internal_tab->hospital_image->path))
+                        <div class="tab_image_area">
+                            <img class="object-fit" src="/img/uploads/300-auto-{{$internal_tab->hospital_image->path}}">
+                            <p class="file_delete_text">
+                                <a class="btn btn-mini btn-danger" onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $internal_tab->hospital_image_id]) }}">
+                                    <i class="icon-trash icon-white"></i>
+                                    ファイル削除
+                                </a>
+                            </p>
+                        </div>
+                    @else
+                        <div class="tab_image_area">
+                            <img src="/img/no_image.png">
+                        </div>
+                    @endif
+                    <label class="file-upload btn btn-primary">
+                        ファイル選択 {{Form::file("internal_tab_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
+                    </label>
+                    @if ($errors->has('internal_tab_'.$i))
+                        <div class="error_message">
+                            {{ $errors->first('internal_tab_').$i }}
+                        </div>
+                    @endif
+                    {{Form::hidden('internal_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_INTERNAL )}}
+                </div>
+                <div class="col-sm-6">
+                    {{Form::label('internal_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
+                    {{Form::text('internal_tab_'.$i.'_order', is_null($internal_tab) ? null : $internal_tab['order'], ['class' => 'form-control'])}}
+                    @if ($errors->has('internal_tab_'.$i.'_order'))
+                        {{ $errors->first('internal_tab_'.$i.'_order') }}
+                    @endif
+                    {{Form::label('internal_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
+                    {{Form::textarea('internal_tab_'.$i.'_memo2', is_null($internal_tab) ? null : $internal_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
+                    @if ($errors->has('internal_tab_'.$i.'_memo2'))
+                        {{ $errors->first('internal_tab_'.$i.'_memo2') }}
+                    @endif
+                </div>
+                @if(!is_null($internal_tab))
+                    <p style="text-align: center; margin-top: 10px">
+                        <a onclick="return confirm('設備タブを削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.image.delete', ['hospital' => $hospital->id, 'hospital_category_id' => $internal_tab->id, 'hospital_image_id' => $internal_tab->hospital_image_id]) }}">
+                            削除
+                        </a>
+                    </p>
+                @endif
+            </div>
+            <a href="javascript:void(0)" class="internal_add btn btn-info" style="@if(!is_null($internal_tab) OR $i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+                <i class="icon-trash icon-white"></i>
+                追加
+            </a>
+        @endforeach
+    <!--//登録済のタブ画像フォーム-->
+        <!--未登録のタブ画像フォーム-->
+        @for ($i = 1; $i <= 30; $i++)
+            @if(!in_array($i, $internal_show_order2))
+                <div class="row photo-tab" data-order="{{$i}}" @if($i != 1) style="display: none" @endif>
+                    <div class="col-sm-6">
+                        <div class="tab_image_area">
+                            <img src="/img/no_image.png">
+                        </div>
+                        <label class="file-upload btn btn-primary">
+                            ファイル選択 {{Form::file("internal_tab_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
+                        </label>
+                        @if ($errors->has('internal_tab_'.$i))
+                            <div class="error_message">
+                                {{ $errors->first('internal_tab_').$i }}
+                            </div>
+                        @endif
+                        {{Form::hidden('internal_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_INTERNAL )}}
+                    </div>
+                    <div class="col-sm-6">
+                        {{Form::label('internal_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
+                        {{Form::text('internal_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
+                        @if ($errors->has('internal_tab_'.$i.'_order'))
+                            {{ $errors->first('internal_tab_'.$i.'_order') }}
+                        @endif
+                        {{Form::label('internal_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
+                        {{Form::textarea('internal_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
+                        @if ($errors->has('internal_tab_'.$i.'_memo2'))
+                            {{ $errors->first('internal_tab_'.$i.'_memo2') }}
+                        @endif
+                    </div>
+                </div>
+                <a href="javascript:void(0)" class="internal_add btn btn-info" style="@if($i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+                    <i class="icon-trash icon-white"></i>
+                    追加
+                </a>
+        @endif
+         @endfor
+    <!--//未登録のタブ画像フォーム-->
+    </div>
+    <!--・//院内タブ-->
+
+
+
+
+
+
+    <!--外観タブ-->
+    <p class="tab_name">
+        外観
+        <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
+    </p>
+<?php $external_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_EXTERNAL);?>
+<?php $external_tab_box = $external_tab_box->sortBy('order');?>
+<?php $external_show_order2 = $external_tab_box->pluck('order2')->toArray();?>
+
+    <!--登録済外観タブ画像フォーム-->
+    <div class="open_close_tab">
+        @foreach($external_tab_box as $external_tab)
+            <?php $i = $external_tab['order2'];?>
+            <div class="row photo-tab" data-order="{{$i}}" @if(is_null($external_tab) && $i != 1) style="display: none" @endif>
+                <div class="col-sm-6">
+                    @if(!is_null($external_tab) && !is_null($external_tab->hospital_image->path))
+                        <div class="tab_image_area">
+                            <img class="object-fit" src="/img/uploads/300-auto-{{$external_tab->hospital_image->path}}">
+                            <p class="file_delete_text">
+                                <a class="btn btn-mini btn-danger" onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $external_tab->hospital_image_id]) }}">
+                                    <i class="icon-trash icon-white"></i>
+                                    ファイル削除
+                                </a>
+                            </p>
+                        </div>
+                    @else
+                        <div class="tab_image_area">
+                            <img src="/img/no_image.png">
+                        </div>
+                    @endif
+                    <label class="file-upload btn btn-primary">
+                        ファイル選択 {{Form::file("external_tab_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
+                    </label>
+                    @if ($errors->has('external_tab_'.$i))
+                        <div class="error_message">
+                            {{ $errors->first('external_tab_').$i }}
+                        </div>
+                    @endif
+                    {{Form::hidden('external_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_EXTERNAL )}}
+                </div>
+                <div class="col-sm-6">
+                    {{Form::label('external_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
+                    {{Form::text('external_tab_'.$i.'_order', is_null($external_tab) ? null : $external_tab['order'], ['class' => 'form-control'])}}
+                    @if ($errors->has('external_tab_'.$i.'_order'))
+                        {{ $errors->first('external_tab_'.$i.'_order') }}
+                    @endif
+                    {{Form::label('external_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
+                    {{Form::textarea('external_tab_'.$i.'_memo2', is_null($external_tab) ? null : $external_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
+                    @if ($errors->has('external_tab_'.$i.'_memo2'))
+                        {{ $errors->first('external_tab_'.$i.'_memo2') }}
+                    @endif
+                </div>
+                @if(!is_null($external_tab))
+                    <p style="text-align: center; margin-top: 10px">
+                        <a onclick="return confirm('外観タブを削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.image.delete', ['hospital' => $hospital->id, 'hospital_category_id' => $external_tab->id, 'hospital_image_id' => $external_tab->hospital_image_id]) }}">
+                            削除
+                        </a>
+                    </p>
+                @endif
+            </div>
+            <a href="javascript:void(0)" class="external_add btn btn-info" style="@if(!is_null($external_tab) OR $i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+                <i class="icon-trash icon-white"></i>
+                追加
+            </a>
+        @endforeach
+    <!--//登録済のタブ画像フォーム-->
+        <!--未登録のタブ画像フォーム-->
+        @for ($i = 1; $i <= 30; $i++)
+            @if(!in_array($i, $external_show_order2))
+                <div class="row photo-tab" data-order="{{$i}}" @if($i != 1) style="display: none" @endif>
+                    <div class="col-sm-6">
+                        <div class="tab_image_area">
+                            <img src="/img/no_image.png">
+                        </div>
+                        <label class="file-upload btn btn-primary">
+                            ファイル選択 {{Form::file("external_tab_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
+                        </label>
+                        @if ($errors->has('external_tab_'.$i))
+                            <div class="error_message">
+                                {{ $errors->first('external_tab_').$i }}
+                            </div>
+                        @endif
+                        {{Form::hidden('external_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_EXTERNAL )}}
+                    </div>
+                    <div class="col-sm-6">
+                        {{Form::label('external_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
+                        {{Form::text('external_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
+                        @if ($errors->has('external_tab_'.$i.'_order'))
+                            {{ $errors->first('external_tab_'.$i.'_order') }}
+                        @endif
+                        {{Form::label('external_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
+                        {{Form::textarea('external_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
+                        @if ($errors->has('external_tab_'.$i.'_memo2'))
+                            {{ $errors->first('external_tab_'.$i.'_memo2') }}
+                        @endif
+                    </div>
+                </div>
+                <a href="javascript:void(0)" class="external_add btn btn-info" style="@if($i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+                    <i class="icon-trash icon-white"></i>
+                    追加
+                </a>
+        @endif
+    @endfor
+    <!--//未登録のタブ画像フォーム-->
+    </div>
+    <!--・//外観タブ-->
+
+
+
+
+
+
+
+
+
+    <!--その他タブ-->
+    <p class="tab_name">
+        その他
+        <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
+    </p>
+<?php $another_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_ANOTHER);?>
+<?php $another_tab_box = $another_tab_box->sortBy('order');?>
+<?php $another_show_order2 = $another_tab_box->pluck('order2')->toArray();?>
+
+<!--登録済その他タブ画像フォーム-->
+    <div class="open_close_tab">
+        @foreach($another_tab_box as $another_tab)
+            <?php $i = $another_tab['order2'];?>
+            <div class="row photo-tab" data-order="{{$i}}" @if(is_null($another_tab) && $i != 1) style="display: none" @endif>
+                <div class="col-sm-6">
+                    @if(!is_null($another_tab) && !is_null($another_tab->hospital_image->path))
+                        <div class="tab_image_area">
+                            <img class="object-fit" src="/img/uploads/300-auto-{{$another_tab->hospital_image->path}}">
+                            <p class="file_delete_text">
+                                <a class="btn btn-mini btn-danger" onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $another_tab->hospital_image_id]) }}">
+                                    <i class="icon-trash icon-white"></i>
+                                    ファイル削除
+                                </a>
+                            </p>
+                        </div>
+                    @else
+                        <div class="tab_image_area">
+                            <img src="/img/no_image.png">
+                        </div>
+                    @endif
+                    <label class="file-upload btn btn-primary">
+                        ファイル選択 {{Form::file("another_tab_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
+                    </label>
+                    @if ($errors->has('another_tab_'.$i))
+                        <div class="error_message">
+                            {{ $errors->first('another_tab_').$i }}
+                        </div>
+                    @endif
+                    {{Form::hidden('another_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_ANOTHER )}}
+                </div>
+                <div class="col-sm-6">
+                    {{Form::label('another_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
+                    {{Form::text('another_tab_'.$i.'_order', is_null($another_tab) ? null : $another_tab['order'], ['class' => 'form-control'])}}
+                    @if ($errors->has('another_tab_'.$i.'_order'))
+                        {{ $errors->first('another_tab_'.$i.'_order') }}
+                    @endif
+                    {{Form::label('another_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
+                    {{Form::textarea('another_tab_'.$i.'_memo2', is_null($another_tab) ? null : $another_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
+                    @if ($errors->has('another_tab_'.$i.'_memo2'))
+                        {{ $errors->first('another_tab_'.$i.'_memo2') }}
+                    @endif
+                </div>
+                @if(!is_null($another_tab))
+                    <p style="text-align: center; margin-top: 10px">
+                        <a onclick="return confirm('その他タブを削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.image.delete', ['hospital' => $hospital->id, 'hospital_category_id' => $another_tab->id, 'hospital_image_id' => $another_tab->hospital_image_id]) }}">
+                            削除
+                        </a>
+                    </p>
+                @endif
+            </div>
+            <a href="javascript:void(0)" class="another_add btn btn-info" style="@if(!is_null($another_tab) OR $i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+                <i class="icon-trash icon-white"></i>
+                追加
+            </a>
+        @endforeach
+    <!--//登録済のタブ画像フォーム-->
+        <!--未登録のタブ画像フォーム-->
+        @for ($i = 1; $i <= 30; $i++)
+            @if(!in_array($i, $another_show_order2))
+                <div class="row photo-tab" data-order="{{$i}}" @if($i != 1) style="display: none" @endif>
+                    <div class="col-sm-6">
+                        <div class="tab_image_area">
+                            <img src="/img/no_image.png">
+                        </div>
+                        <label class="file-upload btn btn-primary">
+                            ファイル選択 {{Form::file("another_tab_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
+                        </label>
+                        @if ($errors->has('another_tab_'.$i))
+                            <div class="error_message">
+                                {{ $errors->first('another_tab_').$i }}
+                            </div>
+                        @endif
+                        {{Form::hidden('another_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_ANOTHER )}}
+                    </div>
+                    <div class="col-sm-6">
+                        {{Form::label('another_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
+                        {{Form::text('another_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
+                        @if ($errors->has('another_tab_'.$i.'_order'))
+                            {{ $errors->first('another_tab_'.$i.'_order') }}
+                        @endif
+                        {{Form::label('another_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
+                        {{Form::textarea('another_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
+                        @if ($errors->has('another_tab_'.$i.'_memo2'))
+                            {{ $errors->first('another_tab_'.$i.'_memo2') }}
+                        @endif
+                    </div>
+                </div>
+                <a href="javascript:void(0)" class="another_add btn btn-info" style="@if($i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+                    <i class="icon-trash icon-white"></i>
+                    追加
+                </a>
+        @endif
+    @endfor
+    <!--//未登録のタブ画像フォーム-->
+    </div>
+    <!--・//その他タブ-->
 </div>
 
 <div class="box box-primary form-box" id="staff_section">
@@ -334,7 +821,7 @@
                 </div>
             @endif
             <label class="file-upload btn btn-primary">
-                ファイル選択 {{Form::file("staff_".$i, ['class' => 'field'])}}
+                ファイル選択 {{Form::file("staff_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
             </label>
             @if ($errors->has('staff_'.$i))
                 <div class="error_message">

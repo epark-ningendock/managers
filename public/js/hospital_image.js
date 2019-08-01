@@ -4,6 +4,25 @@ $(document).ready(function() {
         $(this).hide();
         $(this).prev().show();
     });
+    $('.facility_add').click(function() {[]
+        $(this).hide();
+        $(this).prev().show();
+    });
+
+    $('.internal_add').click(function() {[]
+        $(this).hide();
+        $(this).prev().show();
+    });
+    $('.external_add').click(function() {[]
+        $(this).hide();
+        $(this).prev().show();
+    });
+
+    $('.another_add').click(function() {[]
+        $(this).hide();
+        $(this).prev().show();
+    });
+
 
     $('#interview_add').click(function() {
         let i = $('.interview_detail_new').length;
@@ -24,15 +43,6 @@ $(document).ready(function() {
         $(this).next().slideToggle();
         $(this).parent().next().slideToggle();
     });
-/*
-    $(function() {
-        // jQuery Upload Thumbs
-        $('form input:file').uploadThumbs({
-            position : 0,      // 0:before, 1:after, 2:parent.prepend, 3:parent.append,
-                               // any: arbitrarily jquery selector
-            imgbreak : true    // append <br> after thumbnail images
-        });
-    });*/
 
     $(function() {
         $('input[type=file]').after('<span></span>');

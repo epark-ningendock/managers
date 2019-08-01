@@ -27,6 +27,9 @@ Custom CSS
 Custom CSS
 -----------------------------------------------------*/
 
+.content {
+  position: relative;
+}
 .inner-box {
   padding: 30px;
 }
@@ -389,6 +392,7 @@ legend {
   left: 200px;
   top: 30px;
   width: 40%;
+  z-index: 1;
 }
 
 .footer-submit {
@@ -589,16 +593,12 @@ label.file-upload input[type="file"] {
   display:block;
 }
 
-#staff_add {
-  margin-top: 30px;
-}
-
 #staff_section {
   position: relative;
   padding-bottom: 100px;
 }
 
-.staff_add {
+.staff_add,.facility_add,.internal_add,.external_add,.another_add {
   position: absolute;
   bottom: 10px;
   left: 10px;
@@ -613,7 +613,6 @@ label.file-upload input[type="file"] {
   text-align: left;
   padding: 10px 0 0 0;
   font-size: 12px;
-  position: absolute;
   bottom: 0px;
 }
 .btn-normal{
@@ -663,4 +662,18 @@ label.file-upload input[type="file"] {
   text-align: center;
   line-height: 24px;
   vertical-align: middle;
+}
+
+.photo-tab {
+  padding: 20px 30px 0 30px;
+  .col-sm-6 {
+    height: 290px;
+    padding-top: 20px;
+    border-top: #ccc dotted 1px;
+  }
+}
+
+.open_close_tab {
+  position: relative;
+  padding: 0 0 40px 0;
 }
