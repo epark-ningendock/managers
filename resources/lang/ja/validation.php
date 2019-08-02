@@ -231,6 +231,7 @@ return [
         'is_calendar_display' => 'カレンダー受付可否',
         'title' => '件名',
         'text' => '本文',
+        'contents' => '本文',
         'hospital_id' => '医療機関ID',
         // 受付メール設定系
         'in_hospital_email_reception_flg' => '院内受付メール受信フラグ',

@@ -1,5 +1,5 @@
 <html>
 <body>
-    {!!  nl2br($data["text"]) !!}
+    {!!  nl2br($data["contents"]) !!}
 </body>
 </html>
