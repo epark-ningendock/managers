@@ -13,7 +13,7 @@ class ReservationUpdateFormRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,9 @@ class ReservationUpdateFormRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'course_id' => 'required',
+            'reservation_date' => 'required',
+            'adjustment_price' => 'max:8',
         ];
     }
 }

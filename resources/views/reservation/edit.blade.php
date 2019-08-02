@@ -12,8 +12,8 @@
 
   <form method="POST" action="{{ route('reservation.update', ['reservation' => $reservation->id]) }}">
   	{!! csrf_field() !!}
-      {{ method_field('PUT') }}
-    @include('reservation.partials.form')
+      {{ method_field('PATCH') }}
+    @include('reservation.partials.edit-form')
   </form>
   @includeIf('reservation.partials.customer-script')
 @stop

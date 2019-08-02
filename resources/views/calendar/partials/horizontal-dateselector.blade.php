@@ -40,6 +40,7 @@
                     if ( $reserveDate ) {
                         setTimeout(function(){
                             $('td[data-date="' + $reserveDate + '"]').addClass('it-would-reserve');
+                            $('#reservation_date').val($reserveDate);
                         }, 500);
                     }
 

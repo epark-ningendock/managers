@@ -176,6 +176,7 @@ return [
         'complete_error' => 'エラーが発生しました。',
         'status_update_success' => '予約ステータスが更新されました。',
         'status_update_error' => 'エラーが発生しました。',
-        'invalid_reservation_status' => '無効な操作。'
+        'invalid_reservation_status' => '無効な操作。',
+        'customer_id' => '顧客',
     ]
 ];

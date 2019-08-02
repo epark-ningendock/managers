@@ -23,7 +23,6 @@ class ReservationCreateFormRequest extends FormRequest
      */
     public function rules()
     {
-        dd(request()->all());
         return [
             'course_id' => 'required',
             'reservation_date' => 'required',
@@ -32,6 +31,7 @@ class ReservationCreateFormRequest extends FormRequest
             'start_time_hour' => 'between:0,23',
             'start_time_min' => 'between:0,23',
             'reservation_memo' => 'max:255',
+            'customer_id' => 'required',
             'family_name' => 'max:32',
             'first_name' => 'max:32',
             'family_name_kana' => 'max:32',

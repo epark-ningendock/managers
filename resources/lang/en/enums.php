@@ -7,6 +7,8 @@
  */
 
 use \App\Enums\Authority;
+use App\Enums\Gender;
+use App\Enums\ReservationStatus;
 use App\Enums\StaffStatus;
 use App\Enums\Status;
 use App\Enums\Permission;
@@ -62,6 +64,12 @@ return [
         PaymentStatus::ACTUAL_SALE => 'Actual Sale',
         PaymentStatus::CANCELLATION => 'Cancellation',
         PaymentStatus::ERROR => 'Error'
+    ],
+
+    Gender::class => [
+        Gender::Female => '女性',
+        Gender::Male => '男性',
+
     ]
 
 ];

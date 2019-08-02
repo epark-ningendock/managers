@@ -1,10 +1,13 @@
 <div class="box-body">
-    
+
+    <input type="hidden" name="lock_version" value="{{ $reservation->lock_version or '' }}" />
+
+
     <h3 class="section-title">受付情報</h3>
     <br/><br/>
 
     <div class="row">
-    
+
         <div class="col-md-3">
             <label for="course_id">検査コース</label>
         </div>
@@ -20,14 +23,14 @@
                     @endforeach
                 </select>
                 @if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif
-            </div>            
+            </div>
         </div>
 
     </div>
 
 
     <div class="row">
-    
+
         <div class="col-md-3">
             <label for="regular_price">コース料金</label>
         </div>
@@ -39,14 +42,14 @@
                        value="{{ old('tax_included_price', isset($reservation->tax_included_price) ? $reservation->tax_included_price : null) }}"/> <span
                         class="ml-2" style="position: absolute;top: 0;right: -20px;">円</span>
                 @if ($errors->has('tax_included_price')) <p class="help-block">{{ $errors->first('tax_included_price') }}</p> @endif
-            </div>          
+            </div>
         </div>
 
     </div>
 
 
     <div class="row form-group">
-    
+
         <div class="col-md-3">
             <label id="checkbox option">オプション</label>
         </div>
@@ -67,11 +70,11 @@
             </div>
         </div>
 
-    </div>   
+    </div>
 
 
     <div class="row form-group">
-    
+
         <div class="col-md-3">
             <label>質問設定</label>
         </div>
@@ -80,23 +83,23 @@
             <div class="question-container">
                 <div class="form-group ml-4">
                 </div>
-            </div>  
+            </div>
         </div>
 
-    </div>    
+    </div>
 
 
     <div class="row form-group">
-    
+
         <div class="col-md-3">
             <label for="adjustment_price">調整額</label>
         </div>
 
         <div class="col-md-9">
             <div class="form-group sm-form-group @if ($errors->has('adjustment_price')) has-error @endif" style="margin-right: 21px;">
-                    <input type="number" class="form-control" name="adjustment_price" id="adjustment_price" placeholder="調整額"
-                           value="{{ old('adjustment_price', isset($reservation) ? $reservation->adjustment_price : null) }}"/>
-                    <span class="ml-2" style="position: absolute;top: 0;right: -20px;">円</span>
+                <input type="number" class="form-control" name="adjustment_price" id="adjustment_price" placeholder="調整額"
+                       value="{{ old('adjustment_price', isset($reservation) ? $reservation->adjustment_price : null) }}"/>
+                <span class="ml-2" style="position: absolute;top: 0;right: -20px;">円</span>
                 @if ($errors->has('adjustment_price')) <p class="help-block">{{ $errors->first('adjustment_price') }}</p> @endif
             </div>
 
@@ -105,7 +108,7 @@
     </div>
 
     <div class="row form-group">
-    
+
         <div class="col-md-3">
             <label for="">合計金額</label>
         </div>
@@ -117,20 +120,73 @@
     </div>
 
 
+    <div class="row form-group ">
+
+        <div class="col-md-3">
+            <label for="">決済ステータス</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="total" class="ml-2">{{ (isset($reservation->payment_status) ) ? $reservation->payment_status : '-' }}</span>
+        </div>
+
+    </div>
+
+    <div class="row form-group no-field">
+
+        <div class="col-md-3">
+            <label for="">カード決済額</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="total" class="ml-2">{{ (isset($reservation->card_payment_amount) ) ? $reservation->card_payment_amount : '-' }}</span>
+        </div>
+
+    </div>
+
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="">キャッシュポ利用額</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="total" class="ml-2">{{ (isset($reservation->cashpo_used_price) ) ? $reservation->cashpo_used_price : '-' }}</span>
+        </div>
+
+    </div>
+
+
+    <div class="row form-group no-field">
+
+        <div class="col-md-3">
+            <label for="">現地支払額</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="total" class="ml-2"></span>
+        </div>
+
+    </div>
+
+
+
+
     <div class="row">
-    
+
         <div class="col-md-3">
             <label for="reservation_date">受診日</label>
         </div>
 
         <div class="col-md-9">
             <div class="calendar-box">
-                
-            </div>   
+
+            </div>
             @if ($errors->has('reservation_date')) <p class="help-block text-danger" style="color: #ed5565;">{{ $errors->first('reservation_date') }}</p> @endif
         </div>
 
-    </div> 
+    </div>
 
 
     <div class="row form-group">
@@ -145,13 +201,13 @@
                     <select class="form-control" name="start_time_hour" id="start_time_hour">
                         <option value=""></option>
                         @for ( $x = 0; $x < 24; $x++)
-                        <option
-                                value="{{ ( $x < 10 ) ? '0'.$x :  $x }}"
-                                @if ( old('start_time_hour') == (( $x < 10 ) ? '0'.$x :  $x))
+                            <option
+                                    value="{{ ( $x < 10 ) ? '0'.$x :  $x }}"
+                                    @if ( old('start_time_hour', (isset($reservation->start_time_hour)) ? $reservation->start_time_hour : '') == (( $x < 10 ) ? '0'.$x :  $x))
                                     selected="selected"
-                                @endif
+                                    @endif
 
-                        >{{ ( $x < 10 ) ? '0'.$x :  $x }}</option>
+                            >{{ ( $x < 10 ) ? '0'.$x :  $x }}</option>
                         @endfor
                     </select>
                 </div>
@@ -160,19 +216,70 @@
                     <select class="form-control" name="start_time_min" id="start_time_min">
                         <option value=""></option>
                         @for ( $x = 0; $x < 61; $x++)
-                        <option
-                                value="{{ ( $x < 10 ) ? '0'.$x :  $x }}"
-                                @if ( old('start_time_min') == (( $x < 10 ) ? '0'.$x :  $x))
-                                selected="selected"
-                                @endif
-                        >{{ ( $x < 10 ) ? '0'.$x :  $x }}</option>
+                            <option
+                                    value="{{ ( $x < 10 ) ? '0'.$x :  $x }}"
+                                    @if ( old('start_time_min', (isset($reservation->start_time_min)) ? $reservation->start_time_min : '') == (( $x < 10 ) ? '0'.$x :  $x))
+                                    selected="selected"
+                                    @endif
+                            >{{ ( $x < 10 ) ? '0'.$x :  $x }}</option>
                         @endfor
                     </select>
                 </div>
             </div>
         </div>
 
-    </div>   
+    </div>
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="">第2希望日</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="second_date" class="ml-2">{{ ( isset($reservation->second_date) ) ? $reservation->second_date: '-' }}</span>
+        </div>
+
+    </div>
+
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="">第3希望日</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="third_date" class="ml-2">{{ ( isset($reservation->third_date) ) ? $reservation->third_date: '-' }}</span>
+        </div>
+
+    </div>
+
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="">受付番号</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="acceptance_number" class="ml-2">{{ ( isset($reservation->acceptance_number) ) ? $reservation->acceptance_number: '-' }}</span>
+        </div>
+
+    </div>
+
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="">受付形態</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="terminal_type" class="ml-2">{{ ( isset($reservation->terminal_type) ) ? $reservation->terminal_type: '-' }}</span>
+        </div>
+
+    </div>
 
     <div class="row form-group">
 
@@ -182,124 +289,213 @@
 
         <div class="col-md-9">
             <div class=" @if ($errors->has('reservation_memo')) has-error @endif">
-                <textarea class="form-control" name="reservation_memo" id="reservation_memo">{{ old('reservation_memo') }}</textarea>
+                <textarea class="form-control" name="reservation_memo" id="reservation_memo">{{ old('reservation_memo', $reservation->reservation_memo) }}</textarea>
                 @if ($errors->has('reservation_memo')) <p class="help-block">{{ $errors->first('reservation_memo') }}</p> @endif
-            </div>
-        </div>
-
-    </div>   
-
-    <h3 class="section-title">受診者情報</h3>
-    <br/><a id="examinee-information" href="#">受診者検索</a>
-    <br/><br/>
-    <input type="hidden" name="customer_id" id="customer_id" value="{{ old('customer_id') }}" />
-
-    <div class="row">
-
-        <div class="col-md-3">
-            <label for="">お名前 </label>
-        </div>
-
-        <div class="col-md-9">
-            @if ($errors->has('customer_id')) <p class="help-block" style="color: red;">{{ $errors->first('customer_id') }}</p> @endif
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group @if ($errors->has('family_name')) has-error @endif">
-                        <label for="family_name">姓</label>
-                        <input type="text" class="form-control" name="family_name" style="width: 90%;display: inline-block"
-                               id="family_name" placeholder=""
-                               value="{{ old('family_name', isset($reservation) ? $reservation->family_name : null) }}" readonly />
-                        @if ($errors->has('family_name')) <p class="help-block">{{ $errors->first('family_name') }}</p> @endif
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="form-group @if ($errors->has('first_name')) has-error @endif">
-                        <label for="first_name">名</label>
-                        <input type="text" class="form-control" name="first_name" style="width: 90%;display: inline-block"
-                               id="first_name" placeholder=""
-                               value="{{ old('first_name', isset($reservation) ? $reservation->first_name : null) }}" readonly />
-                        @if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
-                    </div>
-                </div>
             </div>
         </div>
 
     </div>
 
-    <div class="row">
+
+    <div class="row form-group">
 
         <div class="col-md-3">
-            <label for="">お名前 かな </label>
+            <label for="internal_memo">医療機関備考</label>
         </div>
 
         <div class="col-md-9">
-            <div class="row">
-
-                <div class="col-md-4">
-                    <div class="form-group @if ($errors->has('family_name_kana')) has-error @endif">
-                        <span>姓</span>
-                        <input type="text" class="form-control" name="family_name_kana" style="width: 90%;display: inline-block"
-                               id="family_name_kana" placeholder=""
-                               value="{{ old('family_name_kana', isset($reservation) ? $reservation->family_name_kana : null) }}" readonly />
-                        @if ($errors->has('family_name_kana')) <p class="help-block">{{ $errors->first('family_name_kana') }}</p> @endif
-                    </div>
-                </div>
-                <div class="col-md-8">
-                    <div class="form-group @if ($errors->has('first_name_kana')) has-error @endif">
-                        <span>名</span>
-                        <input type="text" class="form-control" name="first_name_kana" style="width: 90%;display: inline-block"
-                               id="first_name_kana" placeholder=""
-                               value="{{ old('first_name_kana', isset($reservation) ? $reservation->first_name_kana : null) }}" readonly />
-                        @if ($errors->has('first_name_kana')) <p class="help-block">{{ $errors->first('first_name_kana') }}</p> @endif
-                    </div>
-                </div>
+            <div class=" @if ($errors->has('internal_memo')) has-error @endif">
+                <textarea class="form-control" name="internal_memo" id="internal_memo">{{ old('internal_memo', $reservation->internal_memo) }}</textarea>
+                @if ($errors->has('internal_memo')) <p class="help-block">{{ $errors->first('internal_memo') }}</p> @endif
             </div>
         </div>
 
-    </div> 
+    </div>
 
+    <h3 class="section-title">申込者情報</h3>
 
-    <div class="row">
+    <div class="row form-group no-field">
 
         <div class="col-md-3">
-            <label for="tel">電話番号</label>
+            <label for="">お名前</label>
         </div>
 
         <div class="col-md-9">
-            <div class="form-group @if ($errors->has('tel')) has-error @endif">
-                <span>名</span>
-                <input type="text" class="form-control" name="tel" style="width: 90%;display: inline-block"
-                       id="tel" placeholder=""
-                       value="{{ old('tel', isset($reservation) ? $reservation->tel : null) }}"/>
-                @if ($errors->has('tel')) <p class="help-block">{{ $errors->first('tel') }}</p> @endif
-            </div>
+            <span id="" class="ml-2">-</span>
         </div>
 
-    </div>     
+    </div>
 
-    <div class="row">
+
+    <div class="row form-group no-field">
 
         <div class="col-md-3">
-            <label for="registration_card_number">診察券番号</label>
+            <label for="">お名前（かな）</label>
         </div>
 
         <div class="col-md-9">
-            <div class="form-group @if ($errors->has('registration_card_number')) has-error @endif">
-                <span>名</span>
-                <input type="text" class="form-control" name="registration_card_number" style="width: 90%;display: inline-block"
-                       id="registration_card_number" placeholder=""
-                       value="{{ old('registration_card_number', isset($reservation) ? $reservation->registration_card_number : null) }}" readonly />
-                @if ($errors->has('registration_card_number')) <p class="help-block">{{ $errors->first('registration_card_number') }}</p> @endif
-            </div>
+            <span id="" class="ml-2">-</span>
+        </div>
+
+    </div>
+
+
+    <div class="row form-group no-field">
+
+        <div class="col-md-3">
+            <label for="">お名前（かな）</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="" class="ml-2">-</span>
+        </div>
+
+    </div>
+
+
+    <div class="row form-group no-field">
+
+        <div class="col-md-3">
+            <label for="">電話番号</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="" class="ml-2">-</span>
+        </div>
+
+    </div>
+
+
+    <h3 class="section-title">受診者情報</h3>
+
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="">お名前</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="" class="ml-2">
+                {{ (isset($reservation->customer->family_name)) ? $reservation->customer->family_name : '' }}
+                {{ (isset($reservation->customer->first_name) ) ? $reservation->customer->first_name : '' }}
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="">電話番号</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="" class="ml-2">
+                {{ ( isset($reservation->customer->tel)) ? $reservation->customer->tel : '-' }}
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="">登録形態</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="" class="ml-2">
+                {{ isset($reservation->is_representative) ? $reservation->is_representative : '-' }}
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="">診察券番号</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="" class="ml-2">
+                {{ (isset($reservation->customer->registration_card_number)) ? $reservation->customer->registration_card_number : '-' }}
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="">性別</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="" class="ml-2">
+                @if( isset($reservation->customer->sex) )
+                {{ \App\Enums\Gender::getDescription($reservation->customer->sex) }}
+                    @endif
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="">生年月日</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="" class="ml-2">
+                {{ (isset($reservation->customer->birthday)) ? $reservation->customer->birthday : '-' }}
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="">住所</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="" class="ml-2">
+                {{ (isset($reservation->customer->address)) ? $reservation->customer->address : '-' }}
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="">受診歴</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="" class="ml-2">
+                {{ (isset($reservation->is_repeat) ) ? $reservation->is_repeat : '-' }}
+            </span>
         </div>
 
     </div>
 
 
     <div class="box-footer">
-        <a href="{{ url('/reception') }}" class="btn btn-default">戻る</a>
+        <a href="{{ url('/reservation') }}" class="btn btn-default">戻る</a>
         <button type="submit" class="btn btn-primary">作成</button>
-    </div>                                              
+    </div>
 
 </div>
 
@@ -356,6 +552,10 @@
 
                                     let $courseOptionOldData = @json(old('course_options'), JSON_PRETTY_PRINT);
 
+                                    if ( ! $courseOptionOldData ) {
+                                        $courseOptionOldData = @json($course_options, JSON_PRETTY_PRINT);
+                                    }
+
                                     let $courseOptionOldValue = ( $courseOptionOldData ) ? $courseOptionOldData : {};
 
                                     let checkedOldValue = ($courseOptionOldValue.hasOwnProperty(courseOption.option.id)  ) ? 'checked' : '';
@@ -382,6 +582,10 @@
 
                                                 let input_name = `questions_${question.id}`;
                                                 let $questionGroupOldData = @json(old(), JSON_PRETTY_PRINT);
+
+                                                if ( ! $questionGroupOldData.length > 0) {
+                                                    $questionGroupOldData = @json($questions, JSON_PRETTY_PRINT);
+                                                }
 
                                                 $questionGroupOldValue = ( $questionGroupOldData ) ? $questionGroupOldData : {};
                                                 checkedOldValue = ( $questionGroupOldValue.hasOwnProperty(input_name) && ($questionGroupOldValue[input_name].hasOwnProperty(key))  ) ? 'checked' : '';
@@ -475,7 +679,7 @@
         }
         .year-label th {
             background: transparent url({{ asset('img/calendar.png') }}) 10px 3px/30px no-repeat;
-        }        
+        }
         td.daybox.is-holiday {
             background: #ddd;
         }
@@ -486,7 +690,7 @@
         td.daybox.it-would-reserve {
             background: #fbfbbf;
         }
-        
+
     </style>
 @endpush
 

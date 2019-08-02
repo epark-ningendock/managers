@@ -259,12 +259,14 @@ return [
         'course_options' => 'オプション',
         'adjustment_price' => '調整額',
         'reservation_memo' => '受付・予約メモ',
+        'internal_memo' => '医療機関備考',
         'registration_card_number' => '診察券番号',
         'tel' => '電話番号',
         'family_name_kana' => 'お名前 かな ( 姓 )',
         'first_name_kana' => 'お名前 かな ( 名 )',
         'family_name' => 'お名前 ( 姓 )',
         'first_name' => 'お名前 ( 名 )',
-        'pvad' => 'PV数'
+        'pvad' => 'PV数',
+        'customer_id' => '顧客',
     ],
 ];

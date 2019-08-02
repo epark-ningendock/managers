@@ -55,7 +55,10 @@ class Reservation extends SoftDeleteModel
         'reservation_date',
 	    'start_time_hour',
 	    'start_time_min',
+        'tax_included_price',
+        'adjustment_price',
         'reservation_status',
+        'reservation_memo',
         'terminal_type', //need to confirm initial value
         'is_repeat', // need to confirm 
         'is_representative', // need to confirm
