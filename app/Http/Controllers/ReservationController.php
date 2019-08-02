@@ -130,7 +130,7 @@ class ReservationController extends Controller
      */
     protected function get_reception_list_query(Request $request)
     {
-        $query = Reservation::with([
+        $query = Reservation::where('hospital_id', session('hospital_id'))->with([
             'course',
             'customer',
             'reservation_options',
@@ -149,13 +149,13 @@ class ReservationController extends Controller
         if ($request->has('completed_start_date') && $request->input('completed_start_date', '') != '') {
             $query->whereDate('completed_date', '>=', $request->input('completed_start_date'));
         } elseif (!$request->has('completed_start_date')) {
-            $query->whereDate('completed_date', '>=', Carbon::now());
+//            $query->whereDate('completed_date', '>=', Carbon::now());
         }
 
         if ($request->has('completed_end_date') && $request->input('completed_end_date', '') != '') {
             $query->whereDate('completed_date', '<=', $request->input('completed_end_date'));
         } elseif (!$request->has('completed_end_date')) {
-            $query->whereDate('completed_date', '<=', Carbon::now());
+//            $query->whereDate('completed_date', '<=', Carbon::now());
         }
 
         if ($request->input('customer_name', '') != '') {
@@ -668,7 +668,7 @@ class ReservationController extends Controller
 
             DB::commit();
 
-            return redirect('reservation')->with('success', trans('messages.reservation.status_update_success'));
+            return redirect('reception')->with('success', trans('messages.reservation.status_update_success'));
 
         } catch (\Exception $i) {
             dd($i);

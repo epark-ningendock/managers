@@ -196,11 +196,11 @@
               <input type="checkbox" name="ids[]" value="{{ $reservation->id }}" />
             </td>
             <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
-            <td>{{ $reservation->customer->name }}</td>
-            <td>{{ $reservation->course->name  }}</td>
-            <td>{{ $reservation->reservation_status->description  }}</td>
+            <td>{{ (isset($reservation->customer->name)) ? $reservation->customer->name : '' }}</td>
+            <td>{{ (isset($reservation->course->name)) ? $reservation->course->name : ''  }}</td>
+            <td>{{ (isset($reservation->reservation_status->description )) ? $reservation->reservation_status->description  : '' }}</td>
             <td>
-              <a class="btn btn-primary ml-3" href="#">
+              <a class="btn btn-primary ml-3" href="{{ route('reservation.edit', ['reservation' => $reservation]) }}">
                 変更
               </a>
             </td>
