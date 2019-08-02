@@ -158,6 +158,7 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     |--------------------------------------------------------------------------
     */
     Route::resource('/email-template', 'EmailTemplateController')->except(['show']);
+    Route::get('/email-template/{id}/copy', 'EmailTemplateController@copy')->name('email-template.copy');
     /*
     |--------------------------------------------------------------------------
     | Reception email setting Routes

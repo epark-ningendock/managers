@@ -26,6 +26,7 @@
           <th>ID</th>
           <th>テンプレート名</th>
           <th>編集</th>
+          <th>操作</th>
           <th>削除</th>
       </tr>
       </thead>
@@ -39,6 +40,10 @@
                     class="btn btn-primary">
                     <i class="fa fa-edit text-bold"> 編集</i>
                     </a>
+              </td>
+              <td>
+                <a href="{{ route('email-template.copy', $email_template->id) }}" class="btn btn-default">コピー</a>
+              </td>
               <td>
                   <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $email_template->id }}">
                         <i class="fa fa-trash"></i>

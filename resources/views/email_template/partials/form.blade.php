@@ -1,7 +1,7 @@
 <div class="box-body">
-  <p class="text-bold">差出人名：Epark</p>
-  <p class="text-bold">差出人メールアドレス：epark@example.com</p>
-
+  <p class="text-bold">差出人名：unei@eparkdock.com</p>
+  <p class="text-bold">差出人メールアドレス：unei@eparkdock.com</p>
+  <input type="hidden" name="lock_version" value="{{ $email_template->lock_version or '' }}"  />
   <div class="form-group @if ($errors->has('title')) has-error @endif">
     <label for="title">テンプレート名（件名）</label>
     {{ Form::text('title', (isset($email_template->title) ) ? $email_template->title : Input::old('title'), ['class' => 'form-control', 'id' => 'title', 'placeholder' => '件名を入力してください']) }}

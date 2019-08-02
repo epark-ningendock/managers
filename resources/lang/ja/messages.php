@@ -182,5 +182,6 @@ return [
     ],
     'address1' => '市区郡',
     'address2' => 'それ以降の住所',
-    'invalid_email' => '正しいメールアドレスの書式でご入力ください'
+    'invalid_email' => '正しいメールアドレスの書式でご入力ください',
+    'email-template-limit-exceed' => 'テンプレートの数が最大になっているため、新規作成を実行できませんでした。'
 ];
