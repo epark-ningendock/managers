@@ -304,7 +304,7 @@
             }
           });
 
-          $('#authority_admin').change(function() {
+          $('#authority_member').change(function() {
             if ($('#authority_member').prop("checked")) {
               resetStaffValue()
             }
