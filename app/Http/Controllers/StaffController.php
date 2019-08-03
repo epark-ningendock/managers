@@ -179,8 +179,8 @@ class StaffController extends Controller
 
             $staff->update($request->only(['name', 'login_id', 'email', 'authority', 'status', 'department_id']));
             $staff->save();
-
-            $staff->staff_auth()->update($request->only(['is_hospital', 'is_staff', 'is_cource_classification', 'is_invoice', 'is_pre_account', 'is_contract']));
+            
+            $staff->staff_auth()->update($staff_auths);
 
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.staff')]));
             DB::commit();
