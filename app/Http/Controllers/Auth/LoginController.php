@@ -149,11 +149,6 @@ class LoginController extends Controller
                 $validator->errors()->add('fail_login', 'スタッフが無効です。');
                 throw new ValidationException($validator);
                 return redirect()->back();
-            } elseif ($staff->status->value == StaffStatus::Deleted) {
-                $validator = Validator::make([], []);
-                $validator->errors()->add('fail_login', 'ユーザが存在しません。');
-                throw new ValidationException($validator);
-                return redirect()->back();
             }
         }
 
