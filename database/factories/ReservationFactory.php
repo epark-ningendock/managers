@@ -19,7 +19,7 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'channel' => $faker->randomElement([0, 1, 2]),
         'is_billable' => $faker->randomElement(['0', '1']),
         'reservation_status' => $faker->randomElement([1, 2, 3, 4]),
-        'completed_date' => $faker->dateTimeThisMonth->format('Y-m-d H:i:s'),
+        'completed_date' => $faker->date('Y-m-d H:i:s', '1 day'),
         'cancel_date' => $faker->dateTimeThisMonth->format('Y-m-d H:i:s'),
         'user_message' => $faker->sentence(10),
         'site_code' => $faker->shuffle('abcdefghijklmnopqrstuvwxyz'),
