@@ -308,6 +308,7 @@
               if (fromAuthorityContractStaff) {
                 assignData()
               }
+              fromAuthorityContractStaff = false
               resetStaffValue()
             }
           });
@@ -317,6 +318,7 @@
               if (fromAuthorityContractStaff) {
                 assignData()
               }
+              fromAuthorityContractStaff = false
               resetStaffValue()
             }
           });
@@ -326,6 +328,7 @@
               if (fromAuthorityContractStaff) {
                 assignData()
               }
+              fromAuthorityContractStaff = false
               resetStaffValue()
             }
           });
