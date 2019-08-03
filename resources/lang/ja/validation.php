@@ -136,7 +136,8 @@ return [
         ],
         'password' => [
             'between' => 'パスワードは、8~20文字以内の半角英数字でご入力ください。',
-            'alpha_num' => 'パスワードは、8~20文字以内の半角英数字でご入力ください。'
+            'alpha_num' => 'パスワードは、8~20文字以内の半角英数字でご入力ください。',
+            'different' => '新しいパスワードと現在のパスワードは、異なるものを指定してください。'
         ],
         'email' => [
             'email' => '正しいメールアドレスの書式でご入力ください。'
@@ -179,7 +180,7 @@ return [
         'login_id' => 'ログインID',
         'email' => 'メールアドレス',
         'password' => 'パスワード',
-        'password_confirmation' => 'パスワード確認',
+        'password_confirmation' => 'パスワード(確認用)',
         'status' => '状態',
         'authority' => 'スタッフ権限',
         'is_hospital' => '医療機関管理',

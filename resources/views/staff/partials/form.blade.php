@@ -279,12 +279,15 @@
 @push('js')
     <script type="text/javascript">
       (function ($) {
+        let data = {};
+        let fromAuthorityContractStaff = false;
+
         (function () {
           $(document).ready( function(){
             if ($('#authority_admin').prop("checked")) {
               resetStaffValue()
             }
-
+ 
             if ($('#authority_member').prop("checked")) {
               resetStaffValue()
             }
@@ -296,28 +299,41 @@
             if ($('#authority_contract_staff').prop("checked")) {
               resetContractStaffValue()
             }
+            data = saveData()
+            fromAuthorityContractStaff = $('#authority_contract_staff').prop("checked")
           });
-
+          
           $('#authority_admin').change(function() {
             if ($('#authority_admin').prop("checked")) {
+              if (fromAuthorityContractStaff) {
+                assignData()
+              }
               resetStaffValue()
             }
           });
 
-          $('#authority_admin').change(function() {
+          $('#authority_member').change(function() {
             if ($('#authority_member').prop("checked")) {
+              if (fromAuthorityContractStaff) {
+                assignData()
+              }
               resetStaffValue()
             }
           });
 
           $('#authority_external_staff').change(function() {
             if ($('#authority_external_staff').prop("checked")) {
+              if (fromAuthorityContractStaff) {
+                assignData()
+              }
               resetStaffValue()
             }
           });
 
           $('#authority_contract_staff').change(function() {
             if ($('#authority_contract_staff').prop("checked")) {
+              data = saveData()
+              fromAuthorityContractStaff = true
               resetContractStaffValue()
             }
           });
@@ -378,6 +394,58 @@
             $('#is_contract_edit').prop('disabled', true);
             $('#is_contract_upload').prop('disabled', true);
           }
+
+          function saveData() {
+            let data = {
+              is_hospital_none: $('#is_hospital_none').prop('checked'),
+              is_hospital_view: $('#is_hospital_view').prop('checked'),
+              is_hospital_edit: $('#is_hospital_edit').prop('checked'),
+              is_staff_none: $('#is_staff_none').prop('checked'),
+              is_staff_view: $('#is_staff_view').prop('checked'),
+              is_staff_edit: $('#is_staff_edit').prop('checked'),
+              is_cource_classification_none: $('#is_cource_classification_none').prop('checked'),
+              is_cource_classification_view: $('#is_cource_classification_view').prop('checked'),
+              is_cource_classification_edit: $('#is_cource_classification_edit').prop('checked'),
+              is_invoice_none: $('#is_invoice_none').prop('checked'),
+              is_invoice_view: $('#is_invoice_view').prop('checked'),
+              is_invoice_edit: $('#is_invoice_edit').prop('checked'),
+              is_invoice_upload: $('#is_invoice_upload').prop('checked'),
+              is_pre_account_none: $('#is_pre_account_none').prop('checked'),
+              is_pre_account_view: $('#is_pre_account_view').prop('checked'),
+              is_pre_account_edit: $('#is_pre_account_edit').prop('checked'),
+              is_pre_account_upload: $('#is_pre_account_upload').prop('checked'),
+              is_contract_none: $('#is_contract_none').prop('checked'),
+              is_contract_view: $('#is_contract_view').prop('checked'),
+              is_contract_edit: $('#is_contract_edit').prop('checked'),
+              is_contract_upload: $('#is_contract_upload').prop('checked')
+            }
+            return data;
+          }
+
+          function assignData() {
+            $('#is_hospital_none').prop('checked', data.is_hospital_none)
+            $('#is_hospital_view').prop('checked', data.is_hospital_view)
+            $('#is_hospital_edit').prop('checked', data.is_hospital_edit)
+            $('#is_staff_none').prop('checked', data.is_staff_none)
+            $('#is_staff_view').prop('checked', data.is_staff_view)
+            $('#is_staff_edit').prop('checked', data.is_staff_edit)
+            $('#is_cource_classification_none').prop('checked', data.is_cource_classification_none)
+            $('#is_cource_classification_view').prop('checked', data.is_cource_classification_view)
+            $('#is_cource_classification_edit').prop('checked', data.is_cource_classification_edit)
+            $('#is_invoice_none').prop('checked', data.is_invoice_none)
+            $('#is_invoice_view').prop('checked', data.is_invoice_view)
+            $('#is_invoice_edit').prop('checked', data.is_invoice_edit)
+            $('#is_invoice_upload').prop('checked', data.is_invoice_upload)
+            $('#is_pre_account_none').prop('checked', data.is_pre_account_none)
+            $('#is_pre_account_view').prop('checked', data.is_pre_account_view)
+            $('#is_pre_account_edit').prop('checked', data.is_pre_account_edit)
+            $('#is_pre_account_upload').prop('checked', data.is_pre_account_upload)
+            $('#is_contract_none').prop('checked', data.is_contract_none)
+            $('#is_contract_view').prop('checked', data.is_contract_view)
+            $('#is_contract_edit').prop('checked', data.is_contract_edit)
+            $('#is_contract_upload').prop('checked', data.is_contract_upload)
+          }
+
         })();
 
       })(jQuery);
