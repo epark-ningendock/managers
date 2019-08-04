@@ -2626,7 +2626,7 @@ label {
   border-color: #3197EE;
 }
 
-.form-entry .radio input[type="radio"]:checked:disabled + .radio-label:before {
+.form-entry .radio input[type="radio"]:disabled + .radio-label:before {
   -webkit-box-shadow: inset 0 0 0 4px #f4f4f4;
           box-shadow: inset 0 0 0 4px #f4f4f4;
   border-color: #b4b4b4;
@@ -2949,5 +2949,18 @@ label.file-upload input[type="file"] {
 .open_close_tab {
   position: relative;
   padding: 0 0 40px 0;
+}
+
+#calendar_box .calendar-period {
+  background: #eeeeee;
+  line-height: 50px;
+  text-indent: 20px;
+  font-weight: 500;
+  font-size: 1.2em;
+  margin: -19px 0 0 0;
+}
+
+#calendar_box .bulk_update h2 {
+  margin: 24px 0 20px 0;
 }
 

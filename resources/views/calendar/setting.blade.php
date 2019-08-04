@@ -11,26 +11,27 @@
   <h1>    
     <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
     -
-    <i class="fa fa-calendar"> カレンダー管理</i>
+    <span>カレンダー管理</span>
   </h1>
 @stop
 
-@section('form')
+<div id="calendar_box">
+  @section('form')
   <form method="POST" action="{{ route('calendar.setting', $calendar->id) }}">
     {!! csrf_field() !!}
     {!! method_field('PATCH') !!}
     <input type="hidden" name="lock_version" value="{{ $calendar->lock_version or '' }}" />
     <div class="box-body">
       <div class="form-group">
-        <h4>カレンダー名 <span class="ml-2 mr-2"> : </span> {{ $calendar->name }}</h4>
+        <h2>カレンダー名 <span class="ml-2 mr-2"> : </span> {{ $calendar->name }}</h2>
       </div>
-      <h4>期間 <span class="ml-2 mr-2"> : </span> {{ $start->format('Y/m/d').' ~ '.$end->format('Y/m/d') }}</h4>
+      <p class="calendar-period">期間 <span class="ml-2 mr-2"> : </span> {{ $start->format('Y/m/d').' ~ '.$end->format('Y/m/d') }}</p>
       {!! csrf_field() !!}
-      <hr>
-      <h4>一括反映</h4>
+    <div class="bulk_update">
+    <h2>一括反映<span>曜日ごとに予約可能な件数を入力してください。</span></h2>
       <div class="row">
-        <div class="col-md-6">
-          <table class="table table-bordered top-table">
+        <div class="col-md-8">
+          <table class="table table-bordered top-table no-border">
             <thead>
             <tr>
               <th class="text-red">日</th>
@@ -114,30 +115,29 @@
           </table>
         </div>
 
-        <div class="col-md-3">
-          <table class="table table-borderless">
-            <tr class="month-week">
-              <td>
-                <h4>対象月</h4>
-                <label><input type="checkbox" id="all-month"/> すべて選択</label>
-                @foreach($months->keys() as $index => $month)
+          <div class="col-md-2">
+              <h3>対象月</h3>
+              <label><input type="checkbox" id="all-month"/> すべて選択</label>
+              @foreach($months->keys() as $index => $month)
                   <label><input type="checkbox" id="month-{{ $index }}" class="month" data-index="{{ $index }}"/> {{ $month }}</label>
-                @endforeach
-              </td>
-              <td>
-                <h4>対象週</h4>
-                <label><input type="checkbox" class="week" id="all-week" /> すべて選択</label>
-                <label><input type="checkbox" class="week" id="week-1" /> 第1 (1日~7日)</label>
-                <label><input type="checkbox" class="week" id="week-2" /> 第2 (8日~14日)</label>
-                <label><input type="checkbox" class="week" id="week-3" /> 第3 (15日~21日)</label>
-                <label><input type="checkbox" class="week" id="week-4" /> 第4 (22日~28日)</label>
-                <label><input type="checkbox" class="week" id="week-5" /> 第5 (29日~)</label>
-              </td>
-            </tr>
-          </table>
+              @endforeach
+          </div>
+
+          <div class="col-md-2">
+              <h3>対象週</h3>
+              <label><input type="checkbox" class="week" id="all-week" /> すべて選択</label>
+              <label><input type="checkbox" class="week" id="week-1" /> 第1 (1日~7日)</label>
+              <label><input type="checkbox" class="week" id="week-2" /> 第2 (8日~14日)</label>
+              <label><input type="checkbox" class="week" id="week-3" /> 第3 (15日~21日)</label>
+              <label><input type="checkbox" class="week" id="week-4" /> 第4 (22日~28日)</label>
+              <label><input type="checkbox" class="week" id="week-5" /> 第5 (29日~)</label>
+          </div>
+        </div>
+        <div class="footer-submit">
           <button class="btn btn-primary pull-right" id="bulk-update">一括反映</button>
         </div>
       </div>
+    </div>
       <hr />
 
       <div class="row">
@@ -240,9 +240,8 @@
         <button class="btn btn-primary" id="reset-data">設定のクリア</button>
         <button class="btn btn-primary" id="clear-data">登録する</button>
       </div>
-    </div>
   </form>
-
+</div>
   <style>
     .top-table td, .top-table th, .calendar-table th {
       text-align: center;
