@@ -181,6 +181,7 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     | Customer Routes
     |--------------------------------------------------------------------------
     */
+    Route::post('customer/email-history/{customer_id}', 'CustomerController@email_history')->name('customer.email.history');
     Route::resource('customer', 'CustomerController');
     Route::post('customer/detail', 'CustomerController@detail')->name('customer.detail');
     //Route::get('customer/basic-information', 'CustomerController@basicInformationCreate');

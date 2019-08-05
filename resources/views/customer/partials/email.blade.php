@@ -20,17 +20,6 @@
                 </td>
             </tr>
 
-            {{-- <tr>
-                <td class="gray-cell-bg">
-                    <label for="appointed_submissions">{{ __('任命された応募') }}</label>
-                </td>
-                <td>
-                    <div class="form-group">
-                        <input type="text" class="form-control" name="appointed_submissions" id="appointed_submissions" />
-                    </div>
-                </td>
-            </tr> --}}
-
             <tr>
                 <td class="gray-cell-bg">
                     <label>{{ __('差出人名') }}</label>
@@ -93,23 +82,23 @@
                     </div>
                 </td>
             </tr>
-
-
-
-
         </table>
 
-
-
-        <div class="text-center mb-5 pb-5">
-            <button type="submit" class="btn btn-primary btn-lg">{{trans('messages.send_email') }}</button>
-        </div>
-
-        <div class="text-center mt-0">
-            <button type="button" class="btn btn-default cancel-btn" data-dismiss="modal">{{ trans('close') }}</button>
+        <div class="text-center mb-5">
+            <button type="submit" class="btn btn-primary btn-lg" id="btn-send">{{trans('messages.send_email') }}</button>
         </div>
 
     </form>
+
+    <div class="mail-history">
+        @include('customer.partials.email-history')
+    </div>
+
+
+    <div class="text-center mt-0">
+        <button type="button" class="btn btn-default cancel-btn" data-dismiss="modal">{{ trans('close') }}</button>
+    </div>
+
 </div>
 
 <script type="text/javascript">
@@ -149,7 +138,7 @@
             $('#email-form').submit(function(event) {
                 event.preventDefault();
                 event.stopPropagation();
-
+                $('#btn-send').html("{{ trans('messages.sending_email') }}").prop('disabled', true);
                 $.ajax({
                     url: $('#email-form').attr('action'),
                     method: 'post',
@@ -170,7 +159,9 @@
                                 scrollTop: 0
                             }, 300);
 
-                            $('.alert-success').fadeOut(2000);
+                            $('.alert-success').fadeOut(2000, function() {
+                                $('.alert-success').remove();
+                            });
 
                         } else {
                             // error message processing for each control
@@ -186,8 +177,10 @@
 
                             });
                         }
+                    },
+                    complete: function() {
+                        $('#btn-send').html("{{trans('messages.send_email') }}").prop('disabled', false);
                     }
-
                 });
             });
         })();

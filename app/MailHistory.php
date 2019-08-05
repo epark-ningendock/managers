@@ -15,6 +15,8 @@ class MailHistory extends SoftDeleteModel
         'customer_id'
     ];
 
+    protected $dates = [ 'sent_datetime' ];
+
     protected static function boot()
     {
         parent::boot();

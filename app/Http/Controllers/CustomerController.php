@@ -123,12 +123,16 @@ class CustomerController extends Controller
         $email_templates = EmailTemplate::where('hospital_id', session()->get('hospital_id'))->get()->toArray();
         $customer = Customer::findOrFail($customer_id);
         $hospital = Hospital::findOrFail(session()->get('hospital_id'));
-        
+
+        $mail_histories = MailHistory::where('customer_id', $customer_id)->orderBy('sent_datetime', 'DESC')->paginate(10);
+
         return response()->json([
             'data' => view('customer.partials.email', [
                 'customer' => $customer,
                 'hospital' => $hospital,
-                'email_templates' => $email_templates
+                'email_templates' => $email_templates,
+                'customer_id' => $customer_id,
+                'mail_histories' => $mail_histories
             ])->render(),
         ]);
     }
@@ -162,5 +166,17 @@ class CustomerController extends Controller
         $mail_history->save();
 
         return response()->json(['success' => trans('messages.sent', [ 'mail' => trans('messages.mails.customer') ])]);
+    }
+
+    public function email_history($customer_id, Request $request){
+        $record_per_page = $request->input('record_per_page', 10);
+        $mail_histories = MailHistory::where('customer_id', $customer_id)->orderBy('sent_datetime', 'DESC')->paginate($record_per_page);
+        return response()->json([
+            'data' => view('customer.partials.email-history', [
+                'customer_id' => $customer_id,
+                'mail_histories' => $mail_histories,
+                'record_per_page' => $record_per_page
+            ])->render(),
+        ]);
     }
 }

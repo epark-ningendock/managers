@@ -149,6 +149,7 @@ return [
     'prefectures'                          => '都道府県',
     'update'                               => '更新',
     'send_email'                           => 'メールを送る',
+    'sending_email'                        => '送信...',
     'close'                                => '閉じる',
     'calendar'                             => 'カレンダー',
     'email_template'                       => 'メールテンプレート',
@@ -156,7 +157,9 @@ return [
     'mails' => [
         'reset_passoword' => 'パスワードリセットメール',
         'registered' => 'スタッフ登録メール',
-        'customer' => '顧客メール'
+        'customer' => '顧客メール',
+        'sent_datetime' => '送信日時',
+        'title' => 'メール件名'
     ],
     'option_name' => 'オプション名',
     'option_description' => 'オプションの説明',
