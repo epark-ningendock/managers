@@ -5,8 +5,6 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\Jobs\PvAggregateJob;
-use phpDocumentor\Reflection\Types\Boolean;
-use Yasumi\tests\Brazil\CarnavalTuesdayTest;
 
 class PvAggregateCommand extends Command
 {
@@ -37,7 +35,7 @@ class PvAggregateCommand extends Command
 
     }
 
-    public function queue(int $aggregateDay, bool $deleteFlg)
+    public function queue(Carbon $aggregateDay, bool $deleteFlg)
     {
         $job = (new PvAggregateJob($aggregateDay, $deleteFlg))->onQueue('pv-aggregate');
         dispatch($job);
