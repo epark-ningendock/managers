@@ -16,7 +16,7 @@
                     <option></option>
                     @foreach($courses as $course)
                         <option value="{{ $course->id }}" data-price="{{ $course->price }}"
-                                @if(old('course_id', isset($reservation) ? $reservation->course_id : null) == $course->id) selected @endif>{{ $course->name }}</option>
+                                @if(old('course_id') == $course->id) selected @endif>{{ $course->name }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif
@@ -36,7 +36,7 @@
             <div class="form-group sm-form-group @if ($errors->has('tax_included_price')) has-error @endif" style="margin-right: 21px;">
                 <input type="number" class="form-control" name="tax_included_price"
                        id="tax_included_price" placeholder="コース料金"
-                       value="{{ old('tax_included_price', isset($reservation->tax_included_price) ? $reservation->tax_included_price : null) }}"/> <span
+                       value="{{ old('tax_included_price') }}"/> <span
                         class="ml-2" style="position: absolute;top: 0;right: -20px;">円</span>
                 @if ($errors->has('tax_included_price')) <p class="help-block">{{ $errors->first('tax_included_price') }}</p> @endif
             </div>          
@@ -95,7 +95,7 @@
         <div class="col-md-9">
             <div class="form-group sm-form-group @if ($errors->has('adjustment_price')) has-error @endif" style="margin-right: 21px;">
                     <input type="number" class="form-control" name="adjustment_price" id="adjustment_price" placeholder="調整額"
-                           value="{{ old('adjustment_price', isset($reservation) ? $reservation->adjustment_price : null) }}"/>
+                           value="{{ old('adjustment_price') }}"/>
                     <span class="ml-2" style="position: absolute;top: 0;right: -20px;">円</span>
                 @if ($errors->has('adjustment_price')) <p class="help-block">{{ $errors->first('adjustment_price') }}</p> @endif
             </div>
@@ -208,7 +208,7 @@
                         <label for="family_name">姓</label>
                         <input type="text" class="form-control" name="family_name" style="width: 90%;display: inline-block"
                                id="family_name" placeholder=""
-                               value="{{ old('family_name', isset($reservation) ? $reservation->family_name : null) }}" readonly />
+                               value="{{ old('family_name') }}" readonly />
                         @if ($errors->has('family_name')) <p class="help-block">{{ $errors->first('family_name') }}</p> @endif
                     </div>
                 </div>
@@ -217,7 +217,7 @@
                         <label for="first_name">名</label>
                         <input type="text" class="form-control" name="first_name" style="width: 90%;display: inline-block"
                                id="first_name" placeholder=""
-                               value="{{ old('first_name', isset($reservation) ? $reservation->first_name : null) }}" readonly />
+                               value="{{ old('first_name') }}" readonly />
                         @if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
                     </div>
                 </div>
@@ -240,7 +240,7 @@
                         <span>姓</span>
                         <input type="text" class="form-control" name="family_name_kana" style="width: 90%;display: inline-block"
                                id="family_name_kana" placeholder=""
-                               value="{{ old('family_name_kana', isset($reservation) ? $reservation->family_name_kana : null) }}" readonly />
+                               value="{{ old('family_name_kana') }}" readonly />
                         @if ($errors->has('family_name_kana')) <p class="help-block">{{ $errors->first('family_name_kana') }}</p> @endif
                     </div>
                 </div>
@@ -249,7 +249,7 @@
                         <span>名</span>
                         <input type="text" class="form-control" name="first_name_kana" style="width: 90%;display: inline-block"
                                id="first_name_kana" placeholder=""
-                               value="{{ old('first_name_kana', isset($reservation) ? $reservation->first_name_kana : null) }}" readonly />
+                               value="{{ old('first_name_kana') }}" readonly />
                         @if ($errors->has('first_name_kana')) <p class="help-block">{{ $errors->first('first_name_kana') }}</p> @endif
                     </div>
                 </div>
@@ -270,7 +270,7 @@
                 <span>名</span>
                 <input type="text" class="form-control" name="tel" style="width: 90%;display: inline-block"
                        id="tel" placeholder=""
-                       value="{{ old('tel', isset($reservation) ? $reservation->tel : null) }}"/>
+                       value="{{ old('tel') }}"/>
                 @if ($errors->has('tel')) <p class="help-block">{{ $errors->first('tel') }}</p> @endif
             </div>
         </div>
@@ -288,7 +288,7 @@
                 <span>名</span>
                 <input type="text" class="form-control" name="registration_card_number" style="width: 90%;display: inline-block"
                        id="registration_card_number" placeholder=""
-                       value="{{ old('registration_card_number', isset($reservation) ? $reservation->registration_card_number : null) }}" readonly />
+                       value="{{ old('registration_card_number') }}" readonly />
                 @if ($errors->has('registration_card_number')) <p class="help-block">{{ $errors->first('registration_card_number') }}</p> @endif
             </div>
         </div>

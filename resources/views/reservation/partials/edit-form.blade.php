@@ -19,7 +19,7 @@
                     <option></option>
                     @foreach($courses as $course)
                         <option value="{{ $course->id }}" data-price="{{ $course->price }}"
-                                @if(old('course_id', isset($reservation) ? $reservation->course_id : null) == $course->id) selected @endif>{{ $course->name }}</option>
+                                @if(old('course_id', $reservation->course_id or null) == $course->id) selected @endif>{{ $course->name }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif
@@ -39,7 +39,7 @@
             <div class="form-group sm-form-group @if ($errors->has('tax_included_price')) has-error @endif" style="margin-right: 21px;">
                 <input type="number" class="form-control" name="tax_included_price"
                        id="tax_included_price" placeholder="コース料金"
-                       value="{{ old('tax_included_price', isset($reservation->tax_included_price) ? $reservation->tax_included_price : null) }}"/> <span
+                       value="{{ old('tax_included_price', $reservation->tax_included_price or null) }}"/> <span
                         class="ml-2" style="position: absolute;top: 0;right: -20px;">円</span>
                 @if ($errors->has('tax_included_price')) <p class="help-block">{{ $errors->first('tax_included_price') }}</p> @endif
             </div>
@@ -98,7 +98,7 @@
         <div class="col-md-9">
             <div class="form-group sm-form-group @if ($errors->has('adjustment_price')) has-error @endif" style="margin-right: 21px;">
                 <input type="number" class="form-control" name="adjustment_price" id="adjustment_price" placeholder="調整額"
-                       value="{{ old('adjustment_price', isset($reservation) ? $reservation->adjustment_price : null) }}"/>
+                       value="{{ old('adjustment_price',  $reservation->adjustment_price or null) }}"/>
                 <span class="ml-2" style="position: absolute;top: 0;right: -20px;">円</span>
                 @if ($errors->has('adjustment_price')) <p class="help-block">{{ $errors->first('adjustment_price') }}</p> @endif
             </div>
@@ -127,7 +127,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{ (isset($reservation->payment_status) ) ? $reservation->payment_status : '-' }}</span>
+            <span id="total" class="ml-2">{{  $reservation->payment_status or '-' }}</span>
         </div>
 
     </div>
@@ -139,7 +139,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{ (isset($reservation->card_payment_amount) ) ? $reservation->card_payment_amount : '-' }}</span>
+            <span id="total" class="ml-2">{{ $reservation->card_payment_amount or '-' }}</span>
         </div>
 
     </div>
@@ -152,7 +152,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{ (isset($reservation->cashpo_used_price) ) ? $reservation->cashpo_used_price : '-' }}</span>
+            <span id="total" class="ml-2">{{  $reservation->cashpo_used_price or '-' }}</span>
         </div>
 
     </div>
@@ -203,7 +203,7 @@
                         @for ( $x = 0; $x < 24; $x++)
                             <option
                                     value="{{ ( $x < 10 ) ? '0'.$x :  $x }}"
-                                    @if ( old('start_time_hour', (isset($reservation->start_time_hour)) ? $reservation->start_time_hour : '') == (( $x < 10 ) ? '0'.$x :  $x))
+                                    @if ( old('start_time_hour', $reservation->start_time_hour or '') == (( $x < 10 ) ? '0'.$x :  $x))
                                     selected="selected"
                                     @endif
 
@@ -218,7 +218,7 @@
                         @for ( $x = 0; $x < 61; $x++)
                             <option
                                     value="{{ ( $x < 10 ) ? '0'.$x :  $x }}"
-                                    @if ( old('start_time_min', (isset($reservation->start_time_min)) ? $reservation->start_time_min : '') == (( $x < 10 ) ? '0'.$x :  $x))
+                                    @if ( old('start_time_min', $reservation->start_time_min or '') == (( $x < 10 ) ? '0'.$x :  $x))
                                     selected="selected"
                                     @endif
                             >{{ ( $x < 10 ) ? '0'.$x :  $x }}</option>
@@ -237,7 +237,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="second_date" class="ml-2">{{ ( isset($reservation->second_date) ) ? $reservation->second_date: '-' }}</span>
+            <span id="second_date" class="ml-2">{{ $reservation->second_date or '-' }}</span>
         </div>
 
     </div>
@@ -250,7 +250,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="third_date" class="ml-2">{{ ( isset($reservation->third_date) ) ? $reservation->third_date: '-' }}</span>
+            <span id="third_date" class="ml-2">{{  $reservation->third_date or '-' }}</span>
         </div>
 
     </div>
@@ -263,7 +263,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="acceptance_number" class="ml-2">{{ ( isset($reservation->acceptance_number) ) ? $reservation->acceptance_number: '-' }}</span>
+            <span id="acceptance_number" class="ml-2">{{ $reservation->acceptance_number or '-' }}</span>
         </div>
 
     </div>
@@ -276,7 +276,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="terminal_type" class="ml-2">{{ ( isset($reservation->terminal_type) ) ? $reservation->terminal_type: '-' }}</span>
+            <span id="terminal_type" class="ml-2">{{ $reservation->terminal_type or '-' }}</span>
         </div>
 
     </div>
@@ -377,8 +377,8 @@
 
         <div class="col-md-9">
             <span id="" class="ml-2">
-                {{ (isset($reservation->customer->family_name)) ? $reservation->customer->family_name : '' }}
-                {{ (isset($reservation->customer->first_name) ) ? $reservation->customer->first_name : '' }}
+                {{  $reservation->customer->family_name or '-' }}
+                {{  $reservation->customer->first_name or '-' }}
             </span>
         </div>
 
@@ -393,7 +393,7 @@
 
         <div class="col-md-9">
             <span id="" class="ml-2">
-                {{ ( isset($reservation->customer->tel)) ? $reservation->customer->tel : '-' }}
+                {{ $reservation->customer->tel or '-' }}
             </span>
         </div>
 
@@ -408,7 +408,7 @@
 
         <div class="col-md-9">
             <span id="" class="ml-2">
-                {{ isset($reservation->is_representative) ? $reservation->is_representative : '-' }}
+                {{  $reservation->is_representative or '-' }}
             </span>
         </div>
 
@@ -423,7 +423,7 @@
 
         <div class="col-md-9">
             <span id="" class="ml-2">
-                {{ (isset($reservation->customer->registration_card_number)) ? $reservation->customer->registration_card_number : '-' }}
+                {{  $reservation->customer->registration_card_number or '-' }}
             </span>
         </div>
 
@@ -470,7 +470,7 @@
 
         <div class="col-md-9">
             <span id="" class="ml-2">
-                {{ (isset($reservation->customer->address)) ? $reservation->customer->address : '-' }}
+                {{$reservation->customer->address or '-' }}
             </span>
         </div>
 
@@ -485,7 +485,7 @@
 
         <div class="col-md-9">
             <span id="" class="ml-2">
-                {{ (isset($reservation->is_repeat) ) ? $reservation->is_repeat : '-' }}
+                {{ $reservation->is_repeat or '-' }}
             </span>
         </div>
 
