@@ -503,14 +503,13 @@ class ReservationController extends Controller
             $reservation = new Reservation();
             $reservation = $reservation->create(request()->all());
 
-            DB::commit();
-
             $this->reservationCourseOptionSaveOrUpdate($request, $reservation);
-
 
             $this->reservationAnswerCreate($request, $reservation);
 
-            return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
+            DB::commit();
+
+            return redirect('reception')->with('success', trans('messages.reservation.complete_success'));
 
         } catch (\Exception $i) {
             dd($i);
