@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             TaxClassesTableSeeder::class,
             ImageOrdersTableSeeder::class,
             CalendarsTableSeeder::class,
+	        CalendarDaysTableSeeder::class,
             CoursesTableSeeder::class,
             EmailTemplatesTableSeeder::class,
             ReceprionEmailSettingsTableSeeder::class,

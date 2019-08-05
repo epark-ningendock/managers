@@ -186,7 +186,7 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting');
     Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting');
     Route::resource('/calendar', 'CalendarController')->except(['show']);
-    Route::get('courses/{course_id}reservation-days', 'CalendarController@reservationDays')->name('course.reservation.days');
+    Route::get('courses/{course_id}/reservation-days', 'CalendarController@reservationDays')->name('course.reservation.days');
 
     /*
     |--------------------------------------------------------------------------
@@ -219,3 +219,4 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
 
 
 });
+Route::get('/ok', 'CalendarController@showCalendarGenerator');
