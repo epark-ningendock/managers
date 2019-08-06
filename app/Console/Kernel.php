@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\PvAggregateCommand::class,
         Commands\TemporaryReservationCheckCommand::class,
+        Commands\ClaimRecordCreateCommand::class,
     ];
 
     /**
@@ -27,6 +28,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('pv-aggregate')->dailyAt('02:00');
         $schedule->command('temporary-reservation-check')->dailyAt('06:30');
+        $schedule->command('claim-record-create')->monthlyOn(21, '05:00');
     }
 
     /**
