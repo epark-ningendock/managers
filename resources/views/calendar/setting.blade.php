@@ -98,7 +98,7 @@
             </ul>
         </div>
         <div class="to-month">
-              <h2>対象月<span>設定する月をチェックしてください</span></h2>
+              <h2>対象月<span>設定する月をチェックをしてください</span></h2>
               <p><input type="checkbox" id="all-month"/> <label for="all-month">すべて選択</label></p>
               @foreach($months->keys() as $index => $month)
                   <p><input type="checkbox" id="month-{{ $index }}" class="month" data-index="{{ $index }}"/><label for="month-{{ $index }}">{{ $month }}</label></p>

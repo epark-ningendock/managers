@@ -3031,7 +3031,7 @@ label.file-upload input[type="file"] {
 
 #calendar_bulk_box li {
   display: inline-block;
-  margin: 0 18px 0 0;
+  margin: 10px 18px 0 0;
 }
 
 #calendar_bulk_box .bulk-weekday label[for="saturday-frame"] {
@@ -3115,5 +3115,20 @@ label.file-upload input[type="file"] {
 
 #calendar_bulk_box .day-label {
   font-weight: bold;
+}
+
+#calendar_bulk_box .pagenate .page-link {
+  text-align: center;
+  margin: 60px auto 20px auto;
+}
+
+.box-footer {
+  text-align: center;
+}
+
+.clearfix::after {
+  content: "";
+  display: block;
+  clear: both;
 }
 

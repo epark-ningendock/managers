@@ -745,7 +745,7 @@ label.file-upload input[type="file"] {
   }
   li {
     display: inline-block;
-    margin: 0 18px 0 0;
+    margin: 10px 18px 0 0;
   }
   .bulk-weekday {
     label[for="saturday-frame"] {
@@ -814,5 +814,21 @@ label.file-upload input[type="file"] {
   .day-label {
     font-weight: bold;
   }
+  .pagenate {
+    .page-link {
+      text-align: center;
+      margin: 60px auto 20px auto;
+    }
+  }
+}
+.box-footer {
+  text-align: center;
+}
+
+
+.clearfix::after {
+  content: "";
+  display: block;
+  clear: both;
 }
 
