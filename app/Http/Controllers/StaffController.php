@@ -179,8 +179,8 @@ class StaffController extends Controller
 
             $staff->update($request->only(['name', 'login_id', 'email', 'authority', 'status', 'department_id']));
             $staff->save();
-
-            $staff->staff_auth()->update($request->only(['is_hospital', 'is_staff', 'is_cource_classification', 'is_invoice', 'is_pre_account', 'is_contract']));
+            
+            $staff->staff_auth()->update($staff_auths);
 
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.staff')]));
             DB::commit();
@@ -215,8 +215,8 @@ class StaffController extends Controller
     public function updatePassword($staff_id, Request $request)
     {
         $this->validate($request, [
-            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
-            'password_confirmation' => 'min:8|max:20'
+            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation|regex:/^[-_@\.a-zA-Z0-9]+$/',
+            'password_confirmation' => 'min:8|max:20|regex:/^[-_@\.a-zA-Z0-9]+$/'
         ]);
 
         $staff = Staff::findOrFail($staff_id);
@@ -252,8 +252,8 @@ class StaffController extends Controller
     {
         $this->validate($request, [
             'old_password' => 'required',
-            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
-            'password_confirmation' => 'min:8|max:20'
+            'password' => 'min:8|max:20|required_with:password_confirmation|different:old_password|same:password_confirmation|regex:/^[-_@\.a-zA-Z0-9]+$/',
+            'password_confirmation' => 'min:8|max:20|regex:/^[-_@\.a-zA-Z0-9]+$/'
         ]);
 
         $staff = Staff::findOrFail(Auth::user()->id);

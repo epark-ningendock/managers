@@ -27,6 +27,9 @@ Custom CSS
 Custom CSS
 -----------------------------------------------------*/
 
+.content {
+  position: relative;
+}
 .inner-box {
   padding: 30px;
 }
@@ -425,4 +428,243 @@ legend {
   .has-feedback label~.form-control-feedback {
     top: 20px;
   }
+}
+
+/*hospital_image*/
+
+.form-box {
+  padding: 20px;
+}
+
+.form_required {
+  display: inline-block;
+  padding: 1px 3px;
+  margin-left: 9px;
+  background-color: #ea3f60;
+  color: #FFF;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: bold;
+  vertical-align: text-bottom;
+  margin-bottom: -2px;
+}
+.form_label {
+  margin-top: 20px;
+  color: #8C8C8C;
+  font-weight: bolder;
+  display: block;
+}
+
+.interview_list {
+  border-top: 1px dotted #666666;
+  margin: 30px 0 0px 0;
+  padding: 0 0 20px 0;
+}
+
+.tab_name {
+  background: #eeeeee;
+  line-height: 36px;
+  text-indent: 20px;
+  font-weight: 500;
+  margin: 20px 15px 20px 15px;
+}
+
+.box_staff_title {
+  background: #eeeeee;
+  line-height: 36px;
+  text-indent: 20px;
+  font-weight: 500;
+  margin: 20px 0px 20px 0px;
+}
+
+.staff_box {
+  height: 540px;
+  margin-top: 20px;
+}
+
+.main_image_area {
+  position: relative;
+  text-align: center;
+  img {
+  width: 300px;
+  height: 200px;
+  object-fit: cover
+  }
+}
+.sub_image_area {
+  position: relative;
+  text-align: center;
+  img {
+    width: 150px;
+    height: 120px;
+    object-fit: cover
+  }
+}
+
+.staff_image_area {
+  position: relative;
+  text-align: center;
+  img {
+    width: 150px;
+    height: 120px;
+    object-fit: cover
+  }
+}
+
+.interview_image_area {
+  position: relative;
+  text-align: center;
+  img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover
+  }
+}
+
+.speciality_image_area {
+  position: relative;
+  text-align: center;
+  img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover
+  }
+}
+
+.tab_image_area {
+  position: relative;
+  text-align: center;
+  img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover
+  }
+}
+
+.image_area {
+  text-align: center;
+}
+
+.no_image_area img {
+  text-align: center;
+}
+
+label.file-upload {
+  position: relative;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+label.file-upload input[type="file"] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-size: 10px;
+}
+
+.staff_box.show {
+  display:none;
+}
+
+.staff_box.show {
+  display:block;
+}
+
+#staff_section {
+  position: relative;
+  padding-bottom: 100px;
+}
+
+.staff_add,.facility_add,.internal_add,.external_add,.another_add {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+.btn-mini {
+  padding: 5px;
+  font-size: 12px;
+}
+
+.file_delete_text {
+  text-align: left;
+  padding: 10px 0 0 0;
+  font-size: 12px;
+  bottom: 0px;
+}
+.btn-normal{
+  color: #777;
+  background-color: #fff;
+  border-color: #777;
+  text-align: center;
+}
+.error_message {
+  color: red;
+}
+
+.object-fit {
+  width: 50%;
+  height: 100px;
+  object-fit: cover;
+}
+
+.select-tab {
+  background: #fff;
+  padding: 4px 10px 4px 10px;
+  float: right;
+  margin: 3px 6px 0 0;
+}
+
+.form_title {
+  padding-bottom: 8px;
+}
+.form-mini-title {
+  font-size: 16px;
+  margin-left: 5px;
+}
+
+.input_title {
+  font-size: 16px;
+  margin-left: 5px;
+}
+
+.number_circle {
+  width: 24px;
+  height: 24px;
+  background: #757575;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #FFF;
+  float: left;
+  text-align: center;
+  line-height: 24px;
+  vertical-align: middle;
+}
+
+.photo-tab {
+  padding: 20px 30px 0 30px;
+  .col-sm-6 {
+    height: 290px;
+    padding-top: 20px;
+    border-top: #ccc dotted 1px;
+  }
+}
+
+.open_close_tab {
+  position: relative;
+  padding: 0 0 40px 0;
 }

@@ -5,7 +5,6 @@
 @extends('layouts.form')
 
 @section('content_header')
-  @include('layouts.partials.message')
   <h1>    
       <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
       -
