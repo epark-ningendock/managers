@@ -15,9 +15,9 @@
   </h1>
 @stop
 
-<div id="calendar_box">
   @section('form')
   <form method="POST" action="{{ route('calendar.setting', $calendar->id) }}">
+  <div id="calendar_bulk_box">
     {!! csrf_field() !!}
     {!! method_field('PATCH') !!}
     <input type="hidden" name="lock_version" value="{{ $calendar->lock_version or '' }}" />
@@ -25,118 +25,96 @@
       <div class="form-group">
         <h2>カレンダー名 <span class="ml-2 mr-2"> : </span> {{ $calendar->name }}</h2>
       </div>
-      <p class="calendar-period">期間 <span class="ml-2 mr-2"> : </span> {{ $start->format('Y/m/d').' ~ '.$end->format('Y/m/d') }}</p>
+      <p class="calendar-period">期間 <span class="ml-2 mr-2"> : </span> {{ $start->format('Y/m/d').' ~ '.$end->format('Y/m/d') }} <button type="button" id="open-bulk-box" class="btn btn-light"><i class="fa fa-angle-down"></i>一括登録設定</button></p>
       {!! csrf_field() !!}
     <div class="bulk_update">
-    <h2>一括反映<span>曜日ごとに予約可能な件数を入力してください。</span></h2>
-      <div class="row">
-        <div class="col-md-8">
-          <table class="table table-bordered top-table no-border">
-            <thead>
-            <tr>
-              <th class="text-red">日</th>
-              <th>月</th>
-              <th>火</th>
-              <th>水</th>
-              <th>木</th>
-              <th>金</th>
-              <th class="text-blue">土</th>
-              <th class="text-red">祝</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td>
-                <select id="sunday-frame">
-                  <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
-                </select>
-              </td>
-              <td>
-                <select id="monday-frame">
-                  <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
-                </select>
-              </td>
-              <td>
-                <select id="tuesday-frame">
-                  <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
-                </select>
-              </td>
-              <td>
-                <select id="wednesday-frame">
-                  <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
-                </select>
-              </td>
-              <td>
-                <select id="thursday-frame">
-                  <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
-                </select>
-              </td>
-              <td>
-                <select id="friday-frame">
-                  <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
-                </select>
-              </td>
-              <td>
-                <select id="saturday-frame">
-                  <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
-                </select>
-              </td>
-              <td>
-                <select id="holiday-frame">
-                  <option></option>
-                  @foreach(range(0, 99) as $i)
-                    <option>{{ $i }}</option>
-                  @endforeach
-                </select>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+        <h2>予約可能件数 <span>曜日ごとに予約可能な件数を入力してください。</span></h2>
+        <div class="bulk-weekday">
+            <ul>
+                <li><label for="sunday-frame">日</label>
+                    <select id="sunday-frame" class="form-control select-box w4em">
+                        <option></option>
+                        @foreach(range(0, 99) as $i)
+                            <option>{{ $i }}</option>
+                        @endforeach
+                    </select>
+                </li>
+                <li><label for="monday-frame">月</label>
+                    <select id="monday-frame" class="form-control select-box w4em">
+                        <option></option>
+                        @foreach(range(0, 99) as $i)
+                            <option>{{ $i }}</option>
+                        @endforeach
+                    </select>
+                </li>
+                <li><label for="tuesday-frame">火</label>
+                    <select id="tuesday-frame" class="form-control select-box w4em">
+                        <option></option>
+                        @foreach(range(0, 99) as $i)
+                            <option>{{ $i }}</option>
+                        @endforeach
+                    </select>
+                </li>
+                <li><label for="wednesday-frame">水</label>
+                    <select id="wednesday-frame" class="form-control select-box w4em">
+                        <option></option>
+                        @foreach(range(0, 99) as $i)
+                            <option>{{ $i }}</option>
+                        @endforeach
+                    </select>
+                </li>
+                <li><label for="thursday-frame">木</label>
+                    <select id="thursday-frame" class="form-control select-box w4em">
+                        <option></option>
+                        @foreach(range(0, 99) as $i)
+                            <option>{{ $i }}</option>
+                        @endforeach
+                    </select>
+                </li>
+                <li><label for="friday-frame">金</label>
+                    <select id="friday-frame" class="form-control select-box w4em">
+                        <option></option>
+                        @foreach(range(0, 99) as $i)
+                            <option>{{ $i }}</option>
+                        @endforeach
+                    </select>
+                </li>
+                <li><label for="saturday-frame">土</label>
+                    <select id="saturday-frame" class="form-control select-box w4em">
+                        <option></option>
+                        @foreach(range(0, 99) as $i)
+                            <option>{{ $i }}</option>
+                        @endforeach
+                    </select>
+                </li>
+                <li><label for="holiday-frame">祝</label>
+                    <select id="holiday-frame" class="form-control select-box w4em">
+                        <option></option>
+                        @foreach(range(0, 99) as $i)
+                            <option>{{ $i }}</option>
+                        @endforeach
+                    </select>
+                </li>
+            </ul>
         </div>
-
-          <div class="col-md-2">
-              <h3>対象月</h3>
-              <label><input type="checkbox" id="all-month"/> すべて選択</label>
+        <div class="to-month">
+              <h2>対象月<span>設定する月をチェックしてください</span></h2>
+              <p><input type="checkbox" id="all-month"/> <label for="all-month">すべて選択</label></p>
               @foreach($months->keys() as $index => $month)
-                  <label><input type="checkbox" id="month-{{ $index }}" class="month" data-index="{{ $index }}"/> {{ $month }}</label>
+                  <p><input type="checkbox" id="month-{{ $index }}" class="month" data-index="{{ $index }}"/><label for="month-{{ $index }}">{{ $month }}</label></p>
               @endforeach
           </div>
-
-          <div class="col-md-2">
-              <h3>対象週</h3>
-              <label><input type="checkbox" class="week" id="all-week" /> すべて選択</label>
-              <label><input type="checkbox" class="week" id="week-1" /> 第1 (1日~7日)</label>
-              <label><input type="checkbox" class="week" id="week-2" /> 第2 (8日~14日)</label>
-              <label><input type="checkbox" class="week" id="week-3" /> 第3 (15日~21日)</label>
-              <label><input type="checkbox" class="week" id="week-4" /> 第4 (22日~28日)</label>
-              <label><input type="checkbox" class="week" id="week-5" /> 第5 (29日~)</label>
+        <div class="to-week">
+              <h2>対象週<span>設定する週をチェックしてください</span></h2>
+              <p><input type="checkbox" class="week" id="all-week" /><label for="all-week"> すべて選択</label></p>
+              <p><input type="checkbox" class="week" id="week-1" /> <label for="week-1">第1 (1日~7日)</label></p>
+              <p><input type="checkbox" class="week" id="week-2" /> <label for="week-2">第2 (8日~14日)</label></p>
+              <p><input type="checkbox" class="week" id="week-3" /> <label for="week-3">第3 (15日~21日)</label></p>
+              <p><input type="checkbox" class="week" id="week-4" /> <label for="week-4">第4 (22日~28日)</label></p>
+              <p><input type="checkbox" class="week" id="week-5" /> <label for="week-5">第5 (29日~)</label></p>
           </div>
-        </div>
-        <div class="footer-submit">
-          <button class="btn btn-primary pull-right" id="bulk-update">一括反映</button>
-        </div>
-      </div>
+        <button class="btn btn-primary pull-right" id="bulk-update">一括反映</button>
+    </div>
     </div>
       <hr />
 

@@ -277,6 +277,12 @@ label {
 .form-control{
   border-radius: 3px;
   font-weight: normal;
+  &.w4em {
+    width: 4em;
+  }
+  &.w8em {
+    width: 8em;
+  }
   &.w16em {
     width: 16em;
   }
@@ -677,7 +683,7 @@ label.file-upload input[type="file"] {
   padding: 0 0 40px 0;
 }
 
-#calendar_box {
+#calendar_bulk_box {
   .calendar-period {
     background: #eeeeee;
     line-height: 50px;
@@ -685,10 +691,128 @@ label.file-upload input[type="file"] {
     font-weight: 500;
     font-size: 1.2em;
     margin: -19px 0 0 0;
+    position: relative;
   }
-  .bulk_update {
-    h2 {
-      margin: 24px 0 20px 0;
+  #open-bulk-box {
+    border: 1px solid #ccc;
+    background: #fff;
+    font-size: 0.8em;
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    i {
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-right: 10px;
+      vertical-align: middle;
     }
   }
+  .bulk_update {
+    display: none;
+    width: 80%;
+    margin: 0 auto;
+    h2 {
+      margin: 24px 0 20px 0;
+      span {
+        font-size: 0.6em;
+        padding-left: 20px;
+      }
+    }
+
+  }
+  .custom-checkbox-area {
+    label {
+      //font-size: 1.2em;
+    }
+  }
+  h3 {
+    color: #777;
+    font-size: 18px;
+    margin: 0;
+  }
+  .to-month {
+    margin: 0 auto;
+    p{
+      display: inline-block;
+      width: 100px;
+    }
+  }
+  .to-week {
+    p{
+      display: inline-block;
+      margin-right: 14px;
+    }
+  }
+  li {
+    display: inline-block;
+    margin: 0 18px 0 0;
+  }
+  .bulk-weekday {
+    label[for="saturday-frame"] {
+      color: #3c8dbc;
+    }
+    label[for="sunday-frame"],label[for="holiday-frame"] {
+      color: #ea3f60;
+    }
+    select {
+      width: 4.3em;
+      display: inline;
+    }
+    label {
+      font-weight: bold;
+    }
+    #bulk-update {
+      clear: both;
+    }
+  }
+  #open-bulk-box {
+  }
+  .calendar-table {
+    a {font-weight: bold}
+  }
+  /*** custom checkboxes ***/
+
+  input[type=checkbox] { display:none; } /* to hide the checkbox itself */
+  input[type=checkbox] + label:before {
+    font-family: FontAwesome;
+    content: "\F096";
+    color: #3c8dbc;
+    text-align: center;
+    display: inline-block;
+    width: 24px;
+    vertical-align: middle;
+    padding: 0px 0 0 0;
+    font-size: 18px;
+    font-weight: bold;
+
+  }
+
+  input[type=checkbox] + label:before { content: "\f096"; color: #3c8dbc} /* unchecked icon */
+  input[type=checkbox] + label:before { letter-spacing: 10px; } /* space between checkbox and label */
+
+  input[type=checkbox]:checked + label:before { content: "\f046"; } /* checked icon */
+  input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow space for check mark */
+
 }
+
+#calendar_bulk_box {
+  h4 {
+    background: #3c8dbc;
+    color: #ffffff;
+    line-height: 2em;
+    margin: 0;
+  }
+  th {
+    background: #eee;
+  }
+  .reservation-count {
+    font-size: 0.8em;
+  }
+  .bg-gray {
+    background-color: #eee !important;
+  }
+  .day-label {
+    font-weight: bold;
+  }
+}
+

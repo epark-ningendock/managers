@@ -2547,6 +2547,14 @@ label {
   font-weight: normal;
 }
 
+.form-control.w4em {
+  width: 4em;
+}
+
+.form-control.w8em {
+  width: 8em;
+}
+
 .form-control.w16em {
   width: 16em;
 }
@@ -2951,16 +2959,161 @@ label.file-upload input[type="file"] {
   padding: 0 0 40px 0;
 }
 
-#calendar_box .calendar-period {
+#calendar_bulk_box {
+  /*** custom checkboxes ***/
+  /* to hide the checkbox itself */
+  /* unchecked icon */
+  /* space between checkbox and label */
+  /* checked icon */
+  /* allow space for check mark */
+}
+
+#calendar_bulk_box .calendar-period {
   background: #eeeeee;
   line-height: 50px;
   text-indent: 20px;
   font-weight: 500;
   font-size: 1.2em;
   margin: -19px 0 0 0;
+  position: relative;
 }
 
-#calendar_box .bulk_update h2 {
+#calendar_bulk_box #open-bulk-box {
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 0.8em;
+  position: absolute;
+  right: 12px;
+  top: 10px;
+}
+
+#calendar_bulk_box #open-bulk-box i {
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+#calendar_bulk_box .bulk_update {
+  display: none;
+  width: 80%;
+  margin: 0 auto;
+}
+
+#calendar_bulk_box .bulk_update h2 {
   margin: 24px 0 20px 0;
+}
+
+#calendar_bulk_box .bulk_update h2 span {
+  font-size: 0.6em;
+  padding-left: 20px;
+}
+
+#calendar_bulk_box h3 {
+  color: #777;
+  font-size: 18px;
+  margin: 0;
+}
+
+#calendar_bulk_box .to-month {
+  margin: 0 auto;
+}
+
+#calendar_bulk_box .to-month p {
+  display: inline-block;
+  width: 100px;
+}
+
+#calendar_bulk_box .to-week p {
+  display: inline-block;
+  margin-right: 14px;
+}
+
+#calendar_bulk_box li {
+  display: inline-block;
+  margin: 0 18px 0 0;
+}
+
+#calendar_bulk_box .bulk-weekday label[for="saturday-frame"] {
+  color: #3c8dbc;
+}
+
+#calendar_bulk_box .bulk-weekday label[for="sunday-frame"],
+#calendar_bulk_box .bulk-weekday label[for="holiday-frame"] {
+  color: #ea3f60;
+}
+
+#calendar_bulk_box .bulk-weekday select {
+  width: 4.3em;
+  display: inline;
+}
+
+#calendar_bulk_box .bulk-weekday label {
+  font-weight: bold;
+}
+
+#calendar_bulk_box .bulk-weekday #bulk-update {
+  clear: both;
+}
+
+#calendar_bulk_box .calendar-table a {
+  font-weight: bold;
+}
+
+#calendar_bulk_box input[type=checkbox] {
+  display: none;
+}
+
+#calendar_bulk_box input[type=checkbox] + label:before {
+  font-family: FontAwesome;
+  content: "\F096";
+  color: #3c8dbc;
+  text-align: center;
+  display: inline-block;
+  width: 24px;
+  vertical-align: middle;
+  padding: 0px 0 0 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#calendar_bulk_box input[type=checkbox] + label:before {
+  content: "\F096";
+  color: #3c8dbc;
+}
+
+#calendar_bulk_box input[type=checkbox] + label:before {
+  letter-spacing: 10px;
+}
+
+#calendar_bulk_box input[type=checkbox]:checked + label:before {
+  content: "\F046";
+}
+
+#calendar_bulk_box input[type=checkbox]:checked + label:before {
+  letter-spacing: 5px;
+}
+
+#calendar_bulk_box h4 {
+  background: #3c8dbc;
+  color: #ffffff;
+  line-height: 2em;
+  margin: 0;
+}
+
+#calendar_bulk_box th {
+  background: #eee;
+}
+
+#calendar_bulk_box .reservation-count {
+  font-size: 0.8em;
+}
+
+#calendar_bulk_box .bg-gray {
+  background-color: #eee !important;
+}
+
+#calendar_bulk_box .day-label {
+  font-weight: bold;
 }
 
