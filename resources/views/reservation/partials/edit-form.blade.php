@@ -438,9 +438,7 @@
 
         <div class="col-md-9">
             <span id="" class="ml-2">
-                @if( isset($reservation->customer->sex) )
                 {{ \App\Enums\Gender::getDescription($reservation->customer->sex) }}
-                    @endif
             </span>
         </div>
 
@@ -455,7 +453,7 @@
 
         <div class="col-md-9">
             <span id="" class="ml-2">
-                {{ (isset($reservation->customer->birthday)) ? $reservation->customer->birthday : '-' }}
+                {{ $reservation->customer->birthday or '-' }}
             </span>
         </div>
 
