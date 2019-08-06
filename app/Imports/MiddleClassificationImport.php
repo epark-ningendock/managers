@@ -2,11 +2,11 @@
 
 namespace App\Imports;
 
-use App\MajorClassification;
+use App\MiddleClassification;
 use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\ToModel;
 
-class MajorClassificationImport extends ImportAbstract implements ToModel
+class MiddleClassificationImport extends ImportAbstract implements ToModel
 {
     /**
      * @param array $row
@@ -15,9 +15,9 @@ class MajorClassificationImport extends ImportAbstract implements ToModel
      */
     public function model(array $row)
     {
-        return new MajorClassification([
-            'id' => $row['item_category_dai_no'],
-            'classification_type_id' => $row['iten_type_no'],
+        return new MiddleClassification([
+            'id' => $row['item_category_chu_no'],
+            'major_classification_id' => $row['item_category_dai_no'],
             'name' => $row['name'],
             'status' => $row['status'],
             'order' => $row['order'],
