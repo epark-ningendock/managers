@@ -5,7 +5,7 @@ namespace App;
 class MiddleClassification extends SoftDeleteModel
 {
     protected $fillable = [
-        'major_classification_id', 'name', 'status', 'order', 'is_icon', 'icon_name'
+        'major_classification_id', 'name', 'status', 'order', 'is_icon', 'icon_name', 'created_at', 'updated_at'
     ];
 
     public function major_classification()
