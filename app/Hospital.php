@@ -62,6 +62,8 @@ class Hospital extends Model
         'is_pre_account',
         'pre_account_discount_rate',
         'pre_account_commission_rate',
+        'created_at',
+        'updated_at',
     ];
 
     /**

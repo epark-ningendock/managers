@@ -3,19 +3,37 @@
 namespace App\Imports;
 
 use App\Hospital;
-use Illuminate\Database\Eloquent\Model;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Row;
 
-class HospitalImport extends ImportAbstract implements ToModel
+class HospitalImport extends ImportAbstract
 {
     /**
-     * @param array $row
-     *
-     * @return Model|null
+     * 旧システムのインポート対象テーブルのプライマリーキーを返す
+     * @return string
      */
-    public function model(array $row)
+    public function getOldPrimaryKeyName(): string
     {
-        return new Hospital([
+        return 'no';
+    }
+
+    /**
+     * 新システムの対象クラス名を返す
+     * @return string
+     */
+    public function getNewClassName(): string
+    {
+        return Hospital::class;
+    }
+
+    /**
+     * @param Row $row
+     * @throws \Exception
+     */
+    public function onRow(Row $row)
+    {
+        $row = $row->toArray();
+
+        $model = new Hospital([
             'name' => $row['name'],
             'kana' => $row['kana'],
             'postcode' => $row['zip'],
@@ -67,6 +85,13 @@ class HospitalImport extends ImportAbstract implements ToModel
             'is_pre_account' => $row['flg_pre_account'],
             'pre_account_discount_rate' => $row['pre_account_discount_rate'],
             'pre_account_commission_rate' => $row['pre_account_commission_rate'],
+            'created_at' => $row['rgst'],
+            'updated_at' => $row['updt'],
         ]);
+        $model->save();
+        if ($row['status'] === 'X') {
+            $model->delete();
+        }
+        $this->setId($model, $row);
     }
 }

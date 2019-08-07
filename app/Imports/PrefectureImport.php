@@ -3,21 +3,48 @@
 namespace App\Imports;
 
 use App\Prefecture;
-use Illuminate\Database\Eloquent\Model;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Row;
 
-class PrefectureImport extends ImportAbstract implements ToModel
+class PrefectureImport extends ImportAbstract
 {
+
     /**
-     * @param array $row
-     *
-     * @return Model|null
+     * 旧システムのインポート対象テーブルのプライマリーキーを返す
+     * @return string
      */
-    public function model(array $row)
+    public function getOldPrimaryKeyName(): string
     {
-        return new Prefecture([
+        return 'pref_no';
+    }
+
+    /**
+     * 新システムの対象クラス名を返す
+     * @return string
+     */
+    public function getNewClassName(): string
+    {
+        return Prefecture::class;
+    }
+
+    /**
+     * @param Row $row
+     * @return mixed
+     * @throws \Exception
+     */
+    public function onRow(Row $row)
+    {
+        $row = $row->toArray();
+
+        $model = new Prefecture([
             'name' => $row['name'],
             'code' => $row['pref_no'],
+            'created_at' => $row['rgst'],
+            'updated_at' => $row['updt'],
         ]);
+        $model->save();
+        if ($row['status'] === 'X') {
+            $model->delete();
+        }
+        $this->setId($model, $row);
     }
 }
