@@ -392,6 +392,7 @@ class ReservationController extends Controller
                 return redirect()->back()->withErrors(trans('messages.reservation.invalid_reservation_status'))->withInput();
             }
             $reservation->reservation_status = ReservationStatus::Cancelled;
+            $reservation->cancel_date = Carbon::now();
             $reservation->save();
             Session::flash('success', trans('messages.reservation.cancel_success'));
             DB::commit();
@@ -420,6 +421,7 @@ class ReservationController extends Controller
                 return redirect()->back()->withErrors(trans('messages.reservation.invalid_reservation_status'))->withInput();
             }
             $reservation->reservation_status = ReservationStatus::Completed;
+            $reservation->completed_date = Carbon::now();
             $reservation->save();
             Session::flash('success', trans('messages.reservation.complete_success'));
             DB::commit();
@@ -445,16 +447,19 @@ class ReservationController extends Controller
             DB::beginTransaction();
             $ids = $request->input('ids');
             $reservation_status = ReservationStatus::getInstance($request->input('reservation_status'));
+            $update_data = ['reservation_status' => $reservation_status->value];
             $update_query = Reservation::whereIn('id', $ids);
             if ($reservation_status->is(ReservationStatus::ReceptionCompleted)) {
                 $update_query->where('reservation_status', ReservationStatus::Pending);
             } elseif ($reservation_status->is(ReservationStatus::Completed)) {
+                $update_data['completed_date'] = Carbon::now();
                 $update_query->where('reservation_status', ReservationStatus::ReceptionCompleted);
             } elseif ($reservation_status->is(ReservationStatus::Cancelled)) {
+                $update_data['cancel_date'] = Carbon::now();
                 $update_query->where('reservation_status', ReservationStatus::Pending)
                     ->orWhere('reservation_status', ReservationStatus::ReceptionCompleted);
             }
-            $update_query->update(['reservation_status' => $reservation_status->value]);
+            $update_query->update($update_data);
             Session::flash('success', trans('messages.reservation.status_update_success'));
             DB::commit();
 
