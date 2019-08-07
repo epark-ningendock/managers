@@ -69,4 +69,18 @@ abstract class ImportAbstract implements WithProgressBar, WithHeadingRow, OnEach
             'new_id' => $model->id,
         ]);
     }
+
+    /**
+     * @param Model $model
+     * @param array $row
+     * @param string $column
+     * @param array $values
+     * @throws \Exception
+     */
+    protected function deleteIf(Model $model, array $row, string $column, array $values)
+    {
+        if (in_array($row[$column], $values)) {
+            $model->delete();
+        }
+    }
 }

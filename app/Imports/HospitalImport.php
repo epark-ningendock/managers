@@ -88,10 +88,9 @@ class HospitalImport extends ImportAbstract
             'created_at' => $row['rgst'],
             'updated_at' => $row['updt'],
         ]);
+
         $model->save();
-        if ($row['status'] === 'X') {
-            $model->delete();
-        }
+        $this->deleteIf($model, $row, 'status', ['X']);
         $this->setId($model, $row);
     }
 }
