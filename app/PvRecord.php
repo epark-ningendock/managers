@@ -41,21 +41,6 @@ class PvRecord extends SoftDeleteModel
         $query->where('created_at', '>', $date);
         $query->groupBy('hospital_id',);
 
-        return collect($query->get()->toArray());
-    }
-
-    /**
-     * 指定日付以前の医療機関ごとに集計したpv数を返す
-     *
-     * @param  Illuminate\Database\Eloquent\Builder $query
-     * @return Illuminate\Database\Eloquent\Builder $query
-     */
-    public function scopeGetPvDataBeforeDate(Builder $query, Carbon $date)
-    {
-
-        $query->where('created_at', '<=', $date);
-        $query->groupBy('hospital_id',);
-
-        return collect($query->get()->toArray());
+        return $query;
     }
 }

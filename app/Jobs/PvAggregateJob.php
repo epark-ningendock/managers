@@ -23,10 +23,19 @@ class PvAggregateJob implements ShouldQueue
         $this->deleteFlg = $deleteFlg;
     }
 
+    /**
+     *
+     */
     public function handle()
     {
+
+        // pv集計数をリセットする
+        $query = PvRecord::all();
+        $query->update(['pv_count' => 0]);
+
         // 医療機関ごとの指定日付分のpv数を取得する。
-        $pvRecords = PvRecord::getPvData($this->aggregateDate);
+        $query = PvRecord::getPvData($this->aggregateDate);
+        $pvRecords = collect($query->get()->toArray());
 
         // 医療機関のpv数を更新する
         $this->updatePvCount($pvRecords);
