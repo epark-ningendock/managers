@@ -5,7 +5,7 @@ namespace App;
 class MiddleClassification extends SoftDeleteModel
 {
     protected $fillable = [
-        'major_classification_id', 'name', 'status', 'order', 'is_icon', 'icon_name'
+        'major_classification_id', 'name', 'status', 'order', 'is_icon', 'icon_name', 'created_at', 'updated_at'
     ];
 
     public function major_classification()
@@ -28,6 +28,6 @@ class MiddleClassification extends SoftDeleteModel
      */
     public function getUpdatedAtStrAttribute()
     {
-        return $this->updated_at->format('Y/m/d').'<br>'.$this->updated_at->format('H:i:s');
+        return $this->updated_at->format('Y/m/d') . '<br>' . $this->updated_at->format('H:i:s');
     }
 }

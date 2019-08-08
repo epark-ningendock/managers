@@ -39,9 +39,9 @@ class ImportCsv extends Command
      * 関連するクラス名を取得する
      * @param $basename
      * @param string $type
-     * @return |null
+     * @return string |null
      */
-    private function getClass($basename, $type = 'model')
+    private function getClass($basename, $type = 'model'): ?string
     {
         if (!array_key_exists($basename, $this->classes)) {
             return null;
@@ -96,6 +96,10 @@ class ImportCsv extends Command
 
         $this->info('インポートを開始します。');
 
+        $this->import('m_item_type.csv');
+        $this->import('m_item_category_dai.csv');
+        $this->import('m_item_category_chu.csv');
+        $this->import('m_item_category_sho.csv');
         $this->import('m_hospital.csv');
 
         $this->info('インポートを完了しました。');
