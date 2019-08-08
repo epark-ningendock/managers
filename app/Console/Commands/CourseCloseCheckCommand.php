@@ -104,7 +104,7 @@ class CourseCloseCheckCommand extends Command
             'receptionCloseCourses' => $receptionCloseCourses,
             'publishCloseCourses' => $publishCloseCourses
         ];
-        $to = config('mail.to.admin_reception');
+        $to = config('mail.to.admin_all');
         Mail::to($to)->send(new CourseCloseCheckMail($mailContext));
     }
 }
