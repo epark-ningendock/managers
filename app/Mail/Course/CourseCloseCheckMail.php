@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Mail\Job;
+namespace App\Mail\Course;
 
-use Carbon\Carbon;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
