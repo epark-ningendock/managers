@@ -41,7 +41,7 @@
             </tbody>
         </table>
         <div class="box-footer pull-right">
-            <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
+            <a href="{{ route('option.index') }}" class="btn btn-default">戻る</a>
             <button type="submit" class="btn btn-primary">作成</button>
         </div>
     </form>
