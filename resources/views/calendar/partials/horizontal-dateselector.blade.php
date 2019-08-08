@@ -13,7 +13,19 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function (response) {
-                        $('.calendar-box').html(response.data);
+
+                        if ( $('.hor-date-table').length > 0 ) {
+
+                            $('.hor-date-table tbody').append($(response.data).find('tbody').children());
+
+                        } else {
+
+                            $('.calendar-box').html(response.data);
+                            $('.hor-date-table tbody tr').addClass('hide-tr').first('tr').addClass('show-tr');
+
+                        }
+
+                        $('.date-row-bar').show();
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
                         alert("Reservation days showing error");
@@ -64,26 +76,38 @@
             /* ---------------------------------------------------
             Load datepicker through ajax
             -----------------------------------------------------*/
-            
             $(document).on('click', '.prev-next-link', function(event){
                 event.preventDefault();
 
-                let ajaxRoute = $(this).attr('href');
+                week_row = $('.hor-date-table tbody tr');
+                show_tr = $('.show-tr');
+                active_week = week_row.siblings('.show-tr');
 
-                $.ajax({
-                    url: ajaxRoute,
-                    method: "GET",
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function (response) {
-                        $('.calendar-box').html(response.data);
-                    },
-                    error: function(XMLHttpRequest, textStatus, errorThrown) {
-                         alert("Reservation days showing error");
-                    }                    
-                });
-                
+                week_row.removeClass('show-tr');
+
+                if ( show_tr.nextAll('tr').length == 3 ) {
+                    let ajaxRoute = $(this).attr('href');
+                    dateLoader(ajaxRoute);
+                }
+
+                if ( $(this).hasClass('prev-link')  ) {
+
+                    week_row.eq(active_week.index() - 1).addClass('show-tr');
+
+                    if ( show_tr.prev('tr').index() === 0 ) {
+                        $('.prev-link').remove();
+                    }
+
+                } else {
+
+                    week_row.eq(active_week.index() + 1).addClass('show-tr');
+
+                    if ( $(this).siblings('.prev-link').length === 0 ) {
+                        $('<a href="#" class="prev-next-link prev-link fl"><<</a>').prependTo($(".paginate-box"));
+                    }
+
+                }
+
             });
 
 

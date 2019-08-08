@@ -425,27 +425,37 @@ class CalendarController extends Controller {
 
 	public function reservationDays( $course_id ) {
 		$calendars = [];
-		$holidays  = [];
 		$course    = Course::find( $course_id );
 		if ( $course ) {
 
-			$holidays      = Holiday::where( 'hospital_id', $course->hospital_id )->get()->pluck( 'date' )->toArray();
-			$calendars     = $course->calendar->calendar_days()->paginate( 7 );
-			$calendar_type = 'real-calendar';
+//			$started_date = Carbon::now();
+			$today = new Carbon();
+			$started_date = ( Carbon::MONDAY == $today->dayOfWeek ) ? $today->format('Y-m-d') : $today->previous(1);
+			$calendar_days = $course->calendar->calendar_days()->where('is_holiday', 1)->orderBy('date')->get();
 
-			if ($calendars->isEmpty()){
+			//date
+			$end_date   = 1000;
 
-				$calendars     = $this->showCalendarGenerator();
-				$calendar_type = 'fake-calendar';
+			$period    = CarbonPeriod::create( $started_date, Carbon::now()->addDay( $end_date )->format( 'Y-m-d' ) );
+			$dates     = $period->toArray();
+			$calendars = [];
+
+			foreach ( $dates as $date ) {
+				$calendars[] =  [
+					'date' => $date->format( 'Y-m-d' ),
+					'is_holiday' => ( $calendar_days->contains('date', new DateTime($date->format( 'Y-m-d' ) ) )  ) ? 1 : 0,
+				];
 			}
+			$calendars =  $this->paginateWithoutKey(collect($calendars), 28, request('page'));
 			$calendars->setPath( route( 'course.reservation.days', [ 'course_id' => $course_id ] ) );
+
+			$calendar_type = 'fake-calendar';
 		}
 
 
 		return response()->json( [
 			'data' => view( 'calendar.partials.daybox', [
 				'calendars'    => $calendars,
-				'holidays'     => $holidays,
 				'calendar_type' => $calendar_type,
 			] )->render(),
 		] );

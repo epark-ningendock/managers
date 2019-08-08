@@ -117,7 +117,7 @@
     </div>
 
 
-    <div class="row">
+    <div class="row date-row-bar" style="display: none;">
     
         <div class="col-md-3">
             <label for="reservation_date">受診日</label>
@@ -486,7 +486,15 @@
         td.daybox.it-would-reserve {
             background: #fbfbbf;
         }
-        
+        .hide-tr {
+            display: none;
+        }
+        .show-tr {
+            display: table-row;
+        }
+        .prev-link {
+            float: left;
+        }
     </style>
 @endpush
 
