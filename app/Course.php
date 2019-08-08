@@ -22,6 +22,8 @@ class Course extends SoftDeleteModel
         'reception_start_date',
         'reception_end_date',
         'reception_acceptance_date',
+        'publish_start_date',
+        'publish_end_date',
         'cancellation_deadline',
         'is_price',
         'price',
@@ -33,6 +35,11 @@ class Course extends SoftDeleteModel
 
     protected $attributes = [
       'course_cancel' => '0'
+    ];
+
+    protected $dates = [
+      'publish_start_date',
+      'publish_end_date'
     ];
 
     protected $enums = [ 'web_reception' => WebReception::class ];

@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CourseCloseCheckCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -16,6 +17,7 @@ class Kernel extends ConsoleKernel
         Commands\PvAggregateCommand::class,
         Commands\TemporaryReservationCheckCommand::class,
         Commands\ClaimRecordCreateCommand::class,
+        Commands\CourseCloseCheckCommand::class,
     ];
 
     /**
@@ -29,6 +31,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('pv-aggregate')->dailyAt('02:00');
         $schedule->command('temporary-reservation-check')->dailyAt('06:30');
         $schedule->command('claim-record-create')->monthlyOn(21, '05:00');
+        $schedule->command('course-close-check')->monthlyOn(1, '05:15');
+        $schedule->command('course-close-check')->monthlyOn(15, '05:15');
     }
 
     /**
