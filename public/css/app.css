@@ -3122,8 +3122,26 @@ label.file-upload input[type="file"] {
   margin: 60px auto 20px auto;
 }
 
+.box-header .box-title {
+  font-weight: normal;
+  font-size: 1em;
+}
+
+.box-header .box-tools .btn {
+  font-weight: normal;
+}
+
 .box-footer {
   text-align: center;
+}
+
+#calendar_header .box-header {
+  background-color: aliceblue;
+}
+
+#calendar_header h2 {
+  font-weight: 500;
+  font-size: 1.1em;
 }
 
 .clearfix::after {

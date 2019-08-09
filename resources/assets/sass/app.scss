@@ -821,8 +821,27 @@ label.file-upload input[type="file"] {
     }
   }
 }
+.box-header {
+  .box-title {
+    font-weight: normal;
+    font-size: 1em;
+  }
+  .box-tools {
+    .btn {font-weight: normal;}
+  }
+}
 .box-footer {
   text-align: center;
+}
+
+#calendar_header {
+  .box-header {
+    background-color: aliceblue;
+  }
+  h2 {
+    font-weight: 500;
+    font-size: 1.1em;
+  }
 }
 
 

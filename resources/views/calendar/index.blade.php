@@ -20,20 +20,26 @@
 
 <!-- search section -->
 @section('search')
-  <div class="row">
+  <div class="row" id="calendar_header">
     <div class="col-xs-12">
-      <div class="box">
-        <h4>カレンダーの登録</h4>
-        <p class="mb-4">下記のボタンをクリックすると新しいカレンダーを登録することができます。</p>
-        <a class="btn btn-success" href="{{ route('calendar.create') }}">カレンダーの新規登録</a>
-        <a class="btn btn-primary ml-2" href="{{ route('calendar.holiday') }}">休日設定</a>
+      <div class="box box-primary">
+        <div class="box-header">
+          <h2 class="box-title">
+            カレンダーの登録
+          </h2>
+        </div>
+        <div class="box-body">
+          <p class="mb-4">下記のボタンをクリックすると新しいカレンダーを登録することができます。</p>
+          <a class="btn btn-success" href="{{ route('calendar.create') }}">カレンダーの新規登録</a>
+          <a class="btn btn-primary ml-2" href="{{ route('calendar.holiday') }}">休日設定</a>
+        </div>
       </div>
     </div>
   </div>
 @stop
 
 @section('table')
-  <div class="row">
+  <div class="row edit-calendar">
     <div class="col-xs-12">
       @foreach($calendars as $index => $calendar)
       <div class="box">
@@ -44,13 +50,13 @@
             「カレンダー受付可否 : {{ $calendar->is_calendar_display->description }}」</h3>
 
           <div class="box-tools">
-            <div class="input-group input-group-sm hidden-xs" style="width: 210px;">
+            <div class="input-group input-group-sm hidden-xs">
 
 
-              <a class="btn btn-primary" href="{{ route('calendar.edit', $calendar->id) }}">
-                <i class="fa fa-edit text-bold"> 編集</i>
+              <a class="btn btn-primary btn-mini" href="{{ route('calendar.edit', $calendar->id) }}">
+                <i class="fa fa-edit"> 編集</i>
               </a>
-              <a class="btn btn-primary ml-2" href="{{ route('calendar.setting', $calendar->id) }}">カレンダー設定</a>
+              <a class="btn btn-primary ml-2 btn-mini" href="{{ route('calendar.setting', $calendar->id) }}">カレンダー設定</a>
 
             </div>
           </div>
