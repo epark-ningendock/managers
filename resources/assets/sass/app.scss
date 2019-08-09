@@ -222,7 +222,7 @@ label {
     border-radius: 2px;
     font-size: 10px;
     font-weight: bold;
-    vertical-align: text-bottom;
+    vertical-align: text-top !important;
   }
 
 
@@ -842,6 +842,10 @@ label.file-upload input[type="file"] {
     font-weight: 500;
     font-size: 1.1em;
   }
+}
+
+.course-select {
+ margin-top: 10px;
 }
 
 

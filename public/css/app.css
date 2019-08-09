@@ -2478,7 +2478,7 @@ label {
   border-radius: 2px;
   font-size: 10px;
   font-weight: bold;
-  vertical-align: text-bottom;
+  vertical-align: text-top !important;
 }
 
 .inline-radio {
@@ -3142,6 +3142,10 @@ label.file-upload input[type="file"] {
 #calendar_header h2 {
   font-weight: 500;
   font-size: 1.1em;
+}
+
+.course-select {
+  margin-top: 10px;
 }
 
 .clearfix::after {
