@@ -91,6 +91,10 @@ class HospitalImport extends ImportAbstract
 
         $model->save();
         $this->deleteIf($model, $row, 'status', ['X']);
+        $model->save();
+        if ($row['status'] === 'X') {
+            $model->delete();
+        }
         $this->setId($model, $row);
     }
 }
