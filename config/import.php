@@ -13,11 +13,17 @@ use App\Imports\HospitalMinorClassificationImport;
 use App\Imports\MajorClassificationImport;
 use App\Imports\MiddleClassificationImport;
 use App\Imports\MinorClassificationImport;
+use App\Imports\PrefectureImport;
 use App\MajorClassification;
 use App\MiddleClassification;
 use App\MinorClassification;
+use App\Prefecture;
 
 return [
+    'm_pref.csv' => [
+        'model' => Prefecture::class,
+        'import' => PrefectureImport::class,
+    ],
     'm_item_type.csv' => [
         'model' => ClassificationType::class,
         'import' => ClassificationTypeImport::class,

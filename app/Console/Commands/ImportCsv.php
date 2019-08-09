@@ -96,6 +96,7 @@ class ImportCsv extends Command
 
         $this->info('インポートを開始します。');
 
+        $this->import('m_pref.csv');
         $this->import('m_item_type.csv');
         $this->import('m_item_category_dai.csv');
         $this->import('m_item_category_chu.csv');
