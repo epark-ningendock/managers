@@ -49,9 +49,7 @@ class MiddleClassificationImport extends ImportAbstract
         ]);
 
         $model->save();
-        if ($row['status'] === 'X') {
-            $model->delete();
-        }
+        $this->deleteIf($model, $row, 'status', ['X']);
         $this->setId($model, $row);
     }
 }

@@ -90,9 +90,7 @@ class HospitalImport extends ImportAbstract
             'deleted_at' => ($row['status'] === 'X') ? now() : null,
         ]);
         $model->save();
-        if ($row['status'] === 'X') {
-            $model->delete();
-        }
+        $this->deleteIf($model, $row, 'status', ['X']);
         $this->setId($model, $row);
     }
 }

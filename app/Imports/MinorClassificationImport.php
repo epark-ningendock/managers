@@ -50,9 +50,7 @@ class MinorClassificationImport extends ImportAbstract
             'updated_at' => $row['updt'],
         ]);
         $model->save();
-        if ($row['status'] === 'X') {
-            $model->delete();
-        }
+        $this->deleteIf($model, $row, 'status', ['X']);
         $this->setId($model, $row);
     }
 }

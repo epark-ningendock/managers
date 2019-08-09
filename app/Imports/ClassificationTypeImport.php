@@ -43,6 +43,7 @@ class ClassificationTypeImport extends ImportAbstract
             'deleted_at' => ($row['status'] === 'X') ? now() : null,
         ]);
         $model->save();
+        $this->deleteIf($model, $row, 'status', ['X']);
         $this->setId($model, $row);
     }
 }

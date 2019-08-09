@@ -2,11 +2,10 @@
 
 namespace App\Imports;
 
-use App\MajorClassification;
-use Exception;
+use App\HospitalMiddleClassification;
 use Maatwebsite\Excel\Row;
 
-class MajorClassificationImport extends ImportAbstract
+class HospitalMiddleClassificationImport extends ImportAbstract
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -15,7 +14,7 @@ class MajorClassificationImport extends ImportAbstract
      */
     public function getOldPrimaryKeyName(): string
     {
-        return 'item_category_dai_no';
+        return 'item_category_chu_no';
     }
 
     /**
@@ -25,20 +24,19 @@ class MajorClassificationImport extends ImportAbstract
      */
     public function getNewClassName(): string
     {
-        return MajorClassification::class;
+        return HospitalMiddleClassification::class;
     }
 
     /**
      * @param Row $row
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function onRow(Row $row)
     {
         $row = $row->toArray();
-
-        $model = new MajorClassification([
-            'classification_type_id' => $this->getId('classification_types', $row['iten_type_no']),
+        $model = new HospitalMiddleClassification([
+            'major_classification_id' => $this->getId('hospital_major_classifications', $row['item_category_dai_no']),
             'name' => $row['name'],
             'status' => $row['status'],
             'order' => $row['order'],
@@ -46,7 +44,6 @@ class MajorClassificationImport extends ImportAbstract
             'icon_name' => $row['icon_name'],
             'created_at' => $row['rgst'],
             'updated_at' => $row['updt'],
-            'deleted_at' => ($row['status'] === 'X') ? now() : null,
         ]);
         $model->save();
         $this->deleteIf($model, $row, 'status', ['X']);

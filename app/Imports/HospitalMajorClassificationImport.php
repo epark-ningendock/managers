@@ -2,11 +2,10 @@
 
 namespace App\Imports;
 
-use App\MajorClassification;
-use Exception;
+use App\HospitalMajorClassification;
 use Maatwebsite\Excel\Row;
 
-class MajorClassificationImport extends ImportAbstract
+class HospitalMajorClassificationImport extends ImportAbstract
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -25,20 +24,18 @@ class MajorClassificationImport extends ImportAbstract
      */
     public function getNewClassName(): string
     {
-        return MajorClassification::class;
+        return HospitalMajorClassification::class;
     }
 
     /**
      * @param Row $row
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function onRow(Row $row)
     {
         $row = $row->toArray();
-
-        $model = new MajorClassification([
-            'classification_type_id' => $this->getId('classification_types', $row['iten_type_no']),
+        $model = new HospitalMajorClassification([
             'name' => $row['name'],
             'status' => $row['status'],
             'order' => $row['order'],
@@ -46,7 +43,6 @@ class MajorClassificationImport extends ImportAbstract
             'icon_name' => $row['icon_name'],
             'created_at' => $row['rgst'],
             'updated_at' => $row['updt'],
-            'deleted_at' => ($row['status'] === 'X') ? now() : null,
         ]);
         $model->save();
         $this->deleteIf($model, $row, 'status', ['X']);
