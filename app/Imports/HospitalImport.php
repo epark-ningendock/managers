@@ -87,8 +87,10 @@ class HospitalImport extends ImportAbstract
             'pre_account_commission_rate' => $row['pre_account_commission_rate'],
             'created_at' => $row['rgst'],
             'updated_at' => $row['updt'],
-            'deleted_at' => ($row['status'] === 'X') ? now() : null,
         ]);
+
+        $model->save();
+        $this->deleteIf($model, $row, 'status', ['X']);
         $model->save();
         if ($row['status'] === 'X') {
             $model->delete();
