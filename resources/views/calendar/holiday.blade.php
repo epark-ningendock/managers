@@ -8,124 +8,102 @@
 @extends('layouts.form')
 
 @section('content_header')
-  <h1>    
-    <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
-    -
-    <i class="fa fa-calendar"> 休日管理</i>
+  <h1>
+      <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
+      -
+      <span>休日管理</span>
   </h1>
 @stop
 
 @section('form')
   <form method="POST" action="{{ route('calendar.updateHoliday') }}">
+    <div id="calendar_bulk_box">
     {!! csrf_field() !!}
     {!! method_field('PATCH') !!}
     <div class="box-body">
-      <h4>期間 <span class="ml-2 mr-2"> : </span> {{ $start->format('Y/m/d').' ~ '.$end->format('Y/m/d') }}</h4>
+      <p class="calendar-period">期間 <span class="ml-2 mr-2"> : </span> {{ $start->format('Y/m/d').' ~ '.$end->format('Y/m/d') }}<button type="button" id="open-bulk-box" class="btn btn-light"><i class="fa fa-angle-down"></i>一括登録設定</button></p>
       {!! csrf_field() !!}
-      <hr>
-      <h4>一括反映</h4>
-      <div class="row">
-        <div class="col-md-6">
-          <table class="table table-bordered top-table">
-            <thead>
-            <tr>
-              <th class="text-red">日</th>
-              <th>月</th>
-              <th>火</th>
-              <th>水</th>
-              <th>木</th>
-              <th>金</th>
-              <th class="text-blue">土</th>
-              <th class="text-red">祝</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td>
-                <select id="sunday">
-                  <option value="0"></option>
-                  <option value="1">休</option>
-                </select>
-              </td>
-              <td>
-                <select id="monday">
-                  <option value="0"></option>
-                  <option value="1">休</option>
-                </select>
-              </td>
-              <td>
-                <select id="tuesday">
-                  <option value="0"></option>
-                  <option value="1">休</option>
-                </select>
-              </td>
-              <td>
-                <select id="wednesday">
-                  <option value="0"></option>
-                  <option value="1">休</option>
-                </select>
-              </td>
-              <td>
-                <select id="thursday">
-                  <option value="0"></option>
-                  <option value="1">休</option>
-                </select>
-              </td>
-              <td>
-                <select id="friday">
-                  <option value="0"></option>
-                  <option value="1">休</option>
-                </select>
-              </td>
-              <td>
-                <select id="saturday">
-                  <option value="0"></option>
-                  <option value="1">休</option>
-                </select>
-              </td>
-              <td>
-                <select id="holiday">
-                  <option value="0"></option>
-                  <option value="1">休</option>
-                </select>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="col-md-3">
-          <table class="table table-borderless">
-            <tr class="month-week">
-              <td class="text-left">
-                <h4 class="text-center">対象月</h4>
-                <label><input type="checkbox" id="all-month"/> すべて選択</label>
-                @foreach($months->keys() as $index => $month)
-                  <label><input type="checkbox" id="month-{{ $index }}" class="month" data-index="{{ $index }}"/> {{ $month }}</label>
-                @endforeach
-              </td>
-              <td class="text-left">
-                <h4 class="text-center">対象週</h4>
-                <label><input type="checkbox" class="week" id="all-week" /> すべて選択</label>
-                <label><input type="checkbox" class="week" id="week-1" /> 第1 (1日~7日)</label>
-                <label><input type="checkbox" class="week" id="week-2" /> 第2 (8日~14日)</label>
-                <label><input type="checkbox" class="week" id="week-3" /> 第3 (15日~21日)</label>
-                <label><input type="checkbox" class="week" id="week-4" /> 第4 (22日~28日)</label>
-                <label><input type="checkbox" class="week" id="week-5" /> 第5 (29日~)</label>
-              </td>
-            </tr>
-          </table>
+      <div class="bulk_update">
+          <h2>休診日設定 <span>休診に設定する曜日を選択してください。</span></h2>
+          <div class="bulk-weekday">
+              <ul>
+                  <li><label for="sunday-frame">日</label>
+                      <select id="sunday" class="form-control select-box w4em">
+                          <option value="0"></option>
+                          <option value="1">休</option>
+                      </select>
+                  </li>
+                  <li><label for="monday-frame">月</label>
+                      <select id="monday" class="form-control select-box w4em">
+                          <option value="0"></option>
+                          <option value="1">休</option>
+                      </select>
+                  </li>
+                  <li><label for="tuesday-frame">火</label>
+                      <select id="tuesday" class="form-control select-box w4em">
+                          <option value="0"></option>
+                          <option value="1">休</option>
+                      </select>
+                  </li>
+                  <li><label for="wednesday-frame">水</label>
+                      <select id="wednesday" class="form-control select-box w4em">
+                          <option value="0"></option>
+                          <option value="1">休</option>
+                      </select>
+                  </li>
+                  <li><label for="thursday-frame">木</label>
+                      <select id="thursday" class="form-control select-box w4em">
+                          <option value="0"></option>
+                          <option value="1">休</option>
+                      </select>
+                  </li>
+                  <li><label for="friday-frame">金</label>
+                      <select id="friday" class="form-control select-box w4em">
+                          <option value="0"></option>
+                          <option value="1">休</option>
+                      </select>
+                  </li>
+                  <li><label for="saturday-frame">土</label>
+                      <select id="saturday" class="form-control select-box w4em">
+                          <option value="0"></option>
+                          <option value="1">休</option>
+                      </select>
+                  </li>
+                  <li><label for="holiday-frame">祝</label>
+                      <select id="holiday" class="form-control select-box w4em">
+                          <option value="0"></option>
+                          <option value="1">休</option>
+                      </select>
+                  </li>
+              </ul>
+          </div>
+          <div class="to-month">
+              <h2>対象月<span>設定する月をチェックしてください</span></h2>
+              <label><input type="checkbox" id="all-month"/> すべて選択</label>
+              @foreach($months->keys() as $index => $month)
+                  <p><input type="checkbox" id="month-{{ $index }}" class="month" data-index="{{ $index }}"/><label for="month-{{ $index }}">{{ $month }}</label></p>
+              @endforeach
+          </div>
+          <div class="to-week clearfix">
+              <h2>対象週<span>設定する週をチェックしてください</span></h2>
+              <p><input type="checkbox" class="week" id="all-week" /><label for="all-week"> すべて選択</label></p>
+              <p><input type="checkbox" class="week" id="week-1" /> <label for="week-1">第1 (1日~7日)</label></p>
+              <p><input type="checkbox" class="week" id="week-2" /> <label for="week-2">第2 (8日~14日)</label></p>
+              <p><input type="checkbox" class="week" id="week-3" /> <label for="week-3">第3 (15日~21日)</label></p>
+              <p><input type="checkbox" class="week" id="week-4" /> <label for="week-4">第4 (22日~28日)</label></p>
+              <p><input type="checkbox" class="week" id="week-5" /> <label for="week-5">第5 (29日~)</label></p>
+          </div>
           <button class="btn btn-primary pull-right" id="bulk-update">一括反映</button>
-        </div>
       </div>
-      <hr />
       @php
         $index = 1
       @endphp
-      <div class="pull-right">
-        <button class="btn btn-primary page-button" data-index="0"><span class="glyphicon glyphicon-chevron-left"></span></button>
-        <span class="ml-2 mr-2">1/2 ページ</span>
-        <button class="btn btn-primary page-button" data-index="1"><span class="glyphicon glyphicon-chevron-right"></span></button>
+      <div class="pagenate">
+          <div class="page-link">
+            <button class="btn btn-primary page-button" data-index="0"><span class="glyphicon glyphicon-chevron-left"></span></button>
+            <span class="ml-2 mr-2">1/2 ページ</span>
+            <button class="btn btn-primary page-button" data-index="1"><span class="glyphicon glyphicon-chevron-right"></span></button>
+          </div>
       </div>
       @foreach($months->chunk(6) as $c_months)
         <div class="row page">
@@ -204,6 +182,7 @@
         <button class="btn btn-primary" id="clear-data">登録する</button>
       </div>
     </div>
+  </form>
   </form>
 
   <style>
