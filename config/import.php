@@ -3,6 +3,7 @@
 use App\ClassificationType;
 use App\Course;
 use App\CourseDetail;
+use App\CourseQuestion;
 use App\Hospital;
 use App\HospitalMajorClassification;
 use App\HospitalMiddleClassification;
@@ -10,6 +11,7 @@ use App\HospitalMinorClassification;
 use App\Imports\ClassificationTypeImport;
 use App\Imports\CourseDetailImport;
 use App\Imports\CourseImport;
+use App\Imports\CourseQuestionImport;
 use App\Imports\HospitalImport;
 use App\Imports\HospitalMajorClassificationImport;
 use App\Imports\HospitalMiddleClassificationImport;
@@ -73,5 +75,9 @@ return [
     'm_course_detail.csv' => [
         'model' => CourseDetail::class,
         'import' => CourseDetailImport::class,
+    ],
+    'm_course_question.csv' => [
+        'model' => CourseQuestion::class,
+        'import' => CourseQuestionImport::class,
     ],
 ];

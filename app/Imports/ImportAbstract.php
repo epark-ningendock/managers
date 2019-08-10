@@ -7,13 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\OnEachRow;
+use Maatwebsite\Excel\Concerns\SkipsErrors;
+use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithProgressBar;
 use Maatwebsite\Excel\Row;
+use Throwable;
 
-abstract class ImportAbstract implements WithProgressBar, WithHeadingRow, OnEachRow
+abstract class ImportAbstract implements WithProgressBar, WithHeadingRow, OnEachRow, SkipsOnError
 {
     use Importable;
+    use SkipsErrors;
 
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -88,5 +92,13 @@ abstract class ImportAbstract implements WithProgressBar, WithHeadingRow, OnEach
             'old_id' => $old_id,
             'new_id' => $model->id,
         ]);
+    }
+
+    /**
+     * @param Throwable $e
+     */
+    public function onError(Throwable $e)
+    {
+        Log::error($e->getMessage());
     }
 }
