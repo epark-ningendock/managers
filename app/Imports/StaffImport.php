@@ -56,10 +56,10 @@ class StaffImport extends ImportAbstract
         $model->save();
 
         $model->staff_auth()->create([
-            'is_hospital' => $row['is_hospital'],
-            'is_staff' => $row['is_staff'],
-            'is_cource_classification' => $row['is_item_category'],
-            'is_invoice' => $row['is_invoice'],
+            'is_hospital' => ($row['is_hospital'] == 255) ? 3 : $row['is_hospital'],
+            'is_staff' => ($row['is_staff'] == 255) ? 3 : $row['is_staff'],
+            'is_cource_classification' => ($row['is_item_category'] == 255) ? 3 : $row['is_item_category'],
+            'is_invoice' => ($row['is_invoice'] == 255) ? 7 : $row['is_invoice'],
             'is_pre_account' => '0',
             'is_contract' => '0',
             'staff_id' => $model->id,
