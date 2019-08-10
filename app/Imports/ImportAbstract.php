@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\ConvertedId;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -43,10 +44,14 @@ abstract class ImportAbstract implements WithProgressBar, WithHeadingRow, OnEach
      */
     protected function getId($table, $old_id)
     {
-        return ConvertedId::where('table_name', $table)
+        $model = ConvertedId::where('table_name', $table)
             ->where('old_id', $old_id)
-            ->first()
-            ->new_id;
+            ->first();
+        if ($model) {
+            return $model->new_id;
+        }
+        Log::warning(sprintf('%s に %d が存在しません。', $table, $old_id));
+        return null;
     }
 
 

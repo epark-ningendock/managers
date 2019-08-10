@@ -4,10 +4,12 @@ namespace App;
 
 use App\Enums\WebReception;
 use App\Helpers\EnumTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Course extends SoftDeleteModel
 {
     use EnumTrait;
+    use SoftDeletes;
 
     protected $fillable = [
         'hospital_id',

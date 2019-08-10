@@ -3,10 +3,13 @@
 namespace App\Imports;
 
 use App\Course;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Maatwebsite\Excel\Row;
 
 class CourseImport extends ImportAbstract
 {
+    use SoftDeletes;
+
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
      * Returns the primary key of the import target table of the old system
