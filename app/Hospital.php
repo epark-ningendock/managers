@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Hospital extends Model
 {
+    use SoftDeletes;
     protected $table = 'hospitals';
 
     //Note $fillable is temporary for factory, make it realistic field when business logic

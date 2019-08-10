@@ -1,11 +1,13 @@
 <?php
 
 use App\ClassificationType;
+use App\Course;
 use App\Hospital;
 use App\HospitalMajorClassification;
 use App\HospitalMiddleClassification;
 use App\HospitalMinorClassification;
 use App\Imports\ClassificationTypeImport;
+use App\Imports\CourseImport;
 use App\Imports\HospitalImport;
 use App\Imports\HospitalMajorClassificationImport;
 use App\Imports\HospitalMiddleClassificationImport;
@@ -61,5 +63,9 @@ return [
     'm_staff.csv' => [
         'model' => Staff::class,
         'import' => StaffImport::class,
+    ],
+    'm_course_basic.csv' => [
+        'model' => Course::class,
+        'import' => CourseImport::class,
     ],
 ];
