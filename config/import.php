@@ -14,10 +14,12 @@ use App\Imports\MajorClassificationImport;
 use App\Imports\MiddleClassificationImport;
 use App\Imports\MinorClassificationImport;
 use App\Imports\PrefectureImport;
+use App\Imports\StaffImport;
 use App\MajorClassification;
 use App\MiddleClassification;
 use App\MinorClassification;
 use App\Prefecture;
+use App\Staff;
 
 return [
     'm_pref.csv' => [
@@ -55,5 +57,9 @@ return [
     'm_hospital_category_sho.csv' => [
         'model' => HospitalMinorClassification::class,
         'import' => HospitalMinorClassificationImport::class,
+    ],
+    'm_staff.csv' => [
+        'model' => Staff::class,
+        'import' => StaffImport::class,
     ],
 ];
