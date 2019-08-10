@@ -4,15 +4,20 @@ namespace App\Imports;
 
 use App\ConvertedId;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\OnEachRow;
+use Maatwebsite\Excel\Concerns\SkipsErrors;
+use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithProgressBar;
 use Maatwebsite\Excel\Row;
+use Throwable;
 
-abstract class ImportAbstract implements WithProgressBar, WithHeadingRow, OnEachRow
+abstract class ImportAbstract implements WithProgressBar, WithHeadingRow, OnEachRow, SkipsOnError
 {
     use Importable;
+    use SkipsErrors;
 
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -43,10 +48,14 @@ abstract class ImportAbstract implements WithProgressBar, WithHeadingRow, OnEach
      */
     protected function getId($table, $old_id)
     {
-        return ConvertedId::where('table_name', $table)
+        $model = ConvertedId::where('table_name', $table)
             ->where('old_id', $old_id)
-            ->first()
-            ->new_id;
+            ->first();
+        if ($model) {
+            return $model->new_id;
+        }
+        Log::warning(sprintf('%s に %d が存在しません。', $table, $old_id));
+        return null;
     }
 
 
@@ -83,5 +92,13 @@ abstract class ImportAbstract implements WithProgressBar, WithHeadingRow, OnEach
             'old_id' => $old_id,
             'new_id' => $model->id,
         ]);
+    }
+
+    /**
+     * @param Throwable $e
+     */
+    public function onError(Throwable $e)
+    {
+        Log::error($e->getMessage());
     }
 }
