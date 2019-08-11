@@ -17,11 +17,13 @@ use App\Imports\HospitalMajorClassificationImport;
 use App\Imports\HospitalMiddleClassificationImport;
 use App\Imports\HospitalMinorClassificationImport;
 use App\Imports\MajorClassificationImport;
+use App\Imports\MedicalTreatmentTimeImport;
 use App\Imports\MiddleClassificationImport;
 use App\Imports\MinorClassificationImport;
 use App\Imports\PrefectureImport;
 use App\Imports\StaffImport;
 use App\MajorClassification;
+use App\MedicalTreatmentTime;
 use App\MiddleClassification;
 use App\MinorClassification;
 use App\Prefecture;
@@ -79,5 +81,9 @@ return [
     'm_course_question.csv' => [
         'model' => CourseQuestion::class,
         'import' => CourseQuestionImport::class,
+    ],
+    'm_hospital_time.csv' => [
+        'model' => MedicalTreatmentTime::class,
+        'import' => MedicalTreatmentTimeImport::class,
     ],
 ];
