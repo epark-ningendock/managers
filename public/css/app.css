@@ -3146,3 +3146,13 @@ label.file-upload input[type="file"] {
   clear: both;
 }
 
+#email-template .email-template-title {
+  width: 70%;
+  text-align: left;
+  vertical-align: middle;
+}
+
+#email-template .email-template-id {
+  vertical-align: middle;
+}
+

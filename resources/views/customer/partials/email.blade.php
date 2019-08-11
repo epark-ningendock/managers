@@ -7,7 +7,6 @@
         {{ csrf_field() }}
 
         <table class="table table-bordered">
-
             <tr>
                 <td class="gray-cell-bg">
                     <label for="customer_email">{{ __('送信先メールアドレス') }}</label>
