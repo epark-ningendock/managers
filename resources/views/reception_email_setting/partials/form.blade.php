@@ -1,3 +1,4 @@
+@include('layouts.partials.error_pan')
 <div class="form-entry">
     <div class="box-body">
     <h2>受付メール設定</h2>
@@ -78,7 +79,6 @@
               <label for="web_reception_email_flg_01">WEB受付</label>
           </p>
       </div>
-
       <div class="form-group @if ($errors->has('reception_email1')) has-error @endif">
         <label class='ml-3'>受信メールアドレス1</label>
         {{ Form::text('reception_email1' , (old('reception_email1')) ? old('reception_email1') : $reception_email_setting->reception_email1, ['class' => 'form-control ml-3', 'id' => 'reception_email1', 'placeholder' => 'メールアドレスを入力してください']) }}
