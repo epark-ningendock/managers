@@ -327,6 +327,9 @@ label {
 $color1: #f4f4f4;
 $color2: #3197EE;
 .form-entry {
+  .checkbox label, .radio label {
+    padding-left: 0px !important;
+  }
   .radio {
     margin: 0.5rem;
     input[type="radio"] {
@@ -762,29 +765,6 @@ label.file-upload input[type="file"] {
   .calendar-table {
     a {font-weight: bold}
   }
-  /*** custom checkboxes ***/
-
-  input[type=checkbox] { display:none; } /* to hide the checkbox itself */
-  input[type=checkbox] + label:before {
-    font-family: FontAwesome;
-    content: "\F096";
-    color: #3c8dbc;
-    text-align: center;
-    display: inline-block;
-    width: 24px;
-    vertical-align: middle;
-    padding: 0px 0 0 0;
-    font-size: 18px;
-    font-weight: bold;
-
-  }
-
-  input[type=checkbox] + label:before { content: "\f096"; color: #3c8dbc} /* unchecked icon */
-  input[type=checkbox] + label:before { letter-spacing: 10px; } /* space between checkbox and label */
-
-  input[type=checkbox]:checked + label:before { content: "\f046"; } /* checked icon */
-  input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow space for check mark */
-
 }
 
 #calendar_bulk_box {
@@ -858,3 +838,35 @@ label.file-upload input[type="file"] {
   }
 }
 
+.confirmation_email_reception_flag,.reception_type_flag, .epark_in_hospital_reception_mail {
+  p {
+    display: inline-block;
+    margin-right: 20px;
+  }
+}
+
+
+/*** custom checkboxes ***/
+
+input[type=checkbox] { display:none; } /* to hide the checkbox itself */
+input[type=checkbox] + label:before {
+  font-family: FontAwesome;
+  content: "\F096";
+  color: #3c8dbc;
+  text-align: center;
+  display: inline-block;
+  width: 24px;
+  vertical-align: middle;
+  padding: 0px 0 0 0;
+  font-size: 18px;
+  font-weight: bold;
+
+}
+
+input[type=checkbox] + label:before { content: "\f096"; color: #3c8dbc} /* unchecked icon */
+input[type=checkbox] + label:before { letter-spacing: 10px; } /* space between checkbox and label */
+
+input[type=checkbox]:checked + label:before { content: "\f046"; } /* checked icon */
+input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow space for check mark */
+
+input[type=checkbox]:disabled + label:before { content: "\f096"; opacity: 0.4; color: #333333}
