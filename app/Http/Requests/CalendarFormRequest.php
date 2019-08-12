@@ -39,7 +39,7 @@ class CalendarFormRequest extends FormRequest
                 'days' => 'required|array',
                 'days.*' => 'integer',
                 'is_holidays' => 'required|array',
-                'is_holidays.*' => [ Rule::in(['', '1'])]
+                'is_holidays.*' => [ Rule::in(['0', '1'])]
             ];
         } else {
             return [

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Enums\Gender;
 use App\Filters\Filterable;
 
 class Customer extends SoftDeleteModel
@@ -37,6 +38,10 @@ class Customer extends SoftDeleteModel
         'id',
     ];
 
+    protected $enums = [
+        'sex' => Gender::class
+    ];
+
     const MALE = 'M';
     const FEMALE = 'F';
 
@@ -59,6 +64,11 @@ class Customer extends SoftDeleteModel
     public function getNameAttribute()
     {
         return $this->family_name . ' ' . $this->first_name;
+    }
+
+    public function getNameKanaAttribute()
+    {
+        return $this->family_name_kana . ' ' . $this->first_name_kana;
     }
 
     public function hospitals()

@@ -19,9 +19,9 @@ class CreateHospitalImagesTable extends Migration
             $table->increments('id');
             $table->integer('hospital_id')->unsigned();
             $table->foreign('hospital_id')->references('id')->on('hospitals');
-            $table->string('name', 128);
-            $table->string('extension', 5);
-            $table->string('path', 256);
+            $table->string('name', 128)->nullable();
+            $table->string('extension', 5)->nullable();
+            $table->string('path', 256)->nullable();
             $table->text('memo1')->nullable();
             $table->text('memo2')->nullable();
             $table->integer('is_display')->default(0);

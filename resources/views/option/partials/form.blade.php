@@ -1,4 +1,5 @@
 <div class="table-responsive">
+    <input type="hidden" name="lock_version" value="{{ $option->lock_version or '' }}" />
     <table class="table table-bordered mb-5 mt-5">
 
         <tr>

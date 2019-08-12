@@ -236,6 +236,20 @@ module.exports.addScrollToTop = function () {
         $(this).siblings('.btn').removeClass('active');
         $(this).addClass('active');
     });
+    /* ---------------------------------------------------
+    calendar bulk
+    -----------------------------------------------------*/
+    $('#open-bulk-box').on('click', function (e) {
+        $('.bulk_update').slideToggle();
+        if($(this).children().hasClass("fa-angle-down")) {
+            $(this).children().removeClass('fa-angle-down');
+            $(this).children().addClass('fa-angle-up');
+        } else {
+            $(this).children().removeClass('fa-angle-up');
+            $(this).children().addClass('fa-angle-down');
+        }
+    });
+
 })(jQuery);
 
 /***/ }),
@@ -246,3 +260,24 @@ module.exports.addScrollToTop = function () {
 
 /***/ })
 /******/ ]);
+
+// フラッシュメッセージのfadeout
+(function() {
+    'use strict';
+    // フラッシュメッセージのfadeout
+    $(function(){
+        $('.alert-success').fadeOut(2000);
+        $('.alert-danger').fadeOut(2000);
+    });
+
+})();
+
+$(function () {
+    $('.sidebar-toggle').click(function() {
+        if($.cookie('menu_close') == 1) {
+            $.removeCookie('menu_close');
+        } else {
+            $.cookie('menu_close', 1);
+        }
+    });
+});

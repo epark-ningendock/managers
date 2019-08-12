@@ -61,28 +61,12 @@
 @stop
 
 @section('table')
-  <div class="count-paginate-bar">
-      <div class="row">
-          <div class="col-sm-6">
-              <div class="display-total text-left mr-5 ">
-                  全{{ $staffs->total() }} 件中
-                  {{ ( $staffs->currentPage() * $staffs->perPage() ) - $staffs->perPage() + 1 }}件
-                  @if ($staffs->currentPage() === $staffs->lastPage())
-                    ~ {{ $staffs->total() }} 件を表示
-                  @else
-                    ~ {{ $staffs->currentPage() * $staffs->perPage() }} 件を表示
-                  @endif
-              </div>
-          </div>
-          <div class="col-sm-6">
-          </div>
-      </div>
-  </div>
-  <div class="table-responsive mt-3">
-    <table id="example2" class="table table-bordered table-hover table-striped">
+  <div class="staff-table-responsive table-responsive mt-3">
+    @include('layouts.partials.pagination-label', ['paginator' => $staffs])
+    <table id="example2" class="table table-bordered table-hover table-striped no-border staff-table">
       <thead>
       <tr>
-        <th>スタッフID</th>
+        <th>ID</th>
         <th>スタッフ名</th>
         <th>ログインID</th>
         <th>メールアドレス</th>
@@ -96,11 +80,11 @@
         <th>契約管理</th>
         <th>状態</th>
         @if (Auth::user()->staff_auth->is_staff === 3)
-          <th>編集</th>
-          <th>削除</th>
+          <th></th>
+          <th></th>
         @endif
         @if (Auth::user()->authority->value === Authority::Admin && Auth::user()->staff_auth->is_staff === 3)
-          <th>パスワード変更</th>
+          <th></th>
         @endif
       </tr>
       </thead>
@@ -125,7 +109,7 @@
               @if ( $staff->status->value !== StaffStatus::Deleted)
                 <a class="btn btn-primary"
                   href="{{ route('staff.edit', $staff->id) }}">
-                  <i class="fa fa-edit text-bold"> 編集</i>
+                  <i class="fa fa-edit"> 編集</i>
                 </a>
               @endif
             </td>
@@ -142,7 +126,7 @@
             <td>
               @if ( $staff->status->value !== StaffStatus::Deleted)
                 <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-primary">
-                  <i class="fa fa-key text-bold"> 変更</i>
+                  <i class="fa fa-key"> 変更</i>
                 </a>
               @endif
             </td>
@@ -152,8 +136,9 @@
       </tbody>
     </table>
   </div>
-
+  <div class="paginate-box">
   {{ $staffs->links() }}
+  </div>
   <style>
     tr.light-gray td {
       background-color: lightgray;

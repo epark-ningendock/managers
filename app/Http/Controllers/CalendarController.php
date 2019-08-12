@@ -10,12 +10,11 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Course;
 use App\Http\Requests\CalendarFormRequest;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use App\Reservation;
 use Yasumi\Yasumi;
-use \DateTime;
+use Reshadman\OptimisticLocking\StaleModelLockingException;
 
 class CalendarController extends Controller
 {
@@ -26,7 +25,7 @@ class CalendarController extends Controller
      */
     public function index()
     {
-        $calendars = Calendar::with('courses')->get();
+        $calendars = Calendar::with('courses')->where('hospital_id', session()->get('hospital_id'))->get();
         return view('calendar.index', ['calendars' => $calendars]);
     }
 
@@ -37,7 +36,7 @@ class CalendarController extends Controller
      */
     public function create()
     {
-        $unregistered_courses = Course::whereNull('calendar_id')->get();
+        $unregistered_courses = Course::whereNull('calendar_id')->where('hospital_id', session()->get('hospital_id'))->get();
         return view('calendar.create', ['unregistered_courses' => $unregistered_courses ]);
     }
 
@@ -76,7 +75,7 @@ class CalendarController extends Controller
      */
     public function edit(Calendar $calendar)
     {
-        $unregistered_courses = Course::whereNull('calendar_id')->get();
+        $unregistered_courses = Course::whereNull('calendar_id')->where('hospital_id', session()->get('hospital_id'))->get();
         return view('calendar.edit')
             ->with('unregistered_courses', $unregistered_courses)
             ->with('calendar', $calendar);
@@ -86,9 +85,10 @@ class CalendarController extends Controller
     {
         try {
             DB::beginTransaction();
-            $calendar_data = $request->only(['name', 'is_calendar_display']);
+            $calendar_data = $request->only(['name', 'is_calendar_display', 'lock_version']);
             if (!isset($calendar)) {
                 $calendar = new Calendar($calendar_data);
+                $calendar->hospital_id = session()->get('hospital_id');
             } else {
                 $calendar->fill($calendar_data);
             }
@@ -126,8 +126,12 @@ class CalendarController extends Controller
             $this->saveCalendar($request, $calendar);
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar')]));
             return redirect('calendar');
+        } catch (StaleModelLockingException $e) {
+            Session::flash('error', trans('messages.model_changed_error'));
+            return redirect()->back();
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
+            Session::flash('error', trans('messages.update_error'));
+            return redirect('calendar');
         }
     }
 
@@ -193,8 +197,8 @@ class CalendarController extends Controller
             });
 
             $reservation = $reservation_counts->get($start->format('Ymd'));
-
-            $month->push([ 'date' => $start->copy(), 'is_holiday' => isset($holiday), 'calendar_day' => $calendar_day, 'reservation_count' => $reservation ]);
+            $is_holiday = isset($holiday) ? $holiday->is_holiday : 0;
+            $month->push([ 'date' => $start->copy(), 'is_holiday' => $is_holiday, 'calendar_day' => $calendar_day, 'reservation_count' => $reservation ]);
 
             if ($start->isLastOfMonth() && !$start->isSaturday()) {
                 for ($i = $start->dayOfWeek; $i < 6; $i++) {
@@ -226,6 +230,11 @@ class CalendarController extends Controller
             DB::beginTransaction();
 
             $calendar = Calendar::findOrFail($id);
+            // force to update calendar lock version
+            $calendar->lock_version = $request->input('lock_version');
+            $calendar->touch();
+            $calendar->save();
+
             $start = Carbon::now()->startOfMonth();
             $end = Carbon::now()->addMonth(5)->endOfMonth();
 
@@ -270,9 +279,14 @@ class CalendarController extends Controller
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar_setting')]));
             DB::commit();
             return redirect('calendar');
+        } catch (StaleModelLockingException $e) {
+            DB::rollback();
+            Session::flash('error', trans('messages.model_changed_error'));
+            return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
+            Session::flash('error', trans('messages.update_error'));
+            return redirect()->back()->withInput();
         }
     }
 
@@ -286,7 +300,7 @@ class CalendarController extends Controller
         $end = Carbon::now()->addMonth(11)->endOfMonth();
         $months = collect();
 
-        $holidays = Holiday::whereDate('date', '>=', $start->toDateString())
+        $holidays = Holiday::where('hospital_id', session()->get('hospital_id'))->whereDate('date', '>=', $start->toDateString())
             ->whereDate('date', '<=', $end->toDateString())->get();
 
         $public_holidays = collect(Yasumi::create('Japan', $start->year, 'ja_JP')->getHolidays())->flatten(1);
@@ -318,7 +332,10 @@ class CalendarController extends Controller
             $p_holiday = $public_holidays->first(function ($h) use ($start) {
                 return $start->isSameDay($h);
             });
-            $month->push([ 'date' => $start->copy(), 'is_holiday' => isset($p_holiday) || isset($holiday), 'holiday' =>  $p_holiday]);
+
+            $is_holiday = isset($holiday) && $holiday->is_holiday == 1;
+            $lock_version = isset($holiday) ? $holiday->lock_version : '';
+            $month->push([ 'date' => $start->copy(), 'is_holiday' => $is_holiday , 'holiday' =>  $p_holiday, 'lock_version' => $lock_version]);
 
             if ($start->isLastOfMonth() && !$start->isSaturday()) {
                 for ($i = $start->dayOfWeek; $i < 6; $i++) {
@@ -351,13 +368,22 @@ class CalendarController extends Controller
             $end = Carbon::now()->addMonth(11)->endOfMonth();
             $months = collect();
 
-            $holidays = Holiday::whereDate('date', '>=', $start->toDateString())
+            $hospital_id = session()->get('hospital_id');
+            $holidays = Holiday::where('hospital_id', $hospital_id)->whereDate('date', '>=', $start->toDateString())
                 ->whereDate('date', '<=', $end->toDateString())->get();
 
             $days = collect($request->input('days'));
             $is_holidays = collect($request->input('is_holidays'));
+            $lock_versions = collect($request->input('lock_versions'));
 
             $new_holidays = collect();
+
+            $public_holidays = collect(Yasumi::create('Japan', $start->year, 'ja_JP')->getHolidays())->flatten(1);
+
+            if ($start->year != $end->year) {
+                $temp = collect(Yasumi::create('Japan', $end->year, 'ja_JP')->getHolidays())->flatten(1);
+                $public_holidays = $public_holidays->merge($temp);
+            }
 
             while ($start->lt($end)) {
                 $key = $start->format('Y年m月');
@@ -371,17 +397,35 @@ class CalendarController extends Controller
                 $index = $days->search(function ($d) use ($start) {
                     return $start->format('Ymd') == $d;
                 });
+
                 $is_holiday = $is_holidays->get($index);
+                $lock_version = $lock_versions->get($index);
 
                 $holiday = $holidays->first(function ($day) use ($start) {
                     return $day->date->isSameDay($start);
                 });
 
-                if ($is_holiday && !isset($holiday)) {
-                    //TODO to add hospital_id from logined user
-                    $new_holidays->push([ 'date' => $start->copy(), 'created_at' => Carbon::now(), 'updated_at'=> Carbon::now() ]);
+                $p_holiday = $public_holidays->first(function ($h) use ($start) {
+                    return $start->isSameDay($h);
+                });
+
+
+                if (!isset($holiday) && ($is_holiday == 1 || isset($p_holiday))) {
+                    $new_holidays->push([
+                        'hospital_id' => $hospital_id,
+                        'date' => $start->copy(),
+                        'is_holiday' => $is_holiday,
+                        'created_at' => Carbon::now(),
+                        'updated_at'=> Carbon::now()
+                    ]);
                 } elseif (isset($holiday)) {
-                    $holiday->forceDelete();
+                    if (!isset($p_holiday) && $is_holiday == 0) {
+                        $holiday->forceDelete();
+                    } else {
+                        $holiday->lock_version = $lock_version;
+                        $holiday->is_holiday = $is_holiday;
+                        $holiday->save();
+                    }
                 }
                 $start->addDay(1);
             }
@@ -391,9 +435,14 @@ class CalendarController extends Controller
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.holiday_setting')]));
             DB::commit();
             return redirect('calendar');
+        } catch (StaleModelLockingException $e) {
+            DB::rollback();
+            Session::flash('error', trans('messages.model_changed_error'));
+            return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
+            Session::flash('error', trans('messages.update_error'));
+            return redirect()->back();
         }
     }
 }

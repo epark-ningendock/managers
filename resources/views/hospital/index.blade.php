@@ -59,24 +59,17 @@
 
     </form>
 
-@stop
+    @include('hospital.partials.record-management-modal-box')
 
-@section('button')
-@include('hospital.partials.record-management-modal-box')
-  <div class="pull-right">
-    @if (Auth::user()->staff_auth->is_hospital === 3)
-        <a class="btn btn-primary btn-create" href="{{ route('hospital.contractInfo') }}">新規作成</a>
-    @endif  
-  </div>
 @stop
 
 
 
 
 @section('table')
-
-    <div class="table-responsive">
-        <table id="example2" class="table table-bordered table-hover table-striped mb-5 mt-5">
+    <p class="table-responsive">
+        @include('layouts.partials.pagination-label', ['paginator' => $hospitals])
+        <table id="example2" class="table table-bordered table-hover table-striped mb-5">
             <thead>
             <tr>
                 <th>ID</th>
@@ -107,7 +100,7 @@
                         @if (Auth::user()->staff_auth->is_hospital === 3)
                             <td>
                                 <a class="btn btn-success insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">
-                                    <span class="fa fa-pencil"></i>    
+                                    <i class="fa fa-pencil"></i>
                                 </a>
                                 <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
                                     {{ csrf_field() }}

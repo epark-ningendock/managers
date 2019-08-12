@@ -144,9 +144,9 @@ class LoginController extends Controller
             // 1:Validのユーザーのみログイン
             if ($staff->status->value == StaffStatus::Valid) {
                 return true;
-            } else {
+            } elseif ($staff->status->value == StaffStatus::Invalid) {
                 $validator = Validator::make([], []);
-                $validator->errors()->add('fail_login', 'スタッフが無効または、削除されています。');
+                $validator->errors()->add('fail_login', 'スタッフが無効です。');
                 throw new ValidationException($validator);
                 return redirect()->back();
             }
