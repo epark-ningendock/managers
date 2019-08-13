@@ -14,7 +14,7 @@ class HospitalImageImport extends ImportAbstract
      */
     public function getOldPrimaryKeyName(): string
     {
-        return '';
+        return 'file_no';
     }
 
     /**
@@ -48,5 +48,6 @@ class HospitalImageImport extends ImportAbstract
         ]);
 
         $model->save();
+        $this->setId($model, $row);
     }
 }
