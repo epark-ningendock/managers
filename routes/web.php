@@ -24,6 +24,9 @@ Route::get('/', function () {
 | Contract Information
 |--------------------------------------------------------------------------
 */
+Route::post('/contract/upload', 'ContractInformationController@upload')->name('contract.upload');
+Route::post('/contract/upload/store', 'ContractInformationController@storeUpload')->name('contract.upload.store');
+Route::get('/contract', 'ContractInformationController@index')->name('contract.index');
 Route::post('/contract-information/store', 'ContractInformationController@store')->name('contract.store');
 Route::get('/hospital/contract-information', 'ContractInformationController@create')->name('hospital.contractInfo');
 

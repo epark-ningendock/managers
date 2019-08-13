@@ -113,9 +113,8 @@
                 @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_pre_account !== Permission::None)
                   <li class="{{ Request::segment(1) === '#' ? 'active' : null }}"><a href="/#"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;事前決済管理</a></li>
                 @endif
-                {{-- 契約管理者のみ表示する --}}
                 @if (Auth::user()->authority->value === Authority::ContractStaff)
-                  <li class="{{ Request::segment(1) === '#' ? 'active' : null }}"><a href="/#"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;契約管理</a></li>
+                  <li class="{{ Request::segment(1) === 'contract' ? 'active' : null }}"><a href="/contract"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;契約管理</a></li>
                 @endif
                 @if(Auth::user()->getTable() == "staffs")
                   <li class="{{ request()->path()  === 'staff/edit-password-personal' ? 'active' : null }}"><a href="/staff/edit-password-personal"><i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;パスワードの変更</a></li>

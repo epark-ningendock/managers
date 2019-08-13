@@ -15,8 +15,9 @@ $factory->define(App\ContractInformation::class, function (Faker $faker) {
         'address' => $faker->address,
         'tel' => $faker->phoneNumber,
         'fax' => $faker->phoneNumber,
-        'karada_dog_id' => $faker->randomNumber(),
+        'email' => $faker->email,
         'code' => $faker->randomNumber(),
-        'old_karada_dog_id' => $faker->randomNumber()
+        'contract_plan_id' => $faker->numberBetween(1, 10),
+        'property_no' => $faker->word
     ];
 });

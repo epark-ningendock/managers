@@ -190,5 +190,6 @@ return [
     ],
     'address1' => '市区郡',
     'address2' => 'それ以降の住所',
-    'invalid_email' => '正しいメールアドレスの書式でご入力ください'
+    'invalid_email' => '正しいメールアドレスの書式でご入力ください',
+    'contract_saved' => '契約情報が保存されました。'
 ];

@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             DistrictCodeSeeder::class,
             HospitalTableSeeder::class,
             HospitalStaffsTableSeeder::class,
+            ContractPlansTableSeeder::class,
             ContractInformationTableSeeder::class, // comment off if you need it
             HospitalImagesTableSeeder::class,
             OptionsTableSeeder::class,
