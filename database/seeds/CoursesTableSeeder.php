@@ -34,6 +34,7 @@ class CoursesTableSeeder extends Seeder
         $calendars = Calendar::all()->groupBy('hospital_id');
 
         $courses = factory(Course::class, 50)->make();
+
         foreach ($courses as $index => $course) {
             $hospital = $faker->randomElement($hospitals);
             $course->hospital_id = $hospital->id;

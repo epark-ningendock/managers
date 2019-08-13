@@ -2596,6 +2596,11 @@ label {
   margin: 0 auto;
 }
 
+.form-entry .checkbox label,
+.form-entry .radio label {
+  padding-left: 0px !important;
+}
+
 .form-entry .radio {
   margin: 0.5rem;
 }
@@ -2951,15 +2956,6 @@ label.file-upload input[type="file"] {
   padding: 0 0 40px 0;
 }
 
-#calendar_bulk_box {
-  /*** custom checkboxes ***/
-  /* to hide the checkbox itself */
-  /* unchecked icon */
-  /* space between checkbox and label */
-  /* checked icon */
-  /* allow space for check mark */
-}
-
 #calendar_bulk_box .calendar-period {
   background: #eeeeee;
   line-height: 50px;
@@ -3052,40 +3048,6 @@ label.file-upload input[type="file"] {
   font-weight: bold;
 }
 
-#calendar_bulk_box input[type=checkbox] {
-  display: none;
-}
-
-#calendar_bulk_box input[type=checkbox] + label:before {
-  font-family: FontAwesome;
-  content: "\F096";
-  color: #3c8dbc;
-  text-align: center;
-  display: inline-block;
-  width: 24px;
-  vertical-align: middle;
-  padding: 0px 0 0 0;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-#calendar_bulk_box input[type=checkbox] + label:before {
-  content: "\F096";
-  color: #3c8dbc;
-}
-
-#calendar_bulk_box input[type=checkbox] + label:before {
-  letter-spacing: 10px;
-}
-
-#calendar_bulk_box input[type=checkbox]:checked + label:before {
-  content: "\F046";
-}
-
-#calendar_bulk_box input[type=checkbox]:checked + label:before {
-  letter-spacing: 5px;
-}
-
 #calendar_bulk_box h4 {
   background: #3c8dbc;
   color: #ffffff;
@@ -3144,5 +3106,74 @@ label.file-upload input[type="file"] {
   content: "";
   display: block;
   clear: both;
+}
+
+#email-template .email-template-title {
+  width: 70%;
+  text-align: left;
+  vertical-align: middle;
+}
+
+#email-template .email-template-id {
+  vertical-align: middle;
+}
+
+.confirmation_email_reception_flag p,
+.reception_type_flag p,
+.epark_in_hospital_reception_mail p {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+/*** custom checkboxes ***/
+
+input[type=checkbox] {
+  display: none;
+}
+
+/* to hide the checkbox itself */
+
+input[type=checkbox] + label:before {
+  font-family: FontAwesome;
+  content: "\F096";
+  color: #3c8dbc;
+  text-align: center;
+  display: inline-block;
+  width: 24px;
+  vertical-align: middle;
+  padding: 0px 0 0 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+input[type=checkbox] + label:before {
+  content: "\F096";
+  color: #3c8dbc;
+}
+
+/* unchecked icon */
+
+input[type=checkbox] + label:before {
+  letter-spacing: 10px;
+}
+
+/* space between checkbox and label */
+
+input[type=checkbox]:checked + label:before {
+  content: "\F046";
+}
+
+/* checked icon */
+
+input[type=checkbox]:checked + label:before {
+  letter-spacing: 5px;
+}
+
+/* allow space for check mark */
+
+input[type=checkbox]:disabled + label:before {
+  content: "\F096";
+  opacity: 0.4;
+  color: #333333;
 }
 

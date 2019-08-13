@@ -8,7 +8,7 @@
   <h1>    
       <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
       -
-      <i class="fa fa-gears"> 受付メール設定</i>
+      <span> 受付メール設定</span>
   </h1>
 @stop
 

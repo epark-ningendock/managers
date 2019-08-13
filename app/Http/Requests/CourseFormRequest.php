@@ -47,7 +47,6 @@ class CourseFormRequest extends FormRequest
                 'is_price_memo' => [Rule::in([0, 1])],
                 'price' => 'required_if:is_price,1|numeric',
                 'price_memo' => 'required_if:is_price_memo,1',
-                'tax_class' => 'exists:tax_classes,id',
                 'is_pre_account' => ['required', Rule::in([0, 1])],
                 'course_option_ids' => 'array',
                 'course_option_ids.*' => 'sometimes|integer',
