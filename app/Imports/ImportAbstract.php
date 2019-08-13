@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\ConvertedId;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -71,6 +72,27 @@ abstract class ImportAbstract implements WithProgressBar, WithHeadingRow, OnEach
         if (in_array($row[$column], $values)) {
             $model->delete();
         }
+    }
+
+    /**
+     * @param $rgst
+     * @return Carbon|\Illuminate\Support\Carbon
+     */
+    protected function setCreatedAt($rgst)
+    {
+        if ($rgst === '0000-00-00 00:00:00' || is_null($rgst)) {
+            return now();
+        }
+        return Carbon::createFromFormat('Y-m-d H:i:s', $rgst);
+    }
+
+    /**
+     * @param $updt
+     * @return Carbon|\Illuminate\Support\Carbon
+     */
+    protected function setUpdatedAt($updt)
+    {
+        return $this->setCreatedAt($updt);
     }
 
     /**
