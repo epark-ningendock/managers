@@ -35,7 +35,7 @@ return [
     'staff_create_error' => '登録の際にエラーが発生しました。',
     'create_error' => 'エラーが発生しました。',
     'update_error' => 'エラーが発生しました。',
-    'model_changed_error' => '更新中にモデルが変更されました。',
+    'model_changed_error' => '更新中にデータ変更されました。',
     'select_hospital_confirmation' => 'この医療機関を操作します。<br/>よろしいですか？',
     'delete_confirmation' => '本当に削除してもよろしいですか？<br/>この処理は取り消せません。',
     'delete_popup_title' => '確認を削除',
