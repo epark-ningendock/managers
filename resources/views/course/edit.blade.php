@@ -10,7 +10,7 @@
 
 <!-- ページの内容を入力 -->
 @section('main-content')
-  @include('layouts.partials.errorbag')
+  @include('layouts.partials.message')
   <form method="POST" action="{{ route('course.update', $course->id) }}">
     {!! csrf_field() !!}
     {!! method_field('PATCH') !!}

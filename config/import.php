@@ -5,6 +5,7 @@ use App\Course;
 use App\CourseDetail;
 use App\CourseQuestion;
 use App\Hospital;
+use App\HospitalDetail;
 use App\HospitalImage;
 use App\HospitalMajorClassification;
 use App\HospitalMiddleClassification;
@@ -13,17 +14,20 @@ use App\Imports\ClassificationTypeImport;
 use App\Imports\CourseDetailImport;
 use App\Imports\CourseImport;
 use App\Imports\CourseQuestionImport;
+use App\Imports\HospitalDetailImport;
 use App\Imports\HospitalImageImport;
 use App\Imports\HospitalImport;
 use App\Imports\HospitalMajorClassificationImport;
 use App\Imports\HospitalMiddleClassificationImport;
 use App\Imports\HospitalMinorClassificationImport;
 use App\Imports\MajorClassificationImport;
+use App\Imports\MedicalTreatmentTimeImport;
 use App\Imports\MiddleClassificationImport;
 use App\Imports\MinorClassificationImport;
 use App\Imports\PrefectureImport;
 use App\Imports\StaffImport;
 use App\MajorClassification;
+use App\MedicalTreatmentTime;
 use App\MiddleClassification;
 use App\MinorClassification;
 use App\Prefecture;
@@ -84,6 +88,14 @@ return [
     ],
     'm_hospital_file.csv' => [
         'model' => HospitalImage::class,
-        'import' => HospitalImageImport::class
+        'import' => HospitalImageImport::class,
+    ],
+    'm_hospital_time.csv' => [
+        'model' => MedicalTreatmentTime::class,
+        'import' => MedicalTreatmentTimeImport::class,
+    ],
+    'm_hospital_detail.csv' => [
+        'model' => HospitalDetail::class,
+        'import' => HospitalDetailImport::class,
     ],
 ];

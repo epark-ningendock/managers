@@ -4,12 +4,11 @@ namespace App;
 
 use App\Enums\WebReception;
 use App\Helpers\EnumTrait;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class Course extends SoftDeleteModel
 {
-    use EnumTrait;
-    use SoftDeletes;
+    use EnumTrait, OptimisticLocking;
 
     protected $fillable = [
         'hospital_id',
@@ -44,6 +43,7 @@ class Course extends SoftDeleteModel
         'status',
         'created_at',
         'updated_at',
+        'lock_version'
     ];
 
     protected $attributes = [
