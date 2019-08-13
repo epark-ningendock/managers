@@ -3,6 +3,7 @@
 use App\ClassificationType;
 use App\Course;
 use App\CourseDetail;
+use App\CourseImage;
 use App\CourseQuestion;
 use App\Hospital;
 use App\HospitalDetail;
@@ -13,6 +14,7 @@ use App\HospitalMinorClassification;
 use App\ImageOrder;
 use App\Imports\ClassificationTypeImport;
 use App\Imports\CourseDetailImport;
+use App\Imports\CourseImageImport;
 use App\Imports\CourseImport;
 use App\Imports\CourseQuestionImport;
 use App\Imports\HospitalDetailImport;
@@ -88,12 +90,10 @@ return [
         'model' => CourseQuestion::class,
         'import' => CourseQuestionImport::class,
     ],
-<<<<<<< HEAD
     'm_file_location.csv' => [
         'model' => ImageOrder::class,
         'import' => ImageOrderImport::class,
-    ]
-=======
+    ],
     'm_hospital_file.csv' => [
         'model' => HospitalImage::class,
         'import' => HospitalImageImport::class,
@@ -106,5 +106,8 @@ return [
         'model' => HospitalDetail::class,
         'import' => HospitalDetailImport::class,
     ],
->>>>>>> bb172c5d0d0cd13ffaa15119d4b34f07b4c1950b
+    'm_course_file.csv' => [
+        'model' => CourseImage::class,
+        'import' => CourseImageImport::class,
+    ],
 ];

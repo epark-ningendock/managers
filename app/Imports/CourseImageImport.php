@@ -45,6 +45,5 @@ class CourseImageImport extends ImportAbstract
             'updated_at' => $this->setUpdatedAt($row['updt']),
         ]);
         $model->save();
-        $this->deleteIf($model, $row, 'status', ['X']);
     }
 }

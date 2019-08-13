@@ -113,6 +113,7 @@ class ImportCsv extends Command
         $this->import('m_hospital_file.csv');
         $this->import('m_hospital_detail.csv');
         $this->import('m_hospital_time.csv');
+        $this->import('m_course_file.csv');
 
         $this->info('インポートを完了しました。');
     }
