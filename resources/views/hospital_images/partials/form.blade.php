@@ -7,7 +7,7 @@
 
         @if(!is_null($main_image_category) && !is_null($main_image_category->hospital_image->path))
             <div class="main_image_area">
-                <img class="object-fit" src="/img/uploads/500-auto-{{$main_image_category->hospital_image->path}}" height="200">
+                <img class="object-fit" src="{{$main_image_category->hospital_image->path}}" height="200">
                 <p class="file_delete_text">
                     <a onclick="return confirm('この施設画像を削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $main_image_category->hospital_image_id]) }}">
                         ファイル削除

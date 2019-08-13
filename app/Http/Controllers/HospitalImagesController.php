@@ -23,6 +23,9 @@ class HospitalImagesController extends Controller
         $this->hospital_category = $hospital_category;
         $this->image_order = $image_order;
         $this->interview_detail = $interview_detail;
+        $this->disks = config('filesystems.disks');
+        $this->cloud = config('filesystems.cloud');
+
     }
     /**
      * Display a listing of the resource.
@@ -78,6 +81,8 @@ class HospitalImagesController extends Controller
      */
     public function store(HospitalImageFormRequest $request, int $hospital_id)
     {
+        $disks = $this->disks[$this->cloud];//保存先のストレージ情報、エンドポイントとか、
+        $img_path = $disks['endpoint'].'/'.$disks['bucket'].'/';//画像のパス
         $hospital = Hospital::find($hospital_id);
 
         $file = $request->all();
@@ -95,20 +100,23 @@ class HospitalImagesController extends Controller
 
         //main画像の保存
         if(isset($file['main'])) {
-            $image = \Image::make(file_get_contents($file['main']->getRealPath()));
-            $image
-                ->save(public_path().'/img/uploads/'.$file['main']->hashName())
-                ->resize(300, null, function ($constraint) {
+            // 画像を横幅750縦幅アスペクト比維持の自動サイズへリサイズ
+            $name = $file['main']->hashName();
+            $image = \Image::make($file['main'])
+                ->resize(750, null, function ($constraint) {
                     $constraint->aspectRatio();
-                })
-                ->save(public_path().'/img/uploads/300-auto-'.$file['main']->hashName())
-                ->resize(500, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                })
-                ->save(public_path().'/img/uploads/500-auto-'.$file['main']->hashName());
+                });
+            //pcはそのままのサイズでOK
+            $pc_image = \Image::make($file['main']);
+
+            // configファイルに定義したS3のパスへ画像をアップロード
+            //sp保存
+            \Storage::put($name.'_sp', (string) $image->encode());
+            //pc保存
+            \Storage::put($name, (string) $pc_image->encode());
 
             //HospitalImage HospitalCategory 保存用array
-            $save_images = ['extension' => str_replace('image/', '', $image->mime), 'name' => $file['main']->getClientOriginalName(), 'path' => $file['main']->hashName()];
+            $save_images = ['extension' => str_replace('image/', '', $image->mime), 'name' => $file['main']->hashName(), 'path' => $img_path. $file['main']->hashName()];
             $save_image_categories = [ 'hospital_id' => $hospital_id, 'image_order' => ImageOrder::IMAGE_GROUP_FACILITY_MAIN ];
 
             //メイン画像の登録確認
@@ -255,6 +263,7 @@ class HospitalImagesController extends Controller
      */
     public function delete(int $hospital_id, int $hospital_category_id, int $hospital_image_id)
     {
+
         $hospital_image = $this->hospital_image->find($hospital_image_id);
 
         $hospital_image_file_sp = public_path().'/img/uploads/300-auto-'.$hospital_image->path;
@@ -293,13 +302,18 @@ class HospitalImagesController extends Controller
      */
     public function deleteImage(int $hospital_id, int $hospital_image_id)
     {
+
         $hospital_image = $this->hospital_image->find($hospital_image_id);
 
         $hospital_image_file_sp = public_path().'/img/uploads/300-auto-'.$hospital_image->path;
         $hospital_image_file_pc = public_path().'/img/uploads/500-auto-'.$hospital_image->path;
         $hospital_image_default = public_path().'/img/uploads/'.$hospital_image->path;
 
-        \File::delete($hospital_image_file_sp, $hospital_image_file_pc, $hospital_image_default);
+        //\File::delete($hospital_image_file_sp, $hospital_image_file_pc, $hospital_image_default);
+
+        $disk = \Storage::disk($this->cloud);
+        $disk->delete($hospital_image->name);
+        $disk->delete($hospital_image->name.'_sp');
 
         $hospital_image->path = null;
         $hospital_image->save();
