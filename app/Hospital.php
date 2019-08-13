@@ -3,12 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class Hospital extends Model
 {
-    use OptimisticLocking;
-
+    use SoftDeletes, OptimisticLocking;
     protected $table = 'hospitals';
 
     //Note $fillable is temporary for factory, make it realistic field when business logic
@@ -66,6 +66,8 @@ class Hospital extends Model
         'is_pre_account',
         'pre_account_discount_rate',
         'pre_account_commission_rate',
+        'created_at',
+        'updated_at',
         'lock_version',
     ];
 
@@ -77,8 +79,19 @@ class Hospital extends Model
         return $this->hasOne('App\ReceptionEmailSetting');
     }
 
+    public function hospital_images()
+    {
+        return $this->hasMany('App\HospitalImage');
+    }
+
+    public function hospital_categories()
+    {
+        return $this->hasMany('App\HospitalCategory');
+    }
+
     public function hospital_details()
     {
         return $this->hasMany('App\HospitalDetail');
     }
+
 }

@@ -37,6 +37,7 @@
     <h1 class="box-title">検査コースの登録</h1>
   </div>
   <div class="box-body">
+    <input type="hidden" name="lock_version" value="{{ $course->lock_version or ''}}" />
     <div class="form-group @if ($errors->has('name')) has-error @endif">
       <label for="name">検査コース名 <span class="text-red">必須</span></label>
       <input type="text" class="form-control" id="name" name="name"
@@ -52,16 +53,16 @@
           <input type="radio" name="web_reception"
                  {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::Accept ? 'checked' : '' }}
                  value="{{ WebReception::Accept }}">
-          受け付ける
+          {{ WebReception::Accept()->description }}
         </label>
         <label class="ml-3">
           <input type="radio" name="web_reception"
                  {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::NotAccept ? 'checked' : '' }}
                  value="{{ WebReception::NotAccept }}">
-          受け付け
+          {{ WebReception::NotAccept()->description }}
         </label>
       </div>
-      @if ($errors->has('web_reception')) <p class="help-block">{{ $errors->first('web_') }}</p> @endif
+      @if ($errors->has('web_reception')) <p class="help-block">{{ $errors->first('web_reception') }}</p> @endif
     </div>
 
     <div class="form-group @if ($errors->has('calendar_id')) has-error @endif" >
@@ -123,7 +124,8 @@
             <div class="mb-3 text-center">
               <image src="{{ $image->path }}" style="width: 40px; height: 40px;"></image>
             </div>
-            <select name="course_image_orders[]" class="form-control">
+            <select name="course_image_orders[]" class="form-control image-order" @if(!$is_checked) disabled @endif>
+              <option></option>
               @foreach($image_orders as $image_order)
                 <option value="{{ $image_order->id }}"
                     {{ $order_value == $image_order->id ? 'selected' : '' }} >
@@ -138,25 +140,19 @@
 
     <div class="form-group">
       <label for="course_point">コースの特徴</label>
-      <textarea class="form-control" id="course_point" name="course_point" rows="5">
-        {{ old('course_point', (isset($course) ? $course->course_point : null)) }}
-      </textarea>
+      <textarea class="form-control" id="course_point" name="course_point" rows="5">{{ old('course_point', (isset($course) ? $course->course_point : null)) }}</textarea>
       <span class="pull-right">0/1000文字</span>
     </div>
 
     <div class="form-group">
       <label for="course_notice">注意事項</label>
-      <textarea class="form-control" id="course_notice" name="course_notice">
-        {{ old('course_notice', (isset($course) ? $course->course_notice : null)) }}
-      </textarea>
+      <textarea class="form-control" id="course_notice" name="course_notice">{{ old('course_notice', (isset($course) ? $course->course_notice : null)) }}</textarea>
       <span class="pull-right">0/1000文字</span>
     </div>
 
     <div class="form-group">
       <label for="course_cancel">キャンセルについて</label>
-      <textarea class="form-control" id="course_cancel" name="course_cancel">
-        {{ old('course_cancel', (isset($course) ? $course->course_cancel : null)) }}
-      </textarea>
+      <textarea class="form-control" id="course_cancel" name="course_cancel">{{ old('course_cancel', (isset($course) ? $course->course_cancel : null)) }}</textarea>
       <span class="pull-right">0/1000文字</span>
     </div>
 
@@ -242,6 +238,7 @@
         <input type="checkbox" class="checkbox d-inline-block mr-2" name="is_price" value="1"
                id="is_price" {{ old('is_price', (isset($course)? $course->is_price : null)) == 1 ? 'checked' : '' }} />
         <label for="is_price">価格</label>
+        <input type="hidden" id="tax_rate" value="{{ $tax_class->rate }}" />
         <input type="number" class="form-control d-inline-block mr-2 ml-2" id="price" name="price" style="width: 100px;"
                value="{{ old('price', (isset($course) ? $course->price : null)) }}">
         円
@@ -251,7 +248,7 @@
     </div>
 
     <div class="form-group @if ( $errors->has('price_memo')) has-error @endif">
-      <label for="name">手動設定金額</label>
+      <label for="price_memo">手動設定金額</label>
       <div>
         <input type="checkbox" class="checkbox d-inline-block mr-2" name="is_price_memo" value="1"
                id="is_price_memo" {{ old('is_price_memo', (isset($course)? $course->is_price_memo : null)) == 1 ? 'checked' : '' }} />
@@ -261,22 +258,6 @@
       </div>
       @if ($errors->has('price_memo')) <p class="help-block">{{ $errors->first('price_memo') }}</p> @endif
     </div>
-    <div class="separator mb-3"></div>
-    <div class="form-group" >
-      <label for="tax_class">税区分<span class="text-red 必須"></span></label>
-      <div class="row">
-        <div class="col-md-12">
-          <select name="tax_class" id="tax_class" class="form-control">
-            @foreach ($tax_classes as $tax_class)
-              <option {{ old('tax_class', isset($course) ? $course->$tax_class : null) == $tax_class->id ? 'selected' : '' }}
-                  data-rate="{{ $tax_class->rate }}"
-              value="{{ $tax_class->id }}"> {{ $tax_class->name }}</option>
-            @endforeach
-          </select>
-        </div>
-      </div>
-    </div>
-
   </div>
 </div>
 
@@ -291,12 +272,12 @@
   <div class="box-body">
     <h4 class="d-inline-block">価格</h4></span>
     <div class="form-group">
-      <label for="name">事前決済価格</label>
+      <label>事前決済価格</label>
       <div>０円（税込）</div>
     </div>
     <div class="separator mb-3"></div>
     <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif" >
-      <label for="tax_class">利用設定 <span class="text-red">必須</span></label>
+      <label>利用設定 <span class="text-red">必須</span></label>
       <div>
         <input type="radio" class="checkbox d-inline-block" id="is_pre_account_normal_payment"
                {{ old('is_pre_account', isset($course) ? $course->is_pre_account : null) == 0 ? 'checked' : '' }}
@@ -581,40 +562,51 @@
           // character count
           -----------------------------------------------------*/
           (function () {
-              $('textarea').on('keyup', function() {
-                  const len = $(this).val().length;
-                  if (len > 1000) {
-                      $(this).val($(this).val().substring(0, 999));
+              const textAreaChange = function(ele, max) {
+                  const len = ele.val().length;
+                  if (len > max) {
+                      ele.val(ele.val().substring(0, max));
                   } else {
-                      $(this).next('span').text(len + '/1000文字');
+                      ele.next('span').text(len + '/' + max + '文字');
                   }
+              };
+
+              $('textarea').each(function(index, ele) {
+                  ele = $(ele);
+                  ele.on('keyup', function() {
+                    textAreaChange(ele, 1000);
+                  });
+                  textAreaChange(ele, 1000);
               });
 
               $('.minor-text').on('keyup', function() {
                   const max = parseInt($(this).data('maxlength'));
-                  const len = $(this).val().length;
-                  if (len > max) {
-                      $(this).val($(this).val().substring(0, max));
-                  } else {
-                      $(this).next('span').text(len + '/' + max + '文字');
-                  }
+                  textAreaChange($(this), max);
               });
+              textAreaChange($('.minor-text'), parseInt($('.minor-text').data('maxlength')));
+
           })();
 
           /* ---------------------------------------------------
           // image order enable/disable
           -----------------------------------------------------*/
           (function () {
+              $('.image-order option:first-child').remove();
+
               const change = function(ele) {
                   const orderEle = ele.parent().parent().find('select');
                   if (ele.prop('checked')) {
                       orderEle.prop('disabled', false);
                       ele.siblings('input:hidden').remove();
                       orderEle.next('input:hidden').remove();
+                      if (!orderEle.find('option:selected').val()) {
+                          orderEle.find('option:first-child').prop('selected', true);
+                      }
                   } else {
                       $('<input type="hidden" name="course_images[]" />').val('0').appendTo(ele.parent());
                       $('<input type="hidden" name="course_image_orders[]" value=""/>').insertAfter(orderEle);
                       orderEle.prop('disabled', true);
+                      orderEle.val('');
                   }
               };
 
@@ -702,7 +694,7 @@
               const change = function() {
                   if ($('#is_price').is(':checked') && $('#price').val()) {
                       const price = parseInt($('#price').val());
-                      const total = price + (price * $('#tax_class option:selected').data('rate') / 100);
+                      const total = price + (price * parseInt($('#tax_rate').val()) / 100);
                       $('#tax_amt').html(total + '円（税込）');
                   } else {
                       $('#tax_amt').html('0円（税込）');

@@ -118,6 +118,7 @@ return [
     'url'                  => ':attributeは、有効なURL形式で指定してください。',
     'uuid'                 => ':attributeは、有効なUUIDでなければなりません。',
     'enum_value'                => '入力した値:attributeのは無効です',
+    'invalid'              => ':attributeが無効です。',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
@@ -135,7 +136,8 @@ return [
         ],
         'password' => [
             'between' => 'パスワードは、8~20文字以内の半角英数字でご入力ください。',
-            'alpha_num' => 'パスワードは、8~20文字以内の半角英数字でご入力ください。'
+            'alpha_num' => 'パスワードは、8~20文字以内の半角英数字でご入力ください。',
+            'different' => '新しいパスワードと現在のパスワードは、異なるものを指定してください。'
         ],
         'email' => [
             'email' => '正しいメールアドレスの書式でご入力ください。'
@@ -178,7 +180,7 @@ return [
         'login_id' => 'ログインID',
         'email' => 'メールアドレス',
         'password' => 'パスワード',
-        'password_confirmation' => 'パスワード確認',
+        'password_confirmation' => 'パスワード(確認用)',
         'status' => '状態',
         'authority' => 'スタッフ権限',
         'is_hospital' => '医療機関管理',
@@ -189,10 +191,10 @@ return [
         'is_contract' => '請求管理',
         'classification' => '分類',
         'classification_ids' => '分類ID',
-        'classification_type_id' => '分数種別',
+        'classification_type_id' => '分類種別',
         'classification_name' => '分類名',
-        'major_classification_id' => '大分数',
-        'middle_classification_id' => '中分数名',
+        'major_classification_id' => '大分類',
+        'middle_classification_id' => '中分類名',
         'is_icon' => 'アイコン表示区分',
         'icon_name' => 'アイコン表示分',
         'is_fregist' => '登録区分',
@@ -252,6 +254,10 @@ return [
         'completed_end_date' => '受診終了日',
         'customer_name' => '受診者名',
         'pvad' => 'PV数',
+        'birthday' => '生年月日',
+        'memo' => '顧客メモ',
+        'prefecture_id' => '都道府県',
+        'hospital_reception_email_transmission_setting' => '院内受付メール送信設定'
         'paycall' => 'ペイパーコール',
         'kana' => '仮名',
     ],

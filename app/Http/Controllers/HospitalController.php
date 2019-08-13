@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\ContractInformation;
 use App\DistrictCode;
 use App\Enums\HospitalEnums;
 use App\Hospital;
-
 use App\HospitalDetail;
 use App\HospitalMajorClassification;
 use App\HospitalMiddleClassification;
 use App\HospitalMinorClassification;
-
+use App\ContractInformation;
 use App\HospitalStaff;
 use App\Http\Requests\HospitalCreateFormRequest;
 use App\Http\Requests\HospitalFormRequest;
@@ -23,8 +21,7 @@ use App\Station;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-
-
+use Illuminate\Auth\SessionGuard;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\Permission;

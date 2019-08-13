@@ -11,6 +11,7 @@ use App\HospitalImage;
 use App\Http\Requests\CourseFormRequest;
 use App\MajorClassification;
 use App\MinorClassification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Option;
@@ -18,6 +19,7 @@ use App\ImageOrder;
 use App\TaxClass;
 use App\Calendar;
 use Mockery\Exception;
+use Reshadman\OptimisticLocking\StaleModelLockingException;
 
 class CourseController extends Controller
 {
@@ -27,7 +29,8 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::orderBy('order')->paginate(10);
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))
+            ->orderBy('order')->paginate(10);
         return view('course.index', ['courses' => $courses]);
     }
 
@@ -37,16 +40,18 @@ class CourseController extends Controller
      */
     public function create()
     {
-        $images = HospitalImage::all();
+        $hospital_id = session()->get('hospital_id');
+        $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('order')->get();
-        $options = Option::orderBy('order')->get();
+        $options = Option::where('hospital_id', $hospital_id)->orderBy('order')->get();
         $image_orders = ImageOrder::orderBy('order')->get();
-        $tax_classes = TaxClass::all();
-        $calendars = Calendar::all();
+        $calendars = Calendar::where('hospital_id', $hospital_id)->get();
+        $tax_class = TaxClass::whereDate('life_time_from', '<=', Carbon::today())
+            ->whereDate('life_time_to', '>=', Carbon::today())->get()->first();
 
         return view('course.create')
             ->with('calendars', $calendars)
-            ->with('tax_classes', $tax_classes)
+            ->with('tax_class', $tax_class)
             ->with('image_orders', $image_orders)
             ->with('options', $options)
             ->with('majors', $majors)
@@ -77,7 +82,8 @@ class CourseController extends Controller
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.course')]));
             return redirect('course');
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(trans('messages.create_error'))->withInput();
+            $request->session()->flash('error', trans('messages.create_error'));
+            return redirect()->back()->withInput();
         }
     }
 
@@ -101,16 +107,18 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
-        $images = HospitalImage::all();
+        $hospital_id = session()->get('hospital_id');
+        $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('order')->get();
-        $options = Option::orderBy('order')->get();
+        $options = Option::where('hospital_id', $hospital_id)->orderBy('order')->get();
         $image_orders = ImageOrder::orderBy('order')->get();
-        $tax_classes = TaxClass::all();
-        $calendars = Calendar::all();
+        $calendars = Calendar::where('hospital_id', $hospital_id)->get();
+        $tax_class = TaxClass::whereDate('life_time_from', '<=', Carbon::today())
+            ->whereDate('life_time_to', '>=', Carbon::today())->get()->first();
 
         return view('course.edit')
             ->with('calendars', $calendars)
-            ->with('tax_classes', $tax_classes)
+            ->with('tax_class', $tax_class)
             ->with('image_orders', $image_orders)
             ->with('options', $options)
             ->with('majors', $majors)
@@ -137,8 +145,8 @@ class CourseController extends Controller
                 'price',
                 'is_price_memo',
                 'price_memo',
-                'tax_class',
-                'is_pre_account_price'
+                'is_pre_account_price',
+                'lock_version'
             ]);
             $reception_start_day = $request->input('reception_start_day');
             $reception_start_month = $request->input('reception_start_month');
@@ -149,7 +157,6 @@ class CourseController extends Controller
             $course_data['reception_start_date'] = $reception_start_month * 1000 + $reception_start_day;
             $course_data['reception_end_date'] = $reception_end_month * 1000 + $reception_end_day;
             $course_data['reception_acceptance_date'] = $reception_acceptance_month * 1000 + $reception_acceptance_day;
-            $course_data['course_cancel'] = '0';
             $course_data['order'] = 0;
 
             if (isset($course_param)) {
@@ -158,6 +165,8 @@ class CourseController extends Controller
                 $course = new Course();
             }
             $course->fill($course_data);
+            //force to update updated_at. otherwise version will not be updated
+            $course->touch();
             $course->save();
 
             //Course Image
@@ -308,8 +317,12 @@ class CourseController extends Controller
             $this->saveCourse($request, $course);
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.course')]));
             return redirect('course');
+        }  catch(StaleModelLockingException $e) {
+            $request->session()->flash('error', trans('messages.model_changed_error'));
+            return redirect()->back();
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
+            $request->session()->flash('error', trans('messages.update_error'));
+            return redirect()->back()->withInput();
         }
     }
 
@@ -337,7 +350,8 @@ class CourseController extends Controller
      */
     public function sort()
     {
-        $courses = Course::orderBy('order')->get();
+
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))->orderBy('order')->get();
         return view('course.sort')->with('courses', $courses);
     }
 
@@ -349,7 +363,8 @@ class CourseController extends Controller
     public function updateSort(CourseFormRequest $request)
     {
         $ids = $request->input('course_ids');
-        $courses = Course::whereIn('id', $ids)->get();
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))
+            ->whereIn('id', $ids)->get();
 
         if (count($ids) != $courses->count()) {
             $request->session()->flash('error', trans('messages.invalid_course_id'));

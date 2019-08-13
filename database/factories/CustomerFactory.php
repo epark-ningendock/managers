@@ -11,7 +11,7 @@ $factory->define(App\Customer::class, function (Faker $faker) {
         'first_name' => $faker->lastName,
         'family_name_kana' => $faker->firstName,
         'first_name_kana' => $faker->lastName,
-        'tel' => $faker->phoneNumber,
+        'tel' => chop($faker->phoneNumber, '-'),
         'email' => $faker->email,
         'postcode' => $faker->postcode,
         'prefecture_id' => $faker->numberBetween(1, 47),

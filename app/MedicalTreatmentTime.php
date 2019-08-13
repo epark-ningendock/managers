@@ -3,11 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MedicalTreatmentTime extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
-        'hospital_id', 'start', 'end', 'mon','tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'hol', 'status'
+        'hospital_id', 'start', 'end', 'mon','tue', 'wed', 'thu', 'fri', 'sat', 'sun', 'hol', 'status', 'created_at', 'updated_at'
     ];
 
 

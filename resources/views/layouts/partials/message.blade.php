@@ -1,6 +1,6 @@
 @foreach (['error', 'warning', 'success', 'info'] as $key)
   @if(session($key))
-    <div class="alert alert-{{ $key == 'error' ? 'danger' : $key }} alert-block alert-dismissible">
+    <div class="alert alert-{{ $key == 'error' ? 'danger' : $key }} alert-block">
       <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
       <strong class="white-space">{{ session($key) }}</strong>
     </div>

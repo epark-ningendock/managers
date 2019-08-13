@@ -5,7 +5,6 @@ use Faker\Generator as Faker;
 
 $factory->define(App\MedicalTreatmentTime::class, function (Faker $faker) {
     return [
-        'hospital_id' => factory(Hospital::class)->create()->id,
         'start' => $faker->time('H:i'),
         'end' => $faker->time('H:i'),
         'mon' => $faker->numberBetween(1, 10),
