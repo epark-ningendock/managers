@@ -17,11 +17,11 @@ class CreateDistrictCodesTable extends Migration
     {
         Schema::create('district_codes', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('district_code')->default(0000000);
-            $table->tinyInteger('prefecture_id')->nullable();
-            $table->string('name', 50)->nullable();
-            $table->string('kana', 50)->nullable();
-            $table->char('status')->default('1')->nullable();
+            $table->unsignedInteger('major_classification_id');
+            $table->string('name', 100);
+            $table->tinyInteger('order')->default(0);
+            $table->char('is_icon')->default(0);
+            $table->string('icon_name', 100);
             $this->addCommonColumns($table);
         });
     }
