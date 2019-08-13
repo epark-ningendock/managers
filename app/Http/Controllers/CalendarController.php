@@ -163,6 +163,13 @@ class CalendarController extends Controller
 
         $holidays = Holiday::whereDate('date', '>=', $start->toDateString())
             ->whereDate('date', '<=', $end->toDateString())->get();
+        
+        $public_holidays = collect(Yasumi::create('Japan', $start->year, 'ja_JP')->getHolidays())->flatten(1);
+
+        if ($start->year != $end->year) {
+            $temp = collect(Yasumi::create('Japan', $end->year, 'ja_JP')->getHolidays())->flatten(1);
+            $public_holidays = $public_holidays->merge($temp);
+        }
 
         $reservation_counts = Reservation::join('courses', 'courses.id', '=', 'reservations.course_id')
             ->whereDate('reservation_date', '>=', $start->toDateString())
@@ -196,9 +203,13 @@ class CalendarController extends Controller
                 return $day->date->isSameDay($start);
             });
 
+            $p_holiday = $public_holidays->first(function ($h) use ($start) {
+                return $start->isSameDay($h);
+            });
+
             $reservation = $reservation_counts->get($start->format('Ymd'));
             $is_holiday = isset($holiday) ? $holiday->is_holiday : 0;
-            $month->push([ 'date' => $start->copy(), 'is_holiday' => $is_holiday, 'calendar_day' => $calendar_day, 'reservation_count' => $reservation ]);
+            $month->push([ 'date' => $start->copy(), 'is_holiday' => $is_holiday, 'holiday' =>  $p_holiday, 'calendar_day' => $calendar_day, 'reservation_count' => $reservation ]);
 
             if ($start->isLastOfMonth() && !$start->isSaturday()) {
                 for ($i = $start->dayOfWeek; $i < 6; $i++) {

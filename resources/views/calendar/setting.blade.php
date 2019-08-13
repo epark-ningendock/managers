@@ -142,7 +142,7 @@
                   <tr>
                     @foreach($week as $day)
                       @if($day != null)
-                        <td class="@if($day['date']->isSunday()) holiday @elseif($day['date']->isSaturday()) saturday @endif">
+                        <td class="@if($day['date']->isSunday() || isset($day['holiday'])) holiday @elseif($day['date']->isSaturday()) saturday @endif">
                           <!-- date -->
                           <input type="hidden" name="days[]" value="{{ $day['date']->format('Ymd') }}" />
                           <span class="day-label @if($day['date']->isSunday()) text-red @elseif($day['date']->isSaturday()) text-blue @endif">
