@@ -193,6 +193,34 @@ class ReservationController extends Controller
         return $query;
     }
 
+    /**
+     * CSV download
+     * @param array $columnNames
+     * @param array $rows
+     * @param string $fileName
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    protected function get_csv($columnNames, $rows, $fileName)
+    {
+        $headers = [
+            "Content-Encoding" => "UTF-8",
+            "Content-type" => "text/csv;charset=UTF-8",
+            "Content-Disposition" => "attachment; filename=" . $fileName,
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+        $callback = function () use ($columnNames, $rows) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columnNames);
+            foreach ($rows as $row) {
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+        return response()->stream($callback, 200, $headers);
+    }
+
     public function reception_csv(Request $request)
     {
         $this->validate($request, [
@@ -202,12 +230,15 @@ class ReservationController extends Controller
             'completed_end_date' => 'nullable|date',
         ]);
         $query = $this->get_reception_list_query($request);
-        $question_count = 0;
 
         $reservations = $query->get();
 
         $option_count = $reservations->max(function ($reservation) {
             return $reservation->reservation_options->count();
+        });
+
+        $question_count = $reservations->max(function ($reservation) {
+            return $reservation->reservation_answers->count();
         });
 
 
@@ -222,8 +253,8 @@ class ReservationController extends Controller
             }
 
             // fill to fix maximum option count
-            for ($i = $reservation->reservation_options->count(); $i <= $option_count; $i++) {
-                $options->merge(['', '']);
+            for ($i = $reservation->reservation_options->count(); $i < $option_count; $i++) {
+                $options = $options->merge(['', '']);
             }
 
             $result = [
@@ -246,31 +277,30 @@ class ReservationController extends Controller
             ];
 
             $questions = collect();
-            $q_count = 0;
 
-            foreach ($reservation->course->course_questions as $course_question) {
-                if (empty($course_question->question_title)) {
+            foreach ($reservation->reservation_answers as $answer) {
+                if (empty($answer->question_title)) {
                     continue;
                 }
-                $questions->push($course_question->question_title);
-                $questions->push($course_question->answer01);
-                $questions->push($course_question->answer02);
-                $questions->push($course_question->answer03);
-                $questions->push($course_question->answer04);
-                $questions->push($course_question->answer05);
-                $questions->push($course_question->answer06);
-                $questions->push($course_question->answer07);
-                $questions->push($course_question->answer08);
-                $questions->push($course_question->answer09);
-                $questions->push($course_question->answer10);
-                $q_count++;
+                $questions->push($answer->question_title);
+                $answers = collect();
+                for($i = 1; $i <= 10; $i++) {
+                    $temp = $answer['answer'.($i != 10 ? '0' : '').$i];
+                    if (!is_null($temp) && $temp == '1') {
+                        $answers->push($answer['question_answer'.($i != 10 ? '0' : '').$i]);
+                    }
+
+                }
+
+                $questions->push($answers->implode(", "));
             }
 
-            if ($q_count > $question_count) {
-                $question_count = $q_count;
+            // fill to fix maximum question count
+            for ($i = $reservation->reservation_answers->count(); $i < $question_count; $i++) {
+                $questions = $questions->merge(['', '']);
             }
 
-            return array_merge($result, $options->toArray(), $questions->toArray());
+            return array_merge($result, $questions->toArray(), $options->toArray());
         });
 
         $headers = [
@@ -292,59 +322,19 @@ class ReservationController extends Controller
             '医療機関備考',
         ];
 
+        for ($i = 0; $i < $question_count; $i++) {
+            $headers = array_merge($headers, [
+                '受付質問',
+                '回答'
+            ]);
+        }
+
         for ($i = 0; $i < $option_count; $i++) {
             $headers = array_merge($headers, ['オプション', 'オプション金額']);
         }
 
-        for ($i = 0; $i < $question_count; $i++) {
-            $headers = array_merge($headers, [
-                '受付質問',
-                '回答01',
-                '回答02',
-                '回答03',
-                '回答04',
-                '回答05',
-                '回答06',
-                '回答07',
-                '回答08',
-                '回答09',
-                '回答10',
-            ]);
-        }
-
 
         return $this->get_csv($headers, $reservations, 'reception.csv');
-    }
-
-    /**
-     * CSV download
-     *
-     * @param array $columnNames
-     * @param array $rows
-     * @param string $fileName
-     *
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
-     */
-    protected function get_csv($columnNames, $rows, $fileName)
-    {
-        $headers = [
-            "Content-Encoding" => "UTF-8",
-            "Content-type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=" . $fileName,
-            "Pragma" => "no-cache",
-            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
-            "Expires" => "0",
-        ];
-        $callback = function () use ($columnNames, $rows) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $columnNames);
-            foreach ($rows as $row) {
-                fputcsv($file, $row);
-            }
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
     }
 
     /**

@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class ReceptionEmailSetting extends Model
 {
+    use OptimisticLocking;
+    
     protected $fillable = [
         'in_hospital_email_reception_flg',
         'in_hospital_confirmation_email_reception_flg',
@@ -20,7 +23,8 @@ class ReceptionEmailSetting extends Model
         'reception_email4',
         'reception_email5',
         'epark_in_hospital_reception_mail_flg',
-        'epark_web_reception_email_flg'
+        'epark_web_reception_email_flg',
+        'lock_version'
     ];
 
     /**

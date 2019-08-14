@@ -8,6 +8,7 @@ use App\Hospital;
 use App\EmailTemplate;
 use App\Http\Requests\CustomerFormRequest;
 use App\Mail\Customer\CustomerSendMail;
+use App\Prefecture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -41,8 +42,8 @@ class CustomerController extends Controller
         return response()->json([
             'data' => view('customer.partials.detail.tab-content', [
                 'customer_detail' => $customer_detail,
-                'reservations'    => $reservations,
-            ])->render(),
+                'reservations'    => $reservations
+            ])->render()
         ]);
     }
 
@@ -71,16 +72,13 @@ class CustomerController extends Controller
 
     public function create()
     {
-        $customers = Customer::select('prefecture_id')->get();
-        return view('customer.create', ['customers' => $customers]);
+        $prefectures = Prefecture::all();
+        return view('customer.create', ['prefectures' => $prefectures]);
     }
 
 
     public function store(CustomerFormRequest $request)
     {
-        $request->request->add([
-            'postcode' => $request->postcode1 . $request->postcode2
-        ]);
         if (Customer::create($request->all())) {
             return redirect('customer')->with('success', trans('messages.created', [ 'name' => trans('messages.names.customers') ]));
         } else {
@@ -91,18 +89,15 @@ class CustomerController extends Controller
 
     public function edit(Customer $customer)
     {
-        $customers = Customer::select('prefecture_id')->get();
+        $prefectures = Prefecture::all();
         $customer_detail = Customer::findOrFail($customer->id);
 
-        return view('customer.edit', [ 'customer_detail' => $customer_detail, 'customers' => $customers ]);
+        return view('customer.edit', [ 'customer_detail' => $customer_detail, 'prefectures' => $prefectures ]);
     }
 
 
-    public function update(Request $request, Customer $customer)
+    public function update(CustomerFormRequest $request, Customer $customer)
     {
-        $request->request->add([
-            'postcode' => $request->postcode1 . $request->postcode2
-        ]);
         $customer = Customer::findOrFail($customer->id);
 
         if ($customer->update($request->all())) {

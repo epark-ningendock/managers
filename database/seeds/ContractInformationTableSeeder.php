@@ -2,6 +2,7 @@
 
 use App\ContractInformation;
 use Illuminate\Database\Seeder;
+use App\HospitalStaff;
 
 class ContractInformationTableSeeder extends Seeder
 {
@@ -12,6 +13,11 @@ class ContractInformationTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(ContractInformation::class, 30)->create();
+        $hospital_staffs = HospitalStaff::all();
+        foreach ($hospital_staffs as $hospital_staff) {
+            factory(ContractInformation::class)->create([
+                'hospital_staff_id' => $hospital_staff->id
+            ]);
+        }
     }
 }

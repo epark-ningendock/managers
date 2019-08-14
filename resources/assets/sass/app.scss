@@ -27,6 +27,9 @@ Custom CSS
 Custom CSS
 -----------------------------------------------------*/
 
+.content {
+  position: relative;
+}
 .inner-box {
   padding: 30px;
 }
@@ -219,7 +222,7 @@ label {
     border-radius: 2px;
     font-size: 10px;
     font-weight: bold;
-    vertical-align: text-bottom;
+    vertical-align: text-top !important;
   }
 
 
@@ -274,6 +277,12 @@ label {
 .form-control{
   border-radius: 3px;
   font-weight: normal;
+  &.w4em {
+    width: 4em;
+  }
+  &.w8em {
+    width: 8em;
+  }
   &.w16em {
     width: 16em;
   }
@@ -310,14 +319,17 @@ label {
   }
 }
 
-.box-body {
+.form-entry {
   width: 80%;
   margin: 0 auto;
 }
 
 $color1: #f4f4f4;
 $color2: #3197EE;
-.staff-form {
+.form-entry {
+  .checkbox label, .radio label {
+    padding-left: 0px !important;
+  }
   .radio {
     margin: 0.5rem;
     input[type="radio"] {
@@ -384,13 +396,6 @@ legend {
   color: #737373;
 }
 
-.alert-danger {
-  position: absolute;
-  left: 200px;
-  top: 30px;
-  width: 40%;
-}
-
 .footer-submit {
   width: 20%;
   margin: 0 auto;
@@ -408,7 +413,6 @@ legend {
 
 .staff-table {
   /* 横スクロール用 */
-  display: inline-block;
   width: 100%;
   td{
     vertical-align: middle !important;
@@ -424,3 +428,445 @@ legend {
     }
   }
 }
+
+.login-form-submit {
+  text-align: center;
+}
+
+.login-box-body {
+  .has-feedback label~.form-control-feedback {
+    top: 20px;
+  }
+}
+
+/*hospital_image*/
+
+.form-box {
+  padding: 20px;
+}
+
+.form_required {
+  display: inline-block;
+  padding: 1px 3px;
+  margin-left: 9px;
+  background-color: #ea3f60;
+  color: #FFF;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: bold;
+  vertical-align: text-bottom;
+  margin-bottom: -2px;
+}
+.form_label {
+  margin-top: 20px;
+  color: #8C8C8C;
+  font-weight: bolder;
+  display: block;
+}
+
+.interview_list {
+  border-top: 1px dotted #666666;
+  margin: 30px 0 0px 0;
+  padding: 0 0 20px 0;
+}
+
+.tab_name {
+  background: #eeeeee;
+  line-height: 36px;
+  text-indent: 20px;
+  font-weight: 500;
+  margin: 20px 15px 20px 15px;
+}
+
+.box_staff_title {
+  background: #eeeeee;
+  line-height: 36px;
+  text-indent: 20px;
+  font-weight: 500;
+  margin: 20px 0px 20px 0px;
+}
+
+.staff_box {
+  height: 540px;
+  margin-top: 20px;
+}
+
+.main_image_area {
+  position: relative;
+  text-align: center;
+  img {
+  width: 300px;
+  height: 200px;
+  object-fit: cover
+  }
+}
+.sub_image_area {
+  position: relative;
+  text-align: center;
+  img {
+    width: 150px;
+    height: 120px;
+    object-fit: cover
+  }
+}
+
+.staff_image_area {
+  position: relative;
+  text-align: center;
+  img {
+    width: 150px;
+    height: 120px;
+    object-fit: cover
+  }
+}
+
+.interview_image_area {
+  position: relative;
+  text-align: center;
+  img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover
+  }
+}
+
+.speciality_image_area {
+  position: relative;
+  text-align: center;
+  img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover
+  }
+}
+
+.tab_image_area {
+  position: relative;
+  text-align: center;
+  img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover
+  }
+}
+
+.image_area {
+  text-align: center;
+}
+
+.no_image_area img {
+  text-align: center;
+}
+
+label.file-upload {
+  position: relative;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+label.file-upload input[type="file"] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-size: 10px;
+}
+
+.staff_box.show {
+  display:none;
+}
+
+.staff_box.show {
+  display:block;
+}
+
+#staff_section {
+  position: relative;
+  padding-bottom: 100px;
+}
+
+.staff_add,.facility_add,.internal_add,.external_add,.another_add {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+.btn-mini {
+  padding: 5px;
+  font-size: 12px;
+}
+
+.file_delete_text {
+  text-align: left;
+  padding: 10px 0 0 0;
+  font-size: 12px;
+  bottom: 0px;
+}
+.btn-normal{
+  color: #777;
+  background-color: #fff;
+  border-color: #777;
+  text-align: center;
+}
+.error_message {
+  color: red;
+}
+
+.object-fit {
+  width: 50%;
+  height: 100px;
+  object-fit: cover;
+}
+
+.select-tab {
+  background: #fff;
+  padding: 4px 10px 4px 10px;
+  float: right;
+  margin: 3px 6px 0 0;
+}
+
+.form_title {
+  padding-bottom: 8px;
+}
+.form-mini-title {
+  font-size: 16px;
+  margin-left: 5px;
+}
+
+.input_title {
+  font-size: 16px;
+  margin-left: 5px;
+}
+
+.number_circle {
+  width: 24px;
+  height: 24px;
+  background: #757575;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #FFF;
+  float: left;
+  text-align: center;
+  line-height: 24px;
+  vertical-align: middle;
+}
+
+.photo-tab {
+  padding: 20px 30px 0 30px;
+  .col-sm-6 {
+    height: 290px;
+    padding-top: 20px;
+    border-top: #ccc dotted 1px;
+  }
+}
+
+.open_close_tab {
+  position: relative;
+  padding: 0 0 40px 0;
+}
+
+#calendar_bulk_box {
+  .calendar-period {
+    background: #eeeeee;
+    line-height: 50px;
+    text-indent: 20px;
+    font-weight: 500;
+    font-size: 1.2em;
+    margin: -19px 0 0 0;
+    position: relative;
+  }
+  #open-bulk-box {
+    border: 1px solid #ccc;
+    background: #fff;
+    font-size: 0.8em;
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    i {
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+  }
+  .bulk_update {
+    display: none;
+    width: 80%;
+    margin: 0 auto;
+    h2 {
+      margin: 24px 0 20px 0;
+      span {
+        font-size: 0.6em;
+        padding-left: 20px;
+      }
+    }
+
+  }
+  .custom-checkbox-area {
+    label {
+      //font-size: 1.2em;
+    }
+  }
+  h3 {
+    color: #777;
+    font-size: 18px;
+    margin: 0;
+  }
+  .to-month {
+    margin: 0 auto;
+    p{
+      display: inline-block;
+      width: 100px;
+    }
+  }
+  .to-week {
+    p{
+      display: inline-block;
+      margin-right: 14px;
+    }
+  }
+  li {
+    display: inline-block;
+    margin: 10px 18px 0 0;
+  }
+  .bulk-weekday {
+    label[for="saturday-frame"] {
+      color: #3c8dbc;
+    }
+    label[for="sunday-frame"],label[for="holiday-frame"] {
+      color: #ea3f60;
+    }
+    select {
+      width: 4.3em;
+      display: inline;
+    }
+    label {
+      font-weight: bold;
+    }
+    #bulk-update {
+      clear: both;
+    }
+  }
+  #open-bulk-box {
+  }
+  .calendar-table {
+    a {font-weight: bold}
+  }
+}
+
+#calendar_bulk_box {
+  h4 {
+    background: #3c8dbc;
+    color: #ffffff;
+    line-height: 2em;
+    margin: 0;
+  }
+  th {
+    background: #eee;
+  }
+  .reservation-count {
+    font-size: 0.8em;
+  }
+  .bg-gray {
+    background-color: #eee !important;
+  }
+  .day-label {
+    font-weight: bold;
+  }
+  .pagenate {
+    .page-link {
+      text-align: center;
+      margin: 60px auto 20px auto;
+    }
+  }
+}
+.box-header {
+  .box-title {
+    font-weight: normal;
+    font-size: 1em;
+  }
+  .box-tools {
+    .btn {font-weight: normal;}
+  }
+}
+.box-footer {
+  text-align: center;
+}
+
+#calendar_header {
+  .box-header {
+    background-color: aliceblue;
+  }
+  h2 {
+    font-weight: 500;
+    font-size: 1.1em;
+  }
+}
+
+.course-select {
+ margin-top: 10px;
+}
+
+
+.clearfix::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+#email-template {
+  .email-template-title {
+    width: 70%;
+    text-align: left;
+    vertical-align: middle;
+  }
+  .email-template-id {
+    vertical-align: middle;
+  }
+}
+
+.confirmation_email_reception_flag,.reception_type_flag, .epark_in_hospital_reception_mail {
+  p {
+    display: inline-block;
+    margin-right: 20px;
+  }
+}
+
+
+/*** custom checkboxes ***/
+
+input[type=checkbox] { display:none; } /* to hide the checkbox itself */
+input[type=checkbox] + label:before {
+  font-family: FontAwesome;
+  content: "\F096";
+  color: #3c8dbc;
+  text-align: center;
+  display: inline-block;
+  width: 24px;
+  vertical-align: middle;
+  padding: 0px 0 0 0;
+  font-size: 18px;
+  font-weight: bold;
+
+}
+
+input[type=checkbox] + label:before { content: "\f096"; color: #3c8dbc} /* unchecked icon */
+input[type=checkbox] + label:before { letter-spacing: 10px; } /* space between checkbox and label */
+
+input[type=checkbox]:checked + label:before { content: "\f046"; } /* checked icon */
+input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow space for check mark */
+
+input[type=checkbox]:disabled + label:before { content: "\f096"; opacity: 0.4; color: #333333}

@@ -66,10 +66,9 @@ return [
         PaymentStatus::ERROR => 'Error'
     ],
 
-    Gender::class => [
-        Gender::Female => '女性',
-        Gender::Male => '男性',
-
+    Gender::class =>[
+        Gender::Male => 'Male',
+        Gender::Female => 'Female'
     ]
 
 ];

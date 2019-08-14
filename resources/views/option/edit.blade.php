@@ -29,6 +29,7 @@
 
 
         <div class="action-btn-wrapper text-center mb-5 pb-5">
+            <a href="{{ route('option.index') }}" class="btn btn-default">戻る</a>
             <button class="btn btn-primary" type="submit">登録</button>
             <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $option->id }}">
                 削除

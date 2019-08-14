@@ -4,11 +4,11 @@
   use \App\Enums\Permission;
 
   if ($type == 'major')
-    $type_label = '大分数';
+    $type_label = '大分類';
   else if ($type == 'middle')
-    $type_label = '中分数';
+    $type_label = '中分類';
   else
-    $type_label = '小分数';
+    $type_label = '小分類';
 
 @endphp
 <div class="box-body">
@@ -16,10 +16,9 @@
   <input type="hidden" name="classification" value="{{ $type }}">
   @if ($type == 'major')
     <div class="form-group @if ($errors->has('classification_type_id')) has-error @endif" >
-      <label for="classification_type_id">分数種別 </label>
+      <label for="classification_type_id">分類種別 </label>
       @if(!isset($classification))
         <select name="classification_type_id" id="classification_type_id" class="form-control">
-          <option value="">なし</option>
           @foreach ($classification_types as $c_type)
             <option {{ old('classification_type_id') == $c_type->id ? 'selected' : '' }}
                 value="{{ $c_type->id }}"> {{ $c_type->name }}</option>
@@ -41,10 +40,9 @@
 
   @if ($type != 'major')
     <div class="form-group @if ($errors->has('major_classification_id')) has-error @endif" >
-      <label for="major_classification_id">大分数</label>
+      <label for="major_classification_id">大分類</label>
       @if(!isset($classification))
         <select name="major_classification_id" id="major_classification_id" class="form-control">
-          <option value="">なし</option>
           @foreach ($c_majors as $c_major)
             <option {{ old('major_classification_id') == $c_major->id ? 'selected' : '' }}
                 value="{{ $c_major->id }}"> {{ $c_major->name }}</option>
@@ -59,10 +57,9 @@
 
   @if ($type == 'minor')
     <div class="form-group @if ($errors->has('middle_classification_id')) has-error @endif" >
-      <label for="middle_classification_id">中分数名</label>
+      <label for="middle_classification_id">中分類名</label>
       @if(!isset($classification))
         <select name="middle_classification_id" id="middle_classification_id" class="form-control">
-          <option value="">なし</option>
           @foreach ($c_middles as $c_middle)
             <option {{ old('middle_classification_id') == $c_middle->id ? 'selected' : '' }}
                 data-major-id="{{$c_middle->major_classification_id}}" value="{{ $c_middle->id }}"> {{ $c_middle->name }}</option>
@@ -164,7 +161,7 @@
 
   <div class="box-footer">
     <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
-    <button type="submit" class="btn btn-primary">保存</button>
+    <button type="submit" class="btn btn-primary">登録</button>
   </div>
 
 </div>
@@ -212,10 +209,15 @@
                   if (selected == ''){
                       $('#middle_classification_id option').show();
                   } else {
+                      const middleSelectedFlg = true;
                       $('#middle_classification_id option').each(function(i, option) {
                           option = $(option);
                           if (option.val() == '' || selected == option.data('major-id')) {
                               option.show();
+                              if (middleSelectedFlg) {
+                                option.prop('selected', true);
+                                middleSelectedFlg = false;
+                              }
                           } else {
                               option.hide();
                               if (option.is(':selected')){

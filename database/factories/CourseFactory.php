@@ -29,6 +29,7 @@ $factory->define(Course::class, function (Faker $faker) {
     }
     return $result;
 });
+
 $factory->defineAs(Course::class, 'with_all', function (Faker $faker) use ($factory) {
     $hospital = factory(Hospital::class)->create();
     $calendar = factory(Calendar::class)->create(['hospital_id' => $hospital->id]);
@@ -38,6 +39,13 @@ $factory->defineAs(Course::class, 'with_all', function (Faker $faker) use ($fact
         'hospital_id' => $hospital->id,
         'calendar_id' => $calendar->id,
         'tax_class' => $tax_class->id,
+        'code' => 'C1H' . $hospital->id
+    ]);
+});
+
+$factory->defineAs(Course::class, 'for_seeder', function (Faker $faker) use ($factory) {
+    $course = $factory->raw(Course::class);
+    return array_merge($course, [
         'code' => 'C1H' . $hospital->id
     ]);
 });

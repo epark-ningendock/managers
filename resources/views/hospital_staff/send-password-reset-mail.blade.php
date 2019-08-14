@@ -17,23 +17,19 @@
                 <a href="{{ url(config('adminlte.dashboard_url', 'home')) }}">{!! config('adminlte.logo', '<b>Admin</b>LTE') !!}</a>
             </div>
             <div class="box-body">
-                <form method="GET"  action="{{ route('hospital-staff.send.password-reset') }}">
+                <h2 class="">パスワード再発行</h2>
+                <p>ご登録のメールアドレスを入力してください。<br>
+                パスワード再設定用のメールをお送りいたします。</p>
+                <form class="mt-4" method="GET"  action="{{ route('hospital-staff.send.password-reset') }}">
                     {{ csrf_field() }}
-                    <label for="email">・メールアドレスを入力してください</label>
+                    <label for="email">メールアドレス<span class="form_required">必須</span></label>
                     <div class="form-group @if ($errors->has('email')) has-error @endif">
-                        <input type="email" class="form-control" id="email" name="email" value="{{ Input::old('email') }}" placeholder="メールアドレスを入力してください">
+                        <input type="email" class="form-control" id="email" name="email" value="{{ Input::old('email') }}" placeholder="epark@example.com">
                         @if ($errors->has('email')) <p class="help-block strong">{{ $errors->first('email') }}</p> @endif
                     </div>
-                    
-                    <div class="row mt-5">
-                      <div class="col-xs-6">
-                      </div>
-                      <div class="col-xs-3">
-                        <a href="/login" class="btn btn-default btn-block btn-flat margin-right-30">戻る</a>
-                      </div>
-                      <div class="col-xs-3">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">送信</button>
-                      </div>
+                    <div class="login-form-submit">
+                        <a href="/login" class="btn btn-default">戻る</a>
+                        <button type="submit" class="btn btn-primary">送信</button>
                     </div>
                 </form>
             </div>
