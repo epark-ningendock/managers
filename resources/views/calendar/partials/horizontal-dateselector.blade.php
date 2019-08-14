@@ -4,6 +4,15 @@
         (function ($) {
 
 
+            function checkPrevNextButton() {
+                if ( $('.show-tr').prev('tr').length === 0 ) {
+                    $('.prev-link').hide();
+                }
+                else {
+                    $('.prev-link').show();
+                }
+            }
+
             function dateLoader(ajaxRoute) {
 
                 $.ajax({
@@ -15,17 +24,14 @@
                     success: function (response) {
 
                         if ( $('.hor-date-table').length > 0 ) {
-
                             $('.hor-date-table tbody').append($(response.data).find('tbody').children());
-
                         } else {
-
                             $('.calendar-box').html(response.data);
                             $('.hor-date-table tbody tr').addClass('hide-tr').first('tr').addClass('show-tr');
-
                         }
 
                         $('.date-row-bar').show();
+                        checkPrevNextButton();
                     },
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
                         alert("Reservation days showing error");
@@ -86,27 +92,25 @@
                 week_row.removeClass('show-tr');
 
                 if ( show_tr.nextAll('tr').length == 3 ) {
-                    let ajaxRoute = $(this).attr('href');
+                    console.log(week_row.last().find('td').last().data('date'));
+                    const lastDate = new Date(week_row.last().find('td').last().data('date'));
+                    lastDate.setDate(lastDate.getDate() + 1);
+                    const  startDate = lastDate.getFullYear() + '/' + (lastDate.getMonth() + 1) + '/' + lastDate.getDate();
+                    let ajaxRoute = "{{  route('course.reservation.days', ['course_id' => ':1']) }}".replace(":1", $('#course_id').val()) + '?start_date=' + startDate;
                     dateLoader(ajaxRoute);
                 }
 
                 if ( $(this).hasClass('prev-link')  ) {
-
                     week_row.eq(active_week.index() - 1).addClass('show-tr');
-
-                    if ( show_tr.prev('tr').index() === 0 ) {
-                        $('.prev-link').remove();
-                    }
-
                 } else {
-
                     week_row.eq(active_week.index() + 1).addClass('show-tr');
-
-                    if ( $(this).siblings('.prev-link').length === 0 ) {
-                        $('<a href="#" class="prev-next-link prev-link fl"><<</a>').prependTo($(".paginate-box"));
-                    }
-
                 }
+
+                checkPrevNextButton();
+
+                // year label
+                const temp = $('.show-tr td:last').data('date').split('-');
+                $('.year-label th').html(temp[0]);
 
             });
 

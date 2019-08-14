@@ -427,27 +427,30 @@ class CalendarController extends Controller {
 		$calendars = [];
 		$course    = Course::find( $course_id );
 		if ( $course ) {
+			$today = Carbon::parse(request()->input('start_date', Carbon::today()->format('Y/m/d')));
+			$started_date = ( Carbon::MONDAY == $today->dayOfWeek ) ? $today : $today->previous(Carbon::MONDAY);
+			// 8 weeks range
+            $end_date = $started_date->copy()->addDay(55);
 
-//			$started_date = Carbon::now();
-			$today = new Carbon();
-			$started_date = ( Carbon::MONDAY == $today->dayOfWeek ) ? $today->format('Y-m-d') : $today->previous(1);
-			$calendar_days = $course->calendar->calendar_days()->where('is_holiday', 1)->orderBy('date')->get();
+			$calendar_days = $course->calendar->calendar_days()
+                ->whereBetween('date', [ $started_date, $end_date])
+                ->where('is_holiday', 1)->orderBy('date')->get();
 
 			//date
-			$end_date   = 1000;
+//			$end_date   = 1000;
 
-			$period    = CarbonPeriod::create( $started_date, Carbon::now()->addDay( $end_date )->format( 'Y-m-d' ) );
+			$period    = CarbonPeriod::create( $started_date, $started_date->copy()->addDay( 55 ));
 			$dates     = $period->toArray();
-			$calendars = [];
+			$calendars = collect();
 
 			foreach ( $dates as $date ) {
-				$calendars[] =  [
+				$calendars->push([
 					'date' => $date->format( 'Y-m-d' ),
-					'is_holiday' => ( $calendar_days->contains('date', new DateTime($date->format( 'Y-m-d' ) ) )  ) ? 1 : 0,
-				];
+					'is_holiday' => $calendar_days->contains('date', $date),
+				]);
 			}
-			$calendars =  $this->paginateWithoutKey(collect($calendars), 28, request('page'));
-			$calendars->setPath( route( 'course.reservation.days', [ 'course_id' => $course_id ] ) );
+//			$calendars =  $this->paginateWithoutKey(collect($calendars), 28, request('page'));
+//			$calendars->setPath( route( 'course.reservation.days', [ 'course_id' => $course_id ] ) );
 
 			$calendar_type = 'fake-calendar';
 		}

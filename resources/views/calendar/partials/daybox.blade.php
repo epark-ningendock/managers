@@ -1,15 +1,8 @@
 
 @if ( $calendars && count($calendars) > 0  )
 	<div class="paginate-box">
-		
-		@if ( $calendars->previousPageUrl() ) 
-			<a href="{{  $calendars->previousPageUrl() }}" class="prev-next-link prev-link fl" style="float: left;">&lt;&lt;</a>
-		@endif
-		
-		@if ( $calendars->nextPageUrl() ) 
-			<a href="{{  $calendars->nextPageUrl() }}" class="prev-next-link next-link fr" style="float: right;">&gt;&gt;</a>
-		@endif
-
+			<a href="#" class="prev-next-link prev-link fl" style="float: left;">&lt;&lt;</a>
+			<a href="#" class="prev-next-link next-link fr" style="float: right;">&gt;&gt;</a>
 	</div>
 	<table class="date-row table table-bordered hor-date-table">
 
@@ -17,7 +10,7 @@
 			<tr class="year-label">
 				<th colspan="7" class="text-center">{{  DateTime::createFromFormat('Y-m-d', $calendars->first()['date'])->format('Y') }}</th>
 				<input type="hidden" name="reservation_date" id="reservation_date">
-				<input type="hidden" name="page_number" id="page_number" value="{{ $calendars->currentPage() }}">
+				{{--<input type="hidden" name="page_number" id="page_number" value="{{ $calendars->currentPage() }}">--}}
 			</tr>
 		</thead>
 
