@@ -50,19 +50,6 @@ class EmailTemplateController extends Controller
             $inputs = request()->all();
             $email_template->update($inputs);
 
-
-            if ( $request->billing_email_flg == '1' ) {
-
-                ReceptionEmailSetting::updateOrCreate(['hospital_id' => session('hospital_id')], [
-                    'billing_email_flg' => (int) $request->billing_email_flg,
-                    'billing_email1' => $request->billing_email1,
-                    'billing_email2' => $request->billing_email2,
-                    'billing_email3' => $request->billing_email3,
-                    'billing_fax_number' => $request->billing_fax_number,
-                ]);
-
-            }
-
             return redirect('email-template')->with('success', trans('messages.updated', ['name' => trans('messages.names.email_template')]));
 
 

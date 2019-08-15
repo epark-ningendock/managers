@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\BillingEmailFaxNumberCheck;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Enums\ReceptionEmailSetting;
@@ -40,7 +41,12 @@ class ReceptionEmailSettingRequest extends FormRequest
             'reception_email4' => 'nullable|email',
             'reception_email5' => 'nullable|email',
             'epark_in_hospital_reception_mail_flg' => 'nullable|enum_value:' . ReceptionEmailSetting::class . ',false',
-            'epark_web_reception_email_flg' => 'nullable|enum_value:' . ReceptionEmailSetting::class . ',false'
+            'epark_web_reception_email_flg' => 'nullable|enum_value:' . ReceptionEmailSetting::class . ',false',
+            'billing_email_flg' => ['required', new BillingEmailFaxNumberCheck()],
+            'billing_email1' => 'nullable|email',
+            'billing_email2' => 'nullable|email',
+            'billing_email3' => 'nullable|email',
+            'billing_fax_number' => 'nullable|digits_between:8,11',
         ];
     }
 

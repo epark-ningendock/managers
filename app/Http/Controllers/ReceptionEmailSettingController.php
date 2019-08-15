@@ -11,11 +11,14 @@ class ReceptionEmailSettingController extends Controller
 {
     public function index()
     {
-        return view('reception_email_setting.index', [ 'reception_email_setting' => ReceptionEmailSetting::where('hospital_id', session()->get('hospital_id'))->first() ]);
+        return view('reception_email_setting.index', [
+        	'reception_email_setting' => ReceptionEmailSetting::where('hospital_id', session()->get('hospital_id'))->first()
+        ]);
     }
 
     public function update(ReceptionEmailSettingRequest $request, $id)
     {
+
         try {
             DB::beginTransaction();
 

@@ -29,11 +29,6 @@ class EmailTemplateFormRequest extends FormRequest
         return [
             'title' => 'required|max:255',
             'text' => 'max:20000',
-            'billing_email_flg' => ['required', new BillingEmailFaxNumberCheck()],
-            'billing_email1' => 'nullable|email',
-            'billing_email2' => 'nullable|email',
-            'billing_email3' => 'nullable|email',
-            'billing_fax_number' => 'nullable|digits_between:8,11',
         ];
     }
 
