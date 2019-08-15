@@ -161,7 +161,7 @@ return [
     'mails' => [
         'reset_passoword' => 'パスワードリセットメール',
         'registered' => 'スタッフ登録メール',
-        'customer' => '顧客メール'
+        'customer' => '顧客メール',
     ],
     'option_name' => 'オプション名',
     'option_description' => 'オプションの説明',
@@ -190,5 +190,12 @@ return [
     ],
     'address1' => '市区郡',
     'address2' => 'それ以降の住所',
-    'invalid_email' => '正しいメールアドレスの書式でご入力ください'
+    'invalid_email' => '正しいメールアドレスの書式でご入力ください',
+    'billing_email_flg' => '請求メールの設定',
+    'billing_email_flg_receive' => '受け取る',
+    'billing_email_flg_not_accept' => '受け取らない',
+    'billing_email1' => '請求メール受信アドレス1',
+    'billing_email2' => '請求メール受信アドレス2',
+    'billing_email3' => '請求メール受信アドレス3',
+    'billing_fax_number' => '請求メール受信fax番号',
 ];
