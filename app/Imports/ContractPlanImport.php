@@ -34,6 +34,17 @@ class ContractPlanImport extends ImportAbstract
      */
     public function onRow(Row $row)
     {
-        // TODO: Implement onRow() method.
+        $row = $row->toArray();
+
+        $model = new ContractPlan([
+            'plan_code' => $row['plan_cd'],
+            'plan_name' => $row['plan_name'],
+            'fee_rate' => $row['fee_rate'],
+            'monthly_contract_fee' => $row['monthly_contract_fee'],
+            'created_at' => $row['rgst'],
+            'updated_at' => $row['updt'],
+        ]);
+
+        $model->save();
     }
 }
