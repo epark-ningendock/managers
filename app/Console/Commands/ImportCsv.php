@@ -109,6 +109,12 @@ class ImportCsv extends Command
         $this->import('m_course_basic.csv');
         $this->import('m_course_detail.csv');
         $this->import('m_course_question.csv');
+        $this->import('m_file_location.csv');
+        $this->import('m_hospital_file.csv');
+        $this->import('m_hospital_detail.csv');
+        $this->import('m_hospital_time.csv');
+        $this->import('m_course_file.csv');
+        $this->import('m_contract_plan.csv');
 
         $this->info('インポートを完了しました。');
     }

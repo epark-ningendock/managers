@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             ClassificationTypeSeeder::class,
             DepartmentsTableSeeder::class,
             StaffsTableSeeder::class,
+            MinorClassificationsTableSeeder::class,
             DistrictCodeSeeder::class,
             HospitalTableSeeder::class,
             HospitalStaffsTableSeeder::class,

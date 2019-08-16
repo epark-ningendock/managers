@@ -47,21 +47,21 @@
       <tr>
           <td>{{ $course->id }}</td>
           <td>{{ $course->name }}</td>
-          <td>{{ $course->web_reception == '1' ? '受け付ける' : '受け付けない' }}</td>
+          <td>{{ $course->web_reception->description }}</td>
           <td>
             <a class="btn btn-primary"
                href="{{ route('course.edit', $course->id) }}">
                <i class="fa fa-edit text-bold"> 編集</i>
             </a>
-            <button class="btn btn-danger delete-btn delete-popup-btn ml-3" data-id="{{ $course->id }}">
+            <button class="btn btn-danger delete-btn delete-popup-btn ml-3" data-id="{{ $course->id }}" data-message="{{ trans('messages.course_delete_popup_content') }}">
               <i class="fa fa-trash"></i>
             </button>
             <a class="btn btn-success ml-3" href="{{ route('course.copy', $course->id) }}">
                 <i class="fa fa-copy text-bold"></i>
             </a>
-            <button class="btn btn-default ml-3">
+            <a class="btn btn-default ml-3">
               プレビュー
-            </button>
+            </a>
           </td>
         </tr>
       @endforeach
