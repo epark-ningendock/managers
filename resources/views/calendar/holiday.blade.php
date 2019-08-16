@@ -1,10 +1,3 @@
-@php
-  use App\Enums\StaffStatus;
-  use App\Enums\Authority;
-  use \App\Enums\Permission;
-  use Carbon\Carbon;
-@endphp
-
 @extends('layouts.form')
 
 @section('content_header')
@@ -140,6 +133,7 @@
 
                             <select name="is_holidays[]" class='is-holiday mt-1' data-day="{{ $day['date']->day }}"
                                     @if($day['is_holiday']) data-holiday="true" @endif
+                                    @if(isset($day['holiday'])) data-holiday-name="{{ $day['holiday']->getName() }}" @endif
                                     data-origin="{{ $day['is_holiday'] }}">
                               <option value="0"></option>
                               <option value="1" @if($day['is_holiday']) selected @endif>休</option>
@@ -283,9 +277,9 @@
                           $(table).find('.is-holiday').each(function(j, ele){
                               ele = $(ele);
                               const day = parseInt(ele.data('day'));
-                              const isHoliday = ele.data('holiday');
+                              const holidayName = ele.data('holiday-name');
 
-                              if (isHoliday) {
+                              if (holidayName) {
                                   ele.val(holiday);
                               } else {
                                   let weekKey = '#week-';
