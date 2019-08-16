@@ -1,9 +1,9 @@
 <?php
 
 use Faker\Generator as Faker;
-use App\ReceptionEmailSetting;
+use App\HospitalEmailSetting;
 
-$factory->define(ReceptionEmailSetting::class, function (Faker $faker) {
+$factory->define(HospitalEmailSetting::class, function (Faker $faker) {
     return [
         'hospital_id' => $faker->unique()->numberBetween(1, 50),
         'in_hospital_email_reception_flg' => $faker->randomElement([0, 1]),

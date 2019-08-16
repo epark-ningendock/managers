@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Reshadman\OptimisticLocking\OptimisticLocking;
 
-class ReceptionEmailSetting extends Model
+class HospitalEmailSetting extends Model
 {
     use OptimisticLocking;
     
