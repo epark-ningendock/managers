@@ -14,13 +14,13 @@
     <h1>    
         <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
         -
-        <i class="fa fa-gears"> テンプレート管理</i>
+        <span> テンプレート管理</span>
     </h1>
 @stop
 
 @section('table')
   @include('layouts.partials.pagination-label', ['paginator' => $email_templates])
-    <table id="example2" class="table table-bordered table-hover table-striped mb-5">
+    <table id="email-template" class="table no-border table-hover table-striped mb-5">
       <thead>
       <tr>
           <th>ID</th>
@@ -33,12 +33,12 @@
       <tbody>
       @foreach ($email_templates as $email_template)
           <tr>
-              <td>{{ $email_template->id }}</td>
-              <td>{{ $email_template->title }}</td>
-              <td>
+              <td class="email-template-id">{{ $email_template->id }}</td>
+              <td class="email-template-title">{{ $email_template->title }}</td>
+              <td class="text-right">
                   <a href="{{ route('email-template.edit', $email_template->id) }}"
                     class="btn btn-primary">
-                    <i class="fa fa-edit text-bold"> 編集</i>
+                    <i class="fa fa-edit"> 編集</i>
                     </a>
               </td>
               <td>

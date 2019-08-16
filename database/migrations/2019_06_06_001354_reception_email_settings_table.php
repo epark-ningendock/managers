@@ -20,7 +20,7 @@ class ReceptionEmailSettingsTable extends Migration
             $table->integer('hospital_id')->unsigned()->unique();
             $table->foreign('hospital_id')->references('id')->on('hospitals');
             $table->tinyInteger('in_hospital_email_reception_flg')->default(0);
-            $table->tinyInteger('in_hospital_confirmation_email_reception_flg')->nullable()->default(0);
+            $table->tinyInteger('in_hospital_confirmation_email_reception_flg') ->default(0);
             $table->tinyInteger('in_hospital_change_email_reception_flg')->nullable()->default(0);
             $table->tinyInteger('in_hospital_cancellation_email_reception_flg')->nullable()->default(0);
             $table->tinyInteger('email_reception_flg')->default(0);

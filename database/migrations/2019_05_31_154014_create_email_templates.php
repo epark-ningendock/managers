@@ -20,7 +20,7 @@ class CreateEmailTemplates extends Migration
             $table->integer('hospital_id')->unsigned();
             $table->foreign('hospital_id')->references('id')->on('hospitals');
             $table->string('title');
-            $table->string('text')->nullable();
+            $table->text('text')->nullable();
             $this->addCommonColumns($table);
         });
     }

@@ -2,8 +2,12 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class CourseQuestion extends SoftDeleteModel
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'course_id',
         'question_number',
@@ -18,7 +22,9 @@ class CourseQuestion extends SoftDeleteModel
         'answer07',
         'answer08',
         'answer09',
-        'answer10'
+        'answer10',
+        'created_at',
+        'updated_at'
     ];
 
     public function course()

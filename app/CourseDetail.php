@@ -5,7 +5,7 @@ namespace App;
 class CourseDetail extends SoftDeleteModel
 {
     protected $fillable = [
-        'course_id', 'major_classification_id', 'middle_classification_id', 'minor_classification_id', 'select_status', 'inputstring'
+        'course_id', 'major_classification_id', 'middle_classification_id', 'minor_classification_id', 'select_status', 'inputstring', 'created_at', 'updated_at'
     ];
 
     public function course()

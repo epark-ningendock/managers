@@ -89,16 +89,16 @@ Route::middleware('auth:staffs')->group(function () {
             Route::get('/attention-information/create', 'HospitalController@createAttentionInformation')->name('hospital.attention-information.show');
             Route::post('/attention-information/store', 'HospitalController@storeAttentionInformation')->name('hospital.attention-information.store');
         });
-
         Route::resource('/hospital', 'HospitalController')->except(['show']);
         
         Route::group(['prefix' => 'hospital'], function () {
             Route::get('/{hospital}/images/create', 'HospitalImagesController@create')->name('hospital.image.create');
             Route::post('/{hospital}/images/store', 'HospitalImagesController@store')->name('hospital.image.store');
-            /*
-            Route::get('/{hospital}/hospital_images/', function ($hospital_id) {
-                return $hospital_id;
-            });*/
+            Route::get('/{hospital}/images/create', 'HospitalImagesController@create')->name('hospital.image.create');
+            Route::post('/{hospital}/images/store', 'HospitalImagesController@store')->name('hospital.image.store');
+            Route::get('/{hospital}/images/{hospital_category_id}/{hospital_image_id}/delete', 'HospitalImagesController@delete')->name('hospital.image.delete');
+            Route::get('/{hospital}/images/{hospital_image_id}/delete_image', 'HospitalImagesController@deleteImage')->name('hospital.delete_image');
+            Route::get('/{hospital}/interview/{interview_id}/delete', 'HospitalImagesController@deleteInterview')->name('hospital.delete_interview');
         });
         /*
         |--------------------------------------------------------------------------
@@ -109,6 +109,7 @@ Route::middleware('auth:staffs')->group(function () {
         Route::get('/classification/sort', 'ClassificationController@sort')->name('classification.sort');
         Route::patch('/classification/sort/update', 'ClassificationController@updateSort')->name('classification.updateSort');
         Route::resource('/classification', 'ClassificationController')->except(['show']);
+
         /*
         |--------------------------------------------------------------------------
         | Reservation Routes
@@ -164,7 +165,7 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     | Reception email setting Routes
     |--------------------------------------------------------------------------
     */
-    Route::resource('/reception-email-setting', 'ReceptionEmailSettingController');
+    Route::resource('/hospital-email-setting', 'HospitalEmailSettingController');
     /*
     |--------------------------------------------------------------------------
     | Calendar Routes

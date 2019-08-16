@@ -34,8 +34,8 @@ class StaffFormRequest extends FormRequest
             'name' => 'required|between:1,25',
             'login_id' => $login_id,
             'email' => $email,
-            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation',
-            'password_confirmation' => 'min:8|max:20',
+            'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation|regex:/^[-_@\.a-zA-Z0-9]+$/',
+            'password_confirmation' => 'min:8|max:20|regex:/^[-_@\.a-zA-Z0-9]+$/',
             'status' => 'required|enum_value:' . StaffStatus::class . ',false',
             'authority' => 'required'
         ];

@@ -6,11 +6,13 @@ use App\Enums\Authority;
 use App\Enums\Permission;
 use App\Enums\StaffStatus;
 use App\Helpers\EnumTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Staff extends Authenticatable
 {
     use EnumTrait;
+    use SoftDeletes;
 
     protected $table = 'staffs';
     protected $fillable = [
@@ -19,9 +21,12 @@ class Staff extends Authenticatable
         'password',
         'authority',
         'email',
+        'remember_token',
         'status',
         'department_id',
-        'first_login_at'
+        'first_login_at',
+        'created_at',
+        'updated_at',
     ];
 
     protected $enums = [

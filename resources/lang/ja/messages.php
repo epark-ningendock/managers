@@ -20,6 +20,7 @@ return [
     
     'created' => ':nameを登録しました。',
     'updated' => ':nameを更新しました。',
+    'updated_common' => '更新しました。',
     'remove' => '削除する',
     'deleted' => '削除が完了しました。',
     'sent' => ':mailを送信しました。',
@@ -34,10 +35,11 @@ return [
     'staff_create_error' => '登録の際にエラーが発生しました。',
     'create_error' => 'エラーが発生しました。',
     'update_error' => 'エラーが発生しました。',
-    'model_changed_error' => '更新中にモデルが変更されました。',
+    'model_changed_error' => '更新中にデータ変更されました。',
     'select_hospital_confirmation' => 'この医療機関を操作します。<br/>よろしいですか？',
     'delete_confirmation' => '本当に削除してもよろしいですか？<br/>この処理は取り消せません。',
     'delete_popup_title' => '確認を削除',
+    'delete_image_popup_content' => 'この画像を削除してもよろしいですか？',
     'delete_popup_content' => 'これを削除してよろしいです :name？',
     'course_delete_popup_content' => 'この分類を削除します。よろしいですか？',
     'classification_delete_popup_content' => 'この分類を削除します。よろしいですか？',
@@ -45,6 +47,7 @@ return [
     'classification_sort_updated' => '分類レコードの順序が更新されました。',
     'invalid_classification_id' => '分類IDが存在しません',
     'no_record' => 'レコードがありません',
+    'hospital_image_update' => '分類レコードの順序が更新されました。',
     'major_classification' => [
         'child_exist_error_on_delete' => '中分類の記録があります。 操作は完了できません。'
     ],
@@ -69,6 +72,8 @@ return [
         'policy_holder' => '保険契約者',
         'representative_name_kana' => '代表名（ふりがな',
         'representative_name' => '代表名',
+        'hospital_categories' => '医療機関画像',
+        'hospital_interview' => 'インタビュー',
         'classifications' => [
             'major' => '大分類',
         'password' => 'パスワード',
@@ -80,7 +85,7 @@ return [
         'calendar' => 'カレンダー',
         'email_template' => 'メールテンプレート',
         'calendar_setting' => 'カレンダー管理',
-        'reception_email_setting' => '受付メール設定',
+        'hospital_email_setting' => '受付メール設定',
         'holiday_setting' => '休日設定',
         'attetion_information' => '医療機関こだわり情報',
     ],
@@ -182,6 +187,9 @@ return [
         'status_update_success' => '予約ステータスが更新されました。',
         'status_update_error' => 'エラーが発生しました。',
         'invalid_reservation_status' => '無効な操作。'
+    ],
+    'image_category' =>[
+        'update_success' => '画像が更新されました。',
     ],
     'address1' => '市区郡',
     'address2' => 'それ以降の住所',
