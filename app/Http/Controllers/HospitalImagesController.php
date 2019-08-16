@@ -92,7 +92,7 @@ class HospitalImagesController extends Controller
             ]
         );
 
-        //main画像の保存image
+        //main画像の保存
         if(isset($file['main'])) {
             // 画像を横幅750縦幅アスペクト比維持の自動サイズへリサイズ
             $name = $file['main']->hashName();
