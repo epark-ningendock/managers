@@ -164,7 +164,7 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     | Reception email setting Routes
     |--------------------------------------------------------------------------
     */
-    Route::resource('/reception-email-setting', 'ReceptionEmailSettingController');
+    Route::resource('/hospital-email-setting', 'HospitalEmailSettingController');
     /*
     |--------------------------------------------------------------------------
     | Calendar Routes
