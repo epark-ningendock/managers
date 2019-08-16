@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Hospital extends Model
 {
+    use SoftDeletes;
     protected $table = 'hospitals';
 
     //Note $fillable is temporary for factory, make it realistic field when business logic
@@ -61,14 +63,16 @@ class Hospital extends Model
         'is_pre_account',
         'pre_account_discount_rate',
         'pre_account_commission_rate',
+        'created_at',
+        'updated_at',
     ];
 
     /**
      * 医療機関に関連する受付メール設定レコードを取得
      */
-    public function reception_email_setting()
+    public function hospital_email_setting()
     {
-        return $this->hasOne('App\ReceptionEmailSetting');
+        return $this->hasOne('App\HospitalEmailSetting');
     }
 
     public function hospital_images()

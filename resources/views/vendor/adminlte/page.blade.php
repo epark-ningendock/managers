@@ -140,7 +140,7 @@
                   <li class="{{ Request::segment(1) === 'reception' ? 'active' : null }}"><a href="/reception"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付一覧</a></li>
                   <li class="{{ Request::segment(1) === 'calendar' ? 'active' : null }}"><a href="/calendar"><i class="fa fa-calendar"></i>&nbsp;&nbsp;&nbsp;&nbsp;カレンダー管理</a></li>
                   <li class="{{ Request::segment(1) === 'email-template' ? 'active' : null }}"><a href="/email-template"><i class="fa fa-gears"></i>&nbsp;&nbsp;&nbsp;&nbsp;メールテンプレート管理</a></li>
-                  <li class="{{ Request::segment(1) === 'reception-email-setting' ? 'active' : null }}"><a href="/reception-email-setting"><i class="fa fa-gears"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付メール設定</a></li>
+                  <li class="{{ Request::segment(1) === 'hospital-email-setting' ? 'active' : null }}"><a href="/hospital-email-setting"><i class="fa fa-gears"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付メール設定</a></li>
                   @if(Auth::user()->getTable() == "hospital_staffs" && request()->session()->get('hospital_id'))
                     <li class="{{ request()->path()  === 'hospital-staff/edit-password' ? 'active' : null }}"><a href="{{ route('hospital-staff.edit.password') }}"><i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;パスワードの変更</a></li>
                   @endif
