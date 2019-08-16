@@ -1,6 +1,7 @@
 <?php
 
 use App\ClassificationType;
+use App\ContractPlan;
 use App\Course;
 use App\CourseDetail;
 use App\CourseImage;
@@ -13,6 +14,7 @@ use App\HospitalMiddleClassification;
 use App\HospitalMinorClassification;
 use App\ImageOrder;
 use App\Imports\ClassificationTypeImport;
+use App\Imports\ContractPlanImport;
 use App\Imports\CourseDetailImport;
 use App\Imports\CourseImageImport;
 use App\Imports\CourseImport;
@@ -109,5 +111,9 @@ return [
     'm_course_file.csv' => [
         'model' => CourseImage::class,
         'import' => CourseImageImport::class,
+    ],
+    'm_contract_plan.csv' => [
+        'model' => ContractPlan::class,
+        'import' => ContractPlanImport::class,
     ],
 ];
