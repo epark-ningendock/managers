@@ -45,7 +45,7 @@
     </div>
 
 
-    <div class="row form-group">
+    <div class="row form-group option-container-row">
     
         <div class="col-md-3">
             <label id="checkbox option">オプション</label>
@@ -70,7 +70,7 @@
     </div>   
 
 
-    <div class="row form-group">
+    <div class="row form-group question-container-row">
     
         <div class="col-md-3">
             <label>質問設定</label>
@@ -124,7 +124,7 @@
         </div>
 
         <div class="col-md-9">
-            <div class="calendar-box">
+            <div class="calendar-box" data-old="{{ old('reservation_date') }}">
                 
             </div>   
             @if ($errors->has('reservation_date')) <p class="help-block text-danger" style="color: #ed5565;">{{ $errors->first('reservation_date') }}</p> @endif
@@ -192,7 +192,7 @@
     <h3 class="section-title">受診者情報</h3>
     <br/><a id="examinee-information" href="#">受診者検索</a>
     <br/><br/>
-    <input type="hidden" name="customer_id" id="customer_id" value="{{ old('customer_id') }}" />
+    {{--<input type="hidden" name="customer_id" id="customer_id" value="{{ old('customer_id') }}" />--}}
 
     <div class="row">
 
@@ -201,23 +201,22 @@
         </div>
 
         <div class="col-md-9">
-            @if ($errors->has('customer_id')) <p class="help-block" style="color: red;">{{ $errors->first('customer_id') }}</p> @endif
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group @if ($errors->has('family_name')) has-error @endif">
-                        <label for="family_name">姓</label>
+                        <span>姓</span>
                         <input type="text" class="form-control" name="family_name" style="width: 90%;display: inline-block"
                                id="family_name" placeholder=""
-                               value="{{ old('family_name') }}" readonly />
+                               value="{{ old('family_name') }}" />
                         @if ($errors->has('family_name')) <p class="help-block">{{ $errors->first('family_name') }}</p> @endif
                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="form-group @if ($errors->has('first_name')) has-error @endif">
-                        <label for="first_name">名</label>
+                        <span>名</span>
                         <input type="text" class="form-control" name="first_name" style="width: 90%;display: inline-block"
                                id="first_name" placeholder=""
-                               value="{{ old('first_name') }}" readonly />
+                               value="{{ old('first_name') }}" />
                         @if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
                     </div>
                 </div>
@@ -240,7 +239,7 @@
                         <span>姓</span>
                         <input type="text" class="form-control" name="family_name_kana" style="width: 90%;display: inline-block"
                                id="family_name_kana" placeholder=""
-                               value="{{ old('family_name_kana') }}" readonly />
+                               value="{{ old('family_name_kana') }}" />
                         @if ($errors->has('family_name_kana')) <p class="help-block">{{ $errors->first('family_name_kana') }}</p> @endif
                     </div>
                 </div>
@@ -249,7 +248,7 @@
                         <span>名</span>
                         <input type="text" class="form-control" name="first_name_kana" style="width: 90%;display: inline-block"
                                id="first_name_kana" placeholder=""
-                               value="{{ old('first_name_kana') }}" readonly />
+                               value="{{ old('first_name_kana') }}" />
                         @if ($errors->has('first_name_kana')) <p class="help-block">{{ $errors->first('first_name_kana') }}</p> @endif
                     </div>
                 </div>
@@ -288,7 +287,7 @@
                 <span>名</span>
                 <input type="text" class="form-control" name="registration_card_number" style="width: 90%;display: inline-block"
                        id="registration_card_number" placeholder=""
-                       value="{{ old('registration_card_number') }}" readonly />
+                       value="{{ old('registration_card_number') }}" />
                 @if ($errors->has('registration_card_number')) <p class="help-block">{{ $errors->first('registration_card_number') }}</p> @endif
             </div>
         </div>
@@ -341,6 +340,7 @@
                     if ($('#course_id').val()) {
                         const url = '{{ route('course.detail.json', ':id') }}'.replace(':id', $('#course_id').val());
                         $.get(url, function (data) {
+                            $('.option-container-row, .question-container-row').show();
                             const tbody = $('.option-container tbody');
                             const questionGroup = $('.question-container .form-group');
 
@@ -361,7 +361,7 @@
                                     let checkedOldValue = ($courseOptionOldValue.hasOwnProperty(courseOption.option.id)  ) ? 'checked' : '';
 
                                     $('<tr></tr>')
-                                        .append($(`<td><input ${checkedOldValue} type="checkbox" class="checkbox option" data-price="${courseOption.option.price}" name="course_options[${courseOption.option.id}]" value="${courseOption.option.price}"/></td>`))
+                                        .append($(`<td style="text-align:left; padding-left:15px;"><input ${checkedOldValue} type="checkbox" class="checkbox option" data-price="${courseOption.option.price}" name="course_options[${courseOption.option.id}]" value="${courseOption.option.price}"/></td>`))
                                         .append($(`<td>${courseOption.option.name}</td>`))
                                         .append($(`<td>${courseOption.option.price}円</td>`))
                                         .appendTo(tbody);
@@ -401,6 +401,10 @@
                             $('.option').change(calculateTotal);
                             calculateTotal();
                         });
+                    } else {
+                        $('.option-container-row, .question-container-row').hide();
+                        $('.option-container tbody').empty();
+                        $('.question-container .form-group').empty();
                     }
                 };
                 $('#course_id').change(function () {
@@ -476,7 +480,7 @@
         .year-label th {
             background: transparent url({{ asset('img/calendar.png') }}) 10px 3px/30px no-repeat;
         }        
-        td.daybox.is-holiday {
+        td.daybox.not-reservable {
             background: #ddd;
         }
 
@@ -494,6 +498,10 @@
         }
         .prev-link {
             float: left;
+        }
+        /* to override hidden checkbox */
+        input[type=checkbox] {
+            display: inline-block !important;
         }
     </style>
 @endpush

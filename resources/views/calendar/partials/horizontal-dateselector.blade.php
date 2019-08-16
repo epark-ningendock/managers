@@ -28,6 +28,16 @@
                         } else {
                             $('.calendar-box').html(response.data);
                             $('.hor-date-table tbody tr').addClass('hide-tr').first('tr').addClass('show-tr');
+                            const oldData = $('.calendar-box').data('old');
+                            if (oldData) {
+                                const selectedDate = $(`.hor-date-table tbody td[data-date=${oldData}]`)
+                                if (selectedDate.hasClass('it-can-reserve')) {
+                                    $('#reservation_date').val(oldData);
+                                    selectedDate.addClass('it-would-reserve');
+                                    $('.hor-date-table tbody tr').removeClass('show-tr').addClass('hide-tr');
+                                    selectedDate.parent('tr').addClass('show-tr');
+                                }
+                            }
                         }
 
                         $('.date-row-bar').show();
@@ -73,9 +83,16 @@
             $(document).on('change', '#course_id', function(){
 
                 let thisValue = $(this).val();
-                let ajaxRoute = "{{  route('course.reservation.days', ['course_id' => ':1']) }}".replace(":1", thisValue);
 
-                dateLoader(ajaxRoute);
+                if (thisValue) {
+                    let ajaxRoute = "{{  route('course.reservation.days', ['course_id' => ':1']) }}".replace(":1", thisValue);
+                    dateLoader(ajaxRoute);
+                } else {
+                    $('.calendar-box').children().remove();
+                    $('.date-row-bar').hide();
+
+                }
+
                 
             });
 

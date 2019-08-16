@@ -31,13 +31,13 @@ class ReservationCreateFormRequest extends FormRequest
             'start_time_hour' => 'between:0,23',
             'start_time_min' => 'between:0,23',
             'reservation_memo' => 'max:255',
-            'customer_id' => 'required',
-            'family_name' => 'max:32',
-            'first_name' => 'max:32',
-            'family_name_kana' => 'max:32',
-            'first_name_kana' => 'max:32',
-            'tel' => 'digits_between:8,13',
-            'registration_card_number' => 'max:32',
+//            'customer_id' => 'required',
+            'family_name' => 'required|max:32',
+            'first_name' => 'required|max:32',
+            'family_name_kana' => 'required|max:32',
+            'first_name_kana' => 'required|max:32',
+            'tel' => 'required|regex:/^[0-9-]{8,13}$/',
+            'registration_card_number' => 'required|max:32',
         ];
     }
 }

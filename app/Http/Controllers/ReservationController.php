@@ -468,7 +468,7 @@ class ReservationController extends Controller
      */
     public function create()
     {
-        $courses = Course::all();
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))->get();
 
         return view('reservation.create')->with(['courses' => $courses]);
     }
@@ -479,6 +479,32 @@ class ReservationController extends Controller
 
         try {
             DB::beginTransaction();
+
+            $course = Course::find($request->course_id);
+            $reservation_date = Carbon::parse($request->reservation_date);
+
+            $calendar_day = $course->calendar->calendar_days()
+                ->whereDate('date', [$reservation_date])->get()->first();
+
+            $holiday = Holiday::where('hospital_id', session()->get('hospital_id'))
+                ->where('is_holiday', 1)
+                ->whereDate('date', $reservation_date)->get()->first();
+
+            // TODO to confirm reservation frame value zero is unlimited or not
+            if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '1') && $calendar_day->reservation_frames == 0) {
+                DB::rollback();
+                return redirect()->back()->with('error', trans('messages.reservation.not_reservable'))->withInput();
+            }
+
+            if (isset($calendar_day) && $calendar_day->reservation_frames > 0) {
+                $count = Reservation::where('course_id', $request->course_id)->whereDate('reservation_date', $reservation_date)->count();
+                if($count >= $calendar_day->reservation_frames) {
+                    DB::rollback();
+                    return redirect()->back()->with('error', trans('messages.reservation.limit_exceed'))->withInput();
+                }
+            }
+
+
 
             request()->merge([
                 'hospital_id' => session('hospital_id'),
@@ -495,9 +521,26 @@ class ReservationController extends Controller
                 'payment_method' => '現金',
             ]);
 
-            $reservation = new Reservation();
-            $reservation = $reservation->create(request()->all());
+            $reservation = new Reservation(request()->all());
+            $reservation->applicant_name = "$request->first_name $request->family_name";
+            $reservation->applicant_name_kana = "$request->first_name_kana $request->family_name_kana";
+            $reservation->applicant_tel = $request->tel;
 
+            $customer = Customer::where('registration_card_number', $request->registration_card_number)->get()->first();
+
+            if (!isset($customer)) {
+                $customer = new Customer([
+                    'first_name' => $request->first_name,
+                    'family_name' => $request->family_name,
+                    'first_name_kana' => $request->first_name_kana,
+                    'family_name_kana' => $request->family_name_kana,
+                    'tel' => $request->tel
+                ]);
+                $customer->save();
+            }
+
+            $reservation->customer_id = $customer->id;
+            $reservation->save();
             $this->reservationCourseOptionSaveOrUpdate($request, $reservation);
 
             $this->reservationAnswerCreate($request, $reservation);

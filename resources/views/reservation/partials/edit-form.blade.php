@@ -377,8 +377,7 @@
 
         <div class="col-md-9">
             <span id="" class="ml-2">
-                {{  $reservation->customer->family_name or '-' }}
-                {{  $reservation->customer->first_name or '-' }}
+                {{  $reservation->applicant_name }}
             </span>
         </div>
 

@@ -10,7 +10,6 @@
 			<tr class="year-label">
 				<th colspan="7" class="text-center">{{  DateTime::createFromFormat('Y-m-d', $calendars->first()['date'])->format('Y') }}</th>
 				<input type="hidden" name="reservation_date" id="reservation_date">
-				{{--<input type="hidden" name="page_number" id="page_number" value="{{ $calendars->currentPage() }}">--}}
 			</tr>
 		</thead>
 
@@ -22,7 +21,7 @@
 
 					@foreach($week as $day)
 
-					<td data-date="{{ $day['date'] }}" class="daybox {{  ( $day['is_holiday'] == 1  ) ? 'is-holiday' : 'it-can-reserve' }}">
+					<td data-date="{{ $day['date'] }}" class="daybox {{  ( $day['is_holiday'] || !$day['is_reservation_acceptance'] ) ? 'not-reservable' : 'it-can-reserve' }}">
 						<div class="txt">
 							{{ date('m', strtotime($day['date'])) }}月
 							{{ date('d', strtotime($day['date']))  }}日

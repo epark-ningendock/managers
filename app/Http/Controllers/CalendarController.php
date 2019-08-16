@@ -471,58 +471,42 @@ class CalendarController extends Controller
             $end_date = $started_date->copy()->addDay(55);
 
             $calendar_days = $course->calendar->calendar_days()
-                ->whereBetween('date', [$started_date, $end_date])
-                ->where('is_holiday', 1)->orderBy('date')->get();
+                ->whereBetween('date', [$started_date, $end_date])->orderBy('date')->get();
 
-            //date
-//			$end_date   = 1000;
+            $holidays = Holiday::where('hospital_id', session()->get('hospital_id'))
+                                ->where('is_holiday', 1)
+                                ->whereBetween('date', [$started_date, $end_date])
+                                ->orderBy('date')->get();
 
-            $period = CarbonPeriod::create($started_date, $started_date->copy()->addDay(55));
+
+            $period = CarbonPeriod::create($started_date, $end_date);
             $dates = $period->toArray();
             $calendars = collect();
 
             foreach ($dates as $date) {
+                $calendar_day = $calendar_days->first(function ($day) use ($date) {
+                    return $day->date->isSameDay($date);
+                });
+
+                $holiday = $holidays->first(function ($day) use ($date) {
+                    return $day->date->isSameDay($date);
+                });
+
                 $calendars->push([
                     'date' => $date->format('Y-m-d'),
-                    'is_holiday' => $calendar_days->contains('date', $date),
+                    'is_holiday' => isset($holiday),
+                    'frame' => isset($calendar_day)? $calendar_day->reservation_frames : -1,
+                    'is_reservation_acceptance' => !$date->isPast() &&  (!isset($calendar_day) || $calendar_day->is_reservation_acceptance == '1')
                 ]);
             }
-//			$calendars =  $this->paginateWithoutKey(collect($calendars), 28, request('page'));
-//			$calendars->setPath( route( 'course.reservation.days', [ 'course_id' => $course_id ] ) );
-
-            $calendar_type = 'fake-calendar';
         }
 
 
         return response()->json([
             'data' => view('calendar.partials.daybox', [
-                'calendars' => $calendars,
-                'calendar_type' => $calendar_type,
+                'calendars' => $calendars
             ])->render(),
         ]);
-    }
-
-
-    /**
-     * @link https://gist.github.com/wuiler/9fd3ca8fa5d58265b49ecfc45dd1e095
-     *
-     * @param $items
-     * @param int $perPage
-     * @param null $page
-     * @param array $options
-     *
-     * @return LengthAwarePaginator
-     */
-    public function paginateWithoutKey($items, $perPage = 15, $page = null, $options = [])
-    {
-
-        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
-        $items = $items instanceof Collection ? $items : Collection::make($items);
-        $lap = new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, [
-            'path' => route('course.reservation.days', ['course_id' => 3]),
-            'pageName' => 'page',
-        ]);
-        return $lap;
     }
 
 

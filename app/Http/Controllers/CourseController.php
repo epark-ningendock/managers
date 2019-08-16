@@ -165,6 +165,7 @@ class CourseController extends Controller
                 $course = new Course();
             }
             $course->fill($course_data);
+            $course->hospital_id = session()->get('hospital_id');
             //force to update updated_at. otherwise version will not be updated
             $course->touch();
             $course->save();
