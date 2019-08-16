@@ -6,6 +6,7 @@ use App\Course;
 use App\Customer;
 use App\Enums\Permission;
 use App\Enums\ReservationStatus;
+use App\FeeRate;
 use App\Holiday;
 use App\Hospital;
 use App\Http\Requests\ReservationCreateFormRequest;
@@ -521,10 +522,26 @@ class ReservationController extends Controller
                 'payment_method' => '現金',
             ]);
 
+
+            $fee_rate = FeeRate::where('hospital_id', session()->get('hospital_id'))
+                ->whereDate('from_date', '<=', Carbon::today())
+                ->where(function($q) {
+                    $q->whereDate('to_date', '>=', Carbon::today())
+                        ->orWhere('to_date', '=', null);
+                })->get()->first();
+
             $reservation = new Reservation(request()->all());
             $reservation->applicant_name = "$request->first_name $request->family_name";
             $reservation->applicant_name_kana = "$request->first_name_kana $request->family_name_kana";
             $reservation->applicant_tel = $request->tel;
+
+
+            $reservation->fee = $request->input('adjustment_price', 0) + ($course->is_price == '1' ? $course->price : 0) + $this->calculateCourseOptionTotalPrice($request);
+
+            if (isset($fee_rate)) {
+                $reservation->fee_rate = $fee_rate->rate;
+                $reservation->fee += $fee_rate->rate;
+            }
 
             $customer = Customer::where('registration_card_number', $request->registration_card_number)->get()->first();
 
@@ -558,7 +575,7 @@ class ReservationController extends Controller
 
     }
 
-    public function reservationCourseOptionSaveOrUpdate($request, $reservation)
+    protected function reservationCourseOptionSaveOrUpdate($request, $reservation)
     {
         if (!empty($request->course_options) && isset($request->course_options)) {
 
@@ -568,7 +585,6 @@ class ReservationController extends Controller
                     'reservation_id' => $reservation->id,
                     'option_id' => $key,
                     'option_price' => $option,
-
                 ];
             }
 
@@ -578,7 +594,18 @@ class ReservationController extends Controller
         }
     }
 
-    public function reservationAnswerCreate($request, $reservation)
+    protected function calculateCourseOptionTotalPrice($request)
+    {
+        $total = 0;
+        if (!empty($request->course_options) && isset($request->course_options)) {
+            foreach ($request->course_options as $key => $option) {
+                $total += $option;
+            }
+        }
+        return $total;
+    }
+
+    protected function reservationAnswerCreate($request, $reservation)
     {
         if (isset(request()->course_id) && !empty(request()->course_id)) {
 

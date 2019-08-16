@@ -19,7 +19,7 @@ class AddRequireColumnsToReservations extends Migration
             $table->string('applicant_tel', 11)->nullable();
             $table->integer('fee_rate')->nullable();
             $table->integer('fee')->nullable();
-            $table->tinyInteger('is_free_hp_link')->nullable();
+            $table->tinyInteger('is_free_hp_link')->default(0);
         });
     }
 

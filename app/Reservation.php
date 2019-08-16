@@ -70,6 +70,12 @@ class Reservation extends SoftDeleteModel
         'payment_status', //not sure what field need to add
         'trade_id', //not sure what field need to add
         'payment_method', //not sure what field need to add
+        'applicant_name',
+        'applicant_name_kana',
+        'applicant_tel',
+        'fee',
+        'fee_rate',
+        'is_free_hp_link',
         'lock_version',
     ];
 
