@@ -185,7 +185,7 @@ return [
         App\Providers\CsvTestServiceProvider::class,
         App\Providers\ReservationExportServiceProvider::class,
         App\Providers\ValidationExtensionServiceProvider::class,
-        App\Providers\MinIOStorageServiceProvider::class
+        //App\Providers\MinIOStorageServiceProvider::class
     ],
 
     /*
