@@ -186,7 +186,7 @@
                     </div>
                 </div>
 
-                <div class="form-group @if ($errors->has('billing_fax_number')) has-error @endif">
+                <div class="form-group @if ($errors->has('billing_fax_number') || ($errors->has('billing_email_flg') && ($errors->first('billing_email_flg') !== '請求メールの設定は、必ず指定してください。'))) has-error @endif">
                     <div class="row">
                         <div class="col-md-4">
                             <label for="billing_fax_number">{{ trans('messages.billing_fax_number') }}</label>
@@ -194,10 +194,8 @@
                         <div class="col-md-8">
                             <input type="text" class="form-control" id="billing_fax_number" name="billing_fax_number" value="{{ old('billing_fax_number', $hospital_email_setting->billing_fax_number ?? '') }}" />
                             @if ($errors->has('billing_fax_number')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_fax_number') }}</p> @endif
-                            <br/><br/>
-                            <div class="has-error">
-                                @if ($errors->has('billing_email_flg') && ($errors->first('billing_email_flg') !== '請求メールの設定は、必ず指定してください。')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_email_flg') }}</p> @endif
-                            </div>
+                            <br/>
+                            @if ($errors->has('billing_email_flg') && ($errors->first('billing_email_flg') !== '請求メールの設定は、必ず指定してください。')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_email_flg') }}</p> @endif
                         </div>
                     </div>
                 </div>
