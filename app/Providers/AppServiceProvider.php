@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,13 +16,19 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         if (config('app.env') !== 'production') {
-            \DB::listen(function ($query) {
-                $sql = $query->sql;
-                for ($i = 0; $i < count($query->bindings); $i++) {
-                    $sql = preg_replace("/\?/", $query->bindings[$i], $sql, 1);
-                }
-                \Log::info($sql);
-            });
+
+            if ( Schema::hasTable('information_schema') ) {
+
+                \DB::listen(function ($query) {
+                    $sql = $query->sql;
+                    for ($i = 0; $i < count($query->bindings); $i++) {
+                        $sql = preg_replace("/\?/", $query->bindings[$i], $sql, 1);
+                        dd($sql);
+                    }
+                    \Log::info($sql);
+                });
+
+            }
         }
     }
 
