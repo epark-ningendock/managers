@@ -3098,6 +3098,10 @@ label.file-upload input[type="file"] {
   font-size: 1.1em;
 }
 
+.edit-calendar h3 span {
+  font-weight: bold !important;
+}
+
 .course-select {
   margin-top: 10px;
 }

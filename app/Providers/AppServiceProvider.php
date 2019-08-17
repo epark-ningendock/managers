@@ -13,6 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // it's for debug
         // if (config('app.env') !== 'production') {
         //     \DB::listen(function ($query) {
         //         $sql = $query->sql;
