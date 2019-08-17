@@ -117,6 +117,7 @@
     @includeIf('customer.partials.detail.detail-popup')
     @includeIf('customer.partials.detail.detail-popup-script')
 
+    @include('customer.partials.email-history-detail')
 
     @includeIf('commons.std-modal-box')
     @includeIf('customer.partials.email-popup-script')

@@ -82,11 +82,12 @@
 @stop
 
 @section('table')
-  <form method="post" action="{{ route('classification.updateSort') }}">
+  <div class="form-entry">
+    <form method="post" action="{{ route('classification.updateSort') }}">
     {!! csrf_field() !!}
     {!! method_field('PATCH') !!}
     <input type="hidden" name="classification" value="{{ $classification }}" />
-    <table class="table table-bordered table-hover">
+    <table class="table table-hover table-striped no-border">
       <thead>
       <tr>
         <th class="text-center">分類名</th>
@@ -96,8 +97,8 @@
       <tbody>
         @foreach ($classifications as $i=>$item)
           <tr class="{{ $item['status']->is(Status::Deleted) ? 'dark-gray' : '' }}">
-            <td style="width: 80%">{{ $item[$classification.'_name'] }}</td>
-            <td class="text-center" style="width: 20%">
+            <td>{{ $item[$classification.'_name'] }}</td>
+            <td class="text-center">
               <input type="hidden" id="order" name="classification_ids[]" value="{{ $item['id'] }}" />
               <button class="btn btn-default up"><span class="fa fa-fw fa-caret-up fa-lg"></span></button>
               <button class="btn btn-default ml-5 down"><span class="fa fa-fw fa-caret-down fa-lg"></span></button>
@@ -106,22 +107,12 @@
         @endforeach
       </tbody>
     </table>
-    <div class="box-footer pull-right">
+    <div class="box-footer">
       <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
       <button type="submit" class="btn btn-primary">保存</button>
     </div>
   </form>
-  <style>
-    tr.dark-gray td {
-      background-color: darkgray;
-    }
-    tr {
-      cursor: move;
-    }
-    .ui-sortable-helper {
-      display: table;
-    }
-  </style>
+  </div>
 @stop
 @section('js')
   @parent

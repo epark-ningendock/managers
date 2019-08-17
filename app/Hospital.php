@@ -74,9 +74,9 @@ class Hospital extends Model
     /**
      * 医療機関に関連する受付メール設定レコードを取得
      */
-    public function reception_email_setting()
+    public function hospital_email_setting()
     {
-        return $this->hasOne('App\ReceptionEmailSetting');
+        return $this->hasOne('App\HospitalEmailSetting');
     }
 
     public function hospital_images()

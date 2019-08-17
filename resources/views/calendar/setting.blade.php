@@ -142,7 +142,7 @@
                   <tr>
                     @foreach($week as $day)
                       @if($day != null)
-                        <td class="@if($day['date']->isSunday()) holiday @elseif($day['date']->isSaturday()) saturday @endif">
+                        <td class="@if($day['date']->isSunday() || isset($day['holiday'])) holiday @elseif($day['date']->isSaturday()) saturday @endif">
                           <!-- date -->
                           <input type="hidden" name="days[]" value="{{ $day['date']->format('Ymd') }}" />
                           <span class="day-label @if($day['date']->isSunday()) text-red @elseif($day['date']->isSaturday()) text-blue @endif">
@@ -154,7 +154,7 @@
                             @if($day['is_holiday'])
                               <span class="day-label text-red">休</span>
                             @elseif(!$day['date']->isPast())
-                              <a class="is_reservation_acceptance day-label">
+                              <a class="is_reservation_acceptance day-label" data-origin="{{  isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">
                                 {{ isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0' ? '✕' : '◯' }}
                               </a>
                             @else
@@ -175,8 +175,9 @@
                                   $reservation_frames = $day['calendar_day']->reservation_frames;
                                 }
                               @endphp
-                              <select name="reservation_frames[]" @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0') || $day['is_holiday']) disabled  @endif class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
+                              <select name="reservation_frames[]" @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0') || $day['is_holiday']) disabled @endif class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
                                       @if($day['is_holiday']) data-holiday="true" @endif
+                                      @if(isset($day['holiday'])) data-public-holiday="true" @endif
                                       data-origin="{{ $reservation_frames }}">
                                 <option></option>
                                 @foreach(range(0, 99) as $i)
@@ -185,6 +186,9 @@
                                   </option>
                                 @endforeach
                               </select>
+                              @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0') || $day['is_holiday'])
+                                <input type="hidden" name="reservation_frames[]" />
+                              @endif
                             @endif
 
                             <!-- reservation count -->
@@ -216,7 +220,7 @@
         <a href="{{ route('calendar.index') }}" class="btn btn-default">戻る</a>
         <button class="btn btn-primary" id="clear-data">期間限定・予約枠の数全てクリア</button>
         <button class="btn btn-primary" id="reset-data">設定のクリア</button>
-        <button class="btn btn-primary" id="clear-data">登録する</button>
+        <button class="btn btn-primary" >登録する</button>
       </div>
   </form>
 </div>
@@ -279,20 +283,22 @@
           -----------------------------------------------------*/
           (function () {
               $('.is_reservation_acceptance').click(function() {
-                  if($(this).html() == '✕') {
+                  if($(this).html().trim() == '✕') {
                       $(this).html('◯');
                       $(this).next('input:hidden').val('1');
                       $(this).siblings('select')
                              .prop('disabled', false)
                              .val('0')
-                             .change();
+                             .change()
+                             .next('input:hidden').remove();
                   } else {
                       $(this).html('✕');
                       $(this).next('input:hidden').val('0');
                       $(this).siblings('select')
                              .prop('disabled', true)
                              .val('')
-                             .change();
+                             .change()
+                             .after('<input type="hidden" name="reservation_frames[]" />');
                   }
               });
           })();
@@ -346,11 +352,15 @@
                       if ($('#month-' + i).prop('checked')) {
                           $(table).find('.calendar-frame').each(function(j, ele){
                               ele = $(ele);
-                              const day = parseInt(ele.data('day'));
-                              const isHoliday = ele.data('holiday');
 
-                              if (isHoliday) {
-                                  ele.val(holidayFrame);
+                              // skip for disable
+                              if (ele.prop('disabled') == true) return;
+
+                              const day = parseInt(ele.data('day'));
+                              const isPublicHoliday = ele.data('public-holiday');
+
+                              if (isPublicHoliday) {
+                                    ele.val(holidayFrame);
                               } else {
                                   let weekKey = '#week-';
                                   if(day >= 1 && day <= 7) {
@@ -382,7 +392,7 @@
               $('#clear-data').click(function(event) {
                   event.preventDefault();
                   event.stopPropagation();
-                  $('.calendar-frame ').val('0');
+                  $('.calendar-frame:not(:disabled)').val('0').trigger('change');
               });
           })();
 
@@ -393,8 +403,31 @@
               $('#reset-data').click(function(event) {
                   event.preventDefault();
                   event.stopPropagation();
-                  $('.calendar-frame').each(function(i, ele){
-                      $(ele).val($(ele).data('origin'));
+                  $('.is_reservation_acceptance').each(function(i, ele) {
+                      ele = $(ele)
+                       const origin = ele.data('origin');
+                      if(origin == '1') {
+                          ele.html('◯');
+                          ele.next('input:hidden').val('1');
+                          ele.siblings('select')
+                              .prop('disabled', false)
+                              .val('0')
+                              .change()
+                              .next('input:hidden').remove();
+                      } else {
+                          ele.html('✕');
+                          ele.next('input:hidden').val('0');
+                          const select = ele.siblings('select')
+                                            .prop('disabled', true)
+                                            .val('')
+                                            .change();
+
+                          select.next('input:hidden').remove();
+                          select.after('<input type="hidden" name="reservation_frames[]" />');
+                      }
+                  });
+                  $('.calendar-frame:not(:disabled)').each(function(i, ele){
+                      $(ele).val($(ele).data('origin')).trigger('change');
                   });
               });
           })();

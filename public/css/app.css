@@ -3177,3 +3177,7 @@ input[type=checkbox]:disabled + label:before {
   color: #333333;
 }
 
+.vertical-middle td {
+  vertical-align: middle !important;
+}
+
