@@ -13,11 +13,15 @@
             <label for="status">受信希望者・院内受付メール送信設定</label>
             <group class="inline-radio two-option">
                 <div>
-                    {{ Form::radio('in_hospital_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false) }}
+                    <input type="radio" name="in_hospital_email_reception_flg"
+                    {{ old('in_hospital_email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }}
+                    value="{{ \App\Enums\ReceptionEmailSetting::ACCEPT }}">
                     <label>配信可</label>
                     </div>
                 <div>
-                    {{ Form::radio('in_hospital_email_reception_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::NOT_ACCEPT ? true : false) }}
+                    <input type="radio" name="in_hospital_email_reception_flg"
+                    {{ old('in_hospital_email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::NOT_ACCEPT ? 'checked' : '' }}
+                    value="{{ \App\Enums\ReceptionEmailSetting::NOT_ACCEPT }}">
                     <label>配信不可</label>
                 </div>
             </group>
@@ -54,11 +58,15 @@
                 <label for="status">受付メール受信アドレス設定</label>
                 <group class="inline-radio two-option">
                     <div>
-                        {{ Form::radio('email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false) }}
+                            <input type="radio" name="email_reception_flg"
+                            {{ old('email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }}
+                            value="{{ \App\Enums\ReceptionEmailSetting::ACCEPT }}">
                         <label>受取可</label>
                     </div>
                     <div>
-                        {{ Form::radio('email_reception_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::NOT_ACCEPT ? true : false) }}
+                            <input type="radio" name="email_reception_flg"
+                            {{ old('email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::NOT_ACCEPT ? 'checked' : '' }}
+                            value="{{ \App\Enums\ReceptionEmailSetting::NOT_ACCEPT }}">
                         <label>受取不可</label>
                     </div>
                 </group>
