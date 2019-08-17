@@ -2,23 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\HospitalStaff;
 use App\HospitalEmailSetting;
 use App\Http\Requests\HospitalEmailSettingRequest;
 use Illuminate\Support\Facades\DB;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
+use Illuminate\Support\Facades\Auth;
 
 class HospitalEmailSettingController extends Controller
 {
     public function index()
     {
+        self::is_staff();
+
         return view('hospital_email_setting.index', [
-        	'hospital_email_setting' => HospitalEmailSetting::where('hospital_id', session()->get('hospital_id'))->first()
+            'hospital_email_setting' => HospitalEmailSetting::where('hospital_id', session()->get('hospital_id'))->first()
         ]);
     }
 
     public function update(HospitalEmailSettingRequest $request, $id)
     {
-
+        self::is_staff();
+        
         try {
             DB::beginTransaction();
 
@@ -43,6 +48,16 @@ class HospitalEmailSettingController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', trans('messages.update_error'));
+        }
+    }
+
+    /**
+     * EPARKスタッフ以外だった場合、医療機関スタッフ一覧に返す
+     */
+    public function is_staff() {
+        if(Auth::user()->getTable() != "staffs") {
+            $hospital_staffs = HospitalStaff::where('hospital_id', session()->get('hospital_id'));
+            return view('hospital_staff.index', [ 'hospital_staffs' => $hospital_staffs->paginate(10)]);
         }
     }
 }

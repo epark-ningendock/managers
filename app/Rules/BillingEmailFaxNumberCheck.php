@@ -45,6 +45,6 @@ class BillingEmailFaxNumberCheck implements Rule
      */
     public function message()
     {
-        return 'billing_mail1~3 or billing_fax_number どちらも空だった場合は、「メールアドレスかFAX番号をご入力ください。」';
+        return '請求メール受信アドレス1~3 or 請求メール受信fax番号 どちらか入力してください。';
     }
 }
