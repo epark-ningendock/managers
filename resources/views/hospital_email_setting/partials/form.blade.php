@@ -215,14 +215,40 @@
 
 @push('js')
   <script>
+      let billingData = {};
+      
+      function saveBillingData() {
+        billingData = {
+            billing_email1: $('#billing_email1').val(),
+            billing_email2: $('#billing_email2').val(),
+            billing_email3: $('#billing_email3').val(),
+            billing_fax_number: $('#billing_fax_number').val(),
+        }
+      }
+
+      function setBillingData() {
+            $('#billing_email1').val(billingData.billing_email1)
+            $('#billing_email2').val(billingData.billing_email2)
+            $('#billing_email3').val(billingData.billing_email3)
+            $('#billing_fax_number').val(billingData.billing_fax_number)
+      }
+
+      function clearBillingData() {
+            $('#billing_email1').val('')
+            $('#billing_email2').val('')
+            $('#billing_email3').val('')
+            $('#billing_fax_number').val('')
+      }
 
       const inputs = $('.bill-fields-box input');
       $(document).ready(function($){
+          saveBillingData()
           if ( $("input[name='billing_email_flg']:checked").val() == 1) {
               inputs.each(function(){
                   $(this).attr('disabled', false);
               });
           } else {
+              clearBillingData()
               inputs.each(function(){
                   $(this).attr('disabled', true);
               });
@@ -236,10 +262,13 @@
           -----------------------------------------------------*/
           $(document).on('change', '.billing_email_flg', function(){
               if ( $(this).val() == 1) {
+                  setBillingData()
                   inputs.each(function(){
                       $(this).attr('disabled', false);
                   });
               } else {
+                  saveBillingData()
+                  clearBillingData()
                   inputs.each(function(){
                       $(this).attr('disabled', true);
                   });
@@ -252,8 +281,6 @@
           -----------------------------------------------------*/
           (function () {
               const change = function() {
-                  console.log($('.hospital_email_reception_flg input[type=radio]:checked'));
-                  console.log($('.hospital_email_reception_flg input[type=radio]'));
                   if ($('.hospital_email_reception_flg input[type=radio]:checked').val() == '0') {
                       $('.confirmation_email_reception_flag input:checkbox').prop('disabled', true);
                   } else {

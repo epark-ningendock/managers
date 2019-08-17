@@ -36,10 +36,20 @@ class HospitalEmailSettingController extends Controller
                 $message = trans('validation.required', ['attribute' => trans('validation.attributes.hospital_reception_email_transmission_setting')]);
                 return redirect()->back()->withErrors(['hospital_reception_email_transmission_setting' => $message ]);
             }
-
+            
             $hospital_email_setting = HospitalEmailSetting::findOrFail($id);
             $inputs = request()->all();
-            $hospital_email_setting->update($inputs);
+
+            if ($request->get('billing_email_flg') == '0') {
+                $inputs['billing_email1'] = null;
+                $inputs['billing_email2'] = null;
+                $inputs['billing_email3'] = null;
+                $inputs['billing_fax_number'] = null;
+                $hospital_email_setting->update($inputs);
+            } else {
+                $hospital_email_setting->update($inputs);
+            }
+            
             DB::commit();
             return redirect('hospital-email-setting')->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_email_setting')]));
         } catch (StaleModelLockingException $e) {
