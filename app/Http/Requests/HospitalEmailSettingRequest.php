@@ -8,7 +8,7 @@ use Illuminate\Validation\Rule;
 use App\Enums\ReceptionEmailSetting;
 use App\Rules\OneOfThemWithIf;
 
-class ReceptionEmailSettingRequest extends FormRequest
+class HospitalEmailSettingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

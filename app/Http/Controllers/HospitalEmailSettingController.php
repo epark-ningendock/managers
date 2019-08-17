@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HospitalEmailSetting;
-use App\Http\Requests\ReceptionEmailSettingRequest;
+use App\Http\Requests\HospitalEmailSettingRequest;
 use Illuminate\Support\Facades\DB;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
 
@@ -11,12 +11,12 @@ class HospitalEmailSettingController extends Controller
 {
     public function index()
     {
-        return view('reception_email_setting.index', [
-        	'reception_email_setting' => ReceptionEmailSetting::where('hospital_id', session()->get('hospital_id'))->first()
+        return view('hospital_email_setting.index', [
+        	'hospital_email_setting' => HospitalEmailSetting::where('hospital_id', session()->get('hospital_id'))->first()
         ]);
     }
 
-    public function update(ReceptionEmailSettingRequest $request, $id)
+    public function update(HospitalEmailSettingRequest $request, $id)
     {
 
         try {

@@ -164,7 +164,7 @@ return [
         'registered' => 'スタッフ登録メール',
         'customer' => '顧客メール',
         'sent_datetime' => '送信日時',
-        'title' => 'メール件名'
+        'title' => 'メール件名',
         'customer' => '顧客メール',
     ],
     'option_name' => 'オプション名',
@@ -195,7 +195,7 @@ return [
     'address1' => '市区郡',
     'address2' => 'それ以降の住所',
     'invalid_email' => '正しいメールアドレスの書式でご入力ください',
-    'email-template-limit-exceed' => 'テンプレートの数が最大になっているため、新規作成を実行できませんでした。'
+    'email-template-limit-exceed' => 'テンプレートの数が最大になっているため、新規作成を実行できませんでした。',
     'invalid_email' => '正しいメールアドレスの書式でご入力ください',
     'billing_email_flg' => '請求メールの設定',
     'billing_email_flg_receive' => '受け取る',
