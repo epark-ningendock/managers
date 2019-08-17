@@ -135,10 +135,10 @@
                     </div>
                     <div class="col-md-8">
                         <label class="radio-inline">
-                            <input type="radio" class="billing_email_flg" name="billing_email_flg" value="1" @if( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '' ) === 1 ) checked @endif>{{ trans('messages.billing_email_flg_receive') }}
+                            <input type="radio" class="billing_email_flg" name="billing_email_flg" value="1" @if( ( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '' ) == 1 ) || is_null($hospital_email_setting->billing_email_flg) ) checked @endif>{{ trans('messages.billing_email_flg_receive') }}
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" class="billing_email_flg" name="billing_email_flg" value="0" @if( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '') === 0 ) checked @endif> {{ trans('messages.billing_email_flg_not_accept') }}
+                            <input type="radio" class="billing_email_flg" name="billing_email_flg" value="0" @if( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '') == 0 ) checked @endif> {{ trans('messages.billing_email_flg_not_accept') }}
                         </label>
 
                         @if ($errors->has('billing_email_flg') && ($errors->first('billing_email_flg') == '請求メールの設定は、必ず指定してください。')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_email_flg') }}</p> @endif
