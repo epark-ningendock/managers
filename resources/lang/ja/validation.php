@@ -257,7 +257,7 @@ return [
         'birthday' => '生年月日',
         'memo' => '顧客メモ',
         'prefecture_id' => '都道府県',
-        'hospital_reception_email_transmission_setting' => '院内受付メール送信設定'
+        'hospital_reception_email_transmission_setting' => '院内受付メール送信設定',
         'paycall' => 'ペイパーコール',
         'kana' => '仮名',
     ],

@@ -500,8 +500,28 @@
 </div>
 <br/>
 
+
+@push('css')
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/iCheck/square/blue.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/iCheck/square/blue.css') }}">
+
+    <style>
+        p.help-block {
+            text-align: left;
+        }
+
+        select#district_code_id option {
+            display: none;
+        }
+    </style>
+@endpush
+
+@includeIf('commons.timepicker')
+
+
 @push('js')
     <script src="{{ asset('js/yubinbango.js') }}" charset="UTF-8"></script>
+    <script src="{{ asset('vendor/adminlte/plugins/iCheck/icheck.min.js') }}"></script>
 
     <script>
         (function ($) {
@@ -548,21 +568,3 @@
         })(jQuery);
     </script>
 @endpush
-
-
-@push('css')
-    <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/iCheck/square/blue.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/iCheck/square/blue.css') }}">
-
-    <style>
-        p.help-block {
-            text-align: left;
-        }
-
-        select#district_code_id option {
-            display: none;
-        }
-    </style>
-@endpush
-
-@includeIf('commons.timepicker')
