@@ -167,7 +167,7 @@ return [
         // ],
         // [
         //     'text'        => '受付メール設定',
-        //     'url'         => '/reception-email-setting',
+        //     'url'         => '/hospital-email-setting',
         //     'icon'        => 'gear ',
         // ],
     ],

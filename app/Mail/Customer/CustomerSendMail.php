@@ -31,7 +31,7 @@ class CustomerSendMail extends Mailable
     {
         // dd($this->data);
         return $this
-            ->from($this->data['hospital_email'])
+            ->from($this->data['sender_address'])
             ->subject($this->data['title'])
             ->view('customer.email.customer-mail');
     }

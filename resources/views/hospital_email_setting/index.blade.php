@@ -13,7 +13,7 @@
 @stop
 
 @section('form')
-  {{ Form::open(['route' => array('reception-email-setting.update', $reception_email_setting->id), 'method' => 'post']) }}
+  {{ Form::open(['route' => array('hospital-email-setting.update', $hospital_email_setting->id), 'method' => 'post']) }}
     {{ method_field('PUT') }}
-    @include('reception_email_setting.partials.form')
+    @include('hospital_email_setting.partials.form')
 @stop

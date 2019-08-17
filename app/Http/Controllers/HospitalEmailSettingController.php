@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\ReceptionEmailSetting;
+use App\HospitalEmailSetting;
 use App\Http\Requests\ReceptionEmailSettingRequest;
 use Illuminate\Support\Facades\DB;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
 
-class ReceptionEmailSettingController extends Controller
+class HospitalEmailSettingController extends Controller
 {
     public function index()
     {
@@ -32,11 +32,11 @@ class ReceptionEmailSettingController extends Controller
                 return redirect()->back()->withErrors(['hospital_reception_email_transmission_setting' => $message ]);
             }
 
-            $reception_email_setting = ReceptionEmailSetting::findOrFail($id);
+            $hospital_email_setting = HospitalEmailSetting::findOrFail($id);
             $inputs = request()->all();
-            $reception_email_setting->update($inputs);
+            $hospital_email_setting->update($inputs);
             DB::commit();
-            return redirect('reception-email-setting')->with('success', trans('messages.updated', ['name' => trans('messages.names.reception_email_setting')]));
+            return redirect('hospital-email-setting')->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_email_setting')]));
         } catch (StaleModelLockingException $e) {
             DB::rollback();
             return redirect()->back()->with('error', trans('messages.model_changed_error'));
