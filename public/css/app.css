@@ -3098,6 +3098,10 @@ label.file-upload input[type="file"] {
   font-size: 1.1em;
 }
 
+.edit-calendar h3 span {
+  font-weight: bold !important;
+}
+
 .course-select {
   margin-top: 10px;
 }
@@ -3175,5 +3179,9 @@ input[type=checkbox]:disabled + label:before {
   content: "\F096";
   opacity: 0.4;
   color: #333333;
+}
+
+.vertical-middle td {
+  vertical-align: middle !important;
 }
 

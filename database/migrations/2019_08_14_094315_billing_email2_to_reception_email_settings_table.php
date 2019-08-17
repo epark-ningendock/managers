@@ -1,12 +1,11 @@
 <?php
+
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use \App\Helpers\DBCommonColumns;
 
-class CreatePasswordResetsTable extends Migration
+class BillingEmail2ToReceptionEmailSettingsTable extends Migration
 {
-    use DBCommonColumns;
     /**
      * Run the migrations.
      *
@@ -14,12 +13,11 @@ class CreatePasswordResetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('password_resets', function (Blueprint $table) {
-            $table->string('email')->index();
-            $table->string('token');
-            $this->addCommonColumns($table);
+        Schema::table('reception_email_settings', function (Blueprint $table) {
+            $table->string('billing_email2')->nullable();
         });
     }
+
     /**
      * Reverse the migrations.
      *
@@ -27,6 +25,8 @@ class CreatePasswordResetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('password_resets');
+        Schema::table('reception_email_settings', function (Blueprint $table) {
+            $table->dropColumn('billing_email2');
+        });
     }
 }

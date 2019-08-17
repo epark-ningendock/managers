@@ -12,6 +12,6 @@ class EmailTemplatesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(EmailTemplate::class, 10)->create();
+        factory(EmailTemplate::class, 50)->create();
     }
 }
