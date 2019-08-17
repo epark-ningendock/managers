@@ -15,16 +15,11 @@
     <h1>    
         <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
         -
-        <i class="fa fa-book"> オプション管理</i>
+        <span> オプション管理</span>
     </h1>
 @stop
 
 @section('search')
-    <p>一覧表示と編集オプション<br/>
-                 オプションの並べ替えボタンを押すと、オプションの順序を並べ替えることができます。
-    </p>
-
-
     <div class="action-btn-wrapper text-right m-4">
 
         <a href="{{ route('option.create') }}" class="btn btn-success">
@@ -41,7 +36,7 @@
 @section('table')
     <div class="table-responsive">
         @include('layouts.partials.pagination-label', ['paginator' => $options])
-        <table class="table table-bordered table-hover table-striped mb-5">
+        <table class="table no-border table-hover table-striped mb-5">
             <thead>
             <tr>
                 <th>オプションID</th>
