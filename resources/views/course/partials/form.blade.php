@@ -38,6 +38,7 @@
   </div>
   <div class="box-body">
     <input type="hidden" name="lock_version" value="{{ $course->lock_version or ''}}" />
+    <input type="hidden" name="hospital_id" value="{{ session()->get('hospital_id') }}" />
     <div class="form-group @if ($errors->has('name')) has-error @endif">
       <label for="name">検査コース名 <span class="text-red">必須</span></label>
       <input type="text" class="form-control" id="name" name="name"
