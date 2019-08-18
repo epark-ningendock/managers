@@ -27,7 +27,7 @@ class BillingEmailFaxNumberCheck implements Rule
     {
         if (  ( request('billing_email_flg') == '1')) {
 
-            $emails = !is_null(request('billing_email1')) && !is_null(request('billing_email2')) && !is_null(request('billing_email3'));
+            $emails = !is_null(request('billing_email1')) || !is_null(request('billing_email2')) || !is_null(request('billing_email3'));
             $fax_number = !is_null(request('billing_fax_number'));
 
             return ( $emails || $fax_number );
@@ -45,6 +45,6 @@ class BillingEmailFaxNumberCheck implements Rule
      */
     public function message()
     {
-        return 'billing_mail1~3 or billing_fax_number どちらも空だった場合は、「メールアドレスかFAX番号をご入力ください。」';
+        return '受け取るを設定した場合、最低1つのメールアドレスかFAX番号を登録してください。';
     }
 }

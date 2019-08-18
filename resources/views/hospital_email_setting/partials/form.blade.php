@@ -186,7 +186,7 @@
                     </div>
                 </div>
 
-                <div class="form-group @if ($errors->has('billing_fax_number')) has-error @endif">
+                <div class="form-group @if ($errors->has('billing_fax_number') || ($errors->has('billing_email_flg') && ($errors->first('billing_email_flg') !== '請求メールの設定は、必ず指定してください。'))) has-error @endif">
                     <div class="row">
                         <div class="col-md-4">
                             <label for="billing_fax_number">{{ trans('messages.billing_fax_number') }}</label>
@@ -194,10 +194,8 @@
                         <div class="col-md-8">
                             <input type="text" class="form-control" id="billing_fax_number" name="billing_fax_number" value="{{ old('billing_fax_number', $hospital_email_setting->billing_fax_number ?? '') }}" />
                             @if ($errors->has('billing_fax_number')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_fax_number') }}</p> @endif
-                            <br/><br/>
-                            <div class="has-error">
-                                @if ($errors->has('billing_email_flg') && ($errors->first('billing_email_flg') !== '請求メールの設定は、必ず指定してください。')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_email_flg') }}</p> @endif
-                            </div>
+                            <br/>
+                            @if ($errors->has('billing_email_flg') && ($errors->first('billing_email_flg') !== '請求メールの設定は、必ず指定してください。')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_email_flg') }}</p> @endif
                         </div>
                     </div>
                 </div>
@@ -215,14 +213,40 @@
 
 @push('js')
   <script>
+      let billingData = {};
+      
+      function saveBillingData() {
+        billingData = {
+            billing_email1: $('#billing_email1').val(),
+            billing_email2: $('#billing_email2').val(),
+            billing_email3: $('#billing_email3').val(),
+            billing_fax_number: $('#billing_fax_number').val(),
+        }
+      }
+
+      function setBillingData() {
+            $('#billing_email1').val(billingData.billing_email1)
+            $('#billing_email2').val(billingData.billing_email2)
+            $('#billing_email3').val(billingData.billing_email3)
+            $('#billing_fax_number').val(billingData.billing_fax_number)
+      }
+
+      function clearBillingData() {
+            $('#billing_email1').val('')
+            $('#billing_email2').val('')
+            $('#billing_email3').val('')
+            $('#billing_fax_number').val('')
+      }
 
       const inputs = $('.bill-fields-box input');
       $(document).ready(function($){
+          saveBillingData()
           if ( $("input[name='billing_email_flg']:checked").val() == 1) {
               inputs.each(function(){
                   $(this).attr('disabled', false);
               });
           } else {
+              clearBillingData()
               inputs.each(function(){
                   $(this).attr('disabled', true);
               });
@@ -236,10 +260,13 @@
           -----------------------------------------------------*/
           $(document).on('change', '.billing_email_flg', function(){
               if ( $(this).val() == 1) {
+                  setBillingData()
                   inputs.each(function(){
                       $(this).attr('disabled', false);
                   });
               } else {
+                  saveBillingData()
+                  clearBillingData()
                   inputs.each(function(){
                       $(this).attr('disabled', true);
                   });
@@ -252,8 +279,6 @@
           -----------------------------------------------------*/
           (function () {
               const change = function() {
-                  console.log($('.hospital_email_reception_flg input[type=radio]:checked'));
-                  console.log($('.hospital_email_reception_flg input[type=radio]'));
                   if ($('.hospital_email_reception_flg input[type=radio]:checked').val() == '0') {
                       $('.confirmation_email_reception_flag input:checkbox').prop('disabled', true);
                   } else {
