@@ -243,7 +243,7 @@
         <input type="number" class="form-control d-inline-block mr-2 ml-2" id="price" name="price" style="width: 100px;"
                value="{{ old('price', (isset($course) ? $course->price : null)) }}">
         円
-        <span id="tax_amt" class="ml-5">０円（税込）</span>
+        <span id="tax_amt" class="ml-5">0円（税込）</span>
       </div>
       @if ($errors->has('price')) <p class="help-block">{{ $errors->first('price') }}</p> @endif
     </div>
