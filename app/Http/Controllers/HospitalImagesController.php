@@ -259,12 +259,9 @@ class HospitalImagesController extends Controller
     {
 
         $hospital_image = $this->hospital_image->find($hospital_image_id);
-
-        $hospital_image_file_sp = public_path().'/img/uploads/300-auto-'.$hospital_image->path;
-        $hospital_image_file_pc = public_path().'/img/uploads/500-auto-'.$hospital_image->path;
-        $hospital_image_default = public_path().'/img/uploads/'.$hospital_image->path;
-
-        \File::delete($hospital_image_file_sp, $hospital_image_file_pc, $hospital_image_default);
+        $disk = \Storage::disk(env('FILESYSTEM_CLOUD'));
+        $disk->delete($hospital_image->name);
+        $disk->delete($hospital_image->name.'_sp');
 
         $this->hospital_category->where('id', $hospital_category_id)->delete();
         $this->hospital_image->where('id', $hospital_image_id)->delete();
@@ -315,6 +312,7 @@ class HospitalImagesController extends Controller
             $memo1 = isset($file[$image_prefix.$i.'_memo1']) ? $file[$image_prefix.$i.'_memo1'] : '' ;
             $memo2 = isset($file[$image_prefix.$i.'_memo2']) ? $file[$image_prefix.$i.'_memo2'] : '' ;
             $order = isset($file[$image_prefix.$i.'_order']) ? $file[$image_prefix.$i.'_order'] : 0 ;
+            $name_2 = isset($file[$image_prefix.$i.'_name']) ? $file[$image_prefix.$i.'_name'] : '' ;
 
             $location_no = isset($file[$image_prefix.$i.'_location']) ? $file[$image_prefix.$i.'_location'] : null ;
             //画像の登録確認
@@ -331,11 +329,11 @@ class HospitalImagesController extends Controller
             //pc保存
             \Storage::disk(env('FILESYSTEM_CLOUD'))->put($name, (string) $sub_image->encode(), 'public');
             $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($name);
-            $save_sub_images = ['extension' => str_replace('image/', '', $sub_image->mime), 'name' => $file[$image_prefix.$i]->getClientOriginalName(), 'path' => $image_path, 'memo1' => $memo1, 'memo2' => $memo2];
-            $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order, 'file_location_no' => $location_no];
+            $save_sub_images = ['extension' => str_replace('image/', '', $sub_image->mime), 'name' => $name, 'path' => $image_path, 'memo1' => $memo1, 'memo2' => $memo2];
+            $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name_2,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order, 'file_location_no' => $location_no];
             } else {
                 $save_sub_images = ['memo1' => $memo1, 'memo2' => $memo2];
-                $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order , 'file_location_no' => $location_no];
+                $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name_2,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order , 'file_location_no' => $location_no];
             }
 
             if(is_null($image_order_exists)) {
