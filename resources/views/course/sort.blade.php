@@ -21,7 +21,7 @@
   <form method="post" action="{{ route('course.updateSort') }}">
     {!! csrf_field() !!}
     {!! method_field('PATCH') !!}
-    <table class="table table-bordered table-hover">
+    <table class="table no-border table-hover table-striped">
       <thead>
       <tr>
         <th class="text-center">検査コース名 &gt; &GT;{{ request()->session()->get('hospital_name') }}</th>
@@ -41,7 +41,7 @@
         @endforeach
       </tbody>
     </table>
-    <div class="box-footer pull-right">
+    <div class="box-footer">
       <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
       <button type="submit" class="btn btn-primary">保存</button>
     </div>
