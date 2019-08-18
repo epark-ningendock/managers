@@ -26,7 +26,7 @@
   $o_answer09s = collect(old('answer09s', []));
   $o_answer10s = collect(old('answer10s', []));
 @endphp
-@include('layouts.partials.error_message_show')
+@include('layouts.partials.error_pan')
 <div class="box box-primary">
   <div></div>
   <div class="box-header with-border">
