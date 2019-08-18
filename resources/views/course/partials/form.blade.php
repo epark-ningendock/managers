@@ -26,7 +26,6 @@
   $o_answer09s = collect(old('answer09s', []));
   $o_answer10s = collect(old('answer10s', []));
 @endphp
-
 <div class="box box-primary">
   <div></div>
   <div class="box-header with-border">
@@ -416,30 +415,17 @@
 
     <div class="form-entry">
         <div class="box-body">
-          <div class="form-group">
-            <label for="name">質問事項の利用</label>
-            <div>
-              <input type="radio" class="checkbox d-inline-block mr-2 is_question" {{ $is_question == 1 ? 'checked' : '' }}
-                     id="is_question_use_{{$qi}}" name="is_question_{{ $qi }}" value="1"/>
-              <label for="is_question_use_{{$qi}}">利用する</label>
-              <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" {{ $is_question == 0 ? 'checked' : '' }}
-                     id="is_question_not_use_{{$qi}}" name="is_question_{{ $qi }}" value="0"/>
-              <label for="is_question_not_use_{{$qi}}">利用しない</label>
-                <input type="hidden" value="{{ $is_question }}" name="is_questions[]"/>
-            </div>
-          </div>
-
             <div class="form-group py-sm-2">
                 <label for="web_reception">質問事項の利用</label>
                 <group class="inline-radio two-option">
                     <div>
-                        <input type="radio" name="is_question_{{ $qi }}" {{ $is_question == 1 ? 'checked' : 'checked' }}
-                        value="1"
-                        ><label>利用する</label></div>
+                        <input type="radio" class="checkbox d-inline-block mr-2 is_question" id="is_question_use_{{$qi}}" name="is_question_{{ $qi }}" {{ $is_question == 1 ? 'checked' : '' }} value="1"
+                        ><label>利用する</label>
+                    </div>
                     <div>
-                        <input type="radio" name="is_question_{{ $qi }}" {{ $is_question == 0 ? 'checked' : '' }}
-                        value="0"><label>利用しない</label></div>
-                    <input type="hidden" value="{{ $is_question }}" name="is_questions[]"/>
+                        <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" id="is_question_not_use_{{$qi}}" name="is_question_{{ $qi }}" {{ $is_question == 0 ? 'checked' : '' }} value="0">
+                        <label>利用しない</label>
+                    </div>
                 </group>
             </div>
 
