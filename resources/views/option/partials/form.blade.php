@@ -7,7 +7,7 @@
         <div class="form-group py-sm-1 @if ($errors->has('name')) has-error @endif">
             <label for="option_name">{{ trans('messages.option_name') }}<span class="form_required">必須</span></label>
             <input type="text" class="form-control w16em" id="option_name" name="name"
-                   value="{{ old('option_name', (isset($option) ? $option->name : null)) }}"
+                   value="{{ old('name', (isset($option) ? $option->name : null)) }}"
                    placeholder="オプション名">
             @if ($errors->has('name')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('name') }}</p> @endif
         </div>
