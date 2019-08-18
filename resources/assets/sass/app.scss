@@ -387,6 +387,16 @@ $color2: #3197EE;
       }
     }
   }
+  label[for="confirm"] {
+    display: block;
+  }
+  .inline-block {
+    display: inline-block;
+  }
+  .input-side-text {
+    vertical-align: sub;
+    color: #666666;
+  }
 }
 
 legend {
