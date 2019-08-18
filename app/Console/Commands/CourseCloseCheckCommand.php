@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Course;
 use App\Enums\WebReception;
-use App\Mail\Job\TemporaryReservationCheckMail;
+use App\Mail\Course\CourseCloseCheckMail;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
@@ -95,7 +95,7 @@ class CourseCloseCheckCommand extends Command
     }
 
     /**
-     * 仮受付確認メール送信
+     * WEB受付、掲載終了確認メール送信
      * @param array $reservationDates
      */
     public function sendCourseCloseCheckMail(array $receptionCloseCourses, array $publishCloseCourses)
