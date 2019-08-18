@@ -30,8 +30,7 @@ class PvAggregateJob implements ShouldQueue
     {
 
         // pv集計数をリセットする
-        $query = PvRecord::all();
-        $query->update(['pv_count' => 0]);
+        $this->resetPvCount();
 
         // 医療機関ごとの指定日付分のpv数を取得する。
         $query = PvRecord::getPvData($this->aggregateDate);
@@ -45,6 +44,16 @@ class PvAggregateJob implements ShouldQueue
             $this->deletePvData();
         }
 
+    }
+
+    /**
+     * PV数をリセットする
+     */
+    protected function resetPvCount() {
+        $pvRecords = PvRecord::all();
+        foreach ($pvRecords as $pvRecord) {
+            $pvRecord->update(['pv_count' => 0]);
+        }
     }
 
     /**
