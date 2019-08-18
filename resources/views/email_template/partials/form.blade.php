@@ -11,7 +11,8 @@
         <div class="form-group py-sm-1 @if ($errors->has('text')) has-error @endif">
             <label for="text">本文</label>
             {{ Form::textarea('text', old('text',(isset($email_template) ) ? $email_template->text : null), ['class' => 'form-control', 'id' => 'text', 'rows' => '10', 'placeholder' => '本文を入力してください']) }}
-            <span class="pull-right">{{ strlen(old('text', (isset($email_template) ) ? $email_template->text : null)) }}/20000文字</span>
+            {{-- <span class="pull-right">{{ strlen(old('text', (isset($email_template) ) ? $email_template->text : null)) }}/20000文字</span> --}}
+            <span class="pull-right">0/20000文字</span>
             @if ($errors->has('text')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('text') }}</p> @endif
         </div>
 
@@ -24,20 +25,27 @@
 @section('script')
   <script>
       (function ($) {
-
-          /* ---------------------------------------------------
-          // character count
-          -----------------------------------------------------*/
-          (function () {
-              $('textarea').on('keyup', function() {
-                  const len = $(this).val().length;
-                  if (len > 20000) {
-                      $(this).val($(this).val().substring(0, 20000));
-                  } else {
-                      $(this).next('span').text(len + '/20000文字');
-                  }
-              });
-          })();
+        $(document).ready(function($){
+            const len = $('textarea').val().length;
+            if (len > 20000) {
+                $('textarea').val($('textarea').val().substring(0, 20000));
+            } else {
+                $('textarea').next('span').text(len + '/20000文字');
+            }
+        });
+        /* ---------------------------------------------------
+        // character count
+        -----------------------------------------------------*/
+        (function () {
+            $('textarea').on('keyup', function() {
+                const len = $(this).val().length;
+                if (len > 20000) {
+                    $(this).val($(this).val().substring(0, 20000));
+                } else {
+                    $(this).next('span').text(len + '/20000文字');
+                }
+            });
+        })();
       })(jQuery);
   </script>
 @stop
