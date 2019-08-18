@@ -31,7 +31,7 @@ class OptionController extends Controller
     {
         $request->request->add([
             'hospital_id' => session()->get('hospital_id'),
-            'order'       => 1,
+            'order'       => 0,
         ]);
         Option::create($request->all());
 
