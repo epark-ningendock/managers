@@ -7,6 +7,7 @@ use App\CourseDetail;
 use App\CourseImage;
 use App\CourseQuestion;
 use App\Hospital;
+use App\HospitalCategory;
 use App\HospitalDetail;
 use App\HospitalImage;
 use App\HospitalMajorClassification;
@@ -19,6 +20,7 @@ use App\Imports\CourseDetailImport;
 use App\Imports\CourseImageImport;
 use App\Imports\CourseImport;
 use App\Imports\CourseQuestionImport;
+use App\Imports\HospitalCategoryImport;
 use App\Imports\HospitalDetailImport;
 use App\Imports\HospitalImageImport;
 use App\Imports\HospitalImport;
@@ -115,5 +117,9 @@ return [
     'm_contract_plan.csv' => [
         'model' => ContractPlan::class,
         'import' => ContractPlanImport::class,
+    ],
+    'm_hospital_category.csv' => [
+        'model' => HospitalCategory::class,
+        'import' => HospitalCategoryImport::class,
     ],
 ];
