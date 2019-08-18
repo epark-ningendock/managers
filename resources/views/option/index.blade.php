@@ -22,7 +22,7 @@
 @section('search')
     <div class="action-btn-wrapper text-right m-4">
 
-        <a href="{{ route('option.create') }}" class="btn btn-success">
+        <a href="{{ route('option.create') }}" class="btn btn-primary">
             オプション登録
         </a>
 
@@ -43,7 +43,7 @@
                 <th>オプション名</th>
                 <th>オプション内容</th>
                 <th>価格</th>
-                <th>編集・削除</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -57,8 +57,11 @@
                         <td>
                             <a href="{{ route('option.edit', $option->id) }}"
                                class="btn btn-primary">
-                               <i class="fa fa-edit text-bold"> 編集</i>
+                               <i class="fa fa-edit"> 編集</i>
                             </a>
+                            <button class="btn btn-primary delete-btn delete-popup-btn" data-id="{{ $option->id }}">
+                                <i class="fa fa-trash"></i>
+                            </button>
                         </td>
                     </tr>
                 @endforeach
