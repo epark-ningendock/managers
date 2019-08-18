@@ -23,7 +23,7 @@
 
         <div class="form-group py-sm-1 @if ($errors->has('price')) has-error @endif">
             <label for="confirm">{{ trans('messages.price') }}<span class="form_required">必須</span></label>
-            <input type="text" class="form-control w16em inline-block" name="price" id="price"
+            <input type="number" class="form-control w16em inline-block" name="price" id="price"
                    placeholder="{{ trans('messages.price') }}"
                    value="{{ old('price', (isset($option) ? $option->price : '')) }}"/>
             <span class="input-side-text">円（税込）</span>
