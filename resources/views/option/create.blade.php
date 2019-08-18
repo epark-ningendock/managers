@@ -9,12 +9,6 @@
 @stop
 
 @section('form')
-
-    <h3 class="std-title">オプション登録</h3>
-    <p class="sub-title text-bold">
-        </b><span class="text-danger">(*)</span>以下の項目を入力してください。
-    </p>
-
     <form method="post" action="{{ route('option.store') }}">
         {{ csrf_field() }}
 
