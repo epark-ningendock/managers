@@ -69,17 +69,6 @@ class ImportCsv extends Command
             $this->error('指定されたディレクトリが存在しません!!');
         }
 
-        $fresh = $this->option('fresh');
-        if ($fresh) {
-            if (!$backup) {
-                $this->line('既存のデータベースをバックアップします。');
-                Artisan::call('db:backup', ['--path' => './storage/app/backup']);
-            }
-
-            $this->line('データベースを初期化します。');
-            Artisan::call('migrate:refresh');
-        }
-
         $this->directory = trim($directory, '/');
         foreach (glob("{$this->directory}/*.csv") as $filename) {
             $basename = basename($filename);
@@ -94,39 +83,40 @@ class ImportCsv extends Command
         $this->info('CSVファイルをチェックします');
         $this->table(['ファイル名', '対象クラス', 'テーブル名'], $csv_files);
 
+        if (!$this->confirm('このまま続けてよろしいですか？')) {
+            return;
+        }
+
+        $fresh = $this->option('fresh');
+        if ($fresh) {
+            if (!$backup) {
+                $this->line('既存のデータベースをバックアップします。');
+                Artisan::call('db:backup', ['--path' => './storage/app/backup']);
+            }
+
+            $this->line('データベースを初期化します。');
+            Artisan::call('migrate:fresh');
+        }
+
         $this->info('インポートを開始します。');
-
-        $this->import('m_pref.csv');
-        $this->import('m_item_type.csv');
-        $this->import('m_item_category_dai.csv');
-        $this->import('m_item_category_chu.csv');
-        $this->import('m_item_category_sho.csv');
-        $this->import('m_hospital.csv');
-        $this->import('m_hospital_category_dai.csv');
-        $this->import('m_hospital_category_chu.csv');
-        $this->import('m_hospital_category_sho.csv');
-        $this->import('m_staff.csv');
-        $this->import('m_course_basic.csv');
-        $this->import('m_course_detail.csv');
-        $this->import('m_course_question.csv');
-        $this->import('m_file_location.csv');
-        $this->import('m_hospital_file.csv');
-        $this->import('m_hospital_detail.csv');
-        $this->import('m_hospital_time.csv');
-        $this->import('m_course_file.csv');
-        $this->import('m_contract_plan.csv');
-
+        $this->import();
         $this->info('インポートを完了しました。');
     }
 
     /**
      * インポート
-     * @param string $basename
      */
-    private function import(string $basename)
+    private function import()
     {
-        $classname = $this->getClass($basename, 'import');
-        $this->line("{$classname}");
-        (new $classname)->withOutput($this->output)->import($this->directory . '/' . $basename);
+        $files = array_keys($this->classes);
+        foreach ($files as $i => $basename) {
+            $realpath = $this->directory . '/' . $basename;
+            if (!file_exists($realpath)) {
+                $this->warn('Skipped: %s is not found.', $basename);
+            }
+            $classname = $this->getClass($basename, 'import');
+            $this->line(sprintf("[ %d / %d ] %s", $i + 1, count($files), $classname));
+            (new $classname)->withOutput($this->output)->import($realpath);
+        }
     }
 }

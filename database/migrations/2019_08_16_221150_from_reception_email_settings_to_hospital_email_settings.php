@@ -1,7 +1,8 @@
 <?php
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
+
 class FromReceptionEmailSettingsToHospitalEmailSettings extends Migration
 {
     /**
@@ -11,8 +12,9 @@ class FromReceptionEmailSettingsToHospitalEmailSettings extends Migration
      */
     public function up()
     {
-	    Schema::rename('reception_email_settings', 'hospital_email_settings');
+        Schema::rename('reception_email_settings', 'hospital_email_settings');
     }
+
     /**
      * Reverse the migrations.
      *
@@ -20,6 +22,8 @@ class FromReceptionEmailSettingsToHospitalEmailSettings extends Migration
      */
     public function down()
     {
-	    Schema::dropIfExists('reception_email_settings');
+        if (Schema::hasTable('hospital_email_settings')) {
+            Schema::rename('hospital_email_settings', 'reception_email_settings');
+        }
     }
 }

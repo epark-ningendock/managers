@@ -37,14 +37,10 @@ class HospitalCategoryImport extends ImportAbstract
     {
         $row = $row->toArray();
         $model = new HospitalCategory([
-            'hospital_id' => $this->getId('hospitals', $row['hospital_id']),
-
-//            'hospital_image_id' => HospitalImage::where('hospital_id', $this->getId('hospitals', $row['hospital_id']))
-//                ->where('file_no', $row['file_no'])->get()->id,
-
+            'hospital_id' => $this->getId('hospitals', $row['hospital_no']),
+            'hospital_image_id' => $this->getId('hospital_images', $row['file_no']),
             'image_order' => ImageOrder::where('image_group_number', $row['file_group_no'])
-                ->where('image_location_number', $row['file_location_no'])->get()->id,
-
+                ->where('image_location_number', $row['file_location_no'])->first()->id,
             'file_location_no' => $row['file_location_no'],
             'title' => $row['title'],
             'caption' => $row['caption'],
