@@ -37,7 +37,9 @@ class PvAggregateJob implements ShouldQueue
         $pvRecords = collect($query->get()->toArray());
 
         // 医療機関のpv数を更新する
-        $this->updatePvCount($pvRecords);
+        if (count($pvRecords)) {
+            $this->updatePvCount($pvRecords);
+        }
 
         // 過のpvデータを削除する
         if ($this->deleteFlg) {
