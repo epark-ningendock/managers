@@ -75,7 +75,7 @@ class PvAggregateJob implements ShouldQueue
      */
     protected function deletePvData() {
         $date = Carbon::today();
-        $date->subDay(($this->aggregateDate + 3));
+        $date->subDay((config('constant.pv_aggregate_day') + 3));
         PvRecord::where('created_at', '<=', $date)->delete();
 
     }
