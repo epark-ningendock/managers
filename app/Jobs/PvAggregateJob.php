@@ -19,7 +19,7 @@ class PvAggregateJob implements ShouldQueue
 
     public function __construct($aggregateDate, $deleteFlg)
     {
-        $this->$aggregateDate = $aggregateDate;
+        $this->aggregateDate = $aggregateDate;
         $this->deleteFlg = $deleteFlg;
     }
 
