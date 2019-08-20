@@ -26,7 +26,7 @@
   $o_answer09s = collect(old('answer09s', []));
   $o_answer10s = collect(old('answer10s', []));
 @endphp
-@include('layouts.partials.error_pan')
+@include('layouts.partials.error_message_show')
 <div class="box box-primary">
   <div></div>
   <div class="box-header with-border">
@@ -245,13 +245,13 @@
     <fieldset class="form-group">
         <legend class="mb-0">利用設定</legend>
         <div class="radio">
-            <input type="radio" name="is_pre_account" id="is_pre_account_0" value="1"
+            <input type="radio" name="is_pre_account" id="is_pre_account_0" value="0"
                    {{ old('is_pre_account', (isset($course) ? $course->is_pre_account : null) ) == 0 ? 'checked' : 'checked' }}
                    class="permission-check">
             <label for="is_pre_account_0" class="radio-label">通常決済利用</label>
         </div>
         <div class="radio">
-            <input type="radio" id="is_pre_account_1" name="is_pre_account" value="2" class="permission-check"
+            <input type="radio" id="is_pre_account_1" name="is_pre_account" value="1" class="permission-check"
                     {{ old('is_pre_account', (isset($course) ? $course->is_pre_account : null) ) == 1 ? 'checked' : '' }}>
             <label for="is_pre_account_1" class="radio-label">事前決済利用</label>
         </div>
@@ -416,17 +416,18 @@
 
     <div class="form-entry">
         <div class="box-body">
-            <div class="form-group">
-                <label for="name">質問事項の利用</label>
-                <div>
-                    <input type="radio" class="checkbox d-inline-block mr-2 is_question" {{ $is_question == 1 ? 'checked' : '' }}
-                    id="is_question_use_{{$qi}}" name="is_question_{{ $qi }}" value="1"/>
-                    <label for="is_question_use_{{$qi}}">利用する</label>
-                    <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" {{ $is_question == 0 ? 'checked' : '' }}
-                    id="is_question_not_use_{{$qi}}" name="is_question_{{ $qi }}" value="0"/>
-                    <label for="is_question_not_use_{{$qi}}">利用しない</label>
-                    <input type="hidden" value="{{ $is_question }}" name="is_questions[]"/>
-                </div>
+            <div class="form-group py-sm-2">
+                <label for="status">状態</label>
+                <group class="inline-radio two-option">
+                    <div>
+                        <input type="radio" name="is_question_{{ $qi }}" {{ old('is_question_'.$qi, (isset($is_question) ? $is_question : null) ) == 1 ? 'checked' : 'checked' }}
+                        value="1"
+                        ><label>利用する</label></div>
+                    <div>
+                        <input type="radio" name="is_question_{{ $qi }}" {{ old('is_question_'.$qi, (isset($is_question) ? $is_question : null) ) == 0 ? 'checked' : '' }}
+                        value="0"><label>利用しない</label></div>
+                </group>
+                @if ($errors->has('is_question_'.$qi)) <p class="help-block has-error">{{ $errors->first('is_question_'.$qi) }}</p> @endif
             </div>
 
       <div class="form-group">
