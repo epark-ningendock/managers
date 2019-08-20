@@ -6,14 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Rail extends Model
+class Station extends Model
 {
     use SoftDeletes;
 
     protected $fillable = [
         'es_code',
-        'railway_company_id',
+        'prefecture_id',
         'name',
+        'kana',
+        'longitude',
+        'latitude',
         'status',
         'created_at',
         'updated_at',
@@ -22,16 +25,8 @@ class Rail extends Model
     /**
      * @return BelongsToMany
      */
-    public function stations(): BelongsToMany
+    public function rails(): BelongsToMany
     {
-        return $this->belongsToMany(Station::class);
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function prefectures(): BelongsToMany
-    {
-        return $this->belongsToMany(Prefecture::class);
+        return $this->belongsToMany(Rail::class);
     }
 }
