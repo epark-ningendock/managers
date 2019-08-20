@@ -881,6 +881,21 @@ input[type=checkbox] + label:before {
 
 }
 
+#setting-list {
+  .mr-2 {
+    cursor: pointer;
+  }
+  span.square:before {
+    font-family: FontAwesome;
+    content: "\f096";
+    color: #3c8dbc;
+    letter-spacing: 10px;
+    font-weight: bold;
+    font-size: 20px;
+    vertical-align: middle;
+  }
+}
+
 input[type=checkbox] + label:before { content: "\f096"; color: #3c8dbc} /* unchecked icon */
 input[type=checkbox] + label:before { letter-spacing: 10px; } /* space between checkbox and label */
 

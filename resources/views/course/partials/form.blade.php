@@ -308,12 +308,12 @@
     <h1 class="box-title">設定項目</h1>
   </div>
     <div class="box-body">
-    <table class="table no-border table-hover table-striped mb-5">
-      @foreach($majors as $major)
+    <table id="setting-list" class="vertical-middle table no-border table-hover table-striped mb-5">
+      @foreach($majors as $key => $major)
         @foreach($major->middle_classifications as $middle)
         <tr>
           @if(!isset($last) || $major != $last)
-            <td colspan="{{ count($major->middle_classifications) }}">{{ $major->name }}</td>
+            <td>{{ $major->name }}</td>
             @php
               $last = $major
             @endphp
@@ -339,13 +339,14 @@
               @endphp
               <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
               @if($minor->is_fregist == '1')
+                <div>
                 <input type="checkbox" class="checkbox d-inline-block minor-checkbox" name="minor_values[]"
                        id="{{ 'minor_id_'.$minor->id }}"
                        {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
-                <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label>
+                <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label></div>
               @else
                 <input type="text" name="minor_values[]"
-                       class="form-control minor-text @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
+                       class="form-control minor-text-{{$key}} @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
                   value = "{{ $minor_value }}" />
                 <span class="pull-right">0/{{ $minor->max_length }}文字</span>
               @endif
@@ -415,15 +416,16 @@
             <div class="form-group py-sm-2">
                 <label for="status">状態</label>
                 <group class="inline-radio two-option">
-                    <div>
+                    <div class="status-btn">
                         <input type="radio" class="checkbox d-inline-block mr-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 1 ? 'checked' : '' }}
                         value="1"
-                        ><label>利用する</label></div>
-                    <div>
+                        ><label>利用する</label>
+                    </div>
+                    <div class="status-btn">
                         <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 0 ? 'checked' : '' }}
                         value="0"><label>利用しない</label>
                     </div>
-                    <input type="hidden" value="{{ $is_question }}" name="is_questions[]"/>
+                    <input type="hidden" class="hidden-q" value="{{ $is_question }}" name="is_questions[]"/>
                 </group>
                 @if ($errors->has('is_question_'.$qi)) <p class="help-block has-error">{{ $errors->first('is_question_'.$qi) }}</p> @endif
             </div>
@@ -530,20 +532,28 @@
 @section('script')
   <script>
       (function ($) {
+          $('.status-btn').on('click', function() {
+              const is_q_val = $(this).find('.is_question').val();
+              $(this).parent().find('.hidden-q').val(is_q_val);
+
+          });
           /* ---------------------------------------------------
           // character count
           -----------------------------------------------------*/
           (function () {
               const textAreaChange = function(ele, max) {
                   const len = ele.val().length;
+
                   if (len > max) {
                       ele.val(ele.val().substring(0, max));
                   } else {
+                      console.log(len);
                       ele.next('span').text(len + '/' + max + '文字');
                   }
               };
 
               $('textarea').each(function(index, ele) {
+
                   ele = $(ele);
                   ele.on('keyup', function() {
                     textAreaChange(ele, 1000);
@@ -551,11 +561,17 @@
                   textAreaChange(ele, 1000);
               });
 
+
               $('.minor-text').on('keyup', function() {
                   const max = parseInt($(this).data('maxlength'));
                   textAreaChange($(this), max);
               });
-              textAreaChange($('.minor-text'), parseInt($('.minor-text').data('maxlength')));
+              @for ($i = 0; $i <= $majors->count(); $i++)
+              if($('.minor-text-{{$i}}').length){
+                  textAreaChange($('.minor-text-{{$i}}'), parseInt($('.minor-text-{{$i}}').data('maxlength')));
+              }
+              @endfor
+
 
           })();
 
@@ -598,8 +614,10 @@
               const change = function(ele) {
                   if (ele.prop('checked')) {
                       ele.next('input:hidden').remove();
+                      ele.prev().remove();
                   } else {
                       $('<input type="hidden" name="minor_values[]" value="0"/>').insertAfter(ele);
+                      ele.before('<span class="square"></span>');
                   }
               };
 
