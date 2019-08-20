@@ -113,7 +113,12 @@
                 $('#contents').val('');
                 return
             } 
-            var email_templates = JSON.parse("{{ json_encode($email_templates) }}".replace(/&quot;/g,'"'));
+            var email_templates = JSON.parse("{{ json_encode($email_templates) }}"
+                .replace(/&quot;/g,'"')
+                .replace(/(\r\n)/g, '\n')
+                .replace(/(\r)/g,   '\n')
+                .replace(/(\n)/g,  '\\n')
+            );
 
             target = email_templates.filter(function(email_template) {
                 return email_template.id == targetId

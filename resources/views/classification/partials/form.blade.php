@@ -146,7 +146,7 @@
                     ><label>有効</label></div>
                 <div>
                     <input type="radio" name="status" {{ old('is_icon', (isset($classification) ? $classification->status : null)) == 'X' ? 'checked' : '' }}
-                    value="X"><label>無効</label></div>
+                    value="X"><label>削除</label></div>
             </group>
             @if ($errors->has('is_icon')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('status') }}</p> @endif
         </div>

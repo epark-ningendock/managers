@@ -2,10 +2,10 @@
 
 namespace App\Imports;
 
-use App\ImageOrder;
+use App\Rail;
 use Maatwebsite\Excel\Row;
 
-class ImageOrderImport extends ImportAbstract
+class RailImport extends ImportAbstract
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -14,7 +14,7 @@ class ImageOrderImport extends ImportAbstract
      */
     public function getOldPrimaryKeyName(): string
     {
-        return '';
+        return 'no';
     }
 
     /**
@@ -24,7 +24,7 @@ class ImageOrderImport extends ImportAbstract
      */
     public function getNewClassName(): string
     {
-        return ImageOrder::class;
+        return Rail::class;
     }
 
     /**
@@ -36,17 +36,17 @@ class ImageOrderImport extends ImportAbstract
     {
         $row = $row->toArray();
 
-        $model = new ImageOrder([
-            'image_group_number' => $row['file_group_no'],
-            'image_location_number' => $row['file_location_no'],
+        $model = new Rail([
+            'es_code' => $row['es_code'],
+            'railway_company_id' => $this->getId('railway_companies', $row['corp'])  ?? 0,
             'name' => $row['name'],
-            'order' => $row['order'],
             'status' => $row['status'],
-            'created_at' => $this->setCreatedAt($row['rgst']),
-            'updated_at' => $this->setUpdatedAt($row['updt']),
+            'created_at' => $row['rgst'],
+            'updated_at' => $row['updt'],
         ]);
+
         $model->save();
         $this->deleteIf($model, $row, 'status', ['X']);
+        $this->setId($model, $row);
     }
-
 }
