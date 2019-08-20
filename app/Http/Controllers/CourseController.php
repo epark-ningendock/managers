@@ -171,35 +171,21 @@ class CourseController extends Controller
             $course->touch();
             $course->save();
 
-            //Course Image
-            $image_ids = collect($request->input('course_images'));
-            $image_order_ids = collect($request->input('course_image_orders'));
-
-            $filtered_image_ids = $image_ids->filter(function ($id) {
-                return $id != 0;
-            });
-
-            $images = HospitalImage::whereIn('id', $filtered_image_ids)->get();
-            if ($images->count() != count($filtered_image_ids)) {
-                $request->session()->flash('error', trans('messages.invalid_hospital_image_id'));
-                return redirect()->back();
+            //Course Images
+            for ($i = 1; $i <= 1; $i++) { 
+                // dd($request->input('course_image_1'));
+                $image = \Image::make(file_get_contents($request->input('course_image_1')->getRealPath()));
+                $name = $request->input('course_image_1').hasName();
+                \Storage::disk(env('FILESYSTEM_CLOUD'))->put($name, (string) $image->encode(), 'public');
+                $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($name);
+                $course_image = [
+                    'course_id' => $course->id,
+                    'extension' => str_replace('image/', '', $image->mime),
+                    'name' => $name,
+                    'path' => $image_path
+                ];
             }
 
-            if (isset($course_param)) {
-                $course->course_images()->forceDelete();
-            }
-
-            foreach ($image_ids as $index => $image_id) {
-                if ($image_id == 0) {
-                    continue;
-                }
-                $image_order_id = $image_order_ids[$index];
-                $course_image = new CourseImage();
-                $course_image->course_id = $course->id;
-                $course_image->hospital_image_id = $image_id;
-                $course_image->image_order_id = $image_order_id;
-                $course_image->save();
-            }
 
 
             //Course Options

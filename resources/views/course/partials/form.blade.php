@@ -97,6 +97,27 @@
 
     <div class="form-group">
       <label>画像の選択</label>
+      <div class="box box-primary form-box">
+        <div class="form_title">
+          <span class="input_title">コース画像</span>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            {{Form::label('sub_1', 'コース画像1',['class' => 'form_label'])}}
+            <div class="sub_image_area">
+              <img src="/img/no_image.png">
+            </div>
+            <label class="file-upload btn btn-primary">
+              ファイル選択 {{Form::file("course_image_1", ['class' => 'field', 'accept' => 'image/*'])}}
+            </label>
+            @if ($errors->has('course_image_1'))
+              <div class="error_message">
+                {{ $errors->first('course_image_1') }}
+              </div>
+            @endif
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="form-group">
