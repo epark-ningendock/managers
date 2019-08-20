@@ -76,9 +76,8 @@ class ClassificationController extends Controller
                 $item = MinorClassification::find($id);
             }
 
-            // $item->status = Status::Deleted;
-            // $item->save();
             $item->update(['status' => Status::Deleted]);
+            DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
@@ -188,10 +187,12 @@ class ClassificationController extends Controller
 
         if ($filterByStatus) {
             if ($request->input('status', Status::Valid) == Status::Deleted) {
-                $query->onlyTrashed();
+                $query->where('minor_classifications.status', Status::Deleted);
+            } else {
+                $query->where('minor_classifications.status', Status::Valid);
             }
         } else {
-            $query->withTrashed();
+            $query->where('minor_classifications.status', Status::Valid);
         }
 
         $query->orderBy($main_table.'.order', 'ASC');
