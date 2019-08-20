@@ -46,7 +46,7 @@
       <input type="text" class="form-control w16em" id="name" name="name"
              value="{{ old('name', (isset($course) ? $course->name : null)) }}"
              placeholder="検査コース名">
-      @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
+      @if ($errors->has('name')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('name') }}</p> @endif
     </div>
 
 
@@ -272,8 +272,7 @@
     <h1 class="box-title">オプションの設定</h1>
   </div>
   <div class="box-body">
-    <h4 class="d-inline-block">オプションの内容</h4></span>
-    <table class="table table-bordered">
+    <table class="table no-border table-hover table-striped ">
       <tr>
         <td class="text-center">選択</td>
         <td class="text-center">オプション名</td>
@@ -307,9 +306,7 @@
         <i class="fa fa-minus"></i></button>
     </div>
     <h1 class="box-title">設定項目</h1>
-      <di></di>
   </div>
-  <div class="form-entry">
     <div class="box-body">
     <table class="table no-border table-hover table-striped mb-5">
       @foreach($majors as $major)
@@ -360,7 +357,6 @@
     </table>
   </div>
   </div>
-</div>
 
 @for($qi = 0; $qi < 5; $qi++)
   @php
@@ -427,6 +423,7 @@
                         <input type="radio" name="is_question_{{ $qi }}" {{ old('is_question_'.$qi, (isset($is_question) ? $is_question : null) ) == 0 ? 'checked' : '' }}
                         value="0"><label>利用しない</label></div>
                 </group>
+                <input type="hidden" value="{{ $is_question }}" name="is_questions[]"/>
                 @if ($errors->has('is_question_'.$qi)) <p class="help-block has-error">{{ $errors->first('is_question_'.$qi) }}</p> @endif
             </div>
 
