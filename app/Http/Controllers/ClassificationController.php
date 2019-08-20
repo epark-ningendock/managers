@@ -55,24 +55,33 @@ class ClassificationController extends Controller
      */
     public function destroy($id, Request $request)
     {
-        $classification = $request->input('classification', 'minor');
-        if ($classification == 'major') {
-            $item = MajorClassification::find($id);
-            if ($item->middle_classifications->count() > 0) {
-                $request->session()->flash('error', trans('messages.major_classification.child_exist_error_on_delete'));
-                return redirect()->back();
+        try {
+            DB::beginTransaction();
+            $classification = $request->input('classification', 'minor');
+            if ($classification == 'major') {
+                $item = MajorClassification::find($id);
+                if ($item->middle_classifications->count() > 0) {
+                    DB::rollback();
+                    $request->session()->flash('error', trans('messages.major_classification.child_exist_error_on_delete'));
+                    return redirect()->back();
+                }
+            } elseif ($classification == 'middle') {
+                $item = MiddleClassification::find($id);
+                if ($item->minor_classifications->count() > 0) {
+                    DB::rollback();
+                    $request->session()->flash('error', trans('messages.middle_classification.child_exist_error_on_delete'));
+                    return redirect()->back();
+                }
+            } else {
+                $item = MinorClassification::find($id);
             }
-        } elseif ($classification == 'middle') {
-            $item = MiddleClassification::find($id);
-            if ($item->minor_classifications->count() > 0) {
-                $request->session()->flash('error', trans('messages.middle_classification.child_exist_error_on_delete'));
-                return redirect()->back();
-            }
-        } else {
-            $item = MinorClassification::find($id);
-        }
 
-        $item->delete();
+            $item->status = Status::Deleted;
+            $item->save();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
+        }
         $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.classifications.'.$classification)]));
         return redirect()->back();
     }
