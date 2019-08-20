@@ -346,7 +346,7 @@
                 <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label></div>
               @else
                 <input type="text" name="minor_values[]"
-                       class="form-control minor-text-{{$key}} @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
+                       class="form-control minor-text minor-text-{{$key}} @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
                   value = "{{ $minor_value }}" />
                 <span class="pull-right">0/{{ $minor->max_length }}文字</span>
               @endif
@@ -535,7 +535,6 @@
           $('.status-btn').on('click', function() {
               const is_q_val = $(this).find('.is_question').val();
               $(this).parent().find('.hidden-q').val(is_q_val);
-
           });
           /* ---------------------------------------------------
           // character count
@@ -547,7 +546,6 @@
                   if (len > max) {
                       ele.val(ele.val().substring(0, max));
                   } else {
-                      console.log(len);
                       ele.next('span').text(len + '/' + max + '文字');
                   }
               };
