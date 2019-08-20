@@ -416,14 +416,15 @@
                 <label for="status">状態</label>
                 <group class="inline-radio two-option">
                     <div>
-                        <input type="radio" name="is_question_{{ $qi }}" {{ old('is_question_'.$qi, (isset($is_question) ? $is_question : null) ) == 1 ? 'checked' : 'checked' }}
+                        <input type="radio" class="checkbox d-inline-block mr-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 1 ? 'checked' : '' }}
                         value="1"
                         ><label>利用する</label></div>
                     <div>
-                        <input type="radio" name="is_question_{{ $qi }}" {{ old('is_question_'.$qi, (isset($is_question) ? $is_question : null) ) == 0 ? 'checked' : '' }}
-                        value="0"><label>利用しない</label></div>
+                        <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 0 ? 'checked' : '' }}
+                        value="0"><label>利用しない</label>
+                    </div>
+                    <input type="hidden" value="{{ $is_question }}" name="is_questions[]"/>
                 </group>
-                <input type="hidden" value="{{ $is_question }}" name="is_questions[]"/>
                 @if ($errors->has('is_question_'.$qi)) <p class="help-block has-error">{{ $errors->first('is_question_'.$qi) }}</p> @endif
             </div>
 
