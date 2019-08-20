@@ -76,8 +76,9 @@ class ClassificationController extends Controller
                 $item = MinorClassification::find($id);
             }
 
-            $item->status = Status::Deleted;
-            $item->save();
+            // $item->status = Status::Deleted;
+            // $item->save();
+            $item->update(['status' => Status::Deleted]);
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
