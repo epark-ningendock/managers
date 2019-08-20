@@ -76,8 +76,8 @@ class ImportCsv extends Command
             $table = is_null($classname) ? null : (new $classname)->getTable();
             $csv_files[] = [
                 $basename,
-                $classname ?? '** UNDEFINED **',
-                $table ?? '** UNDEFINED **'
+                $classname ?? '** UNDEFINED OR LinkTable **',
+                $table ?? '** UNDEFINED OR LinkTable **'
             ];
         }
         $this->info('CSVファイルをチェックします');
