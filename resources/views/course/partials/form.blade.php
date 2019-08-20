@@ -39,6 +39,7 @@
   <div class="form-entry">
     <div class="box-body">
     <input type="hidden" name="lock_version" value="{{ $course->lock_version or ''}}" />
+    <input type="hidden" name="hospital_id" value="{{ session()->get('hospital_id') }}" />
     <div class="form-group @if ($errors->has('name')) has-error @endif">
       <label for="name">検査コース名
         <span class="form_required">必須</span>
@@ -204,7 +205,7 @@
         <input type="number" class="form-control d-inline-block mr-2 ml-2" id="price" name="price" style="width: 100px;"
                value="{{ old('price', (isset($course) ? $course->price : null)) }}">
         円
-        <span id="tax_amt" class="ml-5">０円（税込）</span>
+        <span id="tax_amt" class="ml-5">0円（税込）</span>
       </div>
       @if ($errors->has('price')) <p class="help-block">{{ $errors->first('price') }}</p> @endif
     </div>

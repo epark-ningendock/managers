@@ -133,6 +133,7 @@ class CourseController extends Controller
 
             //Course
             $course_data = $request->only([
+                'hospital_id',
                 'name',
                 'web_reception',
                 'calendar_id',
@@ -154,6 +155,7 @@ class CourseController extends Controller
             $reception_end_month = $request->input('reception_end_month');
             $reception_acceptance_day = $request->input('reception_acceptance_day');
             $reception_acceptance_month = $request->input('reception_acceptance_month');
+            $course_data['hospital_id'] = $request->input('hospital_id');
             $course_data['reception_start_date'] = $reception_start_month * 1000 + $reception_start_day;
             $course_data['reception_end_date'] = $reception_end_month * 1000 + $reception_end_day;
             $course_data['reception_acceptance_date'] = $reception_acceptance_month * 1000 + $reception_acceptance_day;
