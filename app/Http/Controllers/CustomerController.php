@@ -8,11 +8,13 @@ use App\Hospital;
 use App\EmailTemplate;
 use App\Http\Requests\CustomerFormRequest;
 use App\Mail\Customer\CustomerSendMail;
+use App\MailHistory;
 use App\Prefecture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {
@@ -121,12 +123,16 @@ class CustomerController extends Controller
         $email_templates = EmailTemplate::where('hospital_id', session()->get('hospital_id'))->get()->toArray();
         $customer = Customer::findOrFail($customer_id);
         $hospital = Hospital::findOrFail(session()->get('hospital_id'));
-        
+
+        $mail_histories = MailHistory::where('customer_id', $customer_id)->orderBy('sent_datetime', 'DESC')->paginate(10);
+
         return response()->json([
             'data' => view('customer.partials.email', [
                 'customer' => $customer,
                 'hospital' => $hospital,
-                'email_templates' => $email_templates
+                'email_templates' => $email_templates,
+                'customer_id' => $customer_id,
+                'mail_histories' => $mail_histories
             ])->render(),
         ]);
     }
@@ -134,15 +140,43 @@ class CustomerController extends Controller
 
     public function emailSend(Request $request)
     {
-        $this->validate($request, [
-            'customer_email' => 'required|email|max:100',
-            'hospital_email' => 'required|email|max:100',
+        $validator = Validator::make($request->all(), [
+            'customer_id' => 'required|exists:customers,id',
             'title' => 'required|max:100',
-            'text' => 'required|max:1000'
+            'contents' => 'required|max:1000'
         ]);
 
-        Mail::to($request->customer_email)->send(new CustomerSendMail($request->all()));
+        if ($validator->fails())
+        {
+            return response()->json(['errors'=>$validator->errors()]);
+        }
 
-        return redirect('/customer')->with('success', trans('messages.sent', [ 'mail' => trans('messages.mails.customer') ]));
+        $customer = Customer::findOrFail($request->get('customer_id'));
+
+        $attributes = $request->only([ 'customer_id', 'title', 'contents']);
+        $attributes = array_merge($attributes, [
+           'sender_name' => 'unei@eparkdock.com',
+           'sender_address' => 'unei@eparkdock.com',
+           'email' => $customer->email
+        ]);
+
+        Mail::to($customer->email)->send(new CustomerSendMail($attributes));
+
+        $mail_history = new MailHistory($attributes);
+        $mail_history->save();
+
+        return response()->json(['success' => trans('messages.sent', [ 'mail' => trans('messages.mails.customer') ])]);
+    }
+
+    public function email_history($customer_id, Request $request){
+        $record_per_page = $request->input('record_per_page', 10);
+        $mail_histories = MailHistory::where('customer_id', $customer_id)->orderBy('sent_datetime', 'DESC')->paginate($record_per_page);
+        return response()->json([
+            'data' => view('customer.partials.email-history', [
+                'customer_id' => $customer_id,
+                'mail_histories' => $mail_histories,
+                'record_per_page' => $record_per_page
+            ])->render(),
+        ]);
     }
 }

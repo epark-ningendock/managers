@@ -9,6 +9,7 @@
         "azuyalabs/yasumi": "^2.1",
         "barryvdh/laravel-debugbar": "^3.1",
         "bensampo/laravel-enum": "^1.17",
+        "coraxster/flysystem-aws-s3-v3-minio": "^1.0",
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "~3.3",
         "intervention/image": "^2.5",
@@ -18,6 +19,7 @@
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.2.0",
+        "league/flysystem-aws-s3-v3": "^1.0",
         "maatwebsite/excel": "^3.1",
         "rap2hpoutre/laravel-log-viewer": "^0.11.0",
         "reshadman/laravel-optimistic-locking": "^1.1"

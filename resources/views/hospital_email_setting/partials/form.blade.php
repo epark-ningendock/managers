@@ -13,11 +13,15 @@
             <label for="status">受信希望者・院内受付メール送信設定</label>
             <group class="inline-radio two-option">
                 <div>
-                    {{ Form::radio('in_hospital_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false) }}
+                    <input type="radio" name="in_hospital_email_reception_flg"
+                    {{ old('in_hospital_email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }}
+                    value="{{ \App\Enums\ReceptionEmailSetting::ACCEPT }}">
                     <label>配信可</label>
                     </div>
                 <div>
-                    {{ Form::radio('in_hospital_email_reception_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::NOT_ACCEPT ? true : false) }}
+                    <input type="radio" name="in_hospital_email_reception_flg"
+                    {{ old('in_hospital_email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::NOT_ACCEPT ? 'checked' : '' }}
+                    value="{{ \App\Enums\ReceptionEmailSetting::NOT_ACCEPT }}">
                     <label>配信不可</label>
                 </div>
             </group>
@@ -54,11 +58,15 @@
                 <label for="status">受付メール受信アドレス設定</label>
                 <group class="inline-radio two-option">
                     <div>
-                        {{ Form::radio('email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false) }}
+                            <input type="radio" name="email_reception_flg"
+                            {{ old('email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }}
+                            value="{{ \App\Enums\ReceptionEmailSetting::ACCEPT }}">
                         <label>受取可</label>
                     </div>
                     <div>
-                        {{ Form::radio('email_reception_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::NOT_ACCEPT ? true : false) }}
+                            <input type="radio" name="email_reception_flg"
+                            {{ old('email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::NOT_ACCEPT ? 'checked' : '' }}
+                            value="{{ \App\Enums\ReceptionEmailSetting::NOT_ACCEPT }}">
                         <label>受取不可</label>
                     </div>
                 </group>
@@ -125,6 +133,85 @@
               </p>
           </div>
       </div>
+
+        <div class="bill-mail-setup bms">
+
+            <div class="form-group @if ($errors->has('billing_email_flg')) has-error @endif">
+                <div class="row mb-3 mt-3">
+                    <div class="col-md-4">
+                        <label for="billing_email_flg">{{ trans('messages.billing_email_flg') }} <span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="radio-inline">
+                            <input type="radio" class="billing_email_flg" name="billing_email_flg" value="1" @if( ( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '' ) == 1 ) || is_null($hospital_email_setting->billing_email_flg) ) checked @endif>{{ trans('messages.billing_email_flg_receive') }}
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" class="billing_email_flg" name="billing_email_flg" value="0" @if( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '') == 0 ) checked @endif> {{ trans('messages.billing_email_flg_not_accept') }}
+                        </label>
+
+                        @if ($errors->has('billing_email_flg') && ($errors->first('billing_email_flg') == '請求メールの設定は、必ず指定してください。')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_email_flg') }}</p> @endif
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="bill-fields-box">
+
+                <div class="form-group @if ($errors->has('billing_email1')) has-error @endif">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="billing_email1">{{ trans('messages.billing_email1') }}</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="billing_email1" name="billing_email1" value="{{ old('billing_email1', $hospital_email_setting->billing_email1 ?? '') }}" />
+                            @if ($errors->has('billing_email1')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_email1') }}</p> @endif
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group @if ($errors->has('billing_email2')) has-error @endif">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="billing_email2">{{ trans('messages.billing_email2') }}</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="billing_email2" name="billing_email2" value="{{ old('billing_email2', $hospital_email_setting->billing_email2 ?? '') }}" />
+                            @if ($errors->has('billing_email2')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_email2') }}</p> @endif
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group @if ($errors->has('billing_email3')) has-error @endif">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="billing_email3">{{ trans('messages.billing_email3') }}</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="billing_email3" name="billing_email3" value="{{ old('billing_email3', $hospital_email_setting->billing_email3 ?? '') }}" />
+                            @if ($errors->has('billing_email3')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_email3') }}</p> @endif
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group @if ($errors->has('billing_fax_number') || ($errors->has('billing_email_flg') && ($errors->first('billing_email_flg') !== '請求メールの設定は、必ず指定してください。'))) has-error @endif">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="billing_fax_number">{{ trans('messages.billing_fax_number') }}</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="billing_fax_number" name="billing_fax_number" value="{{ old('billing_fax_number', $hospital_email_setting->billing_fax_number ?? '') }}" />
+                            @if ($errors->has('billing_fax_number')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_fax_number') }}</p> @endif
+                            <br/>
+                            @if ($errors->has('billing_email_flg') && ($errors->first('billing_email_flg') !== '請求メールの設定は、必ず指定してください。')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_email_flg') }}</p> @endif
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
       <div class="box-footer">
@@ -134,14 +221,72 @@
 
 @push('js')
   <script>
+      let billingData = {};
+      
+      function saveBillingData() {
+        billingData = {
+            billing_email1: $('#billing_email1').val(),
+            billing_email2: $('#billing_email2').val(),
+            billing_email3: $('#billing_email3').val(),
+            billing_fax_number: $('#billing_fax_number').val(),
+        }
+      }
+
+      function setBillingData() {
+            $('#billing_email1').val(billingData.billing_email1)
+            $('#billing_email2').val(billingData.billing_email2)
+            $('#billing_email3').val(billingData.billing_email3)
+            $('#billing_fax_number').val(billingData.billing_fax_number)
+      }
+
+      function clearBillingData() {
+            $('#billing_email1').val('')
+            $('#billing_email2').val('')
+            $('#billing_email3').val('')
+            $('#billing_fax_number').val('')
+      }
+
+      const inputs = $('.bill-fields-box input');
+      $(document).ready(function($){
+          saveBillingData()
+          if ( $("input[name='billing_email_flg']:checked").val() == 1) {
+              inputs.each(function(){
+                  $(this).attr('disabled', false);
+              });
+          } else {
+              clearBillingData()
+              inputs.each(function(){
+                  $(this).attr('disabled', true);
+              });
+          }
+      });
+
       (function ($) {
+
+          /* ---------------------------------------------------
+           // Billing mail toggle
+          -----------------------------------------------------*/
+          $(document).on('change', '.billing_email_flg', function(){
+              if ( $(this).val() == 1) {
+                  setBillingData()
+                  inputs.each(function(){
+                      $(this).attr('disabled', false);
+                  });
+              } else {
+                  saveBillingData()
+                  clearBillingData()
+                  inputs.each(function(){
+                      $(this).attr('disabled', true);
+                  });
+              }
+          });
+
+
           /* ---------------------------------------------------
            // hospital email reception flag change
           -----------------------------------------------------*/
           (function () {
               const change = function() {
-                  console.log($('.hospital_email_reception_flg input[type=radio]:checked'));
-                  console.log($('.hospital_email_reception_flg input[type=radio]'));
                   if ($('.hospital_email_reception_flg input[type=radio]:checked').val() == '0') {
                       $('.confirmation_email_reception_flag input:checkbox').prop('disabled', true);
                   } else {

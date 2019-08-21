@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Tokyo',
 
     /*
     |--------------------------------------------------------------------------
@@ -127,6 +127,8 @@ return [
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
+    'Excel' => 'Maatwebsite\Excel\Facades\Excel',
+    
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -185,6 +187,7 @@ return [
         App\Providers\CsvTestServiceProvider::class,
         App\Providers\ReservationExportServiceProvider::class,
         App\Providers\ValidationExtensionServiceProvider::class,
+        //App\Providers\MinIOStorageServiceProvider::class
     ],
 
     /*

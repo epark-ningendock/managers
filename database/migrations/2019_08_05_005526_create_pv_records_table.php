@@ -1,10 +1,11 @@
 <?php
+
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use \App\Helpers\DBCommonColumns;
+use App\Helpers\DBCommonColumns;
 
-class CreatePasswordResetsTable extends Migration
+class CreatePvRecordsTable extends Migration
 {
     use DBCommonColumns;
     /**
@@ -14,12 +15,15 @@ class CreatePasswordResetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('password_resets', function (Blueprint $table) {
-            $table->string('email')->index();
-            $table->string('token');
+        Schema::create('pv_records', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('hospital_id')->comment('医療機関ID');
+            $table->string('date_code')->comment('日付コード');
+            $table->integer('pv')->comment('PV数');
             $this->addCommonColumns($table);
         });
     }
+
     /**
      * Reverse the migrations.
      *
@@ -27,6 +31,6 @@ class CreatePasswordResetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('password_resets');
+        Schema::dropIfExists('pv_records');
     }
 }

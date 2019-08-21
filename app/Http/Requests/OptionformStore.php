@@ -36,6 +36,7 @@ class OptionformStore extends FormRequest
                 'tax_class_id' => 'required|exists:tax_classes,id',
             ];
         }
+
     }
 
 
@@ -44,5 +45,13 @@ class OptionformStore extends FormRequest
         return [
             'confirm.max' =>  trans('validation.max', ['attribute' => trans('validation.attributes.confirm')])
         ];
+    }
+
+    public function attributes()
+    {
+        $attributes = [
+            'name' => 'オプション名'
+        ];
+        return $attributes;
     }
 }

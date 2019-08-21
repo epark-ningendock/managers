@@ -232,6 +232,7 @@ return [
         'is_calendar_display' => 'カレンダー受付可否',
         'title' => '件名',
         'text' => '本文',
+        'contents' => '本文',
         'hospital_id' => '医療機関ID',
         // 受付メール設定系
         'in_hospital_email_reception_flg' => '院内受付メール受信フラグ',
@@ -265,6 +266,11 @@ return [
         'representative_name' => '代表者名',
         'service_start_date' => 'サービス開始日',
         'service_end_date' => 'サービス終了日',
-        'hospital_name' => '屋号'
+        'hospital_name' => '屋号',
+        'billing_email_flg' => '請求メールの設定',
+        'billing_email1' => '請求メール受信アドレス1',
+        'billing_email2' => '請求メール受信アドレス2',
+        'billing_email3' => '請求メール受信アドレス3',
+        'billing_fax_number' => '請求メール受信fax番号'
     ],
 ];
