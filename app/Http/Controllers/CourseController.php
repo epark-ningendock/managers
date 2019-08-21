@@ -189,6 +189,7 @@ class CourseController extends Controller
                 }
                 $image = \Image::make(file_get_contents($request->file($target_image)));
                 $name = $request->file($target_image)->getClientOriginalName();
+                // $name = $request->file($target_image)->hashName();
                 \Storage::disk(env('FILESYSTEM_CLOUD'))->put($name, (string) $image->encode(), 'public');
                 $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($name);
                 $course_image_data = [
