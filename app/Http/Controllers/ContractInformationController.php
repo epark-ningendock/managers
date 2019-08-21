@@ -146,25 +146,25 @@ class ContractInformationController extends Controller
         $row = fgetcsv($file, 0, "\t");
 
         $contract_arr = [
-                            'property_no' => trimToNull($row[0]),
-                            'code' => "$row[1]",
-                            'contractor_name_kana' => $row[2],
-                            'contractor_name' => $row[3],
-                            'representative_name_kana' => $row[4],
-                            'representative_name' => $row[5],
-                            'postcode' => $row[6],
-                            'address' => trimToNull(join(array_slice($row, 7, 4), ' ')),
-                            'tel' => trimToNull($row[11]),
-                            'fax' => trimToNull($row[12]),
-                            'email' => trimToNull($row[13]),
-                            'application_date' => trimToNull($row[14]),
-                            'cancellation_date' => trimToNull($row[15]),
-                            'billing_start_date' => trimToNull($row[16]),
-                            'plan_code' => $row[17],
-                            'service_start_date' => trimToNull($row[18]),
-                            'service_end_date' => trimToNull($row[19]),
-                            'hospital_name' => $row[20],
-                            'hospital_name_kana' => $row[21]
+                            'property_no' => trimToNull($row[1]),
+                            'code' => "$row[2]",
+                            'contractor_name_kana' => $row[3],
+                            'contractor_name' => $row[4],
+                            'representative_name_kana' => $row[5],
+                            'representative_name' => $row[6],
+                            'postcode' => $row[7],
+                            'address' => trimToNull(join(array_slice($row, 8, 4), ' ')),
+                            'tel' => trimToNull($row[12]),
+                            'fax' => trimToNull($row[13]),
+                            'email' => trimToNull($row[14]),
+                            'application_date' => trimToNull($row[15]),
+                            'cancellation_date' => trimToNull($row[16]),
+                            'billing_start_date' => trimToNull($row[17]),
+                            'plan_code' => $row[18],
+                            'service_start_date' => trimToNull($row[19]),
+                            'service_end_date' => trimToNull($row[20]),
+                            'hospital_name' => $row[21],
+                            'hospital_name_kana' => $row[22]
                         ];
 
         $validator = Validator::make($contract_arr, $this->rules(), $this->messages());
