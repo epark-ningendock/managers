@@ -103,7 +103,7 @@
         </div>
         <div class="row">
           <div class="col-sm-6">
-            {{Form::label('sub_1', 'コース画像1',['class' => 'form_label'])}}
+            {{Form::label('course_image_1', 'コース画像1',['class' => 'form_label'])}}
             <div class="sub_image_area">
               <img src="/img/no_image.png">
             </div>

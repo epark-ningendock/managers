@@ -135,6 +135,7 @@ class CourseController extends Controller
             $course_data = $request->only([
                 'hospital_id',
                 'name',
+                'course_image_1',
                 'web_reception',
                 'calendar_id',
                 'is_category',
@@ -173,17 +174,18 @@ class CourseController extends Controller
 
             //Course Images
             for ($i = 1; $i <= 1; $i++) { 
-                // dd($request->input('course_image_1'));
-                $image = \Image::make(file_get_contents($request->input('course_image_1')->getRealPath()));
-                $name = $request->input('course_image_1').hasName();
+                $image = \Image::make(file_get_contents($request->file('course_image_1')));
+                $name = $request->file('course_image_1')->getClientOriginalName();
                 \Storage::disk(env('FILESYSTEM_CLOUD'))->put($name, (string) $image->encode(), 'public');
                 $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($name);
-                $course_image = [
+                $course_image_data = [
                     'course_id' => $course->id,
-                    'extension' => str_replace('image/', '', $image->mime),
                     'name' => $name,
+                    'extension' => str_replace('image/', '', $image->mime),
                     'path' => $image_path
                 ];
+                // $course_image = new CourseImage($course_image_data);
+                CourseImage::create($course_image_data);
             }
 
 
