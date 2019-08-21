@@ -12,6 +12,11 @@ class DistrictCodeSeeder extends Seeder
      */
     public function run()
     {
-        factory(DistrictCode::class, 'with_major_class_id', 50)->create();
+        // 47都道府県分
+        for ($i = 1; $i <= 47; $i++) {
+            factory(DistrictCode::class)->create([
+                'prefecture_id' => $i
+            ]);
+        }
     }
 }
