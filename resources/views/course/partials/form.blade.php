@@ -196,7 +196,7 @@
     <div class="box-body">
     <h4 class="d-inline-block">価格</h4> <span class="form_required">必須</span>
     <div class="form-group @if ($errors->has('price')) has-error @endif">
-      <label for="name">表示価格</label>
+      <label for="name">表示価格（税込）</label>
       <div>
         <input type="checkbox" class="checkbox d-inline-block mr-2" name="is_price" value="1"
                id="is_price" {{ old('is_price', (isset($course)? $course->is_price : null)) == 1 ? 'checked' : '' }} />
@@ -205,7 +205,6 @@
         <input type="number" class="form-control d-inline-block mr-2 ml-2" id="price" name="price" style="width: 100px;"
                value="{{ old('price', (isset($course) ? $course->price : null)) }}">
         円
-        <span id="tax_amt" class="ml-5">0円（税込）</span>
       </div>
       @if ($errors->has('price')) <p class="help-block">{{ $errors->first('price') }}</p> @endif
     </div>
@@ -238,7 +237,7 @@
     <h4 class="d-inline-block">価格</h4></span>
     <div class="form-group">
       <label>事前決済価格</label>
-      <div>０円（税込）</div>
+      <div>0円（税込）</div>
     </div>
     <div class="separator mb-3"></div>
     <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif" >
@@ -675,26 +674,6 @@
                   change(ele);
               })
           })();
-
-          /* ---------------------------------------------------
-          // Tax
-          -----------------------------------------------------*/
-          (function () {
-              const change = function() {
-                  if ($('#is_price').is(':checked') && $('#price').val()) {
-                      const price = parseInt($('#price').val());
-                      const total = price + (price * parseInt($('#tax_rate').val()) / 100);
-                      $('#tax_amt').html(total + '円（税込）');
-                  } else {
-                      $('#tax_amt').html('0円（税込）');
-                  }
-              };
-
-              $('#tax_class, #is_price').change(change);
-              $('#price').on('change paste keyup', change);
-              change();
-          })();
-
       })(jQuery);
   </script>
 @stop
