@@ -48,4 +48,5 @@ class ImageOrderImport extends ImportAbstract
         $model->save();
         $this->deleteIf($model, $row, 'status', ['X']);
     }
+
 }

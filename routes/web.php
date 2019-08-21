@@ -171,12 +171,13 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     |--------------------------------------------------------------------------
     */
     Route::resource('/email-template', 'EmailTemplateController')->except(['show']);
+    Route::get('/email-template/{id}/copy', 'EmailTemplateController@copy')->name('email-template.copy');
     /*
     |--------------------------------------------------------------------------
     | Reception email setting Routes
     |--------------------------------------------------------------------------
     */
-    Route::resource('/reception-email-setting', 'ReceptionEmailSettingController');
+    Route::resource('/hospital-email-setting', 'HospitalEmailSettingController');
     /*
     |--------------------------------------------------------------------------
     | Calendar Routes
@@ -194,7 +195,8 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     | Customer Routes
     |--------------------------------------------------------------------------
     */
-    Route::resource('customer', 'CustomerController')->except(['show']);
+    Route::post('customer/email-history/{customer_id}', 'CustomerController@email_history')->name('customer.email.history');
+    Route::resource('customer', 'CustomerController');
     Route::post('customer/detail', 'CustomerController@detail')->name('customer.detail');
     //Route::get('customer/basic-information', 'CustomerController@basicInformationCreate');
     Route::post('customer/import', 'CustomerController@importData')->name('customer.import.data');

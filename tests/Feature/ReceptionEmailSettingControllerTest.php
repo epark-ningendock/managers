@@ -4,14 +4,14 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Hospital;
-use App\ReceptionEmailSetting;
+use App\HospitalEmailSetting;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Session;
 use App\HospitalStaff;
 
-class ReceptionEmailSettingControllerTest extends TestCase
+class HospitalEmailSettingControllerTest extends TestCase
 {
     use DatabaseMigrations, RefreshDatabase;
 
@@ -28,11 +28,11 @@ class ReceptionEmailSettingControllerTest extends TestCase
     public function testIndex()
     {
         $hospital = factory(Hospital::class)->create();
-        $reception_email_setting = factory(ReceptionEmailSetting::class)->create([
+        $hospital_email_setting = factory(HospitalEmailSetting::class)->create([
             'hospital_id' => $hospital->id
         ]);
 
-        $response = $this->call('GET', '/reception-email-setting');
+        $response = $this->call('GET', '/hospital-email-setting');
         $this->assertEquals(200, $response->getStatusCode());
     }
 }
