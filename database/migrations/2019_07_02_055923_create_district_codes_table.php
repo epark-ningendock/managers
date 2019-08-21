@@ -1,13 +1,14 @@
 <?php
 
 use App\Helpers\DBCommonColumns;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateDistrictCodesTable extends Migration
 {
     use DBCommonColumns;
+
     /**
      * Run the migrations.
      *
@@ -17,11 +18,11 @@ class CreateDistrictCodesTable extends Migration
     {
         Schema::create('district_codes', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('major_classification_id');
-            $table->string('name', 100);
-            $table->tinyInteger('order')->default(0);
-            $table->char('is_icon')->default(0);
-            $table->string('icon_name', 100);
+            $table->char('district_code', 7)->default('0000000');
+            $table->unsignedInteger('prefecture_id')->nullable();
+            $table->string('name')->nullable();
+            $table->string('kana')->nullable();
+            $table->char('status', 1)->nullable()->default(1);
             $this->addCommonColumns($table);
         });
     }

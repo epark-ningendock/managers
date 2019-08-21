@@ -3163,6 +3163,20 @@ input[type=checkbox] + label:before {
   font-weight: bold;
 }
 
+#setting-list .mr-2 {
+  cursor: pointer;
+}
+
+#setting-list span.square:before {
+  font-family: FontAwesome;
+  content: "\F096";
+  color: #3c8dbc;
+  letter-spacing: 10px;
+  font-weight: bold;
+  font-size: 20px;
+  vertical-align: middle;
+}
+
 input[type=checkbox] + label:before {
   content: "\F096";
   color: #3c8dbc;

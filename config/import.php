@@ -6,6 +6,7 @@ use App\Course;
 use App\CourseDetail;
 use App\CourseImage;
 use App\CourseQuestion;
+use App\DistrictCode;
 use App\Hospital;
 use App\HospitalCategory;
 use App\HospitalDetail;
@@ -20,6 +21,7 @@ use App\Imports\CourseDetailImport;
 use App\Imports\CourseImageImport;
 use App\Imports\CourseImport;
 use App\Imports\CourseQuestionImport;
+use App\Imports\DistrictCodeImport;
 use App\Imports\HospitalCategoryImport;
 use App\Imports\HospitalDetailImport;
 use App\Imports\HospitalImageImport;
@@ -53,6 +55,10 @@ return [
     'm_pref.csv' => [
         'model' => Prefecture::class,
         'import' => PrefectureImport::class,
+    ],
+    'm_district.csv' => [
+        'model' => DistrictCode::class,
+        'import' => DistrictCodeImport::class
     ],
     'm_item_type.csv' => [
         'model' => ClassificationType::class,
