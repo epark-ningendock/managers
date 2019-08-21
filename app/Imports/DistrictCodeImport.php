@@ -30,12 +30,23 @@ class DistrictCodeImport extends ImportAbstract
     /**
      * @param Row $row
      * @return mixed
+     * @throws \Exception
      */
     public function onRow(Row $row)
     {
         $row = $row->toArray();
 
         $model = new DistrictCode([
+            'district_code' => sprintf('%07d', $row['no']),
+            'prefecture_id' => $row['pref'],
+            'name' => $row['name'],
+            'kana' => $row['kana'],
+            'status' => $row['status'],
+            'created_at' => $row['rgst'] ?? \now(),
+            'updated_at' => $row['updt'] ?? \now(),
         ]);
+
+        $model->save();
+        $this->deleteIf($model, $row, 'status', ['X']);
     }
 }
