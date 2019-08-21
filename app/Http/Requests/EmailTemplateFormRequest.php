@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\EmailTemplate;
+use App\Rules\BillingEmailFaxNumberCheck;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EmailTemplateFormRequest extends FormRequest
@@ -24,9 +25,10 @@ class EmailTemplateFormRequest extends FormRequest
      */
     public function rules()
     {
+
         return [
             'title' => 'required|max:255',
-            'text' => 'max:20000'
+            'text' => 'max:20000',
         ];
     }
 

@@ -24,6 +24,11 @@ class HospitalEmailSetting extends Model
         'reception_email5',
         'epark_in_hospital_reception_mail_flg',
         'epark_web_reception_email_flg',
+        'billing_email_flg',
+        'billing_email1',
+        'billing_email2',
+        'billing_email3',
+        'billing_fax_number',
         'lock_version'
     ];
 

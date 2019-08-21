@@ -26,7 +26,7 @@
   $o_answer09s = collect(old('answer09s', []));
   $o_answer10s = collect(old('answer10s', []));
 @endphp
-
+@include('layouts.partials.error_pan')
 <div class="box box-primary">
   <div></div>
   <div class="box-header with-border">
@@ -36,38 +36,38 @@
     </div>
     <h1 class="box-title">検査コースの登録</h1>
   </div>
-  <div class="box-body">
+  <div class="form-entry">
+    <div class="box-body">
     <input type="hidden" name="lock_version" value="{{ $course->lock_version or ''}}" />
+    <input type="hidden" name="hospital_id" value="{{ session()->get('hospital_id') }}" />
     <div class="form-group @if ($errors->has('name')) has-error @endif">
-      <label for="name">検査コース名 <span class="text-red">必須</span></label>
-      <input type="text" class="form-control" id="name" name="name"
+      <label for="name">検査コース名
+        <span class="form_required">必須</span>
+      </label>
+      <input type="text" class="form-control w16em" id="name" name="name"
              value="{{ old('name', (isset($course) ? $course->name : null)) }}"
              placeholder="検査コース名">
-      @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
+      @if ($errors->has('name')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('name') }}</p> @endif
     </div>
 
-    <div class="form-group @if ($errors->has('web_reception')) has-error @endif">
-      <label for="web_reception">WEBの受付</label>
-      <div class="radio">
-        <label>
-          <input type="radio" name="web_reception"
-                 {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::Accept ? 'checked' : '' }}
-                 value="{{ WebReception::Accept }}">
-          {{ WebReception::Accept()->description }}
-        </label>
-        <label class="ml-3">
-          <input type="radio" name="web_reception"
-                 {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::NotAccept ? 'checked' : '' }}
-                 value="{{ WebReception::NotAccept }}">
-          {{ WebReception::NotAccept()->description }}
-        </label>
-      </div>
-      @if ($errors->has('web_reception')) <p class="help-block">{{ $errors->first('web_reception') }}</p> @endif
+
+    <div class="form-group py-sm-2">
+        <label for="web_reception">WEBの受付</label>
+        <group class="inline-radio two-option">
+            <div>
+                <input type="radio" name="web_reception" {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::Accept ? 'checked' : 'checked' }}
+                value="{{ WebReception::Accept }}"
+                ><label>{{ WebReception::Accept()->description }}</label></div>
+            <div>
+                <input type="radio" name="web_reception" {{ old('web_reception', (isset($course) ? $course->web_reception->value : null)) == WebReception::NotAccept ? 'checked' : '' }}
+                value="{{ WebReception::NotAccept }}"><label>{{ WebReception::NotAccept()->description }}</label></div>
+        </group>
+        @if ($errors->has('web_reception')) <p class="help-block has-error">{{ $errors->first('web_reception') }}</p> @endif
     </div>
 
     <div class="form-group @if ($errors->has('calendar_id')) has-error @endif" >
       <label for="calendar_id">カレンダーの設定</label>
-      <select name="calendar_id" id="calendar_id" class="form-control" >
+      <select name="calendar_id" id="calendar_id" class="form-control w20em" >
         <option value="">なし</option>
         @foreach ($calendars as $calendar)
           <option {{ old('calendar_id', isset($course) ? $course->calendar_id : null) == $calendar->id ? 'selected' : '' }}
@@ -78,64 +78,25 @@
     </div>
 
     <div class="form-group @if ($errors->has('is_category')) has-error @endif">
-      <label for="web_reception">コースの種別</label>
-      <div class="radio">
-        <label>
-          <input type="radio" name="is_category"
-                 {{ old('is_category', (isset($course) ? $course->is_category : null) ) == '1' ? 'checked' : '' }}
-                 value="1">
-          通常コース
-        </label>
-        <label class="ml-3">
-          <input type="radio" name="is_category"
-                 {{ old('is_category', (isset($course) ? $course->is_category : null)) == '2' ? 'checked' : '' }}
-                 value="2">
-          健保コース
-        </label>
-      </div>
-      @if ($errors->has('is_category')) <p class="help-block">{{ $errors->first('is_category') }}</p> @endif
+        <fieldset class="form-group">
+            <legend class="mb-0">コースの種別</legend>
+            <div class="radio">
+                <input type="radio" name="is_category" id="is_category_1" value="1"
+                       {{ old('is_category', (isset($course) ? $course->is_category : null) ) == 1 ? 'checked' : 'checked' }}
+                       class="permission-check">
+                <label for="is_category_1" class="radio-label">通常コース</label>
+            </div>
+            <div class="radio">
+                <input type="radio" id="is_category_2" name="is_category" value="2" class="permission-check"
+                        {{ old('is_category', (isset($course) ? $course->is_category : null) ) == 2 ? 'checked' : '' }}>
+                <label for="is_category_2" class="radio-label">健保コース</label>
+            </div>
+            @if ($errors->has('is_category')) <p class="help-block has-error">{{ $errors->first('is_hospital') }}</p> @endif
+        </fieldset>
     </div>
 
     <div class="form-group">
-      <label>画像の選択	</label>
-      <div class="row">
-        @foreach($images as $index => $image)
-          @php
-            $is_checked = false;
-            $order_value = 0;
-            if($c_images->isNotEmpty()) {
-              $order_value = $c_image_orders[$index];
-              $is_checked = $order_value != '';
-            } else if(isset($course_images)) {
-              $temp = $course_images->where('hospital_image_id', $image->id)->flatten(1);
-              if ($temp->isNotEmpty()) {
-                $is_checked = true;
-                $order_value = $temp[0]->image_order_id;
-              }
-            }
-          @endphp
-          <div class="col-xs-4 mb-3">
-            <div>
-              <input type="checkbox" class="checkbox d-inline-block image-checkbox" name="course_images[]"
-                     {{ $is_checked ? 'checked' : '' }}
-                     id="course_images_{{$image->id}}" value="{{$image->id}}" />
-              <label for="course_images_{{$image->id}}">{{ $image->name }}.{{ $image->extension }}</label>
-            </div>
-            <div class="mb-3 text-center">
-              <image src="{{ $image->path }}" style="width: 40px; height: 40px;"></image>
-            </div>
-            <select name="course_image_orders[]" class="form-control image-order" @if(!$is_checked) disabled @endif>
-              <option></option>
-              @foreach($image_orders as $image_order)
-                <option value="{{ $image_order->id }}"
-                    {{ $order_value == $image_order->id ? 'selected' : '' }} >
-                  {{ $image_order->name }}
-                </option>
-`             @endforeach
-            </select>
-          </div>
-        @endforeach
-      </div>
+      <label>画像の選択</label>
     </div>
 
     <div class="form-group">
@@ -157,7 +118,7 @@
     </div>
 
     <div class="form-group">
-      <label>受付時間 <span class="text-red">必須</span></label>
+      <label>受付時間 <span class="form_required">必須</span></label>
       <div class="form-horizontal">
           本日から
           <div class="d-inline-block @if ($errors->has('reception_start_day')) has-error @endif" >
@@ -188,7 +149,7 @@
       @if ($errors->has('reception_end_month')) <p class="help-block text-red">{{ $errors->first('reception_end_month') }}</p> @endif
     </div>
     <div class="form-group">
-      <label>受付許可日  <span class="text-red">必須</span></label>
+      <label>受付許可日  <span class="form_required">必須</span></label>
       <div class="form-horizontal">
           本日から
           <div class="d-inline-block @if ($errors->has('reception_acceptance_day')) has-error @endif" >
@@ -220,6 +181,7 @@
     </div>
 
   </div>
+  </div>
 </div>
 
 <div class="box box-primary">
@@ -230,8 +192,9 @@
     </div>
     <h1 class="box-title">価格の設定</h1>
   </div>
-  <div class="box-body">
-    <h4 class="d-inline-block">価格</h4> <span class="text-red text-bold">必須</span>
+  <div class="form-entry">
+    <div class="box-body">
+    <h4 class="d-inline-block">価格</h4> <span class="form_required">必須</span>
     <div class="form-group @if ($errors->has('price')) has-error @endif">
       <label for="name">表示価格</label>
       <div>
@@ -242,7 +205,7 @@
         <input type="number" class="form-control d-inline-block mr-2 ml-2" id="price" name="price" style="width: 100px;"
                value="{{ old('price', (isset($course) ? $course->price : null)) }}">
         円
-        <span id="tax_amt" class="ml-5">０円（税込）</span>
+        <span id="tax_amt" class="ml-5">0円（税込）</span>
       </div>
       @if ($errors->has('price')) <p class="help-block">{{ $errors->first('price') }}</p> @endif
     </div>
@@ -259,6 +222,7 @@
       @if ($errors->has('price_memo')) <p class="help-block">{{ $errors->first('price_memo') }}</p> @endif
     </div>
   </div>
+  </div>
 </div>
 
 <div class="box box-primary">
@@ -269,7 +233,8 @@
     </div>
     <h1 class="box-title">事前決済の設定</h1>
   </div>
-  <div class="box-body">
+  <div class="form-entry">
+    <div class="box-body">
     <h4 class="d-inline-block">価格</h4></span>
     <div class="form-group">
       <label>事前決済価格</label>
@@ -277,21 +242,25 @@
     </div>
     <div class="separator mb-3"></div>
     <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif" >
-      <label>利用設定 <span class="text-red">必須</span></label>
-      <div>
-        <input type="radio" class="checkbox d-inline-block" id="is_pre_account_normal_payment"
-               {{ old('is_pre_account', isset($course) ? $course->is_pre_account : null) == 0 ? 'checked' : '' }}
-               name="is_pre_account" value="0"/>
-        <label for="is_pre_account_normal_payment">通常決済利用</label>
-        <input type="radio" class="checkbox d-inline-block ml-2" name="is_pre_account" id="is_pre_account_pre_payment"
-               {{ old('is_pre_account', isset($course) ? $course->is_pre_account : null) == 1 ? 'checked' : '' }}
-               value="1"/>
-        <label for="is_pre_account_pre_payment">事前決済利用</label>
 
-      </div>
-      @if ($errors->has('is_pre_account')) <p class="help-block">{{ $errors->first('is_pre_account') }}</p> @endif
+    <fieldset class="form-group">
+        <legend class="mb-0">利用設定</legend>
+        <div class="radio">
+            <input type="radio" name="is_pre_account" id="is_pre_account_0" value="0"
+                   {{ old('is_pre_account', (isset($course) ? $course->is_pre_account : null) ) == 0 ? 'checked' : 'checked' }}
+                   class="permission-check">
+            <label for="is_pre_account_0" class="radio-label">通常決済利用</label>
+        </div>
+        <div class="radio">
+            <input type="radio" id="is_pre_account_1" name="is_pre_account" value="1" class="permission-check"
+                    {{ old('is_pre_account', (isset($course) ? $course->is_pre_account : null) ) == 1 ? 'checked' : '' }}>
+            <label for="is_pre_account_1" class="radio-label">事前決済利用</label>
+        </div>
+        @if ($errors->has('is_pre_account')) <p class="help-block has-error">{{ $errors->first('is_pre_account') }}</p> @endif
+    </fieldset>
     </div>
 
+  </div>
   </div>
 </div>
 
@@ -304,8 +273,7 @@
     <h1 class="box-title">オプションの設定</h1>
   </div>
   <div class="box-body">
-    <h4 class="d-inline-block">オプションの内容</h4></span>
-    <table class="table table-bordered">
+    <table class="table no-border table-hover table-striped ">
       <tr>
         <td class="text-center">選択</td>
         <td class="text-center">オプション名</td>
@@ -339,15 +307,14 @@
         <i class="fa fa-minus"></i></button>
     </div>
     <h1 class="box-title">設定項目</h1>
-    <di></dI>
   </div>
-  <div class="box-body">
-    <table class="table table-bordered">
-      @foreach($majors as $major)
+    <div class="box-body">
+    <table id="setting-list" class="vertical-middle table no-border table-hover table-striped mb-5">
+      @foreach($majors as $key => $major)
         @foreach($major->middle_classifications as $middle)
         <tr>
           @if(!isset($last) || $major != $last)
-            <td colspan="{{ count($major->middle_classifications) }}">{{ $major->name }}</td>
+            <td>{{ $major->name }}</td>
             @php
               $last = $major
             @endphp
@@ -373,13 +340,14 @@
               @endphp
               <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
               @if($minor->is_fregist == '1')
+                <div>
                 <input type="checkbox" class="checkbox d-inline-block minor-checkbox" name="minor_values[]"
                        id="{{ 'minor_id_'.$minor->id }}"
                        {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
-                <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label>
+                <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label></div>
               @else
                 <input type="text" name="minor_values[]"
-                       class="form-control minor-text @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
+                       class="form-control minor-text minor-text-{{$key}} @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
                   value = "{{ $minor_value }}" />
                 <span class="pull-right">0/{{ $minor->max_length }}文字</span>
               @endif
@@ -390,7 +358,7 @@
       @endforeach
     </table>
   </div>
-</div>
+  </div>
 
 @for($qi = 0; $qi < 5; $qi++)
   @php
@@ -443,19 +411,25 @@
       </div>
       <h1 class="box-title">{{ $qi + 1 }}. 質問・回答の設定</h1>
     </div>
-    <div class="box-body">
-      <div class="form-group">
-        <label for="name">質問事項の利用</label>
-        <div>
-          <input type="radio" class="checkbox d-inline-block mr-2 is_question" {{ $is_question == 1 ? 'checked' : '' }}
-                 id="is_question_use_{{$qi}}" name="is_question_{{ $qi }}" value="1"/>
-          <label for="is_question_use_{{$qi}}">利用する</label>
-          <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" {{ $is_question == 0 ? 'checked' : '' }}
-                 id="is_question_not_use_{{$qi}}" name="is_question_{{ $qi }}" value="0"/>
-          <label for="is_question_not_use_{{$qi}}">利用しない</label>
-            <input type="hidden" value="{{ $is_question }}" name="is_questions[]"/>
-        </div>
-      </div>
+
+    <div class="form-entry">
+        <div class="box-body">
+            <div class="form-group py-sm-2">
+                <label for="status">状態</label>
+                <group class="inline-radio two-option">
+                    <div class="status-btn">
+                        <input type="radio" class="checkbox d-inline-block mr-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 1 ? 'checked' : '' }}
+                        value="1"
+                        ><label>利用する</label>
+                    </div>
+                    <div class="status-btn">
+                        <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 0 ? 'checked' : '' }}
+                        value="0"><label>利用しない</label>
+                    </div>
+                    <input type="hidden" class="hidden-q" value="{{ $is_question }}" name="is_questions[]"/>
+                </group>
+                @if ($errors->has('is_question_'.$qi)) <p class="help-block has-error">{{ $errors->first('is_question_'.$qi) }}</p> @endif
+            </div>
 
       <div class="form-group">
         <label for="question_title_{{$qi}}">質問事項タイトル</label>
@@ -534,6 +508,7 @@
       </div>
 
     </div>
+    </div>
   </div>
 @endfor
 
@@ -558,12 +533,17 @@
 @section('script')
   <script>
       (function ($) {
+          $('.status-btn').on('click', function() {
+              const is_q_val = $(this).find('.is_question').val();
+              $(this).parent().find('.hidden-q').val(is_q_val);
+          });
           /* ---------------------------------------------------
           // character count
           -----------------------------------------------------*/
           (function () {
               const textAreaChange = function(ele, max) {
                   const len = ele.val().length;
+
                   if (len > max) {
                       ele.val(ele.val().substring(0, max));
                   } else {
@@ -572,6 +552,7 @@
               };
 
               $('textarea').each(function(index, ele) {
+
                   ele = $(ele);
                   ele.on('keyup', function() {
                     textAreaChange(ele, 1000);
@@ -579,11 +560,17 @@
                   textAreaChange(ele, 1000);
               });
 
+
               $('.minor-text').on('keyup', function() {
                   const max = parseInt($(this).data('maxlength'));
                   textAreaChange($(this), max);
               });
-              textAreaChange($('.minor-text'), parseInt($('.minor-text').data('maxlength')));
+              @for ($i = 0; $i <= $majors->count(); $i++)
+              if($('.minor-text-{{$i}}').length){
+                  textAreaChange($('.minor-text-{{$i}}'), parseInt($('.minor-text-{{$i}}').data('maxlength')));
+              }
+              @endfor
+
 
           })();
 
@@ -626,8 +613,10 @@
               const change = function(ele) {
                   if (ele.prop('checked')) {
                       ele.next('input:hidden').remove();
+                      ele.prev().remove();
                   } else {
                       $('<input type="hidden" name="minor_values[]" value="0"/>').insertAfter(ele);
+                      ele.before('<span class="square"></span>');
                   }
               };
 

@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\EmailTemplate;
 use App\Http\Controllers\Controller;
+use App\ReceptionEmailSetting;
 use Illuminate\Http\Request;
 use App\Http\Requests\EmailTemplateFormRequest;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
+use function Matrix\trace;
 
 class EmailTemplateController extends Controller
 {

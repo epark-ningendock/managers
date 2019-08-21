@@ -7,6 +7,7 @@ use App\CourseDetail;
 use App\CourseImage;
 use App\CourseQuestion;
 use App\Hospital;
+use App\HospitalCategory;
 use App\HospitalDetail;
 use App\HospitalImage;
 use App\HospitalMajorClassification;
@@ -19,6 +20,7 @@ use App\Imports\CourseDetailImport;
 use App\Imports\CourseImageImport;
 use App\Imports\CourseImport;
 use App\Imports\CourseQuestionImport;
+use App\Imports\HospitalCategoryImport;
 use App\Imports\HospitalDetailImport;
 use App\Imports\HospitalImageImport;
 use App\Imports\HospitalImport;
@@ -31,13 +33,21 @@ use App\Imports\MedicalTreatmentTimeImport;
 use App\Imports\MiddleClassificationImport;
 use App\Imports\MinorClassificationImport;
 use App\Imports\PrefectureImport;
+use App\Imports\PrefectureRailImport;
+use App\Imports\RailImport;
+use App\Imports\RailStationImport;
+use App\Imports\RailwayCompanyImport;
 use App\Imports\StaffImport;
+use App\Imports\StationImport;
 use App\MajorClassification;
 use App\MedicalTreatmentTime;
 use App\MiddleClassification;
 use App\MinorClassification;
 use App\Prefecture;
+use App\Rail;
+use App\RailwayCompany;
 use App\Staff;
+use App\Station;
 
 return [
     'm_pref.csv' => [
@@ -115,5 +125,29 @@ return [
     'm_contract_plan.csv' => [
         'model' => ContractPlan::class,
         'import' => ContractPlanImport::class,
+    ],
+    'm_hospital_category.csv' => [
+        'model' => HospitalCategory::class,
+        'import' => HospitalCategoryImport::class,
+    ],
+    'm_rail_corp.csv' => [
+        'model' => RailwayCompany::class,
+        'import' => RailwayCompanyImport::class,
+    ],
+    'm_rail.csv' => [
+        'model' => Rail::class,
+        'import' => RailImport::class,
+    ],
+    'm_station.csv' => [
+        'model' => Station::class,
+        'import' => StationImport::class,
+    ],
+    'm_rail_station.csv' => [
+        'model' => null, // 中間テーブルのため null
+        'import' => RailStationImport::class,
+    ],
+    'm_rail_pref.csv' => [
+        'model' => null, // 中間テーブルのため null
+        'import' => PrefectureRailImport::class,
     ],
 ];
