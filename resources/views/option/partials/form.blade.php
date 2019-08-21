@@ -7,7 +7,7 @@
         <div class="form-group py-sm-1 @if ($errors->has('name')) has-error @endif">
             <label for="option_name">{{ trans('messages.option_name') }}<span class="form_required">必須</span></label>
             <input type="text" class="form-control w16em" id="option_name" name="name"
-                   value="{{ old('option_name', (isset($option) ? $option->name : null)) }}"
+                   value="{{ old('name', (isset($option) ? $option->name : null)) }}"
                    placeholder="オプション名">
             @if ($errors->has('name')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('name') }}</p> @endif
         </div>
@@ -16,14 +16,14 @@
             <textarea name="confirm" id="confirm" rows="6"
                       placeholder="{{ trans('messages.option_description') }}"
                       class="form-control w20em">{{ old('confirm', (isset($option) ? $option->confirm : '')) }}</textarea>
-            <span class="text-muted d-block text-right" style="text-align: right; display: block; width: 20em">128文字</span>
+            <span class="text-muted d-block text-right" style="text-align: right; display: block; width: 20em">0/128文字</span>
             @if ($errors->has('confirm')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('confirm') }}</p> @endif
         </div>
 
 
         <div class="form-group py-sm-1 @if ($errors->has('price')) has-error @endif">
             <label for="confirm">{{ trans('messages.price') }}<span class="form_required">必須</span></label>
-            <input type="text" class="form-control w16em inline-block" name="price" id="price"
+            <input type="number" class="form-control w16em inline-block" name="price" id="price"
                    placeholder="{{ trans('messages.price') }}"
                    value="{{ old('price', (isset($option) ? $option->price : '')) }}"/>
             <span class="input-side-text">円（税込）</span>
@@ -48,6 +48,31 @@
             @endif
         </div>
     </div>
-
-
 </div>
+@section('script')
+  <script>
+      (function ($) {
+        $(document).ready(function($){
+            const len = $('textarea').val().length;
+            if (len > 128) {
+                $('textarea').val($('textarea').val().substring(0, 128));
+            } else {
+                $('textarea').next('span').text(len + '/128文字');
+            }
+        });
+        /* ---------------------------------------------------
+        // character count
+        -----------------------------------------------------*/
+        (function () {
+            $('textarea').on('keyup', function() {
+                const len = $(this).val().length;
+                if (len > 128) {
+                    $(this).val($(this).val().substring(0, 128));
+                } else {
+                    $(this).next('span').text(len + '/128文字');
+                }
+            });
+        })();
+      })(jQuery);
+  </script>
+@stop

@@ -39,6 +39,7 @@
   <div class="form-entry">
     <div class="box-body">
     <input type="hidden" name="lock_version" value="{{ $course->lock_version or ''}}" />
+    <input type="hidden" name="hospital_id" value="{{ session()->get('hospital_id') }}" />
     <div class="form-group @if ($errors->has('name')) has-error @endif">
       <label for="name">検査コース名
         <span class="form_required">必須</span>
@@ -46,7 +47,7 @@
       <input type="text" class="form-control w16em" id="name" name="name"
              value="{{ old('name', (isset($course) ? $course->name : null)) }}"
              placeholder="検査コース名">
-      @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
+      @if ($errors->has('name')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('name') }}</p> @endif
     </div>
 
 
@@ -204,7 +205,7 @@
         <input type="number" class="form-control d-inline-block mr-2 ml-2" id="price" name="price" style="width: 100px;"
                value="{{ old('price', (isset($course) ? $course->price : null)) }}">
         円
-        <span id="tax_amt" class="ml-5">０円（税込）</span>
+        <span id="tax_amt" class="ml-5">0円（税込）</span>
       </div>
       @if ($errors->has('price')) <p class="help-block">{{ $errors->first('price') }}</p> @endif
     </div>
@@ -245,13 +246,13 @@
     <fieldset class="form-group">
         <legend class="mb-0">利用設定</legend>
         <div class="radio">
-            <input type="radio" name="is_pre_account" id="is_pre_account_0" value="1"
+            <input type="radio" name="is_pre_account" id="is_pre_account_0" value="0"
                    {{ old('is_pre_account', (isset($course) ? $course->is_pre_account : null) ) == 0 ? 'checked' : 'checked' }}
                    class="permission-check">
             <label for="is_pre_account_0" class="radio-label">通常決済利用</label>
         </div>
         <div class="radio">
-            <input type="radio" id="is_pre_account_1" name="is_pre_account" value="2" class="permission-check"
+            <input type="radio" id="is_pre_account_1" name="is_pre_account" value="1" class="permission-check"
                     {{ old('is_pre_account', (isset($course) ? $course->is_pre_account : null) ) == 1 ? 'checked' : '' }}>
             <label for="is_pre_account_1" class="radio-label">事前決済利用</label>
         </div>
@@ -272,8 +273,7 @@
     <h1 class="box-title">オプションの設定</h1>
   </div>
   <div class="box-body">
-    <h4 class="d-inline-block">オプションの内容</h4></span>
-    <table class="table table-bordered">
+    <table class="table no-border table-hover table-striped ">
       <tr>
         <td class="text-center">選択</td>
         <td class="text-center">オプション名</td>
@@ -307,16 +307,14 @@
         <i class="fa fa-minus"></i></button>
     </div>
     <h1 class="box-title">設定項目</h1>
-      <di></di>
   </div>
-  <div class="form-entry">
     <div class="box-body">
-    <table class="table no-border table-hover table-striped mb-5">
-      @foreach($majors as $major)
+    <table id="setting-list" class="vertical-middle table no-border table-hover table-striped mb-5">
+      @foreach($majors as $key => $major)
         @foreach($major->middle_classifications as $middle)
         <tr>
           @if(!isset($last) || $major != $last)
-            <td colspan="{{ count($major->middle_classifications) }}">{{ $major->name }}</td>
+            <td>{{ $major->name }}</td>
             @php
               $last = $major
             @endphp
@@ -342,13 +340,14 @@
               @endphp
               <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
               @if($minor->is_fregist == '1')
+                <div>
                 <input type="checkbox" class="checkbox d-inline-block minor-checkbox" name="minor_values[]"
                        id="{{ 'minor_id_'.$minor->id }}"
                        {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
-                <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label>
+                <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label></div>
               @else
                 <input type="text" name="minor_values[]"
-                       class="form-control minor-text @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
+                       class="form-control minor-text minor-text-{{$key}} @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
                   value = "{{ $minor_value }}" />
                 <span class="pull-right">0/{{ $minor->max_length }}文字</span>
               @endif
@@ -360,7 +359,6 @@
     </table>
   </div>
   </div>
-</div>
 
 @for($qi = 0; $qi < 5; $qi++)
   @php
@@ -416,17 +414,21 @@
 
     <div class="form-entry">
         <div class="box-body">
-            <div class="form-group">
-                <label for="name">質問事項の利用</label>
-                <div>
-                    <input type="radio" class="checkbox d-inline-block mr-2 is_question" {{ $is_question == 1 ? 'checked' : '' }}
-                    id="is_question_use_{{$qi}}" name="is_question_{{ $qi }}" value="1"/>
-                    <label for="is_question_use_{{$qi}}">利用する</label>
-                    <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" {{ $is_question == 0 ? 'checked' : '' }}
-                    id="is_question_not_use_{{$qi}}" name="is_question_{{ $qi }}" value="0"/>
-                    <label for="is_question_not_use_{{$qi}}">利用しない</label>
-                    <input type="hidden" value="{{ $is_question }}" name="is_questions[]"/>
-                </div>
+            <div class="form-group py-sm-2">
+                <label for="status">状態</label>
+                <group class="inline-radio two-option">
+                    <div class="status-btn">
+                        <input type="radio" class="checkbox d-inline-block mr-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 1 ? 'checked' : '' }}
+                        value="1"
+                        ><label>利用する</label>
+                    </div>
+                    <div class="status-btn">
+                        <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 0 ? 'checked' : '' }}
+                        value="0"><label>利用しない</label>
+                    </div>
+                    <input type="hidden" class="hidden-q" value="{{ $is_question }}" name="is_questions[]"/>
+                </group>
+                @if ($errors->has('is_question_'.$qi)) <p class="help-block has-error">{{ $errors->first('is_question_'.$qi) }}</p> @endif
             </div>
 
       <div class="form-group">
@@ -531,12 +533,17 @@
 @section('script')
   <script>
       (function ($) {
+          $('.status-btn').on('click', function() {
+              const is_q_val = $(this).find('.is_question').val();
+              $(this).parent().find('.hidden-q').val(is_q_val);
+          });
           /* ---------------------------------------------------
           // character count
           -----------------------------------------------------*/
           (function () {
               const textAreaChange = function(ele, max) {
                   const len = ele.val().length;
+
                   if (len > max) {
                       ele.val(ele.val().substring(0, max));
                   } else {
@@ -545,6 +552,7 @@
               };
 
               $('textarea').each(function(index, ele) {
+
                   ele = $(ele);
                   ele.on('keyup', function() {
                     textAreaChange(ele, 1000);
@@ -552,11 +560,17 @@
                   textAreaChange(ele, 1000);
               });
 
+
               $('.minor-text').on('keyup', function() {
                   const max = parseInt($(this).data('maxlength'));
                   textAreaChange($(this), max);
               });
-              textAreaChange($('.minor-text'), parseInt($('.minor-text').data('maxlength')));
+              @for ($i = 0; $i <= $majors->count(); $i++)
+              if($('.minor-text-{{$i}}').length){
+                  textAreaChange($('.minor-text-{{$i}}'), parseInt($('.minor-text-{{$i}}').data('maxlength')));
+              }
+              @endfor
+
 
           })();
 
@@ -599,8 +613,10 @@
               const change = function(ele) {
                   if (ele.prop('checked')) {
                       ele.next('input:hidden').remove();
+                      ele.prev().remove();
                   } else {
                       $('<input type="hidden" name="minor_values[]" value="0"/>').insertAfter(ele);
+                      ele.before('<span class="square"></span>');
                   }
               };
 
