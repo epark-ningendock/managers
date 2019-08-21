@@ -15,6 +15,7 @@ use App\Enums\Permission;
 use App\Enums\WebReception;
 use App\Enums\CalendarDisplay;
 use App\Enums\PaymentStatus;
+use App\Enums\TerminalType;
 
 return [
     Authority::class => [
@@ -69,6 +70,14 @@ return [
     Gender::class =>[
         Gender::Male => 'Male',
         Gender::Female => 'Female'
+    ],
+
+    TerminalType::class => [
+        TerminalType::Hospital => 'Hospital',
+        TerminalType::PC => 'PC',
+        TerminalType::SmartPhone => 'Smart Phone',
+        TerminalType::PhoneReservationAPI => 'Phone Reservation(API)',
+        TerminalType::PhoneReservationPPC => 'Phone Reservation(PPC)'
     ]
 
 ];

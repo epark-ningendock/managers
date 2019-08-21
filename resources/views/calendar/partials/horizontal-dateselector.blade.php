@@ -31,12 +31,10 @@
                             const oldData = $('.calendar-box').data('old');
                             if (oldData) {
                                 const selectedDate = $(`.hor-date-table tbody td[data-date=${oldData}]`)
-                                if (selectedDate.hasClass('it-can-reserve')) {
-                                    $('#reservation_date').val(oldData);
-                                    selectedDate.addClass('it-would-reserve');
-                                    $('.hor-date-table tbody tr').removeClass('show-tr').addClass('hide-tr');
-                                    selectedDate.parent('tr').addClass('show-tr');
-                                }
+                                $('#reservation_date').val(oldData);
+                                selectedDate.addClass('it-would-reserve');
+                                $('.hor-date-table tbody tr').removeClass('show-tr').addClass('hide-tr');
+                                selectedDate.parent('tr').addClass('show-tr');
                             }
                         }
 
@@ -53,10 +51,11 @@
 
             $(document).ready(function(){
 
-                let thisValue = $('#course_id').val();
+                const thisValue = $('#course_id').val();
+                const reservationDate = $('.calendar-box').data('old');
 
                 if ( thisValue ) {
-                    let ajaxRoute = "{{  route('course.reservation.days', ['course_id' => ':1', 'page' => old('page_number', 1) ]) }}".replace(":1", thisValue);
+                    let ajaxRoute = "{{  route('course.reservation.days', ['course_id' => ':1']) }}".replace(":1", thisValue) + '?reservation_date=' + reservationDate;
                     dateLoader(ajaxRoute);
 
                     $reserveDate = '{{ old('reservation_date') }}';

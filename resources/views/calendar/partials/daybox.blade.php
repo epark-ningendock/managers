@@ -8,7 +8,7 @@
 
 		<thead>
 			<tr class="year-label">
-				<th colspan="7" class="text-center">{{  DateTime::createFromFormat('Y-m-d', $calendars->first()['date'])->format('Y') }}</th>
+				<th colspan="7" class="text-center">{{  ($calendars->first()['date'])->format('Y') }}</th>
 				<input type="hidden" name="reservation_date" id="reservation_date">
 			</tr>
 		</thead>
@@ -21,13 +21,20 @@
 
 					@foreach($week as $day)
 
-					<td data-date="{{ $day['date'] }}" class="daybox {{  ( $day['is_holiday'] || !$day['is_reservation_acceptance'] ) ? 'not-reservable' : 'it-can-reserve' }}">
+					<td data-date="{{ $day['date']->format('Y-m-d') }}" class="daybox {{  ( $day['is_holiday'] || !$day['is_reservation_acceptance'] ) ? 'not-reservable' : 'it-can-reserve' }}
+							@if($day['is_holiday'] || !$day['is_reservation_acceptance'] || $day['date']->isWeekend()) gray-background @endif">
 						<div class="txt">
-							{{ date('m', strtotime($day['date'])) }}月
-							{{ date('d', strtotime($day['date']))  }}日
-							({{  strtoupper(substr(date('l', strtotime($day['date'])), 0, 2) ) }})
+							{{ $day['date']->format('m') }}月
+							{{ $day['date']->format('d')  }}日
+							({{  strtoupper(substr($day['date']->format('l'), 0, 2)) }})
 						</div>
-						<div class="des-box">-</div>						
+						<div class="des-box">
+							@if($day['is_holiday'] || !$day['is_reservation_acceptance'])
+								−
+							@else
+								◯
+							@endif
+						</div>
 					</td>
 						@endforeach
 				</tr>

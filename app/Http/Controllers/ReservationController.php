@@ -39,7 +39,6 @@ class ReservationController extends Controller
         ReservationExportService $export_file
     )
     {
-//		request()->session()->forget( 'hospital_id' );
         $this->middleware('permission.invoice.edit')->except([
             'index',
             'reception',
@@ -498,7 +497,11 @@ class ReservationController extends Controller
             }
 
             if (isset($calendar_day) && $calendar_day->reservation_frames > 0) {
-                $count = Reservation::where('course_id', $request->course_id)->whereDate('reservation_date', $reservation_date)->count();
+                $count = Reservation::join('courses', 'courses.id', '=', 'reservations.course_id')
+                    ->whereDate('reservation_date', '=', $reservation_date)
+                    ->where('courses.calendar_id', $course->calendar_id)
+                    ->count();
+
                 if($count >= $calendar_day->reservation_frames) {
                     DB::rollback();
                     return redirect()->back()->with('error', trans('messages.reservation.limit_exceed'))->withInput();
@@ -510,16 +513,7 @@ class ReservationController extends Controller
             request()->merge([
                 'hospital_id' => session('hospital_id'),
                 'reservation_status' => ReservationStatus::Pending,
-                'terminal_type' => 1,
-                'is_repeat' => 0,
-                'is_representative' => 0,
-                'timezone_pattern_id' => 3233,
-                'timezone_id' => 3322,
-                'order' => 231,
-                'mail_type' => 0,
-                'payment_status' => 0,
-                'trade_id' => 'mbxrfidstwzvaheonugckljypq',
-                'payment_method' => '現金',
+                'is_repeat' => false
             ]);
 
 
@@ -554,6 +548,8 @@ class ReservationController extends Controller
                     'tel' => $request->tel
                 ]);
                 $customer->save();
+            } else if (Reservation::where('customer_id', $customer->id)->count() > 0) {
+                $reservation->is_repeat = true;
             }
 
             $reservation->customer_id = $customer->id;
@@ -668,7 +664,7 @@ class ReservationController extends Controller
     public function edit(Reservation $reservation)
     {
 
-        $courses = Course::all();
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))->get();
         $reservation_answers = $reservation->reservation_answers;
 
         $course_question_ids = [];
@@ -720,7 +716,44 @@ class ReservationController extends Controller
         try {
             DB::beginTransaction();
 
-            $reservation->update($request->all());
+            $course = Course::find($request->course_id);
+            $reservation_date = Carbon::parse($request->reservation_date);
+
+            $calendar_day = $course->calendar->calendar_days()
+                ->whereDate('date', [$reservation_date])->get()->first();
+
+            $holiday = Holiday::where('hospital_id', session()->get('hospital_id'))
+                ->where('is_holiday', 1)
+                ->whereDate('date', $reservation_date)->get()->first();
+
+            // TODO to confirm reservation frame value zero is unlimited or not
+            if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '1') && $calendar_day->reservation_frames == 0) {
+                DB::rollback();
+                return redirect()->back()->with('error', trans('messages.reservation.not_reservable'))->withInput();
+            }
+
+            // only checking reservation frame for different course select
+            if ($course->calendar_id != $reservation->course->calendar_id && isset($calendar_day) && $calendar_day->reservation_frames > 0) {
+                $count = Reservation::join('courses', 'courses.id', '=', 'reservations.course_id')
+                    ->whereDate('reservation_date', '=', $reservation_date)
+                    ->where('courses.calendar_id', $course->calendar_id)
+                    ->count();
+
+                if($count >= $calendar_day->reservation_frames) {
+                    DB::rollback();
+                    return redirect()->back()->with('error', trans('messages.reservation.limit_exceed'))->withInput();
+                }
+            }
+
+            $params = $request->all();
+            $params['fee'] = $request->input('adjustment_price', 0) + ($course->is_price == '1' ? $course->price : 0) + $this->calculateCourseOptionTotalPrice($request);
+
+            if (isset($fee_rate)) {
+                $params['fee_rate'] = $fee_rate->rate;
+                $params['fee'] += $fee_rate->rate;
+            }
+
+            $reservation->update($params);
 
             $reservation->reservation_options()->forceDelete();
 

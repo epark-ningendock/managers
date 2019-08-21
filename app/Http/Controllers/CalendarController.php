@@ -460,15 +460,25 @@ class CalendarController extends Controller
         }
     }
 
-    public function reservationDays($course_id)
+    public function reservationDays($course_id, Request $request)
     {
         $calendars = [];
         $course = Course::find($course_id);
         if ($course) {
-            $today = Carbon::parse(request()->input('start_date', Carbon::today()->format('Y/m/d')));
+            $today = Carbon::parse($request->input('start_date', Carbon::today()->format('Y/m/d')));
             $started_date = (Carbon::MONDAY == $today->dayOfWeek) ? $today : $today->previous(Carbon::MONDAY);
+
+            if(isset($request->reservation_date)) {
+                $reservation_date = Carbon::parse($request->reservation_date);
+                if ($reservation_date->isPast()) {
+                    $started_date = $reservation_date->copy()->previous(Carbon::MONDAY);
+                }
+            }
+
             // 8 weeks range
             $end_date = $started_date->copy()->addDay(55);
+
+
 
             $calendar_days = $course->calendar->calendar_days()
                 ->whereBetween('date', [$started_date, $end_date])->orderBy('date')->get();
@@ -493,7 +503,7 @@ class CalendarController extends Controller
                 });
 
                 $calendars->push([
-                    'date' => $date->format('Y-m-d'),
+                    'date' => $date,
                     'is_holiday' => isset($holiday),
                     'frame' => isset($calendar_day)? $calendar_day->reservation_frames : -1,
                     'is_reservation_acceptance' => !$date->isPast() &&  (!isset($calendar_day) || $calendar_day->is_reservation_acceptance == '1')

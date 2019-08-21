@@ -27,6 +27,10 @@ class ReservationUpdateFormRequest extends FormRequest
             'course_id' => 'required',
             'reservation_date' => 'required',
             'adjustment_price' => 'max:8',
+            'start_time_hour' => 'between:0,23',
+            'start_time_min' => 'between:0,23',
+            'reservation_memo' => 'max:255',
+            'internal_memo' => 'max:255'
         ];
     }
 }

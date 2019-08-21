@@ -2,7 +2,20 @@
     
     <h3 class="section-title">受付情報</h3>
     <br/><br/>
+    <div class="row">
 
+        <div class="col-md-3">
+            <label for="is_health_insurance">健保</label>
+        </div>
+
+        <div class="col-md-9">
+            <div class="form-group sm-form-group">
+                <input type="checkbox" id="is_health_insurance" name="is_health_insurance" value="1" @if(old('is_health_insurance') == '1') checked @endif />
+                <label for="is_health_insurance">健保</label>
+            </div>
+        </div>
+
+    </div>
     <div class="row">
     
         <div class="col-md-3">
@@ -192,7 +205,6 @@
     <h3 class="section-title">受診者情報</h3>
     <br/><a id="examinee-information" href="#">受診者検索</a>
     <br/><br/>
-    {{--<input type="hidden" name="customer_id" id="customer_id" value="{{ old('customer_id') }}" />--}}
 
     <div class="row">
 
@@ -361,7 +373,12 @@
                                     let checkedOldValue = ($courseOptionOldValue.hasOwnProperty(courseOption.option.id)  ) ? 'checked' : '';
 
                                     $('<tr></tr>')
-                                        .append($(`<td style="text-align:left; padding-left:15px;"><input ${checkedOldValue} type="checkbox" class="checkbox option" data-price="${courseOption.option.price}" name="course_options[${courseOption.option.id}]" value="${courseOption.option.price}"/></td>`))
+                                        .append($(`<td style="text-align:left; padding-left:15px;">
+                                                     <input ${checkedOldValue} id ="option-${courseOption.option.id}" type="checkbox" class="checkbox option"
+                                                        data-price="${courseOption.option.price}" name="course_options[${courseOption.option.id}]"
+                                                        value="${courseOption.option.price}"/>
+                                                     <label for="option-${courseOption.option.id}""></label>
+                                                    </td>`))
                                         .append($(`<td>${courseOption.option.name}</td>`))
                                         .append($(`<td>${courseOption.option.price}円</td>`))
                                         .appendTo(tbody);
@@ -386,7 +403,12 @@
                                                 $questionGroupOldValue = ( $questionGroupOldData ) ? $questionGroupOldData : {};
                                                 checkedOldValue = ( $questionGroupOldValue.hasOwnProperty(input_name) && ($questionGroupOldValue[input_name].hasOwnProperty(key))  ) ? 'checked' : '';
 
-                                                answerGroup.append($(`<label><input ${checkedOldValue} type="checkbox" class="checkbox" name="questions_${question.id}[${key}]" value="${question[key]}"><span>${question[key]}</span></label>`))
+                                                answerGroup.append($(`<input ${checkedOldValue} type="checkbox" class="checkbox"
+                                                                        id="questions_${question.id}[${key}]"
+                                                                        name="questions_${question.id}[${key}]" value="${question[key]}">
+                                                                      <label for="questions_${question.id}[${key}]">
+                                                                        <span>${question[key]}</span>
+                                                                      </label>`));
                                             }
                                         }
                                     }
@@ -435,6 +457,7 @@
 
         .question-container label {
             display: block;
+            width: fit-content;
         }
 
         .question-container label span {
@@ -468,6 +491,7 @@
         }
 
         .daybox .des-box {
+            padding-top: 6px;
             border-top: 2px solid #847f7f;
             margin: 0 -8px;
             text-align: center;
@@ -479,8 +503,9 @@
         }
         .year-label th {
             background: transparent url({{ asset('img/calendar.png') }}) 10px 3px/30px no-repeat;
-        }        
-        td.daybox.not-reservable {
+        }
+
+        td.daybox.gray-background {
             background: #ddd;
         }
 
@@ -498,10 +523,6 @@
         }
         .prev-link {
             float: left;
-        }
-        /* to override hidden checkbox */
-        input[type=checkbox] {
-            display: inline-block !important;
         }
     </style>
 @endpush
