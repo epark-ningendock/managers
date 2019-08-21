@@ -7,6 +7,7 @@
  */
 
 use \App\Enums\Authority;
+use \App\Enums\CourseImageType;
 use App\Enums\HospitalEnums;
 use App\Enums\StaffStatus;
 use App\Enums\Permission;
@@ -76,5 +77,11 @@ return [
     Gender::class =>[
         Gender::Male => '男性',
         Gender::Female => '女性'
+    ],
+
+    CourseImageType::class => [
+        CourseImageType::Main => '検査コースメイン',
+        CourseImageType::Pc => '受診の流れメイン（PC）',
+        CourseImageType::Sp => '受診の流れメイン（SP）',
     ]
 ];

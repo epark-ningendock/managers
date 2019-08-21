@@ -7,6 +7,7 @@ use App\CourseDetail;
 use App\CourseImage;
 use App\CourseOption;
 use App\CourseQuestion;
+use App\Enums\CourseImageType;
 use App\HospitalImage;
 use App\Http\Requests\CourseFormRequest;
 use App\MajorClassification;
@@ -135,7 +136,9 @@ class CourseController extends Controller
             $course_data = $request->only([
                 'hospital_id',
                 'name',
-                'course_image_1',
+                'course_image_main',
+                'course_image_pc',
+                'course_image_sp',
                 'web_reception',
                 'calendar_id',
                 'is_category',
@@ -173,18 +176,28 @@ class CourseController extends Controller
             $course->save();
 
             //Course Images
-            for ($i = 1; $i <= 1; $i++) { 
-                $image = \Image::make(file_get_contents($request->file('course_image_1')));
-                $name = $request->file('course_image_1')->getClientOriginalName();
+            for ($i = 0; $i < 1; $i++) {
+                if ($i == 0) {
+                    $target_image = 'course_image_main';
+                    $target_type = CourseImageType::Main;
+                } elseif ($i == 1) {
+                    $target_image = 'course_image_pc';
+                    $target_type = CourseImageType::Pc;
+                } else {
+                    $target_image = 'course_image_sp';
+                    $target_type = CourseImageType::Sp;
+                }
+                $image = \Image::make(file_get_contents($request->file($target_image)));
+                $name = $request->file($target_image)->getClientOriginalName();
                 \Storage::disk(env('FILESYSTEM_CLOUD'))->put($name, (string) $image->encode(), 'public');
                 $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($name);
                 $course_image_data = [
                     'course_id' => $course->id,
                     'name' => $name,
                     'extension' => str_replace('image/', '', $image->mime),
-                    'path' => $image_path
+                    'path' => $image_path,
+                    'type' => $target_type
                 ];
-                // $course_image = new CourseImage($course_image_data);
                 CourseImage::create($course_image_data);
             }
 

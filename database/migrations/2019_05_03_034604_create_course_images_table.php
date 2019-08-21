@@ -22,6 +22,7 @@ class CreateCourseImagesTable extends Migration
             $table->string('name', 128)->nullable();
             $table->string('extension', 5)->nullable();
             $table->string('path', 256)->nullable();
+            $table->char('type', 1)->default('0');
             $this->addCommonColumns($table);
         });
     }

@@ -8,6 +8,7 @@
     $course_questions = $course->course_questions;
   }
 
+  // TODO: これどうしよう
   $c_images = collect(old('course_images', []));
   $c_image_orders = collect(old('course_image_orders', []));
   $o_option_ids = collect(old('option_ids', []));
@@ -96,27 +97,50 @@
     </div>
 
     <div class="form-group">
-      <label>画像の選択</label>
-      <div class="box box-primary form-box">
-        <div class="form_title">
-          <span class="input_title">コース画像</span>
-        </div>
-        <div class="row">
-          <div class="col-sm-6">
-            {{Form::label('course_image_1', 'コース画像1',['class' => 'form_label'])}}
-            <div class="sub_image_area">
-              <img src="/img/no_image.png">
-            </div>
-            <label class="file-upload btn btn-primary">
-              ファイル選択 {{Form::file("course_image_1", ['class' => 'field', 'accept' => 'image/*'])}}
-            </label>
-            @if ($errors->has('course_image_1'))
-              <div class="error_message">
-                {{ $errors->first('course_image_1') }}
-              </div>
-            @endif
+      <label>コース画像</label>
+      <div class="row">
+        <div class="col-sm-4">
+          {{Form::label('course_image_main', '検査コースメイン' ,['class' => 'form_label'])}}
+          <div class="sub_image_area">
+            <img src="/img/no_image.png">
           </div>
+          <label class="file-upload btn btn-primary">
+            ファイル選択 {{Form::file("course_image_main", ['class' => 'field', 'accept' => 'image/*'])}}
+          </label>
+          @if ($errors->has('course_image_main'))
+            <div class="error_message">
+              {{ $errors->first('course_image_main') }}
+            </div>
+          @endif
         </div>
+        {{-- <div class="col-sm-4">
+          {{Form::label('course_image_pc', '受診の流れメイン（PC）' ,['class' => 'form_label'])}}
+          <div class="sub_image_area">
+            <img src="/img/no_image.png">
+          </div>
+          <label class="file-upload btn btn-primary">
+            ファイル選択 {{Form::file("course_image_pc", ['class' => 'field', 'accept' => 'image/*'])}}
+          </label>
+          @if ($errors->has('course_image_pc'))
+            <div class="error_message">
+              {{ $errors->first('course_image_pc') }}
+            </div>
+          @endif
+        </div>
+        <div class="col-sm-4">
+          {{Form::label('course_image_sp', '受診の流れメイン（SP）' ,['class' => 'form_label'])}}
+          <div class="sub_image_area">
+            <img src="/img/no_image.png">
+          </div>
+          <label class="file-upload btn btn-primary">
+            ファイル選択 {{Form::file("course_image_sp", ['class' => 'field', 'accept' => 'image/*'])}}
+          </label>
+          @if ($errors->has('course_image_sp'))
+            <div class="error_message">
+              {{ $errors->first('course_image_sp') }}
+            </div>
+          @endif
+        </div> --}}
       </div>
     </div>
 

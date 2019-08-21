@@ -68,6 +68,12 @@ return [
     Gender::class =>[
         Gender::Male => 'Male',
         Gender::Female => 'Female'
+    ],
+
+    CourseImageType::class => [
+        CourseImageType::Main => 'MainCourse',
+        CourseImageType::Pc => 'Detail for pc',
+        CourseImageType::Sp => 'Detail for sp',
     ]
 
 ];
