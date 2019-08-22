@@ -45,10 +45,14 @@ abstract class ImportAbstract implements WithProgressBar, WithHeadingRow, OnEach
      * Returns a new ID
      * @param $table
      * @param $old_id
+     * @param null $group_id
      * @return mixed
      */
-    protected function getId($table, $old_id)
+    protected function getId($table, $old_id, $group_id = null)
     {
+        if (!is_null($group_id)) {
+            $old_id = $group_id * 1000 + $old_id;
+        }
         $model = ConvertedId::where('table_name', $table)
             ->where('old_id', $old_id)
             ->first();
@@ -99,12 +103,20 @@ abstract class ImportAbstract implements WithProgressBar, WithHeadingRow, OnEach
      * 新しいIDを設定する
      * Set a new ID
      * @param Model $model
-     * @param array $row
+     * @param array|null $row
+     * @param int|null $old_id
+     * @param int|null $group_id
      */
-    protected function setId(Model $model, array $row)
+    protected function setId(Model $model, array $row = null, int $old_id = null, int $group_id = null)
     {
         $table = $model->getTable();
-        $old_id = $row[$this->getOldPrimaryKeyName()];
+        if (!is_null($row)) {
+            $old_id = $row[$this->getOldPrimaryKeyName()];
+        } else if (!is_null($old_id) && !is_null($group_id)) {
+            $old_id = $group_id * 1000 + $old_id;
+        } else {
+            throw new \InvalidArgumentException();
+        }
 
         ConvertedId::firstOrCreate([
             'table_name' => $table,

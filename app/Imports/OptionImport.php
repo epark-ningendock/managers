@@ -37,19 +37,18 @@ class OptionImport extends ImportAbstract
         $row = $row->toArray();
         $model = new Option([
             'hospital_id' => $this->getId('hospitals', $row['hospital_no']),
-            'name' => $row['name'],
+            'name' => $row['option_name'] ?? '----',
             'confirm' => $row['confirm'],
             'price' => $row['price'],
             'tax_class_id' => null,  // @todo
             'order' => $row['order'],
             'status' => $row['status'],
-            'deleted_at' => $row['deleted_at'],
-            'created_at' => $row['created_at'],
-            'updated_at' => $row['updated_at'],
-            'lock_version' => $row['lock_version'],
+            'created_at' => $row['rgst'],
+            'updated_at' => $row['updt'],
+            'lock_version' => 1, //default
         ]);
         $model->save();
         $this->deleteIf($model, $row, 'status', ['X']);
-        $this->setId($model, $row);
+        $this->setId($model, null, $row['option_cd'], $row['option_group_cd']);
     }
 }
