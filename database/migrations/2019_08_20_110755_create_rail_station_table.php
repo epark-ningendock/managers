@@ -16,7 +16,7 @@ class CreateRailStationTable extends Migration
      */
     public function up()
     {
-        Schema::create('rail_stations', function (Blueprint $table) {
+        Schema::create('rail_station', function (Blueprint $table) {
             $table->unsignedInteger('rail_id');
             $table->unsignedInteger('station_id');
             $table->timestamps();
@@ -35,6 +35,6 @@ class CreateRailStationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rail_stations');
+        Schema::dropIfExists('rail_station');
     }
 }
