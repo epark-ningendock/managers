@@ -82,6 +82,7 @@ return [
             'minor'                        => '小分類'
         ],
         'course'                           => '検査コース',
+        'course_image'                     => '検査コース画像',
         'calendar'                         => 'カレンダー',
         'email_template'                   => 'メールテンプレート',
         'calendar_setting'                 => 'カレンダー管理',

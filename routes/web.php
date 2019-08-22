@@ -145,6 +145,7 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     Route::get('/course/sort', 'CourseController@sort')->name('course.sort');
     Route::get('/course/{id}/copy', 'CourseController@copy')->name('course.copy');
     Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course.updateSort');
+    Route::get('/course/images/{course_image_id}/delete', 'CourseController@deleteImage')->name('course.image.delete');
     /*
     |--------------------------------------------------------------------------
     | Course option Routes

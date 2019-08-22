@@ -177,36 +177,22 @@ class CourseController extends Controller
 
             //Course Images
             for ($i = 0; $i < 1; $i++) {
-                if ($i == 0) {
+                if ($request->has('course_image_main')) {
                     $target_image = 'course_image_main';
                     $target_type = CourseImageType::Main;
-                } elseif ($i == 1) {
+                    $this->saveCourseImage($request, $target_image, $target_type, $course->id);
+                } elseif ($request->has('course_image_pc')) {
                     $target_image = 'course_image_pc';
                     $target_type = CourseImageType::Pc;
-                } else {
+                    $this->saveCourseImage($request, $target_image, $target_type, $course->id);
+                } elseif ($request->has('course_image_sp')) {
                     $target_image = 'course_image_sp';
                     $target_type = CourseImageType::Sp;
+                    $this->saveCourseImage($request, $target_image, $target_type, $course->id);
+                } else {
+                    break;
                 }
-                $image = \Image::make(file_get_contents($request->file($target_image)));
-                $course_image = CourseImage::firstOrCreate([
-                    'course_id' => $course->id,
-                    'type' => $target_type
-                ]);
-
-                $name = $course_image->name_for_upload($request->file($target_image)->getClientOriginalName());
-                \Storage::disk(env('FILESYSTEM_CLOUD'))->put($name, (string) $image->encode(), 'public');
-                $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($name);
-
-                $course_image_data = [
-                    'name' => $name,
-                    'extension' => str_replace('image/', '', $image->mime),
-                    'path' => $image_path,
-                ];
-                $course_image->fill($course_image_data);
-                $course_image->save();
             }
-
-
 
             //Course Options
             $option_ids = collect($request->input('option_ids', []));
@@ -312,6 +298,28 @@ class CourseController extends Controller
         }
     }
 
+    private function saveCourseImage(CourseFormRequest $request, String $target_image, String $target_type, int $course_id)
+    {
+        // dd($request->file($target_image));
+        $image = \Image::make(file_get_contents($request->file($target_image)));
+        $course_image = CourseImage::firstOrCreate([
+            'course_id' => $course_id,
+            'type' => $target_type
+        ]);
+
+        $name = $course_image->name_for_upload($request->file($target_image)->getClientOriginalName());
+        \Storage::disk(env('FILESYSTEM_CLOUD'))->put($name, (string) $image->encode(), 'public');
+        $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($name);
+
+        $course_image_data = [
+            'name' => $name,
+            'extension' => str_replace('image/', '', $image->mime),
+            'path' => $image_path,
+        ];
+        $course_image->fill($course_image_data);
+        $course_image->save();
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -395,5 +403,18 @@ class CourseController extends Controller
             $request->session()->flash('error', trans('messages.create_error'));
             return redirect()->back();
         }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $course_image_id
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteImage(int $course_image_id)
+    {
+        $course = CourseImage::find($course_image_id)->course;
+        CourseImage::find($course_image_id)->delete();
+        return redirect()->route('course.edit', ['course' => $course])->with('success', trans('messages.deleted', ['name' => trans('messages.names.course_image')]));
     }
 }

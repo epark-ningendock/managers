@@ -17,6 +17,6 @@ class CourseImage extends SoftDeleteModel
 
     public function name_for_upload(String $name)
     {
-        return get_class($this).'/'.strval($this->id).'/'.$name;
+        return str_replace('App\\', '', get_class($this)).'/'.strval($this->id).'/'.$name;
     }
 }

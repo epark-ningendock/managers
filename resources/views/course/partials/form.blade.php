@@ -102,16 +102,18 @@
       <div class="row">
         <div class="col-sm-4">
           {{Form::label('course_image_main', '検査コースメイン' , ['class' => 'form_label'])}}
-          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::Main)))
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::Main)->first()))
             <div class="sub_image_area">
-            <div>{{ $course->course_images }}</div>
               <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::Main)->first()->path}}">
               <p class="file_delete_text">
-                {{-- <a onclick="return confirm('この画像を削除します、よろしいですか？')"
+                <a onclick="return confirm('この画像を削除します、よろしいですか？')"
                    class="btn btn-mini btn-danger"
-                   href="{{ route('hospital.image.delete', []) }}">
+                   href="{{ route('course.image.delete', [
+                     'course_image_id' => $course->course_images()->where('type', CourseImageType::Main)->first()->id
+                   ]) }}"
+                >
                   ファイル削除
-                </a> --}}
+                </a>
               </p>
             </div>
           @else
