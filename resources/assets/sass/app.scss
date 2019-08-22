@@ -387,6 +387,16 @@ $color2: #3197EE;
       }
     }
   }
+  label[for="confirm"] {
+    display: block;
+  }
+  .inline-block {
+    display: inline-block;
+  }
+  .input-side-text {
+    vertical-align: sub;
+    color: #666666;
+  }
 }
 
 legend {
@@ -816,6 +826,14 @@ label.file-upload input[type="file"] {
   }
 }
 
+.edit-calendar {
+  h3 {
+    span {
+      font-weight: bold !important;
+    }
+  }
+}
+
 .course-select {
  margin-top: 10px;
 }
@@ -863,6 +881,21 @@ input[type=checkbox] + label:before {
 
 }
 
+#setting-list {
+  .mr-2 {
+    cursor: pointer;
+  }
+  span.square:before {
+    font-family: FontAwesome;
+    content: "\f096";
+    color: #3c8dbc;
+    letter-spacing: 10px;
+    font-weight: bold;
+    font-size: 20px;
+    vertical-align: middle;
+  }
+}
+
 input[type=checkbox] + label:before { content: "\f096"; color: #3c8dbc} /* unchecked icon */
 input[type=checkbox] + label:before { letter-spacing: 10px; } /* space between checkbox and label */
 
@@ -870,3 +903,9 @@ input[type=checkbox]:checked + label:before { content: "\f046"; } /* checked ico
 input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow space for check mark */
 
 input[type=checkbox]:disabled + label:before { content: "\f096"; opacity: 0.4; color: #333333}
+
+.vertical-middle {
+  td {
+    vertical-align: middle !important;
+  }
+}

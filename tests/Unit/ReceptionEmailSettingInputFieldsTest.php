@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use App\Hospital;
-use App\ReceptionEmailSetting;
+use App\HospitalEmailSetting;
 use \Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -56,11 +56,11 @@ class ReceptionEmailSettingInputFieldsTest extends TestCase
     protected function validateFields($attributes)
     {
         $hospital = factory(Hospital::class)->create();
-        $reception_email_setting = factory(ReceptionEmailSetting::class)->raw([
+        $hospital_email_setting = factory(HospitalEmailSetting::class)->raw([
             'hospital_id' => $hospital->id,
         ]);
         $this->withExceptionHandling();
-        return $this->put("/reception-email-setting/{$hospital->id}", $this->validFields($attributes, $reception_email_setting));
+        return $this->put("/hospital-email-setting/{$hospital->id}", $this->validFields($attributes, $hospital_email_setting));
     }
     
     /**
@@ -70,9 +70,9 @@ class ReceptionEmailSettingInputFieldsTest extends TestCase
      *
      * @return array
      */
-    protected function validFields($overwrites = [], $reception_email_setting)
+    protected function validFields($overwrites = [], $hospital_email_setting)
     {
-        $fields = array_merge($reception_email_setting);
+        $fields = array_merge($hospital_email_setting);
         $fields['_token'] = csrf_token();
         return array_merge($fields, $overwrites);
     }

@@ -42,11 +42,10 @@
   <div class="row edit-calendar">
     <div class="col-xs-12">
       @foreach($calendars as $index => $calendar)
-      <div class="box">
+      <div class="box box-primary">
         <div class="box-header">
-          <h3 class="box-title">                <a href="#">
-              {{ $calendar->name }}
-            </a>
+          <h3 class="box-title">
+              <span>{{ $calendar->name }}</span>
             「カレンダー受付可否 : {{ $calendar->is_calendar_display->description }}」</h3>
 
           <div class="box-tools">

@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\ReceptionEmailSetting;
+use App\HospitalEmailSetting;
 
-class ReceprionEmailSettingsTableSeeder extends Seeder
+class HospitalEmailSettingsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,6 +12,6 @@ class ReceprionEmailSettingsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(ReceptionEmailSetting::class, 10)->create();
+        factory(HospitalEmailSetting::class, 10)->create();
     }
 }

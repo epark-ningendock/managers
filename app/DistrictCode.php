@@ -3,10 +3,19 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DistrictCode extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
-      'major_classification_id', 'name', 'is_icon', 'icon_name'
+        'district_code',
+        'prefecture_id',
+        'name',
+        'kana',
+        'status',
+        'created_at',
+        'updated_at',
     ];
 }

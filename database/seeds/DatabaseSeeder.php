@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder
             DepartmentsTableSeeder::class,
             StaffsTableSeeder::class,
             MinorClassificationsTableSeeder::class,
-            DistrictCodeSeeder::class,
             HospitalTableSeeder::class,
             HospitalStaffsTableSeeder::class,
             ContractInformationTableSeeder::class, // comment off if you need it
@@ -28,7 +27,8 @@ class DatabaseSeeder extends Seeder
             CoursesTableSeeder::class,
             EmailTemplatesTableSeeder::class,
             CustomersSeeder::class,
-            PrefecturesSeeder::class
+            PrefecturesSeeder::class,
+            DistrictCodeSeeder::class,
         ]);
     }
 }

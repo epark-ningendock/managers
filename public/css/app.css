@@ -2650,6 +2650,19 @@ label {
   margin-right: 0;
 }
 
+.form-entry label[for="confirm"] {
+  display: block;
+}
+
+.form-entry .inline-block {
+  display: inline-block;
+}
+
+.form-entry .input-side-text {
+  vertical-align: sub;
+  color: #666666;
+}
+
 legend {
   border: none;
   margin: 0 0px 10px 0;
@@ -3098,6 +3111,10 @@ label.file-upload input[type="file"] {
   font-size: 1.1em;
 }
 
+.edit-calendar h3 span {
+  font-weight: bold !important;
+}
+
 .course-select {
   margin-top: 10px;
 }
@@ -3146,6 +3163,20 @@ input[type=checkbox] + label:before {
   font-weight: bold;
 }
 
+#setting-list .mr-2 {
+  cursor: pointer;
+}
+
+#setting-list span.square:before {
+  font-family: FontAwesome;
+  content: "\F096";
+  color: #3c8dbc;
+  letter-spacing: 10px;
+  font-weight: bold;
+  font-size: 20px;
+  vertical-align: middle;
+}
+
 input[type=checkbox] + label:before {
   content: "\F096";
   color: #3c8dbc;
@@ -3175,5 +3206,9 @@ input[type=checkbox]:disabled + label:before {
   content: "\F096";
   opacity: 0.4;
   color: #333333;
+}
+
+.vertical-middle td {
+  vertical-align: middle !important;
 }
 
