@@ -50,7 +50,7 @@
 
 
     <div class="form-group py-sm-2">
-        <label for="web_reception">WEBの受付</label>
+        <label for="web_reception">WEB公開</label>
         <group class="inline-radio two-option">
             <div>
                 <input type="radio" name="web_reception" {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::Accept ? 'checked' : 'checked' }}
