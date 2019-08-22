@@ -167,6 +167,7 @@ class CourseController extends Controller
                 $course = new Course();
             }
             $course->fill($course_data);
+            $course->hospital_id = session()->get('hospital_id');
             //force to update updated_at. otherwise version will not be updated
             $course->touch();
             $course->save();
@@ -389,5 +390,18 @@ class CourseController extends Controller
             $request->session()->flash('error', trans('messages.create_error'));
             return redirect()->back();
         }
+    }
+
+    /**
+     * getting course details
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function course_detail($id)
+    {
+        $course = Course::with([ 'course_options', 'course_options.option', 'course_questions' ])
+            ->where('id', $id)
+            ->get();
+        return response()->json($course);
     }
 }

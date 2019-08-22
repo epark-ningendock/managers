@@ -187,7 +187,11 @@ return [
         'complete_error' => 'エラーが発生しました。',
         'status_update_success' => '予約ステータスが更新されました。',
         'status_update_error' => 'エラーが発生しました。',
-        'invalid_reservation_status' => '無効な操作。'
+        'invalid_reservation_status' => '無効な操作。',
+        'customer_id' => '顧客',
+        'invalid_reservation_status' => '無効な操作。',
+        'not_reservable' => '予約可能な日付ではありません。',
+        'limit_exceed' => '予約可能件数を超えています。'
     ],
     'image_category' =>[
         'update_success' => '画像が更新されました。',
