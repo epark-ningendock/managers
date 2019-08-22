@@ -296,7 +296,6 @@ class CourseController extends Controller
 
     private function saveCourseImage(CourseFormRequest $request, String $target_image, String $target_type, int $course_id)
     {
-        // dd($request->file($target_image));
         $image = \Image::make(file_get_contents($request->file($target_image)));
         $course_image = CourseImage::firstOrCreate([
             'course_id' => $course_id,
