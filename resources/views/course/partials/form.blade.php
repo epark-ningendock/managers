@@ -132,11 +132,27 @@
             </div>
           @endif
         </div>
-        {{-- <div class="col-sm-4">
-          {{Form::label('course_image_pc', '受診の流れメイン（PC）' ,['class' => 'form_label'])}}
-          <div class="sub_image_area">
-            <img src="/img/no_image.png">
-          </div>
+        <div class="col-sm-4">
+          {{Form::label('course_image_pc', '受診の流れメイン（PC）' , ['class' => 'form_label'])}}
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::Pc)->first()))
+            <div class="sub_image_area">
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::Pc)->first()->path}}">
+              <p class="file_delete_text">
+                <a onclick="return confirm('この画像を削除します、よろしいですか？')"
+                    class="btn btn-mini btn-danger"
+                    href="{{ route('course.image.delete', [
+                      'course_image_id' => $course->course_images()->where('type', CourseImageType::Pc)->first()->id
+                    ]) }}"
+                >
+                  ファイル削除
+                </a>
+              </p>
+            </div>
+          @else
+            <div class="sub_image_area">
+              <img src="/img/no_image.png">
+            </div>
+          @endif
           <label class="file-upload btn btn-primary">
             ファイル選択 {{Form::file("course_image_pc", ['class' => 'field', 'accept' => 'image/*'])}}
           </label>
@@ -147,10 +163,26 @@
           @endif
         </div>
         <div class="col-sm-4">
-          {{Form::label('course_image_sp', '受診の流れメイン（SP）' ,['class' => 'form_label'])}}
-          <div class="sub_image_area">
-            <img src="/img/no_image.png">
-          </div>
+          {{Form::label('course_image_sp', '受診の流れメイン（SP）' , ['class' => 'form_label'])}}
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::Sp)->first()))
+            <div class="sub_image_area">
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::Sp)->first()->path}}">
+              <p class="file_delete_text">
+                <a onclick="return confirm('この画像を削除します、よろしいですか？')"
+                  class="btn btn-mini btn-danger"
+                  href="{{ route('course.image.delete', [
+                    'course_image_id' => $course->course_images()->where('type', CourseImageType::Sp)->first()->id
+                  ]) }}"
+                >
+                  ファイル削除
+                </a>
+              </p>
+            </div>
+          @else
+            <div class="sub_image_area">
+              <img src="/img/no_image.png">
+            </div>
+          @endif
           <label class="file-upload btn btn-primary">
             ファイル選択 {{Form::file("course_image_sp", ['class' => 'field', 'accept' => 'image/*'])}}
           </label>
@@ -159,7 +191,7 @@
               {{ $errors->first('course_image_sp') }}
             </div>
           @endif
-        </div> --}}
+        </div>
       </div>
     </div>
 

@@ -180,11 +180,13 @@ class CourseController extends Controller
                 $target_image = 'course_image_main';
                 $target_type = CourseImageType::Main;
                 $this->saveCourseImage($request, $target_image, $target_type, $course->id);
-            } elseif ($request->has('course_image_pc')) {
+            }
+            if ($request->has('course_image_pc')) {
                 $target_image = 'course_image_pc';
                 $target_type = CourseImageType::Pc;
                 $this->saveCourseImage($request, $target_image, $target_type, $course->id);
-            } elseif ($request->has('course_image_sp')) {
+            }
+            if ($request->has('course_image_sp')) {
                 $target_image = 'course_image_sp';
                 $target_type = CourseImageType::Sp;
                 $this->saveCourseImage($request, $target_image, $target_type, $course->id);
@@ -308,7 +310,7 @@ class CourseController extends Controller
 
         $course_image_data = [
             'name' => $name,
-            'extension' => str_replace('image/', '', $image->mime),
+            'extension' => $request->file('course_image_1')->getClientOriginalExtension(),
             'path' => $image_path,
         ];
         $course_image->fill($course_image_data);
