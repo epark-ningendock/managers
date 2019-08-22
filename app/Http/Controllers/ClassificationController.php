@@ -37,9 +37,10 @@ class ClassificationController extends Controller
         $c_majors = MajorClassification::withTrashed()->get();
         $c_middles = MiddleClassification::withTrashed()->get();
 
-
-        [$classifications, $result] = $this->getClassifications($request);
-        return view('classification.index')->with('classifications', $classifications)
+        [$classification, $classifications, $result] = $this->getClassifications($request);
+        return view('classification.index')
+            ->with('classifications', $classifications)
+            ->with('classification', $classification)
             ->with('result', $result)
             ->with('c_types', $c_types)
             ->with('c_majors', $c_majors)
@@ -239,7 +240,7 @@ class ClassificationController extends Controller
         }
 
 
-        return [$classifications, $result];
+        return [$classification, $classifications, $result];
     }
 
     /**
