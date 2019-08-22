@@ -17,6 +17,7 @@ use App\Enums\CalendarDisplay;
 use App\Enums\ReservationStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\Gender;
+use App\Enums\TerminalType;
 
 return [
     Authority::class => [
@@ -77,6 +78,14 @@ return [
     Gender::class =>[
         Gender::Male => '男性',
         Gender::Female => '女性'
+    ],
+
+    TerminalType::class => [
+        TerminalType::Hospital => '院内',
+        TerminalType::PC => 'PC',
+        TerminalType::SmartPhone => 'スマホ',
+        TerminalType::PhoneReservationAPI => '電話予約(API）',
+        TerminalType::PhoneReservationPPC => '電話予約(PPC)'
     ],
 
     CourseImageType::class => [

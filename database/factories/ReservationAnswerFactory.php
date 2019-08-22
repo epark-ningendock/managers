@@ -13,6 +13,6 @@ $factory->define(App\ReservationAnswer::class, function (Faker $faker) {
         'answer07' => $faker->randomElement(['0', '1']),
         'answer08' => $faker->randomElement(['0', '1']),
         'answer09' => $faker->randomElement(['0', '1']),
-        'answer10' => $faker->randomElement(['0', '1']),
+        'answer10' => $faker->randomElement(['0', '1'])
     ];
 });
