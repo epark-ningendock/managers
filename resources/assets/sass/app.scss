@@ -878,12 +878,13 @@ input[type=checkbox] + label:before {
   padding: 0px 0 0 0;
   font-size: 18px;
   font-weight: bold;
-
 }
 
 #setting-list {
   .mr-2 {
     cursor: pointer;
+    text-indent: 15px;
+
   }
   span.square:before {
     font-family: FontAwesome;
@@ -893,6 +894,10 @@ input[type=checkbox] + label:before {
     font-weight: bold;
     font-size: 20px;
     vertical-align: middle;
+    margin: 0 -23px 0 0;
+  }
+  input[type=checkbox] + label:before {
+    margin: 0 9px 0 0;
   }
 }
 
