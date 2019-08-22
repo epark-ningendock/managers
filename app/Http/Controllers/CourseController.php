@@ -176,22 +176,18 @@ class CourseController extends Controller
             $course->save();
 
             //Course Images
-            for ($i = 0; $i < 1; $i++) {
-                if ($request->has('course_image_main')) {
-                    $target_image = 'course_image_main';
-                    $target_type = CourseImageType::Main;
-                    $this->saveCourseImage($request, $target_image, $target_type, $course->id);
-                } elseif ($request->has('course_image_pc')) {
-                    $target_image = 'course_image_pc';
-                    $target_type = CourseImageType::Pc;
-                    $this->saveCourseImage($request, $target_image, $target_type, $course->id);
-                } elseif ($request->has('course_image_sp')) {
-                    $target_image = 'course_image_sp';
-                    $target_type = CourseImageType::Sp;
-                    $this->saveCourseImage($request, $target_image, $target_type, $course->id);
-                } else {
-                    break;
-                }
+            if ($request->has('course_image_main')) {
+                $target_image = 'course_image_main';
+                $target_type = CourseImageType::Main;
+                $this->saveCourseImage($request, $target_image, $target_type, $course->id);
+            } elseif ($request->has('course_image_pc')) {
+                $target_image = 'course_image_pc';
+                $target_type = CourseImageType::Pc;
+                $this->saveCourseImage($request, $target_image, $target_type, $course->id);
+            } elseif ($request->has('course_image_sp')) {
+                $target_image = 'course_image_sp';
+                $target_type = CourseImageType::Sp;
+                $this->saveCourseImage($request, $target_image, $target_type, $course->id);
             }
 
             //Course Options
