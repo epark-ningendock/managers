@@ -16,7 +16,7 @@
             </div>
         @else
             <div class="main_image_area">
-                <img src="/img/no_image.png">
+                <img src="{{ asset('img/no_image.png') }}">
             </div>
         @endif
             <label class="file-upload btn btn-primary">

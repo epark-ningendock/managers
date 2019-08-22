@@ -138,17 +138,17 @@
       @endif
 
         <div class="form-group py-sm-2">
-            <label for="is_icon">状態</label>
+            <label for="status">状態</label>
             <group class="inline-radio two-option">
                 <div>
-                    <input type="radio" name="status" {{ old('is_icon', (isset($classification) ? $classification->status : null) ) == '1' ? 'checked' : 'checked' }}
+                    <input type="radio" name="status" {{ old('status', (isset($classification) ? $classification->status : null) ) == '1' ? 'checked' : 'checked' }}
                     value="1"
                     ><label>有効</label></div>
                 <div>
-                    <input type="radio" name="status" {{ old('is_icon', (isset($classification) ? $classification->status : null)) == 'X' ? 'checked' : '' }}
+                    <input type="radio" name="status" {{ old('status', (isset($classification) ? $classification->status : null)) == 'X' ? 'checked' : '' }}
                     value="X"><label>削除</label></div>
             </group>
-            @if ($errors->has('is_icon')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('status') }}</p> @endif
+            @if ($errors->has('status')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('status') }}</p> @endif
         </div>
 
       <div class="box-footer">

@@ -22,7 +22,7 @@ return [
     'updated' => ':nameを更新しました。',
     'updated_common' => '更新しました。',
     'remove' => '削除する',
-    'deleted' => '削除が完了しました。',
+    'deleted' => ':nameの削除が完了しました。',
     'sent' => ':mailを送信しました。',
     'operation' => '操作対象に指定しました。',
     'hospital_staff_update_passoword' => '医療機関スタッフのパスワードを更新しました',
@@ -30,7 +30,7 @@ return [
     'hospital_staff_does_not_exist' => 'この医療機関スタッフは存在しません。',
     'incorrect_token' => '不正なトークンです。',
     'not_correct' => ':name正しくない',
-    'restored' => '復元が完了しました。',
+    'restored' => ':nameの復元が完了しました。',
     'invalid_format'                       => ':name 無効な形式',
     'staff_create_error' => '登録の際にエラーが発生しました。',
     'create_error' => 'エラーが発生しました。',
@@ -49,14 +49,14 @@ return [
     'no_record' => 'レコードがありません',
     'hospital_image_update' => '分類レコードの順序が更新されました。',
     'major_classification' => [
-        'child_exist_error_on_delete' => '中分類の記録があります。 操作は完了できません。'
+        'child_exist_error_on_delete' => '中分類レコードがあります。 削除できません。',
     ],
     'middle_classification' => [
-        'child_exist_error_on_delete' => '小分類レコードがあります。 操作は完了できません。',
-        'parent_deleted_error_on_restore' => '親の大分類レコードが削除されます。 操作は完了できません。'
+        'child_exist_error_on_delete' => '小分類レコードがあります。 削除できません。',
+        'parent_deleted_error_on_restore' => '親の大分類レコードが削除されています。 復元できません。',
     ],
     'minor_classification' => [
-        'parent_deleted_error_on_restore' => '親の中分類レコードが削除されます。 操作は完了できません。'
+        'parent_deleted_error_on_restore' => '親の中分類レコードが削除されています。 復元できません。',
     ],
     'invalid_course_id' => 'コースIDが存在しません',
     'course_sort_updated' => '並べ替えが完了しました。',
