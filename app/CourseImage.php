@@ -14,4 +14,9 @@ class CourseImage extends SoftDeleteModel
     {
         return $this->belongsTo('App\Course');
     }
+
+    public function name_for_upload(String $name)
+    {
+        return get_class($this).'/'.strval($this->id).'/'.$name;
+    }
 }

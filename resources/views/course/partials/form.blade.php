@@ -1,5 +1,6 @@
 @php
   use \App\Enums\WebReception;
+  use \App\Enums\CourseImageType;
 
   if(isset($course)) {
     $course_details = $course->course_details;
@@ -100,10 +101,24 @@
       <label>コース画像</label>
       <div class="row">
         <div class="col-sm-4">
-          {{Form::label('course_image_main', '検査コースメイン' ,['class' => 'form_label'])}}
-          <div class="sub_image_area">
-            <img src="/img/no_image.png">
-          </div>
+          {{Form::label('course_image_main', '検査コースメイン' , ['class' => 'form_label'])}}
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::Main)))
+            <div class="sub_image_area">
+            <div>{{ $course->course_images }}</div>
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::Main)->first()->path}}">
+              <p class="file_delete_text">
+                {{-- <a onclick="return confirm('この画像を削除します、よろしいですか？')"
+                   class="btn btn-mini btn-danger"
+                   href="{{ route('hospital.image.delete', []) }}">
+                  ファイル削除
+                </a> --}}
+              </p>
+            </div>
+          @else
+            <div class="sub_image_area">
+              <img src="/img/no_image.png">
+            </div>
+          @endif
           <label class="file-upload btn btn-primary">
             ファイル選択 {{Form::file("course_image_main", ['class' => 'field', 'accept' => 'image/*'])}}
           </label>
