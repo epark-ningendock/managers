@@ -5,12 +5,14 @@
   if(isset($course)) {
     $course_details = $course->course_details;
     $course_options = $course->course_options;
+    // TODO: これどうしよう
     $course_images = $course->course_images;
     $course_questions = $course->course_questions;
   }
 
   // TODO: これどうしよう
   $c_images = collect(old('course_images', []));
+  // TODO: これどうしよう
   $c_image_orders = collect(old('course_image_orders', []));
   $o_option_ids = collect(old('option_ids', []));
   $o_minor_ids = collect(old('minor_ids'));
@@ -633,38 +635,6 @@
               @endfor
 
 
-          })();
-
-          /* ---------------------------------------------------
-          // image order enable/disable
-          -----------------------------------------------------*/
-          (function () {
-              $('.image-order option:first-child').remove();
-
-              const change = function(ele) {
-                  const orderEle = ele.parent().parent().find('select');
-                  if (ele.prop('checked')) {
-                      orderEle.prop('disabled', false);
-                      ele.siblings('input:hidden').remove();
-                      orderEle.next('input:hidden').remove();
-                      if (!orderEle.find('option:selected').val()) {
-                          orderEle.find('option:first-child').prop('selected', true);
-                      }
-                  } else {
-                      $('<input type="hidden" name="course_images[]" />').val('0').appendTo(ele.parent());
-                      $('<input type="hidden" name="course_image_orders[]" value=""/>').insertAfter(orderEle);
-                      orderEle.prop('disabled', true);
-                      orderEle.val('');
-                  }
-              };
-
-              $('.image-checkbox').each(function(index, ele) {
-                  ele = $(ele);
-                  ele.change(function() {
-                      change(ele);
-                  });
-                  change(ele);
-              });
           })();
 
           /* ---------------------------------------------------
