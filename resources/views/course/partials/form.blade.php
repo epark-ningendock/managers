@@ -325,9 +325,18 @@
   <div class="form-entry">
     <div class="box-body">
     <h4 class="d-inline-block">価格</h4></span>
-    <div class="form-group">
+    <div class="form-group @if ($errors->has('pre_account_price')) has-error @endif">
       <label>事前決済価格</label>
-      <div>0円（税込）</div>
+        @if(Auth::user()['name'] == 'eparkdock01' && $hospital->is_pre_account == true)
+            <div class="form-horizontal">
+            <input type="text" class="d-inline-block form-control w16em" id="pre_account_price" name="pre_account_price"
+                   value="{{ old('pre_account_price', (isset($course) ? $course->pre_account_price : null)) }}"
+                   placeholder="10000" disabled="disabled">（税込）
+            </div>
+            @if ($errors->has('pre_account_price')) <p class="help-block has-error">{{ $errors->first('pre_account_price') }}</p> @endif
+            @else
+            <div>0円（税込）</div>
+            @endif
     </div>
     <div class="separator mb-3"></div>
     <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif" >
@@ -622,6 +631,10 @@
 @section('script')
   <script>
       (function ($) {
+          const is_pre_account = $('input[name="is_pre_account"]');
+          if(is_pre_account.val() == 1) {
+              $('#pre_account_price').removeAttr('disabled');
+          }
           $('.status-btn').on('click', function() {
               const is_q_val = $(this).find('.is_question').val();
               $(this).parent().find('.hidden-q').val(is_q_val);

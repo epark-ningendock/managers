@@ -8,6 +8,7 @@ use App\CourseImage;
 use App\CourseOption;
 use App\CourseQuestion;
 use App\Enums\CourseImageType;
+use App\Hospital;
 use App\HospitalImage;
 use App\Http\Requests\CourseFormRequest;
 use App\MajorClassification;
@@ -116,6 +117,7 @@ class CourseController extends Controller
         $calendars = Calendar::where('hospital_id', $hospital_id)->get();
         $tax_class = TaxClass::whereDate('life_time_from', '<=', Carbon::today())
             ->whereDate('life_time_to', '>=', Carbon::today())->get()->first();
+        $hospital = Hospital::find($hospital_id);
 
         return view('course.edit')
             ->with('calendars', $calendars)
@@ -124,6 +126,7 @@ class CourseController extends Controller
             ->with('options', $options)
             ->with('majors', $majors)
             ->with('images', $images)
+            ->with('hospital', $hospital)
             ->with('course', $course);
     }
 
@@ -150,6 +153,7 @@ class CourseController extends Controller
                 'price',
                 'is_price_memo',
                 'price_memo',
+                'pre_account_price',
                 'is_pre_account_price',
                 'lock_version'
             ]);
