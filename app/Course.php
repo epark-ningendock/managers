@@ -43,7 +43,9 @@ class Course extends SoftDeleteModel
         'status',
         'created_at',
         'updated_at',
-        'lock_version'
+        'lock_version',
+        'course_display_start',
+        'course_display_end'
     ];
 
     protected $attributes = [

@@ -49,6 +49,8 @@ class CreateCoursesTable extends Migration
             $table->tinyInteger('is_pre_account')->nullable();
             $table->tinyInteger('auto_calc_application')->default(1);
             $table->integer('reception_acceptance_date')->nullable();
+            $table->date('course_display_start')->nullable();
+            $table->date('course_display_end')->nullable();
             $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
         });

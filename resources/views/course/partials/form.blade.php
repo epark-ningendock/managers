@@ -117,8 +117,21 @@
       <span class="pull-right">0/1000文字</span>
     </div>
 
+     <div class="form-group @if ($errors->has('course_display_start') or $errors->has('course_display_end')) has-error @endif">
+         <label>コース表示期間</label>
+         <div class="form-horizontal display-period">
+             <span>表示開始</span>
+                 {{ Form::text('course_display_start', old('course_display_start', (isset($course) ? $course->course_display_start : null)), ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-start', 'placeholder' => $disp_date_start]) }}
+             <span>表示終了</span>
+                 {{ Form::text('course_display_end', old('course_display_end', (isset($course) ? $course->course_display_end : null)), ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-end', 'placeholder' => $disp_date_end]) }}
+        </div>
+         <p>入力がない場合は常に表示されます。</p>
+         @if ($errors->has('course_display_start')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('course_display_start') }}</p> @endif
+         @if ($errors->has('course_display_end')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('course_display_end') }}</p> @endif
+     </div>
+
     <div class="form-group">
-      <label>受付時間 <span class="form_required">必須</span></label>
+      <label>受付期間 <span class="form_required">必須</span></label>
       <div class="form-horizontal">
           本日から
           <div class="d-inline-block @if ($errors->has('reception_start_day')) has-error @endif" >
@@ -677,3 +690,26 @@
       })(jQuery);
   </script>
 @stop
+
+@push('css')
+    <link rel="stylesheet" type="text/css" href="{{ url('css/bootstrap-datepicker.min.css') }}">
+@endpush
+
+@push('js')
+    <script src="{{ url('js/handlebars.js') }}"></script>
+    <script src="{{ url('js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ url('js/bootstrap-datepicker.ja.min.js') }}"></script>
+    <script src="{{ url('js/bootstrap3-typeahead.min.js') }}"></script>
+    <script type="text/javascript">
+        (function ($) {
+            $('#datetimepicker-disp-start').datepicker({
+                language:'ja',
+                format: 'yyyy-mm-dd',
+            });
+            $('#datetimepicker-disp-end').datepicker({
+                language:'ja',
+                format: 'yyyy-mm-dd',
+            });
+        })(jQuery);
+    </script>
+@endpush

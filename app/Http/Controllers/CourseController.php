@@ -40,14 +40,20 @@ class CourseController extends Controller
      */
     public function create()
     {
+        $today = Carbon::today();
+        $disp_date_start = $today->addDay(7)->format('Y-m-d');
+        $disp_date_end = $today->addMonth(12)->format('Y-m-d');
+
+
+
         $hospital_id = session()->get('hospital_id');
         $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('order')->get();
         $options = Option::where('hospital_id', $hospital_id)->orderBy('order')->get();
         $image_orders = ImageOrder::orderBy('order')->get();
         $calendars = Calendar::where('hospital_id', $hospital_id)->get();
-        $tax_class = TaxClass::whereDate('life_time_from', '<=', Carbon::today())
-            ->whereDate('life_time_to', '>=', Carbon::today())->get()->first();
+        $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
+            ->whereDate('life_time_to', '>=', $today)->get()->first();
 
         return view('course.create')
             ->with('calendars', $calendars)
@@ -55,6 +61,8 @@ class CourseController extends Controller
             ->with('image_orders', $image_orders)
             ->with('options', $options)
             ->with('majors', $majors)
+            ->with('disp_date_start', $disp_date_start)
+            ->with('disp_date_end', $disp_date_end)
             ->with('images', $images);
     }
 
@@ -107,6 +115,10 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
+        $today = Carbon::today();
+        $disp_date_start = $today->addDay(7)->format('Y-m-d');
+        $disp_date_end = $today->addMonth(12)->format('Y-m-d');
+
         $hospital_id = session()->get('hospital_id');
         $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('order')->get();
@@ -123,6 +135,8 @@ class CourseController extends Controller
             ->with('options', $options)
             ->with('majors', $majors)
             ->with('images', $images)
+            ->with('disp_date_start', $disp_date_start)
+            ->with('disp_date_end', $disp_date_end)
             ->with('course', $course);
     }
 
@@ -147,7 +161,9 @@ class CourseController extends Controller
                 'is_price_memo',
                 'price_memo',
                 'is_pre_account_price',
-                'lock_version'
+                'lock_version',
+                'course_display_start',
+                'course_display_end'
             ]);
             $reception_start_day = $request->input('reception_start_day');
             $reception_start_month = $request->input('reception_start_month');
