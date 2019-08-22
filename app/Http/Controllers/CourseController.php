@@ -311,7 +311,7 @@ class CourseController extends Controller
 
         $course_image_data = [
             'name' => $name,
-            'extension' => $request->file('course_image_1')->getClientOriginalExtension(),
+            'extension' => $request->file($target_image)->getClientOriginalExtension(),
             'path' => $image_path,
         ];
         $course_image->fill($course_image_data);
