@@ -5,15 +5,9 @@
   if(isset($course)) {
     $course_details = $course->course_details;
     $course_options = $course->course_options;
-    // TODO: これどうしよう
-    $course_images = $course->course_images;
     $course_questions = $course->course_questions;
   }
 
-  // TODO: これどうしよう
-  $c_images = collect(old('course_images', []));
-  // TODO: これどうしよう
-  $c_image_orders = collect(old('course_image_orders', []));
   $o_option_ids = collect(old('option_ids', []));
   $o_minor_ids = collect(old('minor_ids'));
   $o_minor_values = collect(old('minor_values'));
