@@ -331,7 +331,7 @@
             <div class="form-horizontal">
             <input type="text" class="d-inline-block form-control w16em" id="pre_account_price" name="pre_account_price"
                    value="{{ old('pre_account_price', (isset($course) ? $course->pre_account_price : null)) }}"
-                   placeholder="10000" disabled="disabled">（税込）
+                   placeholder="10000">（税込）
             </div>
             @if ($errors->has('pre_account_price')) <p class="help-block has-error">{{ $errors->first('pre_account_price') }}</p> @endif
             @else
