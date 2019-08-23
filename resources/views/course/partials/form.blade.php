@@ -330,7 +330,7 @@
       <label>事前決済価格</label>
         @if(Auth::user()->authority->value == Authority::Admin && $hospital->is_pre_account)
             <div class="form-horizontal">
-            <input type="text" class="d-inline-block form-control w16em" id="pre_account_price" name="pre_account_price"
+            <input type="number" class="d-inline-block form-control w16em" id="pre_account_price" name="pre_account_price"
                    value="{{ old('pre_account_price', (isset($course) ? $course->pre_account_price : null)) }}"
                    placeholder="10000">（税込）
             </div>
