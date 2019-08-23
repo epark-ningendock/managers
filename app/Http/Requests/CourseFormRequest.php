@@ -43,6 +43,7 @@ class CourseFormRequest extends FormRequest
                 'reception_acceptance_day' => 'required|integer',
                 'reception_acceptance_month' => 'required|integer',
                 'cancellation_deadline' => 'required|integer',
+                'pre_account_price' => 'nullable|integer',
                 'is_price' => [Rule::in([0, 1])],
                 'is_price_memo' => [Rule::in([0, 1])],
                 'price' => 'required_if:is_price,1|numeric',
@@ -64,7 +65,9 @@ class CourseFormRequest extends FormRequest
                 'answer07s' => 'array',
                 'answer08s' => 'array',
                 'answer09s' => 'array',
-                'answer10s' => 'array'
+                'answer10s' => 'array',
+                'course_display_start' => 'date',
+                'course_display_end' => 'date',
             ];
         }
     }

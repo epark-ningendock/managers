@@ -7,7 +7,7 @@
 
 @section('adminlte_css')
   <link rel="stylesheet"
-    href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 'blue') . '.min.css')}} ">
+        href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 'blue') . '.min.css')}} ">
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   @stack('css')
   @yield('css')
@@ -124,7 +124,7 @@
           @endif
           {{-- 医療機関スタッフの機能 --}}
           {{-- TODO: 編集権限がない場合、非表示 --}}
-          @if(request()->session()->get('hospital_id'))
+          @if ( ! (auth()->user()->staff_auth && ( (request()->is('reception')) || (request()->route()->getName() == 'reservation.create') || (request()->route()->getName() == 'reservation.edit')) ) )
             <li class="treeview @if (request()->session()->get('hospital_id')) active @endif">
                 <a href="#">
                   <i class="fa fa-list-ul"></i> <span>医療機関スタッフ機能</span>
@@ -141,7 +141,10 @@
                   <li class="{{ Request::segment(1) === 'reception' ? 'active' : null }}"><a href="/reception"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付一覧</a></li>
                   <li class="{{ Request::segment(1) === 'calendar' ? 'active' : null }}"><a href="/calendar"><i class="fa fa-calendar"></i>&nbsp;&nbsp;&nbsp;&nbsp;カレンダー管理</a></li>
                   <li class="{{ Request::segment(1) === 'email-template' ? 'active' : null }}"><a href="/email-template"><i class="fa fa-gears"></i>&nbsp;&nbsp;&nbsp;&nbsp;メールテンプレート管理</a></li>
-                  <li class="{{ Request::segment(1) === 'reception-email-setting' ? 'active' : null }}"><a href="/reception-email-setting"><i class="fa fa-gears"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付メール設定</a></li>
+                  {{-- EPARKスタッフのみ表示させる --}}
+                  @if(Auth::user()->getTable() == "staffs")
+                    <li class="{{ Request::segment(1) === 'hospital-email-setting' ? 'active' : null }}"><a href="/hospital-email-setting"><i class="fa fa-gears"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付メール設定</a></li>
+                  @endif
                   @if(Auth::user()->getTable() == "hospital_staffs" && request()->session()->get('hospital_id'))
                     <li class="{{ request()->path()  === 'hospital-staff/edit-password' ? 'active' : null }}"><a href="{{ route('hospital-staff.edit.password') }}"><i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;パスワードの変更</a></li>
                   @endif
@@ -150,6 +153,7 @@
                 {{-- @each('adminlte::partials.menu-item', $adminlte->menu(), 'item') --}}
             </li>
           @endif
+        </ul>
         <!-- /.sidebar-menu -->
       </section>
       <!-- /.sidebar -->

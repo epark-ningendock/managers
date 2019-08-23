@@ -13,6 +13,11 @@ class Holiday extends SoftDeleteModel
 
     protected $dates = [ 'date' ];
 
+    public function hospital()
+    {
+        return $this->belongsTo('App\Hospital');
+    }
+
     /**
      * Perform the actual delete query on this model instance.
      *

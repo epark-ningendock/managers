@@ -7,6 +7,8 @@ use App\CourseDetail;
 use App\CourseImage;
 use App\CourseOption;
 use App\CourseQuestion;
+use App\Enums\CourseImageType;
+use App\Hospital;
 use App\HospitalImage;
 use App\Http\Requests\CourseFormRequest;
 use App\MajorClassification;
@@ -40,14 +42,19 @@ class CourseController extends Controller
      */
     public function create()
     {
+        
         $hospital_id = session()->get('hospital_id');
+        $hospital = Hospital::find($hospital_id);
         $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('order')->get();
         $options = Option::where('hospital_id', $hospital_id)->orderBy('order')->get();
         $image_orders = ImageOrder::orderBy('order')->get();
         $calendars = Calendar::where('hospital_id', $hospital_id)->get();
-        $tax_class = TaxClass::whereDate('life_time_from', '<=', Carbon::today())
-            ->whereDate('life_time_to', '>=', Carbon::today())->get()->first();
+        $disp_date_start = Carbon::today()->addDay(7)->format('Y-m-d');
+        $disp_date_end = Carbon::today()->addMonth(12)->format('Y-m-d');
+        $today = Carbon::today();
+        $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
+            ->whereDate('life_time_to', '>=', $today)->get()->first();
 
         return view('course.create')
             ->with('calendars', $calendars)
@@ -55,6 +62,9 @@ class CourseController extends Controller
             ->with('image_orders', $image_orders)
             ->with('options', $options)
             ->with('majors', $majors)
+            ->with('disp_date_start', $disp_date_start)
+            ->with('disp_date_end', $disp_date_end)
+            ->with('hospital', $hospital)
             ->with('images', $images);
     }
 
@@ -108,13 +118,18 @@ class CourseController extends Controller
     public function edit(Course $course)
     {
         $hospital_id = session()->get('hospital_id');
+        $hospital = Hospital::find($hospital_id);
         $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('order')->get();
         $options = Option::where('hospital_id', $hospital_id)->orderBy('order')->get();
         $image_orders = ImageOrder::orderBy('order')->get();
         $calendars = Calendar::where('hospital_id', $hospital_id)->get();
-        $tax_class = TaxClass::whereDate('life_time_from', '<=', Carbon::today())
-            ->whereDate('life_time_to', '>=', Carbon::today())->get()->first();
+        $disp_date_start = Carbon::today()->addDay(7)->format('Y-m-d');
+        $disp_date_end = Carbon::today()->addMonth(12)->format('Y-m-d');
+        $today = Carbon::today();
+        $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
+            ->whereDate('life_time_to', '>=', $today)->get()->first();
+
 
         return view('course.edit')
             ->with('calendars', $calendars)
@@ -123,6 +138,9 @@ class CourseController extends Controller
             ->with('options', $options)
             ->with('majors', $majors)
             ->with('images', $images)
+            ->with('disp_date_start', $disp_date_start)
+            ->with('disp_date_end', $disp_date_end)
+            ->with('hospital', $hospital)
             ->with('course', $course);
     }
 
@@ -133,7 +151,11 @@ class CourseController extends Controller
 
             //Course
             $course_data = $request->only([
+                'hospital_id',
                 'name',
+                'course_image_main',
+                'course_image_pc',
+                'course_image_sp',
                 'web_reception',
                 'calendar_id',
                 'is_category',
@@ -145,8 +167,12 @@ class CourseController extends Controller
                 'price',
                 'is_price_memo',
                 'price_memo',
+                'pre_account_price',
                 'is_pre_account_price',
-                'lock_version'
+                'lock_version',
+                'course_display_start',
+                'course_display_end',
+                'is_pre_account'
             ]);
             $reception_start_day = $request->input('reception_start_day');
             $reception_start_month = $request->input('reception_start_month');
@@ -154,6 +180,7 @@ class CourseController extends Controller
             $reception_end_month = $request->input('reception_end_month');
             $reception_acceptance_day = $request->input('reception_acceptance_day');
             $reception_acceptance_month = $request->input('reception_acceptance_month');
+            $course_data['hospital_id'] = $request->input('hospital_id');
             $course_data['reception_start_date'] = $reception_start_month * 1000 + $reception_start_day;
             $course_data['reception_end_date'] = $reception_end_month * 1000 + $reception_end_day;
             $course_data['reception_acceptance_date'] = $reception_acceptance_month * 1000 + $reception_acceptance_day;
@@ -165,40 +192,27 @@ class CourseController extends Controller
                 $course = new Course();
             }
             $course->fill($course_data);
+            $course->hospital_id = session()->get('hospital_id');
             //force to update updated_at. otherwise version will not be updated
             $course->touch();
             $course->save();
 
-            //Course Image
-            $image_ids = collect($request->input('course_images'));
-            $image_order_ids = collect($request->input('course_image_orders'));
-
-            $filtered_image_ids = $image_ids->filter(function ($id) {
-                return $id != 0;
-            });
-
-            $images = HospitalImage::whereIn('id', $filtered_image_ids)->get();
-            if ($images->count() != count($filtered_image_ids)) {
-                $request->session()->flash('error', trans('messages.invalid_hospital_image_id'));
-                return redirect()->back();
+            //Course Images
+            if ($request->has('course_image_main')) {
+                $target_image = 'course_image_main';
+                $target_type = CourseImageType::Main;
+                $this->saveCourseImage($request, $target_image, $target_type, $course->id);
             }
-
-            if (isset($course_param)) {
-                $course->course_images()->forceDelete();
+            if ($request->has('course_image_pc')) {
+                $target_image = 'course_image_pc';
+                $target_type = CourseImageType::Pc;
+                $this->saveCourseImage($request, $target_image, $target_type, $course->id);
             }
-
-            foreach ($image_ids as $index => $image_id) {
-                if ($image_id == 0) {
-                    continue;
-                }
-                $image_order_id = $image_order_ids[$index];
-                $course_image = new CourseImage();
-                $course_image->course_id = $course->id;
-                $course_image->hospital_image_id = $image_id;
-                $course_image->image_order_id = $image_order_id;
-                $course_image->save();
+            if ($request->has('course_image_sp')) {
+                $target_image = 'course_image_sp';
+                $target_type = CourseImageType::Sp;
+                $this->saveCourseImage($request, $target_image, $target_type, $course->id);
             }
-
 
             //Course Options
             $option_ids = collect($request->input('option_ids', []));
@@ -283,17 +297,19 @@ class CourseController extends Controller
                 $course_question->question_number = $i + 1;
                 $course_question->course_id = $course->id;
                 $course_question->is_question = $is_questions[$i];
-                $course_question->question_title = $question_titles[$i];
-                $course_question->answer01 = $answer01s[$i];
-                $course_question->answer02 = $answer02s[$i];
-                $course_question->answer03 = $answer03s[$i];
-                $course_question->answer04 = $answer04s[$i];
-                $course_question->answer05 = $answer05s[$i];
-                $course_question->answer06 = $answer06s[$i];
-                $course_question->answer07 = $answer07s[$i];
-                $course_question->answer08 = $answer08s[$i];
-                $course_question->answer09 = $answer09s[$i];
-                $course_question->answer10 = $answer10s[$i];
+                if ($is_questions[$i] == '1') {
+                    $course_question->question_title = $question_titles[$i];
+                    $course_question->answer01 = $answer01s[$i];
+                    $course_question->answer02 = $answer02s[$i];
+                    $course_question->answer03 = $answer03s[$i];
+                    $course_question->answer04 = $answer04s[$i];
+                    $course_question->answer05 = $answer05s[$i];
+                    $course_question->answer06 = $answer06s[$i];
+                    $course_question->answer07 = $answer07s[$i];
+                    $course_question->answer08 = $answer08s[$i];
+                    $course_question->answer09 = $answer09s[$i];
+                    $course_question->answer10 = $answer10s[$i];
+                }
                 $course_question->save();
             }
 
@@ -302,6 +318,27 @@ class CourseController extends Controller
             DB::rollback();
             throw $e;
         }
+    }
+
+    private function saveCourseImage(CourseFormRequest $request, String $target_image, String $target_type, int $course_id)
+    {
+        $image = \Image::make(file_get_contents($request->file($target_image)));
+        $course_image = CourseImage::firstOrCreate([
+            'course_id' => $course_id,
+            'type' => $target_type
+        ]);
+
+        $name = $course_image->name_for_upload($request->file($target_image)->getClientOriginalName());
+        \Storage::disk(env('FILESYSTEM_CLOUD'))->put($name, (string) $image->encode(), 'public');
+        $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($name);
+
+        $course_image_data = [
+            'name' => $name,
+            'extension' => $request->file($target_image)->getClientOriginalExtension(),
+            'path' => $image_path,
+        ];
+        $course_image->fill($course_image_data);
+        $course_image->save();
     }
 
     /**
@@ -387,5 +424,31 @@ class CourseController extends Controller
             $request->session()->flash('error', trans('messages.create_error'));
             return redirect()->back();
         }
+    }
+
+    /**
+     * getting course details
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function course_detail($id)
+    {
+        $course = Course::with([ 'course_options', 'course_options.option', 'course_questions' ])
+            ->where('id', $id)
+            ->get();
+        return response()->json($course);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $course_image_id
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteImage(int $course_image_id)
+    {
+        $course = CourseImage::find($course_image_id)->course;
+        CourseImage::find($course_image_id)->delete();
+        return redirect()->route('course.edit', ['course' => $course])->with('success', trans('messages.deleted', ['name' => trans('messages.names.course_image')]));
     }
 }
