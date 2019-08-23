@@ -632,9 +632,19 @@
   <script>
       (function ($) {
           const is_pre_account = $('input[name="is_pre_account"]');
-          if(is_pre_account.val() == 1) {
-              $('#pre_account_price').removeAttr('disabled');
+          if(is_pre_account.val() == 0) {
+              $('#pre_account_price').attr('disabled','disabled');
           }
+
+          $( 'input[name="is_pre_account"]:radio' ).change( function() {
+              var radioval = $(this).val();
+              if(radioval == 1){
+                  $('#pre_account_price').removeAttr('disabled');
+              }else{
+                  $('#pre_account_price').attr('disabled','disabled');
+              }
+          });
+
           $('.status-btn').on('click', function() {
               const is_q_val = $(this).find('.is_question').val();
               $(this).parent().find('.hidden-q').val(is_q_val);
