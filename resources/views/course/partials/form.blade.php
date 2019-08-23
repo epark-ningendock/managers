@@ -218,9 +218,18 @@
                 {{ Form::text('course_display_end', old('course_display_end', (isset($course) ? $course->course_display_end : (isset($disp_date_end) ? $disp_date_end : null))),
                     ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-end', 'placeholder' => $disp_date_end]) }}
         </div>
-         <p>入力がない場合は常に表示されます。</p>
-         @if ($errors->has('course_display_start')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('course_display_start') }}</p> @endif
-         @if ($errors->has('course_display_end')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('course_display_end') }}</p> @endif
+        @if ($errors->has('course_display_start'))
+          <p class="help-block">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            {{ $errors->first('course_display_start') }}
+          </p>
+        @endif
+        @if ($errors->has('course_display_end'))
+          <p class="help-block">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            {{ $errors->first('course_display_end') }}
+          </p>
+        @endif
      </div>
 
     <div class="form-group">
