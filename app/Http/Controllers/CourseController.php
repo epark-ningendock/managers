@@ -8,6 +8,7 @@ use App\CourseImage;
 use App\CourseOption;
 use App\CourseQuestion;
 use App\Enums\CourseImageType;
+use App\Hospital;
 use App\HospitalImage;
 use App\Http\Requests\CourseFormRequest;
 use App\MajorClassification;
@@ -42,6 +43,7 @@ class CourseController extends Controller
     public function create()
     {
         $hospital_id = session()->get('hospital_id');
+        $hospital = Hospital::find($hospital_id);
         $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('order')->get();
         $options = Option::where('hospital_id', $hospital_id)->orderBy('order')->get();
@@ -56,6 +58,7 @@ class CourseController extends Controller
             ->with('image_orders', $image_orders)
             ->with('options', $options)
             ->with('majors', $majors)
+            ->with('hospital', $hospital)
             ->with('images', $images);
     }
 
@@ -109,6 +112,7 @@ class CourseController extends Controller
     public function edit(Course $course)
     {
         $hospital_id = session()->get('hospital_id');
+        $hospital = Hospital::find($hospital_id);
         $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('order')->get();
         $options = Option::where('hospital_id', $hospital_id)->orderBy('order')->get();
@@ -124,6 +128,7 @@ class CourseController extends Controller
             ->with('options', $options)
             ->with('majors', $majors)
             ->with('images', $images)
+            ->with('hospital', $hospital)
             ->with('course', $course);
     }
 
@@ -150,8 +155,10 @@ class CourseController extends Controller
                 'price',
                 'is_price_memo',
                 'price_memo',
+                'pre_account_price',
                 'is_pre_account_price',
-                'lock_version'
+                'lock_version',
+                'is_pre_account'
             ]);
             $reception_start_day = $request->input('reception_start_day');
             $reception_start_month = $request->input('reception_start_month');
