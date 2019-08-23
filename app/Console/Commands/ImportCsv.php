@@ -9,13 +9,14 @@ class ImportCsv extends Command
 {
     private $directory;
     private $classes = [];
+    private $classes_b = [];
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'import:csv {--backup} {--fresh : 既存のデータベースを再構築します。} {--dir= : ディレクトリを指定}';
+    protected $signature = 'import:csv {--backup} {--fresh : 既存のデータベースを再構築します。} {--a= : ディレクトリを指定} {--b= : ディレクトリを指定}';
 
     /**
      * The console command description.
@@ -33,6 +34,7 @@ class ImportCsv extends Command
     {
         parent::__construct();
         $this->classes = config('import');
+        $this->classes_b = config('import_b');
     }
 
     /**
@@ -41,12 +43,19 @@ class ImportCsv extends Command
      * @param string $type
      * @return string |null
      */
-    private function getClass($basename, $type = 'model'): ?string
+    private function getClass($ab, $basename, $type = 'model'): ?string
     {
-        if (!array_key_exists($basename, $this->classes)) {
-            return null;
+        if ($ab == 'a') {
+            if (!array_key_exists($basename, $this->classes)) {
+                return null;
+            }
+            return $this->classes[$basename][$type];
+        } else if ($ab == 'b') {
+            if (!array_key_exists($basename, $this->classes_b)) {
+                return null;
+            }
+            return $this->classes_b[$basename][$type];
         }
-        return $this->classes[$basename][$type];
     }
 
     /**
@@ -57,12 +66,6 @@ class ImportCsv extends Command
     public function handle()
     {
         $csv_files = [];
-
-        $backup = $this->option('backup');
-        if ($backup) {
-            $this->line('既存のデータベースをバックアップします。');
-            Artisan::call('db:backup', ['--path' => './storage/app/backup']);
-        }
 
         $directory = $this->option('dir');
         if (!file_exists($directory)) {
@@ -87,34 +90,58 @@ class ImportCsv extends Command
             return;
         }
 
+        $backup = $this->option('backup');
         $fresh = $this->option('fresh');
+
         if ($fresh) {
-            if (!$backup) {
-                $this->line('既存のデータベースをバックアップします。');
-                Artisan::call('db:backup', ['--path' => './storage/app/backup']);
-            }
+            $this->line('既存のデータベースをバックアップします。');
+            Artisan::call('db:backup', ['--path' => './storage/app/backup']);
 
             $this->line('データベースを初期化します。');
             Artisan::call('migrate:fresh');
+        } elseif ($backup) {
+            $this->line('既存のデータベースをバックアップします。');
+            Artisan::call('db:backup', ['--path' => './storage/app/backup']);
         }
 
         $this->info('インポートを開始します。');
-        $this->import();
+
+        $this->info('Start import: A');
+        $this->import('a');
+        $this->info('End import: A');
+
+        if (!$this->confirm('このまま続けてよろしいですか？')) {
+            $this->info('インポートを完了しました。');
+            return;
+        }
+        $this->info('Start import: B');
+        $this->import('b');
+        $this->info('End import: B');
+
         $this->info('インポートを完了しました。');
     }
 
     /**
-     * インポート
+     * インポート(A)
      */
-    private function import()
+    private function import($ab)
     {
-        $files = array_keys($this->classes);
+        $files = [];
+        switch ($ab) {
+            case 'a':
+                $files = array_keys($this->classes);
+                break;
+            case'b':
+                $files = array_keys($this->classes_b);
+                break;
+
+        }
         foreach ($files as $i => $basename) {
             $realpath = $this->directory . '/' . $basename;
             if (!file_exists($realpath)) {
                 $this->warn('Skipped: %s is not found.', $basename);
             }
-            $classname = $this->getClass($basename, 'import');
+            $classname = $this->getClass($ab, $basename, 'import');
             $this->line(sprintf("[ %d / %d ] %s", $i + 1, count($files), $classname));
             (new $classname)->withOutput($this->output)->import($realpath);
         }
