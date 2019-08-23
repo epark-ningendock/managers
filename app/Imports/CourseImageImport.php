@@ -39,8 +39,6 @@ class CourseImageImport extends ImportAbstract
         $row = $row->toArray();
         $model = new CourseImage([
             'course_id' => $this->getId('courses', $row['course_no']),
-            'image_order_id' => ImageOrder::where('name', '検査コースメイン画像')->first()->id,
-            'hospital_image_id' => $this->getId('hospital_images', $row['file_no']),
             'created_at' => $this->setCreatedAt($row['rgst']),
             'updated_at' => $this->setUpdatedAt($row['updt']),
         ]);

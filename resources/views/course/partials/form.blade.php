@@ -1,15 +1,14 @@
 @php
   use \App\Enums\WebReception;
+  use \App\Enums\CourseImageType;
+  use \App\Enums\Authority;
 
   if(isset($course)) {
     $course_details = $course->course_details;
     $course_options = $course->course_options;
-    $course_images = $course->course_images;
     $course_questions = $course->course_questions;
   }
 
-  $c_images = collect(old('course_images', []));
-  $c_image_orders = collect(old('course_image_orders', []));
   $o_option_ids = collect(old('option_ids', []));
   $o_minor_ids = collect(old('minor_ids'));
   $o_minor_values = collect(old('minor_values'));
@@ -52,7 +51,7 @@
 
 
     <div class="form-group py-sm-2">
-        <label for="web_reception">WEBの受付</label>
+        <label for="web_reception">WEB公開</label>
         <group class="inline-radio two-option">
             <div>
                 <input type="radio" name="web_reception" {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::Accept ? 'checked' : 'checked' }}
@@ -96,7 +95,99 @@
     </div>
 
     <div class="form-group">
-      <label>画像の選択</label>
+      <label>コース画像</label>
+      <div class="row">
+        <div class="col-sm-4">
+          {{Form::label('course_image_main', '検査コースメイン' , ['class' => 'form_label'])}}
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::Main)->first()))
+            <div class="sub_image_area">
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::Main)->first()->path}}">
+              <p class="file_delete_text">
+                <a onclick="return confirm('この画像を削除します、よろしいですか？')"
+                   class="btn btn-mini btn-danger"
+                   href="{{ route('course.image.delete', [
+                     'course_image_id' => $course->course_images()->where('type', CourseImageType::Main)->first()->id
+                   ]) }}"
+                >
+                  ファイル削除
+                </a>
+              </p>
+            </div>
+          @else
+            <div class="sub_image_area">
+              <img src="/img/no_image.png">
+            </div>
+          @endif
+          <label class="file-upload btn btn-primary">
+            ファイル選択 {{Form::file("course_image_main", ['class' => 'field', 'accept' => 'image/*'])}}
+          </label>
+          @if ($errors->has('course_image_main'))
+            <div class="error_message">
+              {{ $errors->first('course_image_main') }}
+            </div>
+          @endif
+        </div>
+        <div class="col-sm-4">
+          {{Form::label('course_image_pc', '受診の流れメイン（PC）' , ['class' => 'form_label'])}}
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::Pc)->first()))
+            <div class="sub_image_area">
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::Pc)->first()->path}}">
+              <p class="file_delete_text">
+                <a onclick="return confirm('この画像を削除します、よろしいですか？')"
+                    class="btn btn-mini btn-danger"
+                    href="{{ route('course.image.delete', [
+                      'course_image_id' => $course->course_images()->where('type', CourseImageType::Pc)->first()->id
+                    ]) }}"
+                >
+                  ファイル削除
+                </a>
+              </p>
+            </div>
+          @else
+            <div class="sub_image_area">
+              <img src="/img/no_image.png">
+            </div>
+          @endif
+          <label class="file-upload btn btn-primary">
+            ファイル選択 {{Form::file("course_image_pc", ['class' => 'field', 'accept' => 'image/*'])}}
+          </label>
+          @if ($errors->has('course_image_pc'))
+            <div class="error_message">
+              {{ $errors->first('course_image_pc') }}
+            </div>
+          @endif
+        </div>
+        <div class="col-sm-4">
+          {{Form::label('course_image_sp', '受診の流れメイン（SP）' , ['class' => 'form_label'])}}
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::Sp)->first()))
+            <div class="sub_image_area">
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::Sp)->first()->path}}">
+              <p class="file_delete_text">
+                <a onclick="return confirm('この画像を削除します、よろしいですか？')"
+                  class="btn btn-mini btn-danger"
+                  href="{{ route('course.image.delete', [
+                    'course_image_id' => $course->course_images()->where('type', CourseImageType::Sp)->first()->id
+                  ]) }}"
+                >
+                  ファイル削除
+                </a>
+              </p>
+            </div>
+          @else
+            <div class="sub_image_area">
+              <img src="/img/no_image.png">
+            </div>
+          @endif
+          <label class="file-upload btn btn-primary">
+            ファイル選択 {{Form::file("course_image_sp", ['class' => 'field', 'accept' => 'image/*'])}}
+          </label>
+          @if ($errors->has('course_image_sp'))
+            <div class="error_message">
+              {{ $errors->first('course_image_sp') }}
+            </div>
+          @endif
+        </div>
+      </div>
     </div>
 
     <div class="form-group">
@@ -250,9 +341,18 @@
   <div class="form-entry">
     <div class="box-body">
     <h4 class="d-inline-block">価格</h4></span>
-    <div class="form-group">
+    <div class="form-group @if ($errors->has('pre_account_price')) has-error @endif">
       <label>事前決済価格</label>
-      <div>0円（税込）</div>
+        @if(Auth::user()->authority->value == Authority::Admin && $hospital->is_pre_account)
+            <div class="form-horizontal">
+            <input type="number" class="d-inline-block form-control w16em" id="pre_account_price" name="pre_account_price"
+                   value="{{ old('pre_account_price', (isset($course) ? $course->pre_account_price : null)) }}"
+                   placeholder="10000">（税込）
+            </div>
+            @if ($errors->has('pre_account_price')) <p class="help-block has-error">{{ $errors->first('pre_account_price') }}</p> @endif
+            @else
+            <div>0円（税込）</div>
+            @endif
     </div>
     <div class="separator mb-3"></div>
     <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif" >
@@ -547,6 +647,20 @@
 @section('script')
   <script>
       (function ($) {
+          const is_pre_account = $('input[name="is_pre_account"]');
+          if(is_pre_account.val() == 0) {
+              $('#pre_account_price').attr('disabled','disabled');
+          }
+
+          $( 'input[name="is_pre_account"]:radio' ).change( function() {
+              var radioval = $(this).val();
+              if(radioval == 1){
+                  $('#pre_account_price').removeAttr('disabled');
+              }else{
+                  $('#pre_account_price').attr('disabled','disabled');
+              }
+          });
+
           $('.status-btn').on('click', function() {
               const is_q_val = $(this).find('.is_question').val();
               $(this).parent().find('.hidden-q').val(is_q_val);
@@ -586,38 +700,6 @@
               @endfor
 
 
-          })();
-
-          /* ---------------------------------------------------
-          // image order enable/disable
-          -----------------------------------------------------*/
-          (function () {
-              $('.image-order option:first-child').remove();
-
-              const change = function(ele) {
-                  const orderEle = ele.parent().parent().find('select');
-                  if (ele.prop('checked')) {
-                      orderEle.prop('disabled', false);
-                      ele.siblings('input:hidden').remove();
-                      orderEle.next('input:hidden').remove();
-                      if (!orderEle.find('option:selected').val()) {
-                          orderEle.find('option:first-child').prop('selected', true);
-                      }
-                  } else {
-                      $('<input type="hidden" name="course_images[]" />').val('0').appendTo(ele.parent());
-                      $('<input type="hidden" name="course_image_orders[]" value=""/>').insertAfter(orderEle);
-                      orderEle.prop('disabled', true);
-                      orderEle.val('');
-                  }
-              };
-
-              $('.image-checkbox').each(function(index, ele) {
-                  ele = $(ele);
-                  ele.change(function() {
-                      change(ele);
-                  });
-                  change(ele);
-              });
           })();
 
           /* ---------------------------------------------------

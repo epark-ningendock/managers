@@ -3177,6 +3177,7 @@ input[type=checkbox] + label:before {
 
 #setting-list .mr-2 {
   cursor: pointer;
+  text-indent: 15px;
 }
 
 #setting-list span.square:before {
@@ -3187,6 +3188,11 @@ input[type=checkbox] + label:before {
   font-weight: bold;
   font-size: 20px;
   vertical-align: middle;
+  margin: 0 -23px 0 0;
+}
+
+#setting-list input[type=checkbox] + label:before {
+  margin: 0 9px 0 0;
 }
 
 .display-period {

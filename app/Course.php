@@ -86,6 +86,15 @@ class Course extends SoftDeleteModel
 
     public function calendar()
     {
-        return $this->hasOne('App\Calendar');
+        // return $this->hasOne('App\Calendar');
+        return $this->belongsTo('App\Calendar');
+    }
+
+    public function attributes()
+    {
+        $attributes = [
+            'pre_account_price' => '事前決済価格'
+        ];
+        return $attributes;
     }
 }

@@ -13,6 +13,10 @@
 
 @section('search')
 
+    <a href="{{ route('reservation.create') }}" class="btn btn-primary">
+        新しい承認を登録する
+    </a><br/>
+
     {{ Form::open(['route' => 'reservation.index', 'method' => 'get',]) }}
 
         <div class="std-container">

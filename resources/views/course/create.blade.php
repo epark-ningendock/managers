@@ -13,7 +13,7 @@
 <!-- ページの内容を入力 -->
 @section('main-content')
   @include('layouts.partials.message')
-  <form method="POST" action="{{ route('course.store') }}">
+  <form method="POST" action="{{ route('course.store') }}" enctype="multipart/form-data">
     {!! csrf_field() !!}
     @include('course.partials.form')
   </form>

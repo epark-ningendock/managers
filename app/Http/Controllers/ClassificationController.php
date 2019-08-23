@@ -58,6 +58,7 @@ class ClassificationController extends Controller
     {
         try {
             DB::beginTransaction();
+            // this->update() と同じなので、修正する場合、共に修正する必要がないかを確認すること
             $classification = $request->input('classification', 'minor');
             if ($classification == 'major') {
                 $item = MajorClassification::find($id);
@@ -80,6 +81,7 @@ class ClassificationController extends Controller
             $item->update(['status' => Status::Deleted]);
             DB::commit();
         } catch (\Exception $e) {
+            dd($e);
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
         }
@@ -400,28 +402,49 @@ class ClassificationController extends Controller
     {
         try {
             DB::beginTransaction();
-            $type = $request->input('classification');
+            $classification = $request->input('classification', 'minor');
 
             $data = $request->only(['name', 'status']);
-            if ($type == 'major') {
-                $class = MajorClassification::class;
-            } elseif ($type == 'middle') {
-                $class = MiddleClassification::class;
-                $data = array_merge($data, $request->only(['is_icon', 'icon_name']));
+            if ($request->input('status') == Status::Deleted) {
+                // this->destory() と同じなので、修正する場合、共に修正する必要がないかを確認すること
+                if ($classification == 'major') {
+                    $item = MajorClassification::find($id);
+                    if ($item->middle_classifications->where('status', Status::Valid)->count() > 0) {
+                        DB::rollback();
+                        $request->session()->flash('error', trans('messages.major_classification.child_exist_error_on_delete'));
+                        return redirect()->back();
+                    }
+                } elseif ($classification == 'middle') {
+                    $item = MiddleClassification::find($id);
+                    if ($item->minor_classifications->where('status', Status::Valid)->count() > 0) {
+                        DB::rollback();
+                        $request->session()->flash('error', trans('messages.middle_classification.child_exist_error_on_delete'));
+                        return redirect()->back();
+                    }
+                } else {
+                    $item = MinorClassification::find($id);
+                }
             } else {
-                $class = MinorClassification::class;
-                $data = array_merge($data, $request->only(['is_icon', 'icon_name', 'is_fregist', 'max_length']));
+                if ($classification == 'major') {
+                    $class = MajorClassification::class;
+                } elseif ($classification == 'middle') {
+                    $class = MiddleClassification::class;
+                    $data = array_merge($data, $request->only(['is_icon', 'icon_name']));
+                } else {
+                    $class = MinorClassification::class;
+                    $data = array_merge($data, $request->only(['is_icon', 'icon_name', 'is_fregist', 'max_length']));
+                }
+                $item = $class::findOrFail($id);
             }
-            $classification = $class::findOrFail($id);
-            $classification->fill($data);
-            $classification->save();
+            $item->fill($data);
+            $item->save();
 
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.classification')]));
             DB::commit();
             return redirect('classification');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->withErrors(trans('messages.staff_create_error'))->withInput();
+            return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
         }
     }
 }

@@ -7,7 +7,7 @@
 
 @section('adminlte_css')
   <link rel="stylesheet"
-    href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 'blue') . '.min.css')}} ">
+        href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 'blue') . '.min.css')}} ">
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   @stack('css')
   @yield('css')
@@ -124,7 +124,7 @@
           @endif
           {{-- 医療機関スタッフの機能 --}}
           {{-- TODO: 編集権限がない場合、非表示 --}}
-          @if(request()->session()->get('hospital_id'))
+          @if ( ! (auth()->user()->staff_auth && ( (request()->is('reception')) || (request()->route()->getName() == 'reservation.create') || (request()->route()->getName() == 'reservation.edit')) ) )
             <li class="treeview @if (request()->session()->get('hospital_id')) active @endif">
                 <a href="#">
                   <i class="fa fa-list-ul"></i> <span>医療機関スタッフ機能</span>
@@ -153,6 +153,7 @@
                 {{-- @each('adminlte::partials.menu-item', $adminlte->menu(), 'item') --}}
             </li>
           @endif
+        </ul>
         <!-- /.sidebar-menu -->
       </section>
       <!-- /.sidebar -->
