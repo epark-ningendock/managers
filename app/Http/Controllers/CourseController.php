@@ -40,18 +40,16 @@ class CourseController extends Controller
      */
     public function create()
     {
-        $today = Carbon::today();
-        $disp_date_start = $today->addDay(7)->format('Y-m-d');
-        $disp_date_end = $today->addMonth(12)->format('Y-m-d');
-
-
-
+        
         $hospital_id = session()->get('hospital_id');
         $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('order')->get();
         $options = Option::where('hospital_id', $hospital_id)->orderBy('order')->get();
         $image_orders = ImageOrder::orderBy('order')->get();
         $calendars = Calendar::where('hospital_id', $hospital_id)->get();
+        $disp_date_start = Carbon::today()->addDay(7)->format('Y-m-d');
+        $disp_date_end = Carbon::today()->addMonth(12)->format('Y-m-d');
+        $today = Carbon::today();
         $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
             ->whereDate('life_time_to', '>=', $today)->get()->first();
 

@@ -121,9 +121,11 @@
          <label>コース表示期間</label>
          <div class="form-horizontal display-period">
              <span>表示開始</span>
-                 {{ Form::text('course_display_start', old('course_display_start', (isset($course) ? $course->course_display_start : null)), ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-start', 'placeholder' => $disp_date_start]) }}
+                {{ Form::text('course_display_start', old('course_display_start', (isset($course) ? $course->course_display_start : (isset($disp_date_start) ? $disp_date_start : null))),
+                    ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-start', 'placeholder' => $disp_date_start]) }}
              <span>表示終了</span>
-                 {{ Form::text('course_display_end', old('course_display_end', (isset($course) ? $course->course_display_end : null)), ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-end', 'placeholder' => $disp_date_end]) }}
+                {{ Form::text('course_display_end', old('course_display_end', (isset($course) ? $course->course_display_end : (isset($disp_date_end) ? $disp_date_end : null))),
+                    ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-end', 'placeholder' => $disp_date_end]) }}
         </div>
          <p>入力がない場合は常に表示されます。</p>
          @if ($errors->has('course_display_start')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('course_display_start') }}</p> @endif
