@@ -1,6 +1,7 @@
 @php
   use \App\Enums\WebReception;
   use \App\Enums\CourseImageType;
+  use \App\Enums\Authority;
 
   if(isset($course)) {
     $course_details = $course->course_details;

@@ -58,7 +58,7 @@ class CourseController extends Controller
             ->with('image_orders', $image_orders)
             ->with('options', $options)
             ->with('majors', $majors)
-            ->with('hospital',$hospital)
+            ->with('hospital', $hospital)
             ->with('images', $images);
     }
 
@@ -112,6 +112,7 @@ class CourseController extends Controller
     public function edit(Course $course)
     {
         $hospital_id = session()->get('hospital_id');
+        $hospital = Hospital::find($hospital_id);
         $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('order')->get();
         $options = Option::where('hospital_id', $hospital_id)->orderBy('order')->get();
@@ -119,7 +120,6 @@ class CourseController extends Controller
         $calendars = Calendar::where('hospital_id', $hospital_id)->get();
         $tax_class = TaxClass::whereDate('life_time_from', '<=', Carbon::today())
             ->whereDate('life_time_to', '>=', Carbon::today())->get()->first();
-        $hospital = Hospital::find($hospital_id);
 
         return view('course.edit')
             ->with('calendars', $calendars)
