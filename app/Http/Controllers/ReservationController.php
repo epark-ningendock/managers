@@ -2,20 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ReservationFormRequest;
-use App\Reservation;
-use App\Hospital;
-use App\Customer;
 use App\Course;
-use App\Services\ReservationExportService;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Enums\ReservationStatus;
-use Illuminate\Support\Facades\Session;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use App\Customer;
 use App\Enums\Permission;
+use App\Enums\ReservationStatus;
+use App\FeeRate;
+use App\Holiday;
+use App\Hospital;
+use App\Http\Requests\ReservationCreateFormRequest;
+use App\Http\Requests\ReservationFormRequest;
+use App\Http\Requests\ReservationUpdateFormRequest;
+use App\Reservation;
+use App\ReservationOption;
+use App\Services\ReservationExportService;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+
 
 class ReservationController extends Controller
 {
@@ -32,9 +37,14 @@ class ReservationController extends Controller
         Customer $customer,
         Course $course,
         ReservationExportService $export_file
-    ) {
-        request()->session()->forget('hospital_id');
-        $this->middleware('permission.invoice.edit')->except(['index', 'reception', 'reception_csv', 'reservation_status']);
+    )
+    {
+        $this->middleware('permission.invoice.edit')->except([
+            'index',
+            'reception',
+            'reception_csv',
+            'reservation_status',
+        ]);
         $this->reservation = $reservation;
         $this->hospital = $hospital;
         $this->customer = $customer;
@@ -51,7 +61,8 @@ class ReservationController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::user()->staff_auth->is_invoice === Permission::None) {
+
+        if (isset(Auth::user()->staff_auth->is_invoice) && Auth::user()->staff_auth->is_invoice === Permission::None) {
             return view('staff.edit-password-personal');
         }
 
@@ -72,15 +83,60 @@ class ReservationController extends Controller
         return $this->export_file->operationCsv($request);
     }
 
+    /**
+     * reception list
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function reception(Request $request)
+    {
+        $this->validate($request, [
+            'reservation_start_date' => 'nullable|date',
+            'reservation_end_date' => 'nullable|date',
+            'completed_start_date' => 'nullable|date',
+            'completed_end_date' => 'nullable|date',
+            'customer_name' => 'nullable|max:64',
+        ]);
+
+        $page_per_record = $request->input('record_per_page', 10);
+
+        $query = $this->get_reception_list_query($request);
+        $reservations = $query->paginate($page_per_record)
+            ->appends($request->query());
+        $courses = Course::all();
+
+        $params = $request->input();
+
+        // for initial default value if it has not been set empty purposely
+        if (!$request->has('completed_start_date')) {
+            $params['completed_start_date'] = Carbon::now()->format('Y/m/d');
+        }
+        if (!$request->has('completed_end_date')) {
+            $params['completed_end_date'] = Carbon::now()->format('Y/m/d');
+        }
+
+        return view('reservation.reception', compact('reservations', 'courses'))
+            ->with($params);
+    }
 
     /**
      * build reception list query from request
+     *
      * @param Request $request
+     *
      * @return Reservation|\Illuminate\Database\Eloquent\Builder
      */
     protected function get_reception_list_query(Request $request)
     {
-        $query = Reservation::with(['course', 'customer', 'reservation_options', 'reservation_options.option', 'reservation_answers']);
+        $query = Reservation::where('hospital_id', session('hospital_id'))->with([
+            'course',
+            'customer',
+            'reservation_options',
+            'reservation_options.option',
+            'course.course_questions',
+        ]);
 
         if ($request->input('reservation_start_date', '') != '') {
             $query->whereDate('reservation_date', '>=', $request->input('reservation_start_date'));
@@ -93,13 +149,13 @@ class ReservationController extends Controller
         if ($request->has('completed_start_date') && $request->input('completed_start_date', '') != '') {
             $query->whereDate('completed_date', '>=', $request->input('completed_start_date'));
         } elseif (!$request->has('completed_start_date')) {
-            $query->whereDate('completed_date', '>=', Carbon::now());
+            $query->whereDate('completed_date', '>=', Carbon::today()->startOfDay());
         }
 
         if ($request->has('completed_end_date') && $request->input('completed_end_date', '') != '') {
             $query->whereDate('completed_date', '<=', $request->input('completed_end_date'));
         } elseif (!$request->has('completed_end_date')) {
-            $query->whereDate('completed_date', '<=', Carbon::now());
+            $query->whereDate('completed_date', '<=', Carbon::today()->endOfDay());
         }
 
         if ($request->input('customer_name', '') != '') {
@@ -133,43 +189,8 @@ class ReservationController extends Controller
         if ($status_filter->isNotEmpty()) {
             $query->whereIn('reservation_status', $status_filter);
         }
+
         return $query;
-    }
-
-    /**
-     * reception list
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function reception(Request $request)
-    {
-        $this->validate($request, [
-            'reservation_start_date' => 'nullable|date',
-            'reservation_end_date' => 'nullable|date',
-            'completed_start_date' => 'nullable|date',
-            'completed_end_date' => 'nullable|date',
-            'customer_name' => 'nullable|max:64'
-        ]);
-
-        $page_per_record = $request->input('record_per_page', 10);
-
-        $query = $this->get_reception_list_query($request);
-        $reservations = $query->paginate($page_per_record)
-            ->appends($request->query());
-        $courses = Course::all();
-
-        $params = $request->input();
-
-        // for initial default value if it has not been set empty purposely
-        if (!$request->has('completed_start_date')) {
-            $params['completed_start_date'] = Carbon::now()->format('Y/m/d');
-        }
-        if (!$request->has('completed_end_date')) {
-            $params['completed_end_date'] = Carbon::now()->format('Y/m/d');
-        }
-
-        return view('reservation.reception', compact('reservations', 'courses'))
-            ->with($params);
     }
 
     /**
@@ -252,7 +273,7 @@ class ReservationController extends Controller
                 $reservation->acceptance_number,
                 Reservation::getChannel($reservation->channel),
                 $reservation->reservation_memo,
-                $reservation->todays_memo
+                $reservation->todays_memo,
             ];
 
             $questions = collect();
@@ -298,7 +319,7 @@ class ReservationController extends Controller
             '受付番号',
             '受付形態',
             '受付・予約メモ',
-            '医療機関備考'
+            '医療機関備考',
         ];
 
         for ($i = 0; $i < $question_count; $i++) {
@@ -318,7 +339,9 @@ class ReservationController extends Controller
 
     /**
      * Accept reservation
+     *
      * @param $id Reservatoin ID
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function accept($id)
@@ -333,16 +356,20 @@ class ReservationController extends Controller
             $reservation->save();
             Session::flash('success', trans('messages.reservation.accept_success'));
             DB::commit();
+
             return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
+
             return redirect()->back()->withErrors(trans('messages.reservation.accept_error'))->withInput();
         }
     }
 
     /**
      * Cancel reservation
+     *
      * @param $id Reservatoin ID
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function cancel($id)
@@ -355,19 +382,24 @@ class ReservationController extends Controller
                 return redirect()->back()->withErrors(trans('messages.reservation.invalid_reservation_status'))->withInput();
             }
             $reservation->reservation_status = ReservationStatus::Cancelled;
+            $reservation->cancel_date = Carbon::now();
             $reservation->save();
             Session::flash('success', trans('messages.reservation.cancel_success'));
             DB::commit();
+
             return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
+
             return redirect()->back()->withErrors(trans('messages.reservation.cancel_error'))->withInput();
         }
     }
 
     /**
      * Complete reservation
+     *
      * @param $id Reservatoin ID
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function complete($id)
@@ -379,19 +411,24 @@ class ReservationController extends Controller
                 return redirect()->back()->withErrors(trans('messages.reservation.invalid_reservation_status'))->withInput();
             }
             $reservation->reservation_status = ReservationStatus::Completed;
+            $reservation->completed_date = Carbon::now();
             $reservation->save();
             Session::flash('success', trans('messages.reservation.complete_success'));
             DB::commit();
+
             return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
+
             return redirect()->back()->withErrors(trans('messages.reservation.complete_error'))->withInput();
         }
     }
 
     /**
      * bulk reservation status update
+     *
      * @param ReservationFormRequest $request
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function reservation_status(ReservationFormRequest $request)
@@ -400,22 +437,343 @@ class ReservationController extends Controller
             DB::beginTransaction();
             $ids = $request->input('ids');
             $reservation_status = ReservationStatus::getInstance($request->input('reservation_status'));
+            $update_data = ['reservation_status' => $reservation_status->value];
             $update_query = Reservation::whereIn('id', $ids);
             if ($reservation_status->is(ReservationStatus::ReceptionCompleted)) {
                 $update_query->where('reservation_status', ReservationStatus::Pending);
             } elseif ($reservation_status->is(ReservationStatus::Completed)) {
+                $update_data['completed_date'] = Carbon::now();
                 $update_query->where('reservation_status', ReservationStatus::ReceptionCompleted);
             } elseif ($reservation_status->is(ReservationStatus::Cancelled)) {
+                $update_data['cancel_date'] = Carbon::now();
                 $update_query->where('reservation_status', ReservationStatus::Pending)
                     ->orWhere('reservation_status', ReservationStatus::ReceptionCompleted);
             }
-            $update_query->update([ 'reservation_status' => $reservation_status->value ]);
+            $update_query->update($update_data);
             Session::flash('success', trans('messages.reservation.status_update_success'));
             DB::commit();
+
             return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
+
             return redirect()->back()->withErrors(trans('messages.reservation.status_update_error'))->withInput();
         }
     }
+
+
+    /**
+     * create form for reservation
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function create()
+    {
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))->get();
+
+        return view('reservation.create')->with(['courses' => $courses]);
+    }
+
+
+    public function store(ReservationCreateFormRequest $request)
+    {
+
+        try {
+            DB::beginTransaction();
+
+            $course = Course::find($request->course_id);
+            $reservation_date = Carbon::parse($request->reservation_date);
+
+            $calendar_day = $course->calendar->calendar_days()
+                ->whereDate('date', [$reservation_date])->get()->first();
+
+            $holiday = Holiday::where('hospital_id', session()->get('hospital_id'))
+                ->where('is_holiday', 1)
+                ->whereDate('date', $reservation_date)->get()->first();
+
+            // TODO to confirm reservation frame value zero is unlimited or not
+            if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '1') && $calendar_day->reservation_frames == 0) {
+                DB::rollback();
+                return redirect()->back()->with('error', trans('messages.reservation.not_reservable'))->withInput();
+            }
+
+            if (isset($calendar_day) && $calendar_day->reservation_frames > 0) {
+                $count = Reservation::join('courses', 'courses.id', '=', 'reservations.course_id')
+                    ->whereDate('reservation_date', '=', $reservation_date)
+                    ->where('courses.calendar_id', $course->calendar_id)
+                    ->count();
+
+                if($count >= $calendar_day->reservation_frames) {
+                    DB::rollback();
+                    return redirect()->back()->with('error', trans('messages.reservation.limit_exceed'))->withInput();
+                }
+            }
+
+
+
+            request()->merge([
+                'hospital_id' => session('hospital_id'),
+                'reservation_status' => ReservationStatus::Pending,
+                'is_repeat' => false
+            ]);
+
+
+            $fee_rate = FeeRate::where('hospital_id', session()->get('hospital_id'))
+                ->whereDate('from_date', '<=', Carbon::today())
+                ->where(function($q) {
+                    $q->whereDate('to_date', '>=', Carbon::today())
+                        ->orWhere('to_date', '=', null);
+                })->get()->first();
+
+            $reservation = new Reservation(request()->all());
+            $reservation->applicant_name = "$request->first_name $request->family_name";
+            $reservation->applicant_name_kana = "$request->first_name_kana $request->family_name_kana";
+            $reservation->applicant_tel = $request->tel;
+
+
+            $reservation->fee = $request->input('adjustment_price', 0) + ($course->is_price == '1' ? $course->price : 0) + $this->calculateCourseOptionTotalPrice($request);
+
+            if (isset($fee_rate)) {
+                $reservation->fee_rate = $fee_rate->rate;
+                $reservation->fee += $fee_rate->rate;
+            }
+
+            $customer = Customer::where('registration_card_number', $request->registration_card_number)->get()->first();
+
+            if (!isset($customer)) {
+                $customer = new Customer([
+                    'first_name' => $request->first_name,
+                    'family_name' => $request->family_name,
+                    'first_name_kana' => $request->first_name_kana,
+                    'family_name_kana' => $request->family_name_kana,
+                    'tel' => $request->tel
+                ]);
+                $customer->save();
+            } else if (Reservation::where('customer_id', $customer->id)->count() > 0) {
+                $reservation->is_repeat = true;
+            }
+
+            $reservation->customer_id = $customer->id;
+            $reservation->save();
+            $this->reservationCourseOptionSaveOrUpdate($request, $reservation);
+
+            $this->reservationAnswerCreate($request, $reservation);
+
+            DB::commit();
+
+            return redirect('reception')->with('success', trans('messages.reservation.complete_success'));
+
+        } catch (\Exception $i) {
+            dd($i);
+            DB::rollback();
+
+            return redirect()->back()->with('error', trans('messages.reservation.complete_error'))->withInput();
+        }
+
+    }
+
+    protected function reservationCourseOptionSaveOrUpdate($request, $reservation)
+    {
+        if (!empty($request->course_options) && isset($request->course_options)) {
+
+            $options = [];
+            foreach ($request->course_options as $key => $option) {
+                $options[] = [
+                    'reservation_id' => $reservation->id,
+                    'option_id' => $key,
+                    'option_price' => $option,
+                ];
+            }
+
+            if (!empty($options)) {
+                $reservation->reservation_options()->createMany($options);
+            }
+        }
+    }
+
+    protected function calculateCourseOptionTotalPrice($request)
+    {
+        $total = 0;
+        if (!empty($request->course_options) && isset($request->course_options)) {
+            foreach ($request->course_options as $key => $option) {
+                $total += $option;
+            }
+        }
+        return $total;
+    }
+
+    protected function reservationAnswerCreate($request, $reservation)
+    {
+        if (isset(request()->course_id) && !empty(request()->course_id)) {
+
+            $course = Course::find($request->course_id);
+
+            if (isset($course->course_questions) && !empty($course->course_questions)) {
+
+                $reservation_option_values = [];
+
+                foreach ($course->course_questions as $question) {
+
+                    $question_id_values = collect(request()->get('questions_' . $question->id));
+                    $answer_columns = [
+                        'answer01',
+                        'answer02',
+                        'answer03',
+                        'answer04',
+                        'answer05',
+                        'answer06',
+                        'answer07',
+                        'answer08',
+                        'answer09',
+                        'answer10',
+                    ];
+                    foreach ($answer_columns as $answer_column) {
+                        $answer_values[$answer_column] = ($question_id_values->get($answer_column)) ? 1 : 0;
+                    }
+
+                    $reservation_option_values[] = array_merge([
+                        'reservation_id' => $reservation->id,
+                        'course_id' => request()->course_id,
+                        'course_question_id' => $question->id,
+                        'question_title' => $question->question_title,
+                        'question_answer01' => $question->answer01,
+                        'question_answer02' => $question->answer02,
+                        'question_answer03' => $question->answer03,
+                        'question_answer04' => $question->answer04,
+                        'question_answer05' => $question->answer05,
+                        'question_answer06' => $question->answer06,
+                        'question_answer07' => $question->answer07,
+                        'question_answer08' => $question->answer08,
+                        'question_answer09' => $question->answer09,
+                        'question_answer10' => $question->answer10,
+
+                    ], $answer_values);
+
+                }
+
+
+                if (isset($reservation_option_values) && !empty($reservation_option_values)) { // make it verified it has value
+                    $reservation->reservation_answers()->createMany($reservation_option_values);
+                }
+
+
+            }
+
+        }
+    }
+
+    public function edit(Reservation $reservation)
+    {
+
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))->get();
+        $reservation_answers = $reservation->reservation_answers;
+
+        $course_question_ids = [];
+        $questions = [];
+        $i = 1;
+        if ($reservation_answers) {
+            foreach ($reservation_answers as $reservation_answer) {
+                $course_question_ids[] = $reservation_answer->course_question_id;
+
+                $qa = [];
+                while ($i <= 10) {
+                    $number = ($i <= 10) ? '0' . $i : 10;
+                    $answer_fieldname = "answer$number";
+                    $question_answer_fieldname = "question_answer$number";
+                    if ($reservation_answer->$answer_fieldname) {
+                        $qa['answer' . $number] = $reservation_answer->$question_answer_fieldname;
+                    }
+                    $i++;
+                }
+
+                $questions["questions_" . $reservation_answer->course_question_id] = $qa;
+                $i = 0;
+
+            }
+
+        }
+
+        $course_options = [];
+        if ($reservation->reservation_options) {
+            $reservation_options = $reservation->reservation_options;
+            foreach ($reservation_options as $key => $option) {
+                $course_options[$option->option_id] = (string)$option->option_price;
+            }
+        }
+
+        return view('reservation.edit', [
+            'reservation' => $reservation,
+            'courses' => $courses,
+            'course_options' => $course_options,
+            'course_question_ids' => $course_question_ids,
+            'questions' => $questions,
+        ]);
+
+    }
+
+    public function update(ReservationUpdateFormRequest $request, Reservation $reservation)
+    {
+
+        try {
+            DB::beginTransaction();
+
+            $course = Course::find($request->course_id);
+            $reservation_date = Carbon::parse($request->reservation_date);
+
+            $calendar_day = $course->calendar->calendar_days()
+                ->whereDate('date', [$reservation_date])->get()->first();
+
+            $holiday = Holiday::where('hospital_id', session()->get('hospital_id'))
+                ->where('is_holiday', 1)
+                ->whereDate('date', $reservation_date)->get()->first();
+
+            // TODO to confirm reservation frame value zero is unlimited or not
+            if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '1') && $calendar_day->reservation_frames == 0) {
+                DB::rollback();
+                return redirect()->back()->with('error', trans('messages.reservation.not_reservable'))->withInput();
+            }
+
+            // only checking reservation frame for different course select
+            if ($course->calendar_id != $reservation->course->calendar_id && isset($calendar_day) && $calendar_day->reservation_frames > 0) {
+                $count = Reservation::join('courses', 'courses.id', '=', 'reservations.course_id')
+                    ->whereDate('reservation_date', '=', $reservation_date)
+                    ->where('courses.calendar_id', $course->calendar_id)
+                    ->count();
+
+                if($count >= $calendar_day->reservation_frames) {
+                    DB::rollback();
+                    return redirect()->back()->with('error', trans('messages.reservation.limit_exceed'))->withInput();
+                }
+            }
+
+            $params = $request->all();
+            $params['fee'] = $request->input('adjustment_price', 0) + ($course->is_price == '1' ? $course->price : 0) + $this->calculateCourseOptionTotalPrice($request);
+
+            if (isset($fee_rate)) {
+                $params['fee_rate'] = $fee_rate->rate;
+                $params['fee'] += $fee_rate->rate;
+            }
+
+            $reservation->update($params);
+
+            $reservation->reservation_options()->forceDelete();
+
+            $this->reservationCourseOptionSaveOrUpdate($request, $reservation);
+
+            $reservation->reservation_answers()->forceDelete();
+
+            $this->reservationAnswerCreate($request, $reservation);
+
+            DB::commit();
+
+            return redirect('reception')->with('success', trans('messages.reservation.status_update_success'));
+
+        } catch (\Exception $i) {
+            dd($i);
+            DB::rollback();
+
+            return redirect()->back()->with('error', trans('messages.reservation.status_update_error'))->withInput();
+        }
+
+    }
+
 }

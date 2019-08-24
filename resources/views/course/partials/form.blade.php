@@ -1,15 +1,14 @@
 @php
   use \App\Enums\WebReception;
+  use \App\Enums\CourseImageType;
+  use \App\Enums\Authority;
 
   if(isset($course)) {
     $course_details = $course->course_details;
     $course_options = $course->course_options;
-    $course_images = $course->course_images;
     $course_questions = $course->course_questions;
   }
 
-  $c_images = collect(old('course_images', []));
-  $c_image_orders = collect(old('course_image_orders', []));
   $o_option_ids = collect(old('option_ids', []));
   $o_minor_ids = collect(old('minor_ids'));
   $o_minor_values = collect(old('minor_values'));
@@ -52,7 +51,7 @@
 
 
     <div class="form-group py-sm-2">
-        <label for="web_reception">WEBの受付</label>
+        <label for="web_reception">WEB公開</label>
         <group class="inline-radio two-option">
             <div>
                 <input type="radio" name="web_reception" {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::Accept ? 'checked' : 'checked' }}
@@ -96,7 +95,99 @@
     </div>
 
     <div class="form-group">
-      <label>画像の選択</label>
+      <label>コース画像</label>
+      <div class="row">
+        <div class="col-sm-4">
+          {{Form::label('course_image_main', '検査コースメイン' , ['class' => 'form_label'])}}
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::Main)->first()))
+            <div class="sub_image_area">
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::Main)->first()->path}}">
+              <p class="file_delete_text">
+                <a onclick="return confirm('この画像を削除します、よろしいですか？')"
+                   class="btn btn-mini btn-danger"
+                   href="{{ route('course.image.delete', [
+                     'course_image_id' => $course->course_images()->where('type', CourseImageType::Main)->first()->id
+                   ]) }}"
+                >
+                  ファイル削除
+                </a>
+              </p>
+            </div>
+          @else
+            <div class="sub_image_area">
+              <img src="/img/no_image.png">
+            </div>
+          @endif
+          <label class="file-upload btn btn-primary">
+            ファイル選択 {{Form::file("course_image_main", ['class' => 'field', 'accept' => 'image/*'])}}
+          </label>
+          @if ($errors->has('course_image_main'))
+            <div class="error_message">
+              {{ $errors->first('course_image_main') }}
+            </div>
+          @endif
+        </div>
+        <div class="col-sm-4">
+          {{Form::label('course_image_pc', '受診の流れメイン（PC）' , ['class' => 'form_label'])}}
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::Pc)->first()))
+            <div class="sub_image_area">
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::Pc)->first()->path}}">
+              <p class="file_delete_text">
+                <a onclick="return confirm('この画像を削除します、よろしいですか？')"
+                    class="btn btn-mini btn-danger"
+                    href="{{ route('course.image.delete', [
+                      'course_image_id' => $course->course_images()->where('type', CourseImageType::Pc)->first()->id
+                    ]) }}"
+                >
+                  ファイル削除
+                </a>
+              </p>
+            </div>
+          @else
+            <div class="sub_image_area">
+              <img src="/img/no_image.png">
+            </div>
+          @endif
+          <label class="file-upload btn btn-primary">
+            ファイル選択 {{Form::file("course_image_pc", ['class' => 'field', 'accept' => 'image/*'])}}
+          </label>
+          @if ($errors->has('course_image_pc'))
+            <div class="error_message">
+              {{ $errors->first('course_image_pc') }}
+            </div>
+          @endif
+        </div>
+        <div class="col-sm-4">
+          {{Form::label('course_image_sp', '受診の流れメイン（SP）' , ['class' => 'form_label'])}}
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::Sp)->first()))
+            <div class="sub_image_area">
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::Sp)->first()->path}}">
+              <p class="file_delete_text">
+                <a onclick="return confirm('この画像を削除します、よろしいですか？')"
+                  class="btn btn-mini btn-danger"
+                  href="{{ route('course.image.delete', [
+                    'course_image_id' => $course->course_images()->where('type', CourseImageType::Sp)->first()->id
+                  ]) }}"
+                >
+                  ファイル削除
+                </a>
+              </p>
+            </div>
+          @else
+            <div class="sub_image_area">
+              <img src="/img/no_image.png">
+            </div>
+          @endif
+          <label class="file-upload btn btn-primary">
+            ファイル選択 {{Form::file("course_image_sp", ['class' => 'field', 'accept' => 'image/*'])}}
+          </label>
+          @if ($errors->has('course_image_sp'))
+            <div class="error_message">
+              {{ $errors->first('course_image_sp') }}
+            </div>
+          @endif
+        </div>
+      </div>
     </div>
 
     <div class="form-group">
@@ -117,8 +208,32 @@
       <span class="pull-right">0/1000文字</span>
     </div>
 
+     <div class="form-group @if ($errors->has('course_display_start') or $errors->has('course_display_end')) has-error @endif">
+         <label>コース表示期間</label>
+         <div class="form-horizontal display-period">
+             <span>表示開始</span>
+                {{ Form::text('course_display_start', old('course_display_start', (isset($course) ? $course->course_display_start : (isset($disp_date_start) ? $disp_date_start : null))),
+                    ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-start', 'placeholder' => $disp_date_start]) }}
+             <span>表示終了</span>
+                {{ Form::text('course_display_end', old('course_display_end', (isset($course) ? $course->course_display_end : (isset($disp_date_end) ? $disp_date_end : null))),
+                    ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-end', 'placeholder' => $disp_date_end]) }}
+        </div>
+        @if ($errors->has('course_display_start'))
+          <p class="help-block">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            {{ $errors->first('course_display_start') }}
+          </p>
+        @endif
+        @if ($errors->has('course_display_end'))
+          <p class="help-block">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            {{ $errors->first('course_display_end') }}
+          </p>
+        @endif
+     </div>
+
     <div class="form-group">
-      <label>受付時間 <span class="form_required">必須</span></label>
+      <label>受付期間 <span class="form_required">必須</span></label>
       <div class="form-horizontal">
           本日から
           <div class="d-inline-block @if ($errors->has('reception_start_day')) has-error @endif" >
@@ -196,7 +311,7 @@
     <div class="box-body">
     <h4 class="d-inline-block">価格</h4> <span class="form_required">必須</span>
     <div class="form-group @if ($errors->has('price')) has-error @endif">
-      <label for="name">表示価格</label>
+      <label for="name">表示価格（税込）</label>
       <div>
         <input type="checkbox" class="checkbox d-inline-block mr-2" name="is_price" value="1"
                id="is_price" {{ old('is_price', (isset($course)? $course->is_price : null)) == 1 ? 'checked' : '' }} />
@@ -205,7 +320,6 @@
         <input type="number" class="form-control d-inline-block mr-2 ml-2" id="price" name="price" style="width: 100px;"
                value="{{ old('price', (isset($course) ? $course->price : null)) }}">
         円
-        <span id="tax_amt" class="ml-5">0円（税込）</span>
       </div>
       @if ($errors->has('price')) <p class="help-block">{{ $errors->first('price') }}</p> @endif
     </div>
@@ -236,9 +350,18 @@
   <div class="form-entry">
     <div class="box-body">
     <h4 class="d-inline-block">価格</h4></span>
-    <div class="form-group">
+    <div class="form-group @if ($errors->has('pre_account_price')) has-error @endif">
       <label>事前決済価格</label>
-      <div>０円（税込）</div>
+        @if(Auth::user()->authority && Auth::user()->authority->value == Authority::Admin && $hospital->is_pre_account)
+          <div class="form-horizontal">
+            <input type="number" class="d-inline-block form-control w16em" id="pre_account_price" name="pre_account_price"
+                   value="{{ old('pre_account_price', (isset($course) ? $course->pre_account_price : null)) }}"
+                   placeholder="10000">（税込）
+          </div>
+          @if ($errors->has('pre_account_price')) <p class="help-block has-error">{{ $errors->first('pre_account_price') }}</p> @endif
+        @else
+          <div>0円（税込）</div>
+        @endif
     </div>
     <div class="separator mb-3"></div>
     <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif" >
@@ -259,7 +382,6 @@
         @if ($errors->has('is_pre_account')) <p class="help-block has-error">{{ $errors->first('is_pre_account') }}</p> @endif
     </fieldset>
     </div>
-
   </div>
   </div>
 </div>
@@ -533,6 +655,20 @@
 @section('script')
   <script>
       (function ($) {
+          const is_pre_account = $('input[name="is_pre_account"]');
+          if(is_pre_account.val() == 0) {
+              $('#pre_account_price').attr('disabled','disabled');
+          }
+
+          $( 'input[name="is_pre_account"]:radio' ).change( function() {
+              var radioval = $(this).val();
+              if(radioval == 1){
+                  $('#pre_account_price').removeAttr('disabled');
+              }else{
+                  $('#pre_account_price').attr('disabled','disabled');
+              }
+          });
+
           $('.status-btn').on('click', function() {
               const is_q_val = $(this).find('.is_question').val();
               $(this).parent().find('.hidden-q').val(is_q_val);
@@ -572,38 +708,6 @@
               @endfor
 
 
-          })();
-
-          /* ---------------------------------------------------
-          // image order enable/disable
-          -----------------------------------------------------*/
-          (function () {
-              $('.image-order option:first-child').remove();
-
-              const change = function(ele) {
-                  const orderEle = ele.parent().parent().find('select');
-                  if (ele.prop('checked')) {
-                      orderEle.prop('disabled', false);
-                      ele.siblings('input:hidden').remove();
-                      orderEle.next('input:hidden').remove();
-                      if (!orderEle.find('option:selected').val()) {
-                          orderEle.find('option:first-child').prop('selected', true);
-                      }
-                  } else {
-                      $('<input type="hidden" name="course_images[]" />').val('0').appendTo(ele.parent());
-                      $('<input type="hidden" name="course_image_orders[]" value=""/>').insertAfter(orderEle);
-                      orderEle.prop('disabled', true);
-                      orderEle.val('');
-                  }
-              };
-
-              $('.image-checkbox').each(function(index, ele) {
-                  ele = $(ele);
-                  ele.change(function() {
-                      change(ele);
-                  });
-                  change(ele);
-              });
           })();
 
           /* ---------------------------------------------------
@@ -675,26 +779,29 @@
                   change(ele);
               })
           })();
-
-          /* ---------------------------------------------------
-          // Tax
-          -----------------------------------------------------*/
-          (function () {
-              const change = function() {
-                  if ($('#is_price').is(':checked') && $('#price').val()) {
-                      const price = parseInt($('#price').val());
-                      const total = price + (price * parseInt($('#tax_rate').val()) / 100);
-                      $('#tax_amt').html(total + '円（税込）');
-                  } else {
-                      $('#tax_amt').html('0円（税込）');
-                  }
-              };
-
-              $('#tax_class, #is_price').change(change);
-              $('#price').on('change paste keyup', change);
-              change();
-          })();
-
       })(jQuery);
   </script>
 @stop
+
+@push('css')
+    <link rel="stylesheet" type="text/css" href="{{ url('css/bootstrap-datepicker.min.css') }}">
+@endpush
+
+@push('js')
+    <script src="{{ url('js/handlebars.js') }}"></script>
+    <script src="{{ url('js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ url('js/bootstrap-datepicker.ja.min.js') }}"></script>
+    <script src="{{ url('js/bootstrap3-typeahead.min.js') }}"></script>
+    <script type="text/javascript">
+        (function ($) {
+            $('#datetimepicker-disp-start').datepicker({
+                language:'ja',
+                format: 'yyyy-mm-dd',
+            });
+            $('#datetimepicker-disp-end').datepicker({
+                language:'ja',
+                format: 'yyyy-mm-dd',
+            });
+        })(jQuery);
+    </script>
+@endpush

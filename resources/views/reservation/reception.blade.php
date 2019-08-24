@@ -136,7 +136,10 @@
       </div>
       <div class="clearfix"></div>
       <div class="col-md-12">
-        <button class="btn btn-success pull-right mr-4" id="csv_download">受付一覧をダウンロード</button>
+        <div class="pull-right">
+        <a class="btn btn-primary" href="{{ route('reservation.create') }}">新規受付を登録する</a>
+        <button class="btn btn-success ml-4 mr-4" id="csv_download">受付一覧をダウンロード</button>
+        </div>
       </div>
       <div class="clearfix"></div>
       <div class="col-md-12 mt-4">
@@ -193,11 +196,11 @@
               <input type="checkbox" name="ids[]" value="{{ $reservation->id }}" />
             </td>
             <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
-            <td>{{ $reservation->customer->name }}</td>
-            <td>{{ $reservation->course->name  }}</td>
-            <td>{{ $reservation->reservation_status->description  }}</td>
+            <td>{{ $reservation->customer->name}}</td>
+            <td>{{ $reservation->course->name }}</td>
+            <td>{{ $reservation->reservation_status->description }}</td>
             <td>
-              <a class="btn btn-primary ml-3" href="#">
+              <a class="btn btn-primary ml-3" href="{{ route('reservation.edit', ['reservation' => $reservation]) }}">
                 変更
               </a>
             </td>

@@ -35,6 +35,6 @@ class CreateRailStationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rail_stations');
+        Schema::dropIfExists('rail_station');
     }
 }

@@ -862,8 +862,21 @@ label.file-upload input[type="file"] {
     margin-right: 20px;
   }
 }
+#datetimepicker-course_display_end, #datetimepicker-course_display_start {
+  float: left;
+  .course_display_label {
+    width: 80px;
+    float: left;
+    margin: 0 7px 0 80px;
+  }
+}
+#datetimepicker-course_display_start{
 
+}
 
+.course_display_start_label {
+
+}
 /*** custom checkboxes ***/
 
 input[type=checkbox] { display:none; } /* to hide the checkbox itself */
@@ -878,12 +891,13 @@ input[type=checkbox] + label:before {
   padding: 0px 0 0 0;
   font-size: 18px;
   font-weight: bold;
-
 }
 
 #setting-list {
   .mr-2 {
     cursor: pointer;
+    text-indent: 15px;
+
   }
   span.square:before {
     font-family: FontAwesome;
@@ -893,6 +907,20 @@ input[type=checkbox] + label:before {
     font-weight: bold;
     font-size: 20px;
     vertical-align: middle;
+    margin: 0 -23px 0 0;
+  }
+  input[type=checkbox] + label:before {
+    margin: 0 9px 0 0;
+  }
+}
+
+.display-period {
+  margin-bottom: 10px;
+}
+
+.display-period {
+  input {
+    cursor: pointer;
   }
 }
 
