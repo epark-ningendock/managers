@@ -2,7 +2,12 @@
 
 namespace App\Imports;
 
+use App\Hospital;
+use App\HospitalStaff;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Row;
+use function now;
 
 class HospitalStaffImport extends ImportBAbstract
 {
@@ -12,6 +17,7 @@ class HospitalStaffImport extends ImportBAbstract
     public function getColumns(): array
     {
         return [
+            'HOSPITAL_NO',
             'USER_NO',
             'UID',
             'NAME',
@@ -53,7 +59,7 @@ class HospitalStaffImport extends ImportBAbstract
      */
     public function getOldPrimaryKeyName(): string
     {
-        // TODO: Implement getOldPrimaryKeyName() method.
+        return 'USER_NO';
     }
 
     /**
@@ -63,7 +69,7 @@ class HospitalStaffImport extends ImportBAbstract
      */
     public function getNewClassName(): string
     {
-        // TODO: Implement getNewClassName() method.
+        return HospitalStaff::class;
     }
 
     /**
@@ -72,6 +78,26 @@ class HospitalStaffImport extends ImportBAbstract
      */
     public function onRow(Row $row)
     {
-        // TODO: Implement onRow() method.
+        $row = $row->toArray();
+
+        try {
+            $model = new HospitalStaff([
+                'name' => $this->getValue($row, 'USER_NAME'),
+                'email' => $this->getValue($row, 'EMAIL'),
+                'login_id' => $this->getValue($row, 'UID'),
+                'password' => Hash::make($this->getValue($row, 'PWD')),
+                'remember_token' => null,
+                'first_login_at' => now(),
+                'created_at' => $this->getValue($row, 'CREATE_DATE'),
+                'updated_at' => $this->getValue($row, 'MODIFY_DATE'),
+                'reset_token_digest' => null,
+                'reset_sent_at' => null,
+                'hospital_id' => Hospital::withTrashed()->where('old_karada_dog_id', $this->hospital_no)->get()->first()->id,
+            ]);
+            $model->save();
+            $this->setId($model, $row);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 }

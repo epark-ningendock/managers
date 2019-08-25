@@ -19,6 +19,17 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
     use Importable;
     use SkipsErrors;
 
+    protected $hospital_no;
+
+    /**
+     * ImportBAbstract constructor.
+     * @param $hospital_no
+     */
+    public function __construct($hospital_no)
+    {
+        $this->hospital_no = $hospital_no;
+    }
+
     /**
      * @param string $name
      * @return int
@@ -26,6 +37,23 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
     protected function getColIndex(string $name): int
     {
         return array_search($name, $this->getColumns());
+    }
+
+    /**
+     * @param array $row
+     * @param string|null $name
+     * @return mixed|null
+     */
+    protected function getValue(array $row, string $name = null)
+    {
+        if (is_null($name)) {
+            return null;
+        }
+        $value = $row[$this->getColIndex($name)];
+        if ($value == '\N') {
+            return null;
+        }
+        return $value;
     }
 
     /**
@@ -79,7 +107,7 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
     protected function setId(Model $model, array $row = null)
     {
         $table = $model->getTable();
-        $old_id = $row[$this->getOldPrimaryKeyName()];
+        $old_id = $this->getValue($row, $this->getOldPrimaryKeyName());
 
         ConvertedIdString::firstOrCreate([
             'table_name' => $table,

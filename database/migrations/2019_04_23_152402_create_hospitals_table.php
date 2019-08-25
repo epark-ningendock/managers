@@ -1,13 +1,14 @@
 <?php
 
 use App\Helpers\DBCommonColumns;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateHospitalsTable extends Migration
 {
     use DBCommonColumns;
+
     /**
      * Run the migrations.
      *
@@ -17,6 +18,7 @@ class CreateHospitalsTable extends Migration
     {
         Schema::create('hospitals', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('old_karada_dog_id')->nullable()->comment('旧からだドックID');
             $table->string('name', 200);
             $table->string('kana', 100);
             $table->char('postcode', 8)->nullable();
