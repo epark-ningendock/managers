@@ -352,7 +352,7 @@
     <h4 class="d-inline-block">価格</h4></span>
     <div class="form-group @if ($errors->has('pre_account_price')) has-error @endif">
       <label>事前決済価格</label>
-        @if(Auth::user()->authority && Auth::user()->authority->value == Authority::Admin && $hospital->is_pre_account)
+        @if(Auth::user()->authority && Auth::user()->authority->value == Authority::Admin && $hospital && $hospital->is_pre_account)
           <div class="form-horizontal">
             <input type="number" class="d-inline-block form-control w16em" id="pre_account_price" name="pre_account_price"
                    value="{{ old('pre_account_price', (isset($course) ? $course->pre_account_price : null)) }}"
