@@ -13,6 +13,7 @@ class Hospital extends Model
 
     //Note $fillable is temporary for factory, make it realistic field when business logic
     protected $fillable = [
+        'old_karada_dog_id',
         'name',
         'kana',
         'postcode',
