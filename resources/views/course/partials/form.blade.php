@@ -431,12 +431,14 @@
     <h1 class="box-title">設定項目</h1>
   </div>
     <div class="box-body">
-    <table id="setting-list" class="vertical-middle table no-border table-hover table-striped mb-5">
+    {{-- @todo デザイン --}}
+    {{-- <table id="setting-list" class="vertical-middle table no-border table-hover table-striped mb-5"> --}}
+    <table id="setting-list" class="vertical-middle table no-border mb-5">
       @foreach($majors as $key => $major)
         @foreach($major->middle_classifications as $middle)
         <tr>
           @if(!isset($last) || $major != $last)
-            <td>{{ $major->name }}</td>
+          <td rowspan="{{$major->middle_classifications->count()}}">{{ $major->name }}</td>
             @php
               $last = $major
             @endphp
