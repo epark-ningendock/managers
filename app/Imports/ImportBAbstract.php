@@ -11,10 +11,11 @@ use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithProgressBar;
 use Maatwebsite\Excel\Row;
 
-abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnError
+abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnError, WithHeadingRow
 {
     use Importable;
     use SkipsErrors;
@@ -29,37 +30,6 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
     {
         $this->hospital_no = $hospital_no;
     }
-
-    /**
-     * @param string $name
-     * @return int
-     */
-    protected function getColIndex(string $name): int
-    {
-        return array_search($name, $this->getColumns());
-    }
-
-    /**
-     * @param array $row
-     * @param string|null $name
-     * @return mixed|null
-     */
-    protected function getValue(array $row, string $name = null)
-    {
-        if (is_null($name)) {
-            return null;
-        }
-        $value = $row[$this->getColIndex($name)];
-        if ($value == '\N') {
-            return null;
-        }
-        return $value;
-    }
-
-    /**
-     * @return array
-     */
-    abstract public function getColumns(): array;
 
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
