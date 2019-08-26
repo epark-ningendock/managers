@@ -36,6 +36,7 @@ use App\Imports\MiddleClassificationImport;
 use App\Imports\MinorClassificationImport;
 use App\Imports\OptionImport;
 use App\Imports\PrefectureImport;
+use App\Imports\PvRecordImport;
 use App\Imports\PrefectureRailImport;
 use App\Imports\RailImport;
 use App\Imports\RailStationImport;
@@ -52,6 +53,7 @@ use App\Rail;
 use App\RailwayCompany;
 use App\Staff;
 use App\Station;
+use App\PvRecord;
 
 return [
     'm_pref.csv' => [
@@ -161,5 +163,9 @@ return [
     'm_option.csv' => [
         'model' => Option::class,
         'import' => OptionImport::class,
+    ],
+    't_pv.csv' => [
+        'model' => PvRecord::class,
+        'import' => PvRecordImport::class,
     ],
 ];
