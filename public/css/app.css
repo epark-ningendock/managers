@@ -3180,18 +3180,25 @@ input[type=checkbox] + label:before {
   text-indent: 15px;
 }
 
-#setting-list span.square:before {
-  font-family: FontAwesome;
-  content: "\F096";
-  color: #3c8dbc;
-  letter-spacing: 10px;
-  font-weight: bold;
-  font-size: 20px;
-  vertical-align: middle;
-  margin: 0 -23px 0 0;
+#setting-list input[type=checkbox] + label:before {
+  margin: 0 9px 0 0;
+}
+
+#setting-list .mr-2 {
+  cursor: pointer;
+  text-indent: 15px;
 }
 
 #setting-list input[type=checkbox] + label:before {
+  margin: 0 9px 0 0;
+}
+
+#option-setting .mr-2 {
+  cursor: pointer;
+  text-indent: 15px;
+}
+
+#option-setting input[type=checkbox] + label:before {
   margin: 0 9px 0 0;
 }
 

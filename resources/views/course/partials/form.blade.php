@@ -394,10 +394,9 @@
     </div>
     <h1 class="box-title">オプションの設定</h1>
   </div>
-  <div class="box-body">
+  <div class="box-body" id="option-setting">
     <table class="table no-border table-hover table-striped ">
       <tr>
-        <td class="text-center">選択</td>
         <td class="text-center">オプション名</td>
         <td class="text-center">価格</td>
       </tr>
@@ -410,11 +409,9 @@
             $is_checked = $course_options->where('option_id', $option->id)->isNotEmpty();
           }
         @endphp
-        <tr>
-          <td style="width: 60px;text-align: center;">
-            <input type="checkbox" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
-          </td>
-          <td class="text-center">{{ $option->name }}</td>
+          <td class="text-center">
+              <input type="checkbox" class="minor-checkbox" id="option_set_price{{ $option->id }}" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
+              <label class="mr-2" for="option_set_price{{ $option->id }}">{{ $option->name }}</label></td>
           <td class="text-center">{{ $option->price }} 円</td>
         </tr>
       @endforeach
@@ -708,8 +705,6 @@
                   textAreaChange($('.minor-text-{{$i}}'), parseInt($('.minor-text-{{$i}}').data('maxlength')));
               }
               @endfor
-
-
           })();
 
           /* ---------------------------------------------------
@@ -721,8 +716,7 @@
                       ele.next('input:hidden').remove();
                       ele.prev().remove();
                   } else {
-                      $('<input type="hidden" name="minor_values[]" value="0"/>').insertAfter(ele);
-                      ele.before('<span class="square"></span>');
+                      $('<input type="hidden" name="minor_values[]" value="0"/>').insertBefore(ele);
                   }
               };
 
