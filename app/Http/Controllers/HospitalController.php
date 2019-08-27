@@ -18,6 +18,7 @@ use App\MedicalTreatmentTime;
 use App\Prefecture;
 use App\Rail;
 use App\Station;
+use App\FeeRate;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -289,10 +290,12 @@ class HospitalController extends Controller
     {
         $middles = HospitalMiddleClassification::all();
         $hospital = Hospital::findOrFail(1);
+        $feeRate = FeeRate::findOrFail(1);
 
         return view('hospital.attention-information')
             ->with('hospital', $hospital)
-            ->with('middles', $middles);
+            ->with('middles', $middles)
+            ->with('feeRate', $feeRate);
     }
 
     public function storeAttentionInformation(Request $request)
@@ -311,7 +314,7 @@ class HospitalController extends Controller
         $this->validate($request, [
             'pvad' => 'digits_between:1,10'
         ]);
-
+        
         try {
             DB::beginTransaction();
 
