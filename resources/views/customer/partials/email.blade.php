@@ -151,6 +151,7 @@
                         if(data.success) {
                             //hide modal box
                             $('.std-modal-box').modal('hide');
+                            $('.ajax-data-popup').modal('hide');
 
                             // showing success message
                             const message = $(`<div class="alert alert-success alert-block">

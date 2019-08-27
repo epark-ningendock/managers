@@ -18,29 +18,58 @@
 
 
             /* ---------------------------------------------------
-            Customer Popup Detail
+            Reservation list
             -----------------------------------------------------*/
-            $(document).on('click','.ajax-paginator a', function(e){
+            $(document).on('click','.reservation.ajax-paginator a', function(e){
                 e.preventDefault();
-                var $link = $(this);
-                var page_id = getUrlParameter('page', $link.attr('href'));
+                const $link = $(this);
+                const pageId = getUrlParameter('page', $link.attr('href'));
+                const customerId = $('#customer-id').val();
 
                 $.ajax({
                     url: '{{ route('customer.detail') }}',
                     method: "POST",
                     data: {
                         _token: '{{ csrf_token() }}',
-                        page_id: page_id,
-                        {{--id: '{{ $customer_detail->id }}'--}}
+                        page_id: pageId,
+                        id: customerId
                     },
                     cache: false,
                     success: function (response) {
-                        $('.ajax-data-popup .modal-body-wrapper').html(response.data);
-                        $('.ajax-data-popup a[href="#accepted-guidance-history"]').tab('show') // Select tab by name
+                        $('.ajax-data-popup .modal-body-wrapper').empty();
+                        $('.ajax-data-popup .modal-body-wrapper').append($(response.data));
+                        // reactive for force change
+                        $('.ajax-data-popup a[href="#basic-information"]').tab('show');
+                        $('.ajax-data-popup a[href="#accepted-guidance-history"]').tab('show'); // Select tab by name
                     }
                 });
             });
 
+            $(document).on('click','.name-identification.ajax-paginator a', function(e){
+                e.preventDefault();
+                const $link = $(this);
+                const pageId = getUrlParameter('page', $link.attr('href'));
+                const customerId = $('#customer-id').val();
+                $.ajax({
+                    url: '{{ route('customer.detail') }}',
+                    method: "POST",
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        identification_page_id: pageId,
+                        id: customerId
+                    },
+                    cache: false,
+                    success: function (response) {
+                        $('.ajax-data-popup .modal-body-wrapper').empty();
+                        $('.ajax-data-popup .modal-body-wrapper').append($(response.data));
+                        // reactive for force change
+                        $('.ajax-data-popup a[href="#basic-information"]').tab('show');
+                        $('.ajax-data-popup a[href="#name-identification"]').tab('show'); // Select tab by name
+
+
+                    }
+                });
+            });
         })(jQuery);
 
 

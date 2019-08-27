@@ -139,7 +139,7 @@ return [
     'customer_id'                          => '顧客ID',
     'name_kana'                            => 'お名前（かな）',
     'postcode'                             => '郵便番号',
-    'send_mail'                            => 'メールを送る',
+    'send_mail'                            => 'メール送信',
     'memo'                                 => '顧客メモ',
     'reservation_memo'                     => '次回受付メモ',
     'claim_count'                          => 'クレーム数',
@@ -164,8 +164,7 @@ return [
         'registered' => 'スタッフ登録メール',
         'customer' => '顧客メール',
         'sent_datetime' => '送信日時',
-        'title' => 'メール件名',
-        'customer' => '顧客メール',
+        'title' => 'メール件名'
     ],
     'option_name' => 'オプション名',
     'option_description' => 'オプションの説明',

@@ -41,10 +41,29 @@ class CustomerController extends Controller
         $customer_detail = Customer::findOrFail($request->id);
         $reservations    = $customer_detail->reservations()->paginate(10, [ '*' ], 'page', $page_number);
 
+        if (!isset($customer_detail->epark_member_id)) {
+
+            $identification_page_id = ($request->identification_page_id) ?? 1;
+
+            $name_identifications = Customer::where('id', '<>', $request->id)
+                ->where(function($q) use ($customer_detail){
+                    $q->whereNull('epark_member_id')
+                        ->orWhere('email', $customer_detail->email)
+                        ->orWhere('birthday', $customer_detail->birthday)
+                        ->orWhere(function($nq) use($customer_detail) {
+                            $nq->where('family_name', $customer_detail->family_name)
+                                ->where('first_name', $customer_detail->first_name);
+                        });
+                })->paginate(10, [ '*' ], 'page', $identification_page_id);
+
+        }
+
+
         return response()->json([
             'data' => view('customer.partials.detail.tab-content', [
                 'customer_detail' => $customer_detail,
-                'reservations'    => $reservations
+                'reservations'    => $reservations,
+                'name_identifications' => $name_identifications
             ])->render()
         ]);
     }
@@ -81,7 +100,15 @@ class CustomerController extends Controller
 
     public function store(CustomerFormRequest $request)
     {
-        if (Customer::create($request->all())) {
+        $params = $request->all();
+        if(!isset($params['claim_count'])) {
+            $params['claim_count'] = 0;
+        }
+
+        if(!isset($params['recall_count'])) {
+            $params['recall_count'] = 0;
+        }
+        if (Customer::create($params)) {
             return redirect('customer')->with('success', trans('messages.created', [ 'name' => trans('messages.names.customers') ]));
         } else {
             return redirect('customer')->with('error', trans('messages.invalid_format', [ 'name' => trans('messages.names.customers') ]));
@@ -102,7 +129,16 @@ class CustomerController extends Controller
     {
         $customer = Customer::findOrFail($customer->id);
 
-        if ($customer->update($request->all())) {
+        $params = $request->all();
+        if(!isset($params['claim_count'])) {
+            $params['claim_count'] = 0;
+        }
+
+        if(!isset($params['recall_count'])) {
+            $params['recall_count'] = 0;
+        }
+
+        if ($customer->update($params)) {
             return redirect('customer')->with('success', trans('messages.updated', [ 'name' => trans('messages.names.customers') ]));
         } else {
             return redirect('customer')->with('error', trans('messages.invalid_format', [ 'name' => trans('messages.names.customers') ]));
