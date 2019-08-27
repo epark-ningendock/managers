@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Hospital;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 
 class ImportCsv extends Command
 {
@@ -94,7 +96,6 @@ class ImportCsv extends Command
             return;
         }
         $this->info('Start import: B');
-        $this->moveFilesForB();
         $this->import('b');
         $this->info('End import: B');
 
@@ -116,7 +117,6 @@ class ImportCsv extends Command
                 $this->import_a();
                 break;
             case'b':
-                $files = array_keys($this->classes_b);
                 $this->import_b();
                 break;
         }
@@ -145,10 +145,11 @@ class ImportCsv extends Command
     private function import_b()
     {
         $hospital_nos = [];
-        foreach (glob(storage_path('app/import/b') . '/*') as $dir) {
+        $path = realpath($this->option('b'));
+        foreach (glob($path . '/*') as $dir) {
             $arr_dirs = explode(DIRECTORY_SEPARATOR, $dir);
             $hospital_no = end($arr_dirs);
-            foreach (glob(storage_path("app/import/b/{$hospital_no}/*.csv")) as $file) {
+            foreach (glob($path . "/{$hospital_no}/*.csv") as $file) {
                 $hospital_nos[$hospital_no][basename($file)] = [
                     'realpath' => $file,
                 ];
@@ -157,13 +158,17 @@ class ImportCsv extends Command
 
         $files = array_keys($this->classes_b);
         foreach ($hospital_nos as $hospital_no => $arr) {
-
             $this->line(sprintf("B[ %s ]", $hospital_no));
+
+            if (!$this->checkHospitalNo($hospital_no)) {
+                $this->error(sprintf('%s not found.', $hospital_no));
+                Log::error(sprintf('%s not found.', $hospital_no));
+                continue;
+            }
 
             foreach ($files as $i => $file) {
                 $realpath = $hospital_nos[$hospital_no][$file]['realpath'];
                 $import_class = $this->getClass('b', $file, 'import');
-
                 $this->line(sprintf("B[ %d / %d ] %s", $i + 1, count($files), $import_class));
                 (new $import_class($hospital_no))->withOutput($this->output)->import($realpath);
             }
@@ -213,23 +218,8 @@ class ImportCsv extends Command
         return true;
     }
 
-    /**
-     * Bシステム用のファイルを移動する
-     */
-    private function moveFilesForB()
+    private function checkHospitalNo($hospital_no)
     {
-        $directory = trim($this->option('b'), '/');
-        foreach (glob("{$directory}/*.csv") as $filename) {
-            $basename = basename($filename);
-            $realpath = realpath($filename);
-
-            list($date, $hospital_no, $db_type, $name) = explode('-', $basename);
-
-            $dist = storage_path('app/import/b/' . implode('/', [$hospital_no, $name]));
-            if (!file_exists(dirname($dist))) {
-                mkdir(dirname($dist), 0777, true);
-            }
-            copy($realpath, $dist);
-        }
+        return is_null(Hospital::withTrashed()->where('old_karada_dog_id', $hospital_no)->get()) === false;
     }
 }
