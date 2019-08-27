@@ -1,6 +1,7 @@
 <?php
 
 use App\ContractInformation;
+use App\Hospital;
 use Illuminate\Database\Seeder;
 use App\HospitalStaff;
 
@@ -13,10 +14,11 @@ class ContractInformationTableSeeder extends Seeder
      */
     public function run()
     {
-        $hospital_staffs = HospitalStaff::all();
-        foreach ($hospital_staffs as $hospital_staff) {
+
+        $hospitals = Hospital::all();
+        foreach ($hospitals as $hospital) {
             factory(ContractInformation::class)->create([
-                'hospital_staff_id' => $hospital_staff->id
+            	'hospital_id' => $hospital->id
             ]);
         }
     }

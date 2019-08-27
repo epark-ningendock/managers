@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ContractInformation;
+use App\Hospital;
 use App\HospitalStaff;
 use Illuminate\Http\Request;
 use App\Http\Requests\ContractInformationFormRequest;
@@ -72,10 +73,14 @@ class ContractInformationController extends Controller
      * @param  \App\ContractInformation  $contractInformation
      * @return \Illuminate\Http\Response
      */
-    public function show(ContractInformation $contractInformation)
-    {
-        //
-    }
+	public function show($hospital_id)
+	{
+
+		$hospital = Hospital::findOrFail($hospital_id);
+		$contractInformation = ContractInformation::where('hospital_id', $hospital->id)->first();
+
+		return view('hospital.show-contract-information', ['hospital' => $hospital, 'contractInformation' => $contractInformation, 'tab=hospital-information']);
+	}
 
     /**
      * Show the form for editing the specified resource.

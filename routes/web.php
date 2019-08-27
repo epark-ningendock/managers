@@ -27,7 +27,7 @@ Route::get('/', function () {
 Route::post('/contract-information/store', 'ContractInformationController@store')->name('contract.store');
 Route::get('/contract-information/create', 'ContractInformationController@create')->name('contract.information.create');
 Route::get('/hospital/create', 'ContractInformationController@create')->name('hospital.create');
-
+Route::get('/contract-information/show/{hospital_id}', 'ContractInformationController@show')->name('contract.information.show');
 /*
 |--------------------------------------------------------------------------
 | Login Routes

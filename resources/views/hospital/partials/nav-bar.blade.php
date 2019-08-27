@@ -1,13 +1,13 @@
 
 
-@if ( request()->route()->getName() == 'hospital.edit' )
+@if ( (request()->route()->getName() == 'hospital.edit') || ( request()->route()->getName() == 'contract.information.show' ) )
 
-<ul class="nav nav-pills" style="margin-bottom: 30px;">
-    <li class="@if( request()->get('tab') == 'contractor-information' ) active @endif"><a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}?tab=contractor-information">契約情報</a></li>
-    <li class="@if( request()->get('tab') == 'hospital-information' ) active @endif"><a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}?tab=hospital-information">基本情報</a></li>
-    <li class="@if( request()->get('tab') == 'image-information' ) active @endif"><a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}?tab=image-information">画像情報</a></li>
-    <li class="@if( request()->get('tab') == 'decent-information' ) active @endif"><a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}?tab=decent-information">こだわり情報</a></li>
-</ul>
+    <ul class="nav nav-pills" style="margin-bottom: 30px;">
+        <li class="@if( request()->route()->getName() == 'contract.information.show' ) active @endif"><a href="{{ route('contract.information.show', ['id' => $hospital->id]) }}">契約情報</a></li>
+        <li class="@if( request()->get('tab') == 'hospital-information' ) active @endif"><a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}?tab=hospital-information">基本情報</a></li>
+        <li class="@if( request()->get('tab') == 'image-information' ) active @endif"><a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}?tab=image-information">画像情報</a></li>
+        <li class="@if( request()->get('tab') == 'decent-information' ) active @endif"><a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}?tab=decent-information">こだわり情報</a></li>
+    </ul>
 
     @else
 
