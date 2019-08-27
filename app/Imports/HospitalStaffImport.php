@@ -41,14 +41,14 @@ class HospitalStaffImport extends ImportBAbstract
 
         try {
             $model = new HospitalStaff([
-                'name' => $row['USER_NAME'],
-                'email' => $row['EMAIL'],
-                'login_id' => $row['UID'],
-                'password' => Hash::make($row['PWD']),
+                'name' => $this->getValue($row, 'NAME'),
+                'email' => $this->getValue($row, 'EMAIL'),
+                'login_id' => $this->getValue($row, 'UID'),
+                'password' => Hash::make($this->getValue($row, 'PWD')),
                 'remember_token' => null,
                 'first_login_at' => now(),
-                'created_at' => $row['CREATE_DATE'],
-                'updated_at' => $row['MODIFY_DATE'],
+                'created_at' => $this->getValue($row, 'CREATE_DATE'),
+                'updated_at' => $this->getValue($row, 'MODIFY_DATE'),
                 'reset_token_digest' => null,
                 'reset_sent_at' => null,
                 'hospital_id' => Hospital::withTrashed()->where('old_karada_dog_id', $this->hospital_no)->get()->first()->id,

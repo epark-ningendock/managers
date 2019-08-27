@@ -38,23 +38,23 @@ class ContractInformationImport extends ImportBAbstract
 
         $model = new ContractInformation([
             'id' => null, // @todo,
-            'contractor_name_kana' => $row['SHOPOWNER_NAME_KANA'],
-            'contractor_name' => $row['SHOPOWNER_NAME'],
-            'application_date' => $row['NEW_APPLY_DATE'],
-            'billing_start_date' => $row['SPECIFICFEE_START_DATE'],
-            'cancellation_date' => $row['TERM_DATE'],
-            'representative_name_kana' => $row['DELEGATE_NAME_KANA'],
-            'representative_name' => $row['DELEGATE_NAME'],
-            'postcode' => $row['POSTCODE'],
+            'contractor_name_kana' => $this->getValue($row, 'SHOPOWNER_NAME_KANA'),
+            'contractor_name' => $this->getValue($row, 'SHOPOWNER_NAME'),
+            'application_date' => $this->getValue($row, 'NEW_APPLY_DATE'),
+            'billing_start_date' => $this->getValue($row, 'SPECIFICFEE_START_DATE'),
+            'cancellation_date' => $this->getValue($row, 'TERM_DATE'),
+            'representative_name_kana' => $this->getValue($row, 'DELEGATE_NAME_KANA'),
+            'representative_name' => $this->getValue($row, 'DELEGATE_NAME'),
+            'postcode' => $this->getValue($row, 'POSTCODE'),
             'address' => null, // @todo 文字列で都道府県から接続？？？
-            'tel' => $row['TEL'],
-            'fax' => $row['FAX'],
+            'tel' => $this->getValue($row, 'TEL'),
+            'fax' => $this->getValue($row, 'FAX'),
             'karada_dog_id' => $this->hospital_no, // @todo 確認
             'code' => null, // @todo 対応するデータ不明
             'old_karada_dog_id' => $this->hospital_no, // @todo 確認
-            'hospital_staff_id' => $this->getStaffIdByName($row['DELEGATE_NAME']), // @todo 確認
-            'created_at' => $row['CREATE_DATE'],
-            'updated_at' => $row['MODIFY_DATE'],
+            'hospital_staff_id' => $this->getStaffIdByName($this->getValue($row, 'DELEGATE_NAME')), // @todo 確認
+            'created_at' => $this->getValue($row, 'CREATE_DATE'),
+            'updated_at' => $this->getValue($row, 'MODIFY_DATE'),
         ]);
 
         $model->save();

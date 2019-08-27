@@ -31,6 +31,18 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
         $this->hospital_no = $hospital_no;
     }
 
+    public function getValue(array $row, string $key)
+    {
+        if (!array_key_exists(strtolower($key), $row)) {
+            return null;
+        }
+        $val = $row[strtolower($key)];
+        if ($val === '\N') {
+            return null;
+        }
+        return $val;
+    }
+
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
      * Returns the primary key of the import target table of the old system
