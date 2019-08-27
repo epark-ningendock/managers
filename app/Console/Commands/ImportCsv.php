@@ -9,13 +9,14 @@ class ImportCsv extends Command
 {
     private $directory;
     private $classes = [];
+    private $classes_b = [];
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'import:csv {--backup} {--fresh : 既存のデータベースを再構築します。} {--dir= : ディレクトリを指定}';
+    protected $signature = 'import:csv {--backup} {--fresh : 既存のデータベースを再構築します。} {--a= : ディレクトリを指定} {--b= : ディレクトリを指定}';
 
     /**
      * The console command description.
@@ -33,6 +34,7 @@ class ImportCsv extends Command
     {
         parent::__construct();
         $this->classes = config('import');
+        $this->classes_b = config('import_b');
     }
 
     /**
@@ -41,12 +43,19 @@ class ImportCsv extends Command
      * @param string $type
      * @return string |null
      */
-    private function getClass($basename, $type = 'model'): ?string
+    private function getClass($ab, $basename, $type = 'model'): ?string
     {
-        if (!array_key_exists($basename, $this->classes)) {
-            return null;
+        if ($ab == 'a') {
+            if (!array_key_exists($basename, $this->classes)) {
+                return null;
+            }
+            return $this->classes[$basename][$type];
+        } else if ($ab == 'b') {
+            if (!array_key_exists($basename, $this->classes_b)) {
+                return null;
+            }
+            return $this->classes_b[$basename][$type];
         }
-        return $this->classes[$basename][$type];
     }
 
     /**
@@ -56,57 +65,67 @@ class ImportCsv extends Command
      */
     public function handle()
     {
-        $csv_files = [];
+        if (!$this->checkDefinition('a')) {
+            return;
+        }
 
         $backup = $this->option('backup');
-        if ($backup) {
+        $fresh = $this->option('fresh');
+
+        if ($fresh) {
+            $this->line('既存のデータベースをバックアップします。');
+            Artisan::call('db:backup', ['--path' => './storage/app/backup']);
+
+            $this->line('データベースを初期化します。');
+            Artisan::call('migrate:fresh');
+        } elseif ($backup) {
             $this->line('既存のデータベースをバックアップします。');
             Artisan::call('db:backup', ['--path' => './storage/app/backup']);
         }
 
-        $directory = $this->option('dir');
-        if (!file_exists($directory)) {
-            $this->error('指定されたディレクトリが存在しません!!');
-        }
+        $this->info('インポートを開始します。');
 
-        $this->directory = trim($directory, '/');
-        foreach (glob("{$this->directory}/*.csv") as $filename) {
-            $basename = basename($filename);
-            $classname = $this->getClass($basename, 'model');
-            $table = is_null($classname) ? null : (new $classname)->getTable();
-            $csv_files[] = [
-                $basename,
-                $classname ?? '** UNDEFINED OR LinkTable **',
-                $table ?? '** UNDEFINED OR LinkTable **'
-            ];
-        }
-        $this->info('CSVファイルをチェックします');
-        $this->table(['ファイル名', '対象クラス', 'テーブル名'], $csv_files);
+        $this->info('Start import: A');
+        $this->import('a');
+        $this->info('End import: A');
 
         if (!$this->confirm('このまま続けてよろしいですか？')) {
+            $this->info('インポートを完了しました。');
             return;
         }
+        $this->info('Start import: B');
+        $this->moveFilesForB();
+        $this->import('b');
+        $this->info('End import: B');
 
-        $fresh = $this->option('fresh');
-        if ($fresh) {
-            if (!$backup) {
-                $this->line('既存のデータベースをバックアップします。');
-                Artisan::call('db:backup', ['--path' => './storage/app/backup']);
-            }
-
-            $this->line('データベースを初期化します。');
-            Artisan::call('migrate:fresh');
-        }
-
-        $this->info('インポートを開始します。');
-        $this->import();
         $this->info('インポートを完了しました。');
     }
 
     /**
      * インポート
      */
-    private function import()
+    private function import($ab)
+    {
+        $files = [];
+        $directory = $this->option($ab);
+        if (is_null($directory)) {
+            return;
+        }
+        switch ($ab) {
+            case 'a':
+                $this->import_a();
+                break;
+            case'b':
+                $files = array_keys($this->classes_b);
+                $this->import_b();
+                break;
+        }
+    }
+
+    /**
+     * @param $files
+     */
+    private function import_a()
     {
         $files = array_keys($this->classes);
         foreach ($files as $i => $basename) {
@@ -114,9 +133,103 @@ class ImportCsv extends Command
             if (!file_exists($realpath)) {
                 $this->warn('Skipped: %s is not found.', $basename);
             }
-            $classname = $this->getClass($basename, 'import');
-            $this->line(sprintf("[ %d / %d ] %s", $i + 1, count($files), $classname));
+            $classname = $this->getClass('a', $basename, 'import');
+            $this->line(sprintf("A[ %d / %d ] %s", $i + 1, count($files), $classname));
             (new $classname)->withOutput($this->output)->import($realpath);
+        }
+    }
+
+    /**
+     *
+     */
+    private function import_b()
+    {
+        $hospital_nos = [];
+        foreach (glob(storage_path('app/import/b') . '/*') as $dir) {
+            $arr_dirs = explode(DIRECTORY_SEPARATOR, $dir);
+            $hospital_no = end($arr_dirs);
+            foreach (glob(storage_path("app/import/b/{$hospital_no}/*.csv")) as $file) {
+                $hospital_nos[$hospital_no][basename($file)] = [
+                    'realpath' => $file,
+                ];
+            }
+        }
+
+        $files = array_keys($this->classes_b);
+        foreach ($hospital_nos as $hospital_no => $arr) {
+
+            $this->line(sprintf("B[ %s ]", $hospital_no));
+
+            foreach ($files as $i => $file) {
+                $realpath = $hospital_nos[$hospital_no][$file]['realpath'];
+                $import_class = $this->getClass('b', $file, 'import');
+
+                $this->line(sprintf("B[ %d / %d ] %s", $i + 1, count($files), $import_class));
+                (new $import_class($hospital_no))->withOutput($this->output)->import($realpath);
+            }
+        }
+    }
+
+    /**
+     * @param string $type
+     * @return bool
+     */
+    private function checkDefinition(string $type)
+    {
+        $directory = $this->option($type);
+        if (is_null($directory)) {
+            return true;
+        }
+        if (!file_exists($directory)) {
+            $this->error('指定されたディレクトリが存在しません!!');
+            return true;
+        }
+
+        $csv_files = [];
+        $this->directory = trim($directory, '/');
+
+        foreach (glob("{$this->directory}/*.csv") as $filename) {
+            $basename = basename($filename);
+            $classname = $this->getClass($type, $basename, 'model');
+            $table = is_null($classname) ? null : (new $classname)->getTable();
+            $csv_files[] = [
+                $basename,
+                $classname ?? '** UNDEFINED OR LinkTable **',
+                $table ?? '** UNDEFINED OR LinkTable **'
+            ];
+        }
+
+        $this->info('CSVファイルをチェックします');
+        $this->table(['ファイル名', '対象クラス', 'テーブル名'], $csv_files);
+
+        if (count($csv_files) == 0) {
+            return true;
+        }
+
+        if (!$this->confirm('このまま続けてよろしいですか？')) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Bシステム用のファイルを移動する
+     */
+    private function moveFilesForB()
+    {
+        $directory = trim($this->option('b'), '/');
+        foreach (glob("{$directory}/*.csv") as $filename) {
+            $basename = basename($filename);
+            $realpath = realpath($filename);
+
+            list($date, $hospital_no, $db_type, $name) = explode('-', $basename);
+
+            $dist = storage_path('app/import/b/' . implode('/', [$hospital_no, $name]));
+            if (!file_exists(dirname($dist))) {
+                mkdir(dirname($dist), 0777, true);
+            }
+            copy($realpath, $dist);
         }
     }
 }

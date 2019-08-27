@@ -19,8 +19,10 @@ class CreateCourseImagesTable extends Migration
             $table->increments('id');
             $table->integer('course_id')->unsigned();
             $table->foreign('course_id')->references('id')->on('courses');
-            $table->integer('image_order_id')->unsigned();
-            $table->integer('hospital_image_id')->unsigned()->nullable();
+            $table->string('name', 128)->nullable();
+            $table->string('extension', 5)->nullable();
+            $table->string('path', 256)->nullable();
+            $table->char('type', 1)->default('0');
             $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
         });

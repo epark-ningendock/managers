@@ -25,7 +25,8 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 Route::post('/contract-information/store', 'ContractInformationController@store')->name('contract.store');
-Route::get('/hospital/contract-information', 'ContractInformationController@create')->name('hospital.contractInfo');
+Route::get('/contract-information/create', 'ContractInformationController@create')->name('contract.information.create');
+Route::get('/hospital/create', 'ContractInformationController@create')->name('hospital.create');
 
 /*
 |--------------------------------------------------------------------------
@@ -121,6 +122,17 @@ Route::middleware('auth:staffs')->group(function () {
         Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
         Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Course Classification Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::post('/classification/{id}/restore', 'ClassificationController@restore')->name('classification.restore');
+    Route::get('/classification/sort', 'ClassificationController@sort')->name('classification.sort');
+    Route::patch('/classification/sort/update', 'ClassificationController@updateSort')->name('classification.updateSort');
+    Route::resource('/classification', 'ClassificationController')->except(['show']);
+
 });
 
 /*
@@ -141,10 +153,12 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     | Course Routes
     |--------------------------------------------------------------------------
     */
+    Route::get('/course/json/{id}/detail', 'CourseController@course_detail')->name('course.detail.json');
     Route::resource('/course', 'CourseController')->except(['show']);
     Route::get('/course/sort', 'CourseController@sort')->name('course.sort');
     Route::get('/course/{id}/copy', 'CourseController@copy')->name('course.copy');
     Route::patch('/course/sort/update', 'CourseController@updateSort')->name('course.updateSort');
+    Route::get('/course/images/{course_image_id}/delete', 'CourseController@deleteImage')->name('course.image.delete');
     /*
     |--------------------------------------------------------------------------
     | Course option Routes
@@ -176,6 +190,7 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     Route::get('/calendar/{id}/setting', 'CalendarController@setting')->name('calendar.setting');
     Route::patch('/calendar/{id}/setting', 'CalendarController@updateSetting')->name('calendar.updateSetting');
     Route::resource('/calendar', 'CalendarController')->except(['show']);
+    Route::get('courses/{course_id}/reservation-days', 'CalendarController@reservationDays')->name('course.reservation.days');
 
     /*
     |--------------------------------------------------------------------------
@@ -189,6 +204,7 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     Route::post('customer/import', 'CustomerController@importData')->name('customer.import.data');
     Route::post('customer/email/{customer_id}', 'CustomerController@showEmailForm')->name('customer.show.email.form');
     Route::post('customer/email-send/{customer_id}', 'CustomerController@emailSend')->name('customer.email.send');
+    Route::post('customer/search', 'CustomerController@customerSearch')->name('customer.search');
 
     /*
     |--------------------------------------------------------------------------
@@ -198,4 +214,14 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     Route::get('/reception/csv', 'ReservationController@reception_csv')->name('reception.csv');
     Route::patch('/reception/reservation_status', 'ReservationController@reservation_status')->name('reservation.bulk_status');
     Route::get('/reception', 'ReservationController@reception');
+
+    Route::patch('/reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
+    Route::delete('/reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');
+    Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
+    Route::resource('reservation', 'ReservationController')->except(['show', 'delete']);
+    Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
+	Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
+
+
 });
+Route::get('/ok', 'CalendarController@showCalendarGenerator');

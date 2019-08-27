@@ -11,15 +11,21 @@ use App\HospitalMiddleClassification;
 use App\HospitalMinorClassification;
 use App\ContractInformation;
 use App\HospitalStaff;
+use App\Http\Requests\HospitalCreateFormRequest;
+use App\Http\Requests\HospitalFormRequest;
+use App\MedicalExaminationSystem;
 use App\MedicalTreatmentTime;
 use App\Prefecture;
-use Illuminate\Http\Request;
-use App\Http\Requests\HospitalFormRequest;
-use Illuminate\Support\Facades\Session;
+use App\Rail;
+use App\Station;
 use Illuminate\Auth\SessionGuard;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Enums\Permission;
+use Reshadman\OptimisticLocking\StaleModelLockingException;
+
 
 class HospitalController extends Controller
 {
@@ -29,7 +35,7 @@ class HospitalController extends Controller
         // TODO: middlewareでindexだけにかけるものを作る
         $this->middleware('permission.hospital.edit')->except('index');
     }
-    
+
     public function index(HospitalFormRequest $request)
     {
         if (Auth::user()->staff_auth->is_hospital === Permission::None) {
@@ -52,7 +58,7 @@ class HospitalController extends Controller
         $query = Hospital::query();
 
         if ($request->get('s_text')) {
-            $query->where('name', 'LIKE', "%". $request->get('s_text') . "%");
+            $query->where('name', 'LIKE', "%" . $request->get('s_text') . "%");
         }
 
         if ($request->get('status') || ($request->get('status') === '0')) {
@@ -64,13 +70,13 @@ class HospitalController extends Controller
         }
 
         $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());
-        return view('hospital.index', [ 'hospitals' => $hospitals ]);
+        return view('hospital.index', ['hospitals' => $hospitals]);
     }
 
 
     public function searchText(Request $request)
     {
-        $hospitals = Hospital::select('name', 'address1')->where('name', 'LIKE', "%" .$request->get('s_text') . "%")->get();
+        $hospitals = Hospital::select('name', 'address1')->where('name', 'LIKE', "%" . $request->get('s_text') . "%")->get();
         return response()->json($hospitals);
     }
 
@@ -83,7 +89,7 @@ class HospitalController extends Controller
         // 医療機関名ID検索 or 医療機関名検索
 
         // ドグネット検索
-        $contractInformation = ContractInformation::select()->where('code', 'LIKE', "%" .$inputText . "%")->get();
+        $contractInformation = ContractInformation::select()->where('code', 'LIKE', "%" . $inputText . "%")->get();
         // 医療機関名検索
         // TODO 複数該当する可能性がある
         // $hospitals = Hospital::select()->where('name', 'LIKE', "%" .$inputText . "%")->get();
@@ -102,7 +108,7 @@ class HospitalController extends Controller
 
         // $hospitals = Hospital::select('name', 'address1')->where('name', 'LIKE', "%" .$request->get('s_text') . "%")->get();
         // return response()->json($responseJson);
-        return view('hospital.create-contract-form', [ 'contract_information' => $contractInformation[0] ]);
+        return view('hospital.create-contract-form', ['contract_information' => $contractInformation[0]]);
     }
 
     /**
@@ -114,34 +120,51 @@ class HospitalController extends Controller
     {
         $prefectures = Prefecture::all();
         $district_codes = DistrictCode::all();
+        $medical_examination_systems = MedicalExaminationSystem::all();
+        $stations = Station::all();
+        $rails = Rail::all();
 
-        return view('hospital.create-hospital-form', ['prefectures' => $prefectures, 'district_codes' => $district_codes]);
+        return view('hospital.create', [
+            'prefectures' => $prefectures,
+            'district_codes' => $district_codes,
+            'medical_examination_systems' => $medical_examination_systems,
+            'stations' => $stations,
+            'rails' => $rails,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response\
      */
-    public function store(HospitalFormRequest $request)
+    public function store(HospitalCreateFormRequest $request)
     {
-        $request->request->add([
-            'hospital_staff_id' => auth()->user()->id,
-        ]);
 
+        try {
+            DB::beginTransaction();
 
+            $request->request->add([
+                'hospital_staff_id' => auth()->user()->id,
+            ]);
 
-        $hospital = Hospital::create($request->all());
+            $hospital = Hospital::create($request->all());
 
-        if (!empty(request()->medical_treatment_time)) {
-            foreach (request()->medical_treatment_time as $mtt) {
-                $mtt = array_merge($mtt, ['hospital_id' => $hospital->id]);
-                MedicalTreatmentTime::create($mtt);
+            if (!empty(request()->medical_treatment_time)) {
+                foreach (request()->medical_treatment_time as $mtt) {
+                    $mtt = array_merge($mtt, ['hospital_id' => $hospital->id]);
+                    MedicalTreatmentTime::create($mtt);
+                }
             }
-        }
 
-        return redirect('/hospital/image-information');
+
+            DB::commit();
+            return redirect('/hospital/image-information');
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
     }
 
 
@@ -153,7 +176,7 @@ class HospitalController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Hospital  $hospital
+     * @param \App\Hospital $hospital
      * @return \Illuminate\Http\Response
      */
     public function show(Hospital $hospital)
@@ -161,22 +184,75 @@ class HospitalController extends Controller
         //
     }
 
-    
+
     public function edit(Hospital $hospital)
     {
-        return view('hospital.create-contract-form', compact('hospital'));
+        $prefectures = Prefecture::all();
+        $district_codes = DistrictCode::all();
+        $medical_examination_systems = MedicalExaminationSystem::all();
+        $medical_treatment_times = MedicalTreatmentTime::where('hospital_id', $hospital->id)->get();
+        $stations = Station::all();
+        $rails = Rail::all();
+
+        return view('hospital.edit', [
+            'hospital' => $hospital,
+            'prefectures' => $prefectures,
+            'district_codes' => $district_codes,
+            'medical_examination_systems' => $medical_examination_systems,
+            'stations' => $stations,
+            'rails' => $rails,
+            'medical_treatment_times' => $medical_treatment_times,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Hospital  $hospital
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Hospital $hospital
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Hospital $hospital)
+    public function update(HospitalCreateFormRequest $request, Hospital $hospital)
     {
-        //
+
+        try {
+	        DB::beginTransaction();
+
+	        $hospital = Hospital::findOrFail( $hospital->id );
+	        $hospital->fill( $request->all() );
+	        $hospital->touch();
+	        $hospital->save();
+
+
+	        if ( ! empty( request()->medical_treatment_time ) ) {
+		        foreach ( request()->medical_treatment_time as $mtt ) {
+
+		            if ( isset($mtt['id']) && !empty($mtt['id']) ) {
+
+                        $medical_treatment_times = MedicalTreatmentTime::findOrFail( $mtt['id'] );
+                        $medical_treatment_times->update( MedicalTreatmentTime::getDefaultFieldValues( $mtt ) );
+
+                    } else {
+
+                        $mtt = array_merge($mtt, ['hospital_id' => $hospital->id]);
+                        MedicalTreatmentTime::create($mtt);
+
+                    }
+
+		        }
+	        }
+
+	        DB::commit();
+
+	        return redirect( '/hospital' )->with( 'success', '更新成功' );
+        } catch (Exception $e) {
+	        DB::rollback();
+	        $request->session()->flash('error', trans('messages.update_error'));
+	        return redirect()->back()->withInput();
+        }  catch(StaleModelLockingException $e) {
+	        $request->session()->flash('error', trans('messages.model_changed_error'));
+	        return redirect()->back();
+        }
     }
 
 
@@ -193,7 +269,7 @@ class HospitalController extends Controller
         $query = Hospital::query();
 
         if ($request->get('s_text')) {
-            $query->where('name', 'LIKE', "%". $request->get('s_text') . "%");
+            $query->where('name', 'LIKE', "%" . $request->get('s_text') . "%");
         }
 
         if ($request->get('status') || ($request->get('status') === '0')) {
@@ -206,14 +282,14 @@ class HospitalController extends Controller
 
         $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());
 
-        return view('hospital.index', [ 'hospitals' => $hospitals ])->with('success', trans('messages.operation'));
+        return view('hospital.index', ['hospitals' => $hospitals])->with('success', trans('messages.operation'));
     }
 
     public function createAttentionInformation()
     {
         $middles = HospitalMiddleClassification::all();
         $hospital = Hospital::findOrFail(1);
-        
+
         return view('hospital.attention-information')
             ->with('hospital', $hospital)
             ->with('middles', $middles);

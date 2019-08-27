@@ -23,7 +23,7 @@ class PvRecord extends SoftDeleteModel
     ];
 
     protected $fillable = [
-        'hospital_id', 'date_cord', 'pv'
+        'hospital_id', 'date_code', 'pv'
     ];
 
     /**

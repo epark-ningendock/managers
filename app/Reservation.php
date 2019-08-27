@@ -4,10 +4,13 @@ namespace App;
 
 use App\Enums\ReservationStatus;
 use App\Enums\PaymentStatus;
+use App\Enums\TerminalType;
 use Carbon\Carbon;
+use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class Reservation extends SoftDeleteModel
 {
+    use OptimisticLocking;
     const HOSPITAL = 1;
     const PC = 2;
     const SP = 3;
@@ -30,7 +33,8 @@ class Reservation extends SoftDeleteModel
 
     protected $enums = [
         'reservation_status' => ReservationStatus::class,
-        'payment_status' => PaymentStatus::class
+        'payment_status' => PaymentStatus::class,
+        'terminal_type' => TerminalType::class
     ];
 
     public static $is_billable = [
@@ -53,17 +57,27 @@ class Reservation extends SoftDeleteModel
         'reservation_date',
 	    'start_time_hour',
 	    'start_time_min',
+        'tax_included_price',
+        'adjustment_price',
+        'customer_id',
         'reservation_status',
+        'reservation_memo',
         'terminal_type', //need to confirm initial value
         'is_repeat', // need to confirm 
         'is_representative', // need to confirm
-        'timezone_pattern_id', //not sure what field need to add
-        'timezone_id', //not sure what field need to add
-        'order', //not sure what field need to add
         'mail_type', //not sure what field need to add
         'payment_status', //not sure what field need to add
         'trade_id', //not sure what field need to add
         'payment_method', //not sure what field need to add
+        'applicant_name',
+        'applicant_name_kana',
+        'applicant_tel',
+        'fee',
+        'fee_rate',
+        'is_free_hp_link',
+        'lock_version',
+        'is_health_insurance',
+        'internal_memo'
     ];
 
     //todo channelがどういうケースが発生するのか未定なので、とりあえず仮で
@@ -151,4 +165,25 @@ class Reservation extends SoftDeleteModel
 
         return $query;
     }
+
+    public function getIsRepeatDescAttribute()
+    {
+        if ($this->is_repeat == '0') {
+            return 'はじめて受診する';
+        } else if($this->is_repeat == '1') {
+            return '過去に受診あり';
+        }
+        return '-';
+    }
+
+    public function getIsRepresentativeDescAttribute()
+    {
+        if ($this->is_representative == '0') {
+            return '本人以外';
+        } else if($this->is_representative == '1') {
+            return '本人';
+        }
+        return '-';
+    }
+
 }

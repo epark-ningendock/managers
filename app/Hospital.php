@@ -4,19 +4,22 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class Hospital extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, OptimisticLocking;
     protected $table = 'hospitals';
 
     //Note $fillable is temporary for factory, make it realistic field when business logic
     protected $fillable = [
+        'old_karada_dog_id',
         'name',
         'kana',
         'postcode',
-        'pref',
+        'prefecture_id',
         'district_code_id',
+	    'medical_examination_system_id',
         'course_meta_information_id',
         'address1',
         'address2',
@@ -66,6 +69,7 @@ class Hospital extends Model
         'pre_account_commission_rate',
         'created_at',
         'updated_at',
+        'lock_version',
     ];
 
     /**
