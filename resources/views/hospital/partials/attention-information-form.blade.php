@@ -132,24 +132,25 @@ $o_minor_values = collect(old('minor_values'));
   @section('script')
   <script>
       (function ($) {
-          // @todo class idに識別子を追加する
+          let index = 0;
           $('#add-fee-rate-button').click(function(e) {
+            index += 1;
             $('#fee-rate-block').append(
-              "<br>\
-              <div class='form-group'>\
-                <div class='form-inline'>\
-                <label class='mt-5 ml-5'>手数料率</label>\
-                <input type='number' id='rate' name='rate' value='' placeholder=''> %\
-                <label class='mt-5 ml-5'>適用期間</label>\
-                <div class='input-group date' data-provide='datepicker' data-date-format='yyyy/mm/dd' data-date-autoclose='true' data-date-language='ja'>\
-                <input type='text' class='form-control' id='from_date' name='from_date' placeholder='yyyy/mm/dd' value=''>\
-                <div class='input-group-addon'>\
-                <span class='glyphicon glyphicon-calendar'></span>\
-                </div>\
-                </div>\
-                <span class='ml-2 mr-2'>~</span>\
-                </div>\
-              </div>");
+              "<br>"
+              + "<div class='form-group'>"
+              + "<div class='form-inline'>"
+              + "<label class='mt-5 ml-5'>手数料率</label>"
+              + "<input class='ml-1 mr-2' type='number' id='rate" + index + "' name='rate" + index + "' value='' placeholder=''> %"
+              + "<label class='mt-5 ml-5'>適用期間</label>"
+              + "<div class='input-group date ml-3' data-provide='datepicker' data-date-format='yyyy/mm/dd' data-date-autoclose='true' data-date-language='ja'>"
+              + "<input type='text' class='form-control' id='from_date' name='from_date' placeholder='yyyy/mm/dd' value=''>"
+              + "<div class='input-group-addon'>"
+              + "<span class='glyphicon glyphicon-calendar'></span>"
+              + "</div>"
+              + "</div>"
+              + "<span class='ml-2 mr-2'>~</span>"
+              + "</div>"
+              + "</div>");
           });
 
           $('#add-pre-payment-button').click(function(e) {
