@@ -289,13 +289,14 @@ class HospitalController extends Controller
     public function createAttentionInformation()
     {
         $middles = HospitalMiddleClassification::all();
+        // @todo 医療機関のIDを入れる
         $hospital = Hospital::findOrFail(1);
-        $feeRate = FeeRate::findOrFail(1);
+        $feeRates = FeeRate::where('hospital_id', 1)->get();
 
         return view('hospital.attention-information')
             ->with('hospital', $hospital)
             ->with('middles', $middles)
-            ->with('feeRate', $feeRate);
+            ->with('feeRates', $feeRates);
     }
 
     public function storeAttentionInformation(Request $request)
@@ -315,8 +316,11 @@ class HospitalController extends Controller
             'pvad' => 'digits_between:1,10'
         ]);
         
+        // @todo feeRate from のバリデーション
         try {
             DB::beginTransaction();
+
+            // @todo feeRateの保存
 
             $hospital = Hospital::findOrFail(1);
             $hospital->pvad = $request->get('pvad');

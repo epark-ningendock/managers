@@ -11,7 +11,7 @@ $o_minor_values = collect(old('minor_values'));
       <tr>
         <td class='text-bold' colspan="3">PV・予約</td>
         <td colspan="3">
-          <p class="text-bold">PV件数 
+          <p>PV件数 
               <span>{{ $hospital->pv_count }}</span> 件
           </p>
           <label class="mt-5">PR</label>
@@ -73,26 +73,28 @@ $o_minor_values = collect(old('minor_values'));
             <div class="col-xs-6 col-lg-6"><button type="button" class="btn btn-primary" id="add-fee-rate-button">追加</button></div>
           </div>
           <div id='fee-rate-block'>
-            <div class="form-group">
-              <div class="form-inline">
-                <label class="mt-5 ml-5">手数料率</label>
-                <input type="number" id="rate" name="rate" value="{{ isset($feeRate->rate) ? $feeRate->rate : 0 }}" placeholder=""> %
-                <label class="mt-5 ml-5">適用期間</label>
-                <div class="input-group date" data-provide="datepicker" data-date-format="yyyy/mm/dd"
-                      data-date-autoclose="true" data-date-language="ja">
-                  <input type="text" class="form-control"
-                          id="from_date" name="from_date"
-                          placeholder="yyyy/mm/dd" value="{{ isset($feeRate->from_date) ? $feeRate->from_date : '' }}">
-                  <div class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
+            @foreach($feeRates as $feeRate)
+              <div class="form-group">
+                <div class="form-inline">
+                  <label class="mt-5 ml-5">手数料率</label>
+                  <input type="number" id="{{ 'rate'.$feeRate->id }}" name="{{ 'rate'.$feeRate->id }}" value="{{ isset($feeRate->rate) ? $feeRate->rate : 0 }}" placeholder=""> %
+                  <label class="mt-5 ml-5">適用期間</label>
+                  <div class="input-group date" data-provide="datepicker" data-date-format="yyyy/mm/dd"
+                        data-date-autoclose="true" data-date-language="ja">
+                    <input type="text" class="form-control"
+                            id="{{ 'from_date'.$feeRate->id }}" name="{{ 'from_date'.$feeRate->id }}"
+                            placeholder="yyyy/mm/dd" value="{{ isset($feeRate->from_date) ? $feeRate->from_date : '' }}">
+                    <div class="input-group-addon">
+                      <span class="glyphicon glyphicon-calendar"></span>
+                    </div>
                   </div>
+                  <span class="ml-2 mr-2">~</span>
                 </div>
-                <span class="ml-2 mr-2">~</span>
               </div>
-            </div>
+            @endforeach
           </div> 
           
-          <div class="row mt-5">
+          {{-- <div class="row mt-5">
             <div class="col-xs-6 col-lg-6"><p class="text-bold">事前決済手数料</p></div>
             <div class="col-xs-6 col-lg-6"><button type="button" class="btn btn-primary" id="add-pre-payment-button">追加</button></div>
           </div>
@@ -114,7 +116,7 @@ $o_minor_values = collect(old('minor_values'));
                 <span class="ml-2 mr-2">~</span>
               </div>
             </div>
-          </div>
+          </div> --}}
         </td>
       </tr>
     </table>
@@ -130,6 +132,7 @@ $o_minor_values = collect(old('minor_values'));
   @section('script')
   <script>
       (function ($) {
+          // @todo class idに識別子を追加する
           $('#add-fee-rate-button').click(function(e) {
             $('#fee-rate-block').append(
               "<br>\
