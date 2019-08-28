@@ -289,14 +289,22 @@ class HospitalController extends Controller
     public function createAttentionInformation()
     {
         $middles = HospitalMiddleClassification::all();
+
         // @todo 医療機関のIDを入れる
         $hospital = Hospital::findOrFail(1);
-        $feeRates = FeeRate::where('hospital_id', 1)->get();
+
+        // 通常手数料
+        $feeRates = FeeRate::where('hospital_id', 1)->where('type', 0)->get();
+
+        // 事前決済手数料
+        $prePaymentFeeRates = FeeRate::where('hospital_id', 1)->where('type', 1)->get();
+        
 
         return view('hospital.attention-information')
             ->with('hospital', $hospital)
             ->with('middles', $middles)
-            ->with('feeRates', $feeRates);
+            ->with('feeRates', $feeRates)
+            ->with('prePaymentFeeRates', $prePaymentFeeRates);
     }
 
     public function storeAttentionInformation(Request $request)
@@ -317,10 +325,65 @@ class HospitalController extends Controller
         ]);
         
         // @todo feeRate from のバリデーション
+
         try {
             DB::beginTransaction();
 
-            // @todo feeRateの保存
+            // 通常手数料
+            $fee_rate_ids = collect($request->input('fee_rate_ids'), []);
+            $rates = collect($request->input('rates'), []);
+            $from_dates = collect($request->input('from_dates'), []);
+
+            if($fee_rate_ids->isNotEmpty()) {
+                foreach ($fee_rate_ids as $index => $fee_rate_id) {
+                    if ($fee_rate_id) {
+                        $fee_rate = FeeRate::findOrFail($fee_rate_id);
+                        $fee_rate->rate = $rates[$index];
+                        $fee_rate->from_date = $from_dates[$index];
+                        $fee_rate->save();
+                    } else {
+                        $fee_rate = new FeeRate([
+                            // @todo 医療機関IDを入れる
+                            'hospital_id' => 1,
+                            'type' => 0,
+                            'rate' => $rates[$index],
+                            'from_date' => $from_dates[$index],
+                            
+                            // @todo date_toの入力
+                            // 'to_date' =>
+                        ]);
+                        $fee_rate->save();
+                    }
+                }
+            }
+
+            // 事前決済手数料
+            $pre_payment_fee_rate_ids = collect($request->input('pre_payment_fee_rate_ids'), []);
+            $pre_payment_rates = collect($request->input('pre_payment_rates'), []);
+            $pre_payment_from_dates = collect($request->input('pre_payment_from_dates'), []);
+
+            if($pre_payment_fee_rate_ids->isNotEmpty()) {
+                foreach ($pre_payment_fee_rate_ids as $index => $pre_payment_fee_rate_id) {
+                    if ($pre_payment_fee_rate_id) {
+                        $fee_rate = FeeRate::findOrFail($pre_payment_fee_rate_id);
+                        $fee_rate->rate = $pre_payment_rates[$index];
+                        $fee_rate->from_date = $pre_payment_from_dates[$index];
+                        $fee_rate->save();
+                    } else {
+                        $fee_rate = new FeeRate([
+                            // @todo 医療機関IDを入れる
+                            'hospital_id' => 1,
+                            'type' => 1,
+                            'rate' => $pre_payment_rates[$index],
+                            'from_date' => $pre_payment_from_dates[$index],
+
+                            // @todo date_toの入力
+                            // 'to_date' =>
+                        ]);
+                        $fee_rate->save();
+                    }
+                }
+            }
 
             $hospital = Hospital::findOrFail(1);
             $hospital->pvad = $request->get('pvad');
