@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\DB;
 
 class HospitalAttentionController extends Controller
 {
+    /**
+     * 医療機関こだわり情報画面に遷移する
+     *
+     * @param 医療機関ID
+     * @return 医療機関こだわり情報画面
+     */
     public function create()
     {
         $middles = HospitalMiddleClassification::all();
@@ -34,6 +40,12 @@ class HospitalAttentionController extends Controller
             ->with('prePaymentFeeRates', $prePaymentFeeRates);
     }
 
+    /**
+     * 医療機関こだわり情報を保存する
+     *
+     * @param Request 医療機関こだわり情報, 手数料
+     * @return 医療機関一覧画面
+     */
     public function store(Request $request)
     {
         try {
@@ -45,6 +57,13 @@ class HospitalAttentionController extends Controller
         }
     }
 
+    /**
+     * 医療機関こだわり情報と手数料を保存する
+     * メソッドが大きくなるので、分割した
+     * 
+     * @param Request 医療機関こだわり情報, 手数料
+     * @return 
+     */
     protected function saveAttentionInformation(Request $request)
     {
         $this->validate($request, [
