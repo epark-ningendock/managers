@@ -9,7 +9,6 @@ use App\ImageOrder;
 use App\HospitalCategory;
 use App\InterviewDetail;
 use Illuminate\Http\Request;
-
 class HospitalImagesController extends Controller
 {
     public function __construct(
@@ -23,6 +22,8 @@ class HospitalImagesController extends Controller
         $this->hospital_category = $hospital_category;
         $this->image_order = $image_order;
         $this->interview_detail = $interview_detail;
+        $this->sp_dir = '/SP/';
+        $this->const_name_dir = '/HospitalImage';
     }
     /**
      * Display a listing of the resource.
@@ -94,40 +95,51 @@ class HospitalImagesController extends Controller
 
         //main画像の保存
         if(isset($file['main'])) {
-            // 画像を横幅750縦幅アスペクト比維持の自動サイズへリサイズ
-            $name = $file['main']->hashName();
-            $image = \Image::make($file['main'])
+            // スマホ用画像を横幅750縦幅アスペクト比維持の自動サイズへリサイズ
+            $sp_image = \Image::make($file['main'])
                 ->resize(750, null, function ($constraint) {
                     $constraint->aspectRatio();
                 });
-            //pcはそのままのサイズでOK
-            $pc_image = \Image::make($file['main']);
+            //pc画像を保存 putFile メソッドでuniqueファイル名を返す
+            $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->putFile($this->const_name_dir, $file['main'], 'public');
+            $img_url = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($image_path);
 
-            // configファイルに定義したS3のパスへ画像をアップロード
-            //sp保存
-            \Storage::disk(env('FILESYSTEM_CLOUD'))->put($name.'_sp', (string) $image->encode(), 'public');
-            //pc保存
-            \Storage::disk(env('FILESYSTEM_CLOUD'))->put($name, (string) $pc_image->encode(), 'public');
-            $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($name);
-            //HospitalImage HospitalCategory 保存用array
-            $save_images = ['extension' => str_replace('image/', '', $image->mime), 'name' => $file['main']->hashName(), 'path' => $image_path];
-            $save_image_categories = [ 'hospital_id' => $hospital_id, 'image_order' => ImageOrder::IMAGE_GROUP_FACILITY_MAIN ];
+            //pcのファイル名からsp用の画像ファイル名作成 リサイズ画像は文字列化されているのでputで設置するしかない
+            \Storage::disk(env('FILESYSTEM_CLOUD'))->put($this->sp_dir.$image_path, (string) $sp_image->encode(), 'public');
+            $img_url_sp = \Storage::url($this->sp_dir.$image_path);
+
+            //ファイル拡張子取得
+            $extension = $file['main']->getClientOriginalExtension();
+
+            $save_images = ['extension' => $extension, 'name' => $image_path, 'path' => $img_url];
+            $save_image_categories = [ 'hospital_id' => $hospital_id, 'image_order' => ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 'file_location_no' => 1 ];
+            $save_image_sp = ['extension' => $extension, 'name' => $this->sp_dir.$image_path, 'path' => $img_url_sp];
+            $save_image_categories_sp = [ 'hospital_id' => $hospital_id, 'image_order' => ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 'file_location_no' => 2 ];
 
             //メイン画像の登録確認
             $image_category = $this->hospital_category->ByImageOrder($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 0)->first();
 
             if(is_null($image_category)) {
                 $hospital->hospital_images()->saveMany([
-                        $hospital_img = new HospitalImage($save_images)
+                        $hospital_img = new HospitalImage($save_images),
+                        $hospital_img_sp = new HospitalImage($save_image_sp),
                     ]
                 );
                 $hospital_img->hospital_category()->create($save_image_categories);
+                $hospital_img->hospital_category()->create($save_image_categories_sp);
             } else {
                 $hospital_img = $hospital->hospital_images()->find($image_category->hospital_image_id);
+
+                //古いファイルを削除
+                $disk = \Storage::disk(env('FILESYSTEM_CLOUD'));
+                $disk->delete($hospital_img->name);
+                $disk->delete($this->sp_dir.$hospital_img->name);
+
                 $hospital_img->update($save_images);
                 $hospital_img->hospital_category()->update($save_image_categories);
             }
         }
+
         //sub
         for($i = 1; $i <= 4; $i++){
             if(isset($file['sub_'.$i])) {
@@ -257,11 +269,10 @@ class HospitalImagesController extends Controller
      */
     public function delete(int $hospital_id, int $hospital_category_id, int $hospital_image_id)
     {
-
         $hospital_image = $this->hospital_image->find($hospital_image_id);
         $disk = \Storage::disk(env('FILESYSTEM_CLOUD'));
         $disk->delete($hospital_image->name);
-        $disk->delete($hospital_image->name.'_sp');
+        $disk->delete($this->sp_dir.$hospital_image->name);
 
         $this->hospital_category->where('id', $hospital_category_id)->delete();
         $this->hospital_image->where('id', $hospital_image_id)->delete();
@@ -296,12 +307,19 @@ class HospitalImagesController extends Controller
 
         $hospital_image = $this->hospital_image->find($hospital_image_id);
 
+        $sp_img = $this->hospital_image->byImageName($this->sp_dir.$hospital_image->name)->first();//sp画像
+
         $disk = \Storage::disk(env('FILESYSTEM_CLOUD'));
         $disk->delete($hospital_image->name);
-        $disk->delete($hospital_image->name.'_sp');
+        $disk->delete($this->sp_dir.$hospital_image->name);
 
         $hospital_image->path = null;
+        $hospital_image->name = null;
         $hospital_image->save();
+
+        $sp_img->path = null;
+        $sp_img->name = null;
+        $sp_img->save();
 
         return redirect()->route('hospital.image.create', ['hospital_id' => $hospital_id])->with('success', trans('messages.deleted', ['name' => trans('messages.names.hospital_categories')]));
     }
@@ -322,14 +340,15 @@ class HospitalImagesController extends Controller
             } else {
                 $image_order_exists = $this->hospital_category->ByImageOrder($hospital_id, $image_order, $i)->first();
             }
-            if(isset($file[$image_prefix.$i])) {
-            $sub_image = \Image::make(file_get_contents($file[$image_prefix.$i]->getRealPath()));
 
-             $name = $file[$image_prefix.$i]->hashName();
-            //pc保存
-            \Storage::disk(env('FILESYSTEM_CLOUD'))->put($name, (string) $sub_image->encode(), 'public');
-            $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($name);
-            $save_sub_images = ['extension' => str_replace('image/', '', $sub_image->mime), 'name' => $name, 'path' => $image_path, 'memo1' => $memo1, 'memo2' => $memo2];
+            if(isset($file[$image_prefix.$i])) {
+             $name = $file[$image_prefix.$i]->getClientOriginalName();
+             $extension = $file[$image_prefix.$i]->getClientOriginalExtension();
+            //pc保存 putFile メソッドでuniqueファイル名を返す
+             $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->putFile('/HospitalImage', $file[$image_prefix.$i], 'public');
+             $img_url = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($image_path);
+
+            $save_sub_images = ['extension' => $extension, 'name' => $name, 'path' => $img_url, 'memo1' => $memo1, 'memo2' => $memo2];
             $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name_2,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order, 'file_location_no' => $location_no];
             } else {
                 $save_sub_images = ['memo1' => $memo1, 'memo2' => $memo2];
