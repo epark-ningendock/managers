@@ -16,7 +16,7 @@
         <li class="@if( request()->routeIs('contract.information.create') ) active @endif"><a href="{{ route('contract.information.create') }}">契約情報</a></li>
         <li class="@if( request()->routeIs('hospital.create') ) active @endif"><a href="{{ route('hospital.create') }}">基本情報</a></li>
         <li class="@if( request()->routeIs('hospital.image.information') ) active @endif"><a href="{{ route('hospital.image.information') }}">画像情報</a></li>
-        <li class="@if( request()->routeIs('hospital.attention-information.show') ) active @endif"><a href="{{ route('hospital.attention-information.show') }}">こだわり情報</a></li>
+        <li class="@if( request()->routeIs('hospital.attention.create') ) active @endif"><a href="{{ route('hospital.attention.create') }}">こだわり情報</a></li>
     </ul>
 
 @endif
