@@ -113,28 +113,6 @@ class HospitalController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $prefectures = Prefecture::all();
-        $district_codes = DistrictCode::all();
-        $medical_examination_systems = MedicalExaminationSystem::all();
-        $stations = Station::all();
-        $rails = Rail::all();
-
-        return view('hospital.create', [
-            'prefectures' => $prefectures,
-            'district_codes' => $district_codes,
-            'medical_examination_systems' => $medical_examination_systems,
-            'stations' => $stations,
-            'rails' => $rails,
-        ]);
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
@@ -166,12 +144,6 @@ class HospitalController extends Controller
             DB::rollback();
             throw $e;
         }
-    }
-
-
-    public function createImageInformation()
-    {
-        return view('hospital.create-image-form');
     }
 
     /**

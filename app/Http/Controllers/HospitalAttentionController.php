@@ -19,18 +19,18 @@ class HospitalAttentionController extends Controller
      * @param 医療機関ID
      * @return 医療機関こだわり情報画面
      */
-    public function create()
+    public function create($hospital_id)
     {
         $middles = HospitalMiddleClassification::all();
 
         // @todo 医療機関のIDを入れる
-        $hospital = Hospital::findOrFail(1);
+        $hospital = Hospital::findOrFail($hospital_id);
 
         // 通常手数料
-        $feeRates = FeeRate::where('hospital_id', 1)->where('type', 0)->get();
+        $feeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', 0)->get();
 
         // 事前決済手数料
-        $prePaymentFeeRates = FeeRate::where('hospital_id', 1)->where('type', 1)->get();
+        $prePaymentFeeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', 1)->get();
         
 
         return view('hospital.create-attention')
