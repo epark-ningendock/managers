@@ -10,6 +10,7 @@ use App\FeeRate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class HospitalAttentionController extends Controller
 {
@@ -26,11 +27,10 @@ class HospitalAttentionController extends Controller
         $hospital = Hospital::findOrFail($hospital_id);
 
         // 通常手数料
-        $feeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', FeeRate::FEE_RATE)->get();
+        $feeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', FeeRate::FEE_RATE)->orderBy('from_date', 'asc')->get();
 
         // 事前決済手数料
-        $prePaymentFeeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', FeeRate::PRE_PAYMENT_FEE_RATE)->get();
-        
+        $prePaymentFeeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', FeeRate::PRE_PAYMENT_FEE_RATE)->orderBy('from_date', 'asc')->get();
 
         return view('hospital.create-attention')
             ->with('hospital', $hospital)
@@ -79,66 +79,120 @@ class HospitalAttentionController extends Controller
             DB::beginTransaction();
 
             // 通常手数料
-            $fee_rate_ids = collect($request->input('fee_rate_ids'), []);
-            $rates = collect($request->input('rates'), []);
-            $from_dates = collect($request->input('from_dates'), []);
+            if ($request->input('fee_rate_ids')) {
+                foreach($request->input('fee_rate_ids') as $index => $fee_rate_id) {
+                    $fee_rates_array[$index] = [
+                        'id' => $fee_rate_id,
+                        'rate' => $request->input('rates')[$index],
+                        'from_date' => new Carbon($request->input('from_dates')[$index])
+                    ];
+                }
+                
+                // 期間(開始)を照準でソートする
+                $fee_rates = collect($fee_rates_array);
+                $sorted_fee_rates = $fee_rates->sortBy('from_date')->values();
 
-            if($fee_rate_ids->isNotEmpty()) {
-                foreach ($fee_rate_ids as $index => $fee_rate_id) {
-                    if ($fee_rate_id) {
-                        $fee_rate = FeeRate::findOrFail($fee_rate_id);
-                        $fee_rate->rate = $rates[$index];
-                        $fee_rate->from_date = $from_dates[$index];
-                        $fee_rate->save();
-                    } else {
-                        $fee_rate = new FeeRate([
-                            'hospital_id' => $hospital_id,
-                            'type' => FeeRate::FEE_RATE,
-                            'rate' => $rates[$index],
-                            'from_date' => $from_dates[$index],
+                if($sorted_fee_rates->isNotEmpty()) {
+                    foreach ($sorted_fee_rates as $key => $value) {
 
-                            // @todo date_toの入力
-                            // 'to_date' =>
-                        ]);
-                        $fee_rate->save();
+                        // 期間(終了)を計算する
+                        if (count($sorted_fee_rates) - 1 <= $key) {
+                            if ($value['id']) {
+                                $fee_rate = FeeRate::findOrFail($value['id']);
+                                $fee_rate->rate = $value['rate'];
+                                $fee_rate->from_date = $value['from_date'];
+                                $fee_rate->to_date = null;
+                                $fee_rate->save();
+                            } else {
+                                $fee_rate = new FeeRate([
+                                    'hospital_id' => $hospital_id,
+                                    'type' => FeeRate::FEE_RATE,
+                                    'rate' => $value['rate'],
+                                    'from_date' => $value['from_date'],
+                                    'to_date' => null
+                                ]);
+                                $fee_rate->save();
+                            }
+                        } else {
+                            // @todo 同じ日付の場合、バリデーションエラーを返す
+                            $date = new Carbon($sorted_fee_rates[$key + 1]['from_date']);
+                            $to_date = $date->subDay();
+                            if ($value['id']) {
+                                $fee_rate = FeeRate::findOrFail($value['id']);
+                                $fee_rate->rate = $value['rate'];
+                                $fee_rate->from_date = $value['from_date'];
+                                $fee_rate->to_date = $to_date;
+                                $fee_rate->save();
+                            } else {
+                                $fee_rate = new FeeRate([
+                                    'hospital_id' => $hospital_id,
+                                    'type' => FeeRate::FEE_RATE,
+                                    'rate' => $value['rate'],
+                                    'from_date' => $value['from_date'],
+                                    'to_date' => $to_date
+                                ]);
+                                $fee_rate->save();
+                            }
+                        }
                     }
                 }
             }
 
             // 事前決済手数料
-            $pre_payment_fee_rate_ids = collect($request->input('pre_payment_fee_rate_ids'), []);
-            $pre_payment_rates = collect($request->input('pre_payment_rates'), []);
-            $pre_payment_from_dates = collect($request->input('pre_payment_from_dates'), []);
+            if ($request->input('pre_payment_fee_rate_ids')) {
+                foreach($request->input('pre_payment_fee_rate_ids') as $index => $pre_payment_fee_rate_id) {
+                    $pre_payment_fee_rates_array[$index] = [
+                        'id' => $pre_payment_fee_rate_id,
+                        'rate' => $request->input('pre_payment_rates')[$index],
+                        'from_date' => new Carbon($request->input('pre_payment_from_dates')[$index])
+                    ];
+                }
+    
+                // 期間(開始)を照準でソートする
+                $pre_payment_fee_rates = collect($pre_payment_fee_rates_array);
+                $sorted_pre_payment_fee_rates = $pre_payment_fee_rates->sortBy('from_date')->values();
 
-            if($pre_payment_fee_rate_ids->isNotEmpty()) {
-                foreach ($pre_payment_fee_rate_ids as $index => $pre_payment_fee_rate_id) {
-                    if ($pre_payment_fee_rate_id) {
-                        $fee_rate = FeeRate::findOrFail($pre_payment_fee_rate_id);
-                        $fee_rate->rate = $pre_payment_rates[$index];
-                        $fee_rate->from_date = $pre_payment_from_dates[$index];
-
-                        // @todo ここでfeeRateのバリデーション
-
-                        // $this->feeRateValidation($feeRate);
-                        
-                        $fee_rate->save();
-                    } else {
-                        $fee_rate = new FeeRate([
-                            'hospital_id' => $hospital_id,
-                            'type' => FeeRate::PRE_PAYMENT_FEE_RATE,
-                            'rate' => $pre_payment_rates[$index],
-                            'from_date' => $pre_payment_from_dates[$index],
-
-                            // @todo date_toの入力
-                            // 'to_date' =>
-                        ]);
-
-
-                        // @todo ここでfeeRateのバリデーション
-
-                        // $this->feeRateValidation($feeRate);
-                        
-                        $fee_rate->save();
+                if($sorted_pre_payment_fee_rates->isNotEmpty()) {
+                    foreach ($sorted_pre_payment_fee_rates as $key => $value) {
+    
+                        // 期間(終了)を計算する
+                        if (count($sorted_pre_payment_fee_rates) - 1 <= $key) {
+                            if ($value['id']) {
+                                $pre_payment_fee_rate = FeeRate::findOrFail($value['id']);
+                                $pre_payment_fee_rate->rate = $value['rate'];
+                                $pre_payment_fee_rate->from_date = $value['from_date'];
+                                $pre_payment_fee_rate->to_date = null;
+                                $pre_payment_fee_rate->save();
+                            } else {
+                                $pre_payment_fee_rate = new FeeRate([
+                                    'hospital_id' => $hospital_id,
+                                    'type' => FeeRate::FEE_RATE,
+                                    'rate' => $value['rate'],
+                                    'from_date' => $value['from_date'],
+                                    'to_date' => null
+                                ]);
+                                $pre_payment_fee_rate->save();
+                            }
+                        } else {
+                            // @todo 同じ日付の場合、バリデーションエラーを返す
+                            $to_date = new Carbon($sorted_pre_payment_fee_rates[$key + 1]['from_date']->subDay());
+                            if ($value['id']) {
+                                $pre_payment_fee_rate = FeeRate::findOrFail($value['id']);
+                                $pre_payment_fee_rate->rate = $value['rate'];
+                                $pre_payment_fee_rate->from_date = $value['from_date'];
+                                $pre_payment_fee_rate->to_date = $to_date;
+                                $pre_payment_fee_rate->save();
+                            } else {
+                                $pre_payment_fee_rate = new FeeRate([
+                                    'hospital_id' => $hospital_id,
+                                    'type' => FeeRate::PRE_PAYMENT_FEE_RATE,
+                                    'rate' => $value['rate'],
+                                    'from_date' => $value['from_date'],
+                                    'to_date' => $to_date
+                                ]);
+                                $pre_payment_fee_rate->save();
+                            }
+                        }
                     }
                 }
             }
@@ -194,6 +248,7 @@ class HospitalAttentionController extends Controller
             throw $e;
         }
     }
+
 
     /**
      * 通常手数料と事前手数料のバリデーションを行う
