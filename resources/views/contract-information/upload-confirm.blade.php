@@ -99,7 +99,7 @@
             <div class="form-group">
               <label class="col-md-4">屋号</label>
               <div class="col-md-8 @if(isset($contract->id) && $contract->hospital->isDirty('name')) text-red @endif">
-                {{ isset($contract->id) ? $contract->hospital->name : $contract->hospital_name }}
+                {{ isset($contract->id) ? $contract->hospital->name : $contract_hospital_name }}
                 <input type="hidden" name="hospital_name" value="{{ isset($contract->id) ? $contract->hospital->name : $contract->hospital_name }}"/>
               </div>
             </div>
@@ -107,7 +107,7 @@
             <div class="form-group">
               <label class="col-md-4">屋号(フリガナ)</label>
               <div class="col-md-8 @if(isset($contract->id) && $contract->hospital->isDirty('kana')) text-red @endif">
-                {{ isset($contract->id) ? $contract->hospital->kana : $contract->hospital_name_kana }}
+                {{ isset($contract->id) ? $contract->hospital->kana : $contract_hospital_name_kana }}
                 <input type="hidden" name="hospital_name_kana" value="{{ isset($contract->id) ? $contract->hospital->kana : $contract->hospital_name_kana }}"/>
               </div>
             </div>

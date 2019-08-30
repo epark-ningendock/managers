@@ -102,21 +102,26 @@ class HospitalContractInformationController extends Controller
             $contract_arr['service_end_date'] = Carbon::parse($contract_arr['service_end_date']);
         }
 
-
         $contract = ContractInformation::where('property_no', $contract_arr['property_no'])->get()->first();
 
         $contract_plan = ContractPlan::where('plan_code', $contract_arr['plan_code'])->get()->first();
 
-        if (!isset($contract)) {
-            $contract = new ContractInformation($contract_arr);
-        } else {
+        if (isset($contract)) {
             $contract->fill($contract_arr);
             $contract->hospital->name = $contract_arr['hospital_name'];
             $contract->hospital->kana = $contract_arr['hospital_name_kana'];
+        } else {
+            $contract = new ContractInformation($contract_arr);
         }
 
 
-        return view('contract-information.upload-confirm', ['contract' => $contract, 'contract_plan' => $contract_plan ]);
+        return view('contract-information.upload-confirm',
+            [
+                'contract' => $contract,
+                'contract_plan' => $contract_plan,
+                'contract_hospital_name' => $contract_arr['hospital_name'],
+                'contract_hospital_name_kana' => $contract_arr['hospital_name_kana']
+            ]);
     }
 
     public function storeUpload(Request $request)
