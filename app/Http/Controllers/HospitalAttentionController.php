@@ -26,10 +26,10 @@ class HospitalAttentionController extends Controller
         $hospital = Hospital::findOrFail($hospital_id);
 
         // 通常手数料
-        $feeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', 0)->get();
+        $feeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', FeeRate::FEE_RATE)->get();
 
         // 事前決済手数料
-        $prePaymentFeeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', 1)->get();
+        $prePaymentFeeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', FeeRate::PRE_PAYMENT_FEE_RATE)->get();
         
 
         return view('hospital.create-attention')
@@ -93,7 +93,7 @@ class HospitalAttentionController extends Controller
                     } else {
                         $fee_rate = new FeeRate([
                             'hospital_id' => $hospital_id,
-                            'type' => 0,
+                            'type' => FeeRate::FEE_RATE,
                             'rate' => $rates[$index],
                             'from_date' => $from_dates[$index],
 
@@ -125,7 +125,7 @@ class HospitalAttentionController extends Controller
                     } else {
                         $fee_rate = new FeeRate([
                             'hospital_id' => $hospital_id,
-                            'type' => 1,
+                            'type' => FeeRate::PRE_PAYMENT_FEE_RATE,
                             'rate' => $pre_payment_rates[$index],
                             'from_date' => $pre_payment_from_dates[$index],
 
