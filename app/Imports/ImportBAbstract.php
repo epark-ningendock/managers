@@ -75,10 +75,10 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
         $model = ConvertedIdString::where('table_name', $table)
             ->where('old_id', $old_id)
             ->first();
-        if ($model) {
+        if (!is_null($model)) {
             return $model->new_id;
         }
-        Log::warning(sprintf('%s に %d が存在しません。', $table, $old_id));
+        Log::error(sprintf('%s に %d が存在しません。', $table, $old_id));
         return null;
     }
 

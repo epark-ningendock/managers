@@ -38,7 +38,7 @@ class CalendarImport extends ImportBAbstract
         $model = new Calendar([
             'name' => $this->getValue($row, 'LINE_NAME'),
             'is_calendar_display' => $this->getValue($row, 'TEMP_RECEPTION_FG'),
-            'hospital_id' => null, //@todo 対応不明
+            'hospital_id' => $this->getId('hospitals', $this->hospital_no),
             'created_at' => $this->getValue($row, 'CREATE_DATE'),
             'updated_at' => $this->getValue($row, 'MODIFY_DATE'),
         ]);
