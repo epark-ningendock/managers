@@ -100,7 +100,6 @@ class HospitalAttentionController extends Controller
                                 $fee_rate->rate = $value['rate'];
                                 $fee_rate->from_date = $value['from_date'];
                                 $fee_rate->to_date = null;
-                                $fee_rate->save();
                             } else {
                                 $fee_rate = new FeeRate([
                                     'hospital_id' => $hospital_id,
@@ -109,8 +108,8 @@ class HospitalAttentionController extends Controller
                                     'from_date' => $value['from_date'],
                                     'to_date' => null
                                 ]);
-                                $fee_rate->save();
                             }
+                            $fee_rate->save();
                         } else {
                             // @todo リダイレクトのページ修正 to_dateとrateの有無のバリデーション
                             $next_from_date = new Carbon($sorted_fee_rates[$key + 1]['from_date']);
@@ -125,7 +124,6 @@ class HospitalAttentionController extends Controller
                                 $fee_rate->rate = $value['rate'];
                                 $fee_rate->from_date = $value['from_date'];
                                 $fee_rate->to_date = $to_date;
-                                $fee_rate->save();
                             } else {
                                 $fee_rate = new FeeRate([
                                     'hospital_id' => $hospital_id,
@@ -134,8 +132,8 @@ class HospitalAttentionController extends Controller
                                     'from_date' => $value['from_date'],
                                     'to_date' => $to_date
                                 ]);
-                                $fee_rate->save();
                             }
+                            $fee_rate->save();
                         }
                     }
                 }
@@ -165,7 +163,6 @@ class HospitalAttentionController extends Controller
                                 $pre_payment_fee_rate->rate = $value['rate'];
                                 $pre_payment_fee_rate->from_date = $value['from_date'];
                                 $pre_payment_fee_rate->to_date = null;
-                                $pre_payment_fee_rate->save();
                             } else {
                                 $pre_payment_fee_rate = new FeeRate([
                                     'hospital_id' => $hospital_id,
@@ -174,8 +171,8 @@ class HospitalAttentionController extends Controller
                                     'from_date' => $value['from_date'],
                                     'to_date' => null
                                 ]);
-                                $pre_payment_fee_rate->save();
                             }
+                            $pre_payment_fee_rate->save();
                         } else {
                             // @todo リダイレクトのページ修正 to_dateとrateの有無のバリデーション
                             $next_from_date = new Carbon($sorted_pre_payment_fee_rates[$key + 1]['from_date']);
@@ -189,7 +186,6 @@ class HospitalAttentionController extends Controller
                                 $pre_payment_fee_rate->rate = $value['rate'];
                                 $pre_payment_fee_rate->from_date = $value['from_date'];
                                 $pre_payment_fee_rate->to_date = $to_date;
-                                $pre_payment_fee_rate->save();
                             } else {
                                 $pre_payment_fee_rate = new FeeRate([
                                     'hospital_id' => $hospital_id,
@@ -198,8 +194,8 @@ class HospitalAttentionController extends Controller
                                     'from_date' => $value['from_date'],
                                     'to_date' => $to_date
                                 ]);
-                                $pre_payment_fee_rate->save();
                             }
+                            $pre_payment_fee_rate->save();                            
                         }
                     }
                 }
