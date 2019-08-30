@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 
-class HospitalContractController extends Controller
+class HospitalContractInformationController extends Controller
 {
     /**
      * Show the form for creating a new resource.
