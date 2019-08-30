@@ -15,7 +15,7 @@
         {{method_field('PUT')}}
         {{ csrf_field() }}
         <h5 class="sm-title">基本情報</h5>
-        @includeIf('hospital.partials.form.hospital-form')
+        @includeIf('hospital.partials.hospital-form')
     </form>
 
 @stop
