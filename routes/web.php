@@ -99,6 +99,7 @@ Route::middleware('auth:staffs')->group(function () {
             Route::post('/{hospital}/images/store', 'HospitalImagesController@store')->name('hospital.image.store');
             Route::get('/{hospital}/images/{hospital_category_id}/{hospital_image_id}/delete', 'HospitalImagesController@delete')->name('hospital.image.delete');
             Route::get('/{hospital}/images/{hospital_image_id}/delete_image', 'HospitalImagesController@deleteImage')->name('hospital.delete_image');
+            Route::get('/{hospital}/images/{hospital_image_id}/delete_main_image/{is_sp}', 'HospitalImagesController@deleteMainImage')->name('hospital.delete_main_image');
             Route::get('/{hospital}/interview/{interview_id}/delete', 'HospitalImagesController@deleteInterview')->name('hospital.delete_interview');
         });
         /*
