@@ -16,14 +16,13 @@ class HospitalAttentionController extends Controller
     /**
      * 医療機関こだわり情報画面に遷移する
      *
-     * @param 医療機関ID
+     * @param Int 医療機関ID
      * @return 医療機関こだわり情報画面
      */
     public function create($hospital_id)
     {
         $middles = HospitalMiddleClassification::all();
 
-        // @todo 医療機関のIDを入れる
         $hospital = Hospital::findOrFail($hospital_id);
 
         // 通常手数料
@@ -44,12 +43,14 @@ class HospitalAttentionController extends Controller
      * 医療機関こだわり情報を保存する
      *
      * @param Request 医療機関こだわり情報, 手数料
+     * @param Int 医療機関ID
      * @return 医療機関一覧画面
      */
-    public function store(Request $request)
+    public function store(Request $request, int $hospital_id)
     {
+
         try {
-            $this->saveAttentionInformation($request);
+            $this->saveAttentionInformation($request, $hospital_id);
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.attetion_information')]));
             return redirect('hospital');
         } catch (Exception $e) {
@@ -62,10 +63,12 @@ class HospitalAttentionController extends Controller
      * メソッドが大きくなるので、分割した
      * 
      * @param Request 医療機関こだわり情報, 手数料
+     * @param Int 医療機関ID
      * @return 
      */
-    protected function saveAttentionInformation(Request $request)
+    protected function saveAttentionInformation(Request $request, int $hospital_id)
     {
+
         $this->validate($request, [
             'pvad' => 'digits_between:1,10'
         ]);
@@ -89,8 +92,7 @@ class HospitalAttentionController extends Controller
                         $fee_rate->save();
                     } else {
                         $fee_rate = new FeeRate([
-                            // @todo 医療機関IDを入れる
-                            'hospital_id' => 1,
+                            'hospital_id' => $hospital_id,
                             'type' => 0,
                             'rate' => $rates[$index],
                             'from_date' => $from_dates[$index],
@@ -117,13 +119,12 @@ class HospitalAttentionController extends Controller
 
                         // @todo ここでfeeRateのバリデーション
 
-                        $this->feeRateValidation($feeRate);
+                        // $this->feeRateValidation($feeRate);
                         
                         $fee_rate->save();
                     } else {
                         $fee_rate = new FeeRate([
-                            // @todo 医療機関IDを入れる
-                            'hospital_id' => 1,
+                            'hospital_id' => $hospital_id,
                             'type' => 1,
                             'rate' => $pre_payment_rates[$index],
                             'from_date' => $pre_payment_from_dates[$index],
@@ -135,14 +136,14 @@ class HospitalAttentionController extends Controller
 
                         // @todo ここでfeeRateのバリデーション
 
-                        $this->feeRateValidation($feeRate);
+                        // $this->feeRateValidation($feeRate);
                         
                         $fee_rate->save();
                     }
                 }
             }
 
-            $hospital = Hospital::findOrFail(1);
+            $hospital = Hospital::findOrFail($hospital_id);
             $hospital->pvad = $request->get('pvad');
             if ($request->get('is_pickup')) {
                 $hospital->is_pickup = 1;

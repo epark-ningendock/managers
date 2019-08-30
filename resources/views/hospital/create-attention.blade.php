@@ -7,6 +7,6 @@
 @section('form')
   @includeIf('hospital.partials.nav-bar')
   
-  {{ Form::open(['route' => 'hospital.attention.store', 'method' => 'post']) }}
+  {{ Form::open(['url' => route('hospital.attention.store', $hospital->id), 'method' => 'post']) }}
     @include('hospital.partials.attention-form')
 @stop
