@@ -114,6 +114,11 @@ class HospitalAttentionController extends Controller
                         $fee_rate = FeeRate::findOrFail($pre_payment_fee_rate_id);
                         $fee_rate->rate = $pre_payment_rates[$index];
                         $fee_rate->from_date = $pre_payment_from_dates[$index];
+
+                        // @todo ここでfeeRateのバリデーション
+
+                        $this->feeRateValidation($feeRate);
+                        
                         $fee_rate->save();
                     } else {
                         $fee_rate = new FeeRate([
@@ -126,6 +131,12 @@ class HospitalAttentionController extends Controller
                             // @todo date_toの入力
                             // 'to_date' =>
                         ]);
+
+
+                        // @todo ここでfeeRateのバリデーション
+
+                        $this->feeRateValidation($feeRate);
+                        
                         $fee_rate->save();
                     }
                 }
@@ -181,5 +192,16 @@ class HospitalAttentionController extends Controller
             DB::rollback();
             throw $e;
         }
+    }
+
+    /**
+     * 通常手数料と事前手数料のバリデーションを行う
+     * 
+     * @param feeRate 通常手数料, 事前決済手数料
+     * @return Boolean 
+     */
+    protected function feeRateValidation($feeRate) {
+
+        return true;
     }
 }
