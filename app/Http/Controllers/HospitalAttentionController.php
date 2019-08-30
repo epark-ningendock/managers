@@ -72,8 +72,6 @@ class HospitalAttentionController extends Controller
         $this->validate($request, [
             'pvad' => 'digits_between:1,10'
         ]);
-        
-        // @todo feeRate from のバリデーション
 
         try {
             DB::beginTransaction();
@@ -114,7 +112,12 @@ class HospitalAttentionController extends Controller
                                 $fee_rate->save();
                             }
                         } else {
-                            // @todo 同じ日付の場合、バリデーションエラーを返す
+                            // @todo リダイレクトのページ修正 to_dateとrateの有無のバリデーション
+                            $next_from_date = new Carbon($sorted_fee_rates[$key + 1]['from_date']);
+                            if ($value['from_date'] == $next_from_date) {
+                                return redirect('hospital.create-attention')->withErrors('適用期間が重複しています。')->withInput();
+                            }
+                            
                             $date = new Carbon($sorted_fee_rates[$key + 1]['from_date']);
                             $to_date = $date->subDay();
                             if ($value['id']) {
@@ -154,7 +157,7 @@ class HospitalAttentionController extends Controller
 
                 if($sorted_pre_payment_fee_rates->isNotEmpty()) {
                     foreach ($sorted_pre_payment_fee_rates as $key => $value) {
-    
+
                         // 期間(終了)を計算する
                         if (count($sorted_pre_payment_fee_rates) - 1 <= $key) {
                             if ($value['id']) {
@@ -174,7 +177,12 @@ class HospitalAttentionController extends Controller
                                 $pre_payment_fee_rate->save();
                             }
                         } else {
-                            // @todo 同じ日付の場合、バリデーションエラーを返す
+                            // @todo リダイレクトのページ修正 to_dateとrateの有無のバリデーション
+                            $next_from_date = new Carbon($sorted_pre_payment_fee_rates[$key + 1]['from_date']);
+                            if ($value['from_date'] == $next_from_date) {
+                                return redirect('hospital.create-attention')->withErrors('適用期間が重複しています。')->withInput();
+                            }
+
                             $to_date = new Carbon($sorted_pre_payment_fee_rates[$key + 1]['from_date']->subDay());
                             if ($value['id']) {
                                 $pre_payment_fee_rate = FeeRate::findOrFail($value['id']);
@@ -249,15 +257,4 @@ class HospitalAttentionController extends Controller
         }
     }
 
-
-    /**
-     * 通常手数料と事前手数料のバリデーションを行う
-     * 
-     * @param feeRate 通常手数料, 事前決済手数料
-     * @return Boolean 
-     */
-    protected function feeRateValidation($feeRate) {
-
-        return true;
-    }
 }
