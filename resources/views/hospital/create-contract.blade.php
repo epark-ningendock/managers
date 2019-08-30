@@ -12,7 +12,7 @@
     <form id="contract-form" class="form-horizontal" method="post" action="{{ route('contract.store') }}">
         {{ csrf_field() }}
         <h5 class="sm-title">契約情報</h5>
-        @includeIf('hospital.partials.form.contract-form')
+        @includeIf('hospital.partials.contract-form')
     </form>
     @includeIf('hospital.partials.form-script-style')
 

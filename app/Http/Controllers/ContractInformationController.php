@@ -36,9 +36,11 @@ class ContractInformationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($hospital_id)
     {
-        return view('hospital.create-contract-form');
+        $hospital = Hospital::findOrFail($hospital_id);
+        return view('hospital.create-contract')
+            ->with('hospital', $hospital);
     }
 
     /**

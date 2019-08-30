@@ -82,7 +82,7 @@ class HospitalController extends Controller
     }
 
     // TODO この関数は全体的に見直し必要
-    public function searchHospiralContractInfo(Request $request)
+    public function searchHospiralContract(Request $request)
     {
         // returnさせる医療機関一覧
         $contractInformations = [];
@@ -109,7 +109,7 @@ class HospitalController extends Controller
 
         // $hospitals = Hospital::select('name', 'address1')->where('name', 'LIKE', "%" .$request->get('s_text') . "%")->get();
         // return response()->json($responseJson);
-        return view('hospital.create-contract-form', ['contract_information' => $contractInformation[0]]);
+        return view('hospital.create-contract', ['contract_information' => $contractInformation[0]]);
     }
 
     /**

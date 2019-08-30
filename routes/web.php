@@ -81,19 +81,19 @@ Route::middleware('auth:staffs')->group(function () {
             */
             Route::get('/search', 'HospitalController@index')->name('hospital.search');
             Route::get('/search/text', 'HospitalController@searchText')->name('hospital.search.text');
-            Route::get('/search/contract-info', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');
+            Route::get('/search/contract', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');
             Route::get('/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
             /*
             |--------------------------------------------------------------------------
             | 契約情報
             |--------------------------------------------------------------------------
             */
-            Route::get('/contract-information/create', 'ContractInformationController@create')->name('contract.create');
-            Route::post('/contract-information/store', 'ContractInformationController@store')->name('contract.store');
+            Route::get('/{hospital}/contract/create', 'ContractInformationController@create')->name('contract.create');
+            Route::post('/contract/store', 'ContractInformationController@store')->name('contract.store');
             Route::post('/contract/upload', 'ContractInformationController@upload')->name('contract.upload');
             Route::post('/contract/upload/store', 'ContractInformationController@storeUpload')->name('contract.upload.store');
             Route::get('/contract', 'ContractInformationController@index')->name('contract.index');
-            Route::get('/hospital/contract-information', 'ContractInformationController@create')->name('hospital.contractInfo');
+            Route::get('/hospital/contract', 'ContractInformationController@create')->name('hospital.contractInfo');
             /*
             |--------------------------------------------------------------------------
             | 医療機関 画像情報
