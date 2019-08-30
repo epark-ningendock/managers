@@ -87,8 +87,8 @@ Route::middleware('auth:staffs')->group(function () {
             Route::get('/search/contract-info', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');
             Route::get('/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
             Route::get('/image-information', 'HospitalController@createImageInformation')->name('hospital.image.information');
-            Route::get('/attention-information/create', 'HospitalController@createAttentionInformation')->name('hospital.attention-information.show');
-            Route::post('/attention-information/store', 'HospitalController@storeAttentionInformation')->name('hospital.attention-information.store');
+            Route::get('/attention/create', 'HospitalAttentionController@create')->name('hospital.attention.create');
+            Route::post('/attention/store', 'HospitalAttentionController@store')->name('hospital.attention.store');
         });
         Route::resource('/hospital', 'HospitalController')->except(['show']);
         
