@@ -88,12 +88,9 @@ Route::middleware('auth:staffs')->group(function () {
             | 契約情報
             |--------------------------------------------------------------------------
             */
-            Route::get('/{hospital}/contract/create', 'HospitalContractInformationController@create')->name('contract.create');
-            Route::post('/contract/store', 'HospitalContractInformationController@store')->name('contract.store');
             Route::post('/contract/upload', 'HospitalContractInformationController@upload')->name('contract.upload');
             Route::post('/contract/upload/store', 'HospitalContractInformationController@storeUpload')->name('contract.upload.store');
             Route::get('/contract', 'HospitalContractInformationController@index')->name('contract.index');
-            Route::get('/hospital/contract', 'HospitalContractInformationController@create')->name('hospital.contractInfo');
             Route::get('/{hospital_id}/contract/show', 'HospitalContractInformationController@show')->name('contract.show');
             /*
             |--------------------------------------------------------------------------
