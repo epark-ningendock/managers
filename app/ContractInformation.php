@@ -32,8 +32,7 @@ class ContractInformation extends Model
                             'service_end_date',
                             'lock_version',
                             'hospital_name',
-                            'hospital_name_kana',
-                            'contract_plan_id'
+                            'hospital_name_kana'
                         ];
 
     protected $dates = ['application_date', 'cancellation_date', 'service_start_date', 'service_end_date', 'billing_start_date'];
