@@ -21,15 +21,6 @@ Route::get('/', function () {
 
 /*
 |--------------------------------------------------------------------------
-| Contract Information
-|--------------------------------------------------------------------------
-*/
-Route::post('/contract-information/store', 'ContractInformationController@store')->name('contract.store');
-Route::get('/contract-information/create', 'ContractInformationController@create')->name('contract.information.create');
-Route::get('/hospital/create', 'ContractInformationController@create')->name('hospital.create');
-Route::get('/contract-information/show/{hospital_id}', 'ContractInformationController@show')->name('contract.information.show');
-/*
-|--------------------------------------------------------------------------
 | Login Routes
 |--------------------------------------------------------------------------
 */
@@ -76,31 +67,60 @@ Route::middleware('auth:staffs')->group(function () {
             Route::put('update-password/{staff_id}', 'StaffController@updatePassword')->name('staff.update.password');
         });
         Route::resource('/staff', 'StaffController')->except(['show']);
+
         /*
         |--------------------------------------------------------------------------
         | Hospital Routes
         |--------------------------------------------------------------------------
         */
         Route::group(['prefix' => 'hospital'], function () {
+            /*
+            |--------------------------------------------------------------------------
+            | 医療機関 検索
+            |--------------------------------------------------------------------------
+            */
             Route::get('/search', 'HospitalController@index')->name('hospital.search');
             Route::get('/search/text', 'HospitalController@searchText')->name('hospital.search.text');
-            Route::get('/search/contract-info', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');
+            Route::get('/search/contract', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');
             Route::get('/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
-            Route::get('/image-information', 'HospitalController@createImageInformation')->name('hospital.image.information');
-            Route::get('/attention-information/create', 'HospitalController@createAttentionInformation')->name('hospital.attention-information.show');
-            Route::post('/attention-information/store', 'HospitalController@storeAttentionInformation')->name('hospital.attention-information.store');
-        });
-        Route::resource('/hospital', 'HospitalController')->except(['show']);
-        
-        Route::group(['prefix' => 'hospital'], function () {
-            Route::get('/{hospital}/images/create', 'HospitalImagesController@create')->name('hospital.image.create');
+            /*
+            |--------------------------------------------------------------------------
+            | 契約情報
+            |--------------------------------------------------------------------------
+            */
+            Route::get('/{hospital}/contract/create', 'HospitalContractInformationController@create')->name('contract.create');
+            Route::post('/contract/store', 'HospitalContractInformationController@store')->name('contract.store');
+            Route::post('/contract/upload', 'HospitalContractInformationController@upload')->name('contract.upload');
+            Route::post('/contract/upload/store', 'HospitalContractInformationController@storeUpload')->name('contract.upload.store');
+            Route::get('/contract', 'HospitalContractInformationController@index')->name('contract.index');
+            Route::get('/hospital/contract', 'HospitalContractInformationController@create')->name('hospital.contractInfo');
+            Route::get('/{hospital_id}/contract/show', 'HospitalContractInformationController@show')->name('contract.show');
+            /*
+            |--------------------------------------------------------------------------
+            | 医療機関 画像情報
+            |--------------------------------------------------------------------------
+            */
             Route::post('/{hospital}/images/store', 'HospitalImagesController@store')->name('hospital.image.store');
             Route::get('/{hospital}/images/create', 'HospitalImagesController@create')->name('hospital.image.create');
-            Route::post('/{hospital}/images/store', 'HospitalImagesController@store')->name('hospital.image.store');
             Route::get('/{hospital}/images/{hospital_category_id}/{hospital_image_id}/delete', 'HospitalImagesController@delete')->name('hospital.image.delete');
             Route::get('/{hospital}/images/{hospital_image_id}/delete_image', 'HospitalImagesController@deleteImage')->name('hospital.delete_image');
+            Route::get('/{hospital}/images/{hospital_image_id}/delete_main_image/{is_sp}', 'HospitalImagesController@deleteMainImage')->name('hospital.delete_main_image');
+            /*
+            |--------------------------------------------------------------------------
+            | 医療機関 こだわり情報
+            |--------------------------------------------------------------------------
+            */
+            Route::get('/{hospital}/attention/create', 'HospitalAttentionController@create')->name('hospital.attention.create');
+            Route::post('/attention/store', 'HospitalAttentionController@store')->name('hospital.attention.store');
             Route::get('/{hospital}/interview/{interview_id}/delete', 'HospitalImagesController@deleteInterview')->name('hospital.delete_interview');
         });
+        /*
+        |--------------------------------------------------------------------------
+        | 医療機関 一覧＆基本情報
+        |--------------------------------------------------------------------------
+        */
+        Route::resource('/hospital', 'HospitalController')->except(['show']);
+
         /*
         |--------------------------------------------------------------------------
         | Course Classification Routes

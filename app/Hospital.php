@@ -56,7 +56,6 @@ class Hospital extends Model
         'pv_count',
         'pvad',
         'is_pickup',
-        'hospital_staff_id',
         'status',
         'free_area',
         'search_word',
@@ -93,6 +92,11 @@ class Hospital extends Model
     public function hospital_details()
     {
         return $this->hasMany('App\HospitalDetail');
+    }
+
+    public function contract_information()
+    {
+        return $this->hasOne('App\ContractInformation');
     }
 
 }

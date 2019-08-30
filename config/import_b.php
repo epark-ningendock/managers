@@ -12,4 +12,12 @@ return [
         'model' => \App\ContractInformation::class,
         'import' => \App\Imports\ContractInformationImport::class,
     ],
+    'T_OP_M_HYB_APPOINT_LINE.csv' => [
+        'model' => \App\Calendar::class,
+        'import' => \App\Imports\CalendarImport::class,
+    ],
+    'T_OP_M_HYB_APPOINT_TIMEZONE.csv' => [
+        'model' => \App\CalendarDay::class,
+        'import' => \App\Imports\CalendarDayImport::class,
+    ],
 ];

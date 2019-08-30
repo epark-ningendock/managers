@@ -2,14 +2,11 @@
 
 namespace App\Imports;
 
-use App\Hospital;
-use App\HospitalStaff;
-use Illuminate\Support\Facades\Hash;
+use App\CalendarDay;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Row;
-use function now;
 
-class HospitalStaffImport extends ImportBAbstract
+class CalendarDayImport extends ImportBAbstract
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -18,7 +15,7 @@ class HospitalStaffImport extends ImportBAbstract
      */
     public function getOldPrimaryKeyName(): string
     {
-        return 'USER_NO';
+        return '';
     }
 
     /**
@@ -28,7 +25,7 @@ class HospitalStaffImport extends ImportBAbstract
      */
     public function getNewClassName(): string
     {
-        return HospitalStaff::class;
+        return CalendarDay::class;
     }
 
     /**
@@ -37,24 +34,19 @@ class HospitalStaffImport extends ImportBAbstract
      */
     public function onRow(Row $row)
     {
-        $row = $row->toArray();
-
         try {
-            $model = new HospitalStaff([
-                'name' => $this->getValue($row, 'NAME'),
-                'email' => $this->getValue($row, 'EMAIL'),
-                'login_id' => $this->getValue($row, 'UID'),
-                'password' => Hash::make($this->getValue($row, 'PWD')),
-                'remember_token' => null,
-                'first_login_at' => now(),
+            $row = $row->toArray();
+
+            $model = new CalendarDay([
+                'date' => \now()->format('Y-m-d'), //@todo
+                'is_holiday' => 0,  // @todo
+                'is_reservation_acceptance' => $this->getValue($row, 'OUTSIDE_RESERVATION'),
+                'reservation_frames' => $this->getValue($row, 'RESERVATION_FRAMES'),
+                'calendar_id' => $this->getId('calendars', $this->getValue($row, 'LINE_ID')),
                 'created_at' => $this->getValue($row, 'CREATE_DATE'),
                 'updated_at' => $this->getValue($row, 'MODIFY_DATE'),
-                'reset_token_digest' => null,
-                'reset_sent_at' => null,
-                'hospital_id' => Hospital::withTrashed()->where('old_karada_dog_id', $this->hospital_no)->get()->first()->id,
             ]);
             $model->save();
-            $this->setId($model, $row);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }

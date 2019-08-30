@@ -86,7 +86,6 @@ $factory->define( App\Hospital::class, function ( Faker $faker ) {
 		'pv_count'                      => $faker->numberBetween( 0, 1 ),
 		'pvad'                          => $faker->numberBetween( 0, 1 ),
 		'is_pickup'                     => $faker->numberBetween( 0, 1 ),
-		'hospital_staff_id'             => 1,
 		'status'                        => $faker->randomElement( [ '0', '1', 'X' ] ),
 		'free_area'                     => $faker->text,
 		'search_word'                   => $faker->text,
