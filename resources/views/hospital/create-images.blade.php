@@ -11,7 +11,7 @@
     {!! Form::open(['url' => route('hospital.image.store', $hospital_id), 'files' => true]) !!}
         {{ csrf_field() }}
 
-        @includeIf('hospital_images.partials.form')
+        @includeIf('hospital.partials.images-form')
 
         <div class="action-btn-wrapper text-center mb-5 pb-5">
             <button class="btn btn-primary" type="submit">登録</button>

@@ -68,7 +68,7 @@ class HospitalImagesController extends Controller
 
         $tab_name_list = [ 1 => 'スタッフ',  2 => '設備',  3 => '院内' , 4 => '外観',  5 => 'その他'];
 
-        return view('hospital_images.create', compact('hospital', 'hospital_id', 'image_order', 'tab_name_list', 'interview_top', 'interviews', 'hospital_category'));
+        return view('hospital.create-images', compact('hospital', 'hospital_id', 'image_order', 'tab_name_list', 'interview_top', 'interviews', 'hospital_category'));
     }
 
     /**
