@@ -81,37 +81,6 @@ class HospitalController extends Controller
         return response()->json($hospitals);
     }
 
-    // TODO この関数は全体的に見直し必要
-    public function searchHospiralContract(Request $request)
-    {
-        // returnさせる医療機関一覧
-        $contract_informations = [];
-        $inputText = $request->get('contract_info_search_word');
-        // 医療機関名ID検索 or 医療機関名検索
-
-        // ドグネット検索
-        $contract_information = ContractInformation::select()->where('code', 'LIKE', "%" . $inputText . "%")->get();
-        // 医療機関名検索
-        // TODO 複数該当する可能性がある
-        // $hospitals = Hospital::select()->where('name', 'LIKE', "%" .$inputText . "%")->get();
-        // 契約者名検索
-        // TODO 複数該当する可能性がある
-        // $contract_informations = ContractInformation::select()->where('contractor_name', 'LIKE', "%" .$inputText . "%")->get();
-
-        // 関連する医療機関を追加
-        // array_push($hospitals, $contract_informations->hospital);
-
-        // 懸念点
-        // 複数一致する条件があった場合、どうするのか？
-        // 一旦、候補を複数検索させて、候補を表示する感じ？？
-        // $hospitals = Hospital::where(id, $inputText);
-        // $contract_information = ContractInformation::find($inputText);
-
-        // $hospitals = Hospital::select('name', 'address1')->where('name', 'LIKE', "%" .$request->get('s_text') . "%")->get();
-        // return response()->json($responseJson);
-        return view('hospital.create-contract', ['contract_information' => $contract_information[0]]);
-    }
-
     /**
      * Store a newly created resource in storage.
      *

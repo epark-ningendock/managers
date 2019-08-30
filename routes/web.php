@@ -81,7 +81,6 @@ Route::middleware('auth:staffs')->group(function () {
             */
             Route::get('/search', 'HospitalController@index')->name('hospital.search');
             Route::get('/search/text', 'HospitalController@searchText')->name('hospital.search.text');
-            Route::get('/search/contract', 'HospitalController@searchHospiralContractInfo')->name('hospital.search.contractInfo');
             Route::get('/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
             /*
             |--------------------------------------------------------------------------
