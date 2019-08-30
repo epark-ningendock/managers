@@ -69,8 +69,8 @@ return [
             'secret' => env('MINIO_SECRET', 'your minio server secret'),
             'region' => env('MINIO_REGION', 'your minio server secret'),
             'bucket' => env('MINIO_BUCKET','your minio bucket name'),
-            'endpoint' => env('MINIO_ENDPOINT','http://localhost:9000'),
-            'url' => env('ASSET_HOST', 'http://localhost:9000'),
+            'endpoint' => env('MINIO_ENDPOINT','http://os:9000'),
+            'url' => env('ASSET_HOST', 'http://localhost:9000/epark-bucket/'),
             'version' => 'latest',
             'use_path_style_endpoint' => true,
 
