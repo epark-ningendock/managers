@@ -10,7 +10,7 @@ class Calendar extends SoftDeleteModel
 {
     use EnumTrait, OptimisticLocking;
 
-    protected $fillable = [ 'name', 'hospital_id', 'is_calendar_display', 'hospital_id', 'lock_version' ];
+    protected $fillable = [ 'name', 'hospital_id', 'is_calendar_display', 'hospital_id', 'lock_version', 'created_at', 'updated_at' ];
 
     protected $enums = [ 'is_calendar_display' => CalendarDisplay::class ];
 
@@ -22,5 +22,11 @@ class Calendar extends SoftDeleteModel
     public function calendar_days()
     {
         return $this->hasMany('App\CalendarDay');
+    }
+
+
+    public function hospital()
+    {
+        return $this->belongsTo('App\Hospital');
     }
 }

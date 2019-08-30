@@ -7,13 +7,15 @@
  */
 
 use \App\Enums\Authority;
+use App\Enums\Gender;
+use App\Enums\ReservationStatus;
 use App\Enums\StaffStatus;
 use App\Enums\Status;
 use App\Enums\Permission;
 use App\Enums\WebReception;
 use App\Enums\CalendarDisplay;
 use App\Enums\PaymentStatus;
-use App\Enums\Gender;
+use App\Enums\TerminalType;
 
 return [
     Authority::class => [
@@ -68,6 +70,20 @@ return [
     Gender::class =>[
         Gender::Male => 'Male',
         Gender::Female => 'Female'
+    ],
+
+    TerminalType::class => [
+        TerminalType::Hospital => 'Hospital',
+        TerminalType::PC => 'PC',
+        TerminalType::SmartPhone => 'Smart Phone',
+        TerminalType::PhoneReservationAPI => 'Phone Reservation(API)',
+        TerminalType::PhoneReservationPPC => 'Phone Reservation(PPC)'
+    ],
+
+    CourseImageType::class => [
+        CourseImageType::Main => 'MainCourse',
+        CourseImageType::Pc => 'Detail for pc',
+        CourseImageType::Sp => 'Detail for sp',
     ]
 
 ];

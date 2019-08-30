@@ -34,6 +34,7 @@ class HospitalImport extends ImportAbstract
         $row = $row->toArray();
 
         $model = new Hospital([
+            'old_karada_dog_id' => $row['id'],
             'name' => $row['name'],
             'kana' => $row['kana'],
             'postcode' => $row['zip'],

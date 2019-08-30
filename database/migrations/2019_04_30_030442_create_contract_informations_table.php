@@ -18,7 +18,7 @@ class CreateContractInformationsTable extends Migration
             $table->string('contractor_name_kana', 50);
             $table->string('contractor_name', 50);
             $table->dateTime('application_date');
-            $table->dateTime('billing_start_date');
+            $table->dateTime('billing_start_date')->nullable(); // スーパーユーザーの場合NULL
             $table->dateTime('cancellation_date')->nullable();
             $table->string('representative_name_kana', 50);
             $table->string('representative_name', 50);

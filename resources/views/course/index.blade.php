@@ -51,7 +51,7 @@
           <td>
             <a class="btn btn-primary"
                href="{{ route('course.edit', $course->id) }}">
-               <i class="fa fa-edit text-bold"> 編集</i>
+               <i class="fa fa-edit"> 編集</i>
             </a>
             <button class="btn btn-primary delete-btn delete-popup-btn ml-3" data-id="{{ $course->id }}" data-message="{{ trans('messages.course_delete_popup_content') }}">
               <i class="fa fa-trash"></i>

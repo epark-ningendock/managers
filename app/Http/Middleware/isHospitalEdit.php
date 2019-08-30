@@ -21,10 +21,10 @@ class isHospitalEdit
         if (Auth::user()->getTable() == "staffs") {
             $staff = Staff::findOrFail(request()->session()->get('staffs'));
             
-            if ($staff->staff_auth->is_hospital !== Permission::Edit) {
-                request()->session()->forget('hospital_id');
-                return redirect('/hospital');
-            }
+//            if ($staff->staff_auth->is_hospital !== Permission::Edit) {
+//                request()->session()->forget('hospital_id');
+//                return redirect('/hospital');
+//            }
             return $next($request);
         } else {
             return $next($request);

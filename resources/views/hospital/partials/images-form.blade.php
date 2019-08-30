@@ -9,14 +9,14 @@
             <div class="main_image_area">
                 <img class="object-fit" src="{{$main_image_category->hospital_image->path}}" height="200">
                 <p class="file_delete_text">
-                    <a onclick="return confirm('この施設画像を削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $main_image_category->hospital_image_id]) }}">
+                    <a onclick="return confirm('この施設画像を削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.delete_main_image', ['hospital' => $hospital->id, 'hospital_image_id' => $main_image_category->hospital_image_id, 'is_sp' => true]) }}">
                         ファイル削除
                     </a>
                 </p>
             </div>
         @else
             <div class="main_image_area">
-                <img src="/img/no_image.png">
+                <img src="{{ asset('img/no_image.png') }}">
             </div>
         @endif
             <label class="file-upload btn btn-primary">
