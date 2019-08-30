@@ -1,10 +1,12 @@
 <?php
 
 namespace App;
+use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class HospitalImage extends SoftDeleteModel
 {
     protected $guarded = ['id'];
+    use OptimisticLocking;
     const SP_IMAGE_WIDTH = 750;// スマホ用リサイズ画像サイズWIDTH
 
     public function hospital_category()

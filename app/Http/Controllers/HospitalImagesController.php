@@ -10,6 +10,8 @@ use App\HospitalCategory;
 use App\InterviewDetail;
 use Illuminate\Http\Request;
 use phpDocumentor\Reflection\File;
+use Illuminate\Support\Facades\DB;
+use Reshadman\OptimisticLocking\StaleModelLockingException;
 
 class HospitalImagesController extends Controller
 {
