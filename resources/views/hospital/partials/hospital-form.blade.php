@@ -28,8 +28,7 @@
             {{ \App\Enums\HospitalEnums::getDescription('X') }}
           </label>
         </div>
-        @if ($errors->has('status')) <p class="help-block"
-                                        style="text-align: center !important;">{{ $errors->first('status') }}</p> @endif
+        @if ($errors->has('status')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('status') }}</p> @endif
       </div>
     </td>
   </tr>
@@ -68,10 +67,10 @@
             <div class="col-md-8">
               <span class="p-country-name" style="display:none;">Japan</span>
               <input type="text" class="form-control" id="postcode1" name="postcode"
-                   value="{{ old('postcode', (isset($hospital->postcode) ) ? $hospital->postcode : null) }}"
-                   placeholder="8380222"/>
+                    value="{{ old('postcode', (isset($hospital->postcode) ) ? $hospital->postcode : null) }}"
+                    placeholder="1000005"/>
               <input type="hidden" name="postcode" id="postcode" class="p-postal-code" size="8"
-                   value="{{ old('postcode', (isset($hospital->postcode) ) ? $hospital->postcode : null) }}"/>
+                    value="{{ old('postcode', (isset($hospital->postcode) ) ? $hospital->postcode : null) }}"/>
             </div>
           </div>
           &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
@@ -80,7 +79,7 @@
             {{ __('アドレス検索') }}
           </button>
           @if ($errors->has('postcode')) <p class="help-block text-danger"
-                            style="text-align: center; color: #dd4d3b;">{{ $errors->first('postcode') }}</p> @endif
+                                            style="text-align: center; color: #dd4d3b;">{{ $errors->first('postcode') }}</p> @endif
         </div>
         <br/>
 
@@ -99,8 +98,7 @@
                     > {{ $prefecture->name }}</option>
                   @endforeach
                 </select>
-                @if ($errors->has('prefecture_id')) <p
-                    class="help-block">{{ $errors->first('prefecture_id') }}</p> @endif
+                @if ($errors->has('prefecture_id')) <p class="help-block">{{ $errors->first('prefecture_id') }}</p> @endif
               </div>
             </div>
           </div>
@@ -122,8 +120,7 @@
                     > {{ $district_code->name }}</option>
                   @endforeach
                 </select>
-                @if ($errors->has('district_code_id')) <p
-                    class="help-block">{{ $errors->first('district_code_id') }}</p> @endif
+                @if ($errors->has('district_code_id')) <p class="help-block">{{ $errors->first('district_code_id') }}</p> @endif
               </div>
               <label for="district_code" class="col-md-4">{{ trans('messages.district_code') }}</label>
             </div>
@@ -137,8 +134,7 @@
               <div class="col-md-8">
                 <input type="text" class="form-control p-street-address" id="address1" name="address1"
                      value="{{ old('address1', (isset($hospital->address1)) ? $hospital->address1 : null) }}"/>
-                @if ($errors->has('address1')) <p
-                    class="help-block">{{ $errors->first('address1') }}</p> @endif
+                @if ($errors->has('address1')) <p class="help-block">{{ $errors->first('address1') }}</p> @endif
               </div>
             </div>
 
@@ -147,8 +143,7 @@
               <div class="col-md-8">
                 <input type="text" class="form-control p-extended-address" id="address2" name="address2"
                      value="{{ old('address2', (isset($hospital->address2)) ? $hospital->address2 : null) }}"/>
-                @if ($errors->has('address2')) <p
-                    class="help-block">{{ $errors->first('address2') }}</p> @endif
+                @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
               </div>
             </div>
           </div>
@@ -160,8 +155,7 @@
                 <input type="text" class="form-control" id="latitude" name="latitude"
                      value="{{ old('latitude', (isset($hospital->latitude)) ? $hospital->latitude : null) }}"
                      placeholder="0.0000000"/>
-                @if ($errors->has('latitude')) <p
-                    class="help-block">{{ $errors->first('latitude') }}</p> @endif
+                @if ($errors->has('latitude')) <p class="help-block">{{ $errors->first('latitude') }}</p> @endif
               </div>
             </div>
 
@@ -171,8 +165,7 @@
                 <input type="text" class="form-control" id="longitude" name="longitude"
                      value="{{ old('longitude', (isset($hospital->longitude)) ? $hospital->longitude : null) }}"
                      placeholder="0.0000000"/>
-                @if ($errors->has('longitude')) <p
-                    class="help-block">{{ $errors->first('longitude') }}</p> @endif
+                @if ($errors->has('longitude')) <p class="help-block">{{ $errors->first('longitude') }}</p> @endif
               </div>
             </div>
           </div>
@@ -185,8 +178,7 @@
               <input type="text" class="form-control" id="streetview_url" name="streetview_url"
                    value="{{ old('streetview_url', (isset($hospital->streetview_url)) ? $hospital->streetview_url : null ) }}"
                    placeholder="http://google.com/maps/~"/>
-              @if ($errors->has('streetview_url')) <p
-                  class="help-block">{{ $errors->first('streetview_url') }}</p> @endif
+              @if ($errors->has('streetview_url')) <p class="help-block">{{ $errors->first('streetview_url') }}</p> @endif
             </div>
           </div>
         </div>
@@ -216,9 +208,8 @@
             <label for="paycall" class="col-md-4">{{ trans('messages.paycall') }} </label>
             <div class="col-md-8">
               <input type="text" class="form-control" id="paycall" name="paycall"
-                   value="{{ old('paycall', (isset($hospital->paycall)) ? $hospital->paycall : null) }}"/>
-              @if ($errors->has('paycall')) <p
-                  class="help-block">{{ $errors->first('paycall') }}</p> @endif
+                    value="{{ old('paycall', (isset($hospital->paycall)) ? $hospital->paycall : null) }}"/>
+              @if ($errors->has('paycall')) <p class="help-block">{{ $errors->first('paycall') }}</p> @endif
             </div>
           </div>
         </div>
@@ -268,7 +259,7 @@
             <div class="col-md-4">
               <div class="form-group ml-0 mr-0">
                 <input type="text" class="form-control" id="access{{$i}}" name="access{{$i}}"
-                     value="{{ old("access{$i}", (isset($hospital->{'access'. $i})) ? $hospital->{'access'. $i} : null) }}"/>
+                      value="{{ old("access{$i}", (isset($hospital->{'access'. $i})) ? $hospital->{'access'. $i} : null) }}"/>
               </div>
             </div>
           </div>
@@ -301,11 +292,11 @@
                 <div class="col-md-6">
                   <div class="form-group  @if( $errors->has("medical_treatment_time." .$i. ".start")) has-error @endif">
                     <label for="start-time-{{ $i }}"
-                         class="col-md-3">{{ trans('messages.start') }} </label>
+                          class="col-md-3">{{ trans('messages.start') }} </label>
                     <div class="col-md-9">
                       <input size="5" type="text" class="form-control time-picker"
-                           id="start-time-{{ $i }}" name="medical_treatment_time[{{$i}}][start]"
-                           value="{{ old('medical_treatment_time.' . $i . '.start', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->start : null)) }}"
+                            id="start-time-{{ $i }}" name="medical_treatment_time[{{$i}}][start]"
+                            value="{{ old('medical_treatment_time.' . $i . '.start', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->start : null)) }}"
                       />
                       @if( $errors->has("medical_treatment_time." .$i. ".start"))
                         <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".start") }}</p>
@@ -319,8 +310,8 @@
                     <label for="end-time-{{$i}}" class="col-md-3">〜</label>
                     <div class="col-md-9">
                       <input size="5" type="text" class="form-control time-picker"
-                           id="end-time-{{$i}}" name="medical_treatment_time[{{$i}}][end]"
-                           value="{{ old('medical_treatment_time.' . $i . '.end', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->end : null)) }}"
+                            id="end-time-{{$i}}" name="medical_treatment_time[{{$i}}][end]"
+                            value="{{ old('medical_treatment_time.' . $i . '.end', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->end : null)) }}"
                       />
                       @if( $errors->has("medical_treatment_time." .$i. ".end"))
                         <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".end") }}</p>
@@ -331,34 +322,33 @@
 
                 <div class="daybox">
                   <label class="checkbox-inline">
-                    <input type="checkbox" name="medical_treatment_time[{{$i}}][mon]"
-                         value="1"
-                         @if ( old('medical_treatment_time.' . $i . '.mon', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->mon : null) ) == 1 ) checked @endif>{{
+                    <input type="checkbox" name="medical_treatment_time[{{$i}}][mon]" value="1"
+                          @if ( old('medical_treatment_time.' . $i . '.mon', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->mon : null) ) == 1 ) checked @endif>{{
                     trans('messages.mon') }}
                   </label>
                   <label class="checkbox-inline">
                     <input type="checkbox" name="medical_treatment_time[{{$i}}][tue]" value="1"
-                         @if ( old('medical_treatment_time.' . $i . '.tue', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->tue : null)) == 1 ) checked @endif> {{ trans('messages.tue') }}
+                          @if ( old('medical_treatment_time.' . $i . '.tue', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->tue : null)) == 1 ) checked @endif> {{ trans('messages.tue') }}
                   </label>
                   <label class="checkbox-inline">
                     <input type="checkbox" name="medical_treatment_time[{{$i}}][wed]" value="1"
-                         @if ( old('medical_treatment_time.' . $i . '.wed', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->wed : null)) == 1 ) checked @endif> {{ trans('messages.wed') }}
+                          @if ( old('medical_treatment_time.' . $i . '.wed', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->wed : null)) == 1 ) checked @endif> {{ trans('messages.wed') }}
                   </label>
                   <label class="checkbox-inline">
                     <input type="checkbox" name="medical_treatment_time[{{$i}}][thu]" value="1"
-                         @if ( old('medical_treatment_time.' . $i . '.thu', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->thu : null)) == 1 ) checked @endif> {{ trans('messages.thu') }}
+                          @if ( old('medical_treatment_time.' . $i . '.thu', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->thu : null)) == 1 ) checked @endif> {{ trans('messages.thu') }}
                   </label>
                   <label class="checkbox-inline">
                     <input type="checkbox" name="medical_treatment_time[{{$i}}][fri]" value="1"
-                         @if ( old('medical_treatment_time.' . $i . '.fri', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->fri : null)) == 1 ) checked @endif> {{ trans('messages.fri') }}
+                          @if ( old('medical_treatment_time.' . $i . '.fri', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->fri : null)) == 1 ) checked @endif> {{ trans('messages.fri') }}
                   </label>
                   <label class="checkbox-inline">
                     <input type="checkbox" name="medical_treatment_time[{{$i}}][sat]" value="1"
-                         @if ( old('medical_treatment_time.' . $i . '.sat', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->sat : null)) == 1 ) checked @endif> {{ trans('messages.sat') }}
+                          @if ( old('medical_treatment_time.' . $i . '.sat', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->sat : null)) == 1 ) checked @endif> {{ trans('messages.sat') }}
                   </label>
                   <label class="checkbox-inline">
                     <input type="checkbox" name="medical_treatment_time[{{$i}}][sun]" value="1"
-                         @if ( old('medical_treatment_time.' . $i . '.sun', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->sun : null)) == 1 ) checked @endif> {{ trans('messages.sun') }}
+                          @if ( old('medical_treatment_time.' . $i . '.sun', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->sun : null)) == 1 ) checked @endif> {{ trans('messages.sun') }}
                   </label>
                 </div>
               </td>
@@ -370,9 +360,8 @@
           <label for="consultation_note" class="col-md-2">{{ trans('messages.consultation_note') }} </label>
           <div class="col-md-10">
             <textarea name="consultation_note" id="consultation_note" rows="5"
-                  class="form-control">{{ old('consultation_note',(isset($hospital->consultation_note)) ? $hospital->consultation_note : null) }}</textarea>
-            @if ($errors->has('consultation_note')) <p
-                class="help-block">{{ $errors->first('consultation_note') }}</p> @endif
+                      class="form-control">{{ old('consultation_note',(isset($hospital->consultation_note)) ? $hospital->consultation_note : null) }}</textarea>
+            @if ($errors->has('consultation_note')) <p class="help-block">{{ $errors->first('consultation_note') }}</p> @endif
           </div>
         </div>
 
@@ -380,7 +369,7 @@
           <label for="memo" class="col-md-2">備考</label>
           <div class="col-md-10">
             <textarea name="memo" id="memo" rows="5"
-                  class="form-control">{{ old('memo', (isset($hospital->memo)) ? $hospital->memo : null) }}</textarea>
+                      class="form-control">{{ old('memo', (isset($hospital->memo)) ? $hospital->memo : null) }}</textarea>
             @if ($errors->has('memo')) <p class="help-block">{{ $errors->first('memo') }}</p> @endif
           </div>
         </div>
