@@ -9,7 +9,7 @@ $factory->define(App\MedicalExaminationSystem::class, function (Faker $faker) {
        	'name' => $faker->name,
        	'company_name' => $faker->company,
        	'postcode' => $faker->postcode,
-       	'prefecture_id' => factory(Prefecture::class)->create()->id,
+       	'prefecture_id' => $faker->numberBetween(1,47),
        	'address1' => $faker->address,
        	'address2' => $faker->address,
        	'tel' => $faker->phoneNumber,
