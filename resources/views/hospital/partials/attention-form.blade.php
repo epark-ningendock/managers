@@ -26,7 +26,8 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
               <span>{{ $hospital->pv_count }}</span> 件
           </p>
           <label class="mt-5">PR</label>
-          <input type="text" id="pvad" name="pvad" value="{{ isset($hospital->pvad) ? $hospital->pvad : 0 }}" placeholder="">
+          <input type="number" id="pvad" name="pvad" value="{{ isset($hospital->pvad) ? $hospital->pvad : 0 }}" placeholder="">
+          @if ($errors->has('pvad')) <p class="has-error">{{ $errors->first('pvad') }}</p> @endif
           <div class="mt-5">
             {{ Form::hidden('is_pickup') }}
             {{ Form::checkbox('is_pickup', 1, $hospital->is_pickup, array('id'=>'is_pickup')) }}
@@ -91,11 +92,11 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                   <label class="mt-5 ml-5">手数料率</label>
                   <input type="number" id="{{ 'rate'.$feeRate->id }}" name="rates[]" value="{{ isset($feeRate->rate) ? $feeRate->rate : 0 }}" placeholder=""> %
                   <label class="mt-5 ml-5">適用期間</label>
-                  <div class="input-group date" data-provide="datepicker" data-date-format="yyyy/mm/dd"
+                  <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd"
                         data-date-autoclose="true" data-date-language="ja">
                     <input type="text" class="form-control"
                             id="{{ 'from_date'.$feeRate->id }}" name="from_dates[]"
-                            placeholder="yyyy/mm/dd" value="{{ isset($feeRate->from_date) ? $feeRate->from_date : '' }}">
+                            placeholder="yyyy-mm-dd" value="{{ isset($feeRate->from_date) ? $feeRate->from_date : '' }}">
                     <div class="input-group-addon">
                       <span class="glyphicon glyphicon-calendar"></span>
                     </div>
@@ -105,6 +106,8 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
               </div>
             @endforeach
           </div> 
+          @if ($errors->has('rate')) <p class="has-error">{{ $errors->first('rate') }}</p> @endif
+          @if ($errors->has('from_date')) <p class="has-error">{{ $errors->first('from_date') }}</p> @endif
           
           <div class="row mt-5">
             <div class="col-xs-6 col-lg-6"><p class="text-bold">事前決済手数料</p></div>
@@ -118,11 +121,11 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                   <label class="mt-5 ml-5">手数料率</label>
                   <input type="number" name="pre_payment_rates[]" value="{{ isset($prePaymentFeeRate->rate) ? $prePaymentFeeRate->rate : 0 }}" placeholder=""> %
                   <label class="mt-5 ml-5">適用期間</label>
-                  <div class="input-group date" data-provide="datepicker" data-date-format="yyyy/mm/dd"
+                  <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd"
                         data-date-autoclose="true" data-date-language="ja">
                     <input type="text" class="form-control"
                             name="pre_payment_from_dates[]"
-                            placeholder="yyyy/mm/dd" value="{{ isset($prePaymentFeeRate->from_date) ? $prePaymentFeeRate->from_date : '' }}">
+                            placeholder="yyyy-mm-dd" value="{{ isset($prePaymentFeeRate->from_date) ? $prePaymentFeeRate->from_date : '' }}">
                     <div class="input-group-addon">
                       <span class="glyphicon glyphicon-calendar"></span>
                     </div>
@@ -132,6 +135,8 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
               </div>
             @endforeach
           </div>
+          @if ($errors->has('pre_payment_rate')) <p class="has-error">{{ $errors->first('pre_payment_rate') }}</p> @endif
+          @if ($errors->has('pre_payment_from_date')) <p class="has-error">{{ $errors->first('pre_payment_from_date') }}</p> @endif
 
         </td>
       </tr>
@@ -152,14 +157,13 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
           $('#add-fee-rate-button').click(function(e) {
             index += 1;
             $('#fee-rate-block').append(
-              "<br>"
-              + "<div class='form-group'>"
+              "<div class='form-group'>"
               + "<div class='form-inline'>"
               + "<input type='hidden' name='fee_rate_ids[]' value='' />"
               + "<label class='mt-5 ml-5'>手数料率</label>"
-              + "<input class='ml-1 mr-2' type='number' name='rates[]' value='' placeholder=''> %"
+              + "<input class='ml-1' type='number' name='rates[]' value='' placeholder=''> %"
               + "<label class='mt-5 ml-5'>適用期間</label>"
-              + "<div class='input-group date ml-3' data-provide='datepicker' data-date-format='yyyy/mm/dd' data-date-autoclose='true' data-date-language='ja'>"
+              + "<div class='input-group date ml-2' data-provide='datepicker' data-date-format='yyyy/mm/dd' data-date-autoclose='true' data-date-language='ja'>"
               + "<input type='text' class='form-control' name='from_dates[]' placeholder='yyyy/mm/dd' value=''>"
               + "<div class='input-group-addon'>"
               + "<span class='glyphicon glyphicon-calendar'></span>"
@@ -172,14 +176,13 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
 
           $('#add-pre-payment-button').click(function(e) {
             $('#pre-payment-block').append(
-              "<br>"
-              + "<div class='form-group'>"
+              "<div class='form-group'>"
               + "<div class='form-inline'>"
               + "<input type='hidden' name='pre_payment_fee_rate_ids[]' value='' />"
               + "<label class='mt-5 ml-5'>手数料率</label>"
-              + "<input type='number' name='pre_payment_rates[]' value='' placeholder=''> %"
+              + "<input class='ml-1' type='number' name='pre_payment_rates[]' value='' placeholder=''> %"
               + "<label class='mt-5 ml-5'>適用期間</label>"
-              + "<div class='input-group date' data-provide='datepicker' data-date-format='yyyy/mm/dd' data-date-autoclose='true' data-date-language='ja'>"
+              + "<div class='input-group date ml-2' data-provide='datepicker' data-date-format='yyyy/mm/dd' data-date-autoclose='true' data-date-language='ja'>"
               + "<input type='text' class='form-control' name='pre_payment_from_dates[]' placeholder='yyyy/mm/dd' value=''>"
               + "<div class='input-group-addon'>"
               + "<span class='glyphicon glyphicon-calendar'></span>"

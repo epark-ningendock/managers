@@ -290,5 +290,9 @@ return [
         'billing_fax_number' => '請求メール受信fax番号',
         'paycall' => 'ペイパーコール',
         'kana' => '仮名',
+        'rate' => '手数料率',
+        'from_date' => '適用期間',
+        'pre_payment_rate' => '手数料率',
+        'pre_payment_from_date' => '適用期間',
     ],
 ];
