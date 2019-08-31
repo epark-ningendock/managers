@@ -87,23 +87,9 @@ class HospitalAttentionController extends Controller
                                 return redirect()->back();
                             }
 
-                            // 期間(終了)を計算する
                             if (count($sorted_fee_rates) - 1 <= $key) {
-                                if ($value['id']) {
-                                    $fee_rate = FeeRate::findOrFail($value['id']);
-                                    $fee_rate->rate = $value['rate'];
-                                    $fee_rate->from_date = $value['from_date'];
-                                    $fee_rate->to_date = null;
-                                } else {
-                                    $fee_rate = new FeeRate([
-                                        'hospital_id' => $hospital_id,
-                                        'type' => FeeRate::FEE_RATE,
-                                        'rate' => $value['rate'],
-                                        'from_date' => $value['from_date'],
-                                        'to_date' => null
-                                    ]);
-                                }
-                                $fee_rate->save();
+                                $to_date = null;
+                                $this->saveFeeRate($value, $hospital_id, FeeRate::FEE_RATE, $to_date);
                             } else {
                                 $next_from_date = new Carbon($sorted_fee_rates[$key + 1]['from_date']);
                                 if ($value['from_date'] == $next_from_date) {
@@ -114,21 +100,7 @@ class HospitalAttentionController extends Controller
                                 
                                 $date = new Carbon($sorted_fee_rates[$key + 1]['from_date']);
                                 $to_date = $date->subDay();
-                                if ($value['id']) {
-                                    $fee_rate = FeeRate::findOrFail($value['id']);
-                                    $fee_rate->rate = $value['rate'];
-                                    $fee_rate->from_date = $value['from_date'];
-                                    $fee_rate->to_date = $to_date;
-                                } else {
-                                    $fee_rate = new FeeRate([
-                                        'hospital_id' => $hospital_id,
-                                        'type' => FeeRate::FEE_RATE,
-                                        'rate' => $value['rate'],
-                                        'from_date' => $value['from_date'],
-                                        'to_date' => $to_date
-                                    ]);
-                                }
-                                $fee_rate->save();
+                                $this->saveFeeRate($value, $hospital_id, FeeRate::FEE_RATE, $to_date);
                             }
                         }
                     }
@@ -162,23 +134,9 @@ class HospitalAttentionController extends Controller
                                 return redirect()->back();
                             }
 
-                            // 期間(終了)を計算する
                             if (count($sorted_pre_payment_fee_rates) - 1 <= $key) {
-                                if ($value['id']) {
-                                    $pre_payment_fee_rate = FeeRate::findOrFail($value['id']);
-                                    $pre_payment_fee_rate->rate = $value['rate'];
-                                    $pre_payment_fee_rate->from_date = $value['from_date'];
-                                    $pre_payment_fee_rate->to_date = null;
-                                } else {
-                                    $pre_payment_fee_rate = new FeeRate([
-                                        'hospital_id' => $hospital_id,
-                                        'type' => FeeRate::FEE_RATE,
-                                        'rate' => $value['rate'],
-                                        'from_date' => $value['from_date'],
-                                        'to_date' => null
-                                    ]);
-                                }
-                                $pre_payment_fee_rate->save();
+                                $to_date = null;
+                                $this->saveFeeRate($value, $hospital_id, FeeRate::PRE_PAYMENT_FEE_RATE, $to_date);
                             } else {
                                 $next_from_date = new Carbon($sorted_pre_payment_fee_rates[$key + 1]['from_date']);
                                 if ($value['from_date'] == $next_from_date) {
@@ -188,21 +146,7 @@ class HospitalAttentionController extends Controller
                                 }
     
                                 $to_date = new Carbon($sorted_pre_payment_fee_rates[$key + 1]['from_date']->subDay());
-                                if ($value['id']) {
-                                    $pre_payment_fee_rate = FeeRate::findOrFail($value['id']);
-                                    $pre_payment_fee_rate->rate = $value['rate'];
-                                    $pre_payment_fee_rate->from_date = $value['from_date'];
-                                    $pre_payment_fee_rate->to_date = $to_date;
-                                } else {
-                                    $pre_payment_fee_rate = new FeeRate([
-                                        'hospital_id' => $hospital_id,
-                                        'type' => FeeRate::PRE_PAYMENT_FEE_RATE,
-                                        'rate' => $value['rate'],
-                                        'from_date' => $value['from_date'],
-                                        'to_date' => $to_date
-                                    ]);
-                                }
-                                $pre_payment_fee_rate->save();                            
+                                $this->saveFeeRate($value, $hospital_id, FeeRate::PRE_PAYMENT_FEE_RATE, $to_date);                       
                             }
                         }
                     }
@@ -265,4 +209,29 @@ class HospitalAttentionController extends Controller
         }
     }
 
+    /**
+     * 手数料率テーブルに保存する
+     *
+     * @param Array 手数料率
+     * @param Int 医療機関ID
+     * @param Int 手数料区分
+     * @param 期間(終了)
+     */
+    protected function saveFeeRate(Array $value, int $hospital_id, int $type, $to_date) {
+        if ($value['id']) {
+            $fee_rate = FeeRate::findOrFail($value['id']);
+            $fee_rate->rate = $value['rate'];
+            $fee_rate->from_date = $value['from_date'];
+            $fee_rate->to_date = $to_date;
+        } else {
+            $fee_rate = new FeeRate([
+                'hospital_id' => $hospital_id,
+                'type' => $type,
+                'rate' => $value['rate'],
+                'from_date' => $value['from_date'],
+                'to_date' => $to_date
+            ]);
+        }
+        $fee_rate->save();
+    }
 }
