@@ -35,11 +35,11 @@ class HospitalCreateFormRequest extends FormRequest
             'postcode' => 'number_dash',
             'address1' => 'max:256',
             'address2' => 'max:256',
-            'tel' => 'number_dash',
+            'tel' => 'regex:/^[0-9]{2,4}-?[0-9]{2,4}-?[0-9]{3,4}$/',
             'paycall' => 'digits_between:5,19',
             'consultation_note' => 'max:256',
-           'medical_treatment_time.*.start' => 'nullable|date_format:H:i',
-           'medical_treatment_time.*.end' => 'nullable|date_format:H:i|after:medical_treatment_time.*.start',
+            'medical_treatment_time.*.start' => 'nullable|date_format:H:i',
+            'medical_treatment_time.*.end' => 'nullable|date_format:H:i|after:medical_treatment_time.*.start',
         ];
     }
 
