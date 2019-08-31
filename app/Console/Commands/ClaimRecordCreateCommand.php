@@ -3,13 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Billing;
-use App\Enums\ReservationStatus;
+use App\Enums\BillingStatus;
 use App\Hospital;
-use App\Mail\Job\TemporaryReservationCheckMail;
-use App\Reservation;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Mail;
 
 class ClaimRecordCreateCommand extends Command
 {
@@ -34,6 +31,7 @@ class ClaimRecordCreateCommand extends Command
             $billing = new Billing;
             $billing->hospital_id = $hospital->id;
             $billing->billing_month = $billingMonth;
+            $billing->status = BillingStatus::UNCONFIRMED;
             $billing->save();
         }
     }
