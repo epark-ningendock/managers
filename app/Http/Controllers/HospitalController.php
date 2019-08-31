@@ -165,27 +165,18 @@ class HospitalController extends Controller
 	        $hospital->touch();
 	        $hospital->save();
 
-
-	        if ( ! empty( request()->medical_treatment_time ) ) {
+	        if ( !empty( request()->medical_treatment_time ) ) {
 		        foreach ( request()->medical_treatment_time as $mtt ) {
-
 		            if ( isset($mtt['id']) && !empty($mtt['id']) ) {
-
                         $medical_treatment_times = MedicalTreatmentTime::findOrFail( $mtt['id'] );
                         $medical_treatment_times->update( MedicalTreatmentTime::getDefaultFieldValues( $mtt ) );
-
                     } else {
-
                         $mtt = array_merge($mtt, ['hospital_id' => $hospital->id]);
                         MedicalTreatmentTime::create($mtt);
-
                     }
-
 		        }
 	        }
-
 	        DB::commit();
-
 	        return redirect( '/hospital' )->with( 'success', '更新成功' );
         } catch (Exception $e) {
 	        DB::rollback();

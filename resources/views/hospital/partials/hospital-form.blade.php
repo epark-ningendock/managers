@@ -10,21 +10,21 @@
           <label class="ml-5">
             <input type="radio" name="status" id="private_status"
                  value="{{ \App\Enums\HospitalEnums::Private }}"
-                 @if( old('status', (isset($hospital->status) ) ? $hospital->status : null) == \App\Enums\HospitalEnums::Private ) checked @endif>
+                 @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::Private ) checked @endif>
             {{ \App\Enums\HospitalEnums::getDescription('0') }}
           </label>
 
           <label class="ml-3">
             <input type="radio" name="status" id="public_status"
                  value="{{ \App\Enums\HospitalEnums::Public }}"
-                 @if( old('status', (isset($hospital->status) ) ? $hospital->status : null) == \App\Enums\HospitalEnums::Public ) checked @endif>
+                 @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::Public ) checked @endif>
             {{ \App\Enums\HospitalEnums::getDescription('1') }}
           </label>
 
           <label class="ml-3">
             <input type="radio" name="status" id="deleted_status"
                  value="{{ \App\Enums\HospitalEnums::Delete }}"
-                 @if( old('status', (isset($hospital->status) ) ? $hospital->status : null) == \App\Enums\HospitalEnums::Delete ) checked @endif>
+                 @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::Delete ) checked @endif>
             {{ \App\Enums\HospitalEnums::getDescription('X') }}
           </label>
         </div>
@@ -105,16 +105,17 @@
 
           <div class="col-sm-6">
             <div class="form-group @if( $errors->has('district_code'))  has-error @endif">
+              <label for="district_code" class="col-md-4">{{ trans('messages.district_code') }}</label>
               <div class="col-md-8">
-                <select name="district_code_id" id="district_code_id" class="form-control">
+                <select name="district_code_id" id="district_code_id" class="form-control p-locality-id">
                   <option value="">市町村区を選択</option>
                   @foreach($district_codes as $district_code)
                     <option data-prefecture_id="{{ $district_code->prefecture_id }}"
                         value="{{ $district_code->id }}"
-                        @if (   old('prefecture_id', (isset($hospital->prefecture_id) ) ? $hospital->prefecture_id : null) == $district_code->prefecture_id )
+                        @if ( old('prefecture_id', (isset($hospital->prefecture_id) ) ? $hospital->prefecture_id : null) == $district_code->prefecture_id )
                         style="display: block;"
                         @endif
-                        @if (  ($district_code->id == old('district_code_id', ( isset($hospital->district_code_id) ) ? $hospital->district_code_id : null )) )
+                        @if ( ($district_code->id == old('district_code_id', ( isset($hospital->district_code_id) ) ? $hospital->district_code_id : null )) )
                         selected="selected"
                         @endif
                     > {{ $district_code->name }}</option>
@@ -122,7 +123,6 @@
                 </select>
                 @if ($errors->has('district_code_id')) <p class="help-block">{{ $errors->first('district_code_id') }}</p> @endif
               </div>
-              <label for="district_code" class="col-md-4">{{ trans('messages.district_code') }}</label>
             </div>
           </div>
         </div>
