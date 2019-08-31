@@ -26,7 +26,7 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
               <span>{{ $hospital->pv_count }}</span> 件
           </p>
           <label class="mt-5">PR</label>
-          <input type="text" id="pvad" name="pvad" value="{{ isset($hospital->pvad) ? $hospital->pvad : 0 }}" placeholder="">
+          <input type="number" id="pvad" name="pvad" value="{{ isset($hospital->pvad) ? $hospital->pvad : 0 }}" placeholder="">
           @if ($errors->has('pvad')) <p class="has-error">{{ $errors->first('pvad') }}</p> @endif
           <div class="mt-5">
             {{ Form::hidden('is_pickup') }}
