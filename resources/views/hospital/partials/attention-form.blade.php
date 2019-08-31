@@ -103,11 +103,11 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                   </div>
                   <span class="ml-2 mr-2">~</span>
                 </div>
-                @if ($errors->has('rate')) <p class="has-error">{{ $errors->first('rate') }}</p> @endif
-                @if ($errors->has('from_date')) <p class="has-error">{{ $errors->first('from_date') }}</p> @endif
               </div>
             @endforeach
           </div> 
+          @if ($errors->has('rate')) <p class="has-error">{{ $errors->first('rate') }}</p> @endif
+          @if ($errors->has('from_date')) <p class="has-error">{{ $errors->first('from_date') }}</p> @endif
           
           <div class="row mt-5">
             <div class="col-xs-6 col-lg-6"><p class="text-bold">事前決済手数料</p></div>
@@ -132,11 +132,11 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                   </div>
                   <span class="ml-2 mr-2">~</span>
                 </div>
-                @if ($errors->has('pre_payment_rate')) <p class="has-error">{{ $errors->first('pre_payment_rate') }}</p> @endif
-                @if ($errors->has('pre_payment_from_date')) <p class="has-error">{{ $errors->first('pre_payment_from_date') }}</p> @endif
               </div>
             @endforeach
           </div>
+          @if ($errors->has('pre_payment_rate')) <p class="has-error">{{ $errors->first('pre_payment_rate') }}</p> @endif
+          @if ($errors->has('pre_payment_from_date')) <p class="has-error">{{ $errors->first('pre_payment_from_date') }}</p> @endif
 
         </td>
       </tr>
@@ -157,14 +157,13 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
           $('#add-fee-rate-button').click(function(e) {
             index += 1;
             $('#fee-rate-block').append(
-              "<br>"
-              + "<div class='form-group'>"
+              "<div class='form-group'>"
               + "<div class='form-inline'>"
               + "<input type='hidden' name='fee_rate_ids[]' value='' />"
               + "<label class='mt-5 ml-5'>手数料率</label>"
-              + "<input class='ml-1 mr-2' type='number' name='rates[]' value='' placeholder=''> %"
+              + "<input class='ml-1' type='number' name='rates[]' value='' placeholder=''> %"
               + "<label class='mt-5 ml-5'>適用期間</label>"
-              + "<div class='input-group date ml-3' data-provide='datepicker' data-date-format='yyyy/mm/dd' data-date-autoclose='true' data-date-language='ja'>"
+              + "<div class='input-group date ml-2' data-provide='datepicker' data-date-format='yyyy/mm/dd' data-date-autoclose='true' data-date-language='ja'>"
               + "<input type='text' class='form-control' name='from_dates[]' placeholder='yyyy/mm/dd' value=''>"
               + "<div class='input-group-addon'>"
               + "<span class='glyphicon glyphicon-calendar'></span>"
@@ -177,14 +176,13 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
 
           $('#add-pre-payment-button').click(function(e) {
             $('#pre-payment-block').append(
-              "<br>"
-              + "<div class='form-group'>"
+              "<div class='form-group'>"
               + "<div class='form-inline'>"
               + "<input type='hidden' name='pre_payment_fee_rate_ids[]' value='' />"
               + "<label class='mt-5 ml-5'>手数料率</label>"
-              + "<input class='ml-1 mr-2' type='number' name='pre_payment_rates[]' value='' placeholder=''> %"
+              + "<input class='ml-1' type='number' name='pre_payment_rates[]' value='' placeholder=''> %"
               + "<label class='mt-5 ml-5'>適用期間</label>"
-              + "<div class='input-group date ml-3' data-provide='datepicker' data-date-format='yyyy/mm/dd' data-date-autoclose='true' data-date-language='ja'>"
+              + "<div class='input-group date ml-2' data-provide='datepicker' data-date-format='yyyy/mm/dd' data-date-autoclose='true' data-date-language='ja'>"
               + "<input type='text' class='form-control' name='pre_payment_from_dates[]' placeholder='yyyy/mm/dd' value=''>"
               + "<div class='input-group-addon'>"
               + "<span class='glyphicon glyphicon-calendar'></span>"
