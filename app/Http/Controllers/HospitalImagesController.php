@@ -95,6 +95,7 @@ class HospitalImagesController extends Controller
 
         //main画像の保存
         if(isset($file['main'])) {
+            //dd($file['main']);
             $img_info = $this->putFileStorageImage($file['main'], $hospital_id, true);
 
             //ファイル拡張子取得
@@ -106,8 +107,9 @@ class HospitalImagesController extends Controller
             $save_image_categories_sp = [ 'hospital_id' => $hospital_id, 'image_order' => ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 'file_location_no' => 2 ];
 
             //メイン画像の登録確認$hospital_id, $image_order, $order2, $file_location_no
-            $image_category_pc = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN,1, 1)->first();
-            $image_category_sp = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN,1, 2)->first();
+            $image_category_pc = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 1)->first();
+
+            $image_category_sp = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 2)->first();
 
             $this->saveImageAndDeleteOldImage ($hospital,$image_category_pc,$save_images,$save_image_categories);
             $this->saveImageAndDeleteOldImage ($hospital,$image_category_sp,$save_images_sp,$save_image_categories_sp);
