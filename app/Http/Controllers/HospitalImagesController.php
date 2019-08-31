@@ -7,6 +7,7 @@ use App\HospitalImage;
 use App\Http\Requests\HospitalImageFormRequest;
 use App\ImageOrder;
 use App\HospitalCategory;
+use App\Lock;
 use App\InterviewDetail;
 use Illuminate\Http\Request;
 use phpDocumentor\Reflection\File;
@@ -19,13 +20,15 @@ class HospitalImagesController extends Controller
         HospitalImage $hospital_image,
         HospitalCategory $hospital_category,
         ImageOrder $image_order,
-        InterviewDetail $interview_detail
+        InterviewDetail $interview_detail,
+        Lock $lock
     )
     {
         $this->hospital_image = $hospital_image;
         $this->hospital_category = $hospital_category;
         $this->image_order = $image_order;
         $this->interview_detail = $interview_detail;
+        $this->lock = $lock;
         $this->sp_dir = 'SP';
         $this->base_name = $baseClass = class_basename(HospitalImage::class);
     }
@@ -46,7 +49,7 @@ class HospitalImagesController extends Controller
      */
     public function create($hospital_id)
     {
-        $hospital = Hospital::with(['hospital_images', 'hospital_categories'])->find($hospital_id);
+        $hospital = Hospital::with(['hospital_images', 'hospital_categories', 'lock'])->find($hospital_id);
 
         $interview_top = $hospital->hospital_categories()->where('image_order', ImageOrder::IMAGE_GROUP_INTERVIEW)->first();
 
@@ -82,18 +85,43 @@ class HospitalImagesController extends Controller
     public function store(HospitalImageFormRequest $request, int $hospital_id)
     {
         $file = $request->all();
+
         $hospital = Hospital::find($hospital_id);
-        //TOPの保存
-        $hospital->hospital_categories()->updateOrCreate(
-            ['hospital_id' => $hospital_id,'image_order' => ImageOrder::IMAGE_GROUP_TOP],
+
+        //排他的制御。
+        $lock_flag = $this->isLockVersionTrue('HospitalImage',$hospital,$file['lock_version']);
+        if(!$lock_flag) {
+            return redirect()->back()->with('error', trans('messages.model_changed_error'));
+        }
+
+        //手動でLockを変更する
+        $this->lock->updateOrCreate(
+            ['hospital_id' => $hospital_id,'model' => 'HospitalImage'],
             [
+                'token' => str_random(32),
+                'model' => 'HospitalImage',
                 'hospital_id' => $hospital_id,
-                'image_order' => ImageOrder::IMAGE_GROUP_TOP,
-                'title' => $file['title'],
-                'caption' => $file['caption'],
-                'order2' => 1
             ]
         );
+
+        DB::beginTransaction();
+        try {
+            //TOPの保存
+            $hospital->hospital_categories()->updateOrCreate(
+                ['hospital_id' => $hospital_id,'image_order' => ImageOrder::IMAGE_GROUP_TOP],
+                [
+                    'hospital_id' => $hospital_id,
+                    'image_order' => ImageOrder::IMAGE_GROUP_TOP,
+                    'title' => $file['title'],
+                    'caption' => $file['caption'],
+                    'order2' => 1
+                ]
+            );
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', trans('messages.update_error'));
+        }
 
         //main画像の保存
         if(isset($file['main'])) {
@@ -430,5 +458,16 @@ class HospitalImagesController extends Controller
             $hospital_img->update($save_images);
             $hospital_img->hospital_category()->update($save_image_categories);
         }
+    }
+    private function isLockVersionTrue (string $model_name, object $hospital, $request_lock_version) {
+        $lock = $this->lock->byHospitalIdAndModel($model_name,$hospital->id)->first();
+        if(!is_null($lock)) {
+            if($hospital->lock->lock_version != $request_lock_version) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return true;
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnToHospitalImagesTable extends Migration
+class CreateLocksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,14 @@ class AddColumnToHospitalImagesTable extends Migration
      */
     public function up()
     {
-        Schema::table('hospital_images', function (Blueprint $table) {
+        Schema::create('locks', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('lock_version')->unsigned()->default(1);
+            $table->string('model', 100);
+            $table->string('token', 100);
+            $table->integer('hospital_id')->unsigned();
+            $table->foreign('hospital_id')->references('id')->on('hospitals');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +31,6 @@ class AddColumnToHospitalImagesTable extends Migration
      */
     public function down()
     {
-        Schema::table('hospital_images', function (Blueprint $table) {
-            $table->dropColumn('lock_version');
-        });
+        Schema::dropIfExists('locks');
     }
 }
