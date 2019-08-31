@@ -53,7 +53,7 @@ class HospitalAttentionController extends Controller
 
         try {
             $this->validate($request, [
-                'pvad' => 'number|digits_between:1,10'
+                'pvad' => 'numeric|digits_between:1,10'
             ]);
     
             try {
