@@ -15,9 +15,10 @@ class PvRegistController extends Controller
      */
     public function store(Request $request)
     {
-        if (!empty($request->hospitalId) && $this->isExistHospital($request->hospitalId)) {
+        $hospitalId = $request->input('hospitalId');
+        if (!empty($hospitalId) && $this->isExistHospital($hospitalId)) {
             // PVデータ更新
-            $this->registPv($request->hospitalId);
+            $this->registPv($hospitalId);
         }
     }
 

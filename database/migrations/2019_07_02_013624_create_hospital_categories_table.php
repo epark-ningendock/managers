@@ -17,7 +17,7 @@ class CreateHospitalCategoriesTable extends Migration
     {
         Schema::create('hospital_categories', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('hospital_id')->unsigned()->nullable();
+            $table->integer('hospital_id')->unsigned();
             $table->foreign('hospital_id')->references('id')->on('hospitals');
             $table->integer('hospital_image_id')->unsigned()->nullable();
             $table->integer('image_order')->unsigned()->nullable();

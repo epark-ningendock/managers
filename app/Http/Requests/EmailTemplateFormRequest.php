@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\EmailTemplate;
+use App\Rules\BillingEmailFaxNumberCheck;
 use Illuminate\Foundation\Http\FormRequest;
 
 class EmailTemplateFormRequest extends FormRequest
@@ -24,10 +25,19 @@ class EmailTemplateFormRequest extends FormRequest
      */
     public function rules()
     {
+
         return [
-            // 'hospital_id' => 'required',
-            'title' => 'required',
-            'text' => 'max:20000'
+            'title' => 'required|max:255',
+            'text' => 'max:20000',
         ];
     }
+
+    public function attributes()
+    {
+        $attributes = [
+            'title' => 'テンプレート名（件名）'
+        ];
+        return $attributes;
+    }
+
 }

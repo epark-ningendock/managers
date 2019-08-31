@@ -107,7 +107,7 @@
 
 @section('table')
   @include('layouts.partials.pagination-label', ['paginator' => $result])
-  <table class="table table-bordered table-hover">
+  <table class="table table-striped table-hover no-border vertical-middle">
     <thead>
     <tr>
       <th>大分類</th>
@@ -122,8 +122,7 @@
       <th>更新日時</th>
       <th>状態</th>
       @if (Auth::user()->staff_auth->is_cource_classification === 3)
-        <th>編集</th>
-        <th>{{ isset($status) && $status == Status::Deleted ? '復元' : '削除' }}</th>
+        <th></th>
       @endif
     </tr>
     </thead>
@@ -147,24 +146,21 @@
             @if($item['status']->is(Status::Valid))
               <a class="btn btn-primary"
                 href="{{ route('classification.edit', $item['id']).'?classification='.(isset($classification)? $classification : 'minor') }}">
-                <i class="fa fa-edit text-bold"> 編集</i>
+                <i class="fa fa-edit"> 編集</i>
               </a>
             @endif
-          </td>
-          <td>
-            {{--@if(auth()->check() && auth()->user()->hasPermission('is_cource_classification', Permission::Edit))--}}
-            @if($item['status']->is(Status::Valid))
-              <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"
-                      data-message="{{ trans('messages.classification_delete_popup_content') }}">
-                <i class="fa fa-trash"></i>
-              </button>
-            @elseif($item['status']->is(Status::Deleted))
-              <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"
-                      data-target-form="#restore-record-form" data-message="{{ trans('messages.classification_restore_popup_content') }}">
-                復元
-              </button>
-            @endif
-            {{--@endif--}}
+              {{--@if(auth()->check() && auth()->user()->hasPermission('is_cource_classification', Permission::Edit))--}}
+              @if($item['status']->is(Status::Valid))
+                  <button class="btn btn-primary delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"
+                          data-message="{{ trans('messages.classification_delete_popup_content') }}">
+                      <i class="fa fa-trash"></i>
+                  </button>
+              @elseif($item['status']->is(Status::Deleted))
+                  <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"
+                          data-target-form="#restore-record-form" data-message="{{ trans('messages.classification_restore_popup_content') }}">
+                      復元
+                  </button>
+              @endif
           </td>
         @endif
       </tr>

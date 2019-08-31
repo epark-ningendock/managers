@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Calendar;
 use App\CalendarDay;
 use App\Holiday;
+use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
-
 use Carbon\Carbon;
 use App\Course;
 use App\Http\Requests\CalendarFormRequest;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use App\Reservation;
@@ -164,6 +167,13 @@ class CalendarController extends Controller
         $holidays = Holiday::whereDate('date', '>=', $start->toDateString())
             ->whereDate('date', '<=', $end->toDateString())->get();
 
+        $public_holidays = collect(Yasumi::create('Japan', $start->year, 'ja_JP')->getHolidays())->flatten(1);
+
+        if ($start->year != $end->year) {
+            $temp = collect(Yasumi::create('Japan', $end->year, 'ja_JP')->getHolidays())->flatten(1);
+            $public_holidays = $public_holidays->merge($temp);
+        }
+
         $reservation_counts = Reservation::join('courses', 'courses.id', '=', 'reservations.course_id')
             ->whereDate('reservation_date', '>=', $start->toDateString())
             ->whereDate('reservation_date', '<=', $end->toDateString())
@@ -196,9 +206,13 @@ class CalendarController extends Controller
                 return $day->date->isSameDay($start);
             });
 
+            $p_holiday = $public_holidays->first(function ($h) use ($start) {
+                return $start->isSameDay($h);
+            });
+
             $reservation = $reservation_counts->get($start->format('Ymd'));
             $is_holiday = isset($holiday) ? $holiday->is_holiday : 0;
-            $month->push([ 'date' => $start->copy(), 'is_holiday' => $is_holiday, 'calendar_day' => $calendar_day, 'reservation_count' => $reservation ]);
+            $month->push([ 'date' => $start->copy(), 'is_holiday' => $is_holiday, 'holiday' =>  $p_holiday, 'calendar_day' => $calendar_day, 'reservation_count' => $reservation ]);
 
             if ($start->isLastOfMonth() && !$start->isSaturday()) {
                 for ($i = $start->dayOfWeek; $i < 6; $i++) {
@@ -444,5 +458,83 @@ class CalendarController extends Controller
             Session::flash('error', trans('messages.update_error'));
             return redirect()->back();
         }
+    }
+
+    public function reservationDays($course_id, Request $request)
+    {
+        $calendars = [];
+        $course = Course::find($course_id);
+        if ($course) {
+            $today = Carbon::parse($request->input('start_date', Carbon::today()->format('Y/m/d')));
+            $started_date = (Carbon::MONDAY == $today->dayOfWeek) ? $today : $today->previous(Carbon::MONDAY);
+
+            if(isset($request->reservation_date)) {
+                $reservation_date = Carbon::parse($request->reservation_date);
+                if ($reservation_date->isPast()) {
+                    $started_date = $reservation_date->copy()->previous(Carbon::MONDAY);
+                }
+            }
+
+            // 8 weeks range
+            $end_date = $started_date->copy()->addDay(55);
+
+
+
+            $calendar_days = $course->calendar->calendar_days()
+                ->whereBetween('date', [$started_date, $end_date])->orderBy('date')->get();
+
+            $holidays = Holiday::where('hospital_id', session()->get('hospital_id'))
+                                ->where('is_holiday', 1)
+                                ->whereBetween('date', [$started_date, $end_date])
+                                ->orderBy('date')->get();
+
+
+            $period = CarbonPeriod::create($started_date, $end_date);
+            $dates = $period->toArray();
+            $calendars = collect();
+
+            foreach ($dates as $date) {
+                $calendar_day = $calendar_days->first(function ($day) use ($date) {
+                    return $day->date->isSameDay($date);
+                });
+
+                $holiday = $holidays->first(function ($day) use ($date) {
+                    return $day->date->isSameDay($date);
+                });
+
+                $calendars->push([
+                    'date' => $date,
+                    'is_holiday' => isset($holiday),
+                    'frame' => isset($calendar_day)? $calendar_day->reservation_frames : -1,
+                    'is_reservation_acceptance' => !$date->isPast() &&  (!isset($calendar_day) || $calendar_day->is_reservation_acceptance == '1')
+                ]);
+            }
+        }
+
+
+        return response()->json([
+            'data' => view('calendar.partials.daybox', [
+                'calendars' => $calendars
+            ])->render(),
+        ]);
+    }
+
+
+    public function showCalendarGenerator()
+    {
+
+        $end_date = 1000;
+
+        $period = CarbonPeriod::create(Carbon::now()->addDay(0)->format('Y-m-d'), Carbon::now()->addDay($end_date)->format('Y-m-d'));
+        $dates = $period->toArray();
+        $calendars = [];
+
+        foreach ($dates as $date) {
+            $calendars[] = factory(CalendarDay::class)->make([
+                'date' => $date->format('Y-m-d'),
+            ]);
+        }
+        return $this->paginateWithoutKey(collect($calendars), 7, request('page'));
+
     }
 }

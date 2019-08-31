@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class HospitalMinorClassification extends Model
 {
+    use SoftDeletes;
+
     protected $guarded = [];
 
     public function middle_classification()

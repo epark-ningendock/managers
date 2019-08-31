@@ -5,8 +5,6 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\Jobs\PvAggregateJob;
-use phpDocumentor\Reflection\Types\Boolean;
-use Yasumi\tests\Brazil\CarnavalTuesdayTest;
 
 class PvAggregateCommand extends Command
 {
@@ -25,19 +23,19 @@ class PvAggregateCommand extends Command
         $aggregateDay = $this->option('aggregate_day');
         $deleteFlg = false;
         if (empty($aggregateDay)) {
-            $aggregateDate = config('constant.pv_aggregate_day');
+            $aggregateDay = config('constant.pv_aggregate_day');
             $deleteFlg = true;
         }
 
         $date = Carbon::today();
-        $date->subDay($aggregateDate);
+        $date->subDay($aggregateDay);
 
         // PV集計ジョブをキューに登録
         $this->queue($date, $deleteFlg);
 
     }
 
-    public function queue(int $aggregateDay, bool $deleteFlg)
+    public function queue(Carbon $aggregateDay, bool $deleteFlg)
     {
         $job = (new PvAggregateJob($aggregateDay, $deleteFlg))->onQueue('pv-aggregate');
         dispatch($job);

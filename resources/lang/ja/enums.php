@@ -7,6 +7,7 @@
  */
 
 use \App\Enums\Authority;
+use \App\Enums\CourseImageType;
 use App\Enums\HospitalEnums;
 use App\Enums\StaffStatus;
 use App\Enums\Permission;
@@ -16,6 +17,7 @@ use App\Enums\CalendarDisplay;
 use App\Enums\ReservationStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\Gender;
+use App\Enums\TerminalType;
 
 return [
     Authority::class => [
@@ -50,8 +52,8 @@ return [
     ],
 
     WebReception::class => [
-        WebReception::NotAccept => '受け付けない',
-        WebReception::Accept => '受け付ける'
+        WebReception::NotAccept => '非公開',
+        WebReception::Accept => '公開'
     ],
 
     CalendarDisplay::class => [
@@ -76,5 +78,19 @@ return [
     Gender::class =>[
         Gender::Male => '男性',
         Gender::Female => '女性'
+    ],
+
+    TerminalType::class => [
+        TerminalType::Hospital => '院内',
+        TerminalType::PC => 'PC',
+        TerminalType::SmartPhone => 'スマホ',
+        TerminalType::PhoneReservationAPI => '電話予約(API）',
+        TerminalType::PhoneReservationPPC => '電話予約(PPC)'
+    ],
+
+    CourseImageType::class => [
+        CourseImageType::Main => '検査コースメイン',
+        CourseImageType::Pc => '受診の流れメイン（PC）',
+        CourseImageType::Sp => '受診の流れメイン（SP）',
     ]
 ];

@@ -4,38 +4,55 @@ namespace App;
 
 use App\Enums\WebReception;
 use App\Helpers\EnumTrait;
+use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class Course extends SoftDeleteModel
 {
-    use EnumTrait;
+    use EnumTrait, OptimisticLocking;
 
     protected $fillable = [
         'hospital_id',
-        'web_reception',
-        'is_category',
+        'calendar_id',
         'code',
         'name',
-        'calendar_id',
+        'web_reception',
+        'is_category',
+        'course_sales_copy',
         'course_point',
         'course_notice',
         'course_cancel',
-        'reception_start_date',
-        'reception_end_date',
-        'reception_acceptance_date',
-        'cancellation_deadline',
         'is_price',
         'price',
         'is_price_memo',
         'price_memo',
+        'regular_price',
+        'discounted_p[rice',
+        'tax_class',
+        'display_setting',
+        'pv',
+        'pvad',
         'order',
-        'status'
+        'cancellation_deadline',
+        'reception_start_date',
+        'reception_end_date',
+        'pre_account_price',
+        'is_local_payment',
+        'is_pre_account',
+        'auto_calc_application',
+        'reception_acceptance_date',
+        'status',
+        'created_at',
+        'updated_at',
+        'lock_version',
+        'course_display_start',
+        'course_display_end'
     ];
 
     protected $attributes = [
-      'course_cancel' => '0'
+        'course_cancel' => '0'
     ];
 
-    protected $enums = [ 'web_reception' => WebReception::class ];
+    protected $enums = ['web_reception' => WebReception::class];
 
     public function course_options()
     {
@@ -69,6 +86,15 @@ class Course extends SoftDeleteModel
 
     public function calendar()
     {
-        return $this->hasOne('App\Calendar');
+        // return $this->hasOne('App\Calendar');
+        return $this->belongsTo('App\Calendar');
+    }
+
+    public function attributes()
+    {
+        $attributes = [
+            'pre_account_price' => '事前決済価格'
+        ];
+        return $attributes;
     }
 }

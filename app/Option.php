@@ -12,7 +12,7 @@ class Option extends SoftDeleteModel
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-            'hospital_id', 'name', 'confirm', 'price', 'tax_class_id', 'order', 'status', 'lock_version'
+            'hospital_id', 'name', 'confirm', 'price', 'tax_class_id', 'order', 'status', 'lock_version', 'created_at', 'updated_at'
         ];
 
     public function reservation_options()
