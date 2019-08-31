@@ -27,6 +27,7 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
           </p>
           <label class="mt-5">PR</label>
           <input type="text" id="pvad" name="pvad" value="{{ isset($hospital->pvad) ? $hospital->pvad : 0 }}" placeholder="">
+          @if ($errors->has('pvad')) <p class="has-error">{{ $errors->first('pvad') }}</p> @endif
           <div class="mt-5">
             {{ Form::hidden('is_pickup') }}
             {{ Form::checkbox('is_pickup', 1, $hospital->is_pickup, array('id'=>'is_pickup')) }}
@@ -91,17 +92,19 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                   <label class="mt-5 ml-5">手数料率</label>
                   <input type="number" id="{{ 'rate'.$feeRate->id }}" name="rates[]" value="{{ isset($feeRate->rate) ? $feeRate->rate : 0 }}" placeholder=""> %
                   <label class="mt-5 ml-5">適用期間</label>
-                  <div class="input-group date" data-provide="datepicker" data-date-format="yyyy/mm/dd"
+                  <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd"
                         data-date-autoclose="true" data-date-language="ja">
                     <input type="text" class="form-control"
                             id="{{ 'from_date'.$feeRate->id }}" name="from_dates[]"
-                            placeholder="yyyy/mm/dd" value="{{ isset($feeRate->from_date) ? $feeRate->from_date : '' }}">
+                            placeholder="yyyy-mm-dd" value="{{ isset($feeRate->from_date) ? $feeRate->from_date : '' }}">
                     <div class="input-group-addon">
                       <span class="glyphicon glyphicon-calendar"></span>
                     </div>
                   </div>
                   <span class="ml-2 mr-2">~</span>
                 </div>
+                @if ($errors->has('rate')) <p class="has-error">{{ $errors->first('rate') }}</p> @endif
+                @if ($errors->has('from_date')) <p class="has-error">{{ $errors->first('from_date') }}</p> @endif
               </div>
             @endforeach
           </div> 
@@ -118,17 +121,19 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                   <label class="mt-5 ml-5">手数料率</label>
                   <input type="number" name="pre_payment_rates[]" value="{{ isset($prePaymentFeeRate->rate) ? $prePaymentFeeRate->rate : 0 }}" placeholder=""> %
                   <label class="mt-5 ml-5">適用期間</label>
-                  <div class="input-group date" data-provide="datepicker" data-date-format="yyyy/mm/dd"
+                  <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd"
                         data-date-autoclose="true" data-date-language="ja">
                     <input type="text" class="form-control"
                             name="pre_payment_from_dates[]"
-                            placeholder="yyyy/mm/dd" value="{{ isset($prePaymentFeeRate->from_date) ? $prePaymentFeeRate->from_date : '' }}">
+                            placeholder="yyyy-mm-dd" value="{{ isset($prePaymentFeeRate->from_date) ? $prePaymentFeeRate->from_date : '' }}">
                     <div class="input-group-addon">
                       <span class="glyphicon glyphicon-calendar"></span>
                     </div>
                   </div>
                   <span class="ml-2 mr-2">~</span>
                 </div>
+                @if ($errors->has('pre_payment_rate')) <p class="has-error">{{ $errors->first('pre_payment_rate') }}</p> @endif
+                @if ($errors->has('pre_payment_from_date')) <p class="has-error">{{ $errors->first('pre_payment_from_date') }}</p> @endif
               </div>
             @endforeach
           </div>
