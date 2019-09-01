@@ -3,6 +3,6 @@
 @section('main-content')
     <!-- Error -->
     @include('layouts.partials.error_pan')
-
+    @include('layouts.partials.message')
     @yield('form')
 @stop

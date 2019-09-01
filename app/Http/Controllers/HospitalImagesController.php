@@ -7,9 +7,12 @@ use App\HospitalImage;
 use App\Http\Requests\HospitalImageFormRequest;
 use App\ImageOrder;
 use App\HospitalCategory;
+use App\Lock;
 use App\InterviewDetail;
 use Illuminate\Http\Request;
 use phpDocumentor\Reflection\File;
+use Illuminate\Support\Facades\DB;
+use Reshadman\OptimisticLocking\StaleModelLockingException;
 
 class HospitalImagesController extends Controller
 {
@@ -17,13 +20,15 @@ class HospitalImagesController extends Controller
         HospitalImage $hospital_image,
         HospitalCategory $hospital_category,
         ImageOrder $image_order,
-        InterviewDetail $interview_detail
+        InterviewDetail $interview_detail,
+        Lock $lock
     )
     {
         $this->hospital_image = $hospital_image;
         $this->hospital_category = $hospital_category;
         $this->image_order = $image_order;
         $this->interview_detail = $interview_detail;
+        $this->lock = $lock;
         $this->sp_dir = 'SP';
         $this->base_name = $baseClass = class_basename(HospitalImage::class);
     }
@@ -44,7 +49,7 @@ class HospitalImagesController extends Controller
      */
     public function create($hospital_id)
     {
-        $hospital = Hospital::with(['hospital_images', 'hospital_categories'])->find($hospital_id);
+        $hospital = Hospital::with(['hospital_images', 'hospital_categories', 'lock'])->find($hospital_id);
 
         $interview_top = $hospital->hospital_categories()->where('image_order', ImageOrder::IMAGE_GROUP_INTERVIEW)->first();
 
@@ -80,18 +85,42 @@ class HospitalImagesController extends Controller
     public function store(HospitalImageFormRequest $request, int $hospital_id)
     {
         $file = $request->all();
+
         $hospital = Hospital::find($hospital_id);
-        //TOPの保存
-        $hospital->hospital_categories()->updateOrCreate(
-            ['hospital_id' => $hospital_id,'image_order' => ImageOrder::IMAGE_GROUP_TOP],
+
+        //排他的制御。
+        $lock_flag = $this->isLockVersionTrue('HospitalImage',$hospital,$file['lock_version']);
+        if(!$lock_flag) {
+            return redirect()->back()->with('error', trans('messages.model_changed_error'));
+        }
+
+        //手動でLockを変更する
+        DB::beginTransaction();
+        $this->lock->updateOrCreate(
+            ['hospital_id' => $hospital_id,'model' => 'HospitalImage'],
             [
+                'token' => str_random(32),
+                'model' => 'HospitalImage',
                 'hospital_id' => $hospital_id,
-                'image_order' => ImageOrder::IMAGE_GROUP_TOP,
-                'title' => $file['title'],
-                'caption' => $file['caption'],
-                'order2' => 1
             ]
         );
+        try {
+            //TOPの保存
+            $hospital->hospital_categories()->updateOrCreate(
+                ['hospital_id' => $hospital_id,'image_order' => ImageOrder::IMAGE_GROUP_TOP],
+                [
+                    'hospital_id' => $hospital_id,
+                    'image_order' => ImageOrder::IMAGE_GROUP_TOP,
+                    'title' => $file['title'],
+                    'caption' => $file['caption'],
+                    'order2' => 1
+                ]
+            );
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', trans('messages.update_error'));
+        }
 
         //main画像の保存
         if(isset($file['main'])) {
@@ -106,10 +135,10 @@ class HospitalImagesController extends Controller
             $save_images_sp = ['extension' => $extension, 'name' => $img_info['sp_img_name'], 'path' => $img_info['sp_img_url']];
             $save_image_categories_sp = [ 'hospital_id' => $hospital_id, 'image_order' => ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 'file_location_no' => 2 ];
 
-            //メイン画像の登録確認$hospital_id, $image_order, $order2, $file_location_no
-            $image_category_pc = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 1)->first();
+            //メイン画像の登録確認$hospital_id, $image_order, $i, $location_no
+            $image_category_pc = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN,1, 1)->first();
 
-            $image_category_sp = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 2)->first();
+            $image_category_sp = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN,1, 2)->first();
 
             $this->saveImageAndDeleteOldImage ($hospital,$image_category_pc,$save_images,$save_image_categories);
             $this->saveImageAndDeleteOldImage ($hospital,$image_category_sp,$save_images_sp,$save_image_categories_sp);
@@ -330,7 +359,7 @@ class HospitalImagesController extends Controller
         if ($image_order != ImageOrder::IMAGE_GROUP_MAP) {
             $memo1 = isset($file[$image_prefix.$i.'_memo1']) ? $file[$image_prefix.$i.'_memo1'] : '' ;
             $memo2 = isset($file[$image_prefix.$i.'_memo2']) ? $file[$image_prefix.$i.'_memo2'] : '' ;
-            $order = isset($file[$image_prefix.$i.'_order']) ? $file[$image_prefix.$i.'_order'] : 0 ;
+            $order2 = isset($file[$image_prefix.$i.'_order2']) ? $file[$image_prefix.$i.'_order2'] : 0 ;
             $name_2 = isset($file[$image_prefix.$i.'_name']) ? $file[$image_prefix.$i.'_name'] : '' ;
 
             $location_no = isset($file[$image_prefix.$i.'_location']) ? $file[$image_prefix.$i.'_location'] : null ;
@@ -347,10 +376,10 @@ class HospitalImagesController extends Controller
             //pc保存 putFile メソッドでuniqueファイル名を返す
             $img_info =$this->putFileStorageImage($file[$image_prefix.$i],$hospital_id);
             $save_sub_images = ['extension' => $extension, 'name' => $img_info['pc_img_name'], 'path' => $img_info['pc_img_url'], 'memo1' => $memo1, 'memo2' => $memo2];
-            $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name_2,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order, 'file_location_no' => $location_no];
+            $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name_2,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order' => $i, 'order2' => $order2, 'file_location_no' => $location_no];
             } else {
                 $save_sub_images = ['memo1' => $memo1, 'memo2' => $memo2];
-                $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name_2,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order , 'file_location_no' => $location_no];
+                $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name_2,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order' => $i, 'order2' => $order2 , 'file_location_no' => $location_no];
             }
 
             if(is_null($image_order_exists)) {
@@ -430,5 +459,16 @@ class HospitalImagesController extends Controller
             $hospital_img->update($save_images);
             $hospital_img->hospital_category()->update($save_image_categories);
         }
+    }
+    private function isLockVersionTrue (string $model_name, object $hospital, $request_lock_version) {
+        $lock = $this->lock->byHospitalIdAndModel($model_name,$hospital->id)->first();
+        if(!is_null($lock)) {
+            if($hospital->lock->lock_version != $request_lock_version) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return true;
     }
 }

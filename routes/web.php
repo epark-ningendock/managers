@@ -107,7 +107,7 @@ Route::middleware('auth:staffs')->group(function () {
             |--------------------------------------------------------------------------
             */
             Route::get('/{hospital}/attention/create', 'HospitalAttentionController@create')->name('hospital.attention.create');
-            Route::post('/attention/store', 'HospitalAttentionController@store')->name('hospital.attention.store');
+            Route::post('/{hospital}/attention/store', 'HospitalAttentionController@store')->name('hospital.attention.store');
             Route::get('/{hospital}/interview/{interview_id}/delete', 'HospitalImagesController@deleteInterview')->name('hospital.delete_interview');
         });
         /*

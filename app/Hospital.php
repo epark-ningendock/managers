@@ -99,4 +99,9 @@ class Hospital extends Model
         return $this->hasOne('App\ContractInformation');
     }
 
+    public function lock()
+    {
+        return $this->hasOne('App\Lock');
+    }
+
 }

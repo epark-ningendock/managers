@@ -497,7 +497,7 @@ legend {
 }
 
 .staff_box {
-  height: 540px;
+  height: 610px;
   margin-top: 20px;
 }
 
@@ -603,12 +603,17 @@ label.file-upload input[type="file"] {
   display:block;
 }
 
+#speciality_section {
+  position: relative;
+  padding-bottom: 100px;
+}
+
 #staff_section {
   position: relative;
   padding-bottom: 100px;
 }
 
-.staff_add,.facility_add,.internal_add,.external_add,.another_add {
+.staff_add,.facility_add,.internal_add,.external_add,.another_add,.speciality_add {
   position: absolute;
   bottom: 10px;
   left: 10px;
