@@ -200,7 +200,7 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                   if (ele.prop('checked')) {
                       ele.next('input:hidden').remove();
                   } else {
-                      $('<input type="hidden" name="minor_values[]" value="0"/>').insertAfter(ele);
+                      $('<input type="hidden" name="minor_values[]" value="0"/>').insertBefore(ele);
                   }
               };
 
