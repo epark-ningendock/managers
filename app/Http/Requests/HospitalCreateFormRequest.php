@@ -32,7 +32,7 @@ class HospitalCreateFormRequest extends FormRequest
             'longitude' => 'longitude_latitude',
             'kana' => 'required|max:50',
             'name' => 'required|max:50',
-            'postcode' => 'number_dash',
+            'postcode' => 'regex:/^[0-9]{3}-?[0-9]{4}$/',
             'address1' => 'max:256',
             'address2' => 'max:256',
             'tel' => 'regex:/^[0-9]{2,4}-?[0-9]{2,4}-?[0-9]{3,4}$/',

@@ -32,7 +32,7 @@ class CustomerFormRequest extends FormRequest
             'tel' => 'nullable|regex:/^[0-9]{2,4}-?[0-9]{2,4}-?[0-9]{3,4}$/',
             'sex' => 'required|enum_value:' . Gender::class . ',false',
             'birthday' => 'nullable|date',
-            'postcode' => 'nullable|digits:7',
+            'postcode' => 'nullable|regex:/^[0-9]{3}-?[0-9]{4}$/',
             'prefecture_id' => 'nullable|exists:prefectures,id',
 //            'city_or_country' => 'required',
 //            'address' => 'required',

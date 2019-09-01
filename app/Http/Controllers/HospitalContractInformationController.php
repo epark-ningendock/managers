@@ -190,7 +190,7 @@ class HospitalContractInformationController extends Controller
             'contractor_name' => 'required|max:50',
             'representative_name_kana' => 'required|max:50',
             'representative_name' => 'required|max:50',
-            'postcode' => 'nullable|regex:/^\d{3}-?\d{4}$/',
+            'postcode' => 'nullable|regex:/^[0-9]{3}-?[0-9]{4}$/',
             'address' => 'nullable|max:200',
             'tel' => 'required|regex:/^[0-9]{2,4}-?[0-9]{2,4}-?[0-9]{3,4}$/',
             'fax' => 'nullable|regex:/^[0-9]{2,4}-?[0-9]{2,4}-?[0-9]{3,4}$/',
