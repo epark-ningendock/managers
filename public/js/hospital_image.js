@@ -26,6 +26,11 @@ $(document).ready(function() {
 
     $('#interview_add').click(function() {
         let i = $('.interview_detail_new').length;
+        console.log(i);
+        if(i >= 20) {
+            alert('インタビューは20個までです');
+            return false;
+        }
         $('.interview_detail_new:last').after(
             '<div class="interview_list interview_detail_new">\n' +
             '                <div>\n' +
