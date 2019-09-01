@@ -32,7 +32,7 @@ class HospitalImageFormRequest extends FormRequest
         for ($i = 1; $i <= 30; $i++) {
             $tab_staff_valid += [
             "staff_tab_{$i}" => 'file|image|max:4000',
-            "staff_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+            "staff_tab_{$i}_order2" => 'nullable|max:99|numeric|min:1',
             "staff_tab_{$i}_memo2" => 'nullable|max:200',
             "staff_tab_{$i}_location" => 'nullable',
          ];
@@ -41,7 +41,7 @@ class HospitalImageFormRequest extends FormRequest
         for ($i = 1; $i <= 30; $i++) {
             $tab_facility_valid += [
                 "facility_tab_{$i}" => 'file|image|max:4000',
-                "facility_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+                "facility_tab_{$i}_order2" => 'nullable|max:99|numeric|min:1',
                 "facility_tab_{$i}_memo2" => 'nullable|max:200',
                 "facility_tab_{$i}_location" => 'nullable',
             ];
@@ -50,7 +50,7 @@ class HospitalImageFormRequest extends FormRequest
         for ($i = 1; $i <= 30; $i++) {
             $tab_internal_valid += [
                 "internal_tab_{$i}" => 'file|image|max:4000',
-                "internal_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+                "internal_tab_{$i}_order2" => 'nullable|max:99|numeric|min:1',
                 "internal_tab_{$i}_memo2" => 'nullable|max:200',
                 "internal_tab_{$i}_location" => 'nullable',
             ];
@@ -59,7 +59,7 @@ class HospitalImageFormRequest extends FormRequest
         for ($i = 1; $i <= 30; $i++) {
             $tab_external_valid += [
                 "external_tab_{$i}" => 'file|image|max:4000',
-                "external_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+                "external_tab_{$i}_order2" => 'nullable|max:99|numeric|min:1',
                 "external_tab_{$i}_memo2" => 'nullable|max:200',
                 "external_tab_{$i}_location" => 'nullable',
             ];
@@ -68,7 +68,7 @@ class HospitalImageFormRequest extends FormRequest
         for ($i = 1; $i <= 30; $i++) {
             $tab_another_valid += [
                 "another_tab_{$i}" => 'file|image|max:4000',
-                "another_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+                "another_tab_{$i}_order2" => 'nullable|max:99|numeric|min:1',
                 "another_tab_{$i}_memo2" => 'nullable|max:200',
                 "another_tab_{$i}_location" => 'nullable',
             ];
@@ -207,7 +207,7 @@ class HospitalImageFormRequest extends FormRequest
         $tab_facility_attributes = [];
         for ($i = 1; $i <= 30; $i++) {
             $tab_facility_attributes += [
-                "facility_tab_{$i}_order" => '表示順',
+                "facility_tab_{$i}_order2" => '表示順',
                 "facility_tab_{$i}_memo2" => '説明',
             ];
         }
@@ -215,7 +215,7 @@ class HospitalImageFormRequest extends FormRequest
         $tab_staff_attributes = [];
         for ($i = 1; $i <= 30; $i++) {
             $tab_staff_attributes += [
-                "staff_tab_{$i}_order" => '表示順',
+                "staff_tab_{$i}_order2" => '表示順',
                 "staff_tab_{$i}_memo2" => '説明',
             ];
         }
@@ -223,7 +223,7 @@ class HospitalImageFormRequest extends FormRequest
         $tab_internal_attributes = [];
         for ($i = 1; $i <= 30; $i++) {
             $tab_internal_attributes += [
-                "internal_tab_{$i}_order" => '表示順',
+                "internal_tab_{$i}_order2" => '表示順',
                 "internal_tab_{$i}_memo2" => '説明',
             ];
         }
@@ -231,7 +231,7 @@ class HospitalImageFormRequest extends FormRequest
         $tab_external_attributes = [];
         for ($i = 1; $i <= 30; $i++) {
             $tab_external_attributes += [
-                "external_tab_{$i}_order" => '表示順',
+                "external_tab_{$i}_order2" => '表示順',
                 "external_tab_{$i}_memo2" => '説明',
             ];
         }
@@ -239,7 +239,7 @@ class HospitalImageFormRequest extends FormRequest
         $tab_another_attributes = [];
         for ($i = 1; $i <= 30; $i++) {
             $tab_another_attributes += [
-                "another_tab_{$i}_order" => '表示順',
+                "another_tab_{$i}_order2" => '表示順',
                 "another_tab_{$i}_memo2" => '説明',
             ];
         }

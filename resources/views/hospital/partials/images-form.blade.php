@@ -55,7 +55,7 @@
         @for ($i = 1; $i <= 4; $i++)
         <div class="col-sm-6">
             {{Form::label('sub_'.$i, '施設サブ画像'.$i,['class' => 'form_label'])}}
-            <?php $sub_image_category = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_FACILITY_SUB)->where('order2', $i)->first(); ?>
+            <?php $sub_image_category = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_FACILITY_SUB)->where('order', $i)->first(); ?>
             @if (!is_null($sub_image_category))
                 <div class="sub_image_area">
                     <img class="object-fit" src="{{$sub_image_category->hospital_image->path}}">
@@ -86,7 +86,7 @@
     <div class="form_title"><div class="number_circle">3</div> <span class="input_title">こだわり</span></div>
     <div class="row">
         @for ($i = 1; $i <= 4; $i++)
-            <?php $image_speciality = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_SPECIALITY)->where('order2', $i)->first(); ?>
+            <?php $image_speciality = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_SPECIALITY)->where('order', $i)->first(); ?>
             <div class="col-sm-6" @if(is_null($image_speciality) && $i != 1) style="display: none" @endif>
                 {{Form::label('speciality_1_caption', 'こだわり'.$i,['class' => 'form_label'])}}
                 @if (!is_null($image_speciality) && !is_null($image_speciality->hospital_image->path))
@@ -260,12 +260,12 @@
             <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
         </p>
     <?php $staff_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_STAFF);?>
-    <?php $staff_tab_box = $staff_tab_box->sortBy('order');?>
-    <?php $staff_show_order2 = $staff_tab_box->pluck('order2')->toArray();?>
+    <?php $staff_tab_box = $staff_tab_box->sortBy('order2');?>
+    <?php $staff_show_order2 = $staff_tab_box->pluck('order')->toArray();?>
     <!--登録済のタブ画像フォーム-->
     <div class="open_close_tab">
     @foreach($staff_tab_box as $staff_tab)
-        <?php $i = $staff_tab['order2'];?>
+        <?php $i = $staff_tab['order'];?>
         <div class="row photo-tab" data-order="{{$i}}" @if(is_null($staff_tab) && $i != 1) style="display: none" @endif>
             <div class="col-sm-6">
                 @if(!is_null($staff_tab) && !is_null($staff_tab->hospital_image->path))
@@ -294,10 +294,10 @@
                     {{Form::hidden('staff_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_STAFF )}}
             </div>
             <div class="col-sm-6">
-                {{Form::label('staff_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
-                {{Form::text('staff_tab_'.$i.'_order', is_null($staff_tab) ? null : $staff_tab['order'], ['class' => 'form-control'])}}
-                @if ($errors->has('staff_tab_'.$i.'_order'))
-                    <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_order') }}</div>
+                {{Form::label('staff_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                {{Form::text('staff_tab_'.$i.'_order2', is_null($staff_tab) ? null : $staff_tab['order2'], ['class' => 'form-control'])}}
+                @if ($errors->has('staff_tab_'.$i.'_order2'))
+                    <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_order2') }}</div>
                 @endif
                 {{Form::label('staff_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                 {{Form::textarea('staff_tab_'.$i.'_memo2', is_null($staff_tab) ? '' : $staff_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
@@ -336,10 +336,10 @@
                 {{Form::hidden('staff_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_STAFF )}}
             </div>
             <div class="col-sm-6">
-                {{Form::label('staff_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
-                {{Form::text('staff_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
-                @if ($errors->has('staff_tab_'.$i.'_order'))
-                    <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_order') }}</div>
+                {{Form::label('staff_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                {{Form::text('staff_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
+                @if ($errors->has('staff_tab_'.$i.'_order2'))
+                    <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_order2') }}</div>
                 @endif
                 {{Form::label('staff_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                 {{Form::textarea('staff_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
@@ -364,13 +364,13 @@
         <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
     </p>
     <?php $facility_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_FACILITY);?>
-    <?php $facility_tab_box = $facility_tab_box->sortBy('order');?>
-    <?php $facility_show_order2 = $facility_tab_box->pluck('order2')->toArray();?>
+    <?php $facility_tab_box = $facility_tab_box->sortBy('order2');?>
+    <?php $facility_show_order2 = $facility_tab_box->pluck('order')->toArray();?>
 
     <!--未登録のタブ画像フォーム-->
     <div class="open_close_tab">
         @foreach($facility_tab_box as $facility_tab)
-            <?php $i = $facility_tab['order2'];?>
+            <?php $i = $facility_tab['order'];?>
             <div class="row photo-tab" data-order="{{$i}}" @if(is_null($facility_tab) && $i != 1) style="display: none" @endif>
                 <div class="col-sm-6">
                     @if(!is_null($facility_tab) && !is_null($facility_tab->hospital_image->path))
@@ -399,10 +399,10 @@
                         {{Form::hidden('facility_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_FACILITY )}}
                 </div>
                 <div class="col-sm-6">
-                    {{Form::label('facility_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
-                    {{Form::text('facility_tab_'.$i.'_order', is_null($facility_tab) ? null : $facility_tab['order'], ['class' => 'form-control'])}}
-                    @if ($errors->has('facility_tab_'.$i.'_order'))
-                        <div class="error_message">{{ $errors->first('facility_tab_'.$i.'_order') }}</div>
+                    {{Form::label('facility_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                    {{Form::text('facility_tab_'.$i.'_order2', is_null($facility_tab) ? null : $facility_tab['order2'], ['class' => 'form-control'])}}
+                    @if ($errors->has('facility_tab_'.$i.'_order2'))
+                        <div class="error_message">{{ $errors->first('facility_tab_'.$i.'_order2') }}</div>
                     @endif
                     {{Form::label('facility_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                     {{Form::textarea('facility_tab_'.$i.'_memo2', is_null($facility_tab) ? null : $facility_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
@@ -443,10 +443,10 @@
                     {{Form::hidden('facility_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_FACILITY )}}
                 </div>
                 <div class="col-sm-6">
-                    {{Form::label('facility_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
-                    {{Form::text('facility_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
-                    @if ($errors->has('facility_tab_'.$i.'_order'))
-                        <div class="error_message"> {{ $errors->first('facility_tab_'.$i.'_order') }} </div>
+                    {{Form::label('facility_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                    {{Form::text('facility_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
+                    @if ($errors->has('facility_tab_'.$i.'_order2'))
+                        <div class="error_message"> {{ $errors->first('facility_tab_'.$i.'_order2') }} </div>
                     @endif
                     {{Form::label('facility_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                     {{Form::textarea('facility_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
@@ -476,13 +476,13 @@
         <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
     </p>
     <?php $internal_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_INTERNAL);?>
-    <?php $internal_tab_box = $internal_tab_box->sortBy('order');?>
-    <?php $internal_show_order2 = $internal_tab_box->pluck('order2')->toArray();?>
+    <?php $internal_tab_box = $internal_tab_box->sortBy('order2');?>
+    <?php $internal_show_order2 = $internal_tab_box->pluck('order')->toArray();?>
 
     <!--登録済院内タブ画像フォーム-->
     <div class="open_close_tab">
         @foreach($internal_tab_box as $internal_tab)
-            <?php $i = $internal_tab['order2'];?>
+            <?php $i = $internal_tab['order'];?>
             <div class="row photo-tab" data-order="{{$i}}" @if(is_null($internal_tab) && $i != 1) style="display: none" @endif>
                 <div class="col-sm-6">
                     @if(!is_null($internal_tab) && !is_null($internal_tab->hospital_image->path))
@@ -511,10 +511,10 @@
                     {{Form::hidden('internal_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_INTERNAL )}}
                 </div>
                 <div class="col-sm-6">
-                    {{Form::label('internal_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
-                    {{Form::text('internal_tab_'.$i.'_order', is_null($internal_tab) ? null : $internal_tab['order'], ['class' => 'form-control'])}}
-                    @if ($errors->has('internal_tab_'.$i.'_order'))
-                        <div class="error_message"> {{ $errors->first('internal_tab_'.$i.'_order') }} </div>
+                    {{Form::label('internal_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                    {{Form::text('internal_tab_'.$i.'_order2', is_null($internal_tab) ? null : $internal_tab['order2'], ['class' => 'form-control'])}}
+                    @if ($errors->has('internal_tab_'.$i.'_order2'))
+                        <div class="error_message"> {{ $errors->first('internal_tab_'.$i.'_order2') }} </div>
                     @endif
                     {{Form::label('internal_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                     {{Form::textarea('internal_tab_'.$i.'_memo2', is_null($internal_tab) ? null : $internal_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
@@ -555,10 +555,10 @@
                         {{Form::hidden('internal_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_INTERNAL )}}
                     </div>
                     <div class="col-sm-6">
-                        {{Form::label('internal_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
-                        {{Form::text('internal_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
-                        @if ($errors->has('internal_tab_'.$i.'_order'))
-                            <div class="error_message">{{ $errors->first('internal_tab_'.$i.'_order') }}</div>
+                        {{Form::label('internal_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                        {{Form::text('internal_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
+                        @if ($errors->has('internal_tab_'.$i.'_order2'))
+                            <div class="error_message">{{ $errors->first('internal_tab_'.$i.'_order2') }}</div>
                         @endif
                         {{Form::label('internal_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                         {{Form::textarea('internal_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
@@ -588,13 +588,13 @@
         <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
     </p>
 <?php $external_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_EXTERNAL);?>
-<?php $external_tab_box = $external_tab_box->sortBy('order');?>
-<?php $external_show_order2 = $external_tab_box->pluck('order2')->toArray();?>
+<?php $external_tab_box = $external_tab_box->sortBy('order2');?>
+<?php $external_show_order2 = $external_tab_box->pluck('order')->toArray();?>
 
     <!--登録済外観タブ画像フォーム-->
     <div class="open_close_tab">
         @foreach($external_tab_box as $external_tab)
-            <?php $i = $external_tab['order2'];?>
+            <?php $i = $external_tab['order'];?>
             <div class="row photo-tab" data-order="{{$i}}" @if(is_null($external_tab) && $i != 1) style="display: none" @endif>
                 <div class="col-sm-6">
                     @if(!is_null($external_tab) && !is_null($external_tab->hospital_image->path))
@@ -623,10 +623,10 @@
                     {{Form::hidden('external_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_EXTERNAL )}}
                 </div>
                 <div class="col-sm-6">
-                    {{Form::label('external_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
-                    {{Form::text('external_tab_'.$i.'_order', is_null($external_tab) ? null : $external_tab['order'], ['class' => 'form-control'])}}
-                    @if ($errors->has('external_tab_'.$i.'_order'))
-                        <div class="error_message">{{ $errors->first('external_tab_'.$i.'_order') }}</div>
+                    {{Form::label('external_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                    {{Form::text('external_tab_'.$i.'_order2', is_null($external_tab) ? null : $external_tab['order2'], ['class' => 'form-control'])}}
+                    @if ($errors->has('external_tab_'.$i.'_order2'))
+                        <div class="error_message">{{ $errors->first('external_tab_'.$i.'_order2') }}</div>
                     @endif
                     {{Form::label('external_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                     {{Form::textarea('external_tab_'.$i.'_memo2', is_null($external_tab) ? null : $external_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
@@ -667,10 +667,10 @@
                         {{Form::hidden('external_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_EXTERNAL )}}
                     </div>
                     <div class="col-sm-6">
-                        {{Form::label('external_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
-                        {{Form::text('external_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
-                        @if ($errors->has('external_tab_'.$i.'_order'))
-                            <div class="error_message">{{ $errors->first('external_tab_'.$i.'_order') }}</div>
+                        {{Form::label('external_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                        {{Form::text('external_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
+                        @if ($errors->has('external_tab_'.$i.'_order2'))
+                            <div class="error_message">{{ $errors->first('external_tab_'.$i.'_order2') }}</div>
                         @endif
                         {{Form::label('external_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                         {{Form::textarea('external_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
@@ -694,13 +694,13 @@
         <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
     </p>
 <?php $another_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_ANOTHER);?>
-<?php $another_tab_box = $another_tab_box->sortBy('order');?>
-<?php $another_show_order2 = $another_tab_box->pluck('order2')->toArray();?>
+<?php $another_tab_box = $another_tab_box->sortBy('order2');?>
+<?php $another_show_order2 = $another_tab_box->pluck('order')->toArray();?>
 
 <!--登録済その他タブ画像フォーム-->
     <div class="open_close_tab">
         @foreach($another_tab_box as $another_tab)
-            <?php $i = $another_tab['order2'];?>
+            <?php $i = $another_tab['order'];?>
             <div class="row photo-tab" data-order="{{$i}}" @if(is_null($another_tab) && $i != 1) style="display: none" @endif>
                 <div class="col-sm-6">
                     @if(!is_null($another_tab) && !is_null($another_tab->hospital_image->path))
@@ -729,10 +729,10 @@
                     {{Form::hidden('another_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_ANOTHER )}}
                 </div>
                 <div class="col-sm-6">
-                    {{Form::label('another_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
-                    {{Form::text('another_tab_'.$i.'_order', is_null($another_tab) ? null : $another_tab['order'], ['class' => 'form-control'])}}
-                    @if ($errors->has('another_tab_'.$i.'_order'))
-                        <div class="error_message">{{ $errors->first('another_tab_'.$i.'_order') }}</div>
+                    {{Form::label('another_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                    {{Form::text('another_tab_'.$i.'_order2', is_null($another_tab) ? null : $another_tab['order2'], ['class' => 'form-control'])}}
+                    @if ($errors->has('another_tab_'.$i.'_order2'))
+                        <div class="error_message">{{ $errors->first('another_tab_'.$i.'_order2') }}</div>
                     @endif
                     {{Form::label('another_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                     {{Form::textarea('another_tab_'.$i.'_memo2', is_null($another_tab) ? null : $another_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
@@ -773,10 +773,10 @@
                         {{Form::hidden('another_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_ANOTHER )}}
                     </div>
                     <div class="col-sm-6">
-                        {{Form::label('another_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
-                        {{Form::text('another_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
-                        @if ($errors->has('another_tab_'.$i.'_order'))
-                            <div class="error_message"> {{ $errors->first('another_tab_'.$i.'_order') }} </div>
+                        {{Form::label('another_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                        {{Form::text('another_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
+                        @if ($errors->has('another_tab_'.$i.'_order2'))
+                            <div class="error_message"> {{ $errors->first('another_tab_'.$i.'_order2') }} </div>
                         @endif
                         {{Form::label('another_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                         {{Form::textarea('another_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
@@ -800,7 +800,7 @@
     <div class="form_title"><div class="number_circle">7</div> <span class="input_title">医師・スタッフ</span></div>
     <div class="row">
     @for ($i = 1; $i <= 10; $i++)
-        <?php $staff = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_STAFF)->where('order2', $i)->first();?>
+        <?php $staff = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_STAFF)->where('order', $i)->first();?>
         <div class="col-sm-6 staff_box" data-order="{{$i}}" @if(is_null($staff) && $i != 1) style="display: none" @endif>
             <p class="box_staff_title">医師・スタッフ{{$i}}</p>
             @if(!is_null($staff) && !is_null($staff->hospital_image->path))

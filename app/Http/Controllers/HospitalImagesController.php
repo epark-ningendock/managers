@@ -330,7 +330,7 @@ class HospitalImagesController extends Controller
         if ($image_order != ImageOrder::IMAGE_GROUP_MAP) {
             $memo1 = isset($file[$image_prefix.$i.'_memo1']) ? $file[$image_prefix.$i.'_memo1'] : '' ;
             $memo2 = isset($file[$image_prefix.$i.'_memo2']) ? $file[$image_prefix.$i.'_memo2'] : '' ;
-            $order = isset($file[$image_prefix.$i.'_order']) ? $file[$image_prefix.$i.'_order'] : 0 ;
+            $order2 = isset($file[$image_prefix.$i.'_order2']) ? $file[$image_prefix.$i.'_order2'] : 0 ;
             $name_2 = isset($file[$image_prefix.$i.'_name']) ? $file[$image_prefix.$i.'_name'] : '' ;
 
             $location_no = isset($file[$image_prefix.$i.'_location']) ? $file[$image_prefix.$i.'_location'] : null ;
@@ -347,10 +347,10 @@ class HospitalImagesController extends Controller
             //pc保存 putFile メソッドでuniqueファイル名を返す
             $img_info =$this->putFileStorageImage($file[$image_prefix.$i],$hospital_id);
             $save_sub_images = ['extension' => $extension, 'name' => $img_info['pc_img_name'], 'path' => $img_info['pc_img_url'], 'memo1' => $memo1, 'memo2' => $memo2];
-            $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name_2,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order, 'file_location_no' => $location_no];
+            $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name_2,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order' => $i, 'order2' => $order2, 'file_location_no' => $location_no];
             } else {
                 $save_sub_images = ['memo1' => $memo1, 'memo2' => $memo2];
-                $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name_2,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order2' => $i, 'order' => $order , 'file_location_no' => $location_no];
+                $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name_2,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order' => $i, 'order2' => $order2 , 'file_location_no' => $location_no];
             }
 
             if(is_null($image_order_exists)) {
