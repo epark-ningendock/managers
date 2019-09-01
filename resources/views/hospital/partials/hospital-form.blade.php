@@ -438,7 +438,7 @@
        * @return 住所
        */
        function getAddress() {
-        return $('#prefecture').val() + $('#district_code_id').val() + $('#address1').val() + $('#address1').val()
+        return $('#prefecture').val() + $('#district_code_id').val() + $('#address1').val() + $('#address2').val()
       };
 
       /**
