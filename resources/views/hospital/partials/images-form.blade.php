@@ -293,12 +293,12 @@
                 {{Form::label('staff_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
                 {{Form::text('staff_tab_'.$i.'_order', is_null($staff_tab) ? null : $staff_tab['order'], ['class' => 'form-control'])}}
                 @if ($errors->has('staff_tab_'.$i.'_order'))
-                    {{ $errors->first('staff_tab_'.$i.'_order') }}
+                    <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_order') }}</div>
                 @endif
                 {{Form::label('staff_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                 {{Form::textarea('staff_tab_'.$i.'_memo2', is_null($staff_tab) ? '' : $staff_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
                 @if ($errors->has('staff_tab_'.$i.'_memo2'))
-                    {{ $errors->first('staff_tab_'.$i.'_memo2') }}
+                    <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_memo2') }}</div>
                 @endif
             </div>
             @if(!is_null($staff_tab))
