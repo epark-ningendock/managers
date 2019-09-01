@@ -429,9 +429,41 @@
 @push('js')
   <script src="{{ asset('js/yubinbango.js') }}" charset="UTF-8"></script>
   <script src="{{ asset('vendor/adminlte/plugins/iCheck/icheck.min.js') }}"></script>
-
+  <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}"></script>
+  
   <script>
-    (function ($) {
+    (function ($) {    
+      /**
+       * 入力フォームの住所を取得し、まとめる
+       * @return 住所
+       */
+       function getAddress() {
+        return $('#prefecture').val() + $('#district_code_id').val() + $('#address1').val() + $('#address1').val()
+      };
+
+      /**
+       * 緯度経度を取得し、入力フォームにセットする
+       * @param 検索住所
+       */
+      function setLatLng(address) {
+        let geocoder = new google.maps.Geocoder();
+        geocoder.geocode({'address': address}, (results, status) => {
+          if(status == google.maps.GeocoderStatus.OK) {
+            let lat = results[0].geometry.location.lat();
+            let lng = results[0].geometry.location.lng();
+            $('#latitude').val(lat.toFixed(7));
+            $('#longitude').val(lng.toFixed(7));
+          }
+        });
+      };
+
+      $('#prefecture, #district_code_id, #address1, #address2')
+        .focusin(function(e) {
+          setLatLng(getAddress())
+        })
+        .focusout(function(e) {
+          setLatLng(getAddress())
+        });
 
       /* ---------------------------------------------------
       Icheck
@@ -446,25 +478,26 @@
        combine postcode before submit
       -----------------------------------------------------*/
       $('#postcode-search').click(function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-        $('#postcode').val($('#postcode1').val().replace(/-/g , ""));
-        //to trigger native keyup event
-        $('#postcode')[0].dispatchEvent(new KeyboardEvent('keyup', {'key': ''}));
+          event.preventDefault();
+          event.stopPropagation();
+          $('#postcode').val($('#postcode1').val().replace(/-/g , ""));
+          //to trigger native keyup event
+          $('#postcode')[0].dispatchEvent(new KeyboardEvent('keyup', {'key': ''}));
 
-        //select distict code id
-        setTimeout(function () {
-          distict_code_selector($('#prefecture').val());
-        }, 500);
+          //select distict code id
+          setTimeout(function () {
+            distict_code_selector($('#prefecture').val());
+          }, 500);
+
+        function distict_code_selector($option_id) {
+          $('#district_code_id option').hide();
+          let district_code_option = $('select#district_code_id option[data-prefecture_id="' + $option_id + '"]');
+          district_code_option.first().attr('selected', true);
+          district_code_option.show();
+        }
+
+        setLatLng(getAddress())
       });
-
-      function distict_code_selector($option_id) {
-        $('#district_code_id option').hide();
-        let district_code_option = $('select#district_code_id option[data-prefecture_id="' + $option_id + '"]');
-        district_code_option.first().attr('selected', true);
-        district_code_option.show();
-      }
-
       /* ---------------------------------------------------
       Select district_code_id by prefecture id
       -----------------------------------------------------*/
