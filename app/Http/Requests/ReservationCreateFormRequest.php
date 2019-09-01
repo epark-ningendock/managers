@@ -36,7 +36,7 @@ class ReservationCreateFormRequest extends FormRequest
             'first_name' => 'required|max:32',
             'family_name_kana' => 'required|max:32',
             'first_name_kana' => 'required|max:32',
-            'tel' => 'required|regex:/^[0-9]{2,4}-?[0-9]{2,4}-?[0-9]{3,4}$/',
+            'tel' => 'required|regex:/^\d{2,4}-?\d{2,4}-?\d{3,4}$/',
             'registration_card_number' => 'required|max:32',
         ];
     }

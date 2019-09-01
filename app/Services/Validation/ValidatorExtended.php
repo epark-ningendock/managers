@@ -88,6 +88,6 @@ class ValidatorExtended extends IlluminateValidator
      */
     protected function validateLongitudeLatitude($attribute, $value='')
     {
-        return preg_match("/^\d*(\.\d{7})?$/", $value) ? true : false;
+        return preg_match("/^-?\d*(\.\d{7})?$/", $value) ? true : false;
     }
 }
