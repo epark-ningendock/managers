@@ -82,13 +82,13 @@
         @endfor
     </div>
 </div>
-<div class="box box-primary form-box">
+<div class="box box-primary form-box" id="speciality_section">
     <div class="form_title"><div class="number_circle">3</div> <span class="input_title">こだわり</span></div>
     <div class="row">
         @for ($i = 1; $i <= 4; $i++)
-            <div class="col-sm-6">
+            <?php $image_speciality = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_SPECIALITY)->where('order2', $i)->first(); ?>
+            <div class="col-sm-6" @if(is_null($image_speciality) && $i != 1) style="display: none" @endif>
                 {{Form::label('speciality_1_caption', 'こだわり'.$i,['class' => 'form_label'])}}
-                <?php $image_speciality = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_SPECIALITY)->where('order2', $i)->first(); ?>
                 @if (!is_null($image_speciality) && !is_null($image_speciality->hospital_image->path))
                     <div class="speciality_image_area">
                         <img class="object-fit" src="{{$image_speciality->hospital_image->path}}" width="150">
@@ -134,6 +134,10 @@
                     @endif
                 </div>
             </div>
+            <a href="javascript:void(0)" class="speciality_add btn btn-info" style="@if(!is_null($image_speciality) OR $i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+                <i class="icon-trash icon-white"></i>
+                追加
+            </a>
         @endfor
     </div>
 </div>
@@ -293,12 +297,12 @@
                 {{Form::label('staff_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
                 {{Form::text('staff_tab_'.$i.'_order', is_null($staff_tab) ? null : $staff_tab['order'], ['class' => 'form-control'])}}
                 @if ($errors->has('staff_tab_'.$i.'_order'))
-                    {{ $errors->first('staff_tab_'.$i.'_order') }}
+                    <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_order') }}</div>
                 @endif
                 {{Form::label('staff_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                 {{Form::textarea('staff_tab_'.$i.'_memo2', is_null($staff_tab) ? '' : $staff_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
                 @if ($errors->has('staff_tab_'.$i.'_memo2'))
-                    {{ $errors->first('staff_tab_'.$i.'_memo2') }}
+                    <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_memo2') }}</div>
                 @endif
             </div>
             @if(!is_null($staff_tab))
@@ -335,12 +339,12 @@
                 {{Form::label('staff_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
                 {{Form::text('staff_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
                 @if ($errors->has('staff_tab_'.$i.'_order'))
-                    {{ $errors->first('staff_tab_'.$i.'_order') }}
+                    <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_order') }}</div>
                 @endif
                 {{Form::label('staff_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                 {{Form::textarea('staff_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
                 @if ($errors->has('staff_tab_'.$i.'_memo2'))
-                    {{ $errors->first('staff_tab_'.$i.'_memo2') }}
+                    <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_memo2') }}</div>
                 @endif
             </div>
         </div>
@@ -398,12 +402,12 @@
                     {{Form::label('facility_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
                     {{Form::text('facility_tab_'.$i.'_order', is_null($facility_tab) ? null : $facility_tab['order'], ['class' => 'form-control'])}}
                     @if ($errors->has('facility_tab_'.$i.'_order'))
-                        {{ $errors->first('facility_tab_'.$i.'_order') }}
+                        <div class="error_message">{{ $errors->first('facility_tab_'.$i.'_order') }}</div>
                     @endif
                     {{Form::label('facility_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                     {{Form::textarea('facility_tab_'.$i.'_memo2', is_null($facility_tab) ? null : $facility_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
                     @if ($errors->has('facility_tab_'.$i.'_memo2'))
-                        {{ $errors->first('facility_tab_'.$i.'_memo2') }}
+                        <div class="error_message">{{ $errors->first('facility_tab_'.$i.'_memo2') }}</div>
                     @endif
                 </div>
                 @if(!is_null($facility_tab))
@@ -442,12 +446,12 @@
                     {{Form::label('facility_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
                     {{Form::text('facility_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
                     @if ($errors->has('facility_tab_'.$i.'_order'))
-                        {{ $errors->first('facility_tab_'.$i.'_order') }}
+                        <div class="error_message"> {{ $errors->first('facility_tab_'.$i.'_order') }} </div>
                     @endif
                     {{Form::label('facility_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                     {{Form::textarea('facility_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
                     @if ($errors->has('facility_tab_'.$i.'_memo2'))
-                        {{ $errors->first('facility_tab_'.$i.'_memo2') }}
+                        <div class="error_message"> {{ $errors->first('facility_tab_'.$i.'_memo2') }} </div>
                     @endif
                 </div>
             </div>
@@ -510,12 +514,12 @@
                     {{Form::label('internal_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
                     {{Form::text('internal_tab_'.$i.'_order', is_null($internal_tab) ? null : $internal_tab['order'], ['class' => 'form-control'])}}
                     @if ($errors->has('internal_tab_'.$i.'_order'))
-                        {{ $errors->first('internal_tab_'.$i.'_order') }}
+                        <div class="error_message"> {{ $errors->first('internal_tab_'.$i.'_order') }} </div>
                     @endif
                     {{Form::label('internal_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                     {{Form::textarea('internal_tab_'.$i.'_memo2', is_null($internal_tab) ? null : $internal_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
                     @if ($errors->has('internal_tab_'.$i.'_memo2'))
-                        {{ $errors->first('internal_tab_'.$i.'_memo2') }}
+                        <div class="error_message">{{ $errors->first('internal_tab_'.$i.'_memo2') }}</div>
                     @endif
                 </div>
                 @if(!is_null($internal_tab))
@@ -554,12 +558,12 @@
                         {{Form::label('internal_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
                         {{Form::text('internal_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
                         @if ($errors->has('internal_tab_'.$i.'_order'))
-                            {{ $errors->first('internal_tab_'.$i.'_order') }}
+                            <div class="error_message">{{ $errors->first('internal_tab_'.$i.'_order') }}</div>
                         @endif
                         {{Form::label('internal_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                         {{Form::textarea('internal_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
                         @if ($errors->has('internal_tab_'.$i.'_memo2'))
-                            {{ $errors->first('internal_tab_'.$i.'_memo2') }}
+                            <div class="error_message">{{ $errors->first('internal_tab_'.$i.'_memo2') }}</div>
                         @endif
                     </div>
                 </div>
@@ -622,12 +626,12 @@
                     {{Form::label('external_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
                     {{Form::text('external_tab_'.$i.'_order', is_null($external_tab) ? null : $external_tab['order'], ['class' => 'form-control'])}}
                     @if ($errors->has('external_tab_'.$i.'_order'))
-                        {{ $errors->first('external_tab_'.$i.'_order') }}
+                        <div class="error_message">{{ $errors->first('external_tab_'.$i.'_order') }}</div>
                     @endif
                     {{Form::label('external_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                     {{Form::textarea('external_tab_'.$i.'_memo2', is_null($external_tab) ? null : $external_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
                     @if ($errors->has('external_tab_'.$i.'_memo2'))
-                        {{ $errors->first('external_tab_'.$i.'_memo2') }}
+                        <div class="error_message">{{ $errors->first('external_tab_'.$i.'_memo2') }}</div>
                     @endif
                 </div>
                 @if(!is_null($external_tab))
@@ -666,12 +670,12 @@
                         {{Form::label('external_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
                         {{Form::text('external_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
                         @if ($errors->has('external_tab_'.$i.'_order'))
-                            {{ $errors->first('external_tab_'.$i.'_order') }}
+                            <div class="error_message">{{ $errors->first('external_tab_'.$i.'_order') }}</div>
                         @endif
                         {{Form::label('external_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                         {{Form::textarea('external_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
                         @if ($errors->has('external_tab_'.$i.'_memo2'))
-                            {{ $errors->first('external_tab_'.$i.'_memo2') }}
+                            <div class="error_message"> {{ $errors->first('external_tab_'.$i.'_memo2') }} </div>
                         @endif
                     </div>
                 </div>
@@ -684,15 +688,6 @@
     <!--//未登録のタブ画像フォーム-->
     </div>
     <!--・//外観タブ-->
-
-
-
-
-
-
-
-
-
     <!--その他タブ-->
     <p class="tab_name">
         その他
@@ -737,12 +732,12 @@
                     {{Form::label('another_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
                     {{Form::text('another_tab_'.$i.'_order', is_null($another_tab) ? null : $another_tab['order'], ['class' => 'form-control'])}}
                     @if ($errors->has('another_tab_'.$i.'_order'))
-                        {{ $errors->first('another_tab_'.$i.'_order') }}
+                        <div class="error_message">{{ $errors->first('another_tab_'.$i.'_order') }}</div>
                     @endif
                     {{Form::label('another_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                     {{Form::textarea('another_tab_'.$i.'_memo2', is_null($another_tab) ? null : $another_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
                     @if ($errors->has('another_tab_'.$i.'_memo2'))
-                        {{ $errors->first('another_tab_'.$i.'_memo2') }}
+                        <div class="error_message">{{ $errors->first('another_tab_'.$i.'_memo2') }}</div>
                     @endif
                 </div>
                 @if(!is_null($another_tab))
@@ -781,12 +776,12 @@
                         {{Form::label('another_tab_'.$i.'_order', '表示順',['class' => 'form_label'])}}
                         {{Form::text('another_tab_'.$i.'_order', null, ['class' => 'form-control'])}}
                         @if ($errors->has('another_tab_'.$i.'_order'))
-                            {{ $errors->first('another_tab_'.$i.'_order') }}
+                            <div class="error_message"> {{ $errors->first('another_tab_'.$i.'_order') }} </div>
                         @endif
                         {{Form::label('another_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                         {{Form::textarea('another_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows' => "2"])}}
                         @if ($errors->has('another_tab_'.$i.'_memo2'))
-                            {{ $errors->first('another_tab_'.$i.'_memo2') }}
+                            <div class="error_message">{{ $errors->first('another_tab_'.$i.'_memo2') }} </div>
                         @endif
                     </div>
                 </div>
@@ -802,12 +797,12 @@
 </div>
 
 <div class="box box-primary form-box" id="staff_section">
-    <div class="form_title"><div class="number_circle">7</div> <span class="input_title">スタッフ</span></div>
+    <div class="form_title"><div class="number_circle">7</div> <span class="input_title">医師・スタッフ</span></div>
     <div class="row">
     @for ($i = 1; $i <= 10; $i++)
         <?php $staff = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_STAFF)->where('order2', $i)->first();?>
         <div class="col-sm-6 staff_box" data-order="{{$i}}" @if(is_null($staff) && $i != 1) style="display: none" @endif>
-            <p class="box_staff_title">スタッフ{{$i}}</p>
+            <p class="box_staff_title">医師・スタッフ{{$i}}</p>
             @if(!is_null($staff) && !is_null($staff->hospital_image->path))
                 <div class="staff_image_area">
                     <img class="object-fit" src="{{$staff->hospital_image->path}}">
