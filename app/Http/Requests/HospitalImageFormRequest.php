@@ -75,6 +75,8 @@ class HospitalImageFormRequest extends FormRequest
         }
 
         $valid = [
+            'lock_version' => 'nullable',
+
             'main' => 'file|image|max:4000',
             'sub_1' => 'file|image|max:4000',
             'sub_2' => 'file|image|max:4000',
