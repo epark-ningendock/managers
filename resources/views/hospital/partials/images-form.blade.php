@@ -82,13 +82,13 @@
         @endfor
     </div>
 </div>
-<div class="box box-primary form-box">
+<div class="box box-primary form-box" id="speciality_section">
     <div class="form_title"><div class="number_circle">3</div> <span class="input_title">こだわり</span></div>
     <div class="row">
         @for ($i = 1; $i <= 4; $i++)
-            <div class="col-sm-6">
+            <?php $image_speciality = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_SPECIALITY)->where('order2', $i)->first(); ?>
+            <div class="col-sm-6" @if(is_null($image_speciality) && $i != 1) style="display: none" @endif>
                 {{Form::label('speciality_1_caption', 'こだわり'.$i,['class' => 'form_label'])}}
-                <?php $image_speciality = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_SPECIALITY)->where('order2', $i)->first(); ?>
                 @if (!is_null($image_speciality) && !is_null($image_speciality->hospital_image->path))
                     <div class="speciality_image_area">
                         <img class="object-fit" src="{{$image_speciality->hospital_image->path}}" width="150">
@@ -134,6 +134,10 @@
                     @endif
                 </div>
             </div>
+            <a href="javascript:void(0)" class="speciality_add btn btn-info" style="@if(!is_null($image_speciality) OR $i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+                <i class="icon-trash icon-white"></i>
+                追加
+            </a>
         @endfor
     </div>
 </div>
