@@ -20,4 +20,8 @@ return [
         'model' => \App\CalendarDay::class,
         'import' => \App\Imports\CalendarDayImport::class,
     ],
+    'T_OP_M_HYB_APPOINT_HOLIDAY.csv' => [
+        'model' => \App\Holiday::class,
+        'import' => \App\Imports\HolidayImport::class,
+    ],
 ];
