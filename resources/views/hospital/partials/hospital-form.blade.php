@@ -448,7 +448,7 @@
       $('#postcode-search').click(function (event) {
         event.preventDefault();
         event.stopPropagation();
-        $('#postcode').val($('#postcode1').val());
+        $('#postcode').val($('#postcode1').val().replace(/-/g , ""));
         //to trigger native keyup event
         $('#postcode')[0].dispatchEvent(new KeyboardEvent('keyup', {'key': ''}));
 
