@@ -793,12 +793,12 @@
 </div>
 
 <div class="box box-primary form-box" id="staff_section">
-    <div class="form_title"><div class="number_circle">7</div> <span class="input_title">スタッフ</span></div>
+    <div class="form_title"><div class="number_circle">7</div> <span class="input_title">医師・スタッフ</span></div>
     <div class="row">
     @for ($i = 1; $i <= 10; $i++)
         <?php $staff = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_STAFF)->where('order2', $i)->first();?>
         <div class="col-sm-6 staff_box" data-order="{{$i}}" @if(is_null($staff) && $i != 1) style="display: none" @endif>
-            <p class="box_staff_title">スタッフ{{$i}}</p>
+            <p class="box_staff_title">医師・スタッフ{{$i}}</p>
             @if(!is_null($staff) && !is_null($staff->hospital_image->path))
                 <div class="staff_image_area">
                     <img class="object-fit" src="{{$staff->hospital_image->path}}">
