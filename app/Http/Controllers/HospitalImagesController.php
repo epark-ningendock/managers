@@ -95,6 +95,7 @@ class HospitalImagesController extends Controller
         }
 
         //手動でLockを変更する
+        DB::beginTransaction();
         $this->lock->updateOrCreate(
             ['hospital_id' => $hospital_id,'model' => 'HospitalImage'],
             [
@@ -103,8 +104,6 @@ class HospitalImagesController extends Controller
                 'hospital_id' => $hospital_id,
             ]
         );
-
-        DB::beginTransaction();
         try {
             //TOPの保存
             $hospital->hospital_categories()->updateOrCreate(
