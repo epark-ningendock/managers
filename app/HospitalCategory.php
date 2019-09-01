@@ -39,12 +39,10 @@ class HospitalCategory extends SoftDeleteModel
         return $query;
     }
 
-    public function scopeByImageOrderAndFileLocationNo($query, $hospital_id, $image_order, $file_location_no)
+    public function scopeByImageOrderAndFileLocationNo($query, $hospital_id, $image_order, $order2, $file_location_no)
     {
-        $query->where('hospital_id',$hospital_id)->where('image_order',$image_order)->where('file_location_no',$file_location_no);
+        $query->where('hospital_id',$hospital_id)->where('image_order',$image_order)->where('order2',$order2)->where('file_location_no',$file_location_no);
 
         return $query;
     }
-
-
 }
