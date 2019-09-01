@@ -36,7 +36,7 @@ class HospitalCreateFormRequest extends FormRequest
             'address1' => 'max:256',
             'address2' => 'max:256',
             'tel' => 'regex:/^\d{2,4}-?\d{2,4}-?\d{3,4}$/',
-            'paycall' => 'digits_between:5,19',
+            'paycall' => 'regex:/^\d{2,4}-?\d{2,4}-?\d{3,4}$/',
             'consultation_note' => 'max:256',
             'medical_treatment_time.*.start' => 'nullable|date_format:H:i',
             'medical_treatment_time.*.end' => 'nullable|date_format:H:i|after:medical_treatment_time.*.start',
