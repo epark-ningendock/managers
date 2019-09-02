@@ -20,8 +20,7 @@
                             <tr>
                                 <td>{{ $reservation->reservation_date }}</td>
                                 <td>
-                                    {{--<a href="{{ route('reservation.edit', $reservation->id) }}">--}}
-                                    <a href="#">
+                                    <a href="{{ route('reservation.edit', $reservation->id) }}">
                                         {{ $customer_detail->name }}
                                     </a>
                                 </td>
