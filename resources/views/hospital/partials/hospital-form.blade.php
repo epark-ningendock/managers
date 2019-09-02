@@ -436,7 +436,7 @@
 
       /**
        * 都道府県に紐付く市区町村を取得し、SelectBoxにセットする
-       * @param 都道府県のOption
+       * @param 都道府県のOption value
        */
       function distict_code_selector($option_id) {
         $('#district_code_id option').hide();
