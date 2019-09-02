@@ -435,8 +435,8 @@
     (function ($) {
 
       /**
-       * 都道府県に紐付く, 市区町村を入れる
-       * @param 都道府県のValue
+       * 都道府県に紐付く市区町村を取得し、SelectBoxにセットする
+       * @param 都道府県のOption
        */
       function distict_code_selector($option_id) {
         $('#district_code_id option').hide();
@@ -446,7 +446,7 @@
       }
 
       /**
-       * 入力フォームの住所を取得し、まとめる
+       * 入力フォームの住所を取得し、returnする
        * @return 住所
        */
        function getAddress() {
