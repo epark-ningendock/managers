@@ -92,7 +92,7 @@
                   <option value="">都道府県を選択</option>
                   @foreach($prefectures as $prefecture)
                     <option value="{{ $prefecture->id }}"
-                        @if ( (old('prefecture_id') && ($prefecture->id == old('prefecture_id'))) ||  ( isset($hospital->prefecture_id) && $hospital->prefecture_id == $prefecture->id )  )
+                        @if ( (old('prefecture_id', (isset($hospital->prefecture_id) ) ? $hospital->prefecture_id : null) == $prefecture->id ) )
                         selected="selected"
                         @endif
                     > {{ $prefecture->name }}</option>
@@ -227,7 +227,7 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group ml-0 mr-0">
-                <select id="rail{{$i}}" name="{{$i}}" class="custom-select form-control">
+                <select id="rail{{$i}}" name="rail{{$i}}" class="custom-select form-control">
                   <option value="" id="init-rail{{$i}}">路線を選択</option>
                   {{-- TODO: JS で動的に rail を入れ替える --}}
                   @foreach($rails as $rail)
@@ -245,11 +245,12 @@
 
             <div class="col-md-4">
               <div class="form-group ml-0 mr-0">
-                <select id="station{{$i}}" name="{{$i}}" class="custom-select form-control">
+                <select id="station{{$i}}" name="station{{$i}}" class="custom-select form-control">
                   <option value="" id="init-station{{$i}}">駅を選択</option>
                   {{-- TODO: JS で動的に station を入れ替える --}}
                   @foreach($five_stations[$i - 1] as $station)
                     @if (!isset($station)) @continue @endif
+                    {{-- ここの初期値設定の後にJqueyで書き換えているから、初期値選択ができていない --}}
                     <option value="{{ $station->id }}" id="station-{{ $station->id }}"
                         @if ( old('station' . $i, (isset($hospital->{'station'. $i})) ? $hospital->{'station'. $i} : null) == $station->id)
                         selected="selected"
@@ -503,7 +504,8 @@
        * 都道府県から、該当の線路をプルダウンにセットする
        * @param 都道府県ID
        */
-      function station_selector(rail_id, dom_index) {
+      function station_selector(rail_id, dom_name) {
+        dom_index = dom_name.replace('rail', '');
         $.ajax({
           url: "{{ route('hospital.find-stations') }}",
           type: "POST",
@@ -555,6 +557,11 @@
           }
         });
       };
+
+      // バリデーションエラーで戻ってきたときに、該当の都道府県の路線情報を出すために、この処理を追加
+      $(document).ready(function(){
+        rail_selector($('#prefecture').val());
+      });
 
       $('#prefecture, #district_code_id, #address1, #address2')
         .focusin(e => {
