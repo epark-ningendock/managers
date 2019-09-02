@@ -231,6 +231,7 @@
                   <option value="">路線を選択</option>
                   {{-- TODO: JS で動的に rail を入れ替える --}}
                   @foreach($rails as $rail)
+                  @if (!isset($rail)) @continue @endif
                     <option value="{{ $rail->id }}"
                         @if ( old('rail' . $i, (isset($hospital->{'rail'. $i})) ? $hospital->{'rail'. $i} : null) == $rail->id)
                         selected="selected"

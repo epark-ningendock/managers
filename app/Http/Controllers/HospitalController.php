@@ -134,7 +134,7 @@ class HospitalController extends Controller
         $medical_treatment_times = MedicalTreatmentTime::where('hospital_id', $hospital->id)->get();
         $rails = [];
         if ($hospital->prefecture_id) {
-            $rails = Prefecture::find($hospital->prefecture_id)->rails;
+            $rails = Prefecture::find($hospital->prefecture_id)->rails();
         }
         $five_stations = [];
         for ($i = 1; $i <= 5; $i++) {
