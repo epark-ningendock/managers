@@ -45,18 +45,18 @@
                 });
             });
 
-            $(document).on('click','.name-identification.ajax-paginator a', function(e){
-                e.preventDefault();
-                const $link = $(this);
-                const pageId = getUrlParameter('page', $link.attr('href'));
+            const loadNameIdenticals = function(pageId) {
                 const customerId = $('#customer-id').val();
+                const source_customer_id = $('#source_customer_id').val();
+
                 $.ajax({
                     url: '{{ route('customer.detail') }}',
                     method: "POST",
                     data: {
                         _token: '{{ csrf_token() }}',
                         identification_page_id: pageId,
-                        id: customerId
+                        id: customerId,
+                        source_customer_id: source_customer_id
                     },
                     cache: false,
                     success: function (response) {
@@ -69,6 +69,20 @@
 
                     }
                 });
+            };
+
+            $(document).on('click','.name-identification.ajax-paginator a', function(e){
+                e.preventDefault();
+                const $link = $(this);
+                const pageId = getUrlParameter('page', $link.attr('href'));
+                loadNameIdenticals(pageId);
+            });
+
+            $(document).on('click', '.switch_source', function(e) {
+                e.preventDefault();
+                if($(this).hasClass('source')) return;
+                $('#source_customer_id').val($(this).data('customer-id'));
+                loadNameIdenticals(1);
             });
 
             $(document).on('click', '#perform-integration', function(e) {

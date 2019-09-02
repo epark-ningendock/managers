@@ -2,7 +2,7 @@
 
     <div class="modal-body">
         <div class="table-responsive">
-
+            <input type="hidden" id="source_customer_id" value="{{ $source_customer->id }}"/>
             <h3>顧客の名寄せ</h3>
             @include('layouts.partials.pagination-label', ['paginator' => $name_identifications])
             <div class="table-responsive">
@@ -18,6 +18,25 @@
                             <th>{{ trans('messages.phone_number') }}</th>
                             <th>{{ trans('messages.operation') }}</th>
                         </tr>
+                        <tr class="source">
+                            <td></td>
+                            <td>{{ $source_customer->id }}</td>
+                            <td>{{ $source_customer->registration_card_number }}</td>
+                            <td>
+                                {{ $source_customer->name }}
+                            </td>
+                            <td>
+                                {{ $source_customer->email or '-' }}
+                            </td>
+                            <td>
+                                {{ $source_customer->tel or '-' }}
+                            </td>
+                            <td>
+                                <button class="btn btn-success switch_source source">
+                                    {{ trans('messages.display_switching') }}
+                                </button>
+                            </td>
+                        </tr>
                         @if ( !empty($name_identifications) )
                             @foreach( $name_identifications as $name_identification )
                                 <tr>
@@ -28,17 +47,17 @@
                                     </td>
                                     <td>{{ $name_identification->id }}</td>
                                     <td>{{ $name_identification->registration_card_number }}</td>
-                                    <td class="@if($customer_detail->name == $name_identification->name) text-red @endif">
+                                    <td class="@if($source_customer->name == $name_identification->name) text-red @endif">
                                         {{ $name_identification->name }}
                                     </td>
-                                    <td class="@if($customer_detail->email == $name_identification->email) text-red @endif">
+                                    <td class="@if($source_customer->email == $name_identification->email) text-red @endif">
                                         {{ $name_identification->email or '-' }}
                                     </td>
-                                    <td class="@if($customer_detail->tel == $name_identification->tel) text-red @endif">
+                                    <td class="@if($source_customer->tel == $name_identification->tel) text-red @endif">
                                         {{ $name_identification->tel or '-' }}
                                     </td>
                                     <td>
-                                        <button class="btn btn-primary">
+                                        <button class="btn btn-success switch_source" data-customer-id="{{ $name_identification->id }}">
                                             {{ trans('messages.display_switching') }}
                                         </button>
                                     </td>
@@ -63,3 +82,8 @@
         </div>
     </div>
 </div>
+<style>
+    .source td {
+        background-color: #bcddff;
+    }
+</style>
