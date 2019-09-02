@@ -293,6 +293,6 @@ return [
         'rate' => '手数料率',
         'from_date' => '適用期間',
         'pre_payment_rate' => '手数料率',
-        'pre_payment_from_date' => '適用期間',
+        'pre_payment_from_date' => '適用期間'
     ],
 ];

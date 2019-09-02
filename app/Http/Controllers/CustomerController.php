@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\Enums\Status;
 use App\Filters\Customer\CustomerFilters;
 use App\Hospital;
 use App\EmailTemplate;
 use App\Http\Requests\CustomerFormRequest;
 use App\Mail\Customer\CustomerSendMail;
 use App\MailHistory;
+use App\NameIntegration;
 use App\Prefecture;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -224,5 +227,48 @@ class CustomerController extends Controller
         return response()->json([
             'data' => view('reservation.partials.create.customer-list', ['customers' => $customers])->render()
         ]);  
+    }
+
+    public function integration($id, Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $params = $request->all();
+            $params['id'] = $id;
+
+            $validator = Validator::make($params, [
+                'id' => 'required|exists:customers,id',
+                'identical_ids' => 'required|array',
+                'identical_ids.*' => 'required|exists:customers,id'
+            ]);
+
+            if ($validator->fails())
+            {
+                return response()->json(['errors'=>$validator->errors()]);
+            }
+
+            $identical_ids = $request->input('identical_ids');
+            $identical_customers = collect($identical_ids)->map(function($identical_id) use($id) {
+               return [
+                   'customer_id' => $id,
+                   'integrated_customer_id' => $identical_id
+               ];
+            });
+
+            NameIntegration::insert($identical_customers->toArray());
+
+            // bulk soft delete
+            Customer::whereIn('id', $identical_ids)
+                ->update([
+                    'deleted_at' => Carbon::now(),
+                    'status' => Status::Deleted
+                ]);
+
+            DB::commit();
+            return response()->json(['success'=> trans('messages.integration-success')]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error'=> trans('messages.integration-error')]);
+        }
     }
 }

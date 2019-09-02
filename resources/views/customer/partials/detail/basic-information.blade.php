@@ -42,7 +42,9 @@
                     <td class="gray-cell-bg">{{ trans('messages.address') }}</td>
                     <td colspan="3">
                         {{ $customer_detail->postcode }}<br/>
-                        {{ $customer_detail->prefecture->name }}<br/>
+                        @if(isset($customer_detail->prefecture))
+                            {{ $customer_detail->prefecture->name }}<br/>
+                        @endif
                         {{ $customer_detail->address1 }}<br/>
                         {{ $customer_detail->address2 }}<br/>
                     </td>
