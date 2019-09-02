@@ -31,8 +31,8 @@ $factory->define( App\Hospital::class, function ( Faker $faker ) {
 		'consultation_note'             => $faker->text(),
 		'memo'                          => $faker->text( 100 ),
 		'medical_examination_system_id' => rand( 1, 100 ),
-		'rail1'                         => $faker->numberBetween(1, 655),
-		'station1'                      => $faker->numberBetween(1, 9263),
+		'rail1'                         => null, // $faker->numberBetween(1, 655),
+		'station1'                      => null, // $faker->numberBetween(1, 9263),
 		'access1'                       => $faker->randomElement( [
 			'gate No1',
 			'entrance 2',
@@ -40,8 +40,8 @@ $factory->define( App\Hospital::class, function ( Faker $faker ) {
 			'gate 9',
 			'Station 1',
 		] ),
-		'rail2'                         => $faker->numberBetween(1, 655),
-		'station2'                      => $faker->numberBetween(1, 9263),
+		'rail2'                         => null, // $faker->numberBetween(1, 655),
+		'station2'                      => null, // $faker->numberBetween(1, 9263),
 		'access2'                       => $faker->randomElement( [
 			'gate No1',
 			'entrance 4',
@@ -49,8 +49,8 @@ $factory->define( App\Hospital::class, function ( Faker $faker ) {
 			'gate 8',
 			'Station 1',
 		] ),
-		'rail3'                         => $faker->numberBetween(1, 655),
-		'station3'                      => $faker->numberBetween(1, 9263),
+		'rail3'                         => null, // $faker->numberBetween(1, 655),
+		'station3'                      => null, // $faker->numberBetween(1, 9263),
 		'access3'                       => $faker->randomElement( [
 			'gate No 4',
 			'gate 11',
@@ -60,8 +60,8 @@ $factory->define( App\Hospital::class, function ( Faker $faker ) {
 			'gate 9',
 			'Station 11',
 		] ),
-		'rail4'                         => $faker->numberBetween(1, 655),
-		'station4'                      => $faker->numberBetween(1, 9263),
+		'rail4'                         => null, // $faker->numberBetween(1, 655),
+		'station4'                      => null, // $faker->numberBetween(1, 9263),
 		'access4'                       => $faker->randomElement( [
 			'gate No 4',
 			'entrance 8',
