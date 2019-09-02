@@ -132,20 +132,25 @@ class HospitalController extends Controller
         $district_codes = DistrictCode::all();
         $medical_examination_systems = MedicalExaminationSystem::all();
         $medical_treatment_times = MedicalTreatmentTime::where('hospital_id', $hospital->id)->get();
-        // $rails = Prefecture::find($hospital->prefecture_id)->rails;
-        $rails = Prefecture::all()->mapToDictionary(function ($prefecture) {
-            return [$prefecture->id => $prefecture->rails()->get()];
-        });
-        $stations = Rail::all()->mapToDictionary(function ($rail) {
-            return [$rail->id => $rail->stations()->get()];
-        });
+        $rails = [];
+        if ($hospital->prefecture_id) {
+            $rails = Prefecture::find($hospital->prefecture_id)->rails;
+        }
+        $five_stations = [];
+        for ($i = 1; $i <= 5; $i++) {
+            if ($hospital->{'rail' . $i}) {
+                array_push($five_stations, Rail::find($hospital->{'rail' . $i})->stations()->get());
+            } else {
+                array_push($five_stations, []);
+            }
+        }
 
         return view('hospital.edit', [
             'hospital' => $hospital,
             'prefectures' => $prefectures,
             'district_codes' => $district_codes,
             'medical_examination_systems' => $medical_examination_systems,
-            'stations' => $stations,
+            'five_stations' => $five_stations,
             'rails' => $rails,
             'medical_treatment_times' => $medical_treatment_times,
         ]);
