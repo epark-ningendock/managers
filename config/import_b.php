@@ -24,4 +24,8 @@ return [
         'model' => \App\Holiday::class,
         'import' => \App\Imports\HolidayImport::class,
     ],
+    'T_CR_M_SIMULTANEOUS_TRANSMIT_MAIL_TMPL.csv' => [
+        'model' => \App\EmailTemplate::class,
+        'import' => \App\Imports\EmailTemplateImport::class,
+    ],
 ];
