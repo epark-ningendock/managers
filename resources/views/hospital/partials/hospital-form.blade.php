@@ -432,7 +432,19 @@
   <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}"></script>
   
   <script>
-    (function ($) {    
+    (function ($) {
+
+      /**
+       * 都道府県に紐付く, 市区町村を入れる
+       * @param 都道府県のValue
+       */
+      function distict_code_selector($option_id) {
+        $('#district_code_id option').hide();
+        let district_code_option = $('select#district_code_id option[data-prefecture_id="' + $option_id + '"]');
+        district_code_option.first().attr('selected', true);
+        district_code_option.show();
+      }
+
       /**
        * 入力フォームの住所を取得し、まとめる
        * @return 住所
@@ -488,16 +500,9 @@
           setTimeout(function () {
             distict_code_selector($('#prefecture').val());
           }, 500);
-
-        function distict_code_selector($option_id) {
-          $('#district_code_id option').hide();
-          let district_code_option = $('select#district_code_id option[data-prefecture_id="' + $option_id + '"]');
-          district_code_option.first().attr('selected', true);
-          district_code_option.show();
-        }
-
         setLatLng(getAddress())
       });
+
       /* ---------------------------------------------------
       Select district_code_id by prefecture id
       -----------------------------------------------------*/
