@@ -32,14 +32,14 @@ class HospitalCreateFormRequest extends FormRequest
             'longitude' => 'longitude_latitude',
             'kana' => 'required|max:50',
             'name' => 'required|max:50',
-            'postcode' => 'number_dash',
+            'postcode' => 'regex:/^\d{3}-?\d{4}$/',
             'address1' => 'max:256',
             'address2' => 'max:256',
-            'tel' => 'digits_between:8,13',
-            'paycall' => 'digits_between:5,19',
+            'tel' => 'regex:/^\d{2,4}-?\d{2,4}-?\d{3,4}$/',
+            'paycall' => 'regex:/^\d{2,4}-?\d{2,4}-?\d{3,4}$/',
             'consultation_note' => 'max:256',
-           'medical_treatment_time.*.start' => 'nullable|date_format:H:i',
-           'medical_treatment_time.*.end' => 'nullable|date_format:H:i|after:medical_treatment_time.*.start',
+            'medical_treatment_time.*.start' => 'nullable|date_format:H:i',
+            'medical_treatment_time.*.end' => 'nullable|date_format:H:i|after:medical_treatment_time.*.start',
         ];
     }
 

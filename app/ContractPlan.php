@@ -2,9 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ContractPlan extends Model
+class ContractPlan extends SoftDeleteModel
 {
     protected $fillable = [
         'plan_code',

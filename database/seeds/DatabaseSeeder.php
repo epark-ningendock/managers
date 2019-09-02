@@ -12,14 +12,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            ClassificationTypeSeeder::class,
+            // ClassificationTypeSeeder::class, CSVからインポート
             DepartmentsTableSeeder::class,
             StaffsTableSeeder::class,
-            MinorClassificationsTableSeeder::class,
+            // MinorClassificationsTableSeeder::class, CSVからインポート
             HospitalTableSeeder::class,
             HospitalStaffsTableSeeder::class,
+            ContractPlansTableSeeder::class,
             FeeRateSeeder::class,
-            ContractInformationTableSeeder::class, // comment off if you need it
+            ContractInformationTableSeeder::class,
             HospitalImagesTableSeeder::class,
             OptionsTableSeeder::class,
             TaxClassesTableSeeder::class,
@@ -29,11 +30,11 @@ class DatabaseSeeder extends Seeder
             CoursesTableSeeder::class,
             EmailTemplatesTableSeeder::class,
             CustomersSeeder::class,
-            StationsTableSeeder::class, //it would also create prefecture seeding.
-            RailsTableSeeder::class,
+            // StationsTableSeeder::class, CSVからインポート
+            // RailsTableSeeder::class, CSVからインポート
             MedicalExaminationSystemTableSeeder::class,
-            PrefecturesSeeder::class,
-            DistrictCodeSeeder::class,
+            // PrefecturesSeeder::class, CSVからインポート
+            // DistrictCodeSeeder::class, CSVからインポート
         ]);
     }
 }

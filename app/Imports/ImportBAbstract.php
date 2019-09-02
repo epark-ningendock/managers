@@ -11,10 +11,11 @@ use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\SkipsOnError;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithProgressBar;
 use Maatwebsite\Excel\Row;
 
-abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnError
+abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnError, WithHeadingRow
 {
     use Importable;
     use SkipsErrors;
@@ -30,36 +31,17 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
         $this->hospital_no = $hospital_no;
     }
 
-    /**
-     * @param string $name
-     * @return int
-     */
-    protected function getColIndex(string $name): int
+    public function getValue(array $row, string $key)
     {
-        return array_search($name, $this->getColumns());
-    }
-
-    /**
-     * @param array $row
-     * @param string|null $name
-     * @return mixed|null
-     */
-    protected function getValue(array $row, string $name = null)
-    {
-        if (is_null($name)) {
+        if (!array_key_exists(strtolower($key), $row)) {
             return null;
         }
-        $value = $row[$this->getColIndex($name)];
-        if ($value == '\N') {
+        $val = $row[strtolower($key)];
+        if ($val === '\N') {
             return null;
         }
-        return $value;
+        return $val;
     }
-
-    /**
-     * @return array
-     */
-    abstract public function getColumns(): array;
 
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -93,10 +75,10 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
         $model = ConvertedIdString::where('table_name', $table)
             ->where('old_id', $old_id)
             ->first();
-        if ($model) {
+        if (!is_null($model)) {
             return $model->new_id;
         }
-        Log::warning(sprintf('%s に %d が存在しません。', $table, $old_id));
+        Log::error(sprintf('%s に %d が存在しません。', $table, $old_id));
         return null;
     }
 

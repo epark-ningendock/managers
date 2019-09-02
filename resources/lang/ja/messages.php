@@ -202,7 +202,7 @@ return [
     ],
     'address1'                             => '市区郡',
     'address2'                             => 'それ以降の住所',
-    'invalid_email'                        => '正しいメールアドレスの書式でご入力ください',
+    'contract_saved'                       => '契約情報が保存されました。',
     'email-template-limit-exceed'          => 'テンプレートの数が最大になっているため、新規作成を実行できませんでした。',
     'invalid_email'                        => '正しいメールアドレスの書式でご入力ください',
     'billing_email_flg'                    => '請求メールの設定',

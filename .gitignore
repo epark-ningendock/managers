@@ -15,3 +15,4 @@ npm-debug.log
 yarn-error.log
 .php_cs.cache
 /csv
+.DS_Store 

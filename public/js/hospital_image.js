@@ -23,9 +23,19 @@ $(document).ready(function() {
         $(this).prev().show();
     });
 
+    $('.speciality_add').click(function() {[]
+        $(this).hide();
+        $(this).prev().show();
+    });
+
 
     $('#interview_add').click(function() {
         let i = $('.interview_detail_new').length;
+        console.log(i);
+        if(i >= 20) {
+            alert('インタビューは20個までです');
+            return false;
+        }
         $('.interview_detail_new:last').after(
             '<div class="interview_list interview_detail_new">\n' +
             '                <div>\n' +
