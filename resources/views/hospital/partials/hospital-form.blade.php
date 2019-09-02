@@ -230,7 +230,6 @@
                 <select id="rail{{$i}}" name="rail{{$i}}" class="custom-select form-control">
                   <option value="">路線を選択</option>
                     {{-- TODO: JS で動的に rail を入れ替える --}}
-                    {{-- TODO: hospital->prefecture が null の時の処理を入れる --}}
                   @foreach(isset($hospital->prefecture_id) ? $rails->get($hospital->prefecture_id)[0]->all() : [] as $rail)
                     <option value="{{ $rail->id }}"
                         @if ( old('rail' . $i, (isset($hospital->{'rail'. $i})) ? $hospital->{'rail'. $i} : null) == $rail->id)
