@@ -474,7 +474,7 @@
       };
 
       /**
-       * 緯度経度を取得し、入力フォームにセットする
+       * 北緯東経を取得し、入力フォームにセットする
        * @param 検索住所
        */
       function setLatLng(address) {
@@ -519,8 +519,8 @@
           //select distict code id
           setTimeout(function () {
             distict_code_selector($('#prefecture').val());
+            setLatLng(getAddress())
           }, 500);
-        setLatLng(getAddress())
       });
 
       /* ---------------------------------------------------
