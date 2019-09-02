@@ -438,7 +438,7 @@
        * @return 住所
        */
        function getAddress() {
-        return $('#prefecture').val() + $('#district_code_id').val() + $('#address1').val() + $('#address2').val()
+        return $('#prefecture option:selected').text() + $('#district_code_id option:selected').text() + $('#address1').val() + $('#address2').val()
       };
 
       /**
@@ -458,10 +458,10 @@
       };
 
       $('#prefecture, #district_code_id, #address1, #address2')
-        .focusin(function(e) {
+        .focusin(e => {
           setLatLng(getAddress())
         })
-        .focusout(function(e) {
+        .focusout(e => {
           setLatLng(getAddress())
         });
 
