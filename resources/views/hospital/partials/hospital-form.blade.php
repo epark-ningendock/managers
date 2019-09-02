@@ -228,11 +228,11 @@
             <div class="col-md-4">
               <div class="form-group ml-0 mr-0">
                 <select id="rail{{$i}}" name="rail{{$i}}" class="custom-select form-control">
-                  <option value="">路線を選択</option>
+                  <option value="" id="init-rail{{$i}}">路線を選択</option>
                   {{-- TODO: JS で動的に rail を入れ替える --}}
                   @foreach($rails as $rail)
                   @if (!isset($rail)) @continue @endif
-                    <option value="{{ $rail->id }}"
+                    <option value="{{ $rail->id }}" id="rail-{{ $rail->id }}"
                         @if ( old('rail' . $i, (isset($hospital->{'rail'. $i})) ? $hospital->{'rail'. $i} : null) == $rail->id)
                         selected="selected"
                         @endif
@@ -245,12 +245,12 @@
 
             <div class="col-md-4">
               <div class="form-group ml-0 mr-0">
-                <select id="station{{$i}}" name="station{{$i}}" class="custom-select form-control">
-                  <option value="">駅を選択</option>
+                <select id="station{{$i}}" name="{{$i}}" class="custom-select form-control">
+                  <option value="" id="init-station{{$i}}">駅を選択</option>
                   {{-- TODO: JS で動的に station を入れ替える --}}
                   @foreach($five_stations[$i - 1] as $station)
                     @if (!isset($station)) @continue @endif
-                    <option value="{{ $station->id }}"
+                    <option value="{{ $station->id }}" id="station-{{ $station->id }}"
                         @if ( old('station' . $i, (isset($hospital->{'station'. $i})) ? $hospital->{'station'. $i} : null) == $station->id)
                         selected="selected"
                         @endif
@@ -279,7 +279,6 @@
     </td>
     <td>
       <div class="wrapbox" style="padding: 20px;">
-        <h6>hh:mm形式　fromよりも遅い時間</h6>
         <table class="table table-bordered">
           @for($i= 1; $i<= 4; $i++)
             <tr class="timebox">
@@ -430,7 +429,6 @@
 
 @includeIf('commons.timepicker')
 
-
 @push('js')
   <script src="{{ asset('js/yubinbango.js') }}" charset="UTF-8"></script>
   <script src="{{ asset('vendor/adminlte/plugins/iCheck/icheck.min.js') }}"></script>
@@ -467,6 +465,41 @@
           district_code_options.first().attr('selected', true);
         }
         district_code_options.show();
+      }
+
+      /**
+       * 都道府県から、該当の線路をプルダウンにセットする
+       * @param 都道府県ID
+       */
+      function rail_selector(prefecture_id) {
+        $.ajax({
+          url: "{{ route('hospital.find-rails') }}",
+          type: "POST",
+          data: {
+            _token: '{{ csrf_token() }}',
+            prefecture_id: prefecture_id
+          }
+        })
+        .done(function(data) {
+          console.log('success');
+          console.log(JSON.stringify(data.data));
+          $('option[id^="station-"]').remove();
+          $('option[id^="init-station"]').attr('selected', true);
+          // implement done
+
+          $('option[id^="rail-"]').remove();
+          options = [];
+          $.each(data.data, function (i, rail) {
+            $option = $('<option>', { value: rail.id, text: rail.name, id: 'rail-' + rail.id});
+            options.push($option);
+          });
+          $('select[id^="rail"]').append(options);
+          $('option[id^="init-rail"]').attr('selected', true);
+        })
+        .fail(function(data) {
+          console.log('fail');
+          console.log(JSON.stringify(data.data));
+        });
       }
 
       /**
@@ -523,7 +556,11 @@
           //select distict code id
           setTimeout(function () {
             distict_code_selector($('#prefecture').val());
-            setLatLng(getAddress())
+            // 都道府県が変わらなかった場合は、路線情報リセットしないようにしたい
+            // が前回の都道府県情報を持つことが難しい and 都道府県が変わった時だけ
+            // イベントを発火ができなかったので、今回は見送り
+            rail_selector($('#prefecture').val());
+            setLatLng(getAddress());
           }, 500);
       });
 
@@ -532,6 +569,8 @@
       -----------------------------------------------------*/
       $(document).on('change', '#prefecture', function () {
         distict_code_selector($(this).val());
+        rail_selector($(this).val());
+      });
       });
 
     })(jQuery);

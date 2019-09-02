@@ -21,6 +21,7 @@ use App\Station;
 use App\FeeRate;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -154,6 +155,32 @@ class HospitalController extends Controller
             'rails' => $rails,
             'medical_treatment_times' => $medical_treatment_times,
         ]);
+    }
+
+    /**
+     * 都道府県にひもづく、線路を取得
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function findRails(Request $request) {
+        $response = array();
+        $response["status"] = \Illuminate\Http\Response::HTTP_OK;
+        $response["data"] = Prefecture::find($request->prefecture_id)->rails()->get();
+        return response()->json($response);
+    }
+
+    /**
+     * 線路にひもづく、駅を取得
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function findStations(Request $request) {
+        $response = array();
+        $response["status"] = \Illuminate\Http\Response::HTTP_OK;
+        $response["data"] = Rail::find($request->rail_id)->stations()->get();
+        return response()->json($response);
     }
 
     /**
