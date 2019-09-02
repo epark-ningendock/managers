@@ -5,9 +5,10 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBillingsTable extends Migration
+class CreateBillingMailHistoriesTable extends Migration
 {
     use DBCommonColumns;
+
     /**
      * Run the migrations.
      *
@@ -15,12 +16,15 @@ class CreateBillingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('billings', function (Blueprint $table) {
+        Schema::create('billing_mail_histories', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('hospital_id');
-            $table->integer('contract_plan_id');
-            $table->string('from');
-            $table->string('to');
+            $table->string('to_address1')->nullable();
+            $table->string('to_address2')->nullable();
+            $table->string('to_address3')->nullable();
+            $table->string('cc_name');
+            $table->string('fax')->nullable();
+            $table->tinyInteger('mail_type');
             $this->addCommonColumns($table);
         });
     }
@@ -32,6 +36,6 @@ class CreateBillingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('billings');
+        Schema::dropIfExists('billing_mail_histories');
     }
 }

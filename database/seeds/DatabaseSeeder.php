@@ -1,5 +1,6 @@
 <?php
 
+use App\BillingMailHistory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -31,6 +32,7 @@ class DatabaseSeeder extends Seeder
             EmailTemplatesTableSeeder::class,
             CustomersSeeder::class,
             BillingTableSeeder::class,
+            BillingMailHistory::class,
             // StationsTableSeeder::class, CSVからインポート
             // RailsTableSeeder::class, CSVからインポート
             MedicalExaminationSystemTableSeeder::class,
