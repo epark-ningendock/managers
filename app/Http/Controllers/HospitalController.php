@@ -126,15 +126,19 @@ class HospitalController extends Controller
         //
     }
 
-
     public function edit(Hospital $hospital)
     {
         $prefectures = Prefecture::all();
         $district_codes = DistrictCode::all();
         $medical_examination_systems = MedicalExaminationSystem::all();
         $medical_treatment_times = MedicalTreatmentTime::where('hospital_id', $hospital->id)->get();
-        $stations = Station::all();
-        $rails = Rail::all();
+        // $rails = Prefecture::find($hospital->prefecture_id)->rails;
+        $rails = Prefecture::all()->mapToDictionary(function ($prefecture) {
+            return [$prefecture->id => $prefecture->rails()->get()];
+        });
+        $stations = Rail::all()->mapToDictionary(function ($rail) {
+            return [$rail->id => $rail->stations()->get()];
+        });
 
         return view('hospital.edit', [
             'hospital' => $hospital,

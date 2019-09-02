@@ -229,7 +229,9 @@
               <div class="form-group ml-0 mr-0">
                 <select id="rail{{$i}}" name="rail{{$i}}" class="custom-select form-control">
                   <option value="">路線を選択</option>
-                  @foreach($rails as $rail)
+                    {{-- TODO: JS で動的に rail を入れ替える --}}
+                    {{-- TODO: hospital->prefecture が null の時の処理を入れる --}}
+                  @foreach(isset($hospital->prefecture_id) ? $rails->get($hospital->prefecture_id)[0]->all() : [] as $rail)
                     <option value="{{ $rail->id }}"
                         @if ( old('rail' . $i, (isset($hospital->{'rail'. $i})) ? $hospital->{'rail'. $i} : null) == $rail->id)
                         selected="selected"
@@ -245,7 +247,8 @@
               <div class="form-group ml-0 mr-0">
                 <select id="station{{$i}}" name="station{{$i}}" class="custom-select form-control">
                   <option value="">駅を選択</option>
-                  @foreach($stations as $station)
+                  {{-- TODO: JS で動的に station を入れ替える --}}
+                  @foreach(isset($hospital->{'rail'. $i}) ? $stations->get($hospital->{'rail'. $i})[0]->all() : [] as $station)
                     <option value="{{ $station->id }}"
                         @if ( old('station' . $i, (isset($hospital->{'station'. $i})) ? $hospital->{'station'. $i} : null) == $station->id)
                         selected="selected"
