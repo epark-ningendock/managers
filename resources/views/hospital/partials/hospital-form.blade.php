@@ -107,8 +107,9 @@
             <div class="form-group @if( $errors->has('district_code'))  has-error @endif">
               <label for="district_code" class="col-md-4">{{ trans('messages.district_code') }}</label>
               <div class="col-md-8">
-                <select name="district_code_id" id="district_code_id" class="form-control p-locality-id">
-                  <option value="">市町村区を選択</option>
+                <input type="hidden" class="p-locality" id="hidden-p-locality"></input>
+                <select name="district_code_id" id="district_code_id" class="form-control">
+                  <option value="" id="district_init">市町村区を選択</option>
                   @foreach($district_codes as $district_code)
                     <option data-prefecture_id="{{ $district_code->prefecture_id }}"
                         value="{{ $district_code->id }}"
@@ -439,10 +440,29 @@
        * @param 都道府県のOption value
        */
       function distict_code_selector($option_id) {
-        $('#district_code_id option').hide();
-        let district_code_option = $('select#district_code_id option[data-prefecture_id="' + $option_id + '"]');
-        district_code_option.first().attr('selected', true);
-        district_code_option.show();
+        let all_district_code_option = $('#district_code_id option');
+        // hide() して select box の中身を初期化
+        all_district_code_option.hide();
+        if (!$option_id) {
+          $('#district_code_id option:selected').attr('selected', false);
+          $('#district_init').attr('selected', true);
+          $('#district_init').show();
+          return;
+        }
+        let district_code_options = $('select#district_code_id option[data-prefecture_id="' + $option_id + '"]');
+        // yubinbango.js で取得できた市区町村と一致した市区町村の文字列をセレクトする
+        let matched_option;
+        for (var i = 0; i < district_code_options.length; i++) {
+          if (district_code_options.eq(i).text().trim() == $('#hidden-p-locality').val()) {
+            matched_option = district_code_options.eq(i);
+          }
+        }
+        if (matched_option) {
+          matched_option.first().attr('selected', true);
+        } else {
+          district_code_options.first().attr('selected', true);
+        }
+        district_code_options.show();
       }
 
       /**
