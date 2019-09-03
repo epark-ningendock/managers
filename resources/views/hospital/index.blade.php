@@ -57,7 +57,7 @@
 @section('table')
   <p class="table-responsive">
     @include('layouts.partials.pagination-label', ['paginator' => $hospitals])
-    <table id="example2" class="table table-bordered table-hover table-striped mb-5">
+    <table id="example2" class="table table-striped table-hover no-border vertical-middle mb-5">
       <thead>
       <tr>
         <th>ID</th>
@@ -76,9 +76,9 @@
       @if ( isset($hospitals) && count($hospitals) > 0 )
         @foreach ($hospitals as $hospital)
           <tr class="
-          {{ ($hospital->status === \App\Enums\HospitalEnums::Private) ? 'private-row ' : '' }}
-          {{ ($hospital->status === \App\Enums\HospitalEnums::Public) ? 'public-row ' : '' }}
-          {{ ($hospital->status === \App\Enums\HospitalEnums::Delete) ? 'deleted-row ' : '' }}
+          {{ ($hospital->status === \App\Enums\HospitalEnums::Private) ? 'light-gray ' : '' }}
+          {{ ($hospital->status === \App\Enums\HospitalEnums::Public) ? '' : '' }}
+          {{ ($hospital->status === \App\Enums\HospitalEnums::Delete) ? 'dark-gray' : '' }}
               ">
             <td>{{ $hospital->id }}</td>
             <td>{{ $hospital->name }}</td>
@@ -124,6 +124,14 @@
   </div>
   {{ $hospitals->links() }}
 @stop
+<style>
+  tr.dark-gray td {
+    background-color: darkgray;
+  }
+  tr.light-gray td {
+    background-color: lightgray;
+  }
+</style>
 
 @push('js')
   <script src="{{ url('js/handlebars.js') }}"></script>

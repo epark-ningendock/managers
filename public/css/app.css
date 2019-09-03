@@ -2180,27 +2180,6 @@ Custom CSS
   margin-top: 25px;
 }
 
-.table .deleted-row {
-  background: #484747;
-}
-
-.table .deleted-row td {
-  border: 0;
-  color: #fff;
-}
-
-.table .deleted-row:hover {
-  background: #222;
-}
-
-.table .deleted-row:hover td {
-  color: #fff;
-}
-
-.table .private-row {
-  background: #e9e9e9;
-}
-
 body .no-border {
   border: 0 none;
 }
@@ -2276,27 +2255,6 @@ Custom CSS
 
 .btn-search {
   margin-top: 25px;
-}
-
-.table .deleted-row {
-  background: #484747;
-}
-
-.table .deleted-row td {
-  border: 0;
-  color: #fff;
-}
-
-.table .deleted-row:hover {
-  background: #222;
-}
-
-.table .deleted-row:hover td {
-  color: #fff;
-}
-
-.table .private-row {
-  background: #e9e9e9;
 }
 
 body .no-border {
