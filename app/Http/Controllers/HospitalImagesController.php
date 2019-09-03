@@ -61,7 +61,7 @@ class HospitalImagesController extends Controller
                 ]
             );
             $hospital->hospital_categories()->create(
-                ['hospital_image_id' => $hospital_dummy_img[0]->id,'image_order' => ImageOrder::IMAGE_GROUP_INTERVIEW,'image_order' => ImageOrder::IMAGE_GROUP_INTERVIEW,'order2' => 1]
+                ['hospital_image_id' => $hospital_dummy_img[0]->id,'image_order' => ImageOrder::IMAGE_GROUP_INTERVIEW,'image_order' => ImageOrder::IMAGE_GROUP_INTERVIEW,'order' => 1]
             );
         }
 
