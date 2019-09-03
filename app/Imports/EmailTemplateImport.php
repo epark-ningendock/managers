@@ -36,7 +36,7 @@ class EmailTemplateImport extends ImportBAbstract
     {
         $row = $row->toArray();
         $model = new EmailTemplate([
-            'hospital_id' => Hospital::withTrashed()->where('old_karada_dog_id', $this->hospital_no)->get()->first()->id,
+            'hospital_id' => Hospital::withTrashed()->where('old_karada_dog_id', $this->hospital_no)->first()->id,
             'title' => $this->getValue($row, 'PC_TITLE'),
             'text' => $this->getValue($row, 'PC_BODY'),
         ]);
