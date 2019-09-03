@@ -1,9 +1,10 @@
 <?php
 
+use App\BillingMailHistory;
 use App\Hospital;
 use Faker\Generator as Faker;
 
-$factory->define(App\BillingMailHistory::class, function (Faker $faker) {
+$factory->define(BillingMailHistory::class, function (Faker $faker) {
     return [
         'hospital_id' => factory(Hospital::class)->create()->id,
         'to_address1' => $faker->email,

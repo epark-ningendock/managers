@@ -7,14 +7,11 @@ use Illuminate\Http\Request;
 
 class BillingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        //
+        $billings = Billing::paginate(100);
+        return view('billing.index', ['billings' => $billings]);
     }
 
     /**

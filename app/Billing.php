@@ -10,4 +10,15 @@ class Billing extends Model
 
     protected $dates = ['from', 'to'];
 
+
+    public function contractPlan()
+    {
+        return $this->belongsTo(ContractPlan::class);
+    }
+
+    public function hospital()
+    {
+        return $this->belongsTo(Hospital::class);
+    }
+
 }

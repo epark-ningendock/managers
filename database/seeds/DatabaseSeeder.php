@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
             EmailTemplatesTableSeeder::class,
             CustomersSeeder::class,
             BillingTableSeeder::class,
-            BillingMailHistory::class,
+            BillingMailHistorySeeder::class,
             // StationsTableSeeder::class, CSVからインポート
             // RailsTableSeeder::class, CSVからインポート
             MedicalExaminationSystemTableSeeder::class,

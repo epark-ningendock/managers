@@ -213,4 +213,5 @@ return [
     'billing_email2'                       => '請求メール受信アドレス2',
     'billing_email3'                       => '請求メール受信アドレス3',
     'billing_fax_number'                   => '請求メール受信fax番号',
+    'billing' => '請求メ',
 ];
