@@ -153,7 +153,7 @@ class HospitalImagesController extends Controller
         //こだわり
         for($i = 1; $i <= 4; $i++){
             if(isset($file['speciality_'.$i]) or isset($file['speciality_'.$i.'_title']) or isset($file['speciality_'.$i.'_caption'])) {
-                $this->hospitalImageUploader($file, 'speciality_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_SPECIALITY,null,null,null,$file['speciality_'.$i.'_caption'],$file['speciality_'.$i.'_caption'] );
+                $this->hospitalImageUploader($file, 'speciality_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_SPECIALITY,null,null,null,$file['speciality_'.$i.'_title'],$file['speciality_'.$i.'_caption'] );
             }
         }
         //スタッフ
