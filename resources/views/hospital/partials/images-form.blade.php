@@ -525,7 +525,7 @@
                 </div>
                 @if(!is_null($internal_tab))
                     <p style="text-align: center; margin-top: 10px">
-                        <a onclick="return confirm('設備タブを削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.image.delete', ['hospital' => $hospital->id, 'hospital_category_id' => $internal_tab->id, 'hospital_image_id' => $internal_tab->hospital_image_id]) }}">
+                        <a onclick="return confirm('院内タブを削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.image.delete', ['hospital' => $hospital->id, 'hospital_category_id' => $internal_tab->id, 'hospital_image_id' => $internal_tab->hospital_image_id]) }}">
                             削除
                         </a>
                     </p>
