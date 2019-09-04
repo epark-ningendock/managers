@@ -323,7 +323,11 @@
     <!--未登録のタブ画像フォーム-->
     @for ($i = 1; $i <= 30; $i++)
         @if(!in_array($i, $staff_show_order2))
-        <div class="row photo-tab" data-order="{{$i}}" @if($i != 1) style="display: none" @endif>
+        <div class="row photo-tab" data-order="{{$i}}"
+             @if($i != 1 && (!old('staff_tab_'.$i.'_order2') && !old('staff_tab_'.$i.'_memo2')) )
+             style="display: none"
+            @endif
+        >
             <div class="col-sm-6">
                 <div class="tab_image_area">
                     <img src="/img/no_image.png">
@@ -349,7 +353,9 @@
                 @endif
             </div>
         </div>
-        <a href="javascript:void(0)" class="staff_add btn btn-info" style="@if($i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+        <a href="javascript:void(0)" class="staff_add btn btn-info"
+           style="@if($i == 1 or (old('staff_tab_'.$i.'_order2') or old('staff_tab_'.$i.'_memo2')) )display: none; @endif z-index: {{ 100 - $i}}"
+        >
             <i class="icon-trash icon-white"></i>
             追加
         </a>
@@ -428,7 +434,7 @@
         <!--未登録のタブ画像フォーム-->
         @for ($i = 1; $i <= 30; $i++)
             @if(!in_array($i, $facility_show_order2))
-            <div class="row photo-tab" data-order="{{$i}}" @if($i != 1) style="display: none" @endif>
+            <div class="row photo-tab" data-order="{{$i}}" @if($i != 1 && (!old('facility_tab_'.$i.'_order2') && !old('facility_tab_'.$i.'_memo2')) ) style="display: none" @endif>
                 <div class="col-sm-6">
                     <div class="tab_image_area">
                         <img src="/img/no_image.png">
@@ -456,7 +462,7 @@
                     @endif
                 </div>
             </div>
-            <a href="javascript:void(0)" class="facility_add btn btn-info" style="@if($i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+            <a href="javascript:void(0)" class="facility_add btn btn-info" style="@if($i == 1 or (old('facility_tab_'.$i.'_order2') or old('facility_tab_'.$i.'_memo2')) )display: none; @endif z-index: {{ 100 - $i}}">
                 <i class="icon-trash icon-white"></i>
                 追加
             </a>
@@ -540,7 +546,7 @@
         <!--未登録のタブ画像フォーム-->
         @for ($i = 1; $i <= 30; $i++)
             @if(!in_array($i, $internal_show_order2))
-                <div class="row photo-tab" data-order="{{$i}}" @if($i != 1) style="display: none" @endif>
+                <div class="row photo-tab" data-order="{{$i}}" @if($i != 1 && (!old('internal_tab_'.$i.'_order2') && !old('internal_tab_'.$i.'_memo2')) ) style="display: none" @endif>
                     <div class="col-sm-6">
                         <div class="tab_image_area">
                             <img src="/img/no_image.png">
@@ -568,7 +574,7 @@
                         @endif
                     </div>
                 </div>
-                <a href="javascript:void(0)" class="internal_add btn btn-info" style="@if($i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+                <a href="javascript:void(0)" class="internal_add btn btn-info" style="@if($i == 1 or (old('internal_tab_'.$i.'_order2') or old('internal_tab_'.$i.'_memo2')) )display: none; @endif z-index: {{ 100 - $i}}">
                     <i class="icon-trash icon-white"></i>
                     追加
                 </a>
@@ -652,7 +658,7 @@
         <!--未登録のタブ画像フォーム-->
         @for ($i = 1; $i <= 30; $i++)
             @if(!in_array($i, $external_show_order2))
-                <div class="row photo-tab" data-order="{{$i}}" @if($i != 1) style="display: none" @endif>
+                <div class="row photo-tab" data-order="{{$i}}" @if($i != 1 && (!old('external_tab_'.$i.'_order2') && !old('external_tab_'.$i.'_memo2')) ) style="display: none" @endif>
                     <div class="col-sm-6">
                         <div class="tab_image_area">
                             <img src="/img/no_image.png">
@@ -680,7 +686,7 @@
                         @endif
                     </div>
                 </div>
-                <a href="javascript:void(0)" class="external_add btn btn-info" style="@if($i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+                <a href="javascript:void(0)" class="external_add btn btn-info" style="@if($i == 1 or (old('external_tab_'.$i.'_order2') or old('external_tab_'.$i.'_memo2')) )display: none; @endif z-index: {{ 100 - $i}}">
                     <i class="icon-trash icon-white"></i>
                     追加
                 </a>
@@ -758,7 +764,7 @@
         <!--未登録のタブ画像フォーム-->
         @for ($i = 1; $i <= 30; $i++)
             @if(!in_array($i, $another_show_order2))
-                <div class="row photo-tab" data-order="{{$i}}" @if($i != 1) style="display: none" @endif>
+                <div class="row photo-tab" data-order="{{$i}}" @if($i != 1 && (!old('another_tab_'.$i.'_order2') && !old('another_tab_'.$i.'_memo2')) ) style="display: none" @endif>
                     <div class="col-sm-6">
                         <div class="tab_image_area">
                             <img src="/img/no_image.png">
@@ -786,7 +792,7 @@
                         @endif
                     </div>
                 </div>
-                <a href="javascript:void(0)" class="another_add btn btn-info" style="@if($i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+                <a href="javascript:void(0)" class="another_add btn btn-info" style="@if($i == 1 or (old('another_tab_'.$i.'_order2') or old('another_tab_'.$i.'_memo2')) )display: none; @endif z-index: {{ 100 - $i}}">
                     <i class="icon-trash icon-white"></i>
                     追加
                 </a>
