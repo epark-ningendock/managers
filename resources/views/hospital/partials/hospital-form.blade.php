@@ -1,3 +1,7 @@
+@php
+  use App\Station;
+  use App\Rail;
+@endphp
 <input type="hidden" name="lock_version" value="{{ $hospital->lock_version or ''}}"/>
 <table class="table table-bordered mb-5 mt-5">
   <tr>
@@ -229,16 +233,27 @@
               <div class="form-group ml-0 mr-0">
                 <select id="rail{{$i}}" name="rail{{$i}}" class="custom-select form-control">
                   <option value="" id="init-rail{{$i}}">路線を選択</option>
-                  {{-- TODO: JS で動的に rail を入れ替える --}}
-                  @foreach($rails as $rail)
-                  @if (!isset($rail)) @continue @endif
-                    <option value="{{ $rail->id }}" id="rail-{{ $rail->id }}"
-                        @if ( old('rail' . $i, (isset($hospital->{'rail'. $i})) ? $hospital->{'rail'. $i} : null) == $rail->id)
-                        selected="selected"
-                        @endif
-                    >{{ $rail->name }}
-                    </option>
-                  @endforeach
+                  @if (!old('prefecture_id'))
+                    @foreach($rails as $rail)
+                    @if (!isset($rail)) @continue @endif
+                      <option value="{{ $rail->id }}" id="rail-{{ $rail->id }}"
+                          @if ( old('rail' . $i, (isset($hospital->{'rail'. $i})) ? $hospital->{'rail'. $i} : null) == $rail->id)
+                          selected="selected"
+                          @endif
+                      >{{ $rail->name }}
+                      </option>
+                    @endforeach
+                  @else
+                    @foreach(Rail::find(old('prefecture_id'))->get() as $rail)
+                    @if (!isset($rail)) @continue @endif
+                      <option value="{{ $rail->id }}" id="rail-{{ $rail->id }}"
+                          @if ( old('rail' . $i, (isset($hospital->{'rail'. $i})) ? $hospital->{'rail'. $i} : null) == $rail->id)
+                          selected="selected"
+                          @endif
+                      >{{ $rail->name }}
+                      </option>
+                    @endforeach
+                  @endif
                 </select>
               </div>
             </div>
@@ -247,17 +262,27 @@
               <div class="form-group ml-0 mr-0">
                 <select id="station{{$i}}" name="station{{$i}}" class="custom-select form-control">
                   <option value="" id="init-station{{$i}}">駅を選択</option>
-                  {{-- TODO: JS で動的に station を入れ替える --}}
-                  @foreach($five_stations[$i - 1] as $station)
-                    @if (!isset($station)) @continue @endif
-                    {{-- ここの初期値設定の後にJqueyで書き換えているから、初期値選択ができていない --}}
-                    <option value="{{ $station->id }}" id="station-{{ $station->id }}"
-                        @if ( old('station' . $i, (isset($hospital->{'station'. $i})) ? $hospital->{'station'. $i} : null) == $station->id)
-                        selected="selected"
-                        @endif
-                    >{{ $station->name }}
-                    </option>
-                  @endforeach
+                  @if (!old('rail' . $i))
+                    @foreach($five_stations[$i - 1] as $station)
+                      @if (!isset($station)) @continue @endif
+                      <option value="{{ $station->id }}" id="station-{{ $station->id }}"
+                          @if ( old('station' . $i, (isset($hospital->{'station'. $i})) ? $hospital->{'station'. $i} : null) == $station->id)
+                          selected="selected"
+                          @endif
+                      >{{ $station->name }}
+                      </option>
+                    @endforeach
+                  @else
+                    @foreach(Station::find(old('rail' . $i))->get() as $station)
+                      @if (!isset($station)) @continue @endif
+                        <option value="{{ $station->id }}" id="station-{{ $station->id }}"
+                            @if ( old('station' . $i, (isset($hospital->{'station'. $i})) ? $hospital->{'station'. $i} : null) == $station->id)
+                            selected="selected"
+                            @endif
+                        >{{ $station->name }}
+                        </option>
+                    @endforeach
+                  @endif
                 </select>
               </div>
             </div>
@@ -557,11 +582,6 @@
           }
         });
       };
-
-      // バリデーションエラーで戻ってきたときに、該当の都道府県の路線情報を出すために、この処理を追加
-      $(document).ready(function(){
-        rail_selector($('#prefecture').val());
-      });
 
       $('#prefecture, #district_code_id, #address1, #address2')
         .focusin(e => {
