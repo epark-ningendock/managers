@@ -17,8 +17,28 @@
 
 
 @section('table')
-    <p class="table-responsive">
-    @include('layouts.partials.pagination-label', ['paginator' => $billings])
+
+    <div class="row">
+
+        <div class="col-sm-6">
+
+            <div class="mt-5">
+                @include('layouts.partials.pagination-label', ['paginator' => $billings])
+            </div>
+
+        </div>
+
+        <div class="col-sm-6">
+
+            {{ $billings->appends(request()->input())->links() }}
+
+        </div>
+
+
+    </div>
+
+
+    <div class="table-responsive">
     <table id="example2" class="table table-bordered table-hover table-striped mb-5">
         <thead>
         <tr>
@@ -55,5 +75,7 @@
         </tbody>
     </table>
     </div>
-    {{ $billings->appends(request()->input())->links() }}
+
+
+
 @stop
