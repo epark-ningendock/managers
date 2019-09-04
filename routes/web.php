@@ -117,7 +117,7 @@ Route::middleware('auth:staffs')->group(function () {
         */
         Route::resource('/hospital', 'HospitalController')->except(['show']);
         Route::post('/hospital/find-rails', 'HospitalController@findRails')->name('hospital.find-rails');
-        Route::post('/hospital/fins-stations', 'HospitalController@findStations')->name('hospital.find-stations');
+        Route::post('/hospital/find-stations', 'HospitalController@findStations')->name('hospital.find-stations');
 
         /*
         |--------------------------------------------------------------------------
