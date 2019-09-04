@@ -2,8 +2,10 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class PvRecord extends SoftDeleteModel
 {
@@ -21,7 +23,7 @@ class PvRecord extends SoftDeleteModel
     ];
 
     protected $fillable = [
-        'hospital_id', 'date_cord', 'pv'
+        'hospital_id', 'date_code', 'pv'
     ];
 
     /**
@@ -33,29 +35,14 @@ class PvRecord extends SoftDeleteModel
     public function scopeGetPvData(Builder $query, Carbon $date)
     {
         $query->select(DB::raw(
-        // 医療機関ID
-        '`hospital_id`',
-        // pv集計
-        '`SUM(pv)` AS `pv`',
-            ));
+            // 医療機関ID
+            '`hospital_id`',
+            // pv集計
+            '`SUM(pv)` AS `pv`'
+        ));
         $query->where('created_at', '>', $date);
-        $query->groupBy('hospital_id',);
+        $query->groupBy('hospital_id');
 
-        return collect($query->get()->toArray());
-    }
-
-    /**
-     * 指定日付以前の医療機関ごとに集計したpv数を返す
-     *
-     * @param  Illuminate\Database\Eloquent\Builder $query
-     * @return Illuminate\Database\Eloquent\Builder $query
-     */
-    public function scopeGetPvDataBeforeDate(Builder $query, Carbon $date)
-    {
-
-        $query->where('created_at', '<=', $date);
-        $query->groupBy('hospital_id',);
-
-        return collect($query->get()->toArray());
+        return $query;
     }
 }

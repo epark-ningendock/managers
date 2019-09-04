@@ -38,27 +38,6 @@ Custom CSS
   margin-top: 25px;
 }
 
-.table .deleted-row {
-  background: #484747;
-}
-
-.table .deleted-row td {
-  border: 0;
-  color: #fff;
-}
-
-.table .deleted-row:hover {
-  background: #222;
-}
-
-.table .deleted-row:hover td {
-  color: #fff;
-}
-
-.table .private-row {
-  background: #e9e9e9;
-}
-
 body .no-border {
   border: 0 none;
 }
@@ -222,7 +201,7 @@ label {
     border-radius: 2px;
     font-size: 10px;
     font-weight: bold;
-    vertical-align: text-bottom;
+    vertical-align: text-top !important;
   }
 
 
@@ -277,6 +256,12 @@ label {
 .form-control{
   border-radius: 3px;
   font-weight: normal;
+  &.w4em {
+    width: 4em;
+  }
+  &.w8em {
+    width: 8em;
+  }
   &.w16em {
     width: 16em;
   }
@@ -321,6 +306,9 @@ label {
 $color1: #f4f4f4;
 $color2: #3197EE;
 .form-entry {
+  .checkbox label, .radio label {
+    padding-left: 0px !important;
+  }
   .radio {
     margin: 0.5rem;
     input[type="radio"] {
@@ -378,6 +366,16 @@ $color2: #3197EE;
       }
     }
   }
+  label[for="confirm"] {
+    display: block;
+  }
+  .inline-block {
+    display: inline-block;
+  }
+  .input-side-text {
+    vertical-align: sub;
+    color: #666666;
+  }
 }
 
 legend {
@@ -385,14 +383,6 @@ legend {
   margin: 0 0px 10px 0;
   font-size: 1.2em;
   color: #737373;
-}
-
-.alert-danger {
-  position: absolute;
-  left: 200px;
-  top: 30px;
-  width: 40%;
-  z-index: 1;
 }
 
 .footer-submit {
@@ -486,7 +476,7 @@ legend {
 }
 
 .staff_box {
-  height: 540px;
+  height: 610px;
   margin-top: 20px;
 }
 
@@ -592,12 +582,17 @@ label.file-upload input[type="file"] {
   display:block;
 }
 
+#speciality_section {
+  position: relative;
+  padding-bottom: 100px;
+}
+
 #staff_section {
   position: relative;
   padding-bottom: 100px;
 }
 
-.staff_add,.facility_add,.internal_add,.external_add,.another_add {
+.staff_add,.facility_add,.internal_add,.external_add,.another_add,.speciality_add {
   position: absolute;
   bottom: 10px;
   left: 10px;
@@ -675,4 +670,263 @@ label.file-upload input[type="file"] {
 .open_close_tab {
   position: relative;
   padding: 0 0 40px 0;
+}
+
+#calendar_bulk_box {
+  .calendar-period {
+    background: #eeeeee;
+    line-height: 50px;
+    text-indent: 20px;
+    font-weight: 500;
+    font-size: 1.2em;
+    margin: -19px 0 0 0;
+    position: relative;
+  }
+  #open-bulk-box {
+    border: 1px solid #ccc;
+    background: #fff;
+    font-size: 0.8em;
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    i {
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+  }
+  .bulk_update {
+    display: none;
+    width: 80%;
+    margin: 0 auto;
+    h2 {
+      margin: 24px 0 20px 0;
+      span {
+        font-size: 0.6em;
+        padding-left: 20px;
+      }
+    }
+
+  }
+  .custom-checkbox-area {
+    label {
+      //font-size: 1.2em;
+    }
+  }
+  h3 {
+    color: #777;
+    font-size: 18px;
+    margin: 0;
+  }
+  .to-month {
+    margin: 0 auto;
+    p{
+      display: inline-block;
+      width: 100px;
+    }
+  }
+  .to-week {
+    p{
+      display: inline-block;
+      margin-right: 14px;
+    }
+  }
+  li {
+    display: inline-block;
+    margin: 10px 18px 0 0;
+  }
+  .bulk-weekday {
+    label[for="saturday-frame"] {
+      color: #3c8dbc;
+    }
+    label[for="sunday-frame"],label[for="holiday-frame"] {
+      color: #ea3f60;
+    }
+    select {
+      width: 4.3em;
+      display: inline;
+    }
+    label {
+      font-weight: bold;
+    }
+    #bulk-update {
+      clear: both;
+    }
+  }
+  #open-bulk-box {
+  }
+  .calendar-table {
+    a {font-weight: bold}
+  }
+}
+
+#calendar_bulk_box {
+  h4 {
+    background: #3c8dbc;
+    color: #ffffff;
+    line-height: 2em;
+    margin: 0;
+  }
+  th {
+    background: #eee;
+  }
+  .reservation-count {
+    font-size: 0.8em;
+  }
+  .bg-gray {
+    background-color: #eee !important;
+  }
+  .day-label {
+    font-weight: bold;
+  }
+  .pagenate {
+    .page-link {
+      text-align: center;
+      margin: 60px auto 20px auto;
+    }
+  }
+}
+.box-header {
+  .box-title {
+    font-weight: normal;
+    font-size: 1em;
+  }
+  .box-tools {
+    .btn {font-weight: normal;}
+  }
+}
+.box-footer {
+  text-align: center;
+}
+
+#calendar_header {
+  .box-header {
+    background-color: aliceblue;
+  }
+  h2 {
+    font-weight: 500;
+    font-size: 1.1em;
+  }
+}
+
+.edit-calendar {
+  h3 {
+    span {
+      font-weight: bold !important;
+    }
+  }
+}
+
+.course-select {
+ margin-top: 10px;
+}
+
+
+.clearfix::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+#email-template {
+  .email-template-title {
+    width: 70%;
+    text-align: left;
+    vertical-align: middle;
+  }
+  .email-template-id {
+    vertical-align: middle;
+  }
+}
+
+.confirmation_email_reception_flag,.reception_type_flag, .epark_in_hospital_reception_mail {
+  p {
+    display: inline-block;
+    margin-right: 20px;
+  }
+}
+#datetimepicker-course_display_end, #datetimepicker-course_display_start {
+  float: left;
+  .course_display_label {
+    width: 80px;
+    float: left;
+    margin: 0 7px 0 80px;
+  }
+}
+#datetimepicker-course_display_start{
+
+}
+
+.course_display_start_label {
+
+}
+/*** custom checkboxes ***/
+
+input[type=checkbox] { display:none; } /* to hide the checkbox itself */
+input[type=checkbox] + label:before {
+  font-family: FontAwesome;
+  content: "\F096";
+  color: #3c8dbc;
+  text-align: center;
+  display: inline-block;
+  width: 24px;
+  vertical-align: middle;
+  padding: 0px 0 0 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#setting-list {
+  .mr-2 {
+    cursor: pointer;
+    text-indent: 15px;
+  }
+  input[type=checkbox] + label:before {
+    margin: 0 9px 0 0;
+  }
+}
+
+#setting-list {
+  .mr-2 {
+    cursor: pointer;
+    text-indent: 15px;
+  }
+  input[type=checkbox] + label:before {
+    margin: 0 9px 0 0;
+  }
+}
+
+#option-setting {
+  .mr-2 {
+    cursor: pointer;
+    text-indent: 15px;
+  }
+  input[type=checkbox] + label:before {
+    margin: 0 9px 0 0;
+  }
+}
+
+.display-period {
+  margin-bottom: 10px;
+}
+
+.display-period {
+  input {
+    cursor: pointer;
+  }
+}
+
+input[type=checkbox] + label:before { content: "\f096"; color: #3c8dbc} /* unchecked icon */
+input[type=checkbox] + label:before { letter-spacing: 10px; } /* space between checkbox and label */
+
+input[type=checkbox]:checked + label:before { content: "\f046"; } /* checked icon */
+input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow space for check mark */
+
+input[type=checkbox]:disabled + label:before { content: "\f096"; opacity: 0.4; color: #333333}
+
+.vertical-middle {
+  td {
+    vertical-align: middle !important;
+  }
 }

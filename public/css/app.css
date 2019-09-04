@@ -2180,27 +2180,6 @@ Custom CSS
   margin-top: 25px;
 }
 
-.table .deleted-row {
-  background: #484747;
-}
-
-.table .deleted-row td {
-  border: 0;
-  color: #fff;
-}
-
-.table .deleted-row:hover {
-  background: #222;
-}
-
-.table .deleted-row:hover td {
-  color: #fff;
-}
-
-.table .private-row {
-  background: #e9e9e9;
-}
-
 body .no-border {
   border: 0 none;
 }
@@ -2276,27 +2255,6 @@ Custom CSS
 
 .btn-search {
   margin-top: 25px;
-}
-
-.table .deleted-row {
-  background: #484747;
-}
-
-.table .deleted-row td {
-  border: 0;
-  color: #fff;
-}
-
-.table .deleted-row:hover {
-  background: #222;
-}
-
-.table .deleted-row:hover td {
-  color: #fff;
-}
-
-.table .private-row {
-  background: #e9e9e9;
 }
 
 body .no-border {
@@ -2478,7 +2436,7 @@ label {
   border-radius: 2px;
   font-size: 10px;
   font-weight: bold;
-  vertical-align: text-bottom;
+  vertical-align: text-top !important;
 }
 
 .inline-radio {
@@ -2547,6 +2505,14 @@ label {
   font-weight: normal;
 }
 
+.form-control.w4em {
+  width: 4em;
+}
+
+.form-control.w8em {
+  width: 8em;
+}
+
 .form-control.w16em {
   width: 16em;
 }
@@ -2588,6 +2554,11 @@ label {
   margin: 0 auto;
 }
 
+.form-entry .checkbox label,
+.form-entry .radio label {
+  padding-left: 0px !important;
+}
+
 .form-entry .radio {
   margin: 0.5rem;
 }
@@ -2626,7 +2597,7 @@ label {
   border-color: #3197EE;
 }
 
-.form-entry .radio input[type="radio"]:checked:disabled + .radio-label:before {
+.form-entry .radio input[type="radio"]:disabled + .radio-label:before {
   -webkit-box-shadow: inset 0 0 0 4px #f4f4f4;
           box-shadow: inset 0 0 0 4px #f4f4f4;
   border-color: #b4b4b4;
@@ -2637,19 +2608,24 @@ label {
   margin-right: 0;
 }
 
+.form-entry label[for="confirm"] {
+  display: block;
+}
+
+.form-entry .inline-block {
+  display: inline-block;
+}
+
+.form-entry .input-side-text {
+  vertical-align: sub;
+  color: #666666;
+}
+
 legend {
   border: none;
   margin: 0 0px 10px 0;
   font-size: 1.2em;
   color: #737373;
-}
-
-.alert-danger {
-  position: absolute;
-  left: 200px;
-  top: 30px;
-  width: 40%;
-  z-index: 1;
 }
 
 .footer-submit {
@@ -2739,7 +2715,7 @@ legend {
 }
 
 .staff_box {
-  height: 540px;
+  height: 610px;
   margin-top: 20px;
 }
 
@@ -2857,6 +2833,11 @@ label.file-upload input[type="file"] {
   display: block;
 }
 
+#speciality_section {
+  position: relative;
+  padding-bottom: 100px;
+}
+
 #staff_section {
   position: relative;
   padding-bottom: 100px;
@@ -2866,7 +2847,8 @@ label.file-upload input[type="file"] {
 .facility_add,
 .internal_add,
 .external_add,
-.another_add {
+.another_add,
+.speciality_add {
   position: absolute;
   bottom: 10px;
   left: 10px;
@@ -2949,5 +2931,281 @@ label.file-upload input[type="file"] {
 .open_close_tab {
   position: relative;
   padding: 0 0 40px 0;
+}
+
+#calendar_bulk_box .calendar-period {
+  background: #eeeeee;
+  line-height: 50px;
+  text-indent: 20px;
+  font-weight: 500;
+  font-size: 1.2em;
+  margin: -19px 0 0 0;
+  position: relative;
+}
+
+#calendar_bulk_box #open-bulk-box {
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 0.8em;
+  position: absolute;
+  right: 12px;
+  top: 10px;
+}
+
+#calendar_bulk_box #open-bulk-box i {
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+#calendar_bulk_box .bulk_update {
+  display: none;
+  width: 80%;
+  margin: 0 auto;
+}
+
+#calendar_bulk_box .bulk_update h2 {
+  margin: 24px 0 20px 0;
+}
+
+#calendar_bulk_box .bulk_update h2 span {
+  font-size: 0.6em;
+  padding-left: 20px;
+}
+
+#calendar_bulk_box h3 {
+  color: #777;
+  font-size: 18px;
+  margin: 0;
+}
+
+#calendar_bulk_box .to-month {
+  margin: 0 auto;
+}
+
+#calendar_bulk_box .to-month p {
+  display: inline-block;
+  width: 100px;
+}
+
+#calendar_bulk_box .to-week p {
+  display: inline-block;
+  margin-right: 14px;
+}
+
+#calendar_bulk_box li {
+  display: inline-block;
+  margin: 10px 18px 0 0;
+}
+
+#calendar_bulk_box .bulk-weekday label[for="saturday-frame"] {
+  color: #3c8dbc;
+}
+
+#calendar_bulk_box .bulk-weekday label[for="sunday-frame"],
+#calendar_bulk_box .bulk-weekday label[for="holiday-frame"] {
+  color: #ea3f60;
+}
+
+#calendar_bulk_box .bulk-weekday select {
+  width: 4.3em;
+  display: inline;
+}
+
+#calendar_bulk_box .bulk-weekday label {
+  font-weight: bold;
+}
+
+#calendar_bulk_box .bulk-weekday #bulk-update {
+  clear: both;
+}
+
+#calendar_bulk_box .calendar-table a {
+  font-weight: bold;
+}
+
+#calendar_bulk_box h4 {
+  background: #3c8dbc;
+  color: #ffffff;
+  line-height: 2em;
+  margin: 0;
+}
+
+#calendar_bulk_box th {
+  background: #eee;
+}
+
+#calendar_bulk_box .reservation-count {
+  font-size: 0.8em;
+}
+
+#calendar_bulk_box .bg-gray {
+  background-color: #eee !important;
+}
+
+#calendar_bulk_box .day-label {
+  font-weight: bold;
+}
+
+#calendar_bulk_box .pagenate .page-link {
+  text-align: center;
+  margin: 60px auto 20px auto;
+}
+
+.box-header .box-title {
+  font-weight: normal;
+  font-size: 1em;
+}
+
+.box-header .box-tools .btn {
+  font-weight: normal;
+}
+
+.box-footer {
+  text-align: center;
+}
+
+#calendar_header .box-header {
+  background-color: aliceblue;
+}
+
+#calendar_header h2 {
+  font-weight: 500;
+  font-size: 1.1em;
+}
+
+.edit-calendar h3 span {
+  font-weight: bold !important;
+}
+
+.course-select {
+  margin-top: 10px;
+}
+
+.clearfix::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+#email-template .email-template-title {
+  width: 70%;
+  text-align: left;
+  vertical-align: middle;
+}
+
+#email-template .email-template-id {
+  vertical-align: middle;
+}
+
+.confirmation_email_reception_flag p,
+.reception_type_flag p,
+.epark_in_hospital_reception_mail p {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+#datetimepicker-course_display_end,
+#datetimepicker-course_display_start {
+  float: left;
+}
+
+#datetimepicker-course_display_end .course_display_label,
+#datetimepicker-course_display_start .course_display_label {
+  width: 80px;
+  float: left;
+  margin: 0 7px 0 80px;
+}
+
+/*** custom checkboxes ***/
+
+input[type=checkbox] {
+  display: none;
+}
+
+/* to hide the checkbox itself */
+
+input[type=checkbox] + label:before {
+  font-family: FontAwesome;
+  content: "\F096";
+  color: #3c8dbc;
+  text-align: center;
+  display: inline-block;
+  width: 24px;
+  vertical-align: middle;
+  padding: 0px 0 0 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#setting-list .mr-2 {
+  cursor: pointer;
+  text-indent: 15px;
+}
+
+#setting-list input[type=checkbox] + label:before {
+  margin: 0 9px 0 0;
+}
+
+#setting-list .mr-2 {
+  cursor: pointer;
+  text-indent: 15px;
+}
+
+#setting-list input[type=checkbox] + label:before {
+  margin: 0 9px 0 0;
+}
+
+#option-setting .mr-2 {
+  cursor: pointer;
+  text-indent: 15px;
+}
+
+#option-setting input[type=checkbox] + label:before {
+  margin: 0 9px 0 0;
+}
+
+.display-period {
+  margin-bottom: 10px;
+}
+
+.display-period input {
+  cursor: pointer;
+}
+
+input[type=checkbox] + label:before {
+  content: "\F096";
+  color: #3c8dbc;
+}
+
+/* unchecked icon */
+
+input[type=checkbox] + label:before {
+  letter-spacing: 10px;
+}
+
+/* space between checkbox and label */
+
+input[type=checkbox]:checked + label:before {
+  content: "\F046";
+}
+
+/* checked icon */
+
+input[type=checkbox]:checked + label:before {
+  letter-spacing: 5px;
+}
+
+/* allow space for check mark */
+
+input[type=checkbox]:disabled + label:before {
+  content: "\F096";
+  opacity: 0.4;
+  color: #333333;
+}
+
+.vertical-middle td {
+  vertical-align: middle !important;
 }
 

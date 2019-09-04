@@ -57,11 +57,26 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
+            'key' => env('AWS_KEY'),
+            'secret' => env('AWS_SECRET'),
+            'region' => env('AWS_REGION'),
             'bucket' => env('AWS_BUCKET'),
+            'version' => 'latest',
         ],
+        'minio' => [
+            'driver' => 's3',
+            'key' => env('MINIO_KEY', 'your minio server key'),
+            'secret' => env('MINIO_SECRET', 'your minio server secret'),
+            'region' => env('MINIO_REGION', 'your minio server secret'),
+            'bucket' => env('MINIO_BUCKET','your minio bucket name'),
+            'endpoint' => env('MINIO_ENDPOINT','http://os:9000'),
+            'url' => env('ASSET_HOST', 'http://localhost:9000/epark-bucket/'),
+            'version' => 'latest',
+            'use_path_style_endpoint' => true,
+
+        ],
+
+
 
     ],
 

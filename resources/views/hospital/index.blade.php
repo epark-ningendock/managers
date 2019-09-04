@@ -1,9 +1,10 @@
 @php
-    use \App\Enums\HospitalEnums;
-    $params = [
-        'delete_route' => 'hospital.destroy',
-        'create_route' => 'hospital.create'
-    ];
+  use App\Enums\HospitalEnums;
+  use App\Prefecture;
+  use App\DistrictCode;
+  $params = [
+    'delete_route' => 'hospital.destroy'
+  ];
 @endphp
 
 @extends('layouts.list', $params)
@@ -13,157 +14,152 @@
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-    <h1>
-        <i class="fa fa-hospital-o"> 医療機関管理</i>
-    </h1>
+  <h1>
+    <i class="fa fa-hospital-o"> 医療機関管理</i>
+  </h1>
 @stop
 
 @section('search')
-
-    <form action="{{ route('hospital.search') }}">
-
-        <div class="std-container">
-            <div class="row">
-
-                <div class="col-sm-9">
-                    <div class="form-group">
-                        <label for="s_text">医療機関名・ID</label>
-                        <input type="text" class="form-control" autocomplete="off" name="s_text" id="s_text"
-                               value="{{ request('s_text') }}"/>
-                    </div>
-                </div>
-
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="status">状態</label>
-                        <select name="status" id="status" class="form-control">
-                            @foreach(\App\Enums\HospitalEnums::toArray() as $key)
-
-                                <option
-                                        value="{{ $key }}" {{ ( request('status') == $key) ? "selected" : "" }}>{{ \App\Enums\HospitalEnums::getDescription($key) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="text-center">
-                    <button type="reset" class="btn btn-default">検索用にクリア</button>
-                    <button type="submit" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                        検索
-                    </button>
-                </div>
-
-            </div>
+  <form action="{{ route('hospital.search') }}">
+    <div class="std-container">
+      <div class="row">
+        <div class="col-sm-9">
+          <div class="form-group">
+            <label for="s_text">医療機関名・ID</label>
+            <input type="text" class="form-control" autocomplete="off" name="s_text" id="s_text"
+                 value="{{ request('s_text') }}"/>
+          </div>
         </div>
 
-    </form>
+        <div class="col-sm-3">
+          <div class="form-group">
+            <label for="status">状態</label>
+            <select name="status" id="status" class="form-control">
+              @foreach(HospitalEnums::toArray() as $key => $value)
+                <option value="{{ $value }}" {{ ( request('status') == $value) ? "selected" : "" }}>
+                  {{ HospitalEnums::getDescription($value) }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+        </div>
 
-    @include('hospital.partials.record-management-modal-box')
-
+        <div class="text-center">
+          <button type="reset" class="btn btn-default">検索用にクリア</button>
+          <button type="submit" class="btn btn-primary">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            検索
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
 @stop
-
-
-
 
 @section('table')
-    <p class="table-responsive">
-        @include('layouts.partials.pagination-label', ['paginator' => $hospitals])
-        <table id="example2" class="table table-bordered table-hover table-striped mb-5">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>医療機関名</th>
-                <th>所在地</th>
-                <th>連絡先</th>
-                <th>状態</th>
-                @if (Auth::user()->staff_auth->is_hospital === 3)
-                    <th>操作</th>
-                    <th>編集</th>
-                    <th>削除</th>
-                @endif
-            </tr>
-            </thead>
-            <tbody>
-            @if ( isset($hospitals) && count($hospitals) > 0 )
-                @foreach ($hospitals as $hospital)
-                    <tr class="
-                    {{ ($hospital->status === \App\Enums\HospitalEnums::Private) ? 'private-row ' : '' }}
-                    {{ ($hospital->status === \App\Enums\HospitalEnums::Public) ? 'public-row ' : '' }}
-                    {{ ($hospital->status === \App\Enums\HospitalEnums::Delete) ? 'deleted-row ' : '' }}
-                            ">
-                        <td>{{ $hospital->id }}</td>
-                        <td>{{ $hospital->name }}</td>
-                        <td>{{ $hospital->address1 }}</td>
-                        <td>{{ $hospital->tel }}</td>
-                        <td>{{ \App\Enums\HospitalEnums::getDescription($hospital->status) }}</td>
-                        @if (Auth::user()->staff_auth->is_hospital === 3)
-                            <td>
-                                <a class="btn btn-success insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">
-                                    <i class="fa fa-pencil"></i>
-                                </a>
-                                <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
-                                    {{ csrf_field() }}
-                                </form>
-                            </td>
-                            <td>
-                                @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
-                                    <a href="{{ route('hospital.edit', $hospital->id) }}"
-                                    class="btn btn-primary">
-                                    <i class="fa fa-edit text-bold"> 編集</i>
-                                    </a>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
-                                    <button class="btn btn-danger delete-btn delete-popup-btn"
-                                            data-id="{{ $hospital->id }}">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                @endif
-                            </td>
-                        @endif
-                    </tr>
-                @endforeach
+  <p class="table-responsive">
+    @include('layouts.partials.pagination-label', ['paginator' => $hospitals])
+    <table id="example2" class="table table-striped table-hover no-border vertical-middle mb-5">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>医療機関名</th>
+        <th>所在地</th>
+        <th>連絡先</th>
+        <th>状態</th>
+        @if (Auth::user()->staff_auth->is_hospital === 3)
+          <th>操作</th>
+          <th>編集</th>
+          <th>削除</th>
+        @endif
+      </tr>
+      </thead>
+      <tbody>
+      @if ( isset($hospitals) && count($hospitals) > 0 )
+        @foreach ($hospitals as $hospital)
+          <tr class="
+          {{ ($hospital->status === HospitalEnums::Private) ? 'light-gray ' : '' }}
+          {{ ($hospital->status === HospitalEnums::Public) ? '' : '' }}
+          {{ ($hospital->status === HospitalEnums::Delete) ? 'dark-gray' : '' }}
+              ">
+            <td>{{ $hospital->id }}</td>
+            <td>{{ $hospital->name }}</td>
+            @if (DistrictCode::find($hospital->district_code_id))
+              <td>{{ Prefecture::find($hospital->prefecture_id)->name . DistrictCode::find($hospital->district_code_id)->name . $hospital->address1 }}</td>
             @else
-                <tr>
-                    <td colspan="8" class="text-center">{{ trans('messages.no_record') }}</td>
-                </tr>
+              <td>{{ Prefecture::find($hospital->prefecture_id)->name . $hospital->address1 }}</td>
             @endif
+            <td>{{ $hospital->tel }}</td>
+            <td>{{ HospitalEnums::getDescription($hospital->status) }}</td>
+            @if (Auth::user()->staff_auth->is_hospital === 3)
+              <td>
+                <a class="btn btn-success insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">
+                  <span class="fa fa-pencil"></i>  
+                </a>
+                <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
+                  {{ csrf_field() }}
+                </form>
+              </td>
+              <td>
+                @if ($hospital->status !== HospitalEnums::Delete)
+                  <a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}"
+                    class="btn btn-primary">
+                  <i class="fa fa-edit text-bold"> 編集</i>
+                  </a>
+                @endif
+              </td>
+              <td>
+                @if ($hospital->status !== HospitalEnums::Delete)
+                  <button class="btn btn-danger delete-btn delete-popup-btn"
+                      data-id="{{ $hospital->id }}">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                @endif
+              </td>
+            @endif
+          </tr>
+        @endforeach
+      @else
+        <tr>
+          <td colspan="8" class="text-center">{{ trans('messages.no_record') }}</td>
+        </tr>
+      @endif
 
-            </tbody>
-        </table>
-    </div>
-
-    {{ $hospitals->links() }}
-
+      </tbody>
+    </table>
+  </div>
+  {{ $hospitals->links() }}
 @stop
-
+<style>
+  tr.dark-gray td {
+    background-color: darkgray;
+  }
+  tr.light-gray td {
+    background-color: lightgray;
+  }
+</style>
 
 @push('js')
-    <script src="{{ url('js/handlebars.js') }}"></script>
-    <script src="{{ url('js/bootstrap3-typeahead.min.js') }}"></script>
-    <script type="text/javascript">
+  <script src="{{ url('js/handlebars.js') }}"></script>
+  <script src="{{ url('js/bootstrap3-typeahead.min.js') }}"></script>
+  <script type="text/javascript">
 
-        (function ($) {
-            var route = "{{ route('hospital.search.text') }}";
-            $('#s_text').typeahead({
-                source: function (term, process) {
-                    return $.get(route, {term: term}, function (data) {
-                        return process(data);
-                    });
-                },
-                displayText: function (item) {
-                    return item.name + ' - ' + item.address1;
-                },
-                afterSelect: function (item) {
-                    $('#s_text').val(item.name);
-                }
-            });
+    (function ($) {
+      var route = "{{ route('hospital.search.text') }}";
+      $('#s_text').typeahead({
+        source: function (term, process) {
+          return $.get(route, {term: term}, function (data) {
+            return process(data);
+          });
+        },
+        displayText: function (item) {
+          return item.name + ' - ' + item.address1;
+        },
+        afterSelect: function (item) {
+          $('#s_text').val(item.name);
+        }
+      });
 
-        })(jQuery);
-
-
-    </script>
-
+    })(jQuery);
+  </script>
 @endpush
