@@ -21,6 +21,7 @@ class CreateBillingsTable extends Migration
             $table->integer('contract_plan_id');
             $table->string('from');
             $table->string('to');
+            $table->tinyInteger('status');
             $this->addCommonColumns($table);
         });
     }

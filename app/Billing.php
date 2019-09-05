@@ -2,11 +2,13 @@
 
 namespace App;
 
+use App\Filters\Filterable;
 use Illuminate\Database\Eloquent\Model;
 
 class Billing extends Model
 {
-    protected $fillable = ['hospital_id', 'contract_plan_id', 'from', 'to'];
+    use Filterable;
+    protected $fillable = ['hospital_id', 'contract_plan_id', 'from', 'to', 'status'];
 
     protected $dates = ['from', 'to'];
 

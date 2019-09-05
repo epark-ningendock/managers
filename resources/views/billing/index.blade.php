@@ -15,6 +15,50 @@
     </h1>
 @stop
 
+@section('search')
+    <form method="get" role="form" action="{{ route('billing.index') }}">
+        {{ csrf_field() }}
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="billing_month">請求月</label>
+                    <select class="form-control" id="type" name="billing_month">
+                        <option value=""></option>
+                        @foreach($billings as $billing)
+                            <option value="{{ $billing->to->format('Y-m-d') }}">{{ $billing->to->format('Y-m-d') }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="status">請求ステータス</label>
+                    <select class="form-control" id="status" name="status">
+                        <option value=""></option>
+                        @foreach(\App\Enums\BillingStatus::toArray() as $key)
+                            <option
+                                    value="{{ $key }}" {{ (request('status') == $key) ? "selected" : "" }}>{{ \App\Enums\BillingStatus::getDescription($key) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="hospital_name">医療機関名</label>
+                    <input type="text" class="form-control" name="hospital_name" value="{{ request('hospital_name') }}">
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary btn-search">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    検索
+                </button>
+            </div>
+        </div>
+    </form>
+@stop
+
 
 @section('table')
 
@@ -58,12 +102,12 @@
                 <tr class="billing-id-{{ $billing->id }}">
                     <td>{{ $billing->hospital->contract_information->property_no ?? '' }}</td>
                     <td>{{ $billing->hospital->name }}</td>
-                    <td>{{ \App\Enums\BillingStatus::getDescription((int)$billing->contractPlan->status) }}</td>
+                    <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
                     <td>{{ $billing->contractPlan->plan_name }}</td>
                     <td>Commission total amount + Plan Amount</td>
                     <td>Plan amount of money</td>
                     <td>Commission total amount</td>
-                    <td>{{ $billing->contractPlan->fee_rate }}</td>
+                    <td>{{ $billing->contractPlan->fee_rate }}%</td>
                 </tr>
             @endforeach
         @else

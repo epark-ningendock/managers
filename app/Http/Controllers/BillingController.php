@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Billing;
+use App\Filters\Billing\BillingFilters;
 use Illuminate\Http\Request;
 
 class BillingController extends Controller
 {
 
-    public function index()
+    public function index(BillingFilters $billingFilters)
     {
-        $billings = Billing::paginate(100);
+        $billings = Billing::filter($billingFilters)->paginate(100);
         return view('billing.index', ['billings' => $billings]);
     }
 
