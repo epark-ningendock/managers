@@ -143,7 +143,7 @@ return [
     'customer_id'                          => '顧客ID',
     'name_kana'                            => 'お名前（かな）',
     'postcode'                             => '郵便番号',
-    'send_mail'                            => 'メールを送る',
+    'send_mail'                            => 'メール送信',
     'memo'                                 => '顧客メモ',
     'remarks'                              => '備考',
     'examination_system_name'              => '検診システム名',
@@ -166,12 +166,11 @@ return [
     'email_template'                       => 'メールテンプレート',
     'calendar_setting'                     => 'カレンダー管理',
     'mails' => [
-        'reset_passoword'                  => 'パスワードリセットメール',
-        'registered'                       => 'スタッフ登録メール',
-        'customer'                         => '顧客メール',
-        'sent_datetime'                    => '送信日時',
-        'title'                            => 'メール件名',
-        'customer'                         => '顧客メール',
+        'reset_passoword' => 'パスワードリセットメール',
+        'registered' => 'スタッフ登録メール',
+        'customer' => '顧客メール',
+        'sent_datetime' => '送信日時',
+        'title' => 'メール件名'
     ],
     'time_invalid'                         => '時間が無効です',
     'option_name'                          => 'オプション名',
@@ -228,4 +227,10 @@ return [
     'plan_name'                            => 'プラン名',
     'service_start_date'                   => 'サービス開始日',
     'service_end_date'                     => 'サービス終了日',
+    'integrate'                            => '統合対象',
+    'action'                               => '操作',
+    'display_switching'                    => '表示切替',
+    'perform_identification'               => '名寄せを実行する',
+    'integration-success'                  => '統合の成功。',
+    'integration-error'                    => 'エラーが発生しました。'
 ];

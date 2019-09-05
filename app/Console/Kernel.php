@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\PvAggregateCommand::class,
+        Commands\TemporaryReservationCheckCommand::class,
     ];
 
     /**
@@ -25,7 +26,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('pv-aggregate')->dailyAt('02:00');
-        $schedule->command('reception-checkout')->dailyAt('06:30');
+        $schedule->command('temporary-reservation-check')->dailyAt('06:30');
     }
 
     /**

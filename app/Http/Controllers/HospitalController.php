@@ -212,8 +212,8 @@ class HospitalController extends Controller
                     }
 		        }
 	        }
-	        DB::commit();
-	        return redirect( '/hospital' )->with( 'success', '更新成功' );
+            DB::commit();
+            return redirect()->route('hospital.edit', ['id' => $hospital->id])->with('success', trans('messages.updated', ['name' => trans('messages.basic_information')]));
         } catch (Exception $e) {
 	        DB::rollback();
 	        $request->session()->flash('error', trans('messages.update_error'));

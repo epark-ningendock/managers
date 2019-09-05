@@ -117,7 +117,7 @@ Route::middleware('auth:staffs')->group(function () {
         */
         Route::resource('/hospital', 'HospitalController')->except(['show']);
         Route::post('/hospital/find-rails', 'HospitalController@findRails')->name('hospital.find-rails');
-        Route::post('/hospital/fins-stations', 'HospitalController@findStations')->name('hospital.find-stations');
+        Route::post('/hospital/find-stations', 'HospitalController@findStations')->name('hospital.find-stations');
 
         /*
         |--------------------------------------------------------------------------
@@ -215,6 +215,7 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     | Customer Routes
     |--------------------------------------------------------------------------
     */
+    Route::post('customer/{id}/integration', 'CustomerController@integration')->name('customer.integration');
     Route::post('customer/email-history/{customer_id}', 'CustomerController@email_history')->name('customer.email.history');
     Route::resource('customer', 'CustomerController');
     Route::post('customer/detail', 'CustomerController@detail')->name('customer.detail');

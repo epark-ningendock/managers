@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use App\TaxClass;
 
 
 class ReservationController extends Controller
@@ -160,7 +161,7 @@ class ReservationController extends Controller
 
         if ($request->input('customer_name', '') != '') {
             $query->whereHas('Customer', function ($q) use ($request) {
-                $q->where(DB::raw("concat(family_name, ' ', first_name)"), 'LIKE', '%' . $request->input('customer_name') . '%');
+                $q->where(DB::raw("concat(first_name, ' ', family_name)"), 'LIKE', '%' . $request->input('customer_name') . '%');
             });
         }
 
@@ -479,9 +480,17 @@ class ReservationController extends Controller
 
         try {
             DB::beginTransaction();
+            $today = Carbon::today();
+            $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
+                ->whereDate('life_time_to', '>=', $today)->get()->first();
 
             $course = Course::find($request->course_id);
             $reservation_date = Carbon::parse($request->reservation_date);
+
+            //TODO to check pessimistic locking is require or not
+            $last_acceptance_number = Reservation::whereDate('reservation_date', $reservation_date)
+                                        ->max('acceptance_number');
+            $acceptance_number = isset($last_acceptance_number) ? ($last_acceptance_number + 1) : 1;
 
             $calendar_day = $course->calendar->calendar_days()
                 ->whereDate('date', [$reservation_date])->get()->first();
@@ -528,13 +537,19 @@ class ReservationController extends Controller
             $reservation->applicant_name = "$request->first_name $request->family_name";
             $reservation->applicant_name_kana = "$request->first_name_kana $request->family_name_kana";
             $reservation->applicant_tel = $request->tel;
-
+            $reservation->acceptance_number = $acceptance_number;
 
             $reservation->fee = $request->input('adjustment_price', 0) + ($course->is_price == '1' ? $course->price : 0) + $this->calculateCourseOptionTotalPrice($request);
 
             if (isset($fee_rate)) {
                 $reservation->fee_rate = $fee_rate->rate;
                 $reservation->fee += $fee_rate->rate;
+            }
+
+            if(isset($tax_class)) {
+                $reservation->tax_included_price += $reservation->fee + ($reservation->fee * ($tax_class->rate/100));
+            } else {
+                $reservation->tax_included_price = $reservation->fee;
             }
 
             $customer = Customer::where('registration_card_number', $request->registration_card_number)->get()->first();
@@ -545,7 +560,8 @@ class ReservationController extends Controller
                     'family_name' => $request->family_name,
                     'first_name_kana' => $request->first_name_kana,
                     'family_name_kana' => $request->family_name_kana,
-                    'tel' => $request->tel
+                    'tel' => $request->tel,
+                    'registration_card_number' => $request->registration_card_number
                 ]);
                 $customer->save();
             } else if (Reservation::where('customer_id', $customer->id)->count() > 0) {
@@ -715,6 +731,9 @@ class ReservationController extends Controller
 
         try {
             DB::beginTransaction();
+            $today = Carbon::today();
+            $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
+                ->whereDate('life_time_to', '>=', $today)->get()->first();
 
             $course = Course::find($request->course_id);
             $reservation_date = Carbon::parse($request->reservation_date);
@@ -751,6 +770,12 @@ class ReservationController extends Controller
             if (isset($fee_rate)) {
                 $params['fee_rate'] = $fee_rate->rate;
                 $params['fee'] += $fee_rate->rate;
+            }
+
+            if(isset($tax_class)) {
+                $params['tax_included_price'] += $params['fee'] + ($params['fee'] * ($tax_class->rate/100));
+            } else {
+                $reservation->$params['tax_included_price'] = $params['fee'];
             }
 
             $reservation->update($params);

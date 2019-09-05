@@ -101,27 +101,20 @@
           <label>受付ステータス</label>
           <div class="form-inline">
             <div class="checkbox ml-2">
-              <label>
-                <input type="checkbox" id="is_pending" name="is_pending" value="1" @if(isset($is_pending)) checked @endif/>
-                <span>仮受付</span>
-              </label>
+              <input type="checkbox" id="is_pending" name="is_pending" value="1" @if(isset($is_pending)) checked @endif/>
+              <label for="is_pending">仮受付</label>
             </div>
             <div class="checkbox ml-2">
-              <label>
-                <input type="checkbox" id="is_reception_completed" name="is_reception_completed" value="2" @if(isset($is_reception_completed)) checked @endif/>
-                <span>受付確定</span></label>
+              <input type="checkbox" id="is_reception_completed" name="is_reception_completed" value="2" @if(isset($is_reception_completed)) checked @endif/>
+              <label for="is_reception_completed">受付確定</label>
             </div>
             <div class="checkbox ml-2">
-              <label>
-                <input type="checkbox" id="is_completed" name="is_completed" value="3" @if(isset($is_completed)) checked @endif />
-                <span>完了</span>
-              </label>
+              <input type="checkbox" id="is_completed" name="is_completed" value="3" @if(isset($is_completed)) checked @endif />
+              <label for="is_completed">完了</label>
             </div>
             <div class="checkbox ml-2">
-              <label>
-                <input type="checkbox" id="is_cancelled" name="is_cancelled" value="4" @if(isset($is_cancelled)) checked @endif/>
-                <span>キャンセル</span>
-              </label>
+              <input type="checkbox" id="is_cancelled" name="is_cancelled" value="4" @if(isset($is_cancelled)) checked @endif/>
+              <label for="is_cancelled">キャンセル</label>
             </div>
           </div>
 
@@ -193,7 +186,8 @@
         @foreach ($reservations as $reservation)
           <tr>
             <td>
-              <input type="checkbox" name="ids[]" value="{{ $reservation->id }}" />
+              <input type="checkbox" name="ids[]" id="ids_{{ $reservation->id }}" value="{{ $reservation->id }}" />
+              <label for="ids_{{ $reservation->id }}"id="ids_{{ $reservation->id }}"></label>
             </td>
             <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
             <td>{{ $reservation->customer->name}}</td>

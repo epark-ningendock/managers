@@ -46,12 +46,8 @@
         </div>
 
         <div class="col-md-9">
-            <div class="form-group sm-form-group @if ($errors->has('tax_included_price')) has-error @endif" style="margin-right: 21px;">
-                <input type="number" class="form-control" name="tax_included_price"
-                       id="tax_included_price" placeholder="コース料金"
-                       value="{{ old('tax_included_price') }}"/> <span
-                        class="ml-2" style="position: absolute;top: 0;right: -20px;">円</span>
-                @if ($errors->has('tax_included_price')) <p class="help-block">{{ $errors->first('tax_included_price') }}</p> @endif
+            <div class="form-group sm-form-group">
+                <span id="price">0円</span>
             </div>          
         </div>
 
@@ -346,6 +342,7 @@
                         total += parseInt($(ele).data('price'));
                     });
                     $('#total').html(total + '円');
+                    $('#price').html(coursePrice + '円');
                 }
 
                 const processUI = function () {

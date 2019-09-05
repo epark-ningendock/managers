@@ -124,7 +124,7 @@ class HospitalAttentionController extends Controller
                         foreach ($sorted_pre_payment_fee_rates as $key => $value) {
                             
                             $validator = Validator::make(["pre_payment_rate" => $value['rate'], "pre_payment_from_date" => $value['from_date']], [
-                                'pre_payment_rate' => 'required|numeric|digits_between:1,10',
+                                'pre_payment_rate' => 'required|numeric|between:0,99',
                                 'pre_payment_from_date' => 'required|date'
                             ]);
                     
@@ -202,8 +202,13 @@ class HospitalAttentionController extends Controller
                 DB::rollback();
                 throw $e;
             }
-            $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.attetion_information')]));
-            return redirect('hospital');
+
+            $middles = HospitalMiddleClassification::all();
+            $hospital = Hospital::findOrFail($hospital_id);
+            $feeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', FeeRate::FEE_RATE)->orderBy('from_date', 'asc')->get();
+            $prePaymentFeeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', FeeRate::PRE_PAYMENT_FEE_RATE)->orderBy('from_date', 'asc')->get();
+            return redirect()->route('hospital.attention.create', ['hospital_id' => $hospital_id])->with('success', trans('messages.updated', ['name' => trans('messages.names.attetion_information')]));
+
         } catch (Exception $e) {
             return redirect()->back()->withErrors(trans('messages.create_error'))->withInput();
         }
