@@ -71,7 +71,7 @@
           <td>{{ $contract_information->id }}</td>
           <td>{{ $contract_information->property_no }}</td>
           <td>{{ $contract_information->contractor_name }}</td>
-          <td>{{ $contract_information->hospital->name }}</td>
+          <td>{{ $contract_information->hospital->name or '-' }}</td>
           <td>{{ $contract_information->representative_name }}</td>
           <td>{{ $contract_information->application_date->format('Y/m/d') }}</td>
           <td>{{ $contract_information->cancellation_date->format('Y/m/d') }}</td>
