@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\Enums\Status;
 use App\Filters\Customer\CustomerFilters;
 use App\Hospital;
 use App\EmailTemplate;
 use App\Http\Requests\CustomerFormRequest;
 use App\Mail\Customer\CustomerSendMail;
 use App\MailHistory;
+use App\NameIntegration;
 use App\Prefecture;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -41,10 +44,34 @@ class CustomerController extends Controller
         $customer_detail = Customer::findOrFail($request->id);
         $reservations    = $customer_detail->reservations()->paginate(10, [ '*' ], 'page', $page_number);
 
+        if (!isset($customer_detail->epark_member_id)) {
+
+            $identification_page_id = ($request->identification_page_id) ?? 1;
+
+            $source_customer_id = ($request->source_customer_id) ?? $customer_detail->id;
+
+            $source_customer = Customer::findOrFail($source_customer_id);
+
+            $name_identifications = Customer::where('id', '<>', $source_customer_id)
+                ->where(function($q) use ($source_customer){
+                    $q->whereNull('epark_member_id')
+                        ->orWhere('email', $source_customer->email)
+                        ->orWhere('birthday', $source_customer->birthday)
+                        ->orWhere(function($nq) use($source_customer) {
+                            $nq->where('family_name', $source_customer->family_name)
+                                ->where('first_name', $source_customer->first_name);
+                        });
+                })->paginate(10, [ '*' ], 'page', $identification_page_id);
+
+        }
+
+
         return response()->json([
             'data' => view('customer.partials.detail.tab-content', [
                 'customer_detail' => $customer_detail,
-                'reservations'    => $reservations
+                'source_customer' => $source_customer,
+                'reservations'    => $reservations,
+                'name_identifications' => $name_identifications
             ])->render()
         ]);
     }
@@ -81,7 +108,15 @@ class CustomerController extends Controller
 
     public function store(CustomerFormRequest $request)
     {
-        if (Customer::create($request->all())) {
+        $params = $request->all();
+        if(!isset($params['claim_count'])) {
+            $params['claim_count'] = 0;
+        }
+
+        if(!isset($params['recall_count'])) {
+            $params['recall_count'] = 0;
+        }
+        if (Customer::create($params)) {
             return redirect('customer')->with('success', trans('messages.created', [ 'name' => trans('messages.names.customers') ]));
         } else {
             return redirect('customer')->with('error', trans('messages.invalid_format', [ 'name' => trans('messages.names.customers') ]));
@@ -102,7 +137,16 @@ class CustomerController extends Controller
     {
         $customer = Customer::findOrFail($customer->id);
 
-        if ($customer->update($request->all())) {
+        $params = $request->all();
+        if(!isset($params['claim_count'])) {
+            $params['claim_count'] = 0;
+        }
+
+        if(!isset($params['recall_count'])) {
+            $params['recall_count'] = 0;
+        }
+
+        if ($customer->update($params)) {
             return redirect('customer')->with('success', trans('messages.updated', [ 'name' => trans('messages.names.customers') ]));
         } else {
             return redirect('customer')->with('error', trans('messages.invalid_format', [ 'name' => trans('messages.names.customers') ]));
@@ -192,5 +236,48 @@ class CustomerController extends Controller
         return response()->json([
             'data' => view('reservation.partials.create.customer-list', ['customers' => $customers])->render()
         ]);  
+    }
+
+    public function integration($id, Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $params = $request->all();
+            $params['id'] = $id;
+
+            $validator = Validator::make($params, [
+                'id' => 'required|exists:customers,id',
+                'identical_ids' => 'required|array',
+                'identical_ids.*' => 'required|exists:customers,id'
+            ]);
+
+            if ($validator->fails())
+            {
+                return response()->json(['errors'=>$validator->errors()]);
+            }
+
+            $identical_ids = $request->input('identical_ids');
+            $identical_customers = collect($identical_ids)->map(function($identical_id) use($id) {
+               return [
+                   'customer_id' => $id,
+                   'integrated_customer_id' => $identical_id
+               ];
+            });
+
+            NameIntegration::insert($identical_customers->toArray());
+
+            // bulk soft delete
+            Customer::whereIn('id', $identical_ids)
+                ->update([
+                    'deleted_at' => Carbon::now(),
+                    'status' => Status::Deleted
+                ]);
+
+            DB::commit();
+            return response()->json(['success'=> trans('messages.integration-success')]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error'=> trans('messages.integration-error')]);
+        }
     }
 }
