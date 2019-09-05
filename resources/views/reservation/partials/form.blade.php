@@ -214,8 +214,7 @@
                     <div class="form-group @if ($errors->has('family_name')) has-error @endif">
                         <span>姓</span>
                         <input type="text" class="form-control" name="family_name" style="width: 90%;display: inline-block"
-                               id="family_name"
-                               value="{{ old('family_name') }}" />
+                               id="family_name" value="{{ old('family_name') }}" />
                         @if ($errors->has('family_name')) <p class="help-block">{{ $errors->first('family_name') }}</p> @endif
                     </div>
                 </div>
@@ -223,8 +222,7 @@
                     <div class="form-group @if ($errors->has('first_name')) has-error @endif">
                         <span>名</span>
                         <input type="text" class="form-control" name="first_name" style="width: 90%;display: inline-block"
-                               id="first_name"
-                               value="{{ old('first_name') }}" />
+                               id="first_name" value="{{ old('first_name') }}" />
                         @if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
                     </div>
                 </div>
@@ -246,8 +244,7 @@
                     <div class="form-group @if ($errors->has('family_name_kana')) has-error @endif">
                         <span>せい</span>
                         <input type="text" class="form-control" name="family_name_kana" style="width: 90%;display: inline-block"
-                               id="family_name_kana"
-                               value="{{ old('family_name_kana') }}" />
+                               id="family_name_kana" value="{{ old('family_name_kana') }}" />
                         @if ($errors->has('family_name_kana')) <p class="help-block">{{ $errors->first('family_name_kana') }}</p> @endif
                     </div>
                 </div>
@@ -255,8 +252,7 @@
                     <div class="form-group @if ($errors->has('first_name_kana')) has-error @endif">
                         <span>めい</span>
                         <input type="text" class="form-control" name="first_name_kana" style="width: 90%;display: inline-block"
-                               id="first_name_kana"
-                               value="{{ old('first_name_kana') }}" />
+                               id="first_name_kana" value="{{ old('first_name_kana') }}" />
                         @if ($errors->has('first_name_kana')) <p class="help-block">{{ $errors->first('first_name_kana') }}</p> @endif
                     </div>
                 </div>
@@ -274,10 +270,8 @@
 
         <div class="col-md-9">
             <div class="form-group @if ($errors->has('tel')) has-error @endif">
-                <span>名</span>
                 <input type="text" class="form-control" name="tel" style="width: 90%;display: inline-block"
-                       id="tel"
-                       value="{{ old('tel') }}"/>
+                       id="tel" value="{{ old('tel') }}"/>
                 @if ($errors->has('tel')) <p class="help-block">{{ $errors->first('tel') }}</p> @endif
             </div>
         </div>
@@ -292,10 +286,8 @@
 
         <div class="col-md-9">
             <div class="form-group @if ($errors->has('registration_card_number')) has-error @endif">
-                <span>名</span>
                 <input type="text" class="form-control" name="registration_card_number" style="width: 90%;display: inline-block"
-                       id="registration_card_number"
-                       value="{{ old('registration_card_number') }}" />
+                       id="registration_card_number" value="{{ old('registration_card_number') }}" />
                 @if ($errors->has('registration_card_number')) <p class="help-block">{{ $errors->first('registration_card_number') }}</p> @endif
             </div>
         </div>
