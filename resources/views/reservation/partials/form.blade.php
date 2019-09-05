@@ -210,7 +210,7 @@
 
         <div class="col-md-9">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group @if ($errors->has('family_name')) has-error @endif">
                         <span>姓</span>
                         <input type="text" class="form-control" name="family_name" style="width: 90%;display: inline-block"
@@ -219,7 +219,7 @@
                         @if ($errors->has('family_name')) <p class="help-block">{{ $errors->first('family_name') }}</p> @endif
                     </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <div class="form-group @if ($errors->has('first_name')) has-error @endif">
                         <span>名</span>
                         <input type="text" class="form-control" name="first_name" style="width: 90%;display: inline-block"
@@ -242,18 +242,18 @@
         <div class="col-md-9">
             <div class="row">
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group @if ($errors->has('family_name_kana')) has-error @endif">
-                        <span>姓</span>
+                        <span>せい</span>
                         <input type="text" class="form-control" name="family_name_kana" style="width: 90%;display: inline-block"
                                id="family_name_kana"
                                value="{{ old('family_name_kana') }}" />
                         @if ($errors->has('family_name_kana')) <p class="help-block">{{ $errors->first('family_name_kana') }}</p> @endif
                     </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <div class="form-group @if ($errors->has('first_name_kana')) has-error @endif">
-                        <span>名</span>
+                        <span>めい</span>
                         <input type="text" class="form-control" name="first_name_kana" style="width: 90%;display: inline-block"
                                id="first_name_kana"
                                value="{{ old('first_name_kana') }}" />
