@@ -536,7 +536,7 @@ class ReservationController extends Controller
             $reservation = new Reservation(request()->all());
             $reservation->applicant_name = "$request->first_name $request->family_name";
             $reservation->applicant_name_kana = "$request->first_name_kana $request->family_name_kana";
-            $reservation->applicant_tel = $request->tel;
+            $reservation->applicant_tel = str_replace(['－', '-', '‐', '−', '‒', '—', '–', '―', 'ー', 'ｰ', '─', '━', '一'], '', $request->tel);
             $reservation->acceptance_number = $acceptance_number;
 
             $reservation->fee = $request->input('adjustment_price', 0) + ($course->is_price == '1' ? $course->price : 0) + $this->calculateCourseOptionTotalPrice($request);
