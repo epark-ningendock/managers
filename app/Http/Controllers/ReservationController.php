@@ -579,7 +579,6 @@ class ReservationController extends Controller
             return redirect('reception')->with('success', trans('messages.reservation.complete_success'));
 
         } catch (\Exception $i) {
-            dd($i);
             DB::rollback();
 
             return redirect()->back()->with('error', trans('messages.reservation.complete_error'))->withInput();
@@ -793,7 +792,6 @@ class ReservationController extends Controller
             return redirect('reception')->with('success', trans('messages.reservation.status_update_success'));
 
         } catch (\Exception $i) {
-            dd($i);
             DB::rollback();
 
             return redirect()->back()->with('error', trans('messages.reservation.status_update_error'))->withInput();
