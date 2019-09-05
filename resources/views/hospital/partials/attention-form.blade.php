@@ -26,7 +26,7 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
               <span>{{ $hospital->pv_count }}</span> 件
           </p>
           <label class="mt-5">PR</label>
-          <input type="number" id="pvad" name="pvad" value="{{ isset($hospital->pvad) ? $hospital->pvad : 0 }}" placeholder="">
+          <input type="number" id="pvad" name="pvad" value="{{ isset($hospital->pvad) ? $hospital->pvad : 0 }}">
           @if ($errors->has('pvad')) <p class="has-error">{{ $errors->first('pvad') }}</p> @endif
           <div class="mt-5">
             {{ Form::hidden('is_pickup') }}
@@ -90,7 +90,7 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                 <div class="form-inline">
                   <input type="hidden" name="fee_rate_ids[]" value="{{ $feeRate->id }}" />
                   <label class="mt-5 ml-5">手数料率</label>
-                  <input type="number" id="{{ 'rate'.$feeRate->id }}" name="rates[]" value="{{ isset($feeRate->rate) ? $feeRate->rate : 0 }}" placeholder=""> %
+                  <input type="number" id="{{ 'rate'.$feeRate->id }}" name="rates[]" value="{{ isset($feeRate->rate) ? $feeRate->rate : 0 }}"> %
                   <label class="mt-5 ml-5">適用期間</label>
                   <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd"
                         data-date-autoclose="true" data-date-language="ja">
@@ -119,7 +119,7 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                 <div class="form-inline">
                   <input type='hidden' name='pre_payment_fee_rate_ids[]' value='{{ $prePaymentFeeRate->id }}' />
                   <label class="mt-5 ml-5">手数料率</label>
-                  <input type="number" name="pre_payment_rates[]" value="{{ isset($prePaymentFeeRate->rate) ? $prePaymentFeeRate->rate : 0 }}" placeholder=""> %
+                  <input type="number" name="pre_payment_rates[]" value="{{ isset($prePaymentFeeRate->rate) ? $prePaymentFeeRate->rate : 0 }}"> %
                   <label class="mt-5 ml-5">適用期間</label>
                   <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd"
                         data-date-autoclose="true" data-date-language="ja">
