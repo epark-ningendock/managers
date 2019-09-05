@@ -22,7 +22,7 @@ trait EnumTrait
             $value = $this->getAttributeFromArray($key);
             $enum_values = $class::getValues();
             $index = array_search($value, $enum_values, false);
-            if ($index >= 0) {
+            if ($index !== false && $index >= 0) {
                 return $class::getInstance($enum_values[$index]);
             }
         }

@@ -63,12 +63,12 @@ class Customer extends SoftDeleteModel
 
     public function getNameAttribute()
     {
-        return $this->family_name . ' ' . $this->first_name;
+        return $this->first_name . ' ' . $this->family_name;
     }
 
     public function getNameKanaAttribute()
     {
-        return $this->family_name_kana . ' ' . $this->first_name_kana;
+        return  $this->first_name_kana . ' ' . $this->family_name_kana;
     }
 
     public function hospitals()
