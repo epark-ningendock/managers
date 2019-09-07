@@ -18,9 +18,13 @@ use Illuminate\Support\Facades\Session;
 use App\Reservation;
 use Yasumi\Yasumi;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Calander\CalendarSettingNotificationMail;
 
 class CalendarController extends Controller
 {
+    const EPARK_MAIL_ADDRESS = "dock_all@eparkdock.com";
+
     /**
      * Display a listing of the calendar.
      *
@@ -52,6 +56,15 @@ class CalendarController extends Controller
     {
         try {
             $this->saveCalendar($request, null);
+
+            $data = [
+                'calendar' => $request->get('name'),
+                'subject' => '[Epark]カレンダーを登録しました',
+                'target' => 'カレンダー',
+                'status' => '登録'
+             ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.calendar')]));
             return redirect('calendar');
         } catch (\Exception $e) {
@@ -127,6 +140,15 @@ class CalendarController extends Controller
     {
         try {
             $this->saveCalendar($request, $calendar);
+
+            $data = [
+                'calendar' => $request->get('name'),
+                'subject' => '[Epark]カレンダーを更新しました',
+                'target' => 'カレンダー',
+                'status' => '更新'
+             ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar')]));
             return redirect('calendar');
         } catch (StaleModelLockingException $e) {
@@ -289,6 +311,14 @@ class CalendarController extends Controller
             }
 
             $calendar->calendar_days()->saveMany($calendar_days);
+
+            $data = [
+                'calendar' => $calendar->name,
+                'subject' => '[Epark]カレンダー設定を更新しました',
+                'target' => 'カレンダー設定',
+                'status' => '更新'
+             ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
 
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar_setting')]));
             DB::commit();
