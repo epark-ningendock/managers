@@ -45,7 +45,7 @@
       <div class="box box-primary">
         <div class="box-header">
           <h3 class="box-title">
-              <span>{{ $calendar->name }}</span>
+              <span><a href="{{ route('calendar.setting', $calendar->id) }}">{{ $calendar->name }}</a></span>
             「カレンダー表示 : {{ $calendar->is_calendar_display->description }}」</h3>
 
           <div class="box-tools">
@@ -55,7 +55,6 @@
               <a class="btn btn-primary btn-mini" href="{{ route('calendar.edit', $calendar->id) }}">
                 <i class="fa fa-edit"> 編集</i>
               </a>
-              <a class="btn btn-primary ml-2 btn-mini" href="{{ route('calendar.setting', $calendar->id) }}">カレンダー設定</a>
 
             </div>
           </div>
