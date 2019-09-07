@@ -45,7 +45,7 @@ class BillingController extends Controller
      */
     public function show(Billing $billing)
     {
-        //
+        return view('billing.show', ['billing' => $billing]);
     }
 
     /**
