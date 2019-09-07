@@ -46,7 +46,7 @@
         <div class="box-header">
           <h3 class="box-title">
               <span>{{ $calendar->name }}</span>
-            「カレンダー受付可否 : {{ $calendar->is_calendar_display->description }}」</h3>
+            「カレンダー表示 : {{ $calendar->is_calendar_display->description }}」</h3>
 
           <div class="box-tools">
             <div class="input-group input-group-sm hidden-xs">
@@ -61,22 +61,24 @@
           </div>
         </div>
         <!-- /.box-header -->
-        <div class="box-body table-responsive no-padding">
-          <table class="table table-hover">
-            <tbody><tr>
-              <th>検査コースID</th>
-              <th>検査コース名</th>
-              <th>WEB受付</th>
-            </tr>
-            @foreach($calendar->courses as $course)
-            <tr>
-              <td>{{ $course->id }}</td>
-              <td>{{ $course->name }}</td>
-              <td><span class="label label-danger">{{ $course->web_reception->description }}</span></td>
-            </tr>
-            @endforeach
-            </tbody></table>
-        </div>
+        @if(!$calendar->courses->isEmpty())
+          <div class="box-body table-responsive no-padding">
+            <table class="table table-hover">
+              <tbody><tr>
+                <th>検査コースID</th>
+                <th>検査コース名</th>
+                <th>WEB受付</th>
+              </tr>
+              @foreach($calendar->courses as $course)
+              <tr>
+                <td>{{ $course->id }}</td>
+                <td>{{ $course->name }}</td>
+                <td><span class="label label-danger">{{ $course->web_reception->description }}</span></td>
+              </tr>
+              @endforeach
+              </tbody></table>
+          </div>
+        @endif
         <!-- /.box-body -->
       </div>
       <!-- /.box -->

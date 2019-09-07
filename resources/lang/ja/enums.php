@@ -57,8 +57,8 @@ return [
     ],
 
     CalendarDisplay::class => [
-        CalendarDisplay::Hide => '非表示',
-        CalendarDisplay::Show => '表示'
+        CalendarDisplay::Hide => 'カレンダー非表示',
+        CalendarDisplay::Show => 'カレンダー表示'
     ],
 
     ReservationStatus::class => [
