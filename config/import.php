@@ -81,10 +81,10 @@ return [
         'model' => MinorClassification::class,
         'import' => MinorClassificationImport::class,
     ],
-    'm_hospital.csv' => [
-        'model' => Hospital::class,
-        'import' => HospitalImport::class,
-    ],
+    // 'm_hospital.csv' => [
+    //     'model' => Hospital::class,
+    //     'import' => HospitalImport::class,
+    // ],
     'm_hospital_category_dai.csv' => [
         'model' => HospitalMajorClassification::class,
         'import' => HospitalMajorClassificationImport::class,
@@ -97,50 +97,50 @@ return [
         'model' => HospitalMinorClassification::class,
         'import' => HospitalMinorClassificationImport::class,
     ],
-    'm_staff.csv' => [
-        'model' => Staff::class,
-        'import' => StaffImport::class,
-    ],
-    'm_course_basic.csv' => [
-        'model' => Course::class,
-        'import' => CourseImport::class,
-    ],
-    'm_course_detail.csv' => [
-        'model' => CourseDetail::class,
-        'import' => CourseDetailImport::class,
-    ],
-    'm_course_question.csv' => [
-        'model' => CourseQuestion::class,
-        'import' => CourseQuestionImport::class,
-    ],
-    'm_file_location.csv' => [
-        'model' => ImageOrder::class,
-        'import' => ImageOrderImport::class,
-    ],
-    'm_hospital_file.csv' => [
-        'model' => HospitalImage::class,
-        'import' => HospitalImageImport::class,
-    ],
-    'm_hospital_time.csv' => [
-        'model' => MedicalTreatmentTime::class,
-        'import' => MedicalTreatmentTimeImport::class,
-    ],
-    'm_hospital_detail.csv' => [
-        'model' => HospitalDetail::class,
-        'import' => HospitalDetailImport::class,
-    ],
-    'm_course_file.csv' => [
-        'model' => CourseImage::class,
-        'import' => CourseImageImport::class,
-    ],
-    'm_contract_plan.csv' => [
-        'model' => ContractPlan::class,
-        'import' => ContractPlanImport::class,
-    ],
-    'm_hospital_category.csv' => [
-        'model' => HospitalCategory::class,
-        'import' => HospitalCategoryImport::class,
-    ],
+    // 'm_staff.csv' => [
+    //     'model' => Staff::class,
+    //     'import' => StaffImport::class,
+    // ],
+    // 'm_course_basic.csv' => [
+    //     'model' => Course::class,
+    //     'import' => CourseImport::class,
+    // ],
+    // 'm_course_detail.csv' => [
+    //     'model' => CourseDetail::class,
+    //     'import' => CourseDetailImport::class,
+    // ],
+    // 'm_course_question.csv' => [
+    //     'model' => CourseQuestion::class,
+    //     'import' => CourseQuestionImport::class,
+    // ],
+    // 'm_file_location.csv' => [
+    //     'model' => ImageOrder::class,
+    //     'import' => ImageOrderImport::class,
+    // ],
+    // 'm_hospital_file.csv' => [
+    //     'model' => HospitalImage::class,
+    //     'import' => HospitalImageImport::class,
+    // ],
+    // 'm_hospital_time.csv' => [
+    //     'model' => MedicalTreatmentTime::class,
+    //     'import' => MedicalTreatmentTimeImport::class,
+    // ],
+    // 'm_hospital_detail.csv' => [
+    //     'model' => HospitalDetail::class,
+    //     'import' => HospitalDetailImport::class,
+    // ],
+    // 'm_course_file.csv' => [
+    //     'model' => CourseImage::class,
+    //     'import' => CourseImageImport::class,
+    // ],
+    // 'm_contract_plan.csv' => [
+    //     'model' => ContractPlan::class,
+    //     'import' => ContractPlanImport::class,
+    // ],
+    // 'm_hospital_category.csv' => [
+    //     'model' => HospitalCategory::class,
+    //     'import' => HospitalCategoryImport::class,
+    // ],
     'm_rail_corp.csv' => [
         'model' => RailwayCompany::class,
         'import' => RailwayCompanyImport::class,
@@ -161,12 +161,12 @@ return [
         'model' => null, // 中間テーブルのため null
         'import' => PrefectureRailImport::class,
     ],
-    'm_option.csv' => [
-        'model' => Option::class,
-        'import' => OptionImport::class,
-    ],
-    't_pv.csv' => [
-        'model' => PvRecord::class,
-        'import' => PvRecordImport::class,
-    ],
+    // 'm_option.csv' => [
+    //     'model' => Option::class,
+    //     'import' => OptionImport::class,
+    // ],
+    // 't_pv.csv' => [
+    //     'model' => PvRecord::class,
+    //     'import' => PvRecordImport::class,
+    // ],
 ];
