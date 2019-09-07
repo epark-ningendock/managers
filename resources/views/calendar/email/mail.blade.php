@@ -1,6 +1,15 @@
 <html>
     <body>
-      <p>{{ $data['target'] }} 「{{ $data['calendar'] }}」 を{{ $data['status'] }}しました。</p>
+      <p>カレンダー：{{ $data['calendar']->id }}　{{ $data['calendar']->name }}</p>
+      <p>処理：{{ $data['processing'] }}</p>
+      <p>登録・更新者：{{ $data['staff_name'] }}</p>
+      @if ($data['processing'] === "登録")
+        <p>登録・更新日時：{{ $data['calendar']->created_at }}</p>
+      @elseif ($data['processing'] === "変更")
+        <p>登録・更新日時：{{ $data['calendar']->updated_at }}</p>
+      @elseif ($data['processing'] === "削除")
+        <p>登録・更新日時：{{ $data['calendar']->deleted_at }}</p>
+      @endif
       <br>
       <a href="{{url('login')}}">{{url('login')}}</a>
       <br>

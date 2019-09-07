@@ -20,6 +20,7 @@ use Yasumi\Yasumi;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Calander\CalendarSettingNotificationMail;
+use Illuminate\Support\Facades\Auth;
 
 class CalendarController extends Controller
 {
@@ -55,13 +56,13 @@ class CalendarController extends Controller
     public function store(CalendarFormRequest $request)
     {
         try {
-            $this->saveCalendar($request, null);
+            $calendar = $this->saveCalendar($request, null);
 
             $data = [
-                'calendar' => $request->get('name'),
-                'subject' => '[Epark]カレンダーを登録しました',
-                'target' => 'カレンダー',
-                'status' => '登録'
+                'calendar' => $calendar,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】カレンダー登録・変更・削除のお知らせ',
+                'processing' => '登録'
              ];
             Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
 
@@ -123,6 +124,7 @@ class CalendarController extends Controller
 
             Session::flash('success', trans('messages.created', ['name' => trans('messages.names.calendar')]));
             DB::commit();
+            return $calendar;
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
@@ -142,10 +144,10 @@ class CalendarController extends Controller
             $this->saveCalendar($request, $calendar);
 
             $data = [
-                'calendar' => $request->get('name'),
-                'subject' => '[Epark]カレンダーを更新しました',
-                'target' => 'カレンダー',
-                'status' => '更新'
+                'calendar' => $calendar,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】カレンダー登録・変更・削除のお知らせ',
+                'processing' => '変更'
              ];
             Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
 
@@ -311,12 +313,12 @@ class CalendarController extends Controller
             }
 
             $calendar->calendar_days()->saveMany($calendar_days);
-
+            
             $data = [
-                'calendar' => $calendar->name,
-                'subject' => '[Epark]カレンダー設定を更新しました',
-                'target' => 'カレンダー設定',
-                'status' => '更新'
+                'calendar' => $calendar,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】カレンダー登録・変更・削除のお知らせ',
+                'processing' => '変更'
              ];
             Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
 
