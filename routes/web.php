@@ -159,6 +159,7 @@ Route::middleware('auth:staffs')->group(function () {
 Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->group(function () {
 
     Route::resource('billing', 'BillingController');
+    Route::get('billing/status-update', 'BillingController@statusUpdate');
 
     /*
     |--------------------------------------------------------------------------

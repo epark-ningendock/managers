@@ -56,6 +56,7 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'internal_memo' => $faker->sentence(10),
         'acceptance_number' => $faker->numberBetween(1000, 4000),
         'y_uid' => null,
+        'fee' => $faker->numberBetween(2000, 5000),
         'lock_version' => 1,
     ];
 });

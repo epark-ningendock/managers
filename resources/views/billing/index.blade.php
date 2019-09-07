@@ -94,6 +94,7 @@
             <th>プラン金額（税抜金額）</th>
             <th>手数料合計金額（税抜金額）</th>
             <th>成果コース</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -104,10 +105,13 @@
                     <td>{{ $billing->hospital->name }}</td>
                     <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
                     <td>{{ $billing->contractPlan->plan_name }}</td>
-                    <td>Commission total amount + Plan Amount</td>
-                    <td>Plan amount of money</td>
-                    <td>Commission total amount</td>
+                    <td>{{ $billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() + $billing->contractPlan->monthly_contract_fee }}円</td>
+                    <td>{{ $billing->contractPlan->monthly_contract_fee }}円</td>
+                    <td>{{ $billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() }}円</td>
                     <td>{{ $billing->contractPlan->fee_rate }}%</td>
+                    <td>
+                        <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
+                    </td>
                 </tr>
             @endforeach
         @else
