@@ -246,7 +246,6 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
 
               $('.minor-checkbox').each(function(index, ele) {
                   ele = $(ele);
-                  // console.log(ele)
                   ele.change(function() {
                       change(ele);
                   });
