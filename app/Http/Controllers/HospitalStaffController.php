@@ -7,6 +7,7 @@ use App\HospitalStaff;
 use App\Mail\HospitalStaff\RegisteredMail;
 use App\Mail\HospitalStaff\PasswordResetMail;
 use App\Mail\HospitalStaff\PasswordResetConfirmMail;
+use App\Mail\HospitalStaff\HospitalStaffOperationMail;
 use App\Http\Requests\HospitalStaffFormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,8 @@ use Log;
 
 class HospitalStaffController extends Controller
 {
+    const EPARK_MAIL_ADDRESS = "dock_all@eparkdock.com";
+    
     public function index()
     {
         $hospital_staffs = HospitalStaff::where('hospital_id', session()->get('hospital_id'));
@@ -60,10 +63,17 @@ class HospitalStaffController extends Controller
                 'password' => $hospital_staff_data['password']
             ];
             
-            // 登録メールを送信する
             Mail::to($hospital_staff->email)
                 ->send(new RegisteredMail($data));
             
+            $data = [
+                'hospital_staff' => $hospital_staff,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】医療機関スタッフ登録・更新・削除のお知らせ',
+                'processing' => '登録'
+                ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new HospitalStaffOperationMail($data));
+
             DB::commit();
             return redirect('hospital-staff')->with('success', trans('messages.created', ['name' => trans('messages.names.hospital_staff')]));
         } catch (\Exception $e) {
@@ -100,6 +110,14 @@ class HospitalStaffController extends Controller
 
             DB::commit();
 
+            $data = [
+                'hospital_staff' => $hospital_staff,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】医療機関スタッフ登録・更新・削除のお知らせ',
+                'processing' => '更新'
+                ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new HospitalStaffOperationMail($data));
+
             return redirect('hospital-staff')->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_staff')]));
         } catch (ExclusiveLockException $e) {
             DB::rollback();
@@ -109,10 +127,29 @@ class HospitalStaffController extends Controller
 
     public function destroy($id)
     {
-        $hospital_staff = HospitalStaff::findOrFail($id);
-        $hospital_staff->delete();
+        try {
+            DB::beginTransaction();
+            
+            $hospital_staff = HospitalStaff::findOrFail($id);
+            $hospital_staff->delete();
 
-        return redirect('hospital-staff')->with('error', trans('messages.deleted', ['name' => trans('messages.names.hospital_staff')]));
+            DB::commit();
+
+            $data = [
+                'hospital_staff' => $hospital_staff,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】医療機関スタッフ登録・更新・削除のお知らせ',
+                'processing' => '削除'
+                ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new HospitalStaffOperationMail($data));
+            
+            return redirect('hospital-staff')->with('error', trans('messages.deleted', ['name' => trans('messages.names.hospital_staff')]));
+
+        } catch (ExclusiveLockException $e) {
+            DB::rollback();
+            throw $e;
+        }
+
     }
 
     public function editPassword(Request $request)
