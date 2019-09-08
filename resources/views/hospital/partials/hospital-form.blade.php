@@ -78,21 +78,129 @@
         </div>
 
         <div class="col-md-12">
-          <label for="kana">郵便番号
-            <span class="form_required">必須</span>
-          </label>
-          <div class="form-group margin-none py-sm-1 @if( $errors->has('postcode'))  has-error @endif form-inline">
-            <span class="p-country-name" style="display:none;">Japan</span>
-            <input type="text" class="form-control" id="postcode" name="postcode"
-                   value="{{ old('postcode', (isset($hospital->postcode) ) ? $hospital->postcode : null) }}"
-                   placeholder="1000005"/>
-            <input type="hidden" name="postcode" id="postcode" class="p-postal-code" size="8"
-                   value="{{ old('postcode', (isset($hospital->postcode) ) ? $hospital->postcode : null) }}"/>
-            @if ($errors->has('postcode')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('postcode') }}</p> @endif
-            <button type="button" class="btn btn-default" id="postcode-search" style="margin-left: 20px;">
-              <img width="20px;" src="{{ asset('images/search.png') }}" alt="">
-              {{ __('アドレス検索') }}
-            </button>
+          <div class="wrapbox" style="padding: 20px;">
+            <div class="form-inline">
+              <div class="form-group @if( $errors->has('postcode'))  has-error @endif">
+                <label for="postcode" class="col-md-4 text-right"> 〒</label>
+                <div class="col-md-8">
+                  <span class="p-country-name" style="display:none;">Japan</span>
+                  <input type="text" class="form-control" id="postcode1" name="postcode"
+                         value="{{ old('postcode', (isset($hospital->postcode) ) ? $hospital->postcode : null) }}"
+                         placeholder="1000005"/>
+                  <input type="hidden" name="postcode" id="postcode" class="p-postal-code" size="8"
+                         value="{{ old('postcode', (isset($hospital->postcode) ) ? $hospital->postcode : null) }}"/>
+                </div>
+              </div>
+              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+              <button type="button" class="btn btn-default" id="postcode-search" style="margin-left: 20px;">
+                <img width="20px;" src="{{ asset('images/search.png') }}" alt="">
+                {{ __('アドレス検索') }}
+              </button>
+              @if ($errors->has('postcode')) <p class="help-block text-danger"
+                                                style="text-align: center; color: #dd4d3b;">{{ $errors->first('postcode') }}</p> @endif
+            </div>
+            <br/>
+
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group @if( $errors->has('prefecture_id'))  has-error @endif">
+                  <label for="prefecture" class="col-md-4">{{ trans('messages.prefectures') }}</label>
+                  <div class="col-md-8">
+                    <select name="prefecture_id" id="prefecture" class="form-control p-region-id">
+                      <option value="">都道府県を選択</option>
+                      @foreach($prefectures as $prefecture)
+                        <option value="{{ $prefecture->id }}"
+                                @if ( (old('prefecture_id', (isset($hospital->prefecture_id) ) ? $hospital->prefecture_id : null) == $prefecture->id ) )
+                                selected="selected"
+                                @endif
+                        > {{ $prefecture->name }}</option>
+                      @endforeach
+                    </select>
+                    @if ($errors->has('prefecture_id')) <p class="help-block">{{ $errors->first('prefecture_id') }}</p> @endif
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="form-group @if( $errors->has('district_code'))  has-error @endif">
+                  <label for="district_code" class="col-md-4">{{ trans('messages.district_code') }}</label>
+                  <div class="col-md-8">
+                    <input type="hidden" class="p-locality" id="hidden-p-locality"></input>
+                    <select name="district_code_id" id="district_code_id" class="form-control">
+                      <option value="" id="district_init">市町村区を選択</option>
+                      @foreach($district_codes as $district_code)
+                        <option data-prefecture_id="{{ $district_code->prefecture_id }}"
+                                value="{{ $district_code->id }}"
+                                @if ( old('prefecture_id', (isset($hospital->prefecture_id) ) ? $hospital->prefecture_id : null) == $district_code->prefecture_id )
+                                style="display: block;"
+                                @endif
+                                @if ( ($district_code->id == old('district_code_id', ( isset($hospital->district_code_id) ) ? $hospital->district_code_id : null )) )
+                                selected="selected"
+                                @endif
+                        > {{ $district_code->name }}</option>
+                      @endforeach
+                    </select>
+                    @if ($errors->has('district_code_id')) <p class="help-block">{{ $errors->first('district_code_id') }}</p> @endif
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="form-group @if( $errors->has('address1'))  has-error @endif">
+                  <label for="address1" class="col-md-4">{{ trans('messages.address') }} </label>
+                  <div class="col-md-8">
+                    <input type="text" class="form-control p-street-address" id="address1" name="address1"
+                           value="{{ old('address1', (isset($hospital->address1)) ? $hospital->address1 : null) }}"/>
+                    @if ($errors->has('address1')) <p class="help-block">{{ $errors->first('address1') }}</p> @endif
+                  </div>
+                </div>
+
+                <div class="form-group @if( $errors->has('address2'))  has-error @endif">
+                  <label for="address2" class="col-md-4">{{ trans('messages.building_name') }} </label>
+                  <div class="col-md-8">
+                    <input type="text" class="form-control p-extended-address" id="address2" name="address2"
+                           value="{{ old('address2', (isset($hospital->address2)) ? $hospital->address2 : null) }}"/>
+                    @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group @if( $errors->has('latitude'))  has-error @endif">
+                  <label for="latitude" class="col-md-4">{{ trans('messages.latitude') }} </label>
+                  <div class="col-md-8">
+                    <input type="text" class="form-control" id="latitude" name="latitude"
+                           value="{{ old('latitude', (isset($hospital->latitude)) ? $hospital->latitude : null) }}"
+                           placeholder="0.0000000"/>
+                    @if ($errors->has('latitude')) <p class="help-block">{{ $errors->first('latitude') }}</p> @endif
+                  </div>
+                </div>
+
+                <div class="form-group @if( $errors->has('longitude'))  has-error @endif">
+                  <label for="longitude" class="col-md-4">{{ trans('messages.longitude') }} </label>
+                  <div class="col-md-8">
+                    <input type="text" class="form-control" id="longitude" name="longitude"
+                           value="{{ old('longitude', (isset($hospital->longitude)) ? $hospital->longitude : null) }}"
+                           placeholder="0.0000000"/>
+                    @if ($errors->has('longitude')) <p class="help-block">{{ $errors->first('longitude') }}</p> @endif
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="street-view-wrapper" style="margin-left: 50px;">
+              <div class="form-group @if( $errors->has('streetview_url'))  has-error @endif">
+                <label for="streetview_url" class="col-md-4">{{ trans('messages.streetview_url') }} </label>
+                <div class="col-md-8">
+                  <input type="text" class="form-control" id="streetview_url" name="streetview_url"
+                         value="{{ old('streetview_url', (isset($hospital->streetview_url)) ? $hospital->streetview_url : null ) }}"
+                         placeholder="http://google.com/maps/~"/>
+                  @if ($errors->has('streetview_url')) <p class="help-block">{{ $errors->first('streetview_url') }}</p> @endif
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -101,210 +209,36 @@
         </div>
       </div>
       <!--//所在地-->
-
-
-
-
+      <!--電話番号-->
+      <div class="row">
+        <div class="col-md-12">
+          <legend>{{ trans('messages.contact_information') }} </legend>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group margin-none py-sm-1 @if ($errors->has('tel')) has-error @endif">
+            <label for="tel">{{ trans('messages.tel') }}
+              <span class="form_required">必須</span>
+            </label>
+            <input type="text" class="form-control" id="tel" name="tel"
+                   value="{{ old('tel', (isset($hospital->tel) ) ? $hospital->tel : null) }}"
+                   placeholder="{{ trans('messages.tel') }}">
+            @if ($errors->has('tel')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('tel') }}</p> @endif
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group margin-none py-sm-1 @if( $errors->has('paycall'))  has-error @endif">
+            <label for="paycall">{{ trans('messages.paycall') }}
+            </label>
+            <input type="text" class="form-control" id="paycall" name="paycall"
+                   value="{{ old('paycall', (isset($hospital->paycall) ) ? $hospital->paycall : null) }}"
+                   placeholder="{{ trans('messages.paycall') }}">
+            @if ($errors->has('paycall')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('paycall') }}</p> @endif
+          </div>
+        </div>
+      </div>
+      <!--//電話番号-->
 
 <table class="table table-bordered mb-5 mt-5">
-  <tr>
-    <td class="gray-column">
-      <label for="karada_dog_id">状態</label>
-    </td>
-    <td>
-      <div class="form-group @if( $errors->has('status'))  has-error @endif">
-        <div class="radio">
-          <label class="ml-5">
-            <input type="radio" name="status" id="private_status"
-                 value="{{ \App\Enums\HospitalEnums::Private }}"
-                 @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::Private ) checked @endif>
-            {{ \App\Enums\HospitalEnums::getDescription('0') }}
-          </label>
-
-          <label class="ml-3">
-            <input type="radio" name="status" id="public_status"
-                 value="{{ \App\Enums\HospitalEnums::Public }}"
-                 @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::Public ) checked @endif>
-            {{ \App\Enums\HospitalEnums::getDescription('1') }}
-          </label>
-
-          <label class="ml-3">
-            <input type="radio" name="status" id="deleted_status"
-                 value="{{ \App\Enums\HospitalEnums::Delete }}"
-                 @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::Delete ) checked @endif>
-            {{ \App\Enums\HospitalEnums::getDescription('X') }}
-          </label>
-        </div>
-        @if ($errors->has('status')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('status') }}</p> @endif
-      </div>
-    </td>
-  </tr>
-
-  <tr>
-    <td class="gray-column">
-      <label for="name">{{ trans('messages.names.hospital') }}</label>
-    </td>
-    <td>
-      <div class="form-group @if( $errors->has('name'))  has-error @endif">
-        <label for="name" class="col-md-2">{{ trans('messages.name') }}</label>
-        <div class="col-md-10">
-          <input type="text" class="form-control" id="name" name="name"
-               value="{{ old('name', (isset($hospital->name) ) ? $hospital->name : null) }}"/>
-          @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
-        </div>
-      </div>
-      <div class="form-group @if( $errors->has('kana'))  has-error @endif">
-        <label for="name" class="col-md-2">{{ trans('messages.kana') }}</label>
-        <div class="col-md-10">
-          <input type="text" class="form-control" id="kana" name="kana"
-               value="{{ old('kana', (isset($hospital->kana) ) ? $hospital->kana : null) }}"/>
-          @if ($errors->has('kana')) <p class="help-block">{{ $errors->first('kana') }}</p> @endif
-        </div>
-      </div>
-    </td>
-  </tr>
-
-  <tr>
-    <td class="gray-column"><label for="">{{ __('所在地') }}</label></td>
-    <td>
-      <div class="wrapbox" style="padding: 20px;">
-
-        <br/>
-
-        <div class="row">
-          <div class="col-sm-6">
-            <div class="form-group @if( $errors->has('prefecture_id'))  has-error @endif">
-              <label for="prefecture" class="col-md-4">{{ trans('messages.prefectures') }}</label>
-              <div class="col-md-8">
-                <select name="prefecture_id" id="prefecture" class="form-control p-region-id">
-                  <option value="">都道府県を選択</option>
-                  @foreach($prefectures as $prefecture)
-                    <option value="{{ $prefecture->id }}"
-                        @if ( (old('prefecture_id', (isset($hospital->prefecture_id) ) ? $hospital->prefecture_id : null) == $prefecture->id ) )
-                        selected="selected"
-                        @endif
-                    > {{ $prefecture->name }}</option>
-                  @endforeach
-                </select>
-                @if ($errors->has('prefecture_id')) <p class="help-block">{{ $errors->first('prefecture_id') }}</p> @endif
-              </div>
-            </div>
-          </div>
-
-          <div class="col-sm-6">
-            <div class="form-group @if( $errors->has('district_code'))  has-error @endif">
-              <label for="district_code" class="col-md-4">{{ trans('messages.district_code') }}</label>
-              <div class="col-md-8">
-                <input type="hidden" class="p-locality" id="hidden-p-locality"></input>
-                <select name="district_code_id" id="district_code_id" class="form-control">
-                  <option value="" id="district_init">市町村区を選択</option>
-                  @foreach($district_codes as $district_code)
-                    <option data-prefecture_id="{{ $district_code->prefecture_id }}"
-                        value="{{ $district_code->id }}"
-                        @if ( old('prefecture_id', (isset($hospital->prefecture_id) ) ? $hospital->prefecture_id : null) == $district_code->prefecture_id )
-                        style="display: block;"
-                        @endif
-                        @if ( ($district_code->id == old('district_code_id', ( isset($hospital->district_code_id) ) ? $hospital->district_code_id : null )) )
-                        selected="selected"
-                        @endif
-                    > {{ $district_code->name }}</option>
-                  @endforeach
-                </select>
-                @if ($errors->has('district_code_id')) <p class="help-block">{{ $errors->first('district_code_id') }}</p> @endif
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-8">
-            <div class="form-group @if( $errors->has('address1'))  has-error @endif">
-              <label for="address1" class="col-md-4">{{ trans('messages.address') }} </label>
-              <div class="col-md-8">
-                <input type="text" class="form-control p-street-address" id="address1" name="address1"
-                     value="{{ old('address1', (isset($hospital->address1)) ? $hospital->address1 : null) }}"/>
-                @if ($errors->has('address1')) <p class="help-block">{{ $errors->first('address1') }}</p> @endif
-              </div>
-            </div>
-
-            <div class="form-group @if( $errors->has('address2'))  has-error @endif">
-              <label for="address2" class="col-md-4">{{ trans('messages.building_name') }} </label>
-              <div class="col-md-8">
-                <input type="text" class="form-control p-extended-address" id="address2" name="address2"
-                     value="{{ old('address2', (isset($hospital->address2)) ? $hospital->address2 : null) }}"/>
-                @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
-              </div>
-            </div>
-          </div>
-
-          <div class="col-sm-4">
-            <div class="form-group @if( $errors->has('latitude'))  has-error @endif">
-              <label for="latitude" class="col-md-4">{{ trans('messages.latitude') }} </label>
-              <div class="col-md-8">
-                <input type="text" class="form-control" id="latitude" name="latitude"
-                     value="{{ old('latitude', (isset($hospital->latitude)) ? $hospital->latitude : null) }}"
-                     placeholder="0.0000000"/>
-                @if ($errors->has('latitude')) <p class="help-block">{{ $errors->first('latitude') }}</p> @endif
-              </div>
-            </div>
-
-            <div class="form-group @if( $errors->has('longitude'))  has-error @endif">
-              <label for="longitude" class="col-md-4">{{ trans('messages.longitude') }} </label>
-              <div class="col-md-8">
-                <input type="text" class="form-control" id="longitude" name="longitude"
-                     value="{{ old('longitude', (isset($hospital->longitude)) ? $hospital->longitude : null) }}"
-                     placeholder="0.0000000"/>
-                @if ($errors->has('longitude')) <p class="help-block">{{ $errors->first('longitude') }}</p> @endif
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="street-view-wrapper" style="margin-left: 50px;">
-          <div class="form-group @if( $errors->has('streetview_url'))  has-error @endif">
-            <label for="streetview_url" class="col-md-4">{{ trans('messages.streetview_url') }} </label>
-            <div class="col-md-8">
-              <input type="text" class="form-control" id="streetview_url" name="streetview_url"
-                   value="{{ old('streetview_url', (isset($hospital->streetview_url)) ? $hospital->streetview_url : null ) }}"
-                   placeholder="http://google.com/maps/~"/>
-              @if ($errors->has('streetview_url')) <p class="help-block">{{ $errors->first('streetview_url') }}</p> @endif
-            </div>
-          </div>
-        </div>
-      </div>
-    </td>
-  </tr>
-
-  <tr>
-    <td class="gray-column">
-      <label for="tel">{{ trans('messages.contact_information') }} </label>
-    </td>
-    <td>
-      <div class="row">
-        <div class="col-sm-6">
-          <div class="form-group @if( $errors->has('tel'))  has-error @endif">
-            <label for="tel" class="col-md-4">{{ trans('messages.tel') }} </label>
-            <div class="col-md-8">
-              <input type="text" class="form-control" id="tel" name="tel"
-                   value="{{ old('tel', (isset($hospital->tel)) ? $hospital->tel : null) }}"/>
-              @if ($errors->has('tel')) <p class="help-block">{{ $errors->first('tel') }}</p> @endif
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6">
-          <div class="form-group @if( $errors->has('paycall'))  has-error @endif">
-            <label for="paycall" class="col-md-4">{{ trans('messages.paycall') }} </label>
-            <div class="col-md-8">
-              <input type="text" class="form-control" id="paycall" name="paycall"
-                    value="{{ old('paycall', (isset($hospital->paycall)) ? $hospital->paycall : null) }}"/>
-              @if ($errors->has('paycall')) <p class="help-block">{{ $errors->first('paycall') }}</p> @endif
-            </div>
-          </div>
-        </div>
-      </div>
-    </td>
-  </tr>
   @for($i = 1; $i<= 5; $i++)
     <tr>
       <td class="gray-column">
