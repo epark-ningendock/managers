@@ -170,6 +170,9 @@ class CalendarController extends Controller
      */
     public function destroy(Calendar $calendar)
     {
+        $calendar->delete();
+
+        return redirect('calendar.index')->with('error', trans('messages.deleted', ['name' => trans('messages.names.calendar')]));
     }
 
     /**
@@ -313,7 +316,7 @@ class CalendarController extends Controller
             }
 
             $calendar->calendar_days()->saveMany($calendar_days);
-            
+
             $data = [
                 'calendar' => $calendar,
                 'staff_name' => Auth::user()->name,

@@ -55,7 +55,9 @@
               <a class="btn btn-primary btn-mini" href="{{ route('calendar.edit', $calendar->id) }}">
                 <i class="fa fa-edit"> 編集</i>
               </a>
-
+              <button class="btn btn-primary btn-mini ml-2 delete-btn delete-popup-btn" data-id="{{ $calendar->id }}">
+                  <i class="fa fa-trash"></i>
+              </button>
             </div>
           </div>
         </div>
