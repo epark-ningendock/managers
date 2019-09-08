@@ -8,9 +8,13 @@ use App\Http\Requests\HospitalEmailSettingRequest;
 use Illuminate\Support\Facades\DB;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\HospitalEmailSetting\HospitalEmailSettingOperationMail;
 
 class HospitalEmailSettingController extends Controller
 {
+    const EPARK_MAIL_ADDRESS = "dock_all@eparkdock.com";
+    
     public function index()
     {
         self::is_staff();
@@ -51,6 +55,13 @@ class HospitalEmailSettingController extends Controller
             }
             
             DB::commit();
+            $data = [
+                'hospital_email_setting' => $hospital_email_setting,
+                'staff_name' => Auth::user()->name,
+                'processing' => '更新'
+                ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new HospitalEmailSettingOperationMail($data));
+
             return redirect('hospital-email-setting')->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_email_setting')]));
         } catch (StaleModelLockingException $e) {
             DB::rollback();

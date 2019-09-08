@@ -2500,10 +2500,17 @@ label {
   font-size: 1em;
 }
 
-.inline-radio.two-option-calendar {
+.inline-radio.two-option-middle {
   width: 30%;
   height: 34px;
   width: 250px;
+  font-size: 1em;
+}
+
+.inline-radio.two-option-large {
+  width: 30%;
+  height: 34px;
+  width: 400px;
   font-size: 1em;
 }
 

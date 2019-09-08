@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Exceptions\ExclusiveLockException;
-use Log;
 
 class HospitalStaffController extends Controller
 {

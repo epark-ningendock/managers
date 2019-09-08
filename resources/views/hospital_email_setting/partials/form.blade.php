@@ -11,18 +11,18 @@
         <div class="form-group py-sm-2 radio ml-3 hospital_email_reception_flg">
             <input type="hidden" name="updated_at" value="{{ isset($staff) ? $staff->updated_at : null }}">
             <label for="status">受信希望者・院内受付メール送信設定</label>
-            <group class="inline-radio two-option">
+            <group class="inline-radio two-option-large">
                 <div>
                     <input type="radio" name="in_hospital_email_reception_flg"
                     {{ old('in_hospital_email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }}
                     value="{{ \App\Enums\ReceptionEmailSetting::ACCEPT }}">
-                    <label>配信可</label>
+                    <label>メール配信を希望する</label>
                     </div>
                 <div>
                     <input type="radio" name="in_hospital_email_reception_flg"
                     {{ old('in_hospital_email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::NOT_ACCEPT ? 'checked' : '' }}
                     value="{{ \App\Enums\ReceptionEmailSetting::NOT_ACCEPT }}">
-                    <label>配信不可</label>
+                    <label>配信メール配信を希望しない</label>
                 </div>
             </group>
             @if ($errors->has('in_hospital_email_reception_flg')) <p class="help-block has-error">{{ $errors->first('in_hospital_email_reception_flg') }}</p> @endif
@@ -45,7 +45,7 @@
           <p>
               {{ Form::hidden('in_hospital_cancellation_email_reception_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
               {{ Form::checkbox('in_hospital_cancellation_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_cancellation_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_cancellation_email_reception_flg_01']) }}
-              <label for="in_hospital_cancellation_email_reception_flg_01">キャンセル時</label>
+              <label for="in_hospital_cancellation_email_reception_flg_01">受付キャンセル時</label>
           </p>
         @if ($errors->has('hospital_reception_email_transmission_setting')) <p class="help-block">{{ $errors->first('hospital_reception_email_transmission_setting') }}</p> @endif
       </div>
@@ -56,18 +56,18 @@
             <div class="form-group py-sm-2 radio ml-3 hospital_email_reception_flg">
                 <input type="hidden" name="updated_at" value="{{ isset($staff) ? $staff->updated_at : null }}">
                 <label for="status">受付メール受信アドレス設定</label>
-                <group class="inline-radio two-option">
+                <group class="inline-radio two-option-middle">
                     <div>
                             <input type="radio" name="email_reception_flg"
                             {{ old('email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }}
                             value="{{ \App\Enums\ReceptionEmailSetting::ACCEPT }}">
-                        <label>受取可</label>
+                        <label>受け取る</label>
                     </div>
                     <div>
                             <input type="radio" name="email_reception_flg"
                             {{ old('email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::NOT_ACCEPT ? 'checked' : '' }}
                             value="{{ \App\Enums\ReceptionEmailSetting::NOT_ACCEPT }}">
-                        <label>受取不可</label>
+                        <label>受け取らない</label>
                     </div>
                 </group>
                 @if ($errors->has('email_reception_flg')) <p class="help-block has-error">{{ $errors->first('email_reception_flg') }}</p> @endif
