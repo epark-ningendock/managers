@@ -191,8 +191,13 @@ class HospitalAttentionController extends Controller
                         if ($minor->is_fregist == '1') {
                             $hospital_details->select_status = 1;
                         } else if ($minor->is_fregist == '2') {
-                            $hospital_details->select_status = 1;
-                            $hospital_details->inputstring = $minor_values[$input_index];
+                            if ($minor_values[$input_index]) {
+                                $hospital_details->select_status = 1;
+                                $hospital_details->inputstring = $minor_values[$input_index];  
+                            } else {
+                                $hospital_details->select_status = 0;
+                                $hospital_details->inputstring = '';
+                            }
                         }
                          else {
                             $hospital_details->inputstring = $minor_values[$input_index];

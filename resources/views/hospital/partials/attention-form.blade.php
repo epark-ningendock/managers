@@ -69,9 +69,14 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                 <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label>
               @elseif($minor->is_fregist == '2')
                 <div class="form-group mt-3">
-                  <input type="checkbox" {{ $minor_value ? 'checked' : '' }} value="{{ $minor->id }}" />
+                  <input type="checkbox" 
+                    class="fregist-2-checkbox"
+                    id="{{ 'minor_id_'.$minor->id }}" 
+                    {{ $minor_value ? 'checked' : '' }}
+                    value="{{ $minor->id }}" />
                   <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label> 
-                  <input type="text" name="minor_values[]" value="{{ $minor_value }}" />
+                  <input type="hidden" class="fregist-2-text-dummy" name="minor_values[]" disabled value="" />
+                  <input type="text" class="fregist-2-text" name="minor_values[]" value="{{ $minor_value }}" />
                 </div>
               @else
                 <div class="form-group mt-3">
@@ -159,6 +164,7 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
   @section('script')
   <script>
       (function ($) {
+
           let index = 0;
           $('#add-fee-rate-button').click(function(e) {
             index += 1;
@@ -198,6 +204,32 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
               + "</div>"
               + "</div>");
           });
+
+          let fregistTwoText = $(".fregist-2-text").val();
+
+          $(".fregist-2-checkbox").ready(function(e) {
+            fregistTwoText = setFregistTwoValue(fregistTwoText);
+          });
+          
+          $(".fregist-2-checkbox").click(function(e) {
+            fregistTwoText = setFregistTwoValue(fregistTwoText);
+          });
+
+          function setFregistTwoValue(value) {
+            let newValue = value
+            if ($('.fregist-2-checkbox:checked').val()) {
+              $(".fregist-2-text").prop('disabled', false);
+              $(".fregist-2-text-dummy").prop('disabled', true);
+              $(".fregist-2-text").val(value);
+            } else {
+              newValue = $(".fregist-2-text").val();
+              $(".fregist-2-text").prop('disabled', true);
+              $(".fregist-2-text-dummy").prop('disabled', false);
+              $(".fregist-2-text").val('');
+            }
+            return newValue;
+          };
+
           /* ---------------------------------------------------
           // minor checkbox values
           -----------------------------------------------------*/
