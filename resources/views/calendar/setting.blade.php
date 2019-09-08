@@ -149,7 +149,7 @@
                             {{ $day['date']->day }}
                           </span>
 
-                          <div class="data-box @if($day['date']->isPast() || $day['is_holiday'] || (isset($day['calendar_day']) && $day['calendar_day']->reservation_frames  === 0)) bg-gray @endif">
+                          <div class="data-box @if($day['date']->isPast() || (isset($day['calendar_day']) && $day['calendar_day']->reservation_frames  === 0)) bg-gray @endif">
                             <!-- holiday and reservation acceptance -->
                             @if($day['is_holiday'])
                               <span class="day-label text-red">休</span>
@@ -175,7 +175,7 @@
                                   $reservation_frames = $day['calendar_day']->reservation_frames;
                                 }
                               @endphp
-                              <select name="reservation_frames[]" @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0') || $day['is_holiday']) disabled @endif class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
+                              <select name="reservation_frames[]" @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0')) disabled @endif class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
                                       @if($day['is_holiday']) data-holiday="true" @endif
                                       @if(isset($day['holiday'])) data-public-holiday="true" @endif
                                       data-origin="{{ $reservation_frames }}">
@@ -367,9 +367,9 @@
                                       weekKey += 1;
                                   } else if(ele.parent().parent().parent().attr('class') === 'week-2') {
                                       weekKey += 2;
-                                  } if(ele.parent().parent().parent().attr('class') === 'week-3') {
+                                  } else if(ele.parent().parent().parent().attr('class') === 'week-3') {
                                       weekKey += 3;
-                                  } if(ele.parent().parent().parent().attr('class') === 'week-4') {
+                                  } else if(ele.parent().parent().parent().attr('class') === 'week-4') {
                                       weekKey += 4;
                                   } else if(ele.parent().parent().parent().attr('class') === 'week-5') {
                                       weekKey += 5;
