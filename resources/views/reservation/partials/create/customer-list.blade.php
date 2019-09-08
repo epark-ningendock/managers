@@ -22,7 +22,7 @@
         data-registration_card_number="{{  $customer->registration_card_number }}"
         >
             <td>{{ $customer->id }}</td>
-            <td>{{ $customer->first_name }}</td>
+            <td>{{ $customer->family_name . $customer->first_name }}</td>
             <td>{{ $customer->tel }}</td>
             <td>{{ $customer->registration_card_number }}</td>
             <td><button type="button" class="btn btn-primary">選択</button></td>
