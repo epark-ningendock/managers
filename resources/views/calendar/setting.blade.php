@@ -99,19 +99,19 @@
         </div>
         <div class="to-month">
               <h2>対象月<span>設定する月をチェックをしてください</span></h2>
-              <p><input type="checkbox" id="all-month"/> <label for="all-month">すべて選択</label></p>
+              <p><input type="checkbox" id="all-month" checked/> <label for="all-month">すべて選択</label></p>
               @foreach($months->keys() as $index => $month)
-                  <p><input type="checkbox" id="month-{{ $index }}" class="month" data-index="{{ $index }}"/><label for="month-{{ $index }}">{{ $month }}</label></p>
+                  <p><input type="checkbox" id="month-{{ $index }}" class="month" checked data-index="{{ $index }}"/><label for="month-{{ $index }}">{{ $month }}</label></p>
               @endforeach
           </div>
         <div class="to-week">
               <h2>対象週<span>設定する週をチェックしてください</span></h2>
-              <p><input type="checkbox" class="week" id="all-week" /><label for="all-week"> すべて選択</label></p>
-              <p><input type="checkbox" class="week" id="week-1" /> <label for="week-1">第1 (1日~7日)</label></p>
-              <p><input type="checkbox" class="week" id="week-2" /> <label for="week-2">第2 (8日~14日)</label></p>
-              <p><input type="checkbox" class="week" id="week-3" /> <label for="week-3">第3 (15日~21日)</label></p>
-              <p><input type="checkbox" class="week" id="week-4" /> <label for="week-4">第4 (22日~28日)</label></p>
-              <p><input type="checkbox" class="week" id="week-5" /> <label for="week-5">第5 (29日~)</label></p>
+              <p><input type="checkbox" class="week" id="all-week" checked /><label for="all-week"> すべて選択</label></p>
+              <p><input type="checkbox" class="week" id="week-1" checked /> <label for="week-1">第1週</label></p>
+              <p><input type="checkbox" class="week" id="week-2" checked /> <label for="week-2">第2週</label></p>
+              <p><input type="checkbox" class="week" id="week-3" checked /> <label for="week-3">第3週</label></p>
+              <p><input type="checkbox" class="week" id="week-4" checked /> <label for="week-4">第4週</label></p>
+              <p><input type="checkbox" class="week" id="week-5" checked /> <label for="week-5">第5週</label></p>
           </div>
         <button class="btn btn-primary pull-right" id="bulk-update">一括反映</button>
     </div>
@@ -138,8 +138,8 @@
                   </tr>
                 </thead>
                 <tbody>
-                @foreach($month->chunk(7) as $week)
-                  <tr>
+                @foreach($month->chunk(7) as $num => $week)
+                  <tr class="week-{{ $num + 1 }}">
                     @foreach($week as $day)
                       @if($day != null)
                         <td class="@if($day['date']->isSunday() || isset($day['holiday'])) holiday @elseif($day['date']->isSaturday()) saturday @endif">
@@ -149,11 +149,11 @@
                             {{ $day['date']->day }}
                           </span>
 
-                          <div class="data-box @if($day['date']->isPast() || $day['is_holiday'] || (isset($day['calendar_day']) && $day['calendar_day']->reservation_frames  === 0)) bg-gray @endif">
+                          <div class="data-box @if(($day['date']->isPast() && !$day['date']->isToday()) || (isset($day['calendar_day']) && $day['calendar_day']->reservation_frames === 0)) bg-gray @endif">
                             <!-- holiday and reservation acceptance -->
                             @if($day['is_holiday'])
                               <span class="day-label text-red">休</span>
-                            @elseif(!$day['date']->isPast())
+                            @elseif(!($day['date']->isPast() && !$day['date']->isToday()))
                               <a class="is_reservation_acceptance day-label" data-origin="{{  isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">
                                 {{ isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0' ? '✕' : '◯' }}
                               </a>
@@ -162,20 +162,22 @@
                             @endif
                             <input type="hidden" name="is_reservation_acceptances[]" value="{{ isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">
 
-                            <!-- reservation frame -->
-                            @if($day['date']->isPast())
+                            {{-- 今日以外かつ過去の日付の場合、SelectBoxを表示しない --}}
+                            @if($day['date']->isPast() && !$day['date']->isToday())
                               {{  isset($day['calendar_day']) ? $day['calendar_day']->calendar_frame : 0}}
                               <input type="hidden" name="reservation_frames[]" value="{{  isset($day['calendar_day']) ? $day['calendar_day']->reservation_frames : 0}}" />
+                            
+                            {{-- 今日含めた未来の日付は、SelectBoxを表示する --}}
                             @else
                               @php
                                 $reservation_frames = 0;
-                                if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0') || $day['is_holiday'] == 1) {
+                                if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0')) {
                                   $reservation_frames = '';
-                                } else if (isset($day['calendar_day'])) {
-                                  $reservation_frames = $day['calendar_day']->reservation_frames;
+                                } else if (isset($day['calendar_day']) || $day['is_holiday'] == 1) {
+                                  if(isset($day['calendar_day'])) $reservation_frames = $day['calendar_day']->reservation_frames;
                                 }
                               @endphp
-                              <select name="reservation_frames[]" @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0') || $day['is_holiday']) disabled @endif class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
+                              <select name="reservation_frames[]" @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0')) disabled @endif class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
                                       @if($day['is_holiday']) data-holiday="true" @endif
                                       @if(isset($day['holiday'])) data-public-holiday="true" @endif
                                       data-origin="{{ $reservation_frames }}">
@@ -186,7 +188,8 @@
                                   </option>
                                 @endforeach
                               </select>
-                              @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0') || $day['is_holiday'])
+                              {{-- 受付不可の場合、受付枠数ををhidden属性にする --}}
+                              @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0'))
                                 <input type="hidden" name="reservation_frames[]" />
                               @endif
                             @endif
@@ -218,7 +221,7 @@
       </div>
       <div class="box-footer">
         <a href="{{ route('calendar.index') }}" class="btn btn-default">戻る</a>
-        <button class="btn btn-primary" id="clear-data">期間限定・予約枠の数全てクリア</button>
+        <button class="btn btn-primary" id="clear-data">期間設定・予約枠の数全てクリア</button>
         <button class="btn btn-primary" id="reset-data">設定のクリア</button>
         <button class="btn btn-primary" >登録する</button>
       </div>
@@ -359,24 +362,39 @@
                               const day = parseInt(ele.data('day'));
                               const isPublicHoliday = ele.data('public-holiday');
 
-                              if (isPublicHoliday) {
+                              if (isPublicHoliday && holidayFrame) {
                                     ele.val(holidayFrame);
+                                    if (holidayFrame == 0) {
+                                        ele.parents('.data-box').addClass('bg-gray');
+                                      } else {
+                                        ele.parents('.data-box').removeClass('bg-gray');
+                                        ele.parents('.data-box').addClass('bg-changed');
+                                      }
                               } else {
                                   let weekKey = '#week-';
-                                  if(day >= 1 && day <= 7) {
+                                  if(ele.parent().parent().parent().attr('class') === 'week-1') {
                                       weekKey += 1;
-                                  } else if(day >= 8 && day <= 14) {
+                                  } else if(ele.parent().parent().parent().attr('class') === 'week-2') {
                                       weekKey += 2;
-                                  } if(day >= 15 && day <= 21) {
+                                  } else if(ele.parent().parent().parent().attr('class') === 'week-3') {
                                       weekKey += 3;
-                                  } if(day >= 22 && day <= 28) {
+                                  } else if(ele.parent().parent().parent().attr('class') === 'week-4') {
                                       weekKey += 4;
-                                  } else if(day > 28) {
+                                  } else if(ele.parent().parent().parent().attr('class') === 'week-5') {
                                       weekKey += 5;
                                   }
 
+                                  // 曜日の値が入っていない場合は、そのまま返す
+                                  if (!frames[ele.parents('td').index()]) return
+
                                   if ($(weekKey).prop('checked')) {
                                       ele.val(frames[ele.parents('td').index()]);
+                                      if (frames[ele.parents('td').index()] == 0) {
+                                        ele.parents('.data-box').addClass('bg-gray');
+                                      } else {
+                                        ele.parents('.data-box').removeClass('bg-gray');
+                                        ele.parents('.data-box').addClass('bg-changed');
+                                      }
                                   }
                               }
                           });
@@ -440,8 +458,12 @@
                   const parentDiv = ele.parents('.data-box')
                   if (ele.val() == 0) {
                       parentDiv.addClass('bg-gray');
+                  } else if (ele.attr('data-origin') == ele.val()){
+                    parentDiv.removeClass('bg-gray');
+                    parentDiv.removeClass('bg-changed');
                   } else {
                       parentDiv.removeClass('bg-gray');
+                      parentDiv.addClass('bg-changed');
                   }
               };
               $('.calendar-frame').each(function(index, ele) {

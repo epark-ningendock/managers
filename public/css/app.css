@@ -3015,6 +3015,10 @@ label.file-upload input[type="file"] {
   color: #ea3f60;
 }
 
+.bg-changed {
+  background-color: #eae59a
+}
+
 #calendar_bulk_box .bulk-weekday select {
   width: 4.3em;
   display: inline;
