@@ -5,7 +5,7 @@
 <div class="form-entry">
     <div class="box-body staff-form">
       <h2>基本情報</h2>
-<input type="hidden" name="lock_version" value="{{ $hospital->lock_version or ''}}"/>
+      <input type="hidden" name="lock_version" value="{{ $hospital->lock_version or ''}}"/>
 
       <div class="row">
         <div class="col-md-12">
@@ -207,7 +207,6 @@
 
 
         </div>
-      </div>
       <!--//所在地-->
       <!--電話番号-->
       <div class="row">
@@ -237,219 +236,216 @@
         </div>
       </div>
       <!--//電話番号-->
-
-<table class="table table-bordered mb-5 mt-5">
-  @for($i = 1; $i<= 5; $i++)
-    <tr>
-      <td class="gray-column">
-        <label for="tel">最寄り駅 {{ $i }} </label>
-      </td>
-      <td>
-        <div class="wrapbox" style="padding: 20px;">
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group ml-0 mr-0">
-                <select id="rail{{$i}}" name="rail{{$i}}" class="custom-select form-control">
-                  <option value="" id="init-rail{{$i}}">路線を選択</option>
-                  @if (!old('prefecture_id'))
-                    @foreach($rails as $rail)
+      <div class="row">
+        @for($i = 1; $i<= 5; $i++)
+        <div class="col-md-12">
+          <legend>最寄り駅 {{ $i }} </legend>
+        </div>
+          <div class="col-md-4">
+            <div class="form-group ml-0 mr-0">
+              <select id="rail{{$i}}" name="rail{{$i}}" class="custom-select form-control">
+                <option value="" id="init-rail{{$i}}">路線を選択</option>
+                @if (!old('prefecture_id'))
+                  @foreach($rails as $rail)
                     @if (!isset($rail)) @continue @endif
-                      <option value="{{ $rail->id }}" id="rail-{{ $rail->id }}"
-                          @if ( old('rail' . $i, (isset($hospital->{'rail'. $i})) ? $hospital->{'rail'. $i} : null) == $rail->id)
-                          selected="selected"
-                          @endif
-                      >{{ $rail->name }}
-                      </option>
-                    @endforeach
-                  @else
-                    @foreach(Rail::find(old('prefecture_id'))->get() as $rail)
+                    <option value="{{ $rail->id }}" id="rail-{{ $rail->id }}"
+                            @if ( old('rail' . $i, (isset($hospital->{'rail'. $i})) ? $hospital->{'rail'. $i} : null) == $rail->id)
+                            selected="selected"
+                            @endif
+                    >{{ $rail->name }}
+                    </option>
+                  @endforeach
+                @else
+                  @foreach(Rail::find(old('prefecture_id'))->get() as $rail)
                     @if (!isset($rail)) @continue @endif
-                      <option value="{{ $rail->id }}" id="rail-{{ $rail->id }}"
-                          @if ( old('rail' . $i, (isset($hospital->{'rail'. $i})) ? $hospital->{'rail'. $i} : null) == $rail->id)
-                          selected="selected"
-                          @endif
-                      >{{ $rail->name }}
-                      </option>
-                    @endforeach
-                  @endif
-                </select>
-              </div>
+                    <option value="{{ $rail->id }}" id="rail-{{ $rail->id }}"
+                            @if ( old('rail' . $i, (isset($hospital->{'rail'. $i})) ? $hospital->{'rail'. $i} : null) == $rail->id)
+                            selected="selected"
+                            @endif
+                    >{{ $rail->name }}
+                    </option>
+                  @endforeach
+                @endif
+              </select>
             </div>
+          </div>
 
-            <div class="col-md-4">
-              <div class="form-group ml-0 mr-0">
-                <select id="station{{$i}}" name="station{{$i}}" class="custom-select form-control">
-                  <option value="" id="init-station{{$i}}">駅を選択</option>
-                  @if (!old('rail' . $i))
-                    @foreach($five_stations[$i - 1] as $station)
-                      @if (!isset($station)) @continue @endif
-                      <option value="{{ $station->id }}" id="station-{{ $station->id }}"
-                          @if ( old('station' . $i, (isset($hospital->{'station'. $i})) ? $hospital->{'station'. $i} : null) == $station->id)
-                          selected="selected"
-                          @endif
-                      >{{ $station->name }}
-                      </option>
-                    @endforeach
-                  @else
-                    @foreach(Station::find(old('rail' . $i))->get() as $station)
-                      @if (!isset($station)) @continue @endif
-                        <option value="{{ $station->id }}" id="station-{{ $station->id }}"
+          <div class="col-md-4">
+            <div class="form-group ml-0 mr-0">
+              <select id="station{{$i}}" name="station{{$i}}" class="custom-select form-control">
+                <option value="" id="init-station{{$i}}">駅を選択</option>
+                @if (!old('rail' . $i))
+                  @foreach($five_stations[$i - 1] as $station)
+                    @if (!isset($station)) @continue @endif
+                    <option value="{{ $station->id }}" id="station-{{ $station->id }}"
                             @if ( old('station' . $i, (isset($hospital->{'station'. $i})) ? $hospital->{'station'. $i} : null) == $station->id)
                             selected="selected"
                             @endif
-                        >{{ $station->name }}
-                        </option>
-                    @endforeach
-                  @endif
-                </select>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group ml-0 mr-0">
-                <input type="text" class="form-control" id="access{{$i}}" name="access{{$i}}"
-                      value="{{ old("access{$i}", (isset($hospital->{'access'. $i})) ? $hospital->{'access'. $i} : null) }}"/>
-              </div>
+                    >{{ $station->name }}
+                    </option>
+                  @endforeach
+                @else
+                  @foreach(Station::find(old('rail' . $i))->get() as $station)
+                    @if (!isset($station)) @continue @endif
+                    <option value="{{ $station->id }}" id="station-{{ $station->id }}"
+                            @if ( old('station' . $i, (isset($hospital->{'station'. $i})) ? $hospital->{'station'. $i} : null) == $station->id)
+                            selected="selected"
+                            @endif
+                    >{{ $station->name }}
+                    </option>
+                  @endforeach
+                @endif
+              </select>
             </div>
           </div>
-        </div>
-      </td>
-    </tr>
-  @endfor
 
-  <tr>
-    <td class="gray-column">
-      {{ trans('messages.business_hours') }}
-    </td>
-    <td>
-      <div class="wrapbox" style="padding: 20px;">
-        <table class="table table-bordered">
-          @for($i= 1; $i<= 4; $i++)
-            <tr class="timebox">
-              <td>
-                診療時間 {{  $i }}
-              </td>
-              <td>
-                @if ( isset($medical_treatment_times[$i-1]) && !empty($medical_treatment_times[$i-1]) )
-                  <div class="checkbox icheck">
-                    <input type="hidden" name="medical_treatment_time[{{$i}}][id]"
+          <div class="col-md-4">
+            <div class="form-group ml-0 mr-0">
+              <input type="text" class="form-control" id="access{{$i}}" name="access{{$i}}"
+                     value="{{ old("access{$i}", (isset($hospital->{'access'. $i})) ? $hospital->{'access'. $i} : null) }}"/>
+            </div>
+          </div>
+        @endfor
+      </div>
+    </div>
+
+  <div class="box-body staff-form">
+    <h2>休診日・診療時間</h2>
+    <div class="wrapbox" style="padding: 20px;">
+      <table class="table table-bordered">
+        @for($i= 1; $i<= 4; $i++)
+          <tr class="timebox">
+            <td>
+              診療時間 {{  $i }}
+            </td>
+            <td>
+              @if ( isset($medical_treatment_times[$i-1]) && !empty($medical_treatment_times[$i-1]) )
+                <div class="checkbox icheck">
+                  <input type="hidden" name="medical_treatment_time[{{$i}}][id]"
                          value="{{ $medical_treatment_times[$i-1]->id }}">
-                  </div>
-                @endif
-
-                <div class="col-md-6">
-                  <div class="form-group  @if( $errors->has("medical_treatment_time." .$i. ".start")) has-error @endif">
-                    <label for="start-time-{{ $i }}"
-                          class="col-md-3">{{ trans('messages.start') }} </label>
-                    <div class="col-md-9">
-                      <input size="5" type="text" class="form-control time-picker"
-                            id="start-time-{{ $i }}" name="medical_treatment_time[{{$i}}][start]"
-                            value="{{ old('medical_treatment_time.' . $i . '.start', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->start : null)) }}"
-                      />
-                      @if( $errors->has("medical_treatment_time." .$i. ".start"))
-                        <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".start") }}</p>
-                      @endif
-                    </div>
-                  </div>
                 </div>
+              @endif
 
-                <div class="col-md-6">
-                  <div class="form-group   @if( $errors->has("medical_treatment_time." .$i. ".end")) has-error @endif">
-                    <label for="end-time-{{$i}}" class="col-md-3">〜</label>
-                    <div class="col-md-9">
-                      <input size="5" type="text" class="form-control time-picker"
-                            id="end-time-{{$i}}" name="medical_treatment_time[{{$i}}][end]"
-                            value="{{ old('medical_treatment_time.' . $i . '.end', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->end : null)) }}"
-                      />
-                      @if( $errors->has("medical_treatment_time." .$i. ".end"))
-                        <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".end") }}</p>
-                      @endif
-                    </div>
+              <div class="col-md-6">
+                <div class="form-group  @if( $errors->has("medical_treatment_time." .$i. ".start")) has-error @endif">
+                  <label for="start-time-{{ $i }}"
+                         class="col-md-3">{{ trans('messages.start') }} </label>
+                  <div class="col-md-9">
+                    <input size="5" type="text" class="form-control time-picker"
+                           id="start-time-{{ $i }}" name="medical_treatment_time[{{$i}}][start]"
+                           value="{{ old('medical_treatment_time.' . $i . '.start', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->start : null)) }}"
+                    />
+                    @if( $errors->has("medical_treatment_time." .$i. ".start"))
+                      <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".start") }}</p>
+                    @endif
                   </div>
                 </div>
+              </div>
 
-                <div class="daybox">
-                  <label class="checkbox-inline">
-                    <input type="checkbox" name="medical_treatment_time[{{$i}}][mon]" value="1"
-                          @if ( old('medical_treatment_time.' . $i . '.mon', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->mon : null) ) == 1 ) checked @endif>{{
-                    trans('messages.mon') }}
-                  </label>
-                  <label class="checkbox-inline">
-                    <input type="checkbox" name="medical_treatment_time[{{$i}}][tue]" value="1"
-                          @if ( old('medical_treatment_time.' . $i . '.tue', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->tue : null)) == 1 ) checked @endif> {{ trans('messages.tue') }}
-                  </label>
-                  <label class="checkbox-inline">
-                    <input type="checkbox" name="medical_treatment_time[{{$i}}][wed]" value="1"
-                          @if ( old('medical_treatment_time.' . $i . '.wed', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->wed : null)) == 1 ) checked @endif> {{ trans('messages.wed') }}
-                  </label>
-                  <label class="checkbox-inline">
-                    <input type="checkbox" name="medical_treatment_time[{{$i}}][thu]" value="1"
-                          @if ( old('medical_treatment_time.' . $i . '.thu', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->thu : null)) == 1 ) checked @endif> {{ trans('messages.thu') }}
-                  </label>
-                  <label class="checkbox-inline">
-                    <input type="checkbox" name="medical_treatment_time[{{$i}}][fri]" value="1"
-                          @if ( old('medical_treatment_time.' . $i . '.fri', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->fri : null)) == 1 ) checked @endif> {{ trans('messages.fri') }}
-                  </label>
-                  <label class="checkbox-inline">
-                    <input type="checkbox" name="medical_treatment_time[{{$i}}][sat]" value="1"
-                          @if ( old('medical_treatment_time.' . $i . '.sat', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->sat : null)) == 1 ) checked @endif> {{ trans('messages.sat') }}
-                  </label>
-                  <label class="checkbox-inline">
-                    <input type="checkbox" name="medical_treatment_time[{{$i}}][sun]" value="1"
-                          @if ( old('medical_treatment_time.' . $i . '.sun', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->sun : null)) == 1 ) checked @endif> {{ trans('messages.sun') }}
-                  </label>
+              <div class="col-md-6">
+                <div class="form-group   @if( $errors->has("medical_treatment_time." .$i. ".end")) has-error @endif">
+                  <label for="end-time-{{$i}}" class="col-md-3">〜</label>
+                  <div class="col-md-9">
+                    <input size="5" type="text" class="form-control time-picker"
+                           id="end-time-{{$i}}" name="medical_treatment_time[{{$i}}][end]"
+                           value="{{ old('medical_treatment_time.' . $i . '.end', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->end : null)) }}"
+                    />
+                    @if( $errors->has("medical_treatment_time." .$i. ".end"))
+                      <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".end") }}</p>
+                    @endif
+                  </div>
                 </div>
-              </td>
-            </tr>
-          @endfor
-        </table>
+              </div>
 
-        <div class="form-group @if( $errors->has('consultation_note'))  has-error @endif">
-          <label for="consultation_note" class="col-md-2">{{ trans('messages.consultation_note') }} </label>
-          <div class="col-md-10">
+              <div class="daybox">
+                <label class="checkbox-inline">
+                  <input type="checkbox" name="medical_treatment_time[{{$i}}][mon]" value="1"
+                         @if ( old('medical_treatment_time.' . $i . '.mon', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->mon : null) ) == 1 ) checked @endif>{{
+                  trans('messages.mon') }}
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" name="medical_treatment_time[{{$i}}][tue]" value="1"
+                         @if ( old('medical_treatment_time.' . $i . '.tue', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->tue : null)) == 1 ) checked @endif> {{ trans('messages.tue') }}
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" name="medical_treatment_time[{{$i}}][wed]" value="1"
+                         @if ( old('medical_treatment_time.' . $i . '.wed', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->wed : null)) == 1 ) checked @endif> {{ trans('messages.wed') }}
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" name="medical_treatment_time[{{$i}}][thu]" value="1"
+                         @if ( old('medical_treatment_time.' . $i . '.thu', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->thu : null)) == 1 ) checked @endif> {{ trans('messages.thu') }}
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" name="medical_treatment_time[{{$i}}][fri]" value="1"
+                         @if ( old('medical_treatment_time.' . $i . '.fri', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->fri : null)) == 1 ) checked @endif> {{ trans('messages.fri') }}
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" name="medical_treatment_time[{{$i}}][sat]" value="1"
+                         @if ( old('medical_treatment_time.' . $i . '.sat', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->sat : null)) == 1 ) checked @endif> {{ trans('messages.sat') }}
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" name="medical_treatment_time[{{$i}}][sun]" value="1"
+                         @if ( old('medical_treatment_time.' . $i . '.sun', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->sun : null)) == 1 ) checked @endif> {{ trans('messages.sun') }}
+                </label>
+              </div>
+            </td>
+          </tr>
+        @endfor
+      </table>
+
+      <div class="form-group @if( $errors->has('consultation_note'))  has-error @endif">
+        <label for="consultation_note" class="col-md-2">{{ trans('messages.consultation_note') }} </label>
+        <div class="col-md-10">
             <textarea name="consultation_note" id="consultation_note" rows="5"
                       class="form-control">{{ old('consultation_note',(isset($hospital->consultation_note)) ? $hospital->consultation_note : null) }}</textarea>
-            @if ($errors->has('consultation_note')) <p class="help-block">{{ $errors->first('consultation_note') }}</p> @endif
-          </div>
-        </div>
-
-        <div class="form-group @if( $errors->has('memo'))  has-error @endif">
-          <label for="memo" class="col-md-2">備考</label>
-          <div class="col-md-10">
-            <textarea name="memo" id="memo" rows="5"
-                      class="form-control">{{ old('memo', (isset($hospital->memo)) ? $hospital->memo : null) }}</textarea>
-            @if ($errors->has('memo')) <p class="help-block">{{ $errors->first('memo') }}</p> @endif
-          </div>
+          @if ($errors->has('consultation_note')) <p class="help-block">{{ $errors->first('consultation_note') }}</p> @endif
         </div>
       </div>
-    </td>
-  </tr>
 
-  <tr>
-    <td class="gray-column">
-      <label for="medical_examination_system_id">{{ trans('messages.examination_system_name') }} </label>
-    </td>
-    <td>
-      <div class="form-group ml-2 mr-2  @if( $errors->has('medical_examination_system_id'))  has-error @endif">
+      <div class="form-group @if( $errors->has('memo'))  has-error @endif">
+        <label for="memo" class="col-md-2">備考</label>
+        <div class="col-md-10">
+            <textarea name="memo" id="memo" rows="5"
+                      class="form-control">{{ old('memo', (isset($hospital->memo)) ? $hospital->memo : null) }}</textarea>
+          @if ($errors->has('memo')) <p class="help-block">{{ $errors->first('memo') }}</p> @endif
+        </div>
+      </div>
+
+
+      <div class="form-group @if( $errors->has('memo'))  has-error @endif">
+        <label for="memo" class="col-md-2">備考</label>
+        <div class="col-md-10">
+            <textarea name="memo" id="memo" rows="5"
+                      class="form-control">{{ old('memo', (isset($hospital->memo)) ? $hospital->memo : null) }}</textarea>
+          @if ($errors->has('memo')) <p class="help-block">{{ $errors->first('memo') }}</p> @endif
+        </div>
+      </div>
+
+
+
+
+
+
+      <div class="form-group @if( $errors->has('medical_examination_system_id'))  has-error @endif">
+        <label for="memo" class="col-md-2">{{ trans('messages.examination_system_name') }}</label>
         <select name="medical_examination_system_id" id="medical_examination_system_id" class="form-control">
           <option value=""></option>
           @foreach($medical_examination_systems as $medical_examination_system)
             <option value="{{ $medical_examination_system->id }}"
-                @if ($medical_examination_system->id == old('medical_examination_system_id', (isset($hospital->medical_examination_system_id)) ? $hospital->medical_examination_system_id : null))
-                selected="selected"
-                @endif
+                    @if ($medical_examination_system->id == old('medical_examination_system_id', (isset($hospital->medical_examination_system_id)) ? $hospital->medical_examination_system_id : null))
+                    selected="selected"
+                    @endif
             > {{ $medical_examination_system->name }}</option>
           @endforeach
         </select>
-
         @if ($errors->has('medical_examination_system_id')) <p
-            class="help-block">{{ $errors->first('medical_examination_system_id') }}</p> @endif
+                class="help-block">{{ $errors->first('medical_examination_system_id') }}</p> @endif
       </div>
-    </td>
-  </tr>
-</table>
-</div></div>
 
+    </div>
+  </div>
+
+</div>
 <div class="col-md-12 pb-5">
   <button type="submit" class="btn btn-primary pull-right">保存</button>
 </div>
