@@ -15,6 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Schema::defaultStringLength(191);
         // it's for debug
         // if (config('app.env') !== 'production') {
         //     \DB::listen(function ($query) {
