@@ -362,7 +362,7 @@
                               const day = parseInt(ele.data('day'));
                               const isPublicHoliday = ele.data('public-holiday');
 
-                              if (isPublicHoliday) {
+                              if (isPublicHoliday && holidayFrame) {
                                     ele.val(holidayFrame);
                                     if (holidayFrame == 0) {
                                         ele.parents('.data-box').addClass('bg-gray');
