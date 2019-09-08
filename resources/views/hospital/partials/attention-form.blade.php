@@ -67,6 +67,7 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                         id="{{ 'minor_id_'.$minor->id }}"
                         {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
                 <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label>
+                @if ($errors->has('minor_id_'.$minor->id)) <p class="has-error">{{ $errors->first('minor_id_'.$minor->id) }}</p> @endif
               @elseif($minor->is_fregist == '2')
                 <div class="form-group mt-3">
                   <input type="checkbox" 
@@ -78,10 +79,12 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                   <input type="hidden" class="fregist-2-text-dummy" name="minor_values[]" disabled value="" />
                   <input type="text" class="fregist-2-text" name="minor_values[]" value="{{ $minor_value }}" />
                 </div>
+                @if ($errors->has('minor_id_'.$minor->id)) <p class="has-error">0文字から10文字にしてください。</p> @endif
               @else
                 <div class="form-group mt-3">
                     <label>{{ $minor->name }}</label>
-                    <textarea class="form-control minor-text @if ($index > 0) mt-2 @endif" name="minor_values[]" cols="30" rows="5">{{ $minor_value }}</textarea>
+                    <textarea class="form-control minor-text @if ($index > 0) mt-2 @endif" name="minor_values[]" id="{{ 'minor_id_'.$minor->id }}" cols="30" rows="5">{{ $minor_value }}</textarea>
+                    @if ($errors->has('minor_id_'.$minor->id)) <p class="has-error">0文字から2000文字にしてください。</p> @endif
                 </div>
               @endif
             @endforeach
