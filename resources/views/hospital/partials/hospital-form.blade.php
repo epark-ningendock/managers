@@ -72,40 +72,38 @@
       <!--//医療機関-->
 
       <!--所在地-->
-      <div class="row">
+      <div class="row mt-5">
         <div class="col-md-12">
           <legend>所在地</legend>
         </div>
 
         <div class="col-md-12">
-          <div class="wrapbox" style="padding: 20px;">
+          <div class="wrapbox">
             <div class="form-inline">
               <div class="form-group @if( $errors->has('postcode'))  has-error @endif">
-                <label for="postcode" class="col-md-4 text-right"> 〒</label>
-                <div class="col-md-8">
+                <label for="postcode"> 〒</label>
+
                   <span class="p-country-name" style="display:none;">Japan</span>
                   <input type="text" class="form-control" id="postcode1" name="postcode"
                          value="{{ old('postcode', (isset($hospital->postcode) ) ? $hospital->postcode : null) }}"
                          placeholder="1000005"/>
                   <input type="hidden" name="postcode" id="postcode" class="p-postal-code" size="8"
                          value="{{ old('postcode', (isset($hospital->postcode) ) ? $hospital->postcode : null) }}"/>
-                </div>
-              </div>
-              &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-              <button type="button" class="btn btn-default" id="postcode-search" style="margin-left: 20px;">
+
+              <button type="button" class="btn btn-default" id="postcode-search">
                 <img width="20px;" src="{{ asset('images/search.png') }}" alt="">
                 {{ __('アドレス検索') }}
               </button>
-              @if ($errors->has('postcode')) <p class="help-block text-danger"
-                                                style="text-align: center; color: #dd4d3b;">{{ $errors->first('postcode') }}</p> @endif
+              </div>
+              @if ($errors->has('postcode')) <p class="help-block text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('postcode') }}</p> @endif
             </div>
             <br/>
 
             <div class="row">
               <div class="col-sm-6">
-                <div class="form-group @if( $errors->has('prefecture_id'))  has-error @endif">
-                  <label for="prefecture" class="col-md-4">{{ trans('messages.prefectures') }}</label>
-                  <div class="col-md-8">
+                <div class="form-group margin-none py-sm-1  @if( $errors->has('prefecture_id'))  has-error @endif">
+                  <label for="prefecture">{{ trans('messages.prefectures') }}</label>
+                  <div class="form-group margin-none py-sm-1">
                     <select name="prefecture_id" id="prefecture" class="form-control p-region-id">
                       <option value="">都道府県を選択</option>
                       @foreach($prefectures as $prefecture)
@@ -122,9 +120,9 @@
               </div>
 
               <div class="col-sm-6">
-                <div class="form-group @if( $errors->has('district_code'))  has-error @endif">
-                  <label for="district_code" class="col-md-4">{{ trans('messages.district_code') }}</label>
-                  <div class="col-md-8">
+                <div class="form-group margin-none py-sm-1 @if( $errors->has('district_code'))  has-error @endif">
+                  <label for="district_code">{{ trans('messages.district_code') }}</label>
+                  <div>
                     <input type="hidden" class="p-locality" id="hidden-p-locality"></input>
                     <select name="district_code_id" id="district_code_id" class="form-control">
                       <option value="" id="district_init">市町村区を選択</option>
@@ -148,18 +146,18 @@
 
             <div class="row">
               <div class="col-sm-8">
-                <div class="form-group @if( $errors->has('address1'))  has-error @endif">
-                  <label for="address1" class="col-md-4">{{ trans('messages.address') }} </label>
-                  <div class="col-md-8">
+                <div class="form-group margin-none py-sm-1 @if( $errors->has('address1'))  has-error @endif">
+                  <label for="address1">{{ trans('messages.address') }} </label>
+                  <div>
                     <input type="text" class="form-control p-street-address" id="address1" name="address1"
                            value="{{ old('address1', (isset($hospital->address1)) ? $hospital->address1 : null) }}"/>
                     @if ($errors->has('address1')) <p class="help-block">{{ $errors->first('address1') }}</p> @endif
                   </div>
                 </div>
 
-                <div class="form-group @if( $errors->has('address2'))  has-error @endif">
-                  <label for="address2" class="col-md-4">{{ trans('messages.building_name') }} </label>
-                  <div class="col-md-8">
+                <div class="form-group margin-none py-sm-1 @if( $errors->has('address2'))  has-error @endif">
+                  <label for="address2">{{ trans('messages.building_name') }} </label>
+                  <div>
                     <input type="text" class="form-control p-extended-address" id="address2" name="address2"
                            value="{{ old('address2', (isset($hospital->address2)) ? $hospital->address2 : null) }}"/>
                     @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
@@ -168,9 +166,9 @@
               </div>
 
               <div class="col-sm-4">
-                <div class="form-group @if( $errors->has('latitude'))  has-error @endif">
-                  <label for="latitude" class="col-md-4">{{ trans('messages.latitude') }} </label>
-                  <div class="col-md-8">
+                <div class="form-group margin-none py-sm-1 @if( $errors->has('latitude'))  has-error @endif">
+                  <label for="latitude">{{ trans('messages.latitude') }} </label>
+                  <div>
                     <input type="text" class="form-control" id="latitude" name="latitude"
                            value="{{ old('latitude', (isset($hospital->latitude)) ? $hospital->latitude : null) }}"
                            placeholder="0.0000000"/>
@@ -178,9 +176,9 @@
                   </div>
                 </div>
 
-                <div class="form-group @if( $errors->has('longitude'))  has-error @endif">
-                  <label for="longitude" class="col-md-4">{{ trans('messages.longitude') }} </label>
-                  <div class="col-md-8">
+                <div class="form-group margin-none py-sm-1 @if( $errors->has('longitude'))  has-error @endif">
+                  <label for="longitude">{{ trans('messages.longitude') }} </label>
+                  <div>
                     <input type="text" class="form-control" id="longitude" name="longitude"
                            value="{{ old('longitude', (isset($hospital->longitude)) ? $hospital->longitude : null) }}"
                            placeholder="0.0000000"/>
@@ -190,10 +188,10 @@
               </div>
             </div>
 
-            <div class="street-view-wrapper" style="margin-left: 50px;">
-              <div class="form-group @if( $errors->has('streetview_url'))  has-error @endif">
-                <label for="streetview_url" class="col-md-4">{{ trans('messages.streetview_url') }} </label>
-                <div class="col-md-8">
+            <div class="street-view-wrapper">
+              <div class="form-group margin-none py-sm-1 @if( $errors->has('streetview_url'))  has-error @endif">
+                <label for="streetview_url" class="">{{ trans('messages.streetview_url') }} </label>
+                <div class="">
                   <input type="text" class="form-control" id="streetview_url" name="streetview_url"
                          value="{{ old('streetview_url', (isset($hospital->streetview_url)) ? $hospital->streetview_url : null ) }}"
                          placeholder="http://google.com/maps/~"/>
@@ -209,7 +207,7 @@
         </div>
       <!--//所在地-->
       <!--電話番号-->
-      <div class="row">
+      <div class="row mt-5">
         <div class="col-md-12">
           <legend>{{ trans('messages.contact_information') }} </legend>
         </div>
@@ -238,7 +236,7 @@
       <!--//電話番号-->
       <div class="row">
         @for($i = 1; $i<= 5; $i++)
-        <div class="col-md-12">
+        <div class="col-md-12 mt-5">
           <legend>最寄り駅 {{ $i }} </legend>
         </div>
           <div class="col-md-4">
@@ -423,12 +421,9 @@
 
 
 
-
-
-
-      <div class="form-group @if( $errors->has('medical_examination_system_id'))  has-error @endif">
-        <label for="memo" class="col-md-2">{{ trans('messages.examination_system_name') }}</label>
-        <select name="medical_examination_system_id" id="medical_examination_system_id" class="form-control">
+      <div class="col-md-12 mt-5">
+        <legend>{{ trans('messages.examination_system_name') }}</legend>
+        <select name="medical_examination_system_id" id="medical_examination_system_id" class="form-control w20em">
           <option value=""></option>
           @foreach($medical_examination_systems as $medical_examination_system)
             <option value="{{ $medical_examination_system->id }}"
