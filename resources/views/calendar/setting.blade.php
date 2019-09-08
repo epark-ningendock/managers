@@ -458,6 +458,8 @@
                   const parentDiv = ele.parents('.data-box')
                   if (ele.val() == 0) {
                       parentDiv.addClass('bg-gray');
+                  } else if (ele.attr('data-origin') == ele.val()){
+                    parentDiv.removeClass('bg-gray');
                   } else {
                       parentDiv.removeClass('bg-gray');
                       parentDiv.addClass('bg-changed');
