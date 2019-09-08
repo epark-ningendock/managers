@@ -21,14 +21,17 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
     use SkipsErrors;
 
     protected $hospital_no;
+    protected static $realpath;
 
     /**
      * ImportBAbstract constructor.
      * @param $hospital_no
+     * @param $realpath
      */
-    public function __construct($hospital_no)
+    public function __construct($hospital_no, $realpath)
     {
         $this->hospital_no = $hospital_no;
+        static::$realpath = $realpath;
     }
 
     public function getValue(array $row, string $key)
