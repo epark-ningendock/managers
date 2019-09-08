@@ -149,11 +149,11 @@
                             {{ $day['date']->day }}
                           </span>
 
-                          <div class="data-box @if($day['date']->isPast() || (isset($day['calendar_day']) && $day['calendar_day']->reservation_frames  === 0)) bg-gray @endif">
+                          <div class="data-box @if(($day['date']->isPast() && !$day['date']->isToday()) || (isset($day['calendar_day']) && $day['calendar_day']->reservation_frames  === 0)) bg-gray @endif">
                             <!-- holiday and reservation acceptance -->
                             @if($day['is_holiday'])
                               <span class="day-label text-red">休</span>
-                            @elseif(!$day['date']->isPast())
+                            @elseif(!($day['date']->isPast() && !$day['date']->isToday()))
                               <a class="is_reservation_acceptance day-label" data-origin="{{  isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">
                                 {{ isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0' ? '✕' : '◯' }}
                               </a>
@@ -171,10 +171,10 @@
                             @else
                               @php
                                 $reservation_frames = 0;
-                                if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0') || $day['is_holiday'] == 1) {
+                                if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0')) {
                                   $reservation_frames = '';
-                                } else if (isset($day['calendar_day'])) {
-                                  $reservation_frames = $day['calendar_day']->reservation_frames;
+                                } else if (isset($day['calendar_day']) || $day['is_holiday'] == 1) {
+                                  if($day['calendar_day']->reservation_frames) $reservation_frames = $day['calendar_day']->reservation_frames;
                                 }
                               @endphp
                               <select name="reservation_frames[]" @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0')) disabled @endif class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
@@ -455,11 +455,14 @@
           -----------------------------------------------------*/
           (function () {
               const change = function(ele) {
+                  console.log(ele.attr('data-origin'))
+                  console.log(ele.val())
                   const parentDiv = ele.parents('.data-box')
                   if (ele.val() == 0) {
                       parentDiv.addClass('bg-gray');
                   } else if (ele.attr('data-origin') == ele.val()){
                     parentDiv.removeClass('bg-gray');
+                    parentDiv.removeClass('bg-changed');
                   } else {
                       parentDiv.removeClass('bg-gray');
                       parentDiv.addClass('bg-changed');

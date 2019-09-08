@@ -290,7 +290,7 @@ class CalendarController extends Controller
             $reservation_frames = collect($request->input('reservation_frames'));
 
             while ($start->lt($end)) {
-                if ($start->isPast()) {
+                if ($start->isPast() && !$start->isToday()) {
                     $start->addDay(1);
                     continue;
                 }
