@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Calendar;
 use App\CalendarDay;
 use App\Holiday;
+use App\Hospital;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -498,6 +499,15 @@ class CalendarController extends Controller
             }
 
             Holiday::insert($new_holidays->toArray());
+            $hospital = Hospital::findOrFail(1);
+            
+            $data = [
+                'hospital' => $hospital,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】休日設定更新のお知らせ',
+                'processing' => '更新'
+             ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
 
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.holiday_setting')]));
             DB::commit();
