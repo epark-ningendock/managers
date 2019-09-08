@@ -772,9 +772,9 @@ class ReservationController extends Controller
             }
 
             if(isset($tax_class)) {
-                $params['tax_included_price'] += $params['fee'] + ($params['fee'] * ($tax_class->rate/100));
+                $params['tax_included_price'] = $params['fee'] + ($params['fee'] * ($tax_class->rate/100));
             } else {
-                $reservation->$params['tax_included_price'] = $params['fee'];
+                $params['tax_included_price'] = $params['fee'];
             }
 
             $reservation->update($params);
@@ -789,7 +789,7 @@ class ReservationController extends Controller
 
             DB::commit();
 
-            return redirect('reception')->with('success', trans('messages.reservation.status_update_success'));
+            return redirect('reception')->with('success', trans('messages.reservation.update_success'));
 
         } catch (\Exception $i) {
             DB::rollback();
