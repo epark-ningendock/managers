@@ -61,7 +61,7 @@ class CalendarController extends Controller
             $data = [
                 'calendar' => $calendar,
                 'staff_name' => Auth::user()->name,
-                'subject' => '【EPARK人間ドック】カレンダー登録・変更・削除のお知らせ',
+                'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
                 'processing' => '登録'
              ];
             Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
@@ -146,8 +146,8 @@ class CalendarController extends Controller
             $data = [
                 'calendar' => $calendar,
                 'staff_name' => Auth::user()->name,
-                'subject' => '【EPARK人間ドック】カレンダー登録・変更・削除のお知らせ',
-                'processing' => '変更'
+                'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
+                'processing' => '更新'
              ];
             Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
 
@@ -170,10 +170,26 @@ class CalendarController extends Controller
      */
     public function destroy(Calendar $calendar)
     {
-        $calendar = Calendar::findOrFail($calendar->id);
-        $calendar->delete();
+        try {
+            $calendar = Calendar::findOrFail($calendar->id);
+            $calendar->delete();
+    
+            $data = [
+                'calendar' => $calendar,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
+                'processing' => '削除'
+             ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
 
-        return redirect('calendar')->with('error', trans('messages.deleted', ['name' => trans('messages.names.calendar')]));
+            return redirect('calendar')->with('error', trans('messages.deleted', ['name' => trans('messages.names.calendar')]));
+        } catch (StaleModelLockingException $e) {
+            Session::flash('error', trans('messages.model_changed_error'));
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Session::flash('error', trans('messages.update_error'));
+            return redirect('calendar');
+        }
     }
 
     /**
@@ -252,7 +268,7 @@ class CalendarController extends Controller
         }
 
         $start = Carbon::now()->startOfMonth();
-
+        
         return view('calendar.setting')
             ->with('calendar', $calendar)
             ->with('months', $months)
@@ -322,8 +338,8 @@ class CalendarController extends Controller
             $data = [
                 'calendar' => $calendar,
                 'staff_name' => Auth::user()->name,
-                'subject' => '【EPARK人間ドック】カレンダー登録・変更・削除のお知らせ',
-                'processing' => '変更'
+                'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
+                'processing' => 'カレンダー設定の更新'
              ];
             Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
 
@@ -529,7 +545,7 @@ class CalendarController extends Controller
             $period = CarbonPeriod::create($started_date, $end_date);
             $dates = $period->toArray();
             $calendars = collect();
-
+            
             foreach ($dates as $date) {
                 $calendar_day = $calendar_days->first(function ($day) use ($date) {
                     return $day->date->isSameDay($date);
