@@ -99,19 +99,19 @@
         </div>
         <div class="to-month">
               <h2>対象月<span>設定する月をチェックをしてください</span></h2>
-              <p><input type="checkbox" id="all-month"/> <label for="all-month">すべて選択</label></p>
+              <p><input type="checkbox" id="all-month" checked/> <label for="all-month">すべて選択</label></p>
               @foreach($months->keys() as $index => $month)
-                  <p><input type="checkbox" id="month-{{ $index }}" class="month" data-index="{{ $index }}"/><label for="month-{{ $index }}">{{ $month }}</label></p>
+                  <p><input type="checkbox" id="month-{{ $index }}" class="month" checked data-index="{{ $index }}"/><label for="month-{{ $index }}">{{ $month }}</label></p>
               @endforeach
           </div>
         <div class="to-week">
               <h2>対象週<span>設定する週をチェックしてください</span></h2>
-              <p><input type="checkbox" class="week" id="all-week" /><label for="all-week"> すべて選択</label></p>
-              <p><input type="checkbox" class="week" id="week-1" /> <label for="week-1">第1 (1日~7日)</label></p>
-              <p><input type="checkbox" class="week" id="week-2" /> <label for="week-2">第2 (8日~14日)</label></p>
-              <p><input type="checkbox" class="week" id="week-3" /> <label for="week-3">第3 (15日~21日)</label></p>
-              <p><input type="checkbox" class="week" id="week-4" /> <label for="week-4">第4 (22日~28日)</label></p>
-              <p><input type="checkbox" class="week" id="week-5" /> <label for="week-5">第5 (29日~)</label></p>
+              <p><input type="checkbox" class="week" id="all-week" checked /><label for="all-week"> すべて選択</label></p>
+              <p><input type="checkbox" class="week" id="week-1" checked /> <label for="week-1">第1 (1日~7日)</label></p>
+              <p><input type="checkbox" class="week" id="week-2" checked /> <label for="week-2">第2 (8日~14日)</label></p>
+              <p><input type="checkbox" class="week" id="week-3" checked /> <label for="week-3">第3 (15日~21日)</label></p>
+              <p><input type="checkbox" class="week" id="week-4" checked /> <label for="week-4">第4 (22日~28日)</label></p>
+              <p><input type="checkbox" class="week" id="week-5" checked /> <label for="week-5">第5 (29日~)</label></p>
           </div>
         <button class="btn btn-primary pull-right" id="bulk-update">一括反映</button>
     </div>
