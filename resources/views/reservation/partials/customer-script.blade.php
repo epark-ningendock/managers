@@ -15,7 +15,7 @@
     				<div class="col-sm-9">
     					
     					<div class="form-group">
-    						<input type="text" class="form-control" name="search_text" id="registration_card_number_search" placeholder="チケット番号">
+    						<input type="text" class="form-control" name="search_text" id="registration_card_number_search">
     					</div>
 
     				</div>
