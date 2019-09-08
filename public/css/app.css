@@ -2500,13 +2500,6 @@ label {
   font-size: 1em;
 }
 
-.inline-radio.two-option-calendar {
-  width: 30%;
-  height: 34px;
-  width: 250px;
-  font-size: 1em;
-}
-
 .form-control {
   border-radius: 3px;
   font-weight: normal;
@@ -2728,12 +2721,15 @@ legend {
 
 .main_image_area {
   position: relative;
+  width: 400px;
+  height: 260px;
   text-align: center;
+  margin: 0 auto;
 }
 
 .main_image_area img {
-  width: 300px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -2741,11 +2737,15 @@ legend {
 .sub_image_area {
   position: relative;
   text-align: center;
+  width: 200px;
+  background: #ccc;
+  margin: 0 auto;
+  height: 150px;
 }
 
 .sub_image_area img {
-  width: 150px;
-  height: 120px;
+  width: 100%;
+  height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -2765,11 +2765,14 @@ legend {
 .interview_image_area {
   position: relative;
   text-align: center;
+  width: 300px;
+  height: 200px;
+  margin: 0 auto;
 }
 
 .interview_image_area img {
-  width: 300px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -2777,11 +2780,14 @@ legend {
 .speciality_image_area {
   position: relative;
   text-align: center;
+  width: 300px;
+  height: 200px;
+  margin: 0 auto;
 }
 
 .speciality_image_area img {
-  width: 300px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -2789,11 +2795,14 @@ legend {
 .tab_image_area {
   position: relative;
   text-align: center;
+  width: 300px;
+  height: 200px;
+  margin: 0 auto;
 }
 
 .tab_image_area img {
-  width: 300px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -2868,9 +2877,12 @@ label.file-upload input[type="file"] {
 
 .file_delete_text {
   text-align: left;
-  padding: 10px 0 0 0;
   font-size: 12px;
   bottom: 0px;
+  position: absolute;
+  left: 0px;
+  padding: 0;
+  margin: 0px;
 }
 
 .btn-normal {
@@ -3013,10 +3025,6 @@ label.file-upload input[type="file"] {
 #calendar_bulk_box .bulk-weekday label[for="sunday-frame"],
 #calendar_bulk_box .bulk-weekday label[for="holiday-frame"] {
   color: #ea3f60;
-}
-
-.bg-changed {
-  background-color: #eae59a
 }
 
 #calendar_bulk_box .bulk-weekday select {
