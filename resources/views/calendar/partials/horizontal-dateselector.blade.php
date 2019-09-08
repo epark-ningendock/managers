@@ -108,7 +108,6 @@
                 week_row.removeClass('show-tr');
 
                 if ( show_tr.nextAll('tr').length == 14 ) {
-                    console.log(week_row.last().find('td').last().data('date'));
                     const lastDate = new Date(week_row.last().find('td').last().data('date'));
                     lastDate.setDate(lastDate.getDate() + 1);
                     const  startDate = lastDate.getFullYear() + '/' + (lastDate.getMonth() + 1) + '/' + lastDate.getDate();
