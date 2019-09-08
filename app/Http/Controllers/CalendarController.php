@@ -538,8 +538,8 @@ class CalendarController extends Controller
                 }
             }
 
-            // 8 weeks range
-            $end_date = $started_date->copy()->addDay(55);
+            // 16 weeks range
+            $end_date = $started_date->copy()->addDay(111);
 
 
 
