@@ -17,7 +17,7 @@
 							</div>
 						</div>
 					</a>
-					{{ ($calendars->first()['date'])->format('Y') }}
+					<span id="year-label">{{ ($calendars->first()['date'])->format('Y') }}</span>
 				</th>
 				<input type="hidden" name="reservation_date" id="reservation_date">
 			</tr>

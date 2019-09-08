@@ -125,9 +125,7 @@
 
                 // year label
                 const temp = $('.show-tr td:last').data('date').split('-');
-                const calendar_html = '<a href="#" class="calendar-picker" style="float: left;"><div class="input-group date datepicker" data-date-format="yyyy-mm-dd" data-provide="datepicker"><input type="hidden" id="startdate"/><div class="input-group-addon"><img src="/img/calendar.png" width="25"></img></div></div></a>';
-                $('.year-label th').html(calendar_html + temp[0]);
-
+                $('#year-label').text(temp[0]);
             });
 
             /* ---------------------------------------------------
