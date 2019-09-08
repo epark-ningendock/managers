@@ -79,7 +79,7 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
               </div>
           </div>
           @endforeach
-          <div class="col-md-12">
+          <div class="col-md-12 mt-5">
               <h2>手数料率</h2>
               <div class="form-group py-sm-1 " style="margin-left: 0;">
                   <div class="form-inline">
