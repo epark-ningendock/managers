@@ -122,8 +122,7 @@
               </ul>
           @endif
           {{-- 医療機関スタッフの機能 --}}
-          {{-- TODO: 編集権限がない場合、非表示 --}}
-          @if ( request()->session()->get('hospital_id') && !(auth()->user()->staff_auth && ( (request()->is('reception')) || (request()->route()->getName() == 'reservation.create') || (request()->route()->getName() == 'reservation.edit')) ) )
+          @if ( request()->session()->get('hospital_id'))
             <li class="treeview @if (request()->session()->get('hospital_id')) active @endif">
                 <a href="#">
                   <i class="fa fa-list-ul"></i> <span>医療機関スタッフ機能</span>
