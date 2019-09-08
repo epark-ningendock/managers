@@ -10,7 +10,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="form-group py-sm-1 " style="margin-left: 0;">
-            <label for="karada_dog_id">状態</label>
+            <legend>状態</legend>
               <div class="form-group @if( $errors->has('status'))  has-error @endif">
                 <div class="radio">
                   <label class="ml-5">
@@ -39,9 +39,13 @@
           </div>
         </div>
       </div>
+      <!--医療機関-->
       <div class="row">
+        <div class="col-md-12">
+          <legend>医療機関</legend>
+        </div>
         <div class="col-md-6">
-          <div class="form-group py-sm-1 @if ($errors->has('name')) has-error @endif">
+          <div class="form-group margin-none py-sm-1 @if ($errors->has('name')) has-error @endif">
             <label for="name">{{ trans('messages.name') }}
               <span class="form_required">必須</span>
             </label>
@@ -51,7 +55,52 @@
             @if ($errors->has('name')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('name') }}</p> @endif
           </div>
         </div>
+
+        <div class="col-md-6">
+          <div class="form-group margin-none py-sm-1 @if( $errors->has('kana'))  has-error @endif">
+            <label for="kana">{{ trans('messages.kana') }}
+              <span class="form_required">必須</span>
+            </label>
+            <input type="text" class="form-control" id="kana" name="kana"
+                   value="{{ old('name', (isset($hospital->kana) ) ? $hospital->kana : null) }}"
+                   placeholder="{{ trans('messages.kana') }}">
+            @if ($errors->has('kana')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('kana') }}</p> @endif
+          </div>
+        </div>
+
       </div>
+      <!--//医療機関-->
+
+      <!--所在地-->
+      <div class="row">
+        <div class="col-md-12">
+          <legend>所在地</legend>
+        </div>
+
+        <div class="col-md-12">
+          <label for="kana">郵便番号
+            <span class="form_required">必須</span>
+          </label>
+          <div class="form-group margin-none py-sm-1 @if( $errors->has('postcode'))  has-error @endif form-inline">
+            <span class="p-country-name" style="display:none;">Japan</span>
+            <input type="text" class="form-control" id="postcode" name="postcode"
+                   value="{{ old('postcode', (isset($hospital->postcode) ) ? $hospital->postcode : null) }}"
+                   placeholder="1000005"/>
+            <input type="hidden" name="postcode" id="postcode" class="p-postal-code" size="8"
+                   value="{{ old('postcode', (isset($hospital->postcode) ) ? $hospital->postcode : null) }}"/>
+            @if ($errors->has('postcode')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('postcode') }}</p> @endif
+            <button type="button" class="btn btn-default" id="postcode-search" style="margin-left: 20px;">
+              <img width="20px;" src="{{ asset('images/search.png') }}" alt="">
+              {{ __('アドレス検索') }}
+            </button>
+          </div>
+        </div>
+
+
+
+        </div>
+      </div>
+      <!--//所在地-->
 
 
 
@@ -119,26 +168,7 @@
     <td class="gray-column"><label for="">{{ __('所在地') }}</label></td>
     <td>
       <div class="wrapbox" style="padding: 20px;">
-        <div class="form-inline">
-          <div class="form-group @if( $errors->has('postcode'))  has-error @endif">
-            <label for="postcode" class="col-md-4 text-right"> 〒</label>
-            <div class="col-md-8">
-              <span class="p-country-name" style="display:none;">Japan</span>
-              <input type="text" class="form-control" id="postcode1" name="postcode"
-                    value="{{ old('postcode', (isset($hospital->postcode) ) ? $hospital->postcode : null) }}"
-                    placeholder="1000005"/>
-              <input type="hidden" name="postcode" id="postcode" class="p-postal-code" size="8"
-                    value="{{ old('postcode', (isset($hospital->postcode) ) ? $hospital->postcode : null) }}"/>
-            </div>
-          </div>
-          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-          <button type="button" class="btn btn-default" id="postcode-search" style="margin-left: 20px;">
-            <img width="20px;" src="{{ asset('images/search.png') }}" alt="">
-            {{ __('アドレス検索') }}
-          </button>
-          @if ($errors->has('postcode')) <p class="help-block text-danger"
-                                            style="text-align: center; color: #dd4d3b;">{{ $errors->first('postcode') }}</p> @endif
-        </div>
+
         <br/>
 
         <div class="row">

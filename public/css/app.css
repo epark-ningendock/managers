@@ -2554,6 +2554,10 @@ label {
   margin: 0 auto;
 }
 
+.form-entry .margin-none {
+  margin: 0;
+}
+
 .form-entry .checkbox label,
 .form-entry .radio label {
   padding-left: 0px !important;
