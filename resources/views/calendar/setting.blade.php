@@ -375,8 +375,17 @@
                                       weekKey += 5;
                                   }
 
+                                  // 曜日の値が入っていない場合は、そのまま返す
+                                  if (!frames[ele.parents('td').index()]) return
+
                                   if ($(weekKey).prop('checked')) {
                                       ele.val(frames[ele.parents('td').index()]);
+                                      if (frames[ele.parents('td').index()] == 0) {
+                                        ele.parents('.data-box').addClass('bg-gray');
+                                      } else {
+                                        ele.parents('.data-box').removeClass('bg-gray');
+                                        ele.parents('.data-box').addClass('bg-changed');
+                                      }
                                   }
                               }
                           });
@@ -442,6 +451,7 @@
                       parentDiv.addClass('bg-gray');
                   } else {
                       parentDiv.removeClass('bg-gray');
+                      parentDiv.addClass('bg-changed');
                   }
               };
               $('.calendar-frame').each(function(index, ele) {
