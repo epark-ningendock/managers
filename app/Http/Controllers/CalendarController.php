@@ -268,7 +268,7 @@ class CalendarController extends Controller
      */
     public function updateSetting($id, CalendarFormRequest $request)
     {
-        
+
         try {
             DB::beginTransaction();
 

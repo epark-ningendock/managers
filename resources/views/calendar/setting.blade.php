@@ -166,6 +166,8 @@
                             @if($day['date']->isPast() && !$day['date']->isToday())
                               {{  isset($day['calendar_day']) ? $day['calendar_day']->calendar_frame : 0}}
                               <input type="hidden" name="reservation_frames[]" value="{{  isset($day['calendar_day']) ? $day['calendar_day']->reservation_frames : 0}}" />
+                            
+                            {{-- 今日含めた未来の日付は、SelectBoxを表示する --}}
                             @else
                               @php
                                 $reservation_frames = 0;
@@ -186,7 +188,8 @@
                                   </option>
                                 @endforeach
                               </select>
-                              @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0') || $day['is_holiday'])
+                              {{-- 受付不可の場合、受付枠数ををhidden属性にする --}}
+                              @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0'))
                                 <input type="hidden" name="reservation_frames[]" />
                               @endif
                             @endif
