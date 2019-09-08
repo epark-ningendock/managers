@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ReservationOperationMail extends Mailable
+class ReservationCheckMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
@@ -31,7 +31,7 @@ class ReservationOperationMail extends Mailable
     {
         return $this
             ->from("unei@eparkdock.com")
-            ->subject("【EPARK人間ドック】検査コース登録・変更・削除のお知らせ")
-            ->view('reservation.email.operation-mail');
+            ->subject("【EPARK人間ドック】受付情報登録のお知らせ")
+            ->view('reservation.email.reservation-mail');
     }
 }

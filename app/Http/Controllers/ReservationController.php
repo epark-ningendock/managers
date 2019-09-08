@@ -9,6 +9,7 @@ use App\Enums\ReservationStatus;
 use App\FeeRate;
 use App\Holiday;
 use App\Hospital;
+use App\Mail\Reservation\ReservationCheckMail;
 use App\Http\Requests\ReservationCreateFormRequest;
 use App\Http\Requests\ReservationFormRequest;
 use App\Http\Requests\ReservationUpdateFormRequest;
@@ -18,6 +19,7 @@ use App\Services\ReservationExportService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use App\TaxClass;
@@ -574,6 +576,8 @@ class ReservationController extends Controller
 
             $this->reservationAnswerCreate($request, $reservation);
 
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id'))->name, $reservation);
+
             DB::commit();
 
             return redirect('reception')->with('success', trans('messages.reservation.complete_success'));
@@ -797,6 +801,19 @@ class ReservationController extends Controller
             return redirect()->back()->with('error', trans('messages.reservation.status_update_error'))->withInput();
         }
 
+    }
+
+    /**
+     * 受付確認メール送信
+     * @param array $reservationDates
+     */
+    public function sendReservationCheckMail($hospital_name, $reservation)
+    {
+        $mailContext = [
+            'hospital_name' => $hospital_name,
+            'reservation' => $reservation
+        ];
+        Mail::to('dock_all@eparkdock.com')->send(new ReservationCheckMail($mailContext));
     }
 
 }
