@@ -361,6 +361,12 @@
 
                               if (isPublicHoliday) {
                                     ele.val(holidayFrame);
+                                    if (holidayFrame == 0) {
+                                        ele.parents('.data-box').addClass('bg-gray');
+                                      } else {
+                                        ele.parents('.data-box').removeClass('bg-gray');
+                                        ele.parents('.data-box').addClass('bg-changed');
+                                      }
                               } else {
                                   let weekKey = '#week-';
                                   if(ele.parent().parent().parent().attr('class') === 'week-1') {
