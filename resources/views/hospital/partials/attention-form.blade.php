@@ -69,15 +69,15 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                 <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label>
               @elseif($minor->is_fregist == '2')
                 <div class="form-group mt-3">
-                  <input type="checkbox" class="minor-checkbox" {{ $minor_value ? 'checked' : '' }} value="{{ $minor->id }}" />
+                  <input type="checkbox" {{ $minor_value ? 'checked' : '' }} value="{{ $minor->id }}" />
                   <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label> 
                   <input type="text" name="minor_values[]" value="{{ $minor_value }}" />
                 </div>
               @else
-              <div class="form-group mt-3">
-                  <label>{{ $minor->name }}</label>
-                  <textarea class="form-control minor-text @if ($index > 0) mt-2 @endif" name="minor_values[]" cols="30" rows="5">{{ $minor_value }}</textarea>
-              </div>
+                <div class="form-group mt-3">
+                    <label>{{ $minor->name }}</label>
+                    <textarea class="form-control minor-text @if ($index > 0) mt-2 @endif" name="minor_values[]" cols="30" rows="5">{{ $minor_value }}</textarea>
+                </div>
               @endif
             @endforeach
           </td>
