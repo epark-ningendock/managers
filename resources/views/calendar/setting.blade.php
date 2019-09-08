@@ -162,8 +162,8 @@
                             @endif
                             <input type="hidden" name="is_reservation_acceptances[]" value="{{ isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">
 
-                            <!-- reservation frame -->
-                            @if($day['date']->isPast())
+                            {{-- 今日以外かつ過去の日付の場合、SelectBoxを表示しない --}}
+                            @if($day['date']->isPast() && !$day['date']->isToday())
                               {{  isset($day['calendar_day']) ? $day['calendar_day']->calendar_frame : 0}}
                               <input type="hidden" name="reservation_frames[]" value="{{  isset($day['calendar_day']) ? $day['calendar_day']->reservation_frames : 0}}" />
                             @else
