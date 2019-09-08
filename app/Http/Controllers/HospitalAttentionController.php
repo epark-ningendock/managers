@@ -50,7 +50,6 @@ class HospitalAttentionController extends Controller
      */
     public function store(Request $request, int $hospital_id)
     {
-        // dd($request->all());
 
         try {
             $this->validate($request, [

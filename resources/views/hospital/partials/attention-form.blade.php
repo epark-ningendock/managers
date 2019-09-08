@@ -204,14 +204,17 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
           (function () {
               const change = function(ele) {
                   if (ele.prop('checked')) {
-                      ele.next('input:hidden').remove();
+                      if (ele.next().next().attr('class') == 'dummy') {
+                        ele.next().next().remove();
+                      }
                   } else {
-                      $('<input type="hidden" name="minor_values[]" value="0"/>').insertAfter(ele.next('label'));
+                      $('<input type="hidden" class="dummy" name="minor_values[]" value="0"/>').insertAfter(ele.next('label'));
                   }
               };
 
               $('.minor-checkbox').each(function(index, ele) {
                   ele = $(ele);
+                  // console.log(ele)
                   ele.change(function() {
                       change(ele);
                   });
