@@ -170,9 +170,10 @@ class CalendarController extends Controller
      */
     public function destroy(Calendar $calendar)
     {
+        $calendar = Calendar::findOrFail($calendar->id);
         $calendar->delete();
 
-        return redirect('calendar.index')->with('error', trans('messages.deleted', ['name' => trans('messages.names.calendar')]));
+        return redirect('calendar')->with('error', trans('messages.deleted', ['name' => trans('messages.names.calendar')]));
     }
 
     /**
