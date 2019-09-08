@@ -50,6 +50,7 @@ class HospitalAttentionController extends Controller
      */
     public function store(Request $request, int $hospital_id)
     {
+        // dd($request->all());
 
         try {
             $this->validate($request, [
@@ -178,7 +179,7 @@ class HospitalAttentionController extends Controller
                         $input_index = $minor_ids->search(function ($id) use ($minor) {
                             return $minor->id == $id;
                         });
-    
+                        
                         if ($input_index == -1 || ($minor->is_fregist == '1' && $minor_values[$input_index] == 0)
                             || ($minor->is_fregist == '0' && $minor_values[$input_index] == '')) {
                             continue;
@@ -190,7 +191,11 @@ class HospitalAttentionController extends Controller
                         $hospital_details->minor_classification_id = $minor->id;
                         if ($minor->is_fregist == '1') {
                             $hospital_details->select_status = 1;
-                        } else {
+                        } else if ($minor->is_fregist == '2') {
+                            $hospital_details->select_status = 1;
+                            $hospital_details->inputstring = $minor_values[$input_index];
+                        }
+                         else {
                             $hospital_details->inputstring = $minor_values[$input_index];
                         }
                         $hospital_details->save();
