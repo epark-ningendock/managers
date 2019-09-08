@@ -14,7 +14,7 @@
 
     <div class="form-group py-sm-2 @if ($errors->has('is_calendar_display')) has-error @endif">
         <label for="status">カレンダー表示</label>
-        <group class="inline-radio two-option-calendar">
+        <group class="inline-radio two-option-middle">
             <div>
                 <input type="radio" name="is_calendar_display" {{ old('is_calendar_display', (isset($calendar) ? $calendar->is_calendar_display->value : null) ) == CalendarDisplay::Show ? 'checked' : 'checked' }}
                 value="{{ CalendarDisplay::Show }}"
