@@ -13,7 +13,7 @@
                 }
             }
 
-            function dateLoader(ajaxRoute) {
+            function dateLoader(ajaxRoute, chooseByCalendar = false) {
 
                 $.ajax({
                     url: ajaxRoute,
@@ -23,7 +23,10 @@
                     },
                     success: function (response) {
 
-                        if ( $('.hor-date-table').length > 0 ) {
+                        if (chooseByCalendar) {
+                            $('.calendar-box').html(response.data);
+                            $('.hor-date-table tbody tr').addClass('hide-tr').first('tr').addClass('show-tr');
+                        } else if ( $('.hor-date-table').length > 0 ) {
                             $('.hor-date-table tbody').append($(response.data).find('tbody').children());
                         } else {
                             $('.calendar-box').html(response.data);
@@ -70,10 +73,7 @@
                             $('#reservation_date').val($reserveDate);
                         }, 500);
                     }
-
                 }
-
-
             });
 
             /* ---------------------------------------------------
@@ -125,8 +125,20 @@
 
                 // year label
                 const temp = $('.show-tr td:last').data('date').split('-');
-                $('.year-label th').html(temp[0]);
+                const calendar_html = '<a href="#" class="calendar-picker" style="float: left;"><div class="input-group date datepicker" data-date-format="yyyy-mm-dd" data-provide="datepicker"><input type="hidden" id="startdate"/><div class="input-group-addon"><img src="/img/calendar.png" width="25"></img></div></div></a>';
+                $('.year-label th').html(calendar_html + temp[0]);
 
+            });
+
+            /* ---------------------------------------------------
+            Load calendarpicker through ajax
+            -----------------------------------------------------*/
+            $(document).on('change', '#startdate', function(){
+                event.preventDefault();
+
+                let startdate = $(this).val();
+                let ajaxRoute = "{{  route('course.reservation.days', ['course_id' => ':1']) }}".replace(":1", $('#course_id').val()) + '?start_date=' + startdate;
+                dateLoader(ajaxRoute, true);
             });
 
 

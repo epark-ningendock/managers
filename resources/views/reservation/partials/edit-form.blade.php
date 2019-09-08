@@ -698,9 +698,6 @@
             font-size: 11px;
             padding: 15px;
         }
-        .year-label th {
-            background: transparent url({{ asset('img/calendar.png') }}) 10px 3px/30px no-repeat;
-        }
 
         td.daybox.gray-background {
             background: #ddd;

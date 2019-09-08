@@ -8,7 +8,17 @@
 
 		<thead>
 			<tr class="year-label">
-				<th colspan="7" class="text-center">{{  ($calendars->first()['date'])->format('Y') }}</th>
+				<th colspan="7">
+					<a href="#" class="calendar-picker" style="float: left;">
+						<div class="input-group date datepicker" data-date-format="yyyy-mm-dd" data-provide="datepicker">
+							<input type="hidden" id="startdate"/>
+							<div class="input-group-addon">
+								<img src="/img/calendar.png" width="25"></img>
+							</div>
+						</div>
+					</a>
+					{{ ($calendars->first()['date'])->format('Y') }}
+				</th>
 				<input type="hidden" name="reservation_date" id="reservation_date">
 			</tr>
 		</thead>
