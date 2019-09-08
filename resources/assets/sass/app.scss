@@ -930,3 +930,18 @@ input[type=checkbox]:disabled + label:before { content: "\f096"; opacity: 0.4; c
     vertical-align: middle !important;
   }
 }
+
+.contract-show {
+  legend {
+    float: left;
+    width: 30%;
+    clear: both;
+  }
+  div {
+    width: 70%;
+    float: left;
+  }
+  h2 {
+    clear: both;
+  }
+}

@@ -2500,13 +2500,6 @@ label {
   font-size: 1em;
 }
 
-.inline-radio.two-option-calendar {
-  width: 30%;
-  height: 34px;
-  width: 250px;
-  font-size: 1em;
-}
-
 .form-control {
   border-radius: 3px;
   font-weight: normal;
@@ -3214,5 +3207,20 @@ input[type=checkbox]:disabled + label:before {
 
 .vertical-middle td {
   vertical-align: middle !important;
+}
+
+.contract-show legend {
+  float: left;
+  width: 30%;
+  clear: both;
+}
+
+.contract-show div {
+  width: 70%;
+  float: left;
+}
+
+.contract-show h2 {
+  clear: both;
 }
 
