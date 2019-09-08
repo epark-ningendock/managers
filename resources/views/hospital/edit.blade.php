@@ -11,7 +11,6 @@
     <form id="contract-form" class="form-horizontal h-adr" method="POST" action="{{ route('hospital.update',['hospital' => $hospital]) }}">
         {{method_field('PUT')}}
         {{ csrf_field() }}
-        <h5 class="sm-title">基本情報</h5>
         @includeIf('hospital.partials.hospital-form')
     </form>
 

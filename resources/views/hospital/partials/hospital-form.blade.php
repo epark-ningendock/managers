@@ -2,7 +2,61 @@
   use App\Station;
   use App\Rail;
 @endphp
+<div class="form-entry">
+    <div class="box-body staff-form">
+      <h2>基本情報</h2>
 <input type="hidden" name="lock_version" value="{{ $hospital->lock_version or ''}}"/>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group py-sm-1 " style="margin-left: 0;">
+            <label for="karada_dog_id">状態</label>
+              <div class="form-group @if( $errors->has('status'))  has-error @endif">
+                <div class="radio">
+                  <label class="ml-5">
+                    <input type="radio" name="status" id="private_status"
+                           value="{{ \App\Enums\HospitalEnums::Private }}"
+                           @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::Private ) checked @endif>
+                    {{ \App\Enums\HospitalEnums::getDescription('0') }}
+                  </label>
+
+                  <label class="ml-3">
+                    <input type="radio" name="status" id="public_status"
+                           value="{{ \App\Enums\HospitalEnums::Public }}"
+                           @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::Public ) checked @endif>
+                    {{ \App\Enums\HospitalEnums::getDescription('1') }}
+                  </label>
+
+                  <label class="ml-3">
+                    <input type="radio" name="status" id="deleted_status"
+                           value="{{ \App\Enums\HospitalEnums::Delete }}"
+                           @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::Delete ) checked @endif>
+                    {{ \App\Enums\HospitalEnums::getDescription('X') }}
+                  </label>
+                </div>
+                @if ($errors->has('status')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('status') }}</p> @endif
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group py-sm-1 @if ($errors->has('name')) has-error @endif">
+            <label for="name">{{ trans('messages.name') }}
+              <span class="form_required">必須</span>
+            </label>
+            <input type="text" class="form-control" id="name" name="name"
+                   value="{{ old('name', (isset($hospital->name) ) ? $hospital->name : null) }}"
+                   placeholder="{{ trans('messages.name') }}">
+            @if ($errors->has('name')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('name') }}</p> @endif
+          </div>
+        </div>
+      </div>
+
+
+
+
+
 <table class="table table-bordered mb-5 mt-5">
   <tr>
     <td class="gray-column">
@@ -429,9 +483,8 @@
       </div>
     </td>
   </tr>
-
-  </div>
 </table>
+</div></div>
 
 <div class="col-md-12 pb-5">
   <button type="submit" class="btn btn-primary pull-right">保存</button>
