@@ -65,10 +65,10 @@ class ReservationController extends Controller
     public function index(Request $request)
     {
         $this->validate($request, [
+            'reservation_created_start_date' => 'nullable|date',
+            'reservation_created_end_date' => 'nullable|date',
             'reservation_start_date' => 'nullable|date',
             'reservation_end_date' => 'nullable|date',
-            'completed_start_date' => 'nullable|date',
-            'completed_end_date' => 'nullable|date',
             'customer_name' => 'nullable|max:64',
         ]);
 
@@ -82,11 +82,11 @@ class ReservationController extends Controller
         $params = $request->input();
 
         // for initial default value if it has not been set empty purposely
-        if (!$request->has('completed_start_date')) {
-            $params['completed_start_date'] = Carbon::now()->format('Y/m/d');
+        if (!$request->has('reservation_start_date')) {
+            $params['reservation_start_date'] = Carbon::now()->format('Y/m/d');
         }
-        if (!$request->has('completed_end_date')) {
-            $params['completed_end_date'] = Carbon::now()->format('Y/m/d');
+        if (!$request->has('reservation_end_date')) {
+            $params['reservation_end_date'] = Carbon::now()->format('Y/m/d');
         }
 
         return view('reservation.index', compact('reservations', 'courses'))
@@ -115,6 +115,14 @@ class ReservationController extends Controller
             'course.course_questions',
         ]);
 
+        if ($request->input('reservation_created_start_date', '') != '') {
+            $query->whereDate('created_at', '>=', $request->input('reservation_created_start_date'));
+        }
+
+        if ($request->input('reservation_created_end_date', '') != '') {
+            $query->whereDate('created_at', '<=', $request->input('reservation_created_end_date'));
+        }
+
         if ($request->input('reservation_start_date', '') != '') {
             $query->whereDate('reservation_date', '>=', $request->input('reservation_start_date'));
         }
@@ -123,17 +131,6 @@ class ReservationController extends Controller
             $query->whereDate('reservation_date', '<=', $request->input('reservation_end_date'));
         }
 
-        if ($request->has('completed_start_date') && $request->input('completed_start_date', '') != '') {
-            $query->whereDate('completed_date', '>=', $request->input('completed_start_date'));
-        } elseif (!$request->has('completed_start_date')) {
-            $query->whereDate('completed_date', '>=', Carbon::today()->startOfDay());
-        }
-
-        if ($request->has('completed_end_date') && $request->input('completed_end_date', '') != '') {
-            $query->whereDate('completed_date', '<=', $request->input('completed_end_date'));
-        } elseif (!$request->has('completed_end_date')) {
-            $query->whereDate('completed_date', '<=', Carbon::today()->endOfDay());
-        }
 
         if ($request->input('customer_name', '') != '') {
             $query->whereHas('Customer', function ($q) use ($request) {
@@ -201,10 +198,10 @@ class ReservationController extends Controller
     public function reception_csv(Request $request)
     {
         $this->validate($request, [
+            'reservation_created_start_date' => 'nullable|date',
+            'reservation_created_end_date' => 'nullable|date',
             'reservation_start_date' => 'nullable|date',
             'reservation_end_date' => 'nullable|date',
-            'completed_start_date' => 'nullable|date',
-            'completed_end_date' => 'nullable|date',
         ]);
         $query = $this->get_reception_list_query($request);
 

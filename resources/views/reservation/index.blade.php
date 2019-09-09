@@ -29,8 +29,8 @@
             <div class="input-group date" data-provide="datepicker" data-date-format="yyyy/mm/dd"
                  data-date-autoclose="true" data-date-language="ja">
               <input type="text" class="form-control"
-                     id="reservation_start_date" name="reservation_start_date"
-                     placeholder="yyyy/mm/dd" value="{{ $reservation_start_date or '' }}">
+                     id="reservation_created_start_date" name="reservation_created_start_date"
+                     placeholder="yyyy/mm/dd" value="{{ $reservation_created_start_date or '' }}">
               <div class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
               </div>
@@ -39,8 +39,8 @@
             <div class="input-group date" data-provide="datepicker" data-date-format="yyyy/mm/dd"
                  data-date-autoclose="true" data-date-language="ja">
               <input type="text" class="form-control"
-                     id="reservation_end_date" name="reservation_end_date"
-                     placeholder="yyyy/mm/dd" value="{{ $reservation_end_date or '' }}">
+                     id="reservation_created_end_date" name="reservation_created_end_date"
+                     placeholder="yyyy/mm/dd" value="{{ $reservation_created_end_date or '' }}">
               <div class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
               </div>
@@ -56,8 +56,8 @@
             <div class="input-group date" data-provide="datepicker" data-date-format="yyyy/mm/dd"
                  data-date-autoclose="true" data-date-language="ja">
               <input type="text" class="form-control"
-                     id="completed_start_date" name="completed_start_date"
-                     placeholder="yyyy/mm/dd" value="{{ $completed_start_date or '' }}">
+                     id="reservation_start_date" name="reservation_start_date"
+                     placeholder="yyyy/mm/dd" value="{{ $reservation_start_date or '' }}">
               <div class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
               </div>
@@ -66,8 +66,8 @@
             <div class="input-group date" data-provide="datepicker" data-date-format="yyyy/mm/dd"
                  data-date-autoclose="true" data-date-language="ja">
               <input type="text" class="form-control"
-                     id="completed_end_date" name="completed_end_date"
-                     placeholder="yyyy/mm/dd" value="{{ $completed_end_date or '' }}">
+                     id="reservation_end_date" name="reservation_end_date"
+                     placeholder="yyyy/mm/dd" value="{{ $reservation_end_date or '' }}">
               <div class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
               </div>
