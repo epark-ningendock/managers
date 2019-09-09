@@ -56,44 +56,13 @@ class ReservationController extends Controller
     }
 
     /**
-     * 一覧表示.
-     *
-     * @param Request $request
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function index(Request $request)
-    {
-
-        if (isset(Auth::user()->staff_auth->is_invoice) && Auth::user()->staff_auth->is_invoice === Permission::None) {
-            return view('staff.edit-password-personal');
-        }
-
-        $params = $request->all();
-
-        $query = $this->reservation
-            ->byRequest($request)
-            ->with(['hospital', 'course', 'customer'])
-            ->orderBy('created_at', 'desc');
-
-        $reservations = $query->paginate(env('PAGINATE_NUMBER'));
-
-        return view('reservation.index', compact('reservations', 'params', 'request'));
-    }
-
-    public function operation(Request $request)
-    {
-        return $this->export_file->operationCsv($request);
-    }
-
-    /**
      * reception list
      *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function reception(Request $request)
+    public function index(Request $request)
     {
         $this->validate($request, [
             'reservation_start_date' => 'nullable|date',
@@ -120,8 +89,13 @@ class ReservationController extends Controller
             $params['completed_end_date'] = Carbon::now()->format('Y/m/d');
         }
 
-        return view('reservation.reception', compact('reservations', 'courses'))
+        return view('reservation.index', compact('reservations', 'courses'))
             ->with($params);
+    }
+
+    public function operation(Request $request)
+    {
+        return $this->export_file->operationCsv($request);
     }
 
     /**

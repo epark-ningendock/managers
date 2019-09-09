@@ -32,37 +32,37 @@ class ReservationControllerTest extends TestCase
      */
     public function testReceptionList()
     {
-        $response = $this->call('GET', '/reception');
+        $response = $this->call('GET', '/reservation');
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testInvalidReservationStartDate()
     {
-        $response = $this->call('GET', '/reception?reservation_start_date='.$this->faker->userName);
+        $response = $this->call('GET', '/reservation?reservation_start_date='.$this->faker->userName);
         $response->assertSessionHasErrors('reservation_start_date');
     }
 
     public function testInvalidReservationEndDate()
     {
-        $response = $this->call('GET', '/reception?reservation_end_date='.$this->faker->userName);
+        $response = $this->call('GET', '/reservation?reservation_end_date='.$this->faker->userName);
         $response->assertSessionHasErrors('reservation_end_date');
     }
 
     public function testInvalidCompletedStartDate()
     {
-        $response = $this->call('GET', '/reception?completed_start_date='.$this->faker->userName);
+        $response = $this->call('GET', '/reservation?completed_start_date='.$this->faker->userName);
         $response->assertSessionHasErrors('completed_start_date');
     }
 
     public function testInvalidCompletedEndDate()
     {
-        $response = $this->call('GET', '/reception?completed_end_date='.$this->faker->userName);
+        $response = $this->call('GET', '/reservation?completed_end_date='.$this->faker->userName);
         $response->assertSessionHasErrors('completed_end_date');
     }
 
     public function testInvalidCustomerNameInReceptionList()
     {
-        $response = $this->call('GET', '/reception?customer_name='.$this->faker->regexify('[A-Za-z]{70}'));
+        $response = $this->call('GET', '/reservation?customer_name='.$this->faker->regexify('[A-Za-z]{70}'));
         $response->assertSessionHasErrors('customer_name');
     }
 
