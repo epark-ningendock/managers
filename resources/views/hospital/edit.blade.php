@@ -6,10 +6,10 @@
 
 @section('form')
 
+    @include('layouts.partials.error_pan')
     @includeIf('hospital.partials.nav-bar')
 
     <form id="contract-form" class="form-horizontal h-adr" method="POST" action="{{ route('hospital.update',['hospital' => $hospital]) }}">
-        @include('layouts.partials.error_pan')
         @includeIf('hospital.partials.hospital-form')
         {{method_field('PUT')}}
         {{ csrf_field() }}
