@@ -69,8 +69,8 @@ $factory->defineAs(Reservation::class, 'with_all', function (Faker $faker) use (
     return array_merge($reservation, [
         'hospital_id' => $hospital->id,
         'customer_id' => $customer->id,
-        'applicant_name' => "$customer->first_name $customer->family_name",
-        'applicant_name_kana' => "$customer->first_name_kana $customer->family_name_kana",
+        'applicant_name' => "$customer->family_name $customer->first_name",
+        'applicant_name_kana' => "$customer->family_name_kana $customer->first_name_kana",
         'applicant_tel' => $customer->tel,
         'course_id' => $course->id
     ]);

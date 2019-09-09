@@ -163,7 +163,7 @@ class ReservationController extends Controller
 
         if ($request->input('customer_name', '') != '') {
             $query->whereHas('Customer', function ($q) use ($request) {
-                $q->where(DB::raw("concat(first_name, ' ', family_name)"), 'LIKE', '%' . $request->input('customer_name') . '%');
+                $q->where(DB::raw("concat(family_name, first_name)"), 'LIKE', '%' . $request->input('customer_name') . '%');
             });
         }
 
@@ -536,8 +536,8 @@ class ReservationController extends Controller
                 })->get()->first();
 
             $reservation = new Reservation(request()->all());
-            $reservation->applicant_name = "$request->first_name $request->family_name";
-            $reservation->applicant_name_kana = "$request->first_name_kana $request->family_name_kana";
+            $reservation->applicant_name = "$request->family_name $request->first_name";
+            $reservation->applicant_name_kana = "$request->family_name_kana $request->first_name_kana";
             $reservation->applicant_tel = str_replace(['－', '-', '‐', '−', '‒', '—', '–', '―', 'ー', 'ｰ', '─', '━', '一'], '', $request->tel);
             $reservation->acceptance_number = $acceptance_number;
 
