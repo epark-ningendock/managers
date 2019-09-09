@@ -545,7 +545,7 @@ class ReservationController extends Controller
 
             DB::commit();
 
-            return redirect('reception')->with('success', trans('messages.reservation.complete_success'));
+            return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
 
         } catch (\Exception $i) {
             DB::rollback();
@@ -752,7 +752,7 @@ class ReservationController extends Controller
 
             DB::commit();
 
-            return redirect('reception')->with('success', trans('messages.reservation.update_success'));
+            return redirect('reservation')->with('success', trans('messages.reservation.update_success'));
 
         } catch (\Exception $i) {
             DB::rollback();
