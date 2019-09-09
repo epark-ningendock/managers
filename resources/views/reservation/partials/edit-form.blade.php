@@ -165,7 +165,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{  $reservation->cashpo_used_price or '-' }}</span>
+            <span id="total" class="ml-2">{{  $reservation->cashpo_used_price or '-' }}円</span>
         </div>
 
     </div>
