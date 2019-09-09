@@ -483,8 +483,6 @@ class ReservationController extends Controller
         try {
             DB::beginTransaction();
             $today = Carbon::today();
-            $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
-                ->whereDate('life_time_to', '>=', $today)->get()->first();
 
             $course = Course::find($request->course_id);
             $reservation_date = Carbon::parse($request->reservation_date);
@@ -548,11 +546,7 @@ class ReservationController extends Controller
                 $reservation->fee += $fee_rate->rate;
             }
 
-            if(isset($tax_class)) {
-                $reservation->tax_included_price += $reservation->fee + ($reservation->fee * ($tax_class->rate/100));
-            } else {
-                $reservation->tax_included_price = $reservation->fee;
-            }
+            $reservation->tax_included_price = $reservation->fee;
 
             $customer = Customer::where('registration_card_number', $request->registration_card_number)->get()->first();
 
@@ -735,8 +729,6 @@ class ReservationController extends Controller
         try {
             DB::beginTransaction();
             $today = Carbon::today();
-            $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
-                ->whereDate('life_time_to', '>=', $today)->get()->first();
 
             $course = Course::find($request->course_id);
             $reservation_date = Carbon::parse($request->reservation_date);
@@ -775,11 +767,7 @@ class ReservationController extends Controller
                 $params['fee'] += $fee_rate->rate;
             }
 
-            if(isset($tax_class)) {
-                $params['tax_included_price'] = $params['fee'] + ($params['fee'] * ($tax_class->rate/100));
-            } else {
-                $params['tax_included_price'] = $params['fee'];
-            }
+            $params['tax_included_price'] = $params['fee'];
 
             $reservation->update($params);
 
