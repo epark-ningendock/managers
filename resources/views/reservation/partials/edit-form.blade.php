@@ -34,7 +34,7 @@
                     <option></option>
                     @foreach($courses as $course)
                         <option value="{{ $course->id }}" data-price="{{ $course->price }}"
-                                @if(old('course_id', $reservation->course_id or null) == $course->id) selected @endif>{{ $course->name }}</option>
+                                @if(old('course_id', $reservation->course_id) == $course->id) selected @endif>{{ $course->name }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif
