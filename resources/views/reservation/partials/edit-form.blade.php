@@ -152,7 +152,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{ $reservation->card_payment_amount or '-' }}</span>
+            <span id="total" class="ml-2">{{ $reservation->settlement_price or '-' }}円</span>
         </div>
 
     </div>
