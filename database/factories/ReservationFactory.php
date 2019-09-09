@@ -49,7 +49,7 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'order_id' => null,
         'settlement_price' => $faker->numberBetween(1000, 4000),
         'payment_method' => $faker->randomElement(['現金', 'クレジットカード']),
-        'cashpo_used_price' => null,
+        'cashpo_used_price' => $faker->numberBetween(1000, 4000),
         'amount_unsettled' => $faker->numberBetween(1000, 4000),
         'reservation_memo' => $faker->sentence(10),
         'todays_memo' => $faker->sentence(10),
