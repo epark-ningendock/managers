@@ -306,6 +306,9 @@ label {
 $color1: #f4f4f4;
 $color2: #3197EE;
 .form-entry {
+  .margin-none {
+    margin: 0;
+  }
   .checkbox label, .radio label {
     padding-left: 0px !important;
   }

@@ -68,9 +68,7 @@
         <th>連絡先</th>
         <th>状態</th>
         @if (Auth::user()->staff_auth->is_hospital === 3)
-          <th>操作</th>
-          <th>編集</th>
-          <th>削除</th>
+          <th></th>
         @endif
       </tr>
       </thead>
@@ -93,25 +91,21 @@
             <td>{{ HospitalEnums::getDescription($hospital->status) }}</td>
             @if (Auth::user()->staff_auth->is_hospital === 3)
               <td>
-                <a class="btn btn-success insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">
-                  <span class="fa fa-pencil"></i>  
+                <a class="btn btn-primary insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">
+                  <i><span class="fa fa-pencil"></span></i>
                 </a>
                 <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
                   {{ csrf_field() }}
                 </form>
-              </td>
-              <td>
                 @if ($hospital->status !== HospitalEnums::Delete)
                   <a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}"
-                    class="btn btn-primary">
-                  <i class="fa fa-edit text-bold"> 編集</i>
+                     class="btn btn-primary">
+                    <i class="fa fa-edit"> 編集</i>
                   </a>
                 @endif
-              </td>
-              <td>
                 @if ($hospital->status !== HospitalEnums::Delete)
-                  <button class="btn btn-danger delete-btn delete-popup-btn"
-                      data-id="{{ $hospital->id }}">
+                  <button class="btn  btn-primary delete-btn delete-popup-btn"
+                          data-id="{{ $hospital->id }}">
                     <i class="fa fa-trash"></i>
                   </button>
                 @endif

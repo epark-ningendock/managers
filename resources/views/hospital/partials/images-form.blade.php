@@ -1,5 +1,11 @@
 <div class="box box-primary form-box">
     <input type="hidden" name="lock_version" value="{{ $hospital->lock->lock_version or ''}}" />
+    @include('layouts.partials.error_pan')
+    @include('layouts.partials.message_lock')
+<!-- フラッシュメッセージ -->
+    @if (session('success'))
+        @include('layouts.partials.message')
+    @endif
     @includeIf('hospital.partials.nav-bar')
     <div class="form_title"><div class="number_circle">1</div> <span class="input_title">施設画像登録</span></div>
     <div class="form-group ">
@@ -225,7 +231,7 @@
                     @endif
                 </div>
                 <p class="file_delete_text">
-                    <a onclick="return confirm('このインタビューを削除しますか？')" href="{{ route('hospital.delete_interview', ['hospital' => $hospital->id, 'interview_id' => $interview->id]) }}">
+                    <a class="btn btn-mini btn-danger" onclick="return confirm('このインタビューを削除しますか？')" href="{{ route('hospital.delete_interview', ['hospital' => $hospital->id, 'interview_id' => $interview->id]) }}">
                         <i class="icon-trash icon-white"></i>
                         削除
                     </a>
