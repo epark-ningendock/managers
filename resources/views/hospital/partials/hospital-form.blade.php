@@ -62,7 +62,7 @@
               <span class="form_required">必須</span>
             </label>
             <input type="text" class="form-control" id="kana" name="kana"
-                   value="{{ old('name', (isset($hospital->kana) ) ? $hospital->kana : null) }}"
+                   value="{{ old('kana', (isset($hospital->kana) ) ? $hospital->kana : null) }}"
                    placeholder="{{ trans('messages.kana') }}">
             @if ($errors->has('kana')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('kana') }}</p> @endif
           </div>
@@ -299,7 +299,7 @@
 
           <div class="col-md-4">
             <div class="form-group ml-0 mr-0">
-              <input type="text" class="form-control" id="access{{$i}}" name="access{{$i}}"
+              <input type="text" class="form-control" id="access{{$i}}" name="access{{$i}}" placeholder="A4出口から、徒歩5分"
                      value="{{ old("access{$i}", (isset($hospital->{'access'. $i})) ? $hospital->{'access'. $i} : null) }}"/>
             </div>
           </div>
@@ -408,18 +408,6 @@
           @if ($errors->has('memo')) <p class="help-block">{{ $errors->first('memo') }}</p> @endif
         </div>
       </div>
-
-
-      <div class="form-group @if( $errors->has('memo'))  has-error @endif">
-        <label for="memo" class="col-md-2">備考</label>
-        <div class="col-md-10">
-            <textarea name="memo" id="memo" rows="5"
-                      class="form-control">{{ old('memo', (isset($hospital->memo)) ? $hospital->memo : null) }}</textarea>
-          @if ($errors->has('memo')) <p class="help-block">{{ $errors->first('memo') }}</p> @endif
-        </div>
-      </div>
-
-
 
       <div class="col-md-12 mt-5">
         <legend>{{ trans('messages.examination_system_name') }}</legend>
