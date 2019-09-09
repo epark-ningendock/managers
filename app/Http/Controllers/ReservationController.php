@@ -660,7 +660,7 @@ class ReservationController extends Controller
 
                 $qa = [];
                 while ($i <= 10) {
-                    $number = ($i <= 10) ? '0' . $i : 10;
+                    $number = ($i < 10) ? '0' . $i : 10;
                     $answer_fieldname = "answer$number";
                     $question_answer_fieldname = "question_answer$number";
                     if ($reservation_answer->$answer_fieldname) {
