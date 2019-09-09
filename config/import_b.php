@@ -33,4 +33,8 @@ return [
         'model' => \App\Customer::class,
         'import' => \App\Imports\CustomerImport::class,
     ],
+    'T_AP_M_COMMON_SETTING.csv' => [
+        'model' => \App\HospitalEmailSetting::class,
+        'import' => \App\Imports\HospitalEmailSettingImport::class,
+    ],
 ];
