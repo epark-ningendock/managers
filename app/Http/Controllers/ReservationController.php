@@ -232,16 +232,16 @@ class ReservationController extends Controller
             }
 
             $result = [
-                $reservation->completed_date->format('Y/m/d'),
+                $reservation->completed_date ? $reservation->completed_date->format('Y/m/d') : '',
                 $reservation->start_time_hour,
-                $reservation->reservation_date->format('Y/m/d'),
+                $reservation->reservation_date ? $reservation->reservation_date->format('Y/m/d') : '',
                 $reservation->customer->name,
-                $reservation->reservation_status->description,
+                $reservation->reservation_status ? $reservation->reservation_status->description : '',
                 $reservation->course->name,
                 $reservation->course->tax_included_price,
                 $reservation->adjustment_price,
                 $fee,
-                $reservation->payment_status->description,
+                $reservation->payment_status ? $reservation->payment_status->description : '',
                 $reservation->settlement_price,
                 $reservation->cashpo_used_price,
                 $reservation->acceptance_number,
