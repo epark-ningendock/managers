@@ -232,9 +232,9 @@ class ReservationController extends Controller
             }
 
             $result = [
-                $reservation->completed_date ? $reservation->completed_date->format('Y/m/d') : '',
-                $reservation->start_time_hour,
                 $reservation->reservation_date ? $reservation->reservation_date->format('Y/m/d') : '',
+                $reservation->start_time_hour,
+                $reservation->created_at->format('Y/m/d'),
                 $reservation->customer->name,
                 $reservation->reservation_status ? $reservation->reservation_status->description : '',
                 $reservation->course->name,
