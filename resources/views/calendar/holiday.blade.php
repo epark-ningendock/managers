@@ -72,19 +72,19 @@
           </div>
           <div class="to-month">
               <h2>対象月<span>設定する月をチェックしてください</span></h2>
-              <p><input type="checkbox" id="all-month" class="month"/><label for="all-month"> すべて選択</label></p>
+              <p><input type="checkbox" id="all-month" class="month" checked/><label for="all-month"> すべて選択</label></p>
               @foreach($months->keys() as $index => $month)
-                  <p><input type="checkbox" id="month-{{ $index }}" class="month" data-index="{{ $index }}"/><label for="month-{{ $index }}">{{ $month }}</label></p>
+                  <p><input type="checkbox" id="month-{{ $index }}" class="month" checked data-index="{{ $index }}"/><label for="month-{{ $index }}">{{ $month }}</label></p>
               @endforeach
           </div>
           <div class="to-week clearfix">
               <h2>対象週<span>設定する週をチェックしてください</span></h2>
-              <p><input type="checkbox" class="week" id="all-week" /><label for="all-week"> すべて選択</label></p>
-              <p><input type="checkbox" class="week" id="week-1" /> <label for="week-1">第1 (1日~7日)</label></p>
-              <p><input type="checkbox" class="week" id="week-2" /> <label for="week-2">第2 (8日~14日)</label></p>
-              <p><input type="checkbox" class="week" id="week-3" /> <label for="week-3">第3 (15日~21日)</label></p>
-              <p><input type="checkbox" class="week" id="week-4" /> <label for="week-4">第4 (22日~28日)</label></p>
-              <p><input type="checkbox" class="week" id="week-5" /> <label for="week-5">第5 (29日~)</label></p>
+              <p><input type="checkbox" class="week" id="all-week" checked /><label for="all-week"> すべて選択</label></p>
+              <p><input type="checkbox" class="week" id="week-1" checked /> <label for="week-1">第1週</label></p>
+              <p><input type="checkbox" class="week" id="week-2" checked /> <label for="week-2">第2週</label></p>
+              <p><input type="checkbox" class="week" id="week-3" checked /> <label for="week-3">第3週</label></p>
+              <p><input type="checkbox" class="week" id="week-4" checked /> <label for="week-4">第4週</label></p>
+              <p><input type="checkbox" class="week" id="week-5" checked /> <label for="week-5">第5週</label></p>
           </div>
           <button class="btn btn-primary pull-right" id="bulk-update">一括反映</button>
       </div>
@@ -116,11 +116,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($month->chunk(7) as $week)
-                  <tr>
+                @foreach($month->chunk(7) as $num => $week)
+                  <tr class="week-{{ $num + 1}}">
                     @foreach($week as $day)
                       @if($day != null)
-                        <td class="@if($day['date']->isSaturday()) saturday @elseif($day['date']->isSunday() || isset($day['holiday'])) holiday @endif">
+                        <td class="@if($day['date']->isSaturday() && !isset($day['holiday']))) saturday @elseif($day['date']->isSunday() || isset($day['holiday'])) holiday @endif">
                           <!-- date -->
                           <input type="hidden" name="days[]" value="{{ $day['date']->format('Ymd') }}" />
                           <input type="hidden" name="lock_versions[]" value="{{ $day['lock_version'] or '' }}" />
@@ -283,15 +283,15 @@
                                   ele.val(holiday);
                               } else {
                                   let weekKey = '#week-';
-                                  if(day >= 1 && day <= 7) {
+                                  if(ele.parent().parent().parent().attr('class') === 'week-1') {
                                       weekKey += 1;
-                                  } else if(day >= 8 && day <= 14) {
+                                  } else if(ele.parent().parent().parent().attr('class') === 'week-2') {
                                       weekKey += 2;
-                                  } if(day >= 15 && day <= 21) {
+                                  } else if(ele.parent().parent().parent().attr('class') === 'week-3') {
                                       weekKey += 3;
-                                  } if(day >= 22 && day <= 28) {
+                                  } else if(ele.parent().parent().parent().attr('class') === 'week-4') {
                                       weekKey += 4;
-                                  } else if(day > 28) {
+                                  } else if(ele.parent().parent().parent().attr('class') === 'week-5') {
                                       weekKey += 5;
                                   }
 

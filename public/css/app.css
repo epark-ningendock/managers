@@ -2500,10 +2500,17 @@ label {
   font-size: 1em;
 }
 
-.inline-radio.two-option-calendar {
+.inline-radio.two-option-middle {
   width: 30%;
   height: 34px;
   width: 250px;
+  font-size: 1em;
+}
+
+.inline-radio.two-option-large {
+  width: 30%;
+  height: 34px;
+  width: 400px;
   font-size: 1em;
 }
 
@@ -2559,6 +2566,10 @@ label {
 .form-entry {
   width: 80%;
   margin: 0 auto;
+}
+
+.form-entry .margin-none {
+  margin: 0;
 }
 
 .form-entry .checkbox label,
@@ -3013,6 +3024,10 @@ label.file-upload input[type="file"] {
 #calendar_bulk_box .bulk-weekday label[for="sunday-frame"],
 #calendar_bulk_box .bulk-weekday label[for="holiday-frame"] {
   color: #ea3f60;
+}
+
+.bg-changed {
+  background-color: #eae59a
 }
 
 #calendar_bulk_box .bulk-weekday select {

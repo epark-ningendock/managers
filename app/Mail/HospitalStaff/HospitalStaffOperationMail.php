@@ -7,10 +7,9 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class PasswordResetMail extends Mailable
+class HospitalStaffOperationMail extends Mailable
 {
     use Queueable, SerializesModels;
-
     public $data;
 
     /**
@@ -30,9 +29,10 @@ class PasswordResetMail extends Mailable
      */
     public function build()
     {
+        // dd($this->data);
         return $this
-        ->from('epark@example.com')
-        ->subject('【EPARK人間ドック】パスワード初期化手続きのお知らせ')
-        ->view('hospital_staff.email.password-reset');
+            ->from("unei@eparkdock.com")
+            ->subject($this->data['subject'])
+            ->view('hospital_staff.email.operation-mail');
     }
 }

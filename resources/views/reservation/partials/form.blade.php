@@ -296,7 +296,7 @@
 
 
     <div class="box-footer">
-        <a href="{{ url('/reception') }}" class="btn btn-default">戻る</a>
+        <a href="{{ url('/reservation') }}" class="btn btn-default">戻る</a>
         <button type="submit" class="btn btn-primary">作成</button>
     </div>                                              
 
@@ -489,9 +489,6 @@
         .date-row .daybox .txt {
             font-size: 11px;
             padding: 15px;
-        }
-        .year-label th {
-            background: transparent url({{ asset('img/calendar.png') }}) 10px 3px/30px no-repeat;
         }
 
         td.daybox.gray-background {

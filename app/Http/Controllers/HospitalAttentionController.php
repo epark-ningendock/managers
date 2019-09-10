@@ -175,10 +175,11 @@ class HospitalAttentionController extends Controller
                     $hospital->hospital_details()->forceDelete();
     
                     foreach ($minors as $index => $minor) {
+
                         $input_index = $minor_ids->search(function ($id) use ($minor) {
                             return $minor->id == $id;
                         });
-    
+
                         if ($input_index == -1 || ($minor->is_fregist == '1' && $minor_values[$input_index] == 0)
                             || ($minor->is_fregist == '0' && $minor_values[$input_index] == '')) {
                             continue;
@@ -188,9 +189,38 @@ class HospitalAttentionController extends Controller
                         $hospital_details = new HospitalDetail();
                         $hospital_details->hospital_id = $hospital->id;
                         $hospital_details->minor_classification_id = $minor->id;
+                        $minor_id = $minor->id;
                         if ($minor->is_fregist == '1') {
                             $hospital_details->select_status = 1;
-                        } else {
+                        } else if ($minor->is_fregist == '2') {
+                            if ($minor_values[$input_index]) {
+                                
+                                $validator = Validator::make(["minor_id_${minor_id}" => $minor_values[$input_index]], [
+                                    "minor_id_${minor_id}" => 'nullable|between:0,10'
+                                ]);
+                                
+                                if ($validator->fails()) {
+                                    DB::rollback();
+                                    throw new ValidationException($validator);
+                                    return redirect()->back();
+                                }
+                                $hospital_details->select_status = 1;
+                                $hospital_details->inputstring = $minor_values[$input_index];  
+                            } else {
+                                $hospital_details->select_status = 0;
+                                $hospital_details->inputstring = '';
+                            }
+                        }
+                         else {
+                            $validator = Validator::make(["minor_id_${minor_id}" => $minor_values[$input_index]], [
+                                "minor_id_${minor_id}" => 'nullable|between:0,2000'
+                            ]);
+                    
+                            if ($validator->fails()) {
+                                DB::rollback();
+                                throw new ValidationException($validator);
+                                return redirect()->back();
+                            }
                             $hospital_details->inputstring = $minor_values[$input_index];
                         }
                         $hospital_details->save();

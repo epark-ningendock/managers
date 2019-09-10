@@ -155,6 +155,7 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
   @section('script')
   <script>
       (function ($) {
+
           let index = 0;
           $('#add-fee-rate-button').click(function(e) {
             index += 1;
@@ -194,15 +195,43 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
               + "</div>"
               + "</div>");
           });
+
+          let fregistTwoText = $(".fregist-2-text").val();
+
+          $(".fregist-2-checkbox").ready(function(e) {
+            fregistTwoText = setFregistTwoValue(fregistTwoText);
+          });
+          
+          $(".fregist-2-checkbox").click(function(e) {
+            fregistTwoText = setFregistTwoValue(fregistTwoText);
+          });
+
+          function setFregistTwoValue(value) {
+            let newValue = value
+            if ($('.fregist-2-checkbox:checked').val()) {
+              $(".fregist-2-text").prop('disabled', false);
+              $(".fregist-2-text-dummy").prop('disabled', true);
+              $(".fregist-2-text").val(value);
+            } else {
+              newValue = $(".fregist-2-text").val();
+              $(".fregist-2-text").prop('disabled', true);
+              $(".fregist-2-text-dummy").prop('disabled', false);
+              $(".fregist-2-text").val('');
+            }
+            return newValue;
+          };
+
           /* ---------------------------------------------------
           // minor checkbox values
           -----------------------------------------------------*/
           (function () {
               const change = function(ele) {
                   if (ele.prop('checked')) {
-                      ele.next('input:hidden').remove();
+                      if (ele.next().next().attr('class') == 'dummy') {
+                        ele.next().next().remove();
+                      }
                   } else {
-                      $('<input type="hidden" name="minor_values[]" value="0"/>').insertAfter(ele.next('label'));
+                      $('<input type="hidden" class="dummy" name="minor_values[]" value="0"/>').insertAfter(ele.next('label'));
                   }
               };
 

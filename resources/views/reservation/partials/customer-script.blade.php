@@ -22,7 +22,7 @@
 
     				<div class="col-sm-3">
     					
-    					<button type="submit" class="btn btn-primary">{{  trans('search') }}</button>
+    					<button type="submit" class="btn btn-primary">{{  trans('messages.search') }}</button>
 
     				</div>
 
