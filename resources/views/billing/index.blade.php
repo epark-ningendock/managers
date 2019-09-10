@@ -18,7 +18,7 @@
 @section('search')
 
     <div class="excel-btn-wrapper mb-5 text-right">
-        <a href="" class="btn btn-primary btn-lg">請求一覧EXCELダウンロード</a>
+        <a href="{{ route('billing.excel.export') }}" class="btn btn-primary btn-lg">請求一覧EXCELダウンロード</a>
     </div>
 
     <form method="get" role="form" action="{{ route('billing.index') }}">

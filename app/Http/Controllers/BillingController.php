@@ -3,17 +3,35 @@
 namespace App\Http\Controllers;
 
 use App\Billing;
+use App\Exports\BillingExport;
 use App\Filters\Billing\BillingFilters;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Excel;
 
 class BillingController extends Controller
 {
+    private $excel;
+
+    public function __construct(Excel $excel)
+    {
+        $this->excel = $excel;
+    }
 
     public function index(BillingFilters $billingFilters)
     {
-        $billings = Billing::filter($billingFilters)->whereDate('from', '<', now()->addDay(21))->paginate(10);
+        $billings = Billing::filter($billingFilters)->whereDate('from', '<', now()->addDay(21))->paginate(100);          
 
         return view('billing.index', ['billings' => $billings]);
+    }
+
+
+    public function excelExport(BillingFilters $billingFilters)
+    {
+
+        $billings = Billing::filter($billingFilters)->whereDate('from', '<', now()->addDay(21))->get();
+
+        return $this->excel->download(new BillingExport($billings), 'billing.xlsx');
+
     }
 
     /**

@@ -158,6 +158,7 @@ Route::middleware('auth:staffs')->group(function () {
 */
 Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->group(function () {
 
+    Route::get('billing/excel-export', 'BillingController@excelExport')->name('billing.excel.export');
     Route::resource('billing', 'BillingController');
     Route::get('billing/status-update', 'BillingController@statusUpdate');
 

@@ -22,7 +22,7 @@
         </li>
         <li>
             <small class="text-bold label-text">プラン名</small>
-            <span class="value-text">{{ $billing->contractPlan->plan_name }}</span>
+            <span class="value-text">{{ $billing->contractPlan->plan_name ?? '' }}</span>
         </li>
         <li>
             <small class="text-bold label-text">月額契約料（税抜金額）</small>
