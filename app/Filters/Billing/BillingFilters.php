@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Builder;
 class BillingFilters extends QueryFilters
 {
 
+	public function billing_month( $billing_month = '2019 09' ) {
+		dd('here');
+	}
+
     public function status($status)
     {
         return $this->builder->where('status', $status);

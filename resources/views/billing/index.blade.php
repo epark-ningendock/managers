@@ -28,9 +28,14 @@
                 <div class="form-group">
                     <label for="billing_month">請求月</label>
                     <select class="form-control" id="type" name="billing_month">
-                        <option value=""></option>
-                        @foreach($billings as $billing)
-                            <option value="{{ $billing->to->format('Y-m-d') }}">{{ $billing->to->format('Y-m-d') }}</option>
+                        @foreach($selectBoxMonths as $selectBoxMonth)
+                            <option value="{{ $selectBoxMonth }}"
+                                    @if ( request('billing_month') && request('billing_month') == $selectBoxMonth)
+                                        selected="selected"
+                                    @else
+                                        {{ ( $filterDate->format('Y-m') == $selectBoxMonth ) ? 'selected="selected"' : '' }}
+                                    @endif
+                            >{{ $selectBoxMonth }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -88,45 +93,50 @@
 
 
     <div class="table-responsive">
-    <table id="example2" class="table table-bordered table-hover table-striped mb-5">
-        <thead>
-        <tr>
-            <th>物件番号</th>
-            <th>医療機関名</th>
-            <th>請求ステータス</th>
-            <th>プラン</th>
-            <th>請求金額</th>
-            <th>プラン金額（税抜金額）</th>
-            <th>手数料合計金額（税抜金額）</th>
-            <th>成果コース</th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        @if ( isset($billings) && count($billings) > 0 )
-            @foreach ($billings as $billing)
-                <tr class="billing-id-{{ $billing->id }}">
-                    <td>{{ $billing->hospital->contract_information->property_no ?? '' }}</td>
-                    <td>{{ $billing->hospital->name }}</td>
-                    <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
-                    <td>{{ $billing->contractPlan->plan_name }}</td>
-                    <td>{{ $billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() + $billing->contractPlan->monthly_contract_fee }}円</td>
-                    <td>{{ $billing->contractPlan->monthly_contract_fee }}円</td>
-                    <td>{{ $billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() }}円</td>
-                    <td>{{ $billing->contractPlan->fee_rate }}%</td>
-                    <td>
-                        <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
-                    </td>
-                </tr>
-            @endforeach
-        @else
+        <table id="example2" class="table table-bordered table-hover table-striped mb-5">
+            <thead>
             <tr>
-                <td colspan="8" class="text-center">{{ trans('messages.no_record') }}</td>
+                <th>物件番号</th>
+                <th>医療機関名</th>
+                <th>請求ステータス</th>
+                <th>プラン</th>
+                <th>請求金額</th>
+                <th>プラン金額（税抜金額）</th>
+                <th>手数料合計金額（税抜金額）</th>
+                <th>成果コース</th>
+                <th></th>
             </tr>
-        @endif
+            </thead>
+            <tbody>
+            @if ( isset($billings) && count($billings) > 0 )
+                @foreach ($billings as $billing)
+                    <tr class="billing-id-{{ $billing->id }}">
+                        <td>{{ $billing->hospital->contract_information->property_no ?? '' }}</td>
+                        <td>{{ $billing->hospital->name }}</td>
+                        <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
+                        <td>{{ $billing->contractPlan->plan_name }}</td>
+                        <td>{{ $billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() + $billing->contractPlan->monthly_contract_fee }}
+                            円
+                        </td>
+                        <td>{{ $billing->contractPlan->monthly_contract_fee }}円</td>
+                        <td>{{ $billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() }}
+                            円
+                        </td>
+                        <td>{{ $billing->contractPlan->fee_rate }}%</td>
+                        <td>
+                            <a href="{{ route('billing.show', ['billing' => $billing]) }}"
+                               class="btn btn-primary">明細</a>
+                        </td>
+                    </tr>
+                @endforeach
+            @else
+                <tr>
+                    <td colspan="8" class="text-center">{{ trans('messages.no_record') }}</td>
+                </tr>
+            @endif
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
     </div>
 
 
