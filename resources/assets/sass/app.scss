@@ -671,6 +671,37 @@ label.file-upload input[type="file"] {
   position: relative;
   padding: 0 0 40px 0;
 }
+#reservation_calendar {
+  th {
+    border: none;
+  }
+  .year-label {
+    background: #3c8dbc;
+    color: #ffffff;
+    line-height: 2em;
+    margin: 0;
+    font-size: 1.2em;
+    th {
+      line-height: 34px;
+      position: relative;
+      .calendar-picker {
+        position: absolute;
+        top: 2px;
+        left: 0px;
+      }
+    }
+  }
+  .txt {
+    font-size: 1.2em;
+  }
+}
+
+#calendar_bulk_box h4 {
+  background: #3c8dbc;
+  color: #ffffff;
+  line-height: 2em;
+  margin: 0;
+}
 
 #calendar_bulk_box {
   .calendar-period {
@@ -930,3 +961,47 @@ input[type=checkbox]:disabled + label:before { content: "\f096"; opacity: 0.4; c
     vertical-align: middle !important;
   }
 }
+
+#reservation {
+  .option-container {
+    label#checkbox{
+      font-size: 1em;
+      line-height: 3em;
+      padding: 0 0 0 8px;
+    }
+  }
+  #question-box{
+    font-size: 1em;
+    line-height: 3em;
+    padding: 0 0 0 8px;
+  }
+  .answer-group {
+    label {
+      line-height: 2em;
+      padding: 0 0 0 10px;
+    }
+    label:nth-child(4n) {
+      background: #f9f9f9;
+    }
+  }
+  #price {
+    font-size: 1.6em;
+    font-weight: bold;
+
+    display: inline-block;
+    padding: 0 0 0 30px;
+  }
+  .form-group {
+    margin: 0 0 30px 0;
+  }
+  label {
+    font-size: 1.2em;
+  }
+  .customer-info {
+    .ml-2 {
+      font-size: 1.2em;
+    }
+  }
+}
+
+

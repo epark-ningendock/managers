@@ -2500,20 +2500,6 @@ label {
   font-size: 1em;
 }
 
-.inline-radio.two-option-middle {
-  width: 30%;
-  height: 34px;
-  width: 250px;
-  font-size: 1em;
-}
-
-.inline-radio.two-option-large {
-  width: 30%;
-  height: 34px;
-  width: 400px;
-  font-size: 1em;
-}
-
 .form-control {
   border-radius: 3px;
   font-weight: normal;
@@ -2947,6 +2933,40 @@ label.file-upload input[type="file"] {
   padding: 0 0 40px 0;
 }
 
+#reservation_calendar th {
+  border: none;
+}
+
+#reservation_calendar .year-label {
+  background: #3c8dbc;
+  color: #ffffff;
+  line-height: 2em;
+  margin: 0;
+  font-size: 1.2em;
+}
+
+#reservation_calendar .year-label th {
+  line-height: 34px;
+  position: relative;
+}
+
+#reservation_calendar .year-label th .calendar-picker {
+  position: absolute;
+  top: 2px;
+  left: 0px;
+}
+
+#reservation_calendar .txt {
+  font-size: 1.2em;
+}
+
+#calendar_bulk_box h4 {
+  background: #3c8dbc;
+  color: #ffffff;
+  line-height: 2em;
+  margin: 0;
+}
+
 #calendar_bulk_box .calendar-period {
   background: #eeeeee;
   line-height: 50px;
@@ -3020,10 +3040,6 @@ label.file-upload input[type="file"] {
 #calendar_bulk_box .bulk-weekday label[for="sunday-frame"],
 #calendar_bulk_box .bulk-weekday label[for="holiday-frame"] {
   color: #ea3f60;
-}
-
-.bg-changed {
-  background-color: #eae59a
 }
 
 #calendar_bulk_box .bulk-weekday select {
@@ -3225,5 +3241,45 @@ input[type=checkbox]:disabled + label:before {
 
 .vertical-middle td {
   vertical-align: middle !important;
+}
+
+#reservation .option-container label#checkbox {
+  font-size: 1em;
+  line-height: 3em;
+  padding: 0 0 0 8px;
+}
+
+#reservation #question-box {
+  font-size: 1em;
+  line-height: 3em;
+  padding: 0 0 0 8px;
+}
+
+#reservation .answer-group label {
+  line-height: 2em;
+  padding: 0 0 0 10px;
+}
+
+#reservation .answer-group label:nth-child(4n) {
+  background: #f9f9f9;
+}
+
+#reservation #price {
+  font-size: 1.6em;
+  font-weight: bold;
+  display: inline-block;
+  padding: 0 0 0 30px;
+}
+
+#reservation .form-group {
+  margin: 0 0 30px 0;
+}
+
+#reservation label {
+  font-size: 1.2em;
+}
+
+#reservation .customer-info .ml-2 {
+  font-size: 1.2em;
 }
 

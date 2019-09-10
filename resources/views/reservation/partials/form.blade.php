@@ -1,6 +1,7 @@
+<div class="form-entry" id="reservation">
 <div class="box-body">
-    
-    <h3 class="section-title">受付情報</h3>
+
+    <h2 class="section-title">受付情報</h2>
     <br/><br/>
     <div class="row">
 
@@ -17,7 +18,7 @@
 
     </div>
     <div class="row">
-    
+
         <div class="col-md-3">
             <label for="course_id">検査コース</label>
         </div>
@@ -33,14 +34,14 @@
                     @endforeach
                 </select>
                 @if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif
-            </div>            
+            </div>
         </div>
 
     </div>
 
 
     <div class="row">
-    
+
         <div class="col-md-3">
             <label for="regular_price">コース料金</label>
         </div>
@@ -48,14 +49,14 @@
         <div class="col-md-9">
             <div class="form-group sm-form-group">
                 <span id="price">0円</span>
-            </div>          
+            </div>
         </div>
 
     </div>
 
 
     <div class="row form-group option-container-row">
-    
+
         <div class="col-md-3">
             <label id="checkbox option">オプション</label>
         </div>
@@ -76,11 +77,11 @@
             </div>
         </div>
 
-    </div>   
+    </div>
 
 
     <div class="row form-group question-container-row">
-    
+
         <div class="col-md-3">
             <label>質問設定</label>
         </div>
@@ -89,14 +90,14 @@
             <div class="question-container">
                 <div class="form-group ml-4">
                 </div>
-            </div>  
+            </div>
         </div>
 
-    </div>    
+    </div>
 
 
     <div class="row form-group">
-    
+
         <div class="col-md-3">
             <label for="adjustment_price">調整額</label>
         </div>
@@ -114,7 +115,7 @@
     </div>
 
     <div class="row form-group">
-    
+
         <div class="col-md-3">
             <label for="">合計金額</label>
         </div>
@@ -127,19 +128,19 @@
 
 
     <div class="row date-row-bar" style="display: none;">
-    
+
         <div class="col-md-3">
             <label for="reservation_date">受診日</label>
         </div>
 
         <div class="col-md-9">
             <div class="calendar-box" data-old="{{ old('reservation_date') }}">
-                
-            </div>   
+
+            </div>
             @if ($errors->has('reservation_date')) <p class="help-block text-danger" style="color: #ed5565;">{{ $errors->first('reservation_date') }}</p> @endif
         </div>
 
-    </div> 
+    </div>
 
 
     <div class="row form-group">
@@ -181,7 +182,7 @@
             </div>
         </div>
 
-    </div>   
+    </div>
 
     <div class="row form-group">
 
@@ -196,14 +197,12 @@
             </div>
         </div>
 
-    </div>   
+    </div>
 
-    <h3 class="section-title">受診者情報</h3>
-    <br/><a id="examinee-information" href="#">受診者検索</a>
-    <br/><br/>
+    <h2 class="section-title">受診者情報</h2>
+    <p><a class="btn btn-primary" id="examinee-information" href="#">受診者検索</a></p>
 
-    <div class="row">
-
+    <div class="row mt-5">
         <div class="col-md-3">
             <label for="">お名前 </label>
         </div>
@@ -259,7 +258,7 @@
             </div>
         </div>
 
-    </div> 
+    </div>
 
 
     <div class="row">
@@ -276,7 +275,7 @@
             </div>
         </div>
 
-    </div>     
+    </div>
 
     <div class="row">
 
@@ -298,8 +297,9 @@
     <div class="box-footer">
         <a href="{{ url('/reception') }}" class="btn btn-default">戻る</a>
         <button type="submit" class="btn btn-primary">作成</button>
-    </div>                                              
+    </div>
 
+</div>
 </div>
 
 @include('commons.datepicker')

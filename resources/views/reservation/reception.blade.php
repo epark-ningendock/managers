@@ -170,7 +170,7 @@
       {{ method_field('PATCH') }}
       <input type="hidden" id="reservation_status" name="reservation_status" />
       @include('layouts.partials.pagination-label', ['paginator' => $reservations])
-      <table id="example2" class="table table-bordered table-hover">
+      <table id="example2" class="table table-bordered table-hover no-border table-striped mb-5">
         <thead>
         <tr>
           <th>選択</th>
