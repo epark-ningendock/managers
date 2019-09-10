@@ -74,7 +74,7 @@
                                 {{--{{ $customer->email }}--}}
                             {{--</a>--}}
                         {{--</td>--}}
-                        <td>{{ $customer->sex->description }}</td>
+                        <td>{{ $customer->sex->description or '-' }}</td>
                         <td>
                             <a class="btn btn-primary"
                                href="{{ route('customer.edit', $customer->id) }}">
