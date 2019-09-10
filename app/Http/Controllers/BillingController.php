@@ -19,7 +19,7 @@ class BillingController extends Controller
 
     public function index(BillingFilters $billingFilters)
     {
-        $billings = Billing::filter($billingFilters)->whereDate('from', '<', now()->addDay(21))->paginate(100);          
+        $billings = Billing::filter($billingFilters)->whereDate('from', '<', now()->addDay(21))->paginate(10);          
 
         return view('billing.index', ['billings' => $billings]);
     }

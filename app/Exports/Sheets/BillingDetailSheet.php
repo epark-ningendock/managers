@@ -50,14 +50,17 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         $billing->hospital->contract_information->property_no,
                         $billing->hospital->contract_information->contractor_name,
                         $billing->hospital->name,
-                        $channel,
+                        $reservation->channel,
                         $reservation->completed_date->format('Y/m/d'),
                         $reservation->is_free_hp_link,
                         $billing->contractPlan->plan_name ?? '',
                         isset($reservation->reservation_options) ? '有' : '',
                         'Calculation Errors',
-                        $reservation->taxIncludedPrice->tax_rate,
-
+                        $reservation->tax_included_price + $reservation->tax_rate, //need to verify calculation1
+                        $reservation->fee,
+                        $billing->contractPlan->plan_name ?? '',
+                        (isset($reservation->site_code) && ( $reservation->site_code == 'HP') ) ? 'HPリンク' : $reservation->site_code,
+                        $reservation->fee_rate . '%',
                     ];
 
                 }
@@ -77,13 +80,16 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
             '法人名',
             '医療機関名',
             '媒体',
-            '媒体',
             '来院日',
             'HPリンクステータス',
             '予約コース',
             'オプション有無',
             '総額',
-            '税抜き価格',
+            '税抜き価格', //need to verify calculation1
+            '手数料_税抜',
+            'ROOKプラン',
+            'OP',
+            '手数料料率',
         ];
     }
 

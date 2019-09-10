@@ -30,9 +30,9 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'time_selected' => $faker->randomElement([0, 1]),
         'is_repeat' => $faker->randomElement([0, 1]),
         'is_representative' => $faker->randomElement([0, 1]),
-        'tax_included_price' => null,
+        'tax_included_price' => $faker->numberBetween(1000, 8000),
         'adjustment_price' => null,
-        'tax_rate' => null,
+        'tax_rate' => $faker->numberBetween(1, 30),
         'second_date' => null,
         'third_date' => null,
         'is_choose' => null,
@@ -58,6 +58,7 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'y_uid' => null,
         'fee' => $faker->numberBetween(2000, 5000),
         'lock_version' => 1,
+        'fee_rate' => $faker->numberBetween(1, 30),
     ];
 });
 
