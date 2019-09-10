@@ -23,6 +23,7 @@
 
     <form method="get" role="form" action="{{ route('billing.index') }}">
         {{ csrf_field() }}
+
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
@@ -30,10 +31,10 @@
                     <select class="form-control" id="type" name="billing_month">
                         @foreach($selectBoxMonths as $selectBoxMonth)
                             <option value="{{ $selectBoxMonth }}"
-                                    @if ( request('billing_month') && request('billing_month') == $selectBoxMonth)
+                                    @if ( request('billing_month') && (request('billing_month') == $selectBoxMonth) )
                                         selected="selected"
                                     @else
-                                        {{ ( $endedMonth->format('Y-m') == $selectBoxMonth ) ? 'selected="selected"' : '' }}
+                                        {{ ( empty(request('billing_month')) && $endedMonth->format('Y-m') == $selectBoxMonth ) ? 'selected="selected"' : '' }}
                                     @endif
                             >{{ $selectBoxMonth }}</option>
                         @endforeach

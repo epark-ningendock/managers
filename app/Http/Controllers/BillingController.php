@@ -19,41 +19,57 @@ class BillingController extends Controller
         $this->excel = $excel;
     }
 
-    public function index(BillingFilters $billingFilters)
+    public function billingDateFilter()
     {
+        
+        if ( request('billing_month') ) {
+            $date = Carbon::parse(request('billing_month') . '-' . 28);
+            $date =  ( $date->isCurrentMonth() ) ? now() : $date;
+
+        } else {
+            $date = now();
+        }
 
 
-        if ( date('d') < 21 ) {
+        if ( $date->day < 21 ) {
 
-	        $startedDate = now()->setDate(date('Y'), date('m') - 2, 21);
-	        $endedMonth = now()->setDate(date('Y'), date('m') - 1, 20);
+            $startMonthNumber = ( $date->isCurrentMonth() ) ? $date->copy()->subMonth(2)->month : $date->copy()->subMonth(1)->month;
+            $endMonthNumber = ( $date->isCurrentMonth() ) ? $date->copy()->subMonth(1)->month : $date->month;
+
+            $startedDate = $date->copy()->setDate($date->year, $startMonthNumber, 21);
+            $endedMonth = $date->copy()->setDate($date->year, $endMonthNumber, 20);
 
         } else {
 
-	        $endedMonth = now()->setDate(date('Y'), date('m'), 20);
-	        $startedDate = now()->setDate(date('Y'), date('m') - 1, 21);
+            $startedDate = $date->copy()->setDate($date->year, $date->copy()->subMonth(1)->month, 21);
+            $endedMonth = $date->copy()->setDate($date->year, $date->month, 20);
 
         }
-dump($startedDate);
-        dump($endedMonth);
 
+        $selectBoxMonths = [
+            $startedDate->copy()->subMonth(2)->format('Y-m'),
+            $startedDate->copy()->subMonth(1)->format('Y-m'),
+            $startedDate->format('Y-m'),
+            $startedDate->copy()->addMonth(1)->format('Y-m'),
+            $startedDate->copy()->addMonth(2)->format('Y-m'),
+            $startedDate->copy()->addMonth(3)->format('Y-m'),
+        ];
 
-	    $selectBoxMonths = [
-	        $startedDate->copy()->subMonth(2)->format('Y-m'),
-	        $startedDate->copy()->subMonth(1)->format('Y-m'),
-	        $startedDate->format('Y-m'),
-	        $startedDate->copy()->addMonth(1)->format('Y-m'),
-	        $startedDate->copy()->addMonth(2)->format('Y-m'),
-	        $startedDate->copy()->addMonth(3)->format('Y-m'),
-	    ];
+        return ['startedDate' => $startedDate->startOfDay(), 'endedDate' => $endedMonth->endOfDay(), 'selectBoxMonths' => $selectBoxMonths];
+    }
 
-        $billings = Billing::filter($billingFilters)->whereBetween('created_at', [$startedDate->startOfDay(), $endedMonth->endOfDay()])->paginate(10);
+    public function index(BillingFilters $billingFilters)
+    {
+
+        $dateFilter = $this->billingDateFilter();
+
+        $billings = Billing::filter($billingFilters)->whereBetween('created_at', [$dateFilter['startedDate'], $dateFilter['endedDate']])->paginate(10);
 
         return view('billing.index', [
             'billings' => $billings,
-            'startedDate' => $startedDate,
-            'endedMonth' => $endedMonth,
-            'selectBoxMonths' => $selectBoxMonths
+            'startedDate' => $dateFilter['startedDate'],
+            'endedMonth' => $dateFilter['endedDate'],
+            'selectBoxMonths' => $dateFilter['selectBoxMonths']
         ]);
     }
 
@@ -61,7 +77,7 @@ dump($startedDate);
     public function excelExport(BillingFilters $billingFilters)
     {
 
-        $billings = Billing::filter($billingFilters)->whereDate('from', '<', now()->addDay(21))->get();
+        $billings = Billing::filter($billingFilters)->whereDate('from', '<', $date->addDay(21))->get();
 
         return $this->excel->download(new BillingExport($billings), 'billing.xlsx');
 
