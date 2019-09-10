@@ -160,7 +160,7 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
 
     Route::get('billing/excel-export', 'BillingController@excelExport')->name('billing.excel.export');
     Route::resource('billing', 'BillingController');
-    Route::get('billing/status-update', 'BillingController@statusUpdate');
+    Route::get('billing/{billing}/status/update', 'BillingController@statusUpdate')->name('billing.status.update');
 
     /*
     |--------------------------------------------------------------------------

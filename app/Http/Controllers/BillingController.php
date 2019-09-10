@@ -6,6 +6,7 @@ use App\Billing;
 use App\Exports\BillingExport;
 use App\Filters\Billing\BillingFilters;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Excel;
 
 class BillingController extends Controller
@@ -90,9 +91,21 @@ class BillingController extends Controller
     }
 
 
-    public function statusUpdate(Request $request)
+    public function statusUpdate(Billing $billing, Request $request)
     {
-        dd('here');
+        try {
+
+            DB::beginTransaction();
+
+            $billing->update(['status' => $request->status]);
+
+
+            return redirect('billing')->with('success', trans('messages.updated', ['name' => trans('messages.names.billing')]));
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', trans('messages.update_error'));
+        }
     }
 
     /**
