@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Mail\HospitalStaff;
+namespace App\Mail\Reservation;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class PasswordResetMail extends Mailable
+class ReservationOperationMail extends Mailable
 {
     use Queueable, SerializesModels;
-
     public $data;
 
     /**
@@ -31,8 +30,8 @@ class PasswordResetMail extends Mailable
     public function build()
     {
         return $this
-        ->from('epark@example.com')
-        ->subject('【EPARK人間ドック】パスワード初期化手続きのお知らせ')
-        ->view('hospital_staff.email.password-reset');
+            ->from("unei@eparkdock.com")
+            ->subject("【EPARK人間ドック】検査コース登録・変更・削除のお知らせ")
+            ->view('reservation.email.operation-mail');
     }
 }

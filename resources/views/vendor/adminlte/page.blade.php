@@ -122,8 +122,7 @@
               </ul>
           @endif
           {{-- 医療機関スタッフの機能 --}}
-          {{-- TODO: 編集権限がない場合、非表示 --}}
-          @if ( request()->session()->get('hospital_id') && !(auth()->user()->staff_auth && ( (request()->is('reception')) || (request()->route()->getName() == 'reservation.create') || (request()->route()->getName() == 'reservation.edit')) ) )
+          @if ( request()->session()->get('hospital_id'))
             <li class="treeview @if (request()->session()->get('hospital_id')) active @endif">
                 <a href="#">
                   <i class="fa fa-list-ul"></i> <span>医療機関スタッフ機能</span>
@@ -137,7 +136,7 @@
                   <li class="{{ Request::segment(1) === '#' ? 'active' : null }}"><a href="#"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
                   <li class="{{ Request::segment(1) === 'course' ? 'active' : null }}"><a href="/course"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コース管理</a></li>
                   <li class="{{ Request::segment(1) === 'option' ? 'active' : null }}"><a href="/option"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コースオプション管理</a></li>
-                  <li class="{{ Request::segment(1) === 'reception' ? 'active' : null }}"><a href="/reception"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付一覧</a></li>
+                  <li class="{{ Request::segment(1) === 'reservation' ? 'active' : null }}"><a href="/reservation"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付一覧</a></li>
                   <li class="{{ Request::segment(1) === 'calendar' ? 'active' : null }}"><a href="/calendar"><i class="fa fa-calendar"></i>&nbsp;&nbsp;&nbsp;&nbsp;カレンダー管理</a></li>
                   <li class="{{ Request::segment(1) === 'email-template' ? 'active' : null }}"><a href="/email-template"><i class="fa fa-gears"></i>&nbsp;&nbsp;&nbsp;&nbsp;メールテンプレート管理</a></li>
                   {{-- EPARKスタッフのみ表示させる --}}

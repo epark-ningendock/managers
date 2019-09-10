@@ -67,11 +67,25 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                         id="{{ 'minor_id_'.$minor->id }}"
                         {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
                 <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label>
+                @if ($errors->has('minor_id_'.$minor->id)) <p class="has-error">{{ $errors->first('minor_id_'.$minor->id) }}</p> @endif
+              @elseif($minor->is_fregist == '2')
+                <div class="form-group mt-3">
+                  <input type="checkbox" 
+                    class="fregist-2-checkbox"
+                    id="{{ 'minor_id_'.$minor->id }}" 
+                    {{ $minor_value ? 'checked' : '' }}
+                    value="{{ $minor->id }}" />
+                  <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label> 
+                  <input type="hidden" class="fregist-2-text-dummy" name="minor_values[]" disabled value="" />
+                  <input type="text" class="fregist-2-text" name="minor_values[]" value="{{ $minor_value }}" />
+                </div>
+                @if ($errors->has('minor_id_'.$minor->id)) <p class="has-error">0文字から10文字にしてください。</p> @endif
               @else
-              <div class="form-group mt-3">
-                  <label>{{ $minor->name }}</label>
-                  <textarea class="form-control minor-text @if ($index > 0) mt-2 @endif" name="minor_values[]" cols="30" rows="5">{{ $minor_value }}</textarea>
-              </div>
+                <div class="form-group mt-3">
+                    <label>{{ $minor->name }}</label>
+                    <textarea class="form-control minor-text @if ($index > 0) mt-2 @endif" name="minor_values[]" id="{{ 'minor_id_'.$minor->id }}" cols="30" rows="5">{{ $minor_value }}</textarea>
+                    @if ($errors->has('minor_id_'.$minor->id)) <p class="has-error">0文字から2000文字にしてください。</p> @endif
+                </div>
               @endif
             @endforeach
           </td>
@@ -153,6 +167,7 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
   @section('script')
   <script>
       (function ($) {
+
           let index = 0;
           $('#add-fee-rate-button').click(function(e) {
             index += 1;
@@ -192,15 +207,43 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
               + "</div>"
               + "</div>");
           });
+
+          let fregistTwoText = $(".fregist-2-text").val();
+
+          $(".fregist-2-checkbox").ready(function(e) {
+            fregistTwoText = setFregistTwoValue(fregistTwoText);
+          });
+          
+          $(".fregist-2-checkbox").click(function(e) {
+            fregistTwoText = setFregistTwoValue(fregistTwoText);
+          });
+
+          function setFregistTwoValue(value) {
+            let newValue = value
+            if ($('.fregist-2-checkbox:checked').val()) {
+              $(".fregist-2-text").prop('disabled', false);
+              $(".fregist-2-text-dummy").prop('disabled', true);
+              $(".fregist-2-text").val(value);
+            } else {
+              newValue = $(".fregist-2-text").val();
+              $(".fregist-2-text").prop('disabled', true);
+              $(".fregist-2-text-dummy").prop('disabled', false);
+              $(".fregist-2-text").val('');
+            }
+            return newValue;
+          };
+
           /* ---------------------------------------------------
           // minor checkbox values
           -----------------------------------------------------*/
           (function () {
               const change = function(ele) {
                   if (ele.prop('checked')) {
-                      ele.next('input:hidden').remove();
+                      if (ele.next().next().attr('class') == 'dummy') {
+                        ele.next().next().remove();
+                      }
                   } else {
-                      $('<input type="hidden" name="minor_values[]" value="0"/>').insertAfter(ele.next('label'));
+                      $('<input type="hidden" class="dummy" name="minor_values[]" value="0"/>').insertAfter(ele.next('label'));
                   }
               };
 

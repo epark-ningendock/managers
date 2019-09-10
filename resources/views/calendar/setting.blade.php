@@ -362,39 +362,42 @@
                               const day = parseInt(ele.data('day'));
                               const isPublicHoliday = ele.data('public-holiday');
 
-                              if (isPublicHoliday && holidayFrame) {
-                                    ele.val(holidayFrame);
-                                    if (holidayFrame == 0) {
-                                        ele.parents('.data-box').addClass('bg-gray');
-                                      } else {
-                                        ele.parents('.data-box').removeClass('bg-gray');
-                                        ele.parents('.data-box').addClass('bg-changed');
-                                      }
-                              } else {
-                                  let weekKey = '#week-';
-                                  if(ele.parent().parent().parent().attr('class') === 'week-1') {
-                                      weekKey += 1;
-                                  } else if(ele.parent().parent().parent().attr('class') === 'week-2') {
-                                      weekKey += 2;
-                                  } else if(ele.parent().parent().parent().attr('class') === 'week-3') {
-                                      weekKey += 3;
-                                  } else if(ele.parent().parent().parent().attr('class') === 'week-4') {
-                                      weekKey += 4;
-                                  } else if(ele.parent().parent().parent().attr('class') === 'week-5') {
-                                      weekKey += 5;
-                                  }
+                              let weekKey = '#week-';
+                              if(ele.parent().parent().parent().attr('class') === 'week-1') {
+                                  weekKey += 1;
+                              } else if(ele.parent().parent().parent().attr('class') === 'week-2') {
+                                  weekKey += 2;
+                              } else if(ele.parent().parent().parent().attr('class') === 'week-3') {
+                                  weekKey += 3;
+                              } else if(ele.parent().parent().parent().attr('class') === 'week-4') {
+                                  weekKey += 4;
+                              } else if(ele.parent().parent().parent().attr('class') === 'week-5') {
+                                  weekKey += 5;
+                              }
 
-                                  // 曜日の値が入っていない場合は、そのまま返す
+                              if (isPublicHoliday && holidayFrame) {
+                                if (!holidayFrame) return
+
+                                if ($(weekKey).prop('checked')) {
+                                  ele.val(holidayFrame);
+                                  if (holidayFrame == 0) {
+                                    ele.parents('.data-box').addClass('bg-gray');
+                                  } else {
+                                    ele.parents('.data-box').removeClass('bg-gray');
+                                    ele.parents('.data-box').addClass('bg-changed');
+                                  }
+                                }
+                              } else {
                                   if (!frames[ele.parents('td').index()]) return
 
                                   if ($(weekKey).prop('checked')) {
-                                      ele.val(frames[ele.parents('td').index()]);
-                                      if (frames[ele.parents('td').index()] == 0) {
-                                        ele.parents('.data-box').addClass('bg-gray');
-                                      } else {
-                                        ele.parents('.data-box').removeClass('bg-gray');
-                                        ele.parents('.data-box').addClass('bg-changed');
-                                      }
+                                    ele.val(frames[ele.parents('td').index()]);
+                                    if (frames[ele.parents('td').index()] == 0) {
+                                      ele.parents('.data-box').addClass('bg-gray');
+                                    } else {
+                                      ele.parents('.data-box').removeClass('bg-gray');
+                                      ele.parents('.data-box').addClass('bg-changed');
+                                    }
                                   }
                               }
                           });
