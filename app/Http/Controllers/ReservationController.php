@@ -56,7 +56,7 @@ class ReservationController extends Controller
     }
 
     /**
-     * 一覧表示.
+     * reception list
      *
      * @param Request $request
      *
@@ -64,42 +64,11 @@ class ReservationController extends Controller
      */
     public function index(Request $request)
     {
-
-        if (isset(Auth::user()->staff_auth->is_invoice) && Auth::user()->staff_auth->is_invoice === Permission::None) {
-            return view('staff.edit-password-personal');
-        }
-
-        $params = $request->all();
-
-        $query = $this->reservation
-            ->byRequest($request)
-            ->with(['hospital', 'course', 'customer'])
-            ->orderBy('created_at', 'desc');
-
-        $reservations = $query->paginate(env('PAGINATE_NUMBER'));
-
-        return view('reservation.index', compact('reservations', 'params', 'request'));
-    }
-
-    public function operation(Request $request)
-    {
-        return $this->export_file->operationCsv($request);
-    }
-
-    /**
-     * reception list
-     *
-     * @param Request $request
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function reception(Request $request)
-    {
         $this->validate($request, [
+            'reservation_created_start_date' => 'nullable|date',
+            'reservation_created_end_date' => 'nullable|date',
             'reservation_start_date' => 'nullable|date',
             'reservation_end_date' => 'nullable|date',
-            'completed_start_date' => 'nullable|date',
-            'completed_end_date' => 'nullable|date',
             'customer_name' => 'nullable|max:64',
         ]);
 
@@ -113,15 +82,20 @@ class ReservationController extends Controller
         $params = $request->input();
 
         // for initial default value if it has not been set empty purposely
-        if (!$request->has('completed_start_date')) {
-            $params['completed_start_date'] = Carbon::now()->format('Y/m/d');
+        if (!$request->has('reservation_start_date')) {
+            $params['reservation_start_date'] = Carbon::now()->format('Y/m/d');
         }
-        if (!$request->has('completed_end_date')) {
-            $params['completed_end_date'] = Carbon::now()->format('Y/m/d');
+        if (!$request->has('reservation_end_date')) {
+            $params['reservation_end_date'] = Carbon::now()->format('Y/m/d');
         }
 
-        return view('reservation.reception', compact('reservations', 'courses'))
+        return view('reservation.index', compact('reservations', 'courses'))
             ->with($params);
+    }
+
+    public function operation(Request $request)
+    {
+        return $this->export_file->operationCsv($request);
     }
 
     /**
@@ -141,6 +115,14 @@ class ReservationController extends Controller
             'course.course_questions',
         ]);
 
+        if ($request->input('reservation_created_start_date', '') != '') {
+            $query->whereDate('created_at', '>=', $request->input('reservation_created_start_date'));
+        }
+
+        if ($request->input('reservation_created_end_date', '') != '') {
+            $query->whereDate('created_at', '<=', $request->input('reservation_created_end_date'));
+        }
+
         if ($request->input('reservation_start_date', '') != '') {
             $query->whereDate('reservation_date', '>=', $request->input('reservation_start_date'));
         }
@@ -149,17 +131,6 @@ class ReservationController extends Controller
             $query->whereDate('reservation_date', '<=', $request->input('reservation_end_date'));
         }
 
-        if ($request->has('completed_start_date') && $request->input('completed_start_date', '') != '') {
-            $query->whereDate('completed_date', '>=', $request->input('completed_start_date'));
-        } elseif (!$request->has('completed_start_date')) {
-            $query->whereDate('completed_date', '>=', Carbon::today()->startOfDay());
-        }
-
-        if ($request->has('completed_end_date') && $request->input('completed_end_date', '') != '') {
-            $query->whereDate('completed_date', '<=', $request->input('completed_end_date'));
-        } elseif (!$request->has('completed_end_date')) {
-            $query->whereDate('completed_date', '<=', Carbon::today()->endOfDay());
-        }
 
         if ($request->input('customer_name', '') != '') {
             $query->whereHas('Customer', function ($q) use ($request) {
@@ -227,10 +198,10 @@ class ReservationController extends Controller
     public function reception_csv(Request $request)
     {
         $this->validate($request, [
+            'reservation_created_start_date' => 'nullable|date',
+            'reservation_created_end_date' => 'nullable|date',
             'reservation_start_date' => 'nullable|date',
             'reservation_end_date' => 'nullable|date',
-            'completed_start_date' => 'nullable|date',
-            'completed_end_date' => 'nullable|date',
         ]);
         $query = $this->get_reception_list_query($request);
 
@@ -261,16 +232,16 @@ class ReservationController extends Controller
             }
 
             $result = [
-                $reservation->completed_date->format('Y/m/d'),
+                $reservation->reservation_date ? $reservation->reservation_date->format('Y/m/d') : '',
                 $reservation->start_time_hour,
-                $reservation->reservation_date->format('Y/m/d'),
+                $reservation->created_at->format('Y/m/d'),
                 $reservation->customer->name,
-                $reservation->reservation_status->description,
+                $reservation->reservation_status ? $reservation->reservation_status->description : '',
                 $reservation->course->name,
                 $reservation->course->tax_included_price,
                 $reservation->adjustment_price,
                 $fee,
-                $reservation->payment_status->description,
+                $reservation->payment_status ? $reservation->payment_status->description : '',
                 $reservation->settlement_price,
                 $reservation->cashpo_used_price,
                 $reservation->acceptance_number,
@@ -574,7 +545,7 @@ class ReservationController extends Controller
 
             DB::commit();
 
-            return redirect('reception')->with('success', trans('messages.reservation.complete_success'));
+            return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
 
         } catch (\Exception $i) {
             DB::rollback();
@@ -689,7 +660,7 @@ class ReservationController extends Controller
 
                 $qa = [];
                 while ($i <= 10) {
-                    $number = ($i <= 10) ? '0' . $i : 10;
+                    $number = ($i < 10) ? '0' . $i : 10;
                     $answer_fieldname = "answer$number";
                     $question_answer_fieldname = "question_answer$number";
                     if ($reservation_answer->$answer_fieldname) {
@@ -781,7 +752,7 @@ class ReservationController extends Controller
 
             DB::commit();
 
-            return redirect('reception')->with('success', trans('messages.reservation.update_success'));
+            return redirect('reservation')->with('success', trans('messages.reservation.update_success'));
 
         } catch (\Exception $i) {
             DB::rollback();

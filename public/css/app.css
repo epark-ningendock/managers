@@ -2554,6 +2554,10 @@ label {
   margin: 0 auto;
 }
 
+.form-entry .margin-none {
+  margin: 0;
+}
+
 .form-entry .checkbox label,
 .form-entry .radio label {
   padding-left: 0px !important;
@@ -2721,12 +2725,15 @@ legend {
 
 .main_image_area {
   position: relative;
+  width: 400px;
+  height: 260px;
   text-align: center;
+  margin: 0 auto;
 }
 
 .main_image_area img {
-  width: 300px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -2734,11 +2741,15 @@ legend {
 .sub_image_area {
   position: relative;
   text-align: center;
+  width: 200px;
+  background: #ccc;
+  margin: 0 auto;
+  height: 150px;
 }
 
 .sub_image_area img {
-  width: 150px;
-  height: 120px;
+  width: 100%;
+  height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -2758,11 +2769,14 @@ legend {
 .interview_image_area {
   position: relative;
   text-align: center;
+  width: 300px;
+  height: 200px;
+  margin: 0 auto;
 }
 
 .interview_image_area img {
-  width: 300px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -2770,11 +2784,14 @@ legend {
 .speciality_image_area {
   position: relative;
   text-align: center;
+  width: 300px;
+  height: 200px;
+  margin: 0 auto;
 }
 
 .speciality_image_area img {
-  width: 300px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -2782,11 +2799,14 @@ legend {
 .tab_image_area {
   position: relative;
   text-align: center;
+  width: 300px;
+  height: 200px;
+  margin: 0 auto;
 }
 
 .tab_image_area img {
-  width: 300px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -2861,9 +2881,12 @@ label.file-upload input[type="file"] {
 
 .file_delete_text {
   text-align: left;
-  padding: 10px 0 0 0;
   font-size: 12px;
   bottom: 0px;
+  position: absolute;
+  left: 0px;
+  padding: 0;
+  margin: 0px;
 }
 
 .btn-normal {
@@ -3281,5 +3304,20 @@ input[type=checkbox]:disabled + label:before {
 
 #reservation .customer-info .ml-2 {
   font-size: 1.2em;
+}
+
+.contract-show legend {
+  float: left;
+  width: 30%;
+  clear: both;
+}
+
+.contract-show div {
+  width: 70%;
+  float: left;
+}
+
+.contract-show h2 {
+  clear: both;
 }
 

@@ -128,7 +128,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{ $reservation->card_payment_amount or '-' }}</span>
+            <span id="total" class="ml-2">{{ $reservation->settlement_price or '-' }}円</span>
         </div>
 
     </div>
@@ -141,7 +141,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{  $reservation->cashpo_used_price or '-' }}</span>
+            <span id="total" class="ml-2">{{  $reservation->cashpo_used_price or '-' }}円</span>
         </div>
 
     </div>
@@ -472,7 +472,7 @@
 
 
     <div class="box-footer">
-        <a href="{{ url('/reception') }}" class="btn btn-default">戻る</a>
+        <a href="{{ url('/reservation') }}" class="btn btn-default">戻る</a>
         <button type="submit" class="btn btn-primary">更新</button>
     </div>
 
