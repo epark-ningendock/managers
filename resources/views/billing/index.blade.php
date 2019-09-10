@@ -33,7 +33,7 @@
                                     @if ( request('billing_month') && request('billing_month') == $selectBoxMonth)
                                         selected="selected"
                                     @else
-                                        {{ ( $filterDate->format('Y-m') == $selectBoxMonth ) ? 'selected="selected"' : '' }}
+                                        {{ ( $endedMonth->format('Y-m') == $selectBoxMonth ) ? 'selected="selected"' : '' }}
                                     @endif
                             >{{ $selectBoxMonth }}</option>
                         @endforeach

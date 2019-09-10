@@ -34,6 +34,9 @@ class BillingController extends Controller
 	        $startedDate = now()->setDate(date('Y'), date('m') - 1, 21);
 
         }
+dump($startedDate);
+        dump($endedMonth);
+
 
 	    $selectBoxMonths = [
 	        $startedDate->copy()->subMonth(2)->format('Y-m'),
@@ -44,9 +47,14 @@ class BillingController extends Controller
 	        $startedDate->copy()->addMonth(3)->format('Y-m'),
 	    ];
 
-        $billings = Billing::filter($billingFilters)->whereBetween('created_at', [$startedDate, $endedMonth])->paginate(10);
+        $billings = Billing::filter($billingFilters)->whereBetween('created_at', [$startedDate->startOfDay(), $endedMonth->endOfDay()])->paginate(10);
 
-        return view('billing.index', ['billings' => $billings, 'filterDate' => $startedDate, 'selectBoxMonths' => $selectBoxMonths]);
+        return view('billing.index', [
+            'billings' => $billings,
+            'startedDate' => $startedDate,
+            'endedMonth' => $endedMonth,
+            'selectBoxMonths' => $selectBoxMonths
+        ]);
     }
 
 
