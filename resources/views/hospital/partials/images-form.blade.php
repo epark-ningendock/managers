@@ -245,7 +245,7 @@
                         </div>
                     @endif
                 </div>
-                <p class="file_delete_text">
+                <p class="mt-3">
                     <a class="btn btn-mini btn-danger" onclick="return confirm('このインタビューを削除しますか？')" href="{{ route('hospital.delete_interview', ['hospital' => $hospital->id, 'interview_id' => $interview->id]) }}">
                         <i class="icon-trash icon-white"></i>
                         削除
