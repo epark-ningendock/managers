@@ -3232,3 +3232,18 @@ input[type=checkbox]:disabled + label:before {
   vertical-align: middle !important;
 }
 
+.contract-show legend {
+  float: left;
+  width: 30%;
+  clear: both;
+}
+
+.contract-show div {
+  width: 70%;
+  float: left;
+}
+
+.contract-show h2 {
+  clear: both;
+}
+
