@@ -28,9 +28,14 @@
                 <div class="form-group">
                     <label for="billing_month">請求月</label>
                     <select class="form-control" id="type" name="billing_month">
-                        <option value=""></option>
-                        @foreach($billings as $billing)
-                            <option value="{{ $billing->to->format('Y-m-d') }}">{{ $billing->to->format('Y-m-d') }}</option>
+                        @foreach($selectBoxMonths as $selectBoxMonth)
+                            <option value="{{ $selectBoxMonth }}"
+                                    @if ( request('billing_month') && request('billing_month') == $selectBoxMonth)
+                                        selected="selected"
+                                    @else
+                                        {{ ( $filterDate->format('Y-m') == $selectBoxMonth ) ? 'selected="selected"' : '' }}
+                                    @endif
+                            >{{ $selectBoxMonth }}</option>
                         @endforeach
                     </select>
                 </div>

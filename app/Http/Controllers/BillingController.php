@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Billing;
 use App\Exports\BillingExport;
 use App\Filters\Billing\BillingFilters;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Excel;
@@ -20,9 +21,32 @@ class BillingController extends Controller
 
     public function index(BillingFilters $billingFilters)
     {
-        $billings = Billing::filter($billingFilters)->whereDate('from', '<', now()->addDay(21))->paginate(10);          
 
-        return view('billing.index', ['billings' => $billings]);
+
+        if ( date('d') < 21 ) {
+
+	        $startedDate = now()->setDate(date('Y'), date('m') - 2, 21);
+	        $endedMonth = now()->setDate(date('Y'), date('m') - 1, 20);
+
+        } else {
+
+	        $endedMonth = now()->setDate(date('Y'), date('m'), 20);
+	        $startedDate = now()->setDate(date('Y'), date('m') - 1, 21);
+
+        }
+
+	    $selectBoxMonths = [
+	        $startedDate->copy()->subMonth(2)->format('Y-m'),
+	        $startedDate->copy()->subMonth(1)->format('Y-m'),
+	        $startedDate->format('Y-m'),
+	        $startedDate->copy()->addMonth(1)->format('Y-m'),
+	        $startedDate->copy()->addMonth(2)->format('Y-m'),
+	        $startedDate->copy()->addMonth(3)->format('Y-m'),
+	    ];
+
+        $billings = Billing::filter($billingFilters)->whereBetween('created_at', [$startedDate, $endedMonth])->paginate(10);
+
+        return view('billing.index', ['billings' => $billings, 'filterDate' => $startedDate, 'selectBoxMonths' => $selectBoxMonths]);
     }
 
 
