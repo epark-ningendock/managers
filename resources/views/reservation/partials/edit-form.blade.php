@@ -34,7 +34,7 @@
                     <option></option>
                     @foreach($courses as $course)
                         <option value="{{ $course->id }}" data-price="{{ $course->price }}"
-                                @if(old('course_id', $reservation->course_id or null) == $course->id) selected @endif>{{ $course->name }}</option>
+                                @if(old('course_id', $reservation->course_id) == $course->id) selected @endif>{{ $course->name }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif
@@ -152,7 +152,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{ $reservation->card_payment_amount or '-' }}</span>
+            <span id="total" class="ml-2">{{ $reservation->settlement_price or '-' }}円</span>
         </div>
 
     </div>
@@ -165,7 +165,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{  $reservation->cashpo_used_price or '-' }}</span>
+            <span id="total" class="ml-2">{{  $reservation->cashpo_used_price or '-' }}円</span>
         </div>
 
     </div>
@@ -496,8 +496,8 @@
 
 
     <div class="box-footer">
-        <a href="{{ url('/reception') }}" class="btn btn-default">戻る</a>
-        <button type="submit" class="btn btn-primary">作成</button>
+        <a href="{{ url('/reservation') }}" class="btn btn-default">戻る</a>
+        <button type="submit" class="btn btn-primary">更新</button>
     </div>
 
 </div>
@@ -697,9 +697,6 @@
         .date-row .daybox .txt {
             font-size: 11px;
             padding: 15px;
-        }
-        .year-label th {
-            background: transparent url({{ asset('img/calendar.png') }}) 10px 3px/30px no-repeat;
         }
 
         td.daybox.gray-background {

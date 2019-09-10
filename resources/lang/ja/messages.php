@@ -192,6 +192,7 @@ return [
         'complete_success'                 => '予約は完了しました。',
         'complete_error'                   => 'エラーが発生しました。',
         'status_update_success'            => '予約ステータスが更新されました。',
+        'update_success'                   => '予約が更新されました。',
         'status_update_error'              => 'エラーが発生しました。',
         'invalid_reservation_status'       => '無効な操作。',
         'not_reservable'                   => '予約可能な日付ではありません。',

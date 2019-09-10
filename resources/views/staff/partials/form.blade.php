@@ -3,7 +3,6 @@
   use App\Enums\Authority;
   use \App\Enums\Permission;
 @endphp
-@include('layouts.partials.error_pan')
 
 @include('layouts.partials.message')
 <div class="form-entry">
