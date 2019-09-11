@@ -155,7 +155,7 @@ class BillingController extends Controller {
 
 			$billing->update( [ 'status' => $request->status ] );
 
-			$hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hosptial_id )->first();
+			$hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
 
 			if ( $hospitalEmailSetting ) {
 
