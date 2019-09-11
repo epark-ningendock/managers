@@ -61,6 +61,7 @@ class HospitalEmailSettingController extends Controller
 
             if (!empty($messages)) {
                 DB::rollback();
+                $request->session()->flash('_old_input', $request->all());
                 return redirect()->back()->withErrors($messages);
             }
 
