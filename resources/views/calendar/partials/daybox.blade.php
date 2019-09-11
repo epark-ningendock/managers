@@ -1,15 +1,16 @@
 
 @if ( $calendars && count($calendars) > 0  )
 	<div class="paginate-box">
-			<a href="#" class="prev-next-link prev-link fl" style="float: left;">&lt;&lt;</a>
-			<a href="#" class="prev-next-link next-link fr" style="float: right;">&gt;&gt;</a>
+			<a href="#" class="prev-next-link prev-link fl btn btn-primary" style="float: left;">&lt;&lt;</a>
+			<a href="#" class="prev-next-link next-link fr btn btn-primary" style="float: right;">&gt;&gt;</a>
 	</div>
+	<div id="reservation_calendar">
 	<table class="date-row table table-bordered hor-date-table">
 
 		<thead>
 			<tr class="year-label">
 				<th colspan="7">
-					<a href="#" class="calendar-picker" style="float: left;">
+					<a href="#" class="calendar-picker">
 						<div class="input-group date datepicker" data-date-format="yyyy-mm-dd" data-provide="datepicker">
 							<input type="hidden" id="startdate"/>
 							<div class="input-group-addon">
@@ -53,5 +54,5 @@
 
 
 </table>
-
+	</div>
 @endif
