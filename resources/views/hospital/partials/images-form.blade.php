@@ -228,8 +228,8 @@
         @foreach($interviews as $key => $interview)
             <div class="interview_detail_{{$loop->iteration}} interview_list">
                 <div>
-                    {{Form::label('interview['. $key .']', '質問',['class' => 'form_label'])}}
-                    {{Form::text('interview['. $key .'][question]', is_null($interview) ? '' : $interview->question, ['class' => 'form-control'])}}
+                    {{Form::label('interview['. $interview->id .']', '質問',['class' => 'form_label'])}}
+                    {{Form::text('interview['. $interview->id .'][question]', is_null($interview) ? '' : $interview->question, ['class' => 'form-control'])}}
                     @if ($errors->has('interview['. $key .'][question]'))
                         <div class="error_message">
                         {{ $errors->first('interview['. $key .'][question]') }}
@@ -237,11 +237,11 @@
                     @endif
                 </div>
                 <div>
-                    {{Form::label('interview['. $key .'][answer]', '回答',['class' => 'form_label'])}}
-                    {{Form::text('interview['. $key .'][answer]', is_null($interview) ? '' : $interview->answer, ['class' => 'form-control'])}}
-                    @if ($errors->has('interview['. $key .'][answer]'))
+                    {{Form::label('interview['. $interview->id .'][answer]', '回答',['class' => 'form_label'])}}
+                    {{Form::text('interview['. $interview->id .'][answer]', is_null($interview) ? '' : $interview->answer, ['class' => 'form-control'])}}
+                    @if ($errors->has('interview['. $interview->id .'][answer]'))
                         <div class="error_message">
-                            {{ $errors->first('interview['. $key .'][answer]') }}
+                            {{ $errors->first('interview['. $interview->id .'][answer]') }}
                         </div>
                     @endif
                 </div>
