@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Billing;
+use App\BillingMailHistory;
 use App\Exports\BillingExport;
 use App\Filters\Billing\BillingFilters;
+use App\HospitalEmailSetting;
+use App\Mail\Billing\BillingConfirmationSendMail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Excel;
 
 class BillingController extends Controller
@@ -145,7 +149,37 @@ class BillingController extends Controller
 
             DB::beginTransaction();
 
-            $billing->update(['status' => $request->status]);
+            if ( $request->status !== 4 ) {
+
+	            $billing->update( [ 'status' => $request->status ] );
+
+	            $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', 1 )->first();
+
+	            $confirmMailComposition = [
+		            'subject' => '請求確認メール',
+		            'content' => '請求確認メール'
+	            ];
+
+	            $email = Mail::to( [
+		            $hospitalEmailSetting->billing_email1,
+		            $hospitalEmailSetting->billing_email2,
+		            $hospitalEmailSetting->billing_email3,
+		            $hospitalEmailSetting->billing_fax_number
+	            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition ) );
+
+	            $billingMailHistory = new BillingMailHistory();
+
+	            $billingMailHistory->create( [
+		            'hospital_id' => $hospitalEmailSetting->hospital_id,
+		            'to_address1' => $hospitalEmailSetting->billing_email1,
+		            'to_address2' => $hospitalEmailSetting->billing_email2,
+		            'to_address3' => $hospitalEmailSetting->billing_email3,
+		            'cc_name'     => $hospitalEmailSetting->hospital->name,
+		            'fax'         => $hospitalEmailSetting->billing_fax_number,
+		            'mail_type'   => ( $hospitalEmailSetting->mail_type == 1 ) ? 1 : 2,
+	            ] );
+
+            }
 
 
             return redirect('billing')->with('success', trans('messages.updated', ['name' => trans('messages.names.billing')]));
