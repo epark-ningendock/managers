@@ -11,7 +11,7 @@
       <p>検査コース名：{{ implode(", ", $data['reservation']->course()->get()->pluck('name')->toArray()) }}</p>
       <p>オプション：{{ implode(", ", Option::whereIn('id', $data['reservation']->reservation_options()->get()->pluck('option_id'))->get()->pluck('name')->toArray()) }}</p>
       <p>調整金額：{{ $data['reservation']->adjustment_price }}</p>
-      <p>金額：{{ $data['reservation']->tax_included_price }}</p>
+      <p>金額：{{ $total }}</p>
       <p>健保：{{ $data['reservation']->is_health_insurance ? '◯' : '-' }}</p>
       <p>受付ステータス：受付確定</p>
       <br>
