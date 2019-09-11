@@ -65,7 +65,7 @@ class HospitalAttentionController extends Controller
                         $fee_rates_array[$index] = [
                             'id' => $fee_rate_id,
                             'rate' => $request->input('rates')[$index],
-                            'from_date' => new Carbon($request->input('from_dates')[$index])
+                            'from_date' => $request->input('from_dates')[$index] ? new Carbon($request->input('from_dates')[$index]) : null
                         ];
                     }
                     
@@ -112,7 +112,7 @@ class HospitalAttentionController extends Controller
                         $pre_payment_fee_rates_array[$index] = [
                             'id' => $pre_payment_fee_rate_id,
                             'rate' => $request->input('pre_payment_rates')[$index],
-                            'from_date' => new Carbon($request->input('pre_payment_from_dates')[$index])
+                            'from_date' => $request->input('pre_payment_from_dates')[$index] ? new Carbon($request->input('pre_payment_from_dates')[$index]) : null
                         ];
                     }
         
