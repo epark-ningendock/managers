@@ -3285,11 +3285,18 @@ input[type=checkbox]:disabled + label:before {
 
 #reservation .answer-group label:nth-child(4n) {
   background: #f9f9f9;
+  width: 100%;
 }
 
 #reservation #price {
   font-size: 1.6em;
   font-weight: bold;
+  display: inline-block;
+  padding: 0 0 0 30px;
+}
+
+#reservation #total {
+  font-size: 1.4em;
   display: inline-block;
   padding: 0 0 0 30px;
 }

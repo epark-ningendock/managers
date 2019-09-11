@@ -17,7 +17,7 @@
 
     </div>
 
-    <div class="form-group">
+    <div class="form-group @if ($errors->has('course_id')) has-error @endif">
         <label for="course_id">検査コース<span class="form_required">必須</span></label>
         <select class="w20em form-control" name="course_id" id="course_id">
             <option></option>
