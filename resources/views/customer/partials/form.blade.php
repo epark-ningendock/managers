@@ -86,7 +86,7 @@
                             <label>
                                 <input type="radio" name="sex"
                                        value="{{ $gender }}"
-                                       @if ( old('sex', (isset($customer_detail) && $customer_detail->sex->value)) == $gender)
+                                       @if ( old('sex', (isset($customer_detail) && isset($customer_detail->sex->value)) ? $customer_detail->sex->value : '') == $gender)
                                        checked="checked"
                                     @endif
                                 />
