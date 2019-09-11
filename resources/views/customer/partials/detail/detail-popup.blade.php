@@ -7,7 +7,7 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#basic-information" data-toggle="tab">{{ trans('messages.basic_information') }}</a></li>
                         <li><a href="#accepted-guidance-history" data-toggle="tab">{{ trans('messages.accepted_guidance_history') }}</a></li>
-                        <li><a href="##name-identification" data-toggle="tab">{{ trans('messages.name_identification') }}</a></li>
+                        <li id="name-identification-tab"><a href="#name-identification" data-toggle="tab">{{ trans('messages.name_identification') }}</a></li>
                     </ul>
                 </div>
             </div>

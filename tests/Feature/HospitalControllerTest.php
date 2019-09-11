@@ -63,15 +63,7 @@ class HospitalControllerTest extends TestCase
         return array_merge([
             'name'                        => 'Hospital ' . $this->faker->company,
             'kana'                        => $this->faker->randomElement([ 'asc', 'desc' ]),
-            'postcode'                    => $this->faker->randomElement([
-                '95050',
-                '92053',
-                '92050',
-                '95250',
-                '95250',
-                '25050',
-                '92050',
-            ]),
+            'postcode'                    => $this->faker->postcode,
             'district_code_id'            => $this->faker->randomNumber(),
             'address1'                    => $this->faker->address,
             'address2'                    => $this->faker->address,

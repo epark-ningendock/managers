@@ -21,6 +21,7 @@ use App\Station;
 use App\FeeRate;
 use Illuminate\Auth\SessionGuard;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -126,25 +127,60 @@ class HospitalController extends Controller
         //
     }
 
-
     public function edit(Hospital $hospital)
     {
         $prefectures = Prefecture::all();
         $district_codes = DistrictCode::all();
         $medical_examination_systems = MedicalExaminationSystem::all();
         $medical_treatment_times = MedicalTreatmentTime::where('hospital_id', $hospital->id)->get();
-        $stations = Station::all();
-        $rails = Rail::all();
+        $rails = [];
+        if ($hospital->prefecture_id) {
+            $rails = Prefecture::find($hospital->prefecture_id)->rails()->get();
+        }
+        $five_stations = [];
+        for ($i = 1; $i <= 5; $i++) {
+            if ($hospital->{'rail' . $i}) {
+                array_push($five_stations, Rail::find($hospital->{'rail' . $i})->stations()->get());
+            } else {
+                array_push($five_stations, []);
+            }
+        }
 
         return view('hospital.edit', [
             'hospital' => $hospital,
             'prefectures' => $prefectures,
             'district_codes' => $district_codes,
             'medical_examination_systems' => $medical_examination_systems,
-            'stations' => $stations,
+            'five_stations' => $five_stations,
             'rails' => $rails,
             'medical_treatment_times' => $medical_treatment_times,
         ]);
+    }
+
+    /**
+     * 都道府県にひもづく、線路を取得
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function findRails(Request $request) {
+        $response = array();
+        $response["status"] = \Illuminate\Http\Response::HTTP_OK;
+        $response["data"] = Prefecture::find($request->prefecture_id)->rails()->get();
+        return response()->json($response);
+    }
+
+    /**
+     * 線路にひもづく、駅を取得
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function findStations(Request $request) {
+        $response = array();
+        $response["status"] = \Illuminate\Http\Response::HTTP_OK;
+        $response["data"] = Rail::find($request->rail_id)->stations()->get();
+        return response()->json($response);
     }
 
     /**
@@ -176,8 +212,8 @@ class HospitalController extends Controller
                     }
 		        }
 	        }
-	        DB::commit();
-	        return redirect( '/hospital' )->with( 'success', '更新成功' );
+            DB::commit();
+            return redirect()->route('hospital.edit', ['id' => $hospital->id])->with('success', trans('messages.updated', ['name' => trans('messages.basic_information')]));
         } catch (Exception $e) {
 	        DB::rollback();
 	        $request->session()->flash('error', trans('messages.update_error'));

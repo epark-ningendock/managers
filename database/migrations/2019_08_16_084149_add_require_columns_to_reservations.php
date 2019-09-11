@@ -29,6 +29,7 @@ class AddRequireColumnsToReservations extends Migration
             $table->string('payment_method')->nullable()->change();
             $table->string('payment_status')->nullable()->change();
             $table->string('trade_id')->nullable()->change();
+            $table->date('patment_date')->nullable();
         });
 
         // for unsupported change column types

@@ -124,7 +124,7 @@ class HospitalAttentionController extends Controller
                         foreach ($sorted_pre_payment_fee_rates as $key => $value) {
                             
                             $validator = Validator::make(["pre_payment_rate" => $value['rate'], "pre_payment_from_date" => $value['from_date']], [
-                                'pre_payment_rate' => 'required|numeric|digits_between:1,10',
+                                'pre_payment_rate' => 'required|numeric|between:0,99',
                                 'pre_payment_from_date' => 'required|date'
                             ]);
                     
@@ -175,10 +175,11 @@ class HospitalAttentionController extends Controller
                     $hospital->hospital_details()->forceDelete();
     
                     foreach ($minors as $index => $minor) {
+
                         $input_index = $minor_ids->search(function ($id) use ($minor) {
                             return $minor->id == $id;
                         });
-    
+
                         if ($input_index == -1 || ($minor->is_fregist == '1' && $minor_values[$input_index] == 0)
                             || ($minor->is_fregist == '0' && $minor_values[$input_index] == '')) {
                             continue;
@@ -188,9 +189,38 @@ class HospitalAttentionController extends Controller
                         $hospital_details = new HospitalDetail();
                         $hospital_details->hospital_id = $hospital->id;
                         $hospital_details->minor_classification_id = $minor->id;
+                        $minor_id = $minor->id;
                         if ($minor->is_fregist == '1') {
                             $hospital_details->select_status = 1;
-                        } else {
+                        } else if ($minor->is_fregist == '2') {
+                            if ($minor_values[$input_index]) {
+                                
+                                $validator = Validator::make(["minor_id_${minor_id}" => $minor_values[$input_index]], [
+                                    "minor_id_${minor_id}" => 'nullable|between:0,10'
+                                ]);
+                                
+                                if ($validator->fails()) {
+                                    DB::rollback();
+                                    throw new ValidationException($validator);
+                                    return redirect()->back();
+                                }
+                                $hospital_details->select_status = 1;
+                                $hospital_details->inputstring = $minor_values[$input_index];  
+                            } else {
+                                $hospital_details->select_status = 0;
+                                $hospital_details->inputstring = '';
+                            }
+                        }
+                         else {
+                            $validator = Validator::make(["minor_id_${minor_id}" => $minor_values[$input_index]], [
+                                "minor_id_${minor_id}" => 'nullable|between:0,2000'
+                            ]);
+                    
+                            if ($validator->fails()) {
+                                DB::rollback();
+                                throw new ValidationException($validator);
+                                return redirect()->back();
+                            }
                             $hospital_details->inputstring = $minor_values[$input_index];
                         }
                         $hospital_details->save();
@@ -202,8 +232,13 @@ class HospitalAttentionController extends Controller
                 DB::rollback();
                 throw $e;
             }
-            $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.attetion_information')]));
-            return redirect('hospital');
+
+            $middles = HospitalMiddleClassification::all();
+            $hospital = Hospital::findOrFail($hospital_id);
+            $feeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', FeeRate::FEE_RATE)->orderBy('from_date', 'asc')->get();
+            $prePaymentFeeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', FeeRate::PRE_PAYMENT_FEE_RATE)->orderBy('from_date', 'asc')->get();
+            return redirect()->route('hospital.attention.create', ['hospital_id' => $hospital_id])->with('success', trans('messages.updated', ['name' => trans('messages.names.attetion_information')]));
+
         } catch (Exception $e) {
             return redirect()->back()->withErrors(trans('messages.create_error'))->withInput();
         }

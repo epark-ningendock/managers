@@ -18,7 +18,7 @@
       <div class="col-md-3">
         <div class="form-group">
           <label for="name">キーワード</label>
-          <input type="text" class="form-control" id="search_text" name="search_text" placeholder="" value="{{ $search_text or '' }}">
+          <input type="text" class="form-control" id="search_text" name="search_text" value="{{ $search_text or '' }}">
         </div>
       </div>
 

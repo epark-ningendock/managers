@@ -34,7 +34,7 @@
                     <option></option>
                     @foreach($courses as $course)
                         <option value="{{ $course->id }}" data-price="{{ $course->price }}"
-                                @if(old('course_id', $reservation->course_id or null) == $course->id) selected @endif>{{ $course->name }}</option>
+                                @if(old('course_id', $reservation->course_id) == $course->id) selected @endif>{{ $course->name }}</option>
                     @endforeach
                 </select>
                 @if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif
@@ -51,12 +51,10 @@
         </div>
 
         <div class="col-md-9">
-            <div class="form-group sm-form-group @if ($errors->has('tax_included_price')) has-error @endif" style="margin-right: 21px;">
-                <input type="number" class="form-control" name="tax_included_price"
-                       id="tax_included_price" placeholder="コース料金"
-                       value="{{ old('tax_included_price', $reservation->tax_included_price) }}"/> <span
-                        class="ml-2" style="position: absolute;top: 0;right: -20px;">円</span>
-                @if ($errors->has('tax_included_price')) <p class="help-block">{{ $errors->first('tax_included_price') }}</p> @endif
+            <div class="form-group sm-form-group">
+                <div class="form-group sm-form-group">
+                    <span id="price">0円</span>
+                </div>
             </div>
         </div>
 
@@ -154,7 +152,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{ $reservation->card_payment_amount or '-' }}</span>
+            <span id="total" class="ml-2">{{ $reservation->settlement_price or '-' }}円</span>
         </div>
 
     </div>
@@ -167,7 +165,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{  $reservation->cashpo_used_price or '-' }}</span>
+            <span id="total" class="ml-2">{{  $reservation->cashpo_used_price or '-' }}円</span>
         </div>
 
     </div>
@@ -445,7 +443,7 @@
 
         <div class="col-md-9">
             <span id="" class="ml-2">
-                {{ $reservation->customer->sex->description }}
+                {{ isset($reservation->customer->sex) ? $reservation->customer->sex->description : '-' }}
             </span>
         </div>
 
@@ -499,7 +497,7 @@
 
     <div class="box-footer">
         <a href="{{ url('/reservation') }}" class="btn btn-default">戻る</a>
-        <button type="submit" class="btn btn-primary">作成</button>
+        <button type="submit" class="btn btn-primary">更新</button>
     </div>
 
 </div>
@@ -536,6 +534,7 @@
                         total += parseInt($(ele).data('price'));
                     });
                     $('#total').html(total + '円');
+                    $('#price').html(coursePrice + '円');
                 }
 
                 const processUI = function () {
@@ -609,7 +608,7 @@
                                             }
                                         }
                                     }
-                                })
+                                });
                                 if (flag) {
                                     $('.question-container').show();
                                 }
@@ -698,9 +697,6 @@
         .date-row .daybox .txt {
             font-size: 11px;
             padding: 15px;
-        }
-        .year-label th {
-            background: transparent url({{ asset('img/calendar.png') }}) 10px 3px/30px no-repeat;
         }
 
         td.daybox.gray-background {

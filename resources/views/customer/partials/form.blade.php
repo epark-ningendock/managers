@@ -139,9 +139,9 @@
                         <option value=""></option>
                         @foreach($prefectures as $prefecture)
                             <option value="{{ $prefecture->id }}"
-                                @if(isset($customer_detail) && $prefecture->id === $customer_detail->prefecture_id )
+                                @if(old('prefecture_id', (isset($customer_detail)? $customer_detail->prefecture_id : null)) == $prefecture->id )
                                     selected="selected"
-                                    @endif
+                                @endif
                             >{{ $prefecture->name }}</option>
                         @endforeach
                     </select>
@@ -153,28 +153,28 @@
 
 
         <tr>
-            <td class="gray-cell-bg">{{ trans('messages.address1') }}</td>
+            <td class="gray-cell-bg">{{ trans('messages.address') }}</td>
             <td colspan="3">
-                <div class="form-group @if ($errors->has('address1')) has-error @endif">
-                    <input type="text" class="form-control p-street-address" name="address1" id="address1"
-                           value="{{ old('address1', ( isset($customer_detail) ? $customer_detail->address1 : '')) }}"/>
+                <div class="form-group row mt-2 @if ($errors->has('address1')) has-error @endif">
+                    <label id="address1" class="col-sm-2 mt-2">{{ trans('messages.address1') }}</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control p-street-address" name="address1" id="address1"
+                               value="{{ old('address1', ( isset($customer_detail) ? $customer_detail->address1 : '')) }}"/>
+                    </div>
+
                     @if ($errors->has('address1')) <p class="help-block">{{ $errors->first('address1') }}</p> @endif
                 </div>
-            </td>
-        </tr>
 
-        <tr>
-            <td class="gray-cell-bg">{{ trans('messages.address2') }}</td>
-            <td colspan="3">
-                <div class="form-group @if ($errors->has('address2')) has-error @endif">
-                    <input type="text" class="form-control p-extended-address" name="address2" id="address2"
-                           value="{{ old('address2', ( isset($customer_detail) ? $customer_detail->address2 : '')) }}"/>
+                <div class="form-group row mt-4 @if ($errors->has('address2')) has-error @endif">
+                    <label id="address2" class="col-sm-2 mt-2">{{ trans('messages.address2') }}</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control p-extended-address" name="address2" id="address2"
+                            value="{{ old('address2', ( isset($customer_detail) ? $customer_detail->address2 : '')) }}"/>
+                    </div>
                     @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
                 </div>
             </td>
         </tr>
-
-
 
         <tr>
             <td class="gray-cell-bg">{{ trans('messages.email') }}</td>

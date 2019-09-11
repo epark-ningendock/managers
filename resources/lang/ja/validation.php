@@ -139,6 +139,9 @@ return [
             'alpha_num' => 'パスワードは、8~20文字以内の半角英数字でご入力ください。',
             'different' => '新しいパスワードと現在のパスワードは、異なるものを指定してください。'
         ],
+        'billing_fax_number' => [
+            'regex' => 'fax番号は、7~14文字以内,半角数字,記号（-のみ利用可能）でご入力ください。'
+        ],
         'email' => [
             'email' => '正しいメールアドレスの書式でご入力ください。'
         ],
@@ -229,7 +232,7 @@ return [
         'confirm' => 'オプションの説明',
         'tax_classification' => '税区分',
         'calendar_name' => 'カレンダー名',
-        'is_calendar_display' => 'カレンダー受付可否',
+        'is_calendar_display' => 'カレンダー表示',
         'title' => '件名',
         'text' => '本文',
         'contents' => '本文',
@@ -264,10 +267,10 @@ return [
         'internal_memo' => '医療機関備考',
         'registration_card_number' => '診察券番号',
         'tel' => '電話番号',
-        'family_name_kana' => 'お名前 かな ( 姓 )',
-        'first_name_kana' => 'お名前 かな ( 名 )',
-        'family_name' => 'お名前 ( 姓 )',
-        'first_name' => 'お名前 ( 名 )',
+        'family_name_kana' => 'お名前 かな (せい)',
+        'first_name_kana' => 'お名前 かな (めい)',
+        'family_name' => 'お名前 (姓)',
+        'first_name' => 'お名前 (名)',
         'pvad' => 'PV数',
         'customer_id' => '顧客',
         'pvad' => 'PV数',
@@ -293,6 +296,6 @@ return [
         'rate' => '手数料率',
         'from_date' => '適用期間',
         'pre_payment_rate' => '手数料率',
-        'pre_payment_from_date' => '適用期間',
+        'pre_payment_from_date' => '適用期間'
     ],
 ];

@@ -46,7 +46,7 @@ class HospitalEmailSettingRequest extends FormRequest
             'billing_email1' => 'nullable|email',
             'billing_email2' => 'nullable|email',
             'billing_email3' => 'nullable|email',
-            'billing_fax_number' => 'nullable|digits_between:8,11',
+            'billing_fax_number' => 'nullable|regex:/^\d{3}-?\d{4}$/',
         ];
     }
 

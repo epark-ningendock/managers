@@ -116,6 +116,8 @@ Route::middleware('auth:staffs')->group(function () {
         |--------------------------------------------------------------------------
         */
         Route::resource('/hospital', 'HospitalController')->except(['show']);
+        Route::post('/hospital/find-rails', 'HospitalController@findRails')->name('hospital.find-rails');
+        Route::post('/hospital/find-stations', 'HospitalController@findStations')->name('hospital.find-stations');
 
         /*
         |--------------------------------------------------------------------------
@@ -213,6 +215,7 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     | Customer Routes
     |--------------------------------------------------------------------------
     */
+    Route::post('customer/{id}/integration', 'CustomerController@integration')->name('customer.integration');
     Route::post('customer/email-history/{customer_id}', 'CustomerController@email_history')->name('customer.email.history');
     Route::resource('customer', 'CustomerController');
     Route::post('customer/detail', 'CustomerController@detail')->name('customer.detail');
@@ -229,7 +232,6 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     */
     Route::get('/reception/csv', 'ReservationController@reception_csv')->name('reception.csv');
     Route::patch('/reception/reservation_status', 'ReservationController@reservation_status')->name('reservation.bulk_status');
-    Route::get('/reception', 'ReservationController@reception');
 
     Route::patch('/reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
     Route::delete('/reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');

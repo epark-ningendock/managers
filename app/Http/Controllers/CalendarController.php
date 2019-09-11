@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Calendar;
 use App\CalendarDay;
 use App\Holiday;
+use App\Hospital;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -18,9 +19,14 @@ use Illuminate\Support\Facades\Session;
 use App\Reservation;
 use Yasumi\Yasumi;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Calander\CalendarSettingNotificationMail;
+use Illuminate\Support\Facades\Auth;
 
 class CalendarController extends Controller
 {
+    const EPARK_MAIL_ADDRESS = "dock_all@eparkdock.com";
+
     /**
      * Display a listing of the calendar.
      *
@@ -51,7 +57,16 @@ class CalendarController extends Controller
     public function store(CalendarFormRequest $request)
     {
         try {
-            $this->saveCalendar($request, null);
+            $calendar = $this->saveCalendar($request, null);
+
+            $data = [
+                'calendar' => $calendar,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
+                'processing' => '登録'
+             ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.calendar')]));
             return redirect('calendar');
         } catch (\Exception $e) {
@@ -110,6 +125,7 @@ class CalendarController extends Controller
 
             Session::flash('success', trans('messages.created', ['name' => trans('messages.names.calendar')]));
             DB::commit();
+            return $calendar;
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
@@ -127,6 +143,15 @@ class CalendarController extends Controller
     {
         try {
             $this->saveCalendar($request, $calendar);
+
+            $data = [
+                'calendar' => $calendar,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
+                'processing' => '更新'
+             ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar')]));
             return redirect('calendar');
         } catch (StaleModelLockingException $e) {
@@ -146,6 +171,26 @@ class CalendarController extends Controller
      */
     public function destroy(Calendar $calendar)
     {
+        try {
+            $calendar = Calendar::findOrFail($calendar->id);
+            $calendar->delete();
+    
+            $data = [
+                'calendar' => $calendar,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
+                'processing' => '削除'
+             ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+
+            return redirect('calendar')->with('error', trans('messages.deleted', ['name' => trans('messages.names.calendar')]));
+        } catch (StaleModelLockingException $e) {
+            Session::flash('error', trans('messages.model_changed_error'));
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Session::flash('error', trans('messages.update_error'));
+            return redirect('calendar');
+        }
     }
 
     /**
@@ -224,7 +269,7 @@ class CalendarController extends Controller
         }
 
         $start = Carbon::now()->startOfMonth();
-
+        
         return view('calendar.setting')
             ->with('calendar', $calendar)
             ->with('months', $months)
@@ -240,6 +285,7 @@ class CalendarController extends Controller
      */
     public function updateSetting($id, CalendarFormRequest $request)
     {
+
         try {
             DB::beginTransaction();
 
@@ -261,7 +307,7 @@ class CalendarController extends Controller
             $reservation_frames = collect($request->input('reservation_frames'));
 
             while ($start->lt($end)) {
-                if ($start->isPast()) {
+                if ($start->isPast() && !$start->isToday()) {
                     $start->addDay(1);
                     continue;
                 }
@@ -289,6 +335,14 @@ class CalendarController extends Controller
             }
 
             $calendar->calendar_days()->saveMany($calendar_days);
+
+            $data = [
+                'calendar' => $calendar,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
+                'processing' => 'カレンダー設定の更新'
+             ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
 
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar_setting')]));
             DB::commit();
@@ -445,6 +499,15 @@ class CalendarController extends Controller
             }
 
             Holiday::insert($new_holidays->toArray());
+            $hospital = Hospital::findOrFail(1);
+            
+            $data = [
+                'hospital' => $hospital,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】休日設定更新のお知らせ',
+                'processing' => '更新'
+             ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
 
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.holiday_setting')]));
             DB::commit();
@@ -475,8 +538,8 @@ class CalendarController extends Controller
                 }
             }
 
-            // 8 weeks range
-            $end_date = $started_date->copy()->addDay(55);
+            // 16 weeks range
+            $end_date = $started_date->copy()->addDay(111);
 
 
 
@@ -492,7 +555,7 @@ class CalendarController extends Controller
             $period = CarbonPeriod::create($started_date, $end_date);
             $dates = $period->toArray();
             $calendars = collect();
-
+            
             foreach ($dates as $date) {
                 $calendar_day = $calendar_days->first(function ($day) use ($date) {
                     return $day->date->isSameDay($date);

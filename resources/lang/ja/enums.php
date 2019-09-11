@@ -57,8 +57,8 @@ return [
     ],
 
     CalendarDisplay::class => [
-        CalendarDisplay::Hide => '非表示',
-        CalendarDisplay::Show => '表示'
+        CalendarDisplay::Hide => 'カレンダー非表示',
+        CalendarDisplay::Show => 'カレンダー表示'
     ],
 
     ReservationStatus::class => [
@@ -69,7 +69,7 @@ return [
     ],
 
     PaymentStatus::class => [
-        PaymentStatus::TEMPORARY_SALE => '仮売上',
+        PaymentStatus::TEMPORARY_SALE => '仮受付',
         PaymentStatus::ACTUAL_SALE => '実売上',
         PaymentStatus::CANCELLATION => '取消',
         PaymentStatus::ERROR => 'エラー'

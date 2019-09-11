@@ -36,8 +36,8 @@ use App\Imports\MiddleClassificationImport;
 use App\Imports\MinorClassificationImport;
 use App\Imports\OptionImport;
 use App\Imports\PrefectureImport;
-use App\Imports\PvRecordImport;
 use App\Imports\PrefectureRailImport;
+use App\Imports\PvRecordImport;
 use App\Imports\RailImport;
 use App\Imports\RailStationImport;
 use App\Imports\RailwayCompanyImport;
@@ -49,11 +49,11 @@ use App\MiddleClassification;
 use App\MinorClassification;
 use App\Option;
 use App\Prefecture;
+use App\PvRecord;
 use App\Rail;
 use App\RailwayCompany;
 use App\Staff;
 use App\Station;
-use App\PvRecord;
 
 return [
     // ステージングでのインポートの為、一部コメントアウトしています

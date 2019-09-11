@@ -81,7 +81,6 @@ class ClassificationController extends Controller
             $item->update(['status' => Status::Deleted]);
             DB::commit();
         } catch (\Exception $e) {
-            dd($e);
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
         }

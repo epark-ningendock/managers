@@ -46,12 +46,8 @@
         </div>
 
         <div class="col-md-9">
-            <div class="form-group sm-form-group @if ($errors->has('tax_included_price')) has-error @endif" style="margin-right: 21px;">
-                <input type="number" class="form-control" name="tax_included_price"
-                       id="tax_included_price" placeholder="コース料金"
-                       value="{{ old('tax_included_price') }}"/> <span
-                        class="ml-2" style="position: absolute;top: 0;right: -20px;">円</span>
-                @if ($errors->has('tax_included_price')) <p class="help-block">{{ $errors->first('tax_included_price') }}</p> @endif
+            <div class="form-group sm-form-group">
+                <span id="price">0円</span>
             </div>          
         </div>
 
@@ -214,21 +210,19 @@
 
         <div class="col-md-9">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group @if ($errors->has('family_name')) has-error @endif">
                         <span>姓</span>
                         <input type="text" class="form-control" name="family_name" style="width: 90%;display: inline-block"
-                               id="family_name" placeholder=""
-                               value="{{ old('family_name') }}" />
+                               id="family_name" value="{{ old('family_name') }}" />
                         @if ($errors->has('family_name')) <p class="help-block">{{ $errors->first('family_name') }}</p> @endif
                     </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <div class="form-group @if ($errors->has('first_name')) has-error @endif">
                         <span>名</span>
                         <input type="text" class="form-control" name="first_name" style="width: 90%;display: inline-block"
-                               id="first_name" placeholder=""
-                               value="{{ old('first_name') }}" />
+                               id="first_name" value="{{ old('first_name') }}" />
                         @if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
                     </div>
                 </div>
@@ -246,21 +240,19 @@
         <div class="col-md-9">
             <div class="row">
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group @if ($errors->has('family_name_kana')) has-error @endif">
-                        <span>姓</span>
+                        <span>せい</span>
                         <input type="text" class="form-control" name="family_name_kana" style="width: 90%;display: inline-block"
-                               id="family_name_kana" placeholder=""
-                               value="{{ old('family_name_kana') }}" />
+                               id="family_name_kana" value="{{ old('family_name_kana') }}" />
                         @if ($errors->has('family_name_kana')) <p class="help-block">{{ $errors->first('family_name_kana') }}</p> @endif
                     </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <div class="form-group @if ($errors->has('first_name_kana')) has-error @endif">
-                        <span>名</span>
+                        <span>めい</span>
                         <input type="text" class="form-control" name="first_name_kana" style="width: 90%;display: inline-block"
-                               id="first_name_kana" placeholder=""
-                               value="{{ old('first_name_kana') }}" />
+                               id="first_name_kana" value="{{ old('first_name_kana') }}" />
                         @if ($errors->has('first_name_kana')) <p class="help-block">{{ $errors->first('first_name_kana') }}</p> @endif
                     </div>
                 </div>
@@ -278,10 +270,8 @@
 
         <div class="col-md-9">
             <div class="form-group @if ($errors->has('tel')) has-error @endif">
-                <span>名</span>
                 <input type="text" class="form-control" name="tel" style="width: 90%;display: inline-block"
-                       id="tel" placeholder=""
-                       value="{{ old('tel') }}"/>
+                       id="tel" value="{{ old('tel') }}"/>
                 @if ($errors->has('tel')) <p class="help-block">{{ $errors->first('tel') }}</p> @endif
             </div>
         </div>
@@ -296,10 +286,8 @@
 
         <div class="col-md-9">
             <div class="form-group @if ($errors->has('registration_card_number')) has-error @endif">
-                <span>名</span>
                 <input type="text" class="form-control" name="registration_card_number" style="width: 90%;display: inline-block"
-                       id="registration_card_number" placeholder=""
-                       value="{{ old('registration_card_number') }}" />
+                       id="registration_card_number" value="{{ old('registration_card_number') }}" />
                 @if ($errors->has('registration_card_number')) <p class="help-block">{{ $errors->first('registration_card_number') }}</p> @endif
             </div>
         </div>
@@ -308,7 +296,7 @@
 
 
     <div class="box-footer">
-        <a href="{{ url('/reception') }}" class="btn btn-default">戻る</a>
+        <a href="{{ url('/reservation') }}" class="btn btn-default">戻る</a>
         <button type="submit" class="btn btn-primary">作成</button>
     </div>                                              
 
@@ -346,6 +334,7 @@
                         total += parseInt($(ele).data('price'));
                     });
                     $('#total').html(total + '円');
+                    $('#price').html(coursePrice + '円');
                 }
 
                 const processUI = function () {
@@ -500,9 +489,6 @@
         .date-row .daybox .txt {
             font-size: 11px;
             padding: 15px;
-        }
-        .year-label th {
-            background: transparent url({{ asset('img/calendar.png') }}) 10px 3px/30px no-repeat;
         }
 
         td.daybox.gray-background {
