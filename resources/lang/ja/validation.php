@@ -277,7 +277,6 @@ return [
         'birthday' => '生年月日',
         'memo' => '顧客メモ',
         'prefecture_id' => '都道府県',
-        'hospital_reception_email_transmission_setting' => '院内受付メール送信設定',
         'property_no' => '物件番号',
         'code' => '顧客番号',
         'contractor_name_kana' => '顧客名（フリガナ）',
