@@ -124,18 +124,18 @@
                         <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
                     </td>
                     <td>
-                            <a href="{{ route('billing.status.update', ['billing' => $billing, 'status' => 2]) }}" class="btn btn-primary"
+                            <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2]) }}" class="btn btn-primary"
                             @if( $billing->status == 1 ) style="pointer-events: none;" @endif
                             >未確認</a>
                     </td>
                     <td>
-                        <a href="{{ route('billing.status.update', ['billing' => $billing, 'status' => 4]) }}" class="btn btn-primary"
+                        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 4]) }}" class="btn btn-primary"
                            @if( $billing->status == 2  || $billing->status == 3) style="pointer-events: none;" @endif
                         >請求確定</a>
                     </td>
 
                     <td>
-                        <a href="{{ route('billing.status.update', ['billing' => $billing, 'status' => 2]) }}" class="btn btn-primary"
+                        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2]) }}" class="btn btn-primary"
                            @if( $billing->status != 4) style="pointer-events: none;" @endif
                         >確定取消</a>
                     </td>

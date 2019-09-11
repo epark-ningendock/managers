@@ -155,35 +155,43 @@ class BillingController extends Controller {
 
 			$billing->update( [ 'status' => $request->status ] );
 
-			$hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', 1 )->first();
+			$hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hosptial_id )->first();
 
-			$confirmMailComposition = [
-				'subject' => '請求確認メール',
-				'content' => '請求確認メール',
-			];
+			if ( $hospitalEmailSetting ) {
 
-			Mail::to( [
-				$hospitalEmailSetting->billing_email1,
-				$hospitalEmailSetting->billing_email2,
-				$hospitalEmailSetting->billing_email3,
-				$hospitalEmailSetting->billing_fax_number,
-			] )->send( new BillingConfirmationSendMail( $confirmMailComposition ) );
+				$confirmMailComposition = [
+					'subject' => '請求確認メール',
+					'content' => '請求確認メール',
+				];
 
-			$billingMailHistory = new BillingMailHistory();
+				Mail::to( [
+					$hospitalEmailSetting->billing_email1,
+					$hospitalEmailSetting->billing_email2,
+					$hospitalEmailSetting->billing_email3,
+					$hospitalEmailSetting->billing_fax_number,
+				] )->send( new BillingConfirmationSendMail( $confirmMailComposition ) );
 
-			$billingMailHistory->create( [
-				'hospital_id' => $hospitalEmailSetting->hospital_id,
-				'to_address1' => $hospitalEmailSetting->billing_email1,
-				'to_address2' => $hospitalEmailSetting->billing_email2,
-				'to_address3' => $hospitalEmailSetting->billing_email3,
-				'cc_name'     => $hospitalEmailSetting->hospital->name,
-				'fax'         => $hospitalEmailSetting->billing_fax_number,
-				'mail_type'   => ( $hospitalEmailSetting->mail_type == 1 ) ? 1 : 2,
-			] );
+				$billingMailHistory = new BillingMailHistory();
+
+				$billingMailHistory->create( [
+					'hospital_id' => $hospitalEmailSetting->hospital_id,
+					'to_address1' => $hospitalEmailSetting->billing_email1,
+					'to_address2' => $hospitalEmailSetting->billing_email2,
+					'to_address3' => $hospitalEmailSetting->billing_email3,
+					'cc_name'     => $hospitalEmailSetting->hospital->name,
+					'fax'         => $hospitalEmailSetting->billing_fax_number,
+					'mail_type'   => ( $hospitalEmailSetting->mail_type == 1 ) ? 1 : 2,
+				] );
+
+			}
 
 		}
 
-		return redirect( 'billing' )->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
+		if ($request->route()->getName() == "billing.status.update" ) {
+			return redirect('billing')->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
+		} else {
+			return back()->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
+		}
 	}
 
 	/**

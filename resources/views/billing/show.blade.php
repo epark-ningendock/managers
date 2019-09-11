@@ -39,9 +39,19 @@
     </ul>
 
     <p class="action-button-list text-center m-3 mb-5">
-        <a href="{{ route('billing.index') }}" class="btn btn-primary">{{ __('請求確認') }}</a>
-        <a href="{{ route('billing.index') }}" class="btn btn-primary">{{ __('請求確定') }}</a>
-        <a href="{{ route('billing.index') }}" class="btn btn-primary">{{ __('確定取消') }}</a>
+
+        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2]) }}" class="btn btn-primary"
+           @if( $billing->status == 1 ) style="pointer-events: none;" @endif
+        >未確認</a>
+
+        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 4]) }}" class="btn btn-primary"
+           @if( $billing->status == 2  || $billing->status == 3) style="pointer-events: none;" @endif
+        >請求確定</a>
+
+        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2]) }}" class="btn btn-primary"
+           @if( $billing->status != 4) style="pointer-events: none;" @endif
+        >確定取消</a>
+
     </p>
 
 
