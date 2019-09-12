@@ -30,7 +30,7 @@ class CustomerController extends Controller
             100,
         ])) ? request()->get('pagination') : 10;
 
-        $customers       = Customer::filter($customerFilters)->orderBy('id', 'asc')->paginate($pagination);
+        $customers       = Customer::filter($customerFilters)->where('hospital_id', '=', session('hospital_id'))->orderBy('id', 'asc')->paginate($pagination);
         $customer_detail = [];// Customer::findOrFail( 1 );
         $reservations    = [];// $customer_detail->reservations()->paginate( 2 );
 
@@ -108,7 +108,11 @@ class CustomerController extends Controller
 
     public function store(CustomerFormRequest $request)
     {
+    	$request->merge([
+    		'hospital_id' => session('hospital_id')
+	    ]);
         $params = $request->all();
+
         if(!isset($params['claim_count'])) {
             $params['claim_count'] = 0;
         }
