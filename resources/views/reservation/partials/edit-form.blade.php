@@ -116,7 +116,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{  $reservation->payment_status->description or '-' }}</span>
+            <span id="total" class="ml-2">{{ $reservation->payment_status->description or '-' }}</span>
         </div>
 
     </div>
@@ -128,20 +128,33 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{ $reservation->settlement_price or '-' }}円</span>
-        </div>
+            <span id="total" class="ml-2">
+                @if($reservation->settlement_price)
+                    {{ number_format($reservation->settlement_price) }}
+                 @else
+                     -
+                 @endif
+                 円
+            </span>
+         </div>
 
-    </div>
+     </div>
 
 
     <div class="row form-group">
+         <div class="col-md-3">
+             <label for="">キャッシュポ利用額</label>
+         </div>
 
-        <div class="col-md-3">
-            <label for="">キャッシュポ利用額</label>
-        </div>
-
-        <div class="col-md-9">
-            <span id="total" class="ml-2">{{  $reservation->cashpo_used_price or '-' }}円</span>
+         <div class="col-md-9">
+             <span id="total" class="ml-2">
+                 @if($reservation->cashpo_used_price)
+                     {{ number_format($reservation->cashpo_used_price) }}
+                 @else
+                     -
+                 @endif
+                 円
+            </span>
         </div>
 
     </div>
@@ -155,7 +168,7 @@
 
         <div class="col-md-9">
             <span id="total" class="ml-2">
-                {{ $reservation->is_payment == '0' ? '0円' : $reservation->fee.'円' }}
+                {{ $reservation->is_payment == '0' ? '0円' : number_format($reservation->fee).'円' }}
             </span>
         </div>
 
@@ -510,8 +523,8 @@
                     $('.option:checked').each(function(idx, ele) {
                         total += parseInt($(ele).data('price'));
                     });
-                    $('#total').html(total + '円');
-                    $('#price').html(coursePrice + '円');
+                    $('#total').html(total.toLocaleString() + '円');
+                    $('#price').html(coursePrice.toLocaleString() + '円');
                 }
 
                 const processUI = function () {
@@ -549,7 +562,7 @@
                                                      <label for="option-${courseOption.option.id}""></label>
                                                     </td>`))
                                         .append($(`<td>${courseOption.option.name}</td>`))
-                                        .append($(`<td>${courseOption.option.price}円</td>`))
+                                        .append($(`<td>${courseOption.option.price.toLocaleString()}円</td>`))
                                         .appendTo(tbody);
                                 });
 

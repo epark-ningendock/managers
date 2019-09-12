@@ -310,8 +310,8 @@
                     $('.option:checked').each(function(idx, ele) {
                         total += parseInt($(ele).data('price'));
                     });
-                    $('#total').html(total + '円');
-                    $('#price').html(coursePrice + '円');
+                    $('#total').html(total.toLocaleString() + '円');
+                    $('#price').html(coursePrice.toLocaleString() + '円');
                 }
 
                 const processUI = function () {
@@ -346,7 +346,7 @@
                                                      <label for="option-${courseOption.option.id}""></label>
                                                     </td>`))
                                         .append($(`<td>${courseOption.option.name}</td>`))
-                                        .append($(`<td>${courseOption.option.price}円</td>`))
+                                        .append($(`<td>${courseOption.option.price.toLocaleString()}円</td>`))
                                         .appendTo(tbody);
                                 });
 
