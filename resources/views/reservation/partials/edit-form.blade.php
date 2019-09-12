@@ -36,7 +36,7 @@
         </p>
     </div>
 
-    <div class="row form-group">
+    <div class="row form-group option-row">
         <div class="box box-default option-container">
             <label id="checkbox">オプション</label>
             <table class="table table-bordered table-hover table-striped no-border">
@@ -613,6 +613,8 @@
                         $('.option-container-row, .question-container-row').hide();
                         $('.option-container tbody').empty();
                         $('.question-container .form-group').empty();
+                        $('.option-container').hide();
+                        $('.question-container').hide();
                     }
 
                 };
