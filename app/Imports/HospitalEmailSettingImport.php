@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Hospital;
 use Maatwebsite\Excel\Concerns\RegistersEventListeners;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterImport;
@@ -41,11 +42,11 @@ class HospitalEmailSettingImport extends ImportBAbstract implements WithEvents
     {
         $row = $row->toArray();
 
-        if ($this->getValue($row, 'IDENT_KEY') !== '0111') {
+        if ($this->getValue($row, 'IDENT_KEY') !== 'O111') {
             return;
         }
 
-        static::$arr['hospital_id'] = $this->getId('hospitals', $this->hospital_no);
+        static::$arr['hospital_id'] = Hospital::withTrashed()->where('old_karada_dog_id', $this->hospital_no)->get()->first()->id;
 
         $key_code = $this->getValue($row, 'KEY_CODE');
         $value = $this->getValue($row, 'KEY_VALUE');
