@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="exampleModalLabel">受験者</h4>
+        <h4 class="modal-title" id="exampleModalLabel">受診者検索</h4>
       </div>
       <div class="modal-body">
         <form id="customer-searchform" method="post" action="{{  route('customer.search') }}">
@@ -15,14 +15,14 @@
     				<div class="col-sm-9">
     					
     					<div class="form-group">
-    						<input type="text" class="form-control" name="registration_card_number" id="registration_card_number_search" placeholder="チケット番号">
+    						<input type="text" class="form-control" name="search_text" id="registration_card_number_search">
     					</div>
 
     				</div>
 
     				<div class="col-sm-3">
     					
-    					<button type="submit" class="btn btn-primary">{{  trans('search') }}</button>
+    					<button type="submit" class="btn btn-primary">{{  trans('messages.search') }}</button>
 
     				</div>
 
@@ -57,7 +57,7 @@
 
     $('.customer-search-box').on('hidden.bs.modal', function (e) {
       $('.customer-list').html('');
-      $('#customer-searchform').find('input').val('');
+      $('#customer-searchform').find('input:text').val('');
     });    
 
 

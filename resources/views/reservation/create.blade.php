@@ -1,7 +1,11 @@
 @extends('layouts.form')
 
 @section('content_header')
-  <h1>受信 &gt; &GT;{{ request()->session()->get('hospital_name') }}</h1>
+    <h1>
+        <i class="fa fa-list-alt"> 受診</i>
+        -
+        <span>{{ request()->session()->get('hospital_name') }}</span>
+    </h1>
 @stop
 
 @section('form')

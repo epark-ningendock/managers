@@ -31,7 +31,8 @@ class Customer extends SoftDeleteModel
         'birthday',
         'memo',
         'claim_count',
-        'recall_count'
+        'recall_count',
+        'epark_member_id'
     ];
 
     protected $guarded = [
@@ -68,7 +69,7 @@ class Customer extends SoftDeleteModel
 
     public function getNameKanaAttribute()
     {
-        return $this->family_name_kana . ' ' . $this->first_name_kana;
+        return  $this->family_name_kana . ' ' . $this->first_name_kana;
     }
 
     public function hospitals()

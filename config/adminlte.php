@@ -157,7 +157,7 @@ return [
         // ],
         // [
         //    'text'        => '受付一覧',
-        //    'url'         => '/reception',
+        //    'url'         => '/reservation',
         //    'icon'        => 'list-alt',
         // ],
         // [

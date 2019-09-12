@@ -1,13 +1,9 @@
+<div class="form-entry" id="reservation">
 <div class="box-body">
-
     <input type="hidden" name="lock_version" value="{{ $reservation->lock_version or '' }}" />
-
-
-    <h3 class="section-title">受付情報</h3>
-    <br/><br/>
+    <h2 class="section-title">受付情報</h2>
 
     <div class="row">
-
         <div class="col-md-3">
             <label for="is_health_insurance">健保</label>
         </div>
@@ -21,74 +17,52 @@
 
     </div>
 
-    <div class="row">
-
-        <div class="col-md-3">
-            <label for="course_id">検査コース</label>
-        </div>
-
-        <div class="col-md-9">
-            <div class="form-group sm-form-group @if ($errors->has('course_id')) has-error @endif">
-
-                <select class="form-control" name="course_id" id="course_id">
-                    <option></option>
-                    @foreach($courses as $course)
-                        <option value="{{ $course->id }}" data-price="{{ $course->price }}"
-                                @if(old('course_id', $reservation->course_id or null) == $course->id) selected @endif>{{ $course->name }}</option>
-                    @endforeach
-                </select>
-                @if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif
-            </div>
-        </div>
-
+    <div class="form-group @if ($errors->has('course_id')) has-error @endif">
+        <label for="course_id">検査コース<span class="form_required">必須</span></label>
+        <select class="w20em form-control" name="course_id" id="course_id">
+            <option></option>
+            @foreach($courses as $course)
+                <option value="{{ $course->id }}" data-price="{{ $course->price }}"
+                        @if(old('course_id', $reservation->course_id) == $course->id) selected @endif>{{ $course->name }}</option>
+            @endforeach
+        </select>
+        @if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif
     </div>
 
-
-    <div class="row">
-
-        <div class="col-md-3">
-            <label for="regular_price">コース料金</label>
-        </div>
-
-        <div class="col-md-9">
-            <div class="form-group sm-form-group @if ($errors->has('tax_included_price')) has-error @endif" style="margin-right: 21px;">
-                <input type="number" class="form-control" name="tax_included_price"
-                       id="tax_included_price" placeholder="コース料金"
-                       value="{{ old('tax_included_price', $reservation->tax_included_price) }}"/> <span
-                        class="ml-2" style="position: absolute;top: 0;right: -20px;">円</span>
-                @if ($errors->has('tax_included_price')) <p class="help-block">{{ $errors->first('tax_included_price') }}</p> @endif
-            </div>
-        </div>
-
+    <div class="form-group">
+        <p class="form-inline">
+        <label for="regular_price">コース料金</label>
+        <span id="price">0円</span>
+        </p>
     </div>
-
 
     <div class="row form-group">
-
-        <div class="col-md-3">
-            <label id="checkbox option">オプション</label>
+        <div class="box box-default option-container">
+            <label id="checkbox">オプション</label>
+            <table class="table table-bordered table-hover table-striped no-border">
+                <thead>
+                <tr>
+                    <th style="text-align: left;">選択</th>
+                    <th>オプション</th>
+                    <th>価格</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
+    </div>
 
-        <div class="col-md-9">
-            <div class="option-container" style="max-width: 550px;">
-                <table class="table table-borderless">
-                    <thead>
-                    <tr>
-                        <th style="text-align: left;">選択</th>
-                        <th>オプション</th>
-                        <th>価格</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+    <div class="row form-group">
+        <div class="box box-default question-container">
+            <label id="question-box">質問設定</label>
+            <div class="form-group ml-4">
             </div>
         </div>
-
     </div>
 
 
-    <div class="row form-group">
+    <!--<div class="row form-group">
 
         <div class="col-md-3">
             <label>質問設定</label>
@@ -101,7 +75,7 @@
             </div>
         </div>
 
-    </div>
+    </div>-->
 
 
     <div class="row form-group">
@@ -154,7 +128,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{ $reservation->card_payment_amount or '-' }}</span>
+            <span id="total" class="ml-2">{{ $reservation->settlement_price or '-' }}円</span>
         </div>
 
     </div>
@@ -167,7 +141,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{  $reservation->cashpo_used_price or '-' }}</span>
+            <span id="total" class="ml-2">{{  $reservation->cashpo_used_price or '-' }}円</span>
         </div>
 
     </div>
@@ -191,12 +165,12 @@
 
 
     <div class="row date-row-bar" style="display: none;" >
-
-        <div class="col-md-3">
+        <h2>受診日</h2>
+        <!--<div class="col-md-3">
             <label for="reservation_date">受診日</label>
-        </div>
+        </div>-->
 
-        <div class="col-md-9">
+        <div class="col-md-12">
             <div class="calendar-box" data-old="{{ old('reservation_date', $reservation->reservation_date->format('Y-m-d')) }}">
 
             </div>
@@ -328,8 +302,7 @@
         </div>
 
     </div>
-
-    <h3 class="section-title">申込者情報</h3>
+    <h2 class="section-title">申込者情報</h2>
 
     <div class="row form-group no-field">
 
@@ -374,9 +347,9 @@
     </div>
 
 
-    <h3 class="section-title">受診者情報</h3>
+    <h2 class="section-title">受診者情報</h2>
 
-
+    <div class="customer-info">
     <div class="row form-group">
 
         <div class="col-md-3">
@@ -445,7 +418,7 @@
 
         <div class="col-md-9">
             <span id="" class="ml-2">
-                {{ $reservation->customer->sex->description }}
+                {{ isset($reservation->customer->sex) ? $reservation->customer->sex->description : '-' }}
             </span>
         </div>
 
@@ -495,13 +468,15 @@
         </div>
 
     </div>
+    </div>
 
 
     <div class="box-footer">
         <a href="{{ url('/reservation') }}" class="btn btn-default">戻る</a>
-        <button type="submit" class="btn btn-primary">作成</button>
+        <button type="submit" class="btn btn-primary">更新</button>
     </div>
 
+</div>
 </div>
 
 @include('commons.datepicker')
@@ -536,6 +511,7 @@
                         total += parseInt($(ele).data('price'));
                     });
                     $('#total').html(total + '円');
+                    $('#price').html(coursePrice + '円');
                 }
 
                 const processUI = function () {
@@ -609,7 +585,7 @@
                                             }
                                         }
                                     }
-                                })
+                                });
                                 if (flag) {
                                     $('.question-container').show();
                                 }
@@ -683,24 +659,15 @@
         /* ---------------------------------------------------
         Daybox
         -----------------------------------------------------*/
+        /*
         .date-row, .date-row.table td, .date-row.table th {
             border-color: #847f7f !important;
             border-width: 2px;
-        }
-
-        .daybox .des-box {
-            padding-top: 6px;
-            border-top: 2px solid #847f7f;
-            margin: 0 -8px;
-            text-align: center;
-        }
+        }*/
 
         .date-row .daybox .txt {
             font-size: 11px;
             padding: 15px;
-        }
-        .year-label th {
-            background: transparent url({{ asset('img/calendar.png') }}) 10px 3px/30px no-repeat;
         }
 
         td.daybox.gray-background {

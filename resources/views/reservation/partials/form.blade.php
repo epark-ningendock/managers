@@ -1,9 +1,9 @@
+<div class="form-entry" id="reservation">
 <div class="box-body">
-    
-    <h3 class="section-title">受付情報</h3>
-    <br/><br/>
-    <div class="row">
 
+    <h2 class="section-title">受付情報</h2>
+
+    <div class="row">
         <div class="col-md-3">
             <label for="is_health_insurance">健保</label>
         </div>
@@ -16,91 +16,64 @@
         </div>
 
     </div>
-    <div class="row">
-    
-        <div class="col-md-3">
-            <label for="course_id">検査コース</label>
-        </div>
 
-        <div class="col-md-9">
-            <div class="form-group sm-form-group @if ($errors->has('course_id')) has-error @endif">
 
-                <select class="form-control" name="course_id" id="course_id">
-                    <option></option>
-                    @foreach($courses as $course)
-                        <option value="{{ $course->id }}" data-price="{{ $course->price }}"
-                                @if(old('course_id') == $course->id) selected @endif>{{ $course->name }}</option>
-                    @endforeach
-                </select>
-                @if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif
-            </div>            
-        </div>
-
+    <div class="form-group @if ($errors->has('course_id')) has-error @endif">
+        <label for="course_id">検査コース<span class="form_required">必須</span></label>
+        <select class="form-control w20em" name="course_id" id="course_id">
+            <option></option>
+            @foreach($courses as $course)
+                <option value="{{ $course->id }}" data-price="{{ $course->price }}"
+                        @if(old('course_id') == $course->id) selected @endif>{{ $course->name }}</option>
+            @endforeach
+        </select>
+        @if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif
     </div>
 
-
     <div class="row">
-    
+
         <div class="col-md-3">
             <label for="regular_price">コース料金</label>
         </div>
 
         <div class="col-md-9">
-            <div class="form-group sm-form-group @if ($errors->has('tax_included_price')) has-error @endif" style="margin-right: 21px;">
-                <input type="number" class="form-control" name="tax_included_price"
-                       id="tax_included_price" placeholder="コース料金"
-                       value="{{ old('tax_included_price') }}"/> <span
-                        class="ml-2" style="position: absolute;top: 0;right: -20px;">円</span>
-                @if ($errors->has('tax_included_price')) <p class="help-block">{{ $errors->first('tax_included_price') }}</p> @endif
-            </div>          
+            <div class="form-group sm-form-group">
+                <span id="price">0円</span>
+            </div>
         </div>
 
     </div>
 
 
-    <div class="row form-group option-container-row">
-    
-        <div class="col-md-3">
-            <label id="checkbox option">オプション</label>
+    <div class="row form-group">
+        <div class="box box-default option-container">
+            <label id="checkbox">オプション</label>
+            <table class="table table-bordered table-hover table-striped no-border">
+                <thead>
+                <tr>
+                    <th style="text-align: left;">選択</th>
+                    <th>オプション</th>
+                    <th>価格</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
-
-        <div class="col-md-9">
-            <div class="option-container" style="max-width: 550px;">
-                <table class="table table-borderless">
-                    <thead>
-                    <tr>
-                        <th style="text-align: left;">選択</th>
-                        <th>オプション</th>
-                        <th>価格</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>   
-
-
-    <div class="row form-group question-container-row">
-    
-        <div class="col-md-3">
-            <label>質問設定</label>
-        </div>
-
-        <div class="col-md-9">
-            <div class="question-container">
-                <div class="form-group ml-4">
-                </div>
-            </div>  
-        </div>
-
-    </div>    
+    </div>
 
 
     <div class="row form-group">
-    
+        <div class="box box-default question-container">
+            <label id="question-box">質問設定</label>
+            <div class="form-group ml-4">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row form-group">
+
         <div class="col-md-3">
             <label for="adjustment_price">調整額</label>
         </div>
@@ -118,7 +91,7 @@
     </div>
 
     <div class="row form-group">
-    
+
         <div class="col-md-3">
             <label for="">合計金額</label>
         </div>
@@ -131,19 +104,20 @@
 
 
     <div class="row date-row-bar" style="display: none;">
-    
-        <div class="col-md-3">
-            <label for="reservation_date">受診日</label>
-        </div>
+        <h2>受診日</h2>
 
-        <div class="col-md-9">
+        <!--<div class="col-md-3">
+            <label for="reservation_date">受診日</label>
+        </div>-->
+
+        <div class="col-md-12">
             <div class="calendar-box" data-old="{{ old('reservation_date') }}">
-                
-            </div>   
+
+            </div>
             @if ($errors->has('reservation_date')) <p class="help-block text-danger" style="color: #ed5565;">{{ $errors->first('reservation_date') }}</p> @endif
         </div>
 
-    </div> 
+    </div>
 
 
     <div class="row form-group">
@@ -185,7 +159,7 @@
             </div>
         </div>
 
-    </div>   
+    </div>
 
     <div class="row form-group">
 
@@ -200,35 +174,31 @@
             </div>
         </div>
 
-    </div>   
+    </div>
 
-    <h3 class="section-title">受診者情報</h3>
-    <br/><a id="examinee-information" href="#">受診者検索</a>
-    <br/><br/>
+    <h2 class="section-title">受診者情報</h2>
+    <p><a class="btn btn-primary" id="examinee-information" href="#">受診者検索</a></p>
 
-    <div class="row">
-
+    <div class="row mt-5">
         <div class="col-md-3">
-            <label for="">お名前 </label>
+            <label for="">お名前 <span class="form_required">必須</span></label>
         </div>
 
         <div class="col-md-9">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group @if ($errors->has('family_name')) has-error @endif">
                         <span>姓</span>
                         <input type="text" class="form-control" name="family_name" style="width: 90%;display: inline-block"
-                               id="family_name" placeholder=""
-                               value="{{ old('family_name') }}" />
+                               id="family_name" value="{{ old('family_name') }}" />
                         @if ($errors->has('family_name')) <p class="help-block">{{ $errors->first('family_name') }}</p> @endif
                     </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <div class="form-group @if ($errors->has('first_name')) has-error @endif">
                         <span>名</span>
                         <input type="text" class="form-control" name="first_name" style="width: 90%;display: inline-block"
-                               id="first_name" placeholder=""
-                               value="{{ old('first_name') }}" />
+                               id="first_name" value="{{ old('first_name') }}" />
                         @if ($errors->has('first_name')) <p class="help-block">{{ $errors->first('first_name') }}</p> @endif
                     </div>
                 </div>
@@ -240,66 +210,60 @@
     <div class="row">
 
         <div class="col-md-3">
-            <label for="">お名前 かな </label>
+            <label for="">お名前 かな<span class="form_required">必須</span> </label>
         </div>
 
         <div class="col-md-9">
             <div class="row">
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="form-group @if ($errors->has('family_name_kana')) has-error @endif">
-                        <span>姓</span>
+                        <span>せい</span>
                         <input type="text" class="form-control" name="family_name_kana" style="width: 90%;display: inline-block"
-                               id="family_name_kana" placeholder=""
-                               value="{{ old('family_name_kana') }}" />
+                               id="family_name_kana" value="{{ old('family_name_kana') }}" />
                         @if ($errors->has('family_name_kana')) <p class="help-block">{{ $errors->first('family_name_kana') }}</p> @endif
                     </div>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <div class="form-group @if ($errors->has('first_name_kana')) has-error @endif">
-                        <span>名</span>
+                        <span>めい</span>
                         <input type="text" class="form-control" name="first_name_kana" style="width: 90%;display: inline-block"
-                               id="first_name_kana" placeholder=""
-                               value="{{ old('first_name_kana') }}" />
+                               id="first_name_kana" value="{{ old('first_name_kana') }}" />
                         @if ($errors->has('first_name_kana')) <p class="help-block">{{ $errors->first('first_name_kana') }}</p> @endif
                     </div>
                 </div>
             </div>
         </div>
 
-    </div> 
+    </div>
 
 
     <div class="row">
 
         <div class="col-md-3">
-            <label for="tel">電話番号</label>
+            <label for="tel">電話番号<span class="form_required">必須</span></label>
         </div>
 
         <div class="col-md-9">
             <div class="form-group @if ($errors->has('tel')) has-error @endif">
-                <span>名</span>
                 <input type="text" class="form-control" name="tel" style="width: 90%;display: inline-block"
-                       id="tel" placeholder=""
-                       value="{{ old('tel') }}"/>
+                       id="tel" value="{{ old('tel') }}"/>
                 @if ($errors->has('tel')) <p class="help-block">{{ $errors->first('tel') }}</p> @endif
             </div>
         </div>
 
-    </div>     
+    </div>
 
     <div class="row">
 
         <div class="col-md-3">
-            <label for="registration_card_number">診察券番号</label>
+            <label for="registration_card_number">診察券番号<span class="form_required">必須</span></label>
         </div>
 
         <div class="col-md-9">
             <div class="form-group @if ($errors->has('registration_card_number')) has-error @endif">
-                <span>名</span>
                 <input type="text" class="form-control" name="registration_card_number" style="width: 90%;display: inline-block"
-                       id="registration_card_number" placeholder=""
-                       value="{{ old('registration_card_number') }}" />
+                       id="registration_card_number" value="{{ old('registration_card_number') }}" />
                 @if ($errors->has('registration_card_number')) <p class="help-block">{{ $errors->first('registration_card_number') }}</p> @endif
             </div>
         </div>
@@ -308,10 +272,11 @@
 
 
     <div class="box-footer">
-        <a href="{{ url('/reception') }}" class="btn btn-default">戻る</a>
+        <a href="{{ url('/reservation') }}" class="btn btn-default">戻る</a>
         <button type="submit" class="btn btn-primary">作成</button>
-    </div>                                              
+    </div>
 
+</div>
 </div>
 
 @include('commons.datepicker')
@@ -346,6 +311,7 @@
                         total += parseInt($(ele).data('price'));
                     });
                     $('#total').html(total + '円');
+                    $('#price').html(coursePrice + '円');
                 }
 
                 const processUI = function () {
@@ -485,24 +451,10 @@
         /* ---------------------------------------------------
         Daybox
         -----------------------------------------------------*/
-        .date-row, .date-row.table td, .date-row.table th {
-            border-color: #847f7f !important;
-            border-width: 2px;
-        }
-
-        .daybox .des-box {
-            padding-top: 6px;
-            border-top: 2px solid #847f7f;
-            margin: 0 -8px;
-            text-align: center;
-        }
 
         .date-row .daybox .txt {
             font-size: 11px;
             padding: 15px;
-        }
-        .year-label th {
-            background: transparent url({{ asset('img/calendar.png') }}) 10px 3px/30px no-repeat;
         }
 
         td.daybox.gray-background {

@@ -1,5 +1,7 @@
 @php
-  use \App\Enums\HospitalEnums;
+  use App\Enums\HospitalEnums;
+  use App\Prefecture;
+  use App\DistrictCode;
   $params = [
     'delete_route' => 'hospital.destroy'
   ];
@@ -33,9 +35,9 @@
           <div class="form-group">
             <label for="status">状態</label>
             <select name="status" id="status" class="form-control">
-              @foreach(\App\Enums\HospitalEnums::toArray() as $key => $value)
+              @foreach(HospitalEnums::toArray() as $key => $value)
                 <option value="{{ $value }}" {{ ( request('status') == $value) ? "selected" : "" }}>
-                  {{ \App\Enums\HospitalEnums::getDescription($value) }}
+                  {{ HospitalEnums::getDescription($value) }}
                 </option>
               @endforeach
             </select>
@@ -57,7 +59,7 @@
 @section('table')
   <p class="table-responsive">
     @include('layouts.partials.pagination-label', ['paginator' => $hospitals])
-    <table id="example2" class="table table-bordered table-hover table-striped mb-5">
+    <table id="example2" class="table table-striped table-hover no-border vertical-middle mb-5">
       <thead>
       <tr>
         <th>ID</th>
@@ -66,9 +68,7 @@
         <th>連絡先</th>
         <th>状態</th>
         @if (Auth::user()->staff_auth->is_hospital === 3)
-          <th>操作</th>
-          <th>編集</th>
-          <th>削除</th>
+          <th></th>
         @endif
       </tr>
       </thead>
@@ -76,36 +76,36 @@
       @if ( isset($hospitals) && count($hospitals) > 0 )
         @foreach ($hospitals as $hospital)
           <tr class="
-          {{ ($hospital->status === \App\Enums\HospitalEnums::Private) ? 'private-row ' : '' }}
-          {{ ($hospital->status === \App\Enums\HospitalEnums::Public) ? 'public-row ' : '' }}
-          {{ ($hospital->status === \App\Enums\HospitalEnums::Delete) ? 'deleted-row ' : '' }}
+          {{ ($hospital->status === HospitalEnums::Private) ? 'light-gray ' : '' }}
+          {{ ($hospital->status === HospitalEnums::Public) ? '' : '' }}
+          {{ ($hospital->status === HospitalEnums::Delete) ? 'dark-gray' : '' }}
               ">
             <td>{{ $hospital->id }}</td>
             <td>{{ $hospital->name }}</td>
-            <td>{{ $hospital->address1 }}</td>
+            @if (DistrictCode::find($hospital->district_code_id))
+              <td>{{ Prefecture::find($hospital->prefecture_id)->name . DistrictCode::find($hospital->district_code_id)->name . $hospital->address1 }}</td>
+            @else
+              <td>{{ Prefecture::find($hospital->prefecture_id)->name . $hospital->address1 }}</td>
+            @endif
             <td>{{ $hospital->tel }}</td>
-            <td>{{ \App\Enums\HospitalEnums::getDescription($hospital->status) }}</td>
+            <td>{{ HospitalEnums::getDescription($hospital->status) }}</td>
             @if (Auth::user()->staff_auth->is_hospital === 3)
               <td>
-                <a class="btn btn-success insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">
-                  <span class="fa fa-pencil"></i>  
+                <a class="btn btn-primary insert-hospital-id-popup-btn" data-id="{{ $hospital->id }}">
+                  <i><span class="fa fa-pencil"></span></i>
                 </a>
                 <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
                   {{ csrf_field() }}
                 </form>
-              </td>
-              <td>
-                @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
+                @if ($hospital->status !== HospitalEnums::Delete)
                   <a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}"
-                    class="btn btn-primary">
-                  <i class="fa fa-edit text-bold"> 編集</i>
+                     class="btn btn-primary">
+                    <i class="fa fa-edit"> 編集</i>
                   </a>
                 @endif
-              </td>
-              <td>
-                @if ($hospital->status !== \App\Enums\HospitalEnums::Delete)
-                  <button class="btn btn-danger delete-btn delete-popup-btn"
-                      data-id="{{ $hospital->id }}">
+                @if ($hospital->status !== HospitalEnums::Delete)
+                  <button class="btn  btn-primary delete-btn delete-popup-btn"
+                          data-id="{{ $hospital->id }}">
                     <i class="fa fa-trash"></i>
                   </button>
                 @endif
@@ -124,6 +124,14 @@
   </div>
   {{ $hospitals->links() }}
 @stop
+<style>
+  tr.dark-gray td {
+    background-color: darkgray;
+  }
+  tr.light-gray td {
+    background-color: lightgray;
+  }
+</style>
 
 @push('js')
   <script src="{{ url('js/handlebars.js') }}"></script>

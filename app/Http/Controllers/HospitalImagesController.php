@@ -61,7 +61,7 @@ class HospitalImagesController extends Controller
                 ]
             );
             $hospital->hospital_categories()->create(
-                ['hospital_image_id' => $hospital_dummy_img[0]->id,'image_order' => ImageOrder::IMAGE_GROUP_INTERVIEW,'image_order' => ImageOrder::IMAGE_GROUP_INTERVIEW,'order2' => 1]
+                ['hospital_image_id' => $hospital_dummy_img[0]->id,'image_order' => ImageOrder::IMAGE_GROUP_INTERVIEW,'image_order' => ImageOrder::IMAGE_GROUP_INTERVIEW,'order' => 1]
             );
         }
 
@@ -136,9 +136,9 @@ class HospitalImagesController extends Controller
             $save_image_categories_sp = [ 'hospital_id' => $hospital_id, 'image_order' => ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 'file_location_no' => 2 ];
 
             //メイン画像の登録確認$hospital_id, $image_order, $i, $location_no
-            $image_category_pc = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN,1, 1)->first();
+            $image_category_pc = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 0, 1)->first();
 
-            $image_category_sp = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN,1, 2)->first();
+            $image_category_sp = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 0, 2)->first();
 
             $this->saveImageAndDeleteOldImage ($hospital,$image_category_pc,$save_images,$save_image_categories);
             $this->saveImageAndDeleteOldImage ($hospital,$image_category_sp,$save_images_sp,$save_image_categories_sp);
@@ -153,7 +153,7 @@ class HospitalImagesController extends Controller
         //こだわり
         for($i = 1; $i <= 4; $i++){
             if(isset($file['speciality_'.$i]) or isset($file['speciality_'.$i.'_title']) or isset($file['speciality_'.$i.'_caption'])) {
-                $this->hospitalImageUploader($file, 'speciality_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_SPECIALITY,null,null,null,$file['speciality_'.$i.'_caption'],$file['speciality_'.$i.'_caption'] );
+                $this->hospitalImageUploader($file, 'speciality_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_SPECIALITY,null,null,null,$file['speciality_'.$i.'_title'],$file['speciality_'.$i.'_caption'] );
             }
         }
         //スタッフ
