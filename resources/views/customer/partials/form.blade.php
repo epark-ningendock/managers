@@ -172,7 +172,7 @@
                     @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
                         <label for="name">{{ trans('messages.address2') }}
                         </label>
-                        <input type="text" class="form-control" name="address2" id="address2"
+                        <input type="text" class="form-control p-extended-address" name="address2" id="address2"
                                value="{{ old('address2', ( isset($customer_detail) ? $customer_detail->address2 : '')) }}"/>
                         @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
                 </div>
