@@ -161,7 +161,7 @@
                     <div class="form-group py-sm-1 @if ($errors->has('address1')) has-error @endif">
                         <label for="name">{{ trans('messages.address1') }}
                         </label>
-                        <input type="text" class="form-control" name="address1" id="address1"
+                        <input type="text" class="form-control p-street-address" name="address1" id="address1"
                                value="{{ old('address1', ( isset($customer_detail) ? $customer_detail->address1 : '')) }}"/>
                         @if ($errors->has('address1')) <p class="help-block">{{ $errors->first('address1') }}</p> @endif
                     </div>
