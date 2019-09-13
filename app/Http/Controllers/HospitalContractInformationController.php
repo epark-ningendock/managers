@@ -72,13 +72,13 @@ class HospitalContractInformationController extends Controller
                 'tel' => trimToNull($row[12]),
                 'fax' => trimToNull($row[13]),
                 'email' => trimToNull($row[14]),
-                'application_date' => trimToNull($row[15]),
-                'cancellation_date' => trimToNull($row[16]),
-                'billing_start_date' => trimToNull($row[17]),
-                'plan_code' => $row[18],
-                'service_start_date' => trimToNull($row[19]),
-                'service_end_date' => trimToNull($row[20]),
-                'hospital_name' => $row[21]
+                'application_date' => trimToNull($row[16]),
+                'cancellation_date' => trimToNull($row[17]),
+                'billing_start_date' => trimToNull($row[19]),
+                'plan_code' => $row[22],
+                'service_start_date' => trimToNull($row[23]),
+                'service_end_date' => trimToNull($row[24]),
+                'hospital_name' => $row[25]
             ]);
         }
         //skip title
@@ -230,12 +230,12 @@ class HospitalContractInformationController extends Controller
             '*.tel' => 'required|regex:/^\d{2,4}-?\d{2,4}-?\d{3,4}$/',
             '*.fax' => 'nullable|regex:/^\d{2,4}-?\d{2,4}-?\d{3,4}$/',
             '*.email' => 'nullable|email',
-            '*.application_date' => 'required|date_format:Y/m/d',
-            '*.cancellation_date' => 'nullable|date_format:Y/m/d',
-            '*.billing_start_date' => 'required|date_format:Y/m/d',
+            '*.application_date' => 'required|date_format:Y/n/j',
+            '*.cancellation_date' => 'nullable|date_format:Y/n/j',
+            '*.billing_start_date' => 'required|date_format:Y/n/j',
             '*.plan_code' => 'required|max:2|exists:contract_plans,plan_code',
-            '*.service_start_date' => 'nullable|date_format:Y/m/d',
-            '*.service_end_date' => 'nullable|date_format:Y/m/d',
+            '*.service_start_date' => 'nullable|date_format:Y/n/j',
+            '*.service_end_date' => 'nullable|date_format:Y/n/j',
             '*.hospital_name' => 'required|max:50'
         ];
     }
