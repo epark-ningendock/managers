@@ -1,6 +1,7 @@
 <?php
 
 use App\Customer;
+use App\Hospital;
 use App\Reservation;
 use Illuminate\Database\Seeder;
 use Faker\Factory;
@@ -21,6 +22,7 @@ class CustomersSeeder extends Seeder
         $faker = Factory::create();
         $options = Option::all();
         $courses = Course::all();
+        $hospital = Hospital::orderby('created_at', 'desc')->first();
 
         factory(Customer::class, 50)->create()->each(function ($customer, $index) use ($faker, $options, $courses) {
             $reservations = factory(Reservation::class, 3)->create([

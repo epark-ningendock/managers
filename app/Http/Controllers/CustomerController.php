@@ -30,7 +30,7 @@ class CustomerController extends Controller
             100,
         ])) ? request()->get('pagination') : 10;
 
-        $customers       = Customer::filter($customerFilters)->orderBy('id', 'asc')->paginate($pagination);
+        $customers       = Customer::filter($customerFilters)->where('hospital_id', '=', session('hospital_id'))->orderBy('id', 'asc')->paginate($pagination);
         $customer_detail = [];// Customer::findOrFail( 1 );
         $reservations    = [];// $customer_detail->reservations()->paginate( 2 );
 
@@ -108,7 +108,11 @@ class CustomerController extends Controller
 
     public function store(CustomerFormRequest $request)
     {
+    	$request->merge([
+    		'hospital_id' => session('hospital_id')
+	    ]);
         $params = $request->all();
+
         if(!isset($params['claim_count'])) {
             $params['claim_count'] = 0;
         }
@@ -227,11 +231,13 @@ class CustomerController extends Controller
 
     public function customerSearch()
     {
-        $customers = Customer::where('registration_card_number', 'LIKE', '%'. request()->search_text . '%')
-            ->orWhere(DB::raw("concat(family_name, first_name)"), 'LIKE', '%' . request()->search_text . '%')
-            ->orWhere(DB::raw("concat(family_name_kana, first_name_kana)"), 'LIKE', '%' . request()->search_text . '%')
-            ->orWhere('tel', request()->search_text)
-            ->get();
+        $customers = Customer::where('hospital_id', session()->get('hospital_id'))
+            ->where(function($query) {
+                $query->where('registration_card_number', 'LIKE', '%'. request()->search_text . '%')
+                    ->orWhere(DB::raw("concat(family_name, first_name)"), 'LIKE', '%' . request()->search_text . '%')
+                    ->orWhere(DB::raw("concat(family_name_kana, first_name_kana)"), 'LIKE', '%' . request()->search_text . '%')
+                    ->orWhere('tel', request()->search_text);
+        })->get();
 
         return response()->json([
             'data' => view('reservation.partials.create.customer-list', ['customers' => $customers])->render()
