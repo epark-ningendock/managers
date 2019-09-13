@@ -69,9 +69,9 @@ class CustomerController extends Controller
         return response()->json([
             'data' => view('customer.partials.detail.tab-content', [
                 'customer_detail' => $customer_detail,
-                'source_customer' => $source_customer,
+                'source_customer' => isset($source_customer) ? $source_customer : null,
                 'reservations'    => $reservations,
-                'name_identifications' => $name_identifications
+                'name_identifications' => isset($name_identifications) ? $name_identifications : null
             ])->render()
         ]);
     }
