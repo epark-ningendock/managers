@@ -32,7 +32,8 @@ class Customer extends SoftDeleteModel
         'memo',
         'claim_count',
         'recall_count',
-        'epark_member_id'
+        'epark_member_id',
+        'hospital_id',
     ];
 
     protected $guarded = [

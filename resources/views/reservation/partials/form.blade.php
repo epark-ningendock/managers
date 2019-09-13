@@ -45,7 +45,7 @@
     </div>
 
 
-    <div class="row form-group">
+    <div class="row form-group option-row option-container">
         <div class="box box-default option-container">
             <label id="checkbox">オプション</label>
             <table class="table table-bordered table-hover table-striped no-border">
@@ -310,8 +310,8 @@
                     $('.option:checked').each(function(idx, ele) {
                         total += parseInt($(ele).data('price'));
                     });
-                    $('#total').html(total + '円');
-                    $('#price').html(coursePrice + '円');
+                    $('#total').html(total.toLocaleString() + '円');
+                    $('#price').html(coursePrice.toLocaleString() + '円');
                 }
 
                 const processUI = function () {
@@ -346,7 +346,7 @@
                                                      <label for="option-${courseOption.option.id}""></label>
                                                     </td>`))
                                         .append($(`<td>${courseOption.option.name}</td>`))
-                                        .append($(`<td>${courseOption.option.price}円</td>`))
+                                        .append($(`<td>${courseOption.option.price.toLocaleString()}円</td>`))
                                         .appendTo(tbody);
                                 });
 
@@ -393,6 +393,8 @@
                         $('.option-container-row, .question-container-row').hide();
                         $('.option-container tbody').empty();
                         $('.question-container .form-group').empty();
+                        $('.option-container').hide();
+                        $('.question-container').hide();
                     }
                 };
                 $('#course_id').change(function () {
