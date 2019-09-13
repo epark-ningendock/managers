@@ -79,7 +79,6 @@
                 </div>
             </div>
         </div>
-
         <div class="form-group">
             <legend class="mb-0">{{ trans('messages.gender') }}</legend>
             @foreach(Gender::getValues() as $gender)

@@ -33,7 +33,7 @@
                 <tr>
                     <td class="gray-cell-bg"><label for="gender">{{ trans('messages.gender') }}</label></td>
                     <td>
-                        {{ $customer_detail->sex->description }}
+                        {{ $customer_detail->sex->description or '-' }}
                     </td>
                     <td class="gray-cell-bg">{{ trans('messages.birthday') }}</td>
                     <td>{{ $customer_detail->birthday }}</td>

@@ -225,6 +225,11 @@
 
 @push('js')
   <script>
+    $(document).ready(function(){
+        $('.in_hospital_confirmation_email_reception_flg').on('change', function(){
+            return false
+        });
+    });
       let billingData = {};
       
       function saveBillingData() {
@@ -292,11 +297,14 @@
           (function () {
               const change = function() {
                   if ($('.in_hospital_email_reception_flg input[type=radio]:checked').val() == '0') {
-                    //   $('.confirmation_email_reception_flag input:checkbox').prop('disabled', true);
-                      $('.confirmation_email_reception_flag').css('color', '#a5b6bf');
+                    //   $(".in_hospital_confirmation_email_reception_flg").get(0).onclick = return false;
+                    //   $(".in_hospital_change_email_reception_flg").get(0).onclick = return false;
+                    //   $(".in_hospital_cancellation_email_reception_flg").get(0).onclick = return false;
                   } else {
                     //   $('.confirmation_email_reception_flag input:checkbox').prop('disabled', false);
-                      $('.confirmation_email_reception_flag').css('color', '#a5b6bf');
+                    //   $(".in_hospital_confirmation_email_reception_flg").get(0).onclick = '';
+                    //   $(".in_hospital_change_email_reception_flg").get(0).onclick = '';
+                    //   $(".in_hospital_cancellation_email_reception_flg").get(0).onclick = '';
                   }
               };
               $('.in_hospital_email_reception_flg input:radio').change(function() {
@@ -311,7 +319,6 @@
           (function () {
               const changeEmailReceptionFlg = function() {
                   if ($('.email_reception_flg input[type=radio]:checked').val() == '0') {
-                      console.log('a')
                       $('.reception_type_flag input:checkbox').prop('disabled', true);
                   } else {
                       $('.reception_type_flag input:checkbox').prop('disabled', false);
