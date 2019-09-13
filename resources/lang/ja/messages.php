@@ -159,7 +159,6 @@ return [
     'registration'                         => '登録',
     'prefectures'                          => '都道府県',
     'update'                               => '更新',
-    'send_email'                           => 'メールを送る',
     'sending_email'                        => '送信...',
     'close'                                => '閉じる',
     'calendar'                             => 'カレンダー',
