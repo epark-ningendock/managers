@@ -32,7 +32,7 @@
 @section('table')
     <div class="table-responsive">
         @include('layouts.partials.pagination-label', ['paginator' => $customers])
-        <table id="example2" class="table table-bordered table-hover table-striped mb-5">
+        <table id="example2" class="table no-border table-hover table-striped mb-5">
             <thead>
             <tr>
                 <th>
@@ -52,8 +52,8 @@
                     {{--</a>--}}
                 {{--</th>--}}
                 <th>{{ trans('messages.gender') }}</th>
-                <th>{{ trans('messages.edit') }}</th>
-                <th>{{ trans('messages.delete') }}</th>
+                <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -78,11 +78,9 @@
                         <td>
                             <a class="btn btn-primary"
                                href="{{ route('customer.edit', $customer->id) }}">
-                               <i class="fa fa-edit text-bold"> 編集</i>
+                                <i class="fa fa-edit"> 編集</i>
                             </a>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $customer->id }}">
+                            <button class="btn btn-primary delete-btn delete-popup-btn" data-id="{{ $customer->id }}">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </td>
