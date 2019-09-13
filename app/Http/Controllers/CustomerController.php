@@ -231,11 +231,13 @@ class CustomerController extends Controller
 
     public function customerSearch()
     {
-        $customers = Customer::where('registration_card_number', 'LIKE', '%'. request()->search_text . '%')
-            ->orWhere(DB::raw("concat(family_name, first_name)"), 'LIKE', '%' . request()->search_text . '%')
-            ->orWhere(DB::raw("concat(family_name_kana, first_name_kana)"), 'LIKE', '%' . request()->search_text . '%')
-            ->orWhere('tel', request()->search_text)
-            ->get();
+        $customers = Customer::where('hospital_id', session()->get('hospital_id'))
+            ->where(function($query) {
+                $query->where('registration_card_number', 'LIKE', '%'. request()->search_text . '%')
+                    ->orWhere(DB::raw("concat(family_name, first_name)"), 'LIKE', '%' . request()->search_text . '%')
+                    ->orWhere(DB::raw("concat(family_name_kana, first_name_kana)"), 'LIKE', '%' . request()->search_text . '%')
+                    ->orWhere('tel', request()->search_text);
+        })->get();
 
         return response()->json([
             'data' => view('reservation.partials.create.customer-list', ['customers' => $customers])->render()
