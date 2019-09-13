@@ -295,6 +295,25 @@ return [
         'rate' => '手数料率',
         'from_date' => '適用期間',
         'pre_payment_rate' => '手数料率',
-        'pre_payment_from_date' => '適用期間'
+        'pre_payment_from_date' => '適用期間',
+        'pre_payment_from_date' => '適用期間',
+        // Contract information
+        '*.property_no' => '物件番号',
+        '*.code' => '顧客番号',
+        '*.contractor_name_kana' => '顧客名（フリガナ）',
+        '*.contractor_name' => '契約者名',
+        '*.representative_name_kana' => '代表者名（フリガナ）',
+        '*.representative_name' => '代表者名',
+        '*.address' => '住所',
+        '*.tel' => '電話番号',
+        '*.fax' => 'FAX番号',
+        '*.email' => 'メールアドレス',
+        '*.application_date' => '新規申込日',
+        '*.cancellation_date' => '解約予定日',
+        '*.billing_start_date' => '従量課金開始日',
+        '*.plan_code' => 'プランコード',
+        '*.service_start_date' => 'サービス開始日',
+        '*.service_end_date' => 'サービス終了日',
+        '*.hospital_name' => '屋号'
     ],
 ];
