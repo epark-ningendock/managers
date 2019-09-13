@@ -55,11 +55,13 @@ class CustomerController extends Controller
             $name_identifications = Customer::where('id', '<>', $source_customer_id)
                 ->where(function($q) use ($source_customer){
                     $q->whereNull('epark_member_id')
-                        ->orWhere('email', $source_customer->email)
-                        ->orWhere('birthday', $source_customer->birthday)
-                        ->orWhere(function($nq) use($source_customer) {
-                            $nq->where('family_name', $source_customer->family_name)
-                                ->where('first_name', $source_customer->first_name);
+                        ->where(function($q) use ($source_customer) {
+                            $q->orWhere('email', $source_customer->email)
+                                ->orWhere('birthday', $source_customer->birthday)
+                                ->orWhere(function($nq) use($source_customer) {
+                                    $nq->where('family_name', $source_customer->family_name)
+                                        ->where('first_name', $source_customer->first_name);
+                                });
                         });
                 })->paginate(10, [ '*' ], 'page', $identification_page_id);
 
