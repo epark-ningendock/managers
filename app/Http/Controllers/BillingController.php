@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Billing;
 use App\BillingMailHistory;
+use App\Enums\ReservationStatus;
 use App\Exports\BillingExport;
 use App\Filters\Billing\BillingFilters;
 use App\HospitalEmailSetting;
@@ -90,7 +91,7 @@ class BillingController extends Controller {
 			$dateFilter['endedDate'],
 		] )->paginate( 100 );
 
-		return $this->excel->download( new BillingExport( $billings ), 'billing.xlsx' );
+		return $this->excel->download( new BillingExport( $billings, $dateFilter['startedDate'], $dateFilter['endedDate'] ), 'billing.xlsx' );
 
 	}
 

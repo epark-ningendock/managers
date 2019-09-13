@@ -14,10 +14,14 @@ class BillingListingSheet implements FromCollection, WithHeadings, WithMapping, 
     private $dataCollection;
 
     private $counter = 1;
+    private $startedDate;
+    private $endedDate;
 
-    public function __construct($collection)
+    public function __construct($collection, $startedDate, $endedDate)
     {
         $this->dataCollection = $collection;
+        $this->startedDate = $startedDate;
+        $this->endedDate = $endedDate;
     }
 
     /**
@@ -30,14 +34,19 @@ class BillingListingSheet implements FromCollection, WithHeadings, WithMapping, 
 
     public function map($billing): array
     {
+        $totalMonthlyReservation = $billing->hospital->reservations()->whereBetween( 'created_at', [
+            $this->startedDate,
+            $this->endedDate,
+        ] )->get()->pluck('fee')->sum();
+
         return [
             $billing->created_at->format('Y/m'),
             $billing->hospital->contract_information->property_no,
             $billing->hospital->contract_information->contractor_name,
             $billing->hospital->name,
-            $billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum(),
-            'Consumption tax subtotal',
-            $billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() + $billing->contractPlan->fee_rate
+            $billing->contractPlan->monthly_contract_fee,
+            $totalMonthlyReservation,
+            $billing->contractPlan->monthly_contract_fee + $totalMonthlyReservation
         ];
     }    
 

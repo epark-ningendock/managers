@@ -3,6 +3,7 @@
 namespace App\Exports\Sheets;
 
 use App\Billing;
+use App\Enums\ReservationStatus;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -14,10 +15,14 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
     private $dataCollection;
 
     private $counter = 1;
+    private $startedDate;
+    private $endedDate;
 
-    public function __construct($collection)
+    public function __construct($collection, $startedDate, $endedDate)
     {
         $this->dataCollection = $collection;
+        $this->startedDate = $startedDate;
+        $this->endedDate = $endedDate;
     }
 
     /**
@@ -34,15 +39,35 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
         $row = [];
         foreach( $this->dataCollection as $billing ) {
 
-            if ( isset($billing->hospital->reservations) )
-                
-                foreach( $billing->hospital->reservations->sortBy('hospital_id') as $reservation) {
+            $reservations = $billing->hospital->reservations->sortBy('hospital_id');
 
-                    if ( $reservation->channel == 2 || $reservation->channel == 3 ) {
-                        $channel = 'WEB';
+            if ( isset($reservations) )
+
+                foreach( $reservations as $key => $reservation) {
+
+                    if ( count($reservations) == ($key+1) ) {
+                        $channel = $billing->contractPlan->monthly_contract_fee;
                     } else {
-                        $channel = 'TEL';
+
+                        if ( $reservation->channel == 2 || $reservation->channel == 3 ) {
+                            $channel = 'WEB';
+                        } else {
+                            $channel = 'TEL';
+                        }
+
                     }
+
+                    $hp_link_status = '';
+                    if ( ($reservation->site_code == 'HP') && ( $reservation->fee == 0) && ( ReservationStatus::getKey($reservation->reservation_status) == 4) ) {
+                        $hp_link_status = 'HP Link';
+                    } elseif ( ($reservation->site_code == 'HP') && ( $reservation->fee == 0) ) {
+                        $hp_link_status = 'HP Link (Cancel)';
+                    }
+
+
+                    $the_amount = $reservation->tax_included_price + $reservation->adjustment_price + $reservation->reservation_options->pluck('option_price')->sum();
+
+
 
                     $row[] = [
                         // $reservation->hospital_id, sorting testing
@@ -50,22 +75,22 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         $billing->hospital->contract_information->property_no,
                         $billing->hospital->contract_information->contractor_name,
                         $billing->hospital->name,
-                        $reservation->channel,
+                        $channel,
                         $reservation->completed_date->format('Y/m/d'),
-                        $reservation->is_free_hp_link,
+                        $hp_link_status,
                         $billing->contractPlan->plan_name ?? '',
                         isset($reservation->reservation_options) ? '有' : '',
-                        'Calculation Errors',
-                        $reservation->tax_included_price + $reservation->tax_rate, //need to verify calculation1
+                        $the_amount,
+                        $the_amount / $reservation->tax_rate, //need to verify calculation1
                         $reservation->fee,
                         $billing->contractPlan->plan_name ?? '',
-                        (isset($reservation->site_code) && ( $reservation->site_code == 'HP') ) ? 'HPリンク' : $reservation->site_code,
+                        (isset($reservation->site_code) && ( $reservation->site_code == 'HP') ) ? 'HPリンク' : '',
                         $reservation->fee_rate . '%',
                     ];
 
                 }
 
-            }
+        }
 
             return collect($row);
 

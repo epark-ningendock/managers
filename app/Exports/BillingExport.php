@@ -19,10 +19,14 @@ class BillingExport implements WithMultipleSheets
     private $collection;
 
     private $counter = 1;
+    private $startedDate;
+    private $endedDate;
 
-    public function __construct($collection)
+    public function __construct($collection, $startedDate, $endedDate)
     {
         $this->collection = $collection;
+        $this->startedDate = $startedDate;
+        $this->endedDate = $endedDate;
     }
 
 
@@ -32,8 +36,8 @@ class BillingExport implements WithMultipleSheets
     public function sheets(): array
     {
         $sheets = [
-			new BillingListingSheet($this->collection),
-			new BillingDetailSheet($this->collection),
+			new BillingListingSheet($this->collection, $this->startedDate, $this->endedDate),
+			new BillingDetailSheet($this->collection, $this->startedDate, $this->endedDate),
         ];
 
         return $sheets;
