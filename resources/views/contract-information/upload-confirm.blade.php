@@ -15,7 +15,6 @@
         <tr>
           <th></th>
           <th>{{ trans('messages.property_no') }}</th>
-          <th>{{ trans('messages.customer_no') }}</th>
           <th>{{ trans('messages.contractor_name')  }}</th>
           <th>{{ trans('messages.contractor_name_kana') }}</th>
           <th>{{ trans('messages.application_date') }}</th>
@@ -31,8 +30,8 @@
           <th>{{ trans('messages.email') }}</th>
           <th>{{ trans('messages.plan_code') }}</th>
           <th>{{ trans('messages.plan_name') }}</th>
-          <th>{{ trans('service_start_date') }}</th>
-          <th>{{ trans('service_end_date') }}</th>
+          <th>{{ trans('messages.service_start_date') }}</th>
+          <th>{{ trans('messages.service_end_date') }}</th>
         </tr>
         </thead>
         <tbody>
@@ -42,9 +41,6 @@
             <td class="@if(isset($contract->id) && $contract->isDirty('property_no')) text-red @endif">
               {{ $contract->property_no }}
               <input type="hidden" name="contracts[{{$i}}][property_no]" value="{{ $contract->property_no }}">
-            </td>
-            <td class="@if(isset($contract->id) && $contract->isDirty('code')) text-red @endif">
-              {{ $contract->code }}
               <input type="hidden" name="contracts[{{$i}}][code]" value="{{ $contract->code }}">
             </td>
             <td class="@if(isset($contract->id) && $contract->isDirty('contractor_name')) text-red @endif">
