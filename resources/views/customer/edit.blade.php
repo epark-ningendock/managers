@@ -9,10 +9,6 @@
 @stop
 
 @section('form')
-
-    <div class="note-msg m-4">
-      <span class="text-danger">(*)</span>の欄は必ず入力してください
-    </div>
     <form method="post" action="{{ route('customer.update', ['id' => $customer_detail->id]) }}" class="h-adr">
       {{ csrf_field() }}
         {{ method_field('PATCH') }}

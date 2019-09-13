@@ -5,11 +5,13 @@
     <div class="box-body staff-form">
         <h2>顧客管理</h2>
         <div class="row">
+            @if (isset($customer_detail->id))
             <div class="col-md-6">
                 <label for="name">{{ trans('messages.customer_id') }}
                 </label>
                 <p>{{ $customer_detail->id or '' }}</p>
             </div>
+            @endif
             <div class="col-md-6">
                 <div class="form-group py-sm-1 @if ($errors->has('registration_card_number')) has-error @endif">
                     <label for="name">{{ trans('messages.consultation_ticket_number') }}</label>
@@ -159,7 +161,7 @@
                 <div class="form-group py-sm-1 @if ($errors->has('address1')) has-error @endif">
                     @if ($errors->has('address1')) <p class="help-block">{{ $errors->first('address1') }}</p> @endif
                     <div class="form-group py-sm-1 @if ($errors->has('address1')) has-error @endif">
-                        <label for="name">{{ trans('messages.address1') }}
+                        <label for="address1">{{ trans('messages.address1') }}
                         </label>
                         <input type="text" class="form-control p-street-address" name="address1" id="address1"
                                value="{{ old('address1', ( isset($customer_detail) ? $customer_detail->address1 : '')) }}"/>
@@ -170,7 +172,7 @@
             <div class="col-md-6">
                 <div class="form-group py-sm-1 @if ($errors->has('address2')) has-error @endif">
                     @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
-                        <label for="name">{{ trans('messages.address2') }}
+                        <label for="address2">{{ trans('messages.address2') }}
                         </label>
                         <input type="text" class="form-control p-extended-address" name="address2" id="address2"
                                value="{{ old('address2', ( isset($customer_detail) ? $customer_detail->address2 : '')) }}"/>
@@ -183,7 +185,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group py-sm-1 @if ($errors->has('email')) has-error @endif">
-                    <label for="name">{{ trans('messages.email') }}
+                    <label for="email">{{ trans('messages.email') }}
                     </label>
                     <input type="text" class="form-control" name="email" id="email"
                            value="{{ old('email', ( isset($customer_detail) ? $customer_detail->email : '')) }}"/>
@@ -221,7 +223,7 @@
                     @if ($errors->has('recall_count')) <p class="help-block">{{ $errors->first('recall_count') }}</p> @endif
                     <label for="name">{{ trans('messages.recall_count') }}
                     </label>
-                    <input type="text" class="form-control" name="address2" id="address2"
+                    <input type="text" class="form-control" name="recall_count" id="recall_count"
                            value="{{ old('recall_count', ( isset($customer_detail) ? $customer_detail->recall_count : '')) }}"/>
                     @if ($errors->has('recall_count')) <p class="help-block">{{ $errors->first('recall_count') }}</p> @endif
                 </div>
