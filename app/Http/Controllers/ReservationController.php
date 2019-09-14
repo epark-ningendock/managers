@@ -519,20 +519,22 @@ class ReservationController extends Controller
 
             $reservation->tax_included_price = $reservation->fee;
 
-            $customer = Customer::where('registration_card_number', $request->registration_card_number)->get()->first();
-
-            if (!isset($customer)) {
+            if ($request->customer_id) {
+                $customer = Customer::findOrFail($request->customer_id);
+                if (Reservation::where('customer_id', $request->customer_id)->count() > 0) {
+                    $reservation->is_repeat = true;
+                }
+            } else {
                 $customer = new Customer([
                     'first_name' => $request->first_name,
                     'family_name' => $request->family_name,
                     'first_name_kana' => $request->first_name_kana,
                     'family_name_kana' => $request->family_name_kana,
                     'tel' => $request->tel,
-                    'registration_card_number' => $request->registration_card_number
+                    'registration_card_number' => $request->registration_card_number,
+                    'hospital_id' => session()->get('hospital_id'),
                 ]);
                 $customer->save();
-            } else if (Reservation::where('customer_id', $customer->id)->count() > 0) {
-                $reservation->is_repeat = true;
             }
 
             $reservation->customer_id = $customer->id;
