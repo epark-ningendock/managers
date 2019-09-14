@@ -158,7 +158,7 @@
                 <div class="form-group row mt-2 @if ($errors->has('address1')) has-error @endif">
                     <label id="address1" class="col-sm-2 mt-2">{{ trans('messages.address1') }}</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control p-street-address" name="address1" id="address1"
+                        <input type="text" class="form-control p-locality" name="address1" id="address1"
                                value="{{ old('address1', ( isset($customer_detail) ? $customer_detail->address1 : '')) }}"/>
                     </div>
 
@@ -168,7 +168,7 @@
                 <div class="form-group row mt-4 @if ($errors->has('address2')) has-error @endif">
                     <label id="address2" class="col-sm-2 mt-2">{{ trans('messages.address2') }}</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control p-extended-address" name="address2" id="address2"
+                        <input type="text" class="form-control p-street-address p-extended-address" name="address2" id="address2"
                             value="{{ old('address2', ( isset($customer_detail) ? $customer_detail->address2 : '')) }}"/>
                     </div>
                     @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
