@@ -162,7 +162,7 @@
                     <div class="form-group py-sm-1 @if ($errors->has('address1')) has-error @endif">
                         <label for="address1">{{ trans('messages.address1') }}
                         </label>
-                        <input type="text" class="form-control p-street-address" name="address1" id="address1"
+                        <input type="text" class="form-control p-locality" name="address1" id="address1"
                                value="{{ old('address1', ( isset($customer_detail) ? $customer_detail->address1 : '')) }}"/>
                         @if ($errors->has('address1')) <p class="help-block">{{ $errors->first('address1') }}</p> @endif
                     </div>
@@ -173,7 +173,7 @@
                     @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
                         <label for="address2">{{ trans('messages.address2') }}
                         </label>
-                        <input type="text" class="form-control p-extended-address" name="address2" id="address2"
+                        <input type="text" class="form-control p-street-address p-extended-address" name="address2" id="address2"
                                value="{{ old('address2', ( isset($customer_detail) ? $customer_detail->address2 : '')) }}"/>
                         @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
                 </div>

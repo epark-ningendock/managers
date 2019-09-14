@@ -178,6 +178,7 @@
 
     <h2 class="section-title">受診者情報</h2>
     <p><a class="btn btn-primary" id="examinee-information" href="#">受診者検索</a></p>
+    <input type="hidden" name="customer_id" id="customer_id" value="{{ old('customer_id') }}"
 
     <div class="row mt-5">
         <div class="col-md-3">
