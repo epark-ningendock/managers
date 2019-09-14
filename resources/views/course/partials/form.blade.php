@@ -466,13 +466,12 @@
                 <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label></p>
               @else
                 <p class="col-sm-12">
-
-                    @if($minor->max_length < 500 )
-                <input type="text" name="minor_values[]"
-                       class="form-control minor-text minor-text-{{$key}} @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
-                  value = "{{ $minor_value }}" />
-                    @else
+                    @if($minor->max_length >= 500 )
                         <textarea class="form-control" name="minor_values[]" rows="7">{{ $minor_value }}</textarea>
+                    @else
+                        <input type="text" name="minor_values[]"
+                               class="form-control minor-text minor-text-{{$key}} @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
+                               value = "{{ $minor_value }}" />
                     @endif
                 <span class="pull-right">0/{{ $minor->max_length }}文字</span>
                 </p>
