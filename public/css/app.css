@@ -3206,21 +3206,12 @@ input[type=checkbox] + label:before {
   text-align: left;
 }
 
-#setting-list .mr-2 {
-  cursor: pointer;
-}
-
-#setting-list input[type=checkbox] + label:before {
-  margin: 0 9px 0 0;
-}
-
 #setting-list legend {
   width: auto;
 }
 
 #setting-list .mr-2 {
   cursor: pointer;
-  text-indent: 15px;
 }
 
 #setting-list input[type=checkbox] + label:before {
