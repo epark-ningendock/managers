@@ -169,8 +169,18 @@ class ImportCsv extends Command
             foreach ($files as $i => $file) {
                 $realpath = $hospital_nos[$hospital_no][$file]['realpath'];
                 $import_class = $this->getClass('b', $file, 'import');
+
+                if (filesize($realpath) == 0) {
+                    continue;
+                }
+
                 $this->line(sprintf("B[ %d / %d ] %s", $i + 1, count($files), $import_class));
-                (new $import_class($hospital_no, $realpath))->withOutput($this->output)->import($realpath);
+
+                try {
+                    (new $import_class($hospital_no, $realpath))->withOutput($this->output)->import($realpath);
+                } catch (\Exception $e) {
+                    Log::error($e->getMessage());
+                }
             }
         }
     }
