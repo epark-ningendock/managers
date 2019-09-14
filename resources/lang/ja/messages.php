@@ -24,7 +24,7 @@ return [
     'remove'                               => '削除する',
     'deleted'                              => ':nameの削除が完了しました。',
     'sent'                                 => ':mailを送信しました。',
-    'operation'                            => '操作対象に指定しました。',
+    'operation'                            => '操作対象に指定',
     'hospital_staff_update_passoword'      => '医療機関スタッフのパスワードを更新しました',
     'token_expired'                        => 'トークンが期限切れです。再送信してください',
     'hospital_staff_does_not_exist'        => 'この医療機関スタッフは存在しません。',
@@ -150,7 +150,7 @@ return [
     'reservation_memo'                     => '次回受付メモ',
     'claim_count'                          => 'クレーム数',
     'recall_count'                         => 'リコール数',
-    'reservation_date'                     => '予約日（受診日）',
+    'reservation_date'                     => '受診日',
     'course_name'                          => '検査コース名',
     'reservation_status'                   => 'ステータス',
     'consultation_ticket_number'           => '診察券番号',
@@ -231,6 +231,6 @@ return [
     'action'                               => '操作',
     'display_switching'                    => '表示切替',
     'perform_identification'               => '名寄せを実行する',
-    'integration-success'                  => '統合の成功。',
+    'integration-success'                  => '名寄せが完了しました。',
     'integration-error'                    => 'エラーが発生しました。'
 ];
