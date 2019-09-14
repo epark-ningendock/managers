@@ -55,6 +55,7 @@ class CustomerController extends Controller
             $name_identifications = Customer::where('id', '<>', $source_customer_id)
                 ->where(function($q) use ($source_customer){
                     $q->whereNull('epark_member_id')
+                        ->where('hospital_id', session()->get('hospital_id'))
                         ->where(function($q) use ($source_customer) {
                             $q->orWhere('email', $source_customer->email)
                                 ->orWhere('birthday', $source_customer->birthday)
