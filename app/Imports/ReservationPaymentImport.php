@@ -53,10 +53,9 @@ class ReservationPaymentImport extends ImportBAbstract
         ];
 
         try {
-            $model = new Reservation($arr);
-            $model->save();
+            $reservation->fill($arr);
+            $reservation->save();
 
-            $this->setId($model, $row);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
