@@ -40,13 +40,13 @@
 
           <p>
               {{ Form::hidden('in_hospital_change_email_reception_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
-              {{ Form::checkbox('in_hospital_change_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_change_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_change_email_reception_flg_01']) }}
+              {{ Form::checkbox('in_hospital_change_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT,  (old('in_hospital_change_email_reception_flg')) ? old('in_hospital_change_email_reception_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_change_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_change_email_reception_flg_01']) }}
               <label for="in_hospital_change_email_reception_flg_01">受付変更時</label>
           </p>
 
           <p>
               {{ Form::hidden('in_hospital_cancellation_email_reception_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
-              {{ Form::checkbox('in_hospital_cancellation_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_cancellation_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_cancellation_email_reception_flg_01']) }}
+              {{ Form::checkbox('in_hospital_cancellation_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('in_hospital_cancellation_email_reception_flg')) ? old('in_hospital_cancellation_email_reception_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_cancellation_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_cancellation_email_reception_flg_01']) }}
               <label for="in_hospital_cancellation_email_reception_flg_01">受付キャンセル時</label>
           </p>
         @if ($errors->has('hospital_reception_email_transmission_setting')) <p class="help-block">{{ $errors->first('hospital_reception_email_transmission_setting') }}</p> @endif
@@ -79,13 +79,13 @@
       <div class='form-group checkbox ml-3 reception_type_flag @if ($errors->has('reception_email_reception_address_setting')) has-error @endif'>
           <p>
               {{ Form::hidden('in_hospital_reception_email_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
-              {{ Form::checkbox('in_hospital_reception_email_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_reception_email_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_reception_email_flg_01']) }}
+              {{ Form::checkbox('in_hospital_reception_email_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('in_hospital_reception_email_flg')) ? old('in_hospital_reception_email_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_reception_email_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_reception_email_flg_01']) }}
               <label for="in_hospital_reception_email_flg_01">院内受付</label>
           </p>
 
           <p>
               {{ Form::hidden('web_reception_email_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
-              {{ Form::checkbox('web_reception_email_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->web_reception_email_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'web_reception_email_flg_01']) }}
+              {{ Form::checkbox('web_reception_email_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('web_reception_email_flg')) ? old('web_reception_email_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->web_reception_email_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'web_reception_email_flg_01']) }}
               <label for="web_reception_email_flg_01">WEB受付</label>
           </p>
           @if ($errors->has('reception_email_reception_address_setting')) <p class="help-block">{{ $errors->first('reception_email_reception_address_setting') }}</p> @endif
@@ -128,13 +128,13 @@
           <div class='checkbox ml-3 epark_in_hospital_reception_mail'>
               <p>
                   {{ Form::hidden('epark_in_hospital_reception_mail_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
-                  {{ Form::checkbox('epark_in_hospital_reception_mail_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->epark_in_hospital_reception_mail_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'epark_in_hospital_reception_mail_flg_01']) }}
+                  {{ Form::checkbox('epark_in_hospital_reception_mail_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('epark_in_hospital_reception_mail_flg')) ? old('epark_in_hospital_reception_mail_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->epark_in_hospital_reception_mail_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'epark_in_hospital_reception_mail_flg_01']) }}
                   <label for="epark_in_hospital_reception_mail_flg_01">院内受付</label>
               </p>
 
               <p>
                   {{ Form::hidden('epark_web_reception_email_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
-                  {{ Form::checkbox('epark_web_reception_email_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->epark_web_reception_email_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'epark_web_reception_email_flg_01']) }}
+                  {{ Form::checkbox('epark_web_reception_email_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('epark_web_reception_email_flg')) ? old('epark_web_reception_email_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->epark_web_reception_email_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'epark_web_reception_email_flg_01']) }}
                   <label for="epark_web_reception_email_flg_01">WEB受付</label>
               </p>
           </div>
