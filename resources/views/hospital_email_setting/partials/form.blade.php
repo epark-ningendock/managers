@@ -1,14 +1,16 @@
 @include('layouts.partials.error_pan')
-<div class="form-entry">
+<div class="form-entry" id="hospital_email_setting">
     <div class="box-body">
     <h2>受付メール設定</h2>
-    <p class="text-bold">【メール設定】</p>
-    <p class='ml-3'>差出人メールアドレス：unei@eparkdock.com</p>
+    <fieldset class="form-group mt-3">
+        <legend>メール設定</legend>
+    <!--<p class="text-bold">【メール設定】</p>-->
+    <p class="sender-email">差出人メールアドレス：unei@eparkdock.com</p>
 
     <div class="form-group @if ($errors->has('hospital_email_setting')) has-error @endif">
       <input type="hidden" name="lock_version" value="{{ $hospital_email_setting->lock_version or '' }}" />
 
-        <div class="form-group py-sm-2 radio ml-3 in_hospital_email_reception_flg">
+        <div class="form-group py-sm-2 in_hospital_email_reception_flg">
             <input type="hidden" name="updated_at" value="{{ isset($staff) ? $staff->updated_at : null }}">
             <label for="status">受信希望者・院内受付メール送信設定</label>
             <group class="inline-radio two-option-large">
@@ -22,7 +24,7 @@
                     <input type="radio" name="in_hospital_email_reception_flg" id="in_hospital_email_reception_flg_false"
                     {{ old('in_hospital_email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::NOT_ACCEPT ? 'checked' : '' }}
                     value="{{ \App\Enums\ReceptionEmailSetting::NOT_ACCEPT }}">
-                    <label id="in_hospital_email_reception_flg_false">配信メール配信を希望しない</label>
+                    <label id="in_hospital_email_reception_flg_false">メール配信を希望しない</label>
                 </div>
             </group>
             @if ($errors->has('in_hospital_email_reception_flg')) <p class="help-block has-error">{{ $errors->first('in_hospital_email_reception_flg') }}</p> @endif
@@ -53,7 +55,7 @@
         <div class="form-group @if ($errors->has('hospital_email_setting')) has-error @endif">
             <input type="hidden" name="lock_version" value="{{ $hospital_email_setting->lock_version or '' }}" />
 
-            <div class="form-group py-sm-2 radio ml-3 email_reception_flg">
+            <div class="form-group py-sm-2 email_reception_flg">
                 <input type="hidden" name="updated_at" value="{{ isset($staff) ? $staff->updated_at : null }}">
                 <label for="status">受付メール受信アドレス設定</label>
                 <group class="inline-radio two-option-middle">
@@ -137,6 +139,7 @@
               </p>
           </div>
       </div>
+    </fieldset>
 
         <h2>請求メール設定</h2>
 
