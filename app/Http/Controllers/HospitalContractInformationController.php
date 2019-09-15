@@ -23,7 +23,11 @@ class HospitalContractInformationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(ContractInformationFilters $filter) {
+    public function index(ContractInformationFilters $filter, Request $request) {
+        if(!isset($request->status)) {
+            $request->request->add(['status' => 'UNDER_CONTRACT']);
+        }
+
         $contract_informations = ContractInformation::with('hospital')
             ->filter($filter)->orderBy('updated_at', 'DESC')->paginate(20);
 
