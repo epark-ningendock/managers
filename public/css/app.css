@@ -3272,6 +3272,12 @@ input[type=checkbox]:disabled + label:before {
   color: #333333;
 }
 
+input[type=checkbox]:checked:disabled + label:before {
+  content: "\F046";
+  opacity: 0.4;
+  color: #333333;
+}
+
 .vertical-middle td {
   vertical-align: middle !important;
 }

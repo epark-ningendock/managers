@@ -989,6 +989,9 @@ input[type=checkbox]:checked + label:before { letter-spacing: 5px; } /* allow sp
 
 input[type=checkbox]:disabled + label:before { content: "\f096"; opacity: 0.4; color: #333333}
 
+input[type=checkbox]:checked:disabled + label:before { content: "\f046"; opacity: 0.4; color: #333333}
+
+
 .vertical-middle {
   td {
     vertical-align: middle !important;
