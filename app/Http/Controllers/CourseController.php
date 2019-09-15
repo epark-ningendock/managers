@@ -172,7 +172,8 @@ class CourseController extends Controller
                 'lock_version',
                 'course_display_start',
                 'course_display_end',
-                'is_pre_account'
+                'is_pre_account',
+                'reception_acceptance_day_end'
             ]);
             $reception_start_day = $request->input('reception_start_day');
             $reception_start_month = $request->input('reception_start_month');

@@ -263,7 +263,18 @@
       @if ($errors->has('reception_end_day')) <p class="help-block text-red">{{ $errors->first('reception_end_day') }}</p> @endif
       @if ($errors->has('reception_end_month')) <p class="help-block text-red">{{ $errors->first('reception_end_month') }}</p> @endif
     </div>
-    <div class="form-group">
+
+
+        <div class="form-group @if ($errors->has('reception_acceptance_day_end')) has-error @endif">
+            <div class="form-horizontal display-period">
+                <label>受付終了日</label>
+                {{ Form::text('reception_acceptance_day_end', old('reception_acceptance_day_end', (isset($course) ? $course->reception_acceptance_day_end : null)),
+                    ['class' => 'd-inline-block w16em form-control', 'id' => 'reception_acceptance_day_end', 'placeholder' => $disp_date_end]) }}
+            </div>
+        </div>
+
+
+    <!--<div class="form-group">
       <label>受付許可日  <span class="form_required">必須</span></label>
       <div class="form-horizontal">
           本日から
@@ -279,7 +290,7 @@
       </div>
       @if ($errors->has('reception_acceptance_day')) <p class="help-block text-red">{{ $errors->first('reception_acceptance_day') }}</p>@endif
       @if ($errors->has('reception_acceptance_month')) <p class="help-block text-red">{{ $errors->first('reception_acceptance_month') }}</p> @endif
-    </div>
+    </div>-->
     <div class="form-group @if ($errors->has('cancellation_deadline')) has-error @endif" >
       <label for="cancellation_deadline">変更キャンセル受付期限</label>
       <div>
@@ -795,6 +806,10 @@
                 format: 'yyyy-mm-dd',
             });
             $('#datetimepicker-disp-end').datepicker({
+                language:'ja',
+                format: 'yyyy-mm-dd',
+            });
+            $('#reception_acceptance_day_end').datepicker({
                 language:'ja',
                 format: 'yyyy-mm-dd',
             });
