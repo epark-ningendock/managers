@@ -1,14 +1,16 @@
 @include('layouts.partials.error_pan')
-<div class="form-entry">
+<div class="form-entry" id="hospital_email_setting">
     <div class="box-body">
     <h2>受付メール設定</h2>
-    <p class="text-bold">【メール設定】</p>
-    <p class='ml-3'>差出人メールアドレス：unei@eparkdock.com</p>
+    <fieldset class="form-group mt-3">
+        <legend>メール設定</legend>
+    <!--<p class="text-bold">【メール設定】</p>-->
+    <p class="sender-email">差出人メールアドレス：unei@eparkdock.com</p>
 
     <div class="form-group @if ($errors->has('hospital_email_setting')) has-error @endif">
       <input type="hidden" name="lock_version" value="{{ $hospital_email_setting->lock_version or '' }}" />
 
-        <div class="form-group py-sm-2 radio ml-3 in_hospital_email_reception_flg">
+        <div class="form-group py-sm-2 in_hospital_email_reception_flg">
             <input type="hidden" name="updated_at" value="{{ isset($staff) ? $staff->updated_at : null }}">
             <label for="status">受信希望者・院内受付メール送信設定</label>
             <group class="inline-radio two-option-large">
@@ -22,7 +24,7 @@
                     <input type="radio" name="in_hospital_email_reception_flg" id="in_hospital_email_reception_flg_false"
                     {{ old('in_hospital_email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::NOT_ACCEPT ? 'checked' : '' }}
                     value="{{ \App\Enums\ReceptionEmailSetting::NOT_ACCEPT }}">
-                    <label id="in_hospital_email_reception_flg_false">配信メール配信を希望しない</label>
+                    <label id="in_hospital_email_reception_flg_false">メール配信を希望しない</label>
                 </div>
             </group>
             @if ($errors->has('in_hospital_email_reception_flg')) <p class="help-block has-error">{{ $errors->first('in_hospital_email_reception_flg') }}</p> @endif
@@ -53,7 +55,7 @@
         <div class="form-group @if ($errors->has('hospital_email_setting')) has-error @endif">
             <input type="hidden" name="lock_version" value="{{ $hospital_email_setting->lock_version or '' }}" />
 
-            <div class="form-group py-sm-2 radio ml-3 email_reception_flg">
+            <div class="form-group py-sm-2 email_reception_flg">
                 <input type="hidden" name="updated_at" value="{{ isset($staff) ? $staff->updated_at : null }}">
                 <label for="status">受付メール受信アドレス設定</label>
                 <group class="inline-radio two-option-middle">
@@ -137,27 +139,26 @@
               </p>
           </div>
       </div>
+    </fieldset>
+
+        <h2>請求メール設定</h2>
+
+        <div class="form-group py-sm-2">
+            <label for="status">{{ trans('messages.billing_email_flg') }}</label>
+            <group class="inline-radio two-option" style="width: 190px;">
+                <div>
+                    <input class="billing_email_flg" type="radio" name="billing_email_flg" @if( ( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '' ) == 1 ) || is_null($hospital_email_setting->billing_email_flg) ) checked @endif }}
+                    value="1"
+                    ><label>{{ trans('messages.billing_email_flg_receive') }}</label></div>
+                <div>
+                    <input class="billing_email_flg" type="radio" name="billing_email_flg" @if( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '') == 0 ) checked @endif
+                    value="0"><label>{{ trans('messages.billing_email_flg_not_accept') }}</label></div>
+            </group>
+            @if ($errors->has('billing_email_flg')) <p class="help-block has-error">{{ $errors->first('billing_email_flg') }}</p> @endif
+        </div>
+
 
         <div class="bill-mail-setup bms">
-
-            <div class="form-group @if ($errors->has('billing_email_flg')) has-error @endif">
-                <div class="row mb-3 mt-3">
-                    <div class="col-md-4">
-                        <label for="billing_email_flg">{{ trans('messages.billing_email_flg') }} <span class="text-danger">*</span></label>
-                    </div>
-                    <div class="col-md-8">
-                        <label class="radio-inline">
-                            <input type="radio" class="billing_email_flg" name="billing_email_flg" value="1" @if( ( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '' ) == 1 ) || is_null($hospital_email_setting->billing_email_flg) ) checked @endif>{{ trans('messages.billing_email_flg_receive') }}
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" class="billing_email_flg" name="billing_email_flg" value="0" @if( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '') == 0 ) checked @endif> {{ trans('messages.billing_email_flg_not_accept') }}
-                        </label>
-
-                        @if ($errors->has('billing_email_flg') && ($errors->first('billing_email_flg') == '請求メールの設定は、必ず指定してください。')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_email_flg') }}</p> @endif
-
-                    </div>
-                </div>
-            </div>
 
             <div class="bill-fields-box">
 
