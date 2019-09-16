@@ -6,7 +6,6 @@
         <legend>メール設定</legend>
     <!--<p class="text-bold">【メール設定】</p>-->
     <p class="sender-email">差出人メールアドレス：unei@eparkdock.com</p>
-
     <div class="form-group @if ($errors->has('hospital_email_setting')) has-error @endif">
       <input type="hidden" name="lock_version" value="{{ $hospital_email_setting->lock_version or '' }}" />
 
@@ -30,7 +29,7 @@
         </div>
     </div>
 
-      <div class='form-group checkbox ml-3 confirmation_email_reception_flag @if ($errors->has('in_hospital_email_reception_flg')) has-error @endif'>
+      <div class='form-group checkbox ml-3 confirmation_email_reception_flag @if ($errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') != '受信メールアドレスを1つ以上入力してください。')) has-error @endif'>
 
           <p>{{ Form::hidden('in_hospital_confirmation_email_reception_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
               {{ Form::checkbox('in_hospital_confirmation_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('in_hospital_confirmation_email_reception_flg')) ? old('in_hospital_confirmation_email_reception_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_confirmation_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_confirmation_email_reception_flg_01']) }}
@@ -48,7 +47,7 @@
               {{ Form::checkbox('in_hospital_cancellation_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('in_hospital_cancellation_email_reception_flg')) ? old('in_hospital_cancellation_email_reception_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_cancellation_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_cancellation_email_reception_flg_01']) }}
               <label for="in_hospital_cancellation_email_reception_flg_01">受付キャンセル時</label>
           </p>
-        @if ($errors->has('in_hospital_email_reception_flg')) <p class="help-block">{{ $errors->first('in_hospital_email_reception_flg') }}</p> @endif
+        @if ($errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') != '受信メールアドレスを1つ以上入力してください。')) <p class="help-block">{{ $errors->first('in_hospital_email_reception_flg') }}</p> @endif
       </div>
 
         <div class="form-group @if ($errors->has('hospital_email_setting')) has-error @endif">
@@ -88,7 +87,7 @@
           </p>
           @if ($errors->has('email_reception_flg')) <p class="help-block">{{ $errors->first('email_reception_flg') }}</p> @endif
       </div>
-      <div class='form-group @if ($errors->has('reception_email_group')) has-error @endif'>
+      <div class='form-group @if ($errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') === '受信メールアドレスを1つ以上入力してください。')) has-error @endif'>
         <div class="form-group @if ($errors->has('reception_email1')) has-error @endif">
             <label class='ml-3'>受信メールアドレス1</label>
             {{ Form::text('reception_email1' , (old('reception_email1')) ? old('reception_email1') : $hospital_email_setting->reception_email1, ['class' => 'form-control ml-3', 'id' => 'reception_email1', 'placeholder' => 'メールアドレスを入力してください']) }}
@@ -118,7 +117,7 @@
             {{ Form::text('reception_email5' , (old('reception_email5')) ? old('reception_email5') : $hospital_email_setting->reception_email5, ['class' => 'form-control ml-3', 'id' => 'reception_email5', 'placeholder' => 'メールアドレスを入力してください']) }}
             @if ($errors->has('reception_email5')) <p class="help-block ml-3">{{ $errors->first('reception_email5') }}</p> @endif
         </div>
-        @if ($errors->has('reception_email_group')) <p class="help-block">{{ $errors->first('reception_email_group') }}</p> @endif
+        @if ($errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') === '受信メールアドレスを1つ以上入力してください。') ) <p class="help-block">{{ $errors->first('in_hospital_email_reception_flg') }}</p> @endif
       </div>
 
       <div class="form-group">
@@ -152,7 +151,6 @@
                     <input class="billing_email_flg" type="radio" name="billing_email_flg" @if( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '') == 0 ) checked @endif
                     value="0"><label>{{ trans('messages.billing_email_flg_not_accept') }}</label></div>
             </group>
-            @if ($errors->has('billing_email_flg')) <p class="help-block has-error">{{ $errors->first('billing_email_flg') }}</p> @endif
         </div>
 
 

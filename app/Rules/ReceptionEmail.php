@@ -33,7 +33,7 @@ class ReceptionEmail implements Rule
           && request('reception_email4') == ''
           && request('reception_email5') == '')) {
           return false;
-        } else {
+        } else {          
           return true;
         }
     }

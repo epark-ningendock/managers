@@ -30,26 +30,7 @@ class HospitalEmailSettingController extends Controller
         
         try {
             DB::beginTransaction();
-
-            $messages = [];
             
-            // 受付メール受信アドレス設定
-                if (($request->get('in_hospital_email_reception_flg') == '1'
-                || $request->get('email_reception_flg') == '1')
-                && ($request->get('reception_email1') == ''
-                && $request->get('reception_email2') == ''
-                && $request->get('reception_email3') == ''
-                && $request->get('reception_email4') == ''
-                && $request->get('reception_email5') == '')) {
-                $messages += array('reception_email_group' => '受信メールアドレスを1つ以上入力してください。');
-            }
-
-            if (!empty($messages)) {
-                DB::rollback();
-                $request->session()->flash('_old_input', $request->all());
-                return redirect()->back()->withErrors($messages);
-            }
-
             $hospital_email_setting = HospitalEmailSetting::findOrFail($id);
             $inputs = request()->all();
 
