@@ -106,7 +106,6 @@ class HospitalContractInformationController extends Controller
         });
         $contract_plans = ContractPlan::whereIn('plan_code', $plan_codes)->get()->groupBy('plan_code');
 
-
         $contracts = collect();
         foreach ($uploaded_contracts as $contract_arr) {
 
@@ -234,12 +233,12 @@ class HospitalContractInformationController extends Controller
             '*.tel' => 'required|regex:/^\d{2,4}-?\d{2,4}-?\d{3,4}$/',
             '*.fax' => 'nullable|regex:/^\d{2,4}-?\d{2,4}-?\d{3,4}$/',
             '*.email' => 'nullable|email',
-            '*.application_date' => 'required|date_format:Y/n/j',
-            '*.cancellation_date' => 'nullable|date_format:Y/n/j',
-            '*.billing_start_date' => 'required|date_format:Y/n/j',
+            '*.application_date' => 'required|date_format:Ymd',
+            '*.cancellation_date' => 'nullable|date_format:Ymd',
+            '*.billing_start_date' => 'required|date_format:Ymd',
             '*.plan_code' => 'required|max:2|exists:contract_plans,plan_code',
-            '*.service_start_date' => 'nullable|date_format:Y/n/j',
-            '*.service_end_date' => 'nullable|date_format:Y/n/j',
+            '*.service_start_date' => 'nullable|date_format:Ymd',
+            '*.service_end_date' => 'nullable|date_format:Ymd',
             '*.hospital_name' => 'required|max:50'
         ];
     }

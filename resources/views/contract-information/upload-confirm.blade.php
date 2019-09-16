@@ -53,16 +53,16 @@
             </td>
             <td class="@if(isset($contract->id) && $contract->isDirty('application_date')) text-red @endif">
               {{ $contract->application_date->format('Y/m/d') }}
-              <input type="hidden" name="contracts[{{$i}}][application_date]" value="{{ $contract->application_date->format('Y/n/j') }}">
+              <input type="hidden" name="contracts[{{$i}}][application_date]" value="{{ $contract->application_date->format('Ymd') }}">
             </td>
             <td class="@if(isset($contract->id) && $contract->isDirty('billing_start_date')) text-red @endif">
               {{ $contract->billing_start_date->format('Y/m/d') }}
-              <input type="hidden" name="contracts[{{$i}}][billing_start_date]" value="{{ $contract->billing_start_date->format('Y/n/j') }}">
+              <input type="hidden" name="contracts[{{$i}}][billing_start_date]" value="{{ $contract->billing_start_date->format('Ymd') }}">
             </td>
             <td class="@if(isset($contract->id) && $contract->isDirty('cancellation_date')) text-red @endif">
               {{ isset($contract->cancellation_date) ? $contract->cancellation_date->format('Y/m/d') : '-' }}
               <input type="hidden" name="contracts[{{$i}}][cancellation_date]"
-                     value="{{ isset($contract->cancellation_date) ? $contract->cancellation_date->format('Y/n/j') : ''}}">
+                     value="{{ isset($contract->cancellation_date) ? $contract->cancellation_date->format('Ymd') : ''}}">
             </td>
             <td class="@if(isset($contract->id) && $contract->isDirty('representative_name')) text-red @endif">
               {{ $contract->representative_name }}
@@ -97,7 +97,7 @@
               <input type="hidden" name="contracts[{{$i}}][email]" value="{{ $contract->email }}">
             </td>
             <td class="@if(isset($contract->id) && $contract->is_plan_change) text-red @endif">
-              {{ $contract->contract_plan->id }}
+              {{ $contract->contract_plan->plan_code }}
               <input type="hidden" name="contracts[{{$i}}][plan_code]" value="{{ $contract->contract_plan->plan_code }}">
             </td>
             <td class="@if(isset($contract->id) && $contract->is_plan_change) text-red @endif">
@@ -105,11 +105,11 @@
             </td>
             <td class="@if(isset($contract->id) && $contract->isDirty('service_start_date')) text-red @endif">
               {{ $contract->service_start_date->format('Y/m/d') }}
-              <input type="hidden" name="contracts[{{$i}}][service_start_date]" value="{{ $contract->service_start_date->format('Y/n/j') }}">
+              <input type="hidden" name="contracts[{{$i}}][service_start_date]" value="{{ $contract->service_start_date->format('Ymd') }}">
             </td>
             <td class="@if(isset($contract->id) && $contract->isDirty('service_end_date')) text-red @endif">
               {{ $contract->service_end_date->format('Y/m/d') }}
-              <input type="hidden" name="contracts[{{$i}}][service_end_date]" value="{{ $contract->service_end_date->format('Y/n/j') }}">
+              <input type="hidden" name="contracts[{{$i}}][service_end_date]" value="{{ $contract->service_end_date->format('Ymd') }}">
             </td>
           </tr>
         @endforeach
