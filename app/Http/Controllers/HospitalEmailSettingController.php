@@ -32,21 +32,6 @@ class HospitalEmailSettingController extends Controller
             DB::beginTransaction();
 
             $messages = [];
-
-            // 受信希望者・院内受付メール送信設定
-            if ($request->get('in_hospital_email_reception_flg') == '1'
-                && ($request->get('in_hospital_confirmation_email_reception_flg') != '1'
-                && $request->get('in_hospital_change_email_reception_flg') != '1'
-                && $request->get('in_hospital_cancellation_email_reception_flg') != '1')) {
-                $messages += array('hospital_reception_email_transmission_setting' => '院内受付メール送信設定を希望する場合は、1つ以上指定してください。');
-            }
-
-            // 受付メール受信アドレス設定
-            if ($request->get('email_reception_flg') == '1'
-                && ($request->get('in_hospital_reception_email_flg') != '1'
-                && $request->get('web_reception_email_flg') != '1')) {
-                $messages += array('reception_email_reception_address_setting' => '受付メール受信アドレス設定を受け取る場合は、1つ以上指定してください。');
-            }
             
             // 受付メール受信アドレス設定
                 if (($request->get('in_hospital_email_reception_flg') == '1'

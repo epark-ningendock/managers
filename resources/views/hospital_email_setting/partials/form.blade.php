@@ -27,11 +27,10 @@
                     <label id="in_hospital_email_reception_flg_false">メール配信を希望しない</label>
                 </div>
             </group>
-            @if ($errors->has('in_hospital_email_reception_flg')) <p class="help-block has-error">{{ $errors->first('in_hospital_email_reception_flg') }}</p> @endif
         </div>
     </div>
 
-      <div class='form-group checkbox ml-3 confirmation_email_reception_flag @if ($errors->has('hospital_reception_email_transmission_setting')) has-error @endif'>
+      <div class='form-group checkbox ml-3 confirmation_email_reception_flag @if ($errors->has('in_hospital_email_reception_flg')) has-error @endif'>
 
           <p>{{ Form::hidden('in_hospital_confirmation_email_reception_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
               {{ Form::checkbox('in_hospital_confirmation_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('in_hospital_confirmation_email_reception_flg')) ? old('in_hospital_confirmation_email_reception_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_confirmation_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_confirmation_email_reception_flg_01']) }}
@@ -49,7 +48,7 @@
               {{ Form::checkbox('in_hospital_cancellation_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('in_hospital_cancellation_email_reception_flg')) ? old('in_hospital_cancellation_email_reception_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_cancellation_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_cancellation_email_reception_flg_01']) }}
               <label for="in_hospital_cancellation_email_reception_flg_01">受付キャンセル時</label>
           </p>
-        @if ($errors->has('hospital_reception_email_transmission_setting')) <p class="help-block">{{ $errors->first('hospital_reception_email_transmission_setting') }}</p> @endif
+        @if ($errors->has('in_hospital_email_reception_flg')) <p class="help-block">{{ $errors->first('in_hospital_email_reception_flg') }}</p> @endif
       </div>
 
         <div class="form-group @if ($errors->has('hospital_email_setting')) has-error @endif">
@@ -72,11 +71,10 @@
                         <label for="email_reception_flg_false">受け取らない</label>
                     </div>
                 </group>
-                @if ($errors->has('email_reception_flg')) <p class="help-block has-error">{{ $errors->first('email_reception_flg') }}</p> @endif
             </div>
         </div>
 
-      <div class='form-group checkbox ml-3 reception_type_flag @if ($errors->has('reception_email_reception_address_setting')) has-error @endif'>
+      <div class='form-group checkbox ml-3 reception_type_flag @if ($errors->has('email_reception_flg')) has-error @endif'>
           <p>
               {{ Form::hidden('in_hospital_reception_email_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
               {{ Form::checkbox('in_hospital_reception_email_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('in_hospital_reception_email_flg')) ? old('in_hospital_reception_email_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_reception_email_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_reception_email_flg_01']) }}
@@ -88,7 +86,7 @@
               {{ Form::checkbox('web_reception_email_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('web_reception_email_flg')) ? old('web_reception_email_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->web_reception_email_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'web_reception_email_flg_01']) }}
               <label for="web_reception_email_flg_01">WEB受付</label>
           </p>
-          @if ($errors->has('reception_email_reception_address_setting')) <p class="help-block">{{ $errors->first('reception_email_reception_address_setting') }}</p> @endif
+          @if ($errors->has('email_reception_flg')) <p class="help-block">{{ $errors->first('email_reception_flg') }}</p> @endif
       </div>
       <div class='form-group @if ($errors->has('reception_email_group')) has-error @endif'>
         <div class="form-group @if ($errors->has('reception_email1')) has-error @endif">
