@@ -8,7 +8,7 @@
 @elseif ($data['processing'] === "更新")
     <p>更新者：{{ $data['staff_name'] }}</p>
     <p>更新日時：{{ $data['course']->updated_at }}</p>
-@elseif ($data['course'] === "削除")
+@elseif ($data['processing'] === "削除")
     <p>削除者：{{ $data['staff_name'] }}</p>
     <p>削除日時：{{ $data['course']->deleted_at }}</p>
 @endif
