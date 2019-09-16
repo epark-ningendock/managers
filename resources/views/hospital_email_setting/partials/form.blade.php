@@ -13,7 +13,7 @@
         <div class="form-group py-sm-2 in_hospital_email_reception_flg">
             <input type="hidden" name="updated_at" value="{{ isset($staff) ? $staff->updated_at : null }}">
             <label for="status">受信希望者・院内受付メール送信設定</label>
-            <group class="inline-radio two-option-large">
+            <group class="inline-radio two-option-large" style="width: 350px;">
                 <div>
                     <input type="radio" name="in_hospital_email_reception_flg" id="in_hospital_email_reception_flg_true"
                     {{ old('in_hospital_email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }}
@@ -58,7 +58,7 @@
             <div class="form-group py-sm-2 email_reception_flg">
                 <input type="hidden" name="updated_at" value="{{ isset($staff) ? $staff->updated_at : null }}">
                 <label for="status">受付メール受信アドレス設定</label>
-                <group class="inline-radio two-option-middle">
+                <group class="inline-radio two-option-middle" style="width: 350px;">
                     <div>
                             <input type="radio" name="email_reception_flg" id="email_reception_flg_true"
                             {{ old('email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }}
@@ -298,14 +298,9 @@
           (function () {
               const change = function() {
                   if ($('.in_hospital_email_reception_flg input[type=radio]:checked').val() == '0') {
-                    //   $(".in_hospital_confirmation_email_reception_flg").get(0).onclick = return false;
-                    //   $(".in_hospital_change_email_reception_flg").get(0).onclick = return false;
-                    //   $(".in_hospital_cancellation_email_reception_flg").get(0).onclick = return false;
+                      $('.confirmation_email_reception_flag input:checkbox').prop('disabled', true);
                   } else {
-                    //   $('.confirmation_email_reception_flag input:checkbox').prop('disabled', false);
-                    //   $(".in_hospital_confirmation_email_reception_flg").get(0).onclick = '';
-                    //   $(".in_hospital_change_email_reception_flg").get(0).onclick = '';
-                    //   $(".in_hospital_cancellation_email_reception_flg").get(0).onclick = '';
+                      $('.confirmation_email_reception_flag input:checkbox').prop('disabled', false);
                   }
               };
               $('.in_hospital_email_reception_flg input:radio').change(function() {
@@ -314,7 +309,7 @@
               change();
           })();
 
-        　/* ---------------------------------------------------
+        /* ---------------------------------------------------
            // 受付メール受信アドレス設定
           -----------------------------------------------------*/
           (function () {
