@@ -2532,6 +2532,10 @@ label {
   line-height: 2em;
 }
 
+.color-gray {
+  color: #777777;
+}
+
 .help-block {
   display: block;
   margin-top: 2px;

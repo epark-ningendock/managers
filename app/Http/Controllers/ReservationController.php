@@ -77,16 +77,16 @@ class ReservationController extends Controller
         $query = $this->get_reception_list_query($request);
         $reservations = $query->paginate($page_per_record)
             ->appends($request->query());
-        $courses = Course::all();
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))->get();
 
         $params = $request->input();
 
         // for initial default value if it has not been set empty purposely
         if (!$request->has('reservation_start_date')) {
-            $params['reservation_start_date'] = Carbon::now()->format('Y/m/d');
+            $params['reservation_start_date'] = Carbon::now()->startOfMonth()->format('Y/m/d');
         }
         if (!$request->has('reservation_end_date')) {
-            $params['reservation_end_date'] = Carbon::now()->format('Y/m/d');
+            $params['reservation_end_date'] = Carbon::now()->endOfMonth()->format('Y/m/d');
         }
 
         return view('reservation.index', compact('reservations', 'courses'))

@@ -177,9 +177,17 @@
     </div>
 
     <h2 class="section-title">受診者情報</h2>
-    <p><a class="btn btn-primary" id="examinee-information" href="#">受診者検索</a></p>
-    <input type="hidden" name="customer_id" id="customer_id" value="{{ old('customer_id') }}"
-
+    <div class="row mt-5">
+        <div class="col-md-3">
+            <p><a class="btn btn-primary" id="examinee-information" href="#">受診者検索</a></p>
+        </div>
+        <div class="col-md-9">
+            <p class="color-gray" style="font-size: 1.2rem;">受診者名、受診者名かな、電話番号、診察券番号から検索が行えます。</p>
+            <p class="color-gray" style="font-size: 1.2rem;">全ての顧客を表示する場合は何も入力せず検索ボタンを押下してください</p>
+        </div>
+    </div>     
+    <input type="hidden" name="customer_id" id="customer_id" value="{{ old('customer_id') }}">
+    
     <div class="row mt-5">
         <div class="col-md-3">
             <label for="">お名前 <span class="form_required">必須</span></label>
@@ -258,7 +266,7 @@
     <div class="row">
 
         <div class="col-md-3">
-            <label for="registration_card_number">診察券番号<span class="form_required">必須</span></label>
+            <label for="registration_card_number">診察券番号</label>
         </div>
 
         <div class="col-md-9">
