@@ -412,7 +412,7 @@
           <td class="text-center">
               <input type="checkbox" class="minor-checkbox" id="option_set_price{{ $option->id }}" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
               <label class="mr-2" for="option_set_price{{ $option->id }}">{{ $option->name }}</label></td>
-          <td class="text-center">{{ $option->price }} 円</td>
+          <td class="text-center">{{ number_format($option->price) }} 円</td>
         </tr>
       @endforeach
     </table>
