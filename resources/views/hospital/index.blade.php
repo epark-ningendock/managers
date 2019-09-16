@@ -82,7 +82,9 @@
               ">
             <td>{{ $hospital->id }}</td>
             <td>{{ $hospital->name }}</td>
-            @if (DistrictCode::find($hospital->district_code_id))
+            @if (!$hospital->prefecture_id && !$hospital->district_code_id)
+              <td></td>
+            @elseif (DistrictCode::find($hospital->district_code_id))
               <td>{{ Prefecture::find($hospital->prefecture_id)->name . DistrictCode::find($hospital->district_code_id)->name . $hospital->address1 }}</td>
             @else
               <td>{{ Prefecture::find($hospital->prefecture_id)->name . $hospital->address1 }}</td>

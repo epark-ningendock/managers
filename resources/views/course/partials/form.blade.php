@@ -95,7 +95,7 @@
     </div>
 
     <div class="form-group">
-      <label>コース画像</label>
+      <legend>コース画像</legend>
       <div class="row">
         <div class="col-sm-4">
           {{Form::label('course_image_main', '検査コースメイン' , ['class' => 'form_label'])}}
@@ -438,21 +438,19 @@
     </div>
     <h1 class="box-title">設定項目</h1>
   </div>
-    <div class="box-body">
-    {{-- @todo デザイン --}}
-    {{-- <table id="setting-list" class="vertical-middle table no-border table-hover table-striped mb-5"> --}}
-    <table id="setting-list" class="vertical-middle table no-border mb-5">
+    <div class="form-entry">
+    <div class="box-body" id="setting-list">
       @foreach($majors as $key => $major)
         @foreach($major->middle_classifications as $middle)
-        <tr>
           @if(!isset($last) || $major != $last)
-          <td rowspan="{{$major->middle_classifications->count()}}">{{ $major->name }}</td>
+            <h4 class="d-inline-block">{{ $major->name }}</h4>
             @php
               $last = $major
             @endphp
           @endif
-          <td>{{ $middle->name }}</td>
-          <td>
+          <fieldset>
+          <legend>{{ $middle->name }}</legend>
+          <div class="row mb-4">
             @foreach($middle->minors_with_fregist_order as $index => $minor)
               @php
                 $minor_value = '';
@@ -470,26 +468,32 @@
                   }
                 }
               @endphp
-              <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
+                  <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
               @if($minor->is_fregist == '1')
-                <div>
+                <p class="col-sm-4">
                 <input type="checkbox" class="checkbox d-inline-block minor-checkbox" name="minor_values[]"
                        id="{{ 'minor_id_'.$minor->id }}"
                        {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
-                <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label></div>
+                <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label></p>
               @else
-                <input type="text" name="minor_values[]"
-                       class="form-control minor-text minor-text-{{$key}} @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
-                  value = "{{ $minor_value }}" />
+                <p class="col-sm-12">
+                    @if($minor->max_length >= 500 )
+                        <textarea class="form-control" name="minor_values[]" rows="7">{{ $minor_value }}</textarea>
+                    @else
+                        <input type="text" name="minor_values[]"
+                               class="form-control minor-text minor-text-{{$key}} @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
+                               value = "{{ $minor_value }}" />
+                    @endif
                 <span class="pull-right">0/{{ $minor->max_length }}文字</span>
+                </p>
               @endif
             @endforeach
-          </td>
-        </tr>
+          </div>
+          </fieldset>
         @endforeach
       @endforeach
-    </table>
-  </div>
+    </div>
+    </div>
   </div>
 
 @for($qi = 0; $qi < 5; $qi++)
