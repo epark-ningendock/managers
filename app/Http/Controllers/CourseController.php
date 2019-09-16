@@ -22,9 +22,13 @@ use App\TaxClass;
 use App\Calendar;
 use Mockery\Exception;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Course\CourseSettingNotificationMail;
+use Illuminate\Support\Facades\Auth;
 
 class CourseController extends Controller
 {
+    const EPARK_MAIL_ADDRESS = "dock_all@eparkdock.com";
     /**
      * Display a listing of the course.
      * @return \Illuminate\Contracts\View\Factory\Illuminate\View\View
@@ -88,7 +92,14 @@ class CourseController extends Controller
     public function store(CourseFormRequest $request)
     {
         try {
-            $this->saveCourse($request, null);
+            $course = $this->saveCourse($request, null);
+            $data = [
+                'course' => $course,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
+                'processing' => '登録'
+            ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CourseSettingNotificationMail($data));
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.course')]));
             return redirect('course');
         } catch (Exception $e) {
@@ -319,6 +330,7 @@ class CourseController extends Controller
             DB::rollback();
             throw $e;
         }
+        return $course;
     }
 
     private function saveCourseImage(CourseFormRequest $request, String $target_image, String $target_type, int $course_id)
@@ -352,7 +364,15 @@ class CourseController extends Controller
     public function update(CourseFormRequest $request, Course $course)
     {
         try {
-            $this->saveCourse($request, $course);
+            $course = $this->saveCourse($request, $course);
+            $data = [
+                'course' => $course,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
+                'processing' => '更新'
+            ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CourseSettingNotificationMail($data));
+
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.course')]));
             return redirect('course');
         }  catch(StaleModelLockingException $e) {
@@ -378,6 +398,14 @@ class CourseController extends Controller
         $course->course_questions()->delete();
         $course->course_images()->delete();
         $course->delete();
+        $data = [
+            'course' => $course,
+            'staff_name' => Auth::user()->name,
+            'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
+            'processing' => '削除'
+        ];
+        Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CourseSettingNotificationMail($data));
+
         $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.course')]));
         return redirect()->back();
     }
