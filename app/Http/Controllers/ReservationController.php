@@ -495,7 +495,7 @@ class ReservationController extends Controller
 
             request()->merge([
                 'hospital_id' => session('hospital_id'),
-                'reservation_status' => ReservationStatus::Pending,
+                'reservation_status' => ReservationStatus::ReceptionCompleted,
                 'is_repeat' => false
             ]);
 

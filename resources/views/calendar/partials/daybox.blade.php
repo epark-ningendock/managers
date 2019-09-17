@@ -32,6 +32,7 @@
 
 					@foreach($week as $day)
 
+					{{-- <td data-date="{{ $day['date']->format('Y-m-d') }}" class="daybox {{  ( $day['is_holiday'] || !$day['is_reservation_acceptance'] ) ? 'not-reservable' : 'it-can-reserve' }} --}}
 					<td data-date="{{ $day['date']->format('Y-m-d') }}" class="daybox {{  ( $day['is_holiday'] || !$day['is_reservation_acceptance'] ) ? 'not-reservable' : 'it-can-reserve' }}
 							@if($day['is_holiday'] || !$day['is_reservation_acceptance'] || $day['date']->isWeekend()) gray-background @endif">
 						<div class="txt">
