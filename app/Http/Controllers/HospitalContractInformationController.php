@@ -236,7 +236,7 @@ class HospitalContractInformationController extends Controller
             '*.application_date' => 'required|date_format:Ymd',
             '*.cancellation_date' => 'nullable|date_format:Ymd',
             '*.billing_start_date' => 'required|date_format:Ymd',
-            '*.plan_code' => 'required|max:2|exists:contract_plans,plan_code',
+            '*.plan_code' => 'required|max:4|exists:contract_plans,plan_code',
             '*.service_start_date' => 'nullable|date_format:Ymd',
             '*.service_end_date' => 'nullable|date_format:Ymd',
             '*.hospital_name' => 'required|max:50'
