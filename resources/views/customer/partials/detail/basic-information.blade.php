@@ -33,7 +33,7 @@
                 <tr>
                     <td class="gray-cell-bg"><label for="gender">{{ trans('messages.gender') }}</label></td>
                     <td>
-                        {{ $customer_detail->sex->description }}
+                        {{ $customer_detail->sex->description or '-' }}
                     </td>
                     <td class="gray-cell-bg">{{ trans('messages.birthday') }}</td>
                     <td>{{ $customer_detail->birthday }}</td>
@@ -41,12 +41,11 @@
                 <tr>
                     <td class="gray-cell-bg">{{ trans('messages.address') }}</td>
                     <td colspan="3">
-                        {{ $customer_detail->postcode }}<br/>
+                        〒{{ $customer_detail->postcode }}<br/>
                         @if(isset($customer_detail->prefecture))
-                            {{ $customer_detail->prefecture->name }}<br/>
+                            {{ $customer_detail->prefecture->name }}
                         @endif
-                        {{ $customer_detail->address1 }}<br/>
-                        {{ $customer_detail->address2 }}<br/>
+                        {{ $customer_detail->address1 }}{{ $customer_detail->address2 }}<br/>
                     </td>
                 </tr>
                 <tr>

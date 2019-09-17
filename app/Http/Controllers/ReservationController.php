@@ -9,6 +9,7 @@ use App\Enums\ReservationStatus;
 use App\FeeRate;
 use App\Holiday;
 use App\Hospital;
+use App\Mail\Reservation\ReservationCheckMail;
 use App\Http\Requests\ReservationCreateFormRequest;
 use App\Http\Requests\ReservationFormRequest;
 use App\Http\Requests\ReservationUpdateFormRequest;
@@ -18,6 +19,7 @@ use App\Services\ReservationExportService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use App\TaxClass;
@@ -54,7 +56,7 @@ class ReservationController extends Controller
     }
 
     /**
-     * 一覧表示.
+     * reception list
      *
      * @param Request $request
      *
@@ -62,42 +64,11 @@ class ReservationController extends Controller
      */
     public function index(Request $request)
     {
-
-        if (isset(Auth::user()->staff_auth->is_invoice) && Auth::user()->staff_auth->is_invoice === Permission::None) {
-            return view('staff.edit-password-personal');
-        }
-
-        $params = $request->all();
-
-        $query = $this->reservation
-            ->byRequest($request)
-            ->with(['hospital', 'course', 'customer'])
-            ->orderBy('created_at', 'desc');
-
-        $reservations = $query->paginate(env('PAGINATE_NUMBER'));
-
-        return view('reservation.index', compact('reservations', 'params', 'request'));
-    }
-
-    public function operation(Request $request)
-    {
-        return $this->export_file->operationCsv($request);
-    }
-
-    /**
-     * reception list
-     *
-     * @param Request $request
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function reception(Request $request)
-    {
         $this->validate($request, [
+            'reservation_created_start_date' => 'nullable|date',
+            'reservation_created_end_date' => 'nullable|date',
             'reservation_start_date' => 'nullable|date',
             'reservation_end_date' => 'nullable|date',
-            'completed_start_date' => 'nullable|date',
-            'completed_end_date' => 'nullable|date',
             'customer_name' => 'nullable|max:64',
         ]);
 
@@ -106,20 +77,25 @@ class ReservationController extends Controller
         $query = $this->get_reception_list_query($request);
         $reservations = $query->paginate($page_per_record)
             ->appends($request->query());
-        $courses = Course::all();
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))->get();
 
         $params = $request->input();
 
         // for initial default value if it has not been set empty purposely
-        if (!$request->has('completed_start_date')) {
-            $params['completed_start_date'] = Carbon::now()->format('Y/m/d');
+        if (!$request->has('reservation_start_date')) {
+            $params['reservation_start_date'] = Carbon::now()->startOfMonth()->format('Y/m/d');
         }
-        if (!$request->has('completed_end_date')) {
-            $params['completed_end_date'] = Carbon::now()->format('Y/m/d');
+        if (!$request->has('reservation_end_date')) {
+            $params['reservation_end_date'] = Carbon::now()->endOfMonth()->format('Y/m/d');
         }
 
-        return view('reservation.reception', compact('reservations', 'courses'))
+        return view('reservation.index', compact('reservations', 'courses'))
             ->with($params);
+    }
+
+    public function operation(Request $request)
+    {
+        return $this->export_file->operationCsv($request);
     }
 
     /**
@@ -139,6 +115,14 @@ class ReservationController extends Controller
             'course.course_questions',
         ]);
 
+        if ($request->input('reservation_created_start_date', '') != '') {
+            $query->whereDate('created_at', '>=', $request->input('reservation_created_start_date'));
+        }
+
+        if ($request->input('reservation_created_end_date', '') != '') {
+            $query->whereDate('created_at', '<=', $request->input('reservation_created_end_date'));
+        }
+
         if ($request->input('reservation_start_date', '') != '') {
             $query->whereDate('reservation_date', '>=', $request->input('reservation_start_date'));
         }
@@ -147,21 +131,10 @@ class ReservationController extends Controller
             $query->whereDate('reservation_date', '<=', $request->input('reservation_end_date'));
         }
 
-        if ($request->has('completed_start_date') && $request->input('completed_start_date', '') != '') {
-            $query->whereDate('completed_date', '>=', $request->input('completed_start_date'));
-        } elseif (!$request->has('completed_start_date')) {
-            $query->whereDate('completed_date', '>=', Carbon::today()->startOfDay());
-        }
-
-        if ($request->has('completed_end_date') && $request->input('completed_end_date', '') != '') {
-            $query->whereDate('completed_date', '<=', $request->input('completed_end_date'));
-        } elseif (!$request->has('completed_end_date')) {
-            $query->whereDate('completed_date', '<=', Carbon::today()->endOfDay());
-        }
 
         if ($request->input('customer_name', '') != '') {
             $query->whereHas('Customer', function ($q) use ($request) {
-                $q->where(DB::raw("concat(first_name, ' ', family_name)"), 'LIKE', '%' . $request->input('customer_name') . '%');
+                $q->where(DB::raw("concat(family_name, first_name)"), 'LIKE', '%' . $request->input('customer_name') . '%');
             });
         }
 
@@ -225,10 +198,10 @@ class ReservationController extends Controller
     public function reception_csv(Request $request)
     {
         $this->validate($request, [
+            'reservation_created_start_date' => 'nullable|date',
+            'reservation_created_end_date' => 'nullable|date',
             'reservation_start_date' => 'nullable|date',
             'reservation_end_date' => 'nullable|date',
-            'completed_start_date' => 'nullable|date',
-            'completed_end_date' => 'nullable|date',
         ]);
         $query = $this->get_reception_list_query($request);
 
@@ -259,16 +232,16 @@ class ReservationController extends Controller
             }
 
             $result = [
-                $reservation->completed_date->format('Y/m/d'),
+                $reservation->reservation_date ? $reservation->reservation_date->format('Y/m/d') : '',
                 $reservation->start_time_hour,
-                $reservation->reservation_date->format('Y/m/d'),
+                $reservation->created_at->format('Y/m/d'),
                 $reservation->customer->name,
-                $reservation->reservation_status->description,
+                $reservation->reservation_status ? $reservation->reservation_status->description : '',
                 $reservation->course->name,
                 $reservation->course->tax_included_price,
                 $reservation->adjustment_price,
                 $fee,
-                $reservation->payment_status->description,
+                $reservation->payment_status ? $reservation->payment_status->description : '',
                 $reservation->settlement_price,
                 $reservation->cashpo_used_price,
                 $reservation->acceptance_number,
@@ -481,8 +454,6 @@ class ReservationController extends Controller
         try {
             DB::beginTransaction();
             $today = Carbon::today();
-            $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
-                ->whereDate('life_time_to', '>=', $today)->get()->first();
 
             $course = Course::find($request->course_id);
             $reservation_date = Carbon::parse($request->reservation_date);
@@ -534,8 +505,8 @@ class ReservationController extends Controller
                 })->get()->first();
 
             $reservation = new Reservation(request()->all());
-            $reservation->applicant_name = "$request->first_name $request->family_name";
-            $reservation->applicant_name_kana = "$request->first_name_kana $request->family_name_kana";
+            $reservation->applicant_name = "$request->family_name $request->first_name";
+            $reservation->applicant_name_kana = "$request->family_name_kana $request->first_name_kana";
             $reservation->applicant_tel = str_replace(['－', '-', '‐', '−', '‒', '—', '–', '―', 'ー', 'ｰ', '─', '━', '一'], '', $request->tel);
             $reservation->acceptance_number = $acceptance_number;
 
@@ -546,26 +517,24 @@ class ReservationController extends Controller
                 $reservation->fee += $fee_rate->rate;
             }
 
-            if(isset($tax_class)) {
-                $reservation->tax_included_price += $reservation->fee + ($reservation->fee * ($tax_class->rate/100));
+            $reservation->tax_included_price = $reservation->fee;
+
+            if ($request->customer_id) {
+                $customer = Customer::findOrFail($request->customer_id);
+                if (Reservation::where('customer_id', $request->customer_id)->count() > 0) {
+                    $reservation->is_repeat = true;
+                }
             } else {
-                $reservation->tax_included_price = $reservation->fee;
-            }
-
-            $customer = Customer::where('registration_card_number', $request->registration_card_number)->get()->first();
-
-            if (!isset($customer)) {
                 $customer = new Customer([
                     'first_name' => $request->first_name,
                     'family_name' => $request->family_name,
                     'first_name_kana' => $request->first_name_kana,
                     'family_name_kana' => $request->family_name_kana,
                     'tel' => $request->tel,
-                    'registration_card_number' => $request->registration_card_number
+                    'registration_card_number' => $request->registration_card_number,
+                    'hospital_id' => session()->get('hospital_id'),
                 ]);
                 $customer->save();
-            } else if (Reservation::where('customer_id', $customer->id)->count() > 0) {
-                $reservation->is_repeat = true;
             }
 
             $reservation->customer_id = $customer->id;
@@ -574,9 +543,11 @@ class ReservationController extends Controller
 
             $this->reservationAnswerCreate($request, $reservation);
 
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id'))->name, $reservation);
+
             DB::commit();
 
-            return redirect('reception')->with('success', trans('messages.reservation.complete_success'));
+            return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
 
         } catch (\Exception $i) {
             DB::rollback();
@@ -691,7 +662,7 @@ class ReservationController extends Controller
 
                 $qa = [];
                 while ($i <= 10) {
-                    $number = ($i <= 10) ? '0' . $i : 10;
+                    $number = ($i < 10) ? '0' . $i : 10;
                     $answer_fieldname = "answer$number";
                     $question_answer_fieldname = "question_answer$number";
                     if ($reservation_answer->$answer_fieldname) {
@@ -731,8 +702,6 @@ class ReservationController extends Controller
         try {
             DB::beginTransaction();
             $today = Carbon::today();
-            $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
-                ->whereDate('life_time_to', '>=', $today)->get()->first();
 
             $course = Course::find($request->course_id);
             $reservation_date = Carbon::parse($request->reservation_date);
@@ -771,11 +740,7 @@ class ReservationController extends Controller
                 $params['fee'] += $fee_rate->rate;
             }
 
-            if(isset($tax_class)) {
-                $params['tax_included_price'] = $params['fee'] + ($params['fee'] * ($tax_class->rate/100));
-            } else {
-                $params['tax_included_price'] = $params['fee'];
-            }
+            $params['tax_included_price'] = $params['fee'];
 
             $reservation->update($params);
 
@@ -789,7 +754,7 @@ class ReservationController extends Controller
 
             DB::commit();
 
-            return redirect('reception')->with('success', trans('messages.reservation.update_success'));
+            return redirect('reservation')->with('success', trans('messages.reservation.update_success'));
 
         } catch (\Exception $i) {
             DB::rollback();
@@ -797,6 +762,19 @@ class ReservationController extends Controller
             return redirect()->back()->with('error', trans('messages.reservation.status_update_error'))->withInput();
         }
 
+    }
+
+    /**
+     * 受付確認メール送信
+     * @param array $reservationDates
+     */
+    public function sendReservationCheckMail($hospital_name, $reservation)
+    {
+        $mailContext = [
+            'hospital_name' => $hospital_name,
+            'reservation' => $reservation
+        ];
+        Mail::to('dock_all@eparkdock.com')->send(new ReservationCheckMail($mailContext));
     }
 
 }

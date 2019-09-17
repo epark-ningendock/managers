@@ -41,7 +41,7 @@ class CourseImport extends ImportAbstract
 
         $model = new Course([
             'hospital_id' => $this->getId('hospitals', $row['hospital_no']),
-//            'calendar_id' => $row[''], // @todo
+            'calendar_id' => $row['calender'],
             'code' => $row['code'],
             'name' => $row['name'],
             'web_reception' => $row['web_reception'],

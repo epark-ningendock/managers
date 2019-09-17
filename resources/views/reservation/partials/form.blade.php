@@ -1,9 +1,9 @@
+<div class="form-entry" id="reservation">
 <div class="box-body">
-    
-    <h3 class="section-title">受付情報</h3>
-    <br/><br/>
-    <div class="row">
 
+    <h2 class="section-title">受付情報</h2>
+
+    <div class="row">
         <div class="col-md-3">
             <label for="is_health_insurance">健保</label>
         </div>
@@ -16,31 +16,22 @@
         </div>
 
     </div>
-    <div class="row">
-    
-        <div class="col-md-3">
-            <label for="course_id">検査コース</label>
-        </div>
 
-        <div class="col-md-9">
-            <div class="form-group sm-form-group @if ($errors->has('course_id')) has-error @endif">
 
-                <select class="form-control" name="course_id" id="course_id">
-                    <option></option>
-                    @foreach($courses as $course)
-                        <option value="{{ $course->id }}" data-price="{{ $course->price }}"
-                                @if(old('course_id') == $course->id) selected @endif>{{ $course->name }}</option>
-                    @endforeach
-                </select>
-                @if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif
-            </div>            
-        </div>
-
+    <div class="form-group @if ($errors->has('course_id')) has-error @endif">
+        <label for="course_id">検査コース<span class="form_required">必須</span></label>
+        <select class="form-control w20em" name="course_id" id="course_id">
+            <option></option>
+            @foreach($courses as $course)
+                <option value="{{ $course->id }}" data-price="{{ $course->price }}"
+                        @if(old('course_id') == $course->id) selected @endif>{{ $course->name }}</option>
+            @endforeach
+        </select>
+        @if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif
     </div>
 
-
     <div class="row">
-    
+
         <div class="col-md-3">
             <label for="regular_price">コース料金</label>
         </div>
@@ -48,55 +39,41 @@
         <div class="col-md-9">
             <div class="form-group sm-form-group">
                 <span id="price">0円</span>
-            </div>          
+            </div>
         </div>
 
     </div>
 
 
-    <div class="row form-group option-container-row">
-    
-        <div class="col-md-3">
-            <label id="checkbox option">オプション</label>
+    <div class="row form-group option-row option-container">
+        <div class="box box-default option-container">
+            <label id="checkbox">オプション</label>
+            <table class="table table-bordered table-hover table-striped no-border">
+                <thead>
+                <tr>
+                    <th style="text-align: left;">選択</th>
+                    <th>オプション</th>
+                    <th>価格</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
-
-        <div class="col-md-9">
-            <div class="option-container" style="max-width: 550px;">
-                <table class="table table-borderless">
-                    <thead>
-                    <tr>
-                        <th style="text-align: left;">選択</th>
-                        <th>オプション</th>
-                        <th>価格</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>   
-
-
-    <div class="row form-group question-container-row">
-    
-        <div class="col-md-3">
-            <label>質問設定</label>
-        </div>
-
-        <div class="col-md-9">
-            <div class="question-container">
-                <div class="form-group ml-4">
-                </div>
-            </div>  
-        </div>
-
-    </div>    
+    </div>
 
 
     <div class="row form-group">
-    
+        <div class="box box-default question-container">
+            <label id="question-box">質問設定</label>
+            <div class="form-group ml-4">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row form-group">
+
         <div class="col-md-3">
             <label for="adjustment_price">調整額</label>
         </div>
@@ -114,7 +91,7 @@
     </div>
 
     <div class="row form-group">
-    
+
         <div class="col-md-3">
             <label for="">合計金額</label>
         </div>
@@ -127,19 +104,20 @@
 
 
     <div class="row date-row-bar" style="display: none;">
-    
-        <div class="col-md-3">
-            <label for="reservation_date">受診日</label>
-        </div>
+        <h2>受診日</h2>
 
-        <div class="col-md-9">
+        <!--<div class="col-md-3">
+            <label for="reservation_date">受診日</label>
+        </div>-->
+
+        <div class="col-md-12">
             <div class="calendar-box" data-old="{{ old('reservation_date') }}">
-                
-            </div>   
+
+            </div>
             @if ($errors->has('reservation_date')) <p class="help-block text-danger" style="color: #ed5565;">{{ $errors->first('reservation_date') }}</p> @endif
         </div>
 
-    </div> 
+    </div>
 
 
     <div class="row form-group">
@@ -181,7 +159,7 @@
             </div>
         </div>
 
-    </div>   
+    </div>
 
     <div class="row form-group">
 
@@ -196,16 +174,23 @@
             </div>
         </div>
 
-    </div>   
+    </div>
 
-    <h3 class="section-title">受診者情報</h3>
-    <br/><a id="examinee-information" href="#">受診者検索</a>
-    <br/><br/>
-
-    <div class="row">
-
+    <h2 class="section-title">受診者情報</h2>
+    <div class="row mt-5">
         <div class="col-md-3">
-            <label for="">お名前 </label>
+            <p><a class="btn btn-primary" id="examinee-information" href="#">受診者検索</a></p>
+        </div>
+        <div class="col-md-9">
+            <p class="color-gray" style="font-size: 1.2rem;">受診者名、受診者名かな、電話番号、診察券番号から検索が行えます。</p>
+            <p class="color-gray" style="font-size: 1.2rem;">全ての顧客を表示する場合は何も入力せず検索ボタンを押下してください</p>
+        </div>
+    </div>     
+    <input type="hidden" name="customer_id" id="customer_id" value="{{ old('customer_id') }}">
+    
+    <div class="row mt-5">
+        <div class="col-md-3">
+            <label for="">お名前 <span class="form_required">必須</span></label>
         </div>
 
         <div class="col-md-9">
@@ -234,7 +219,7 @@
     <div class="row">
 
         <div class="col-md-3">
-            <label for="">お名前 かな </label>
+            <label for="">お名前 かな<span class="form_required">必須</span> </label>
         </div>
 
         <div class="col-md-9">
@@ -259,13 +244,13 @@
             </div>
         </div>
 
-    </div> 
+    </div>
 
 
     <div class="row">
 
         <div class="col-md-3">
-            <label for="tel">電話番号</label>
+            <label for="tel">電話番号<span class="form_required">必須</span></label>
         </div>
 
         <div class="col-md-9">
@@ -276,7 +261,7 @@
             </div>
         </div>
 
-    </div>     
+    </div>
 
     <div class="row">
 
@@ -296,10 +281,11 @@
 
 
     <div class="box-footer">
-        <a href="{{ url('/reception') }}" class="btn btn-default">戻る</a>
+        <a href="{{ url('/reservation') }}" class="btn btn-default">戻る</a>
         <button type="submit" class="btn btn-primary">作成</button>
-    </div>                                              
+    </div>
 
+</div>
 </div>
 
 @include('commons.datepicker')
@@ -333,8 +319,8 @@
                     $('.option:checked').each(function(idx, ele) {
                         total += parseInt($(ele).data('price'));
                     });
-                    $('#total').html(total + '円');
-                    $('#price').html(coursePrice + '円');
+                    $('#total').html(total.toLocaleString() + '円');
+                    $('#price').html(coursePrice.toLocaleString() + '円');
                 }
 
                 const processUI = function () {
@@ -369,7 +355,7 @@
                                                      <label for="option-${courseOption.option.id}""></label>
                                                     </td>`))
                                         .append($(`<td>${courseOption.option.name}</td>`))
-                                        .append($(`<td>${courseOption.option.price}円</td>`))
+                                        .append($(`<td>${courseOption.option.price.toLocaleString()}円</td>`))
                                         .appendTo(tbody);
                                 });
 
@@ -416,6 +402,8 @@
                         $('.option-container-row, .question-container-row').hide();
                         $('.option-container tbody').empty();
                         $('.question-container .form-group').empty();
+                        $('.option-container').hide();
+                        $('.question-container').hide();
                     }
                 };
                 $('#course_id').change(function () {
@@ -474,24 +462,10 @@
         /* ---------------------------------------------------
         Daybox
         -----------------------------------------------------*/
-        .date-row, .date-row.table td, .date-row.table th {
-            border-color: #847f7f !important;
-            border-width: 2px;
-        }
-
-        .daybox .des-box {
-            padding-top: 6px;
-            border-top: 2px solid #847f7f;
-            margin: 0 -8px;
-            text-align: center;
-        }
 
         .date-row .daybox .txt {
             font-size: 11px;
             padding: 15px;
-        }
-        .year-label th {
-            background: transparent url({{ asset('img/calendar.png') }}) 10px 3px/30px no-repeat;
         }
 
         td.daybox.gray-background {

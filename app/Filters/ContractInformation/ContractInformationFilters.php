@@ -3,6 +3,7 @@
 namespace App\Filters\ContractInformation;
 
 use App\Filters\QueryFilters;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
 class ContractInformationFilters extends QueryFilters
@@ -26,9 +27,11 @@ class ContractInformationFilters extends QueryFilters
     public function status($status)
     {
         if ( $status == 'CANCELLED') {
-            return $this->builder->whereNotNull('cancellation_date');
+            return $this->builder->whereNotNull('cancellation_date')
+                ->whereDate('cancellation_date', '<=', Carbon::today());
         } else if ($status ==  'UNDER_CONTRACT') {
-            return $this->builder->whereNull('cancellation_date');
+            return $this->builder->whereNull('cancellation_date')
+                ->orWhereDate('cancellation_date', '>', Carbon::today());
         }
     }
 

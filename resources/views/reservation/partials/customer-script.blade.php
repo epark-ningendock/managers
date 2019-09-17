@@ -22,7 +22,7 @@
 
     				<div class="col-sm-3">
     					
-    					<button type="submit" class="btn btn-primary">{{  trans('search') }}</button>
+    					<button type="submit" class="btn btn-primary">{{  trans('messages.search') }}</button>
 
     				</div>
 
@@ -88,7 +88,7 @@
     -----------------------------------------------------*/
     $(document).on('click', '.customer-row', function(){
         let $this = $(this);
-        // $('#customer_id').val($this.attr('data-id'));
+        $('#customer_id').val($this.attr('data-id'));
         $('#family_name').val($this.attr('data-family_name'));
         $('#first_name').val($this.attr('data-first_name'));
         $('#family_name_kana').val($this.attr('data-family_name_kana'));
