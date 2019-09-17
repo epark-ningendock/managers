@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Hospital;
+use App\HospitalEmailSetting;
 use Maatwebsite\Excel\Concerns\RegistersEventListeners;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterImport;
@@ -31,7 +32,7 @@ class HospitalEmailSettingImport extends ImportBAbstract implements WithEvents
      */
     public function getNewClassName(): string
     {
-        return HospitalEmailSettingImport::class;
+        return HospitalEmailSetting::class;
     }
 
     /**
@@ -64,12 +65,18 @@ class HospitalEmailSettingImport extends ImportBAbstract implements WithEvents
             case '05':
                 static::$arr['email_reception_flg'] = $value;
                 break;
+            case '01':
             case '06':
             case '07':
-//                static::$arr['reception_email1'] = $value;
-//                static::$arr['reception_email2'] = $value;
-//                static::$arr['reception_email3'] = $value;
-//                static::$arr['reception_email4'] = $value;
+                if (!isset(static::$arr['reception_email1'])) {
+                    static::$arr['reception_email1'] = $value;
+                } else if (!isset(static::$arr['reception_email2'])) {
+                    static::$arr['reception_email2'] = $value;
+                } else if (!isset(static::$arr['reception_email3'])) {
+                    static::$arr['reception_email3'] = $value;
+                } else if (!isset(static::$arr['reception_email4'])) {
+                    static::$arr['reception_email4'] = $value;
+                }
                 break;
             case '21':
                 static::$arr['epark_in_hospital_reception_mail_flg'] = $value;
@@ -83,6 +90,8 @@ class HospitalEmailSettingImport extends ImportBAbstract implements WithEvents
 
     public static function afterImport(AfterImport $event)
     {
-        dd(static::$arr);
+        dump(static::$arr);
+        $model = new HospitalEmailSetting(static::$arr);
+        $model->save();
     }
 }
