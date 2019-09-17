@@ -174,10 +174,13 @@
         <thead>
         <tr>
           <th>選択</th>
+          <th>予約ID</th>
           <th>受診日</th>
           <th>受診者名</th>
           <th>検査コース</th>
+          <th>合計金額</th>
           <th>受付ステータス</th>
+          <th>予約日</th>
           <th>編集</th>
           <th>ステータス変更</th>
         </tr>
@@ -189,10 +192,13 @@
               <input type="checkbox" name="ids[]" id="ids_{{ $reservation->id }}" value="{{ $reservation->id }}" />
               <label for="ids_{{ $reservation->id }}"id="ids_{{ $reservation->id }}"></label>
             </td>
+            <td>{{ $reservation->id }}</td>
             <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
             <td>{{ $reservation->customer->name}}</td>
             <td>{{ $reservation->course->name }}</td>
+            <td>2000円</td>
             <td>{{ $reservation->reservation_status->description }}</td>
+            <td>{{ $reservation->created_at->format('Y/m/d') }}</td>
             <td>
               <a class="btn btn-primary ml-3" href="{{ route('reservation.edit', ['reservation' => $reservation]) }}">
                 変更
@@ -203,13 +209,18 @@
                 <button class="btn btn-success ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.accept_confirmation') }}"
                         data-target-form="#accept-form" data-button-text="確認する">
-                  確定
+                  仮予約
                 </button>
               @endif
               @if($reservation->reservation_status->is(ReservationStatus::ReceptionCompleted))
                 <button class="btn btn-primary ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.complete_confirmation') }}"
                         data-target-form="#complete-form" data-button-text="確認する">
+                  受付確定
+                </button>
+              @endif
+              @if($reservation->reservation_status->is(ReservationStatus::Completed))
+                <button class="btn btn-primary ml-3 delete-popup-btn">
                   受診完了
                 </button>
               @endif

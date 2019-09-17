@@ -77,16 +77,16 @@ class ReservationController extends Controller
         $query = $this->get_reception_list_query($request);
         $reservations = $query->paginate($page_per_record)
             ->appends($request->query());
-        $courses = Course::all();
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))->get();
 
         $params = $request->input();
 
         // for initial default value if it has not been set empty purposely
         if (!$request->has('reservation_start_date')) {
-            $params['reservation_start_date'] = Carbon::now()->format('Y/m/d');
+            $params['reservation_start_date'] = Carbon::now()->startOfMonth()->format('Y/m/d');
         }
         if (!$request->has('reservation_end_date')) {
-            $params['reservation_end_date'] = Carbon::now()->format('Y/m/d');
+            $params['reservation_end_date'] = Carbon::now()->endOfMonth()->format('Y/m/d');
         }
 
         return view('reservation.index', compact('reservations', 'courses'))
@@ -519,20 +519,22 @@ class ReservationController extends Controller
 
             $reservation->tax_included_price = $reservation->fee;
 
-            $customer = Customer::where('registration_card_number', $request->registration_card_number)->get()->first();
-
-            if (!isset($customer)) {
+            if ($request->customer_id) {
+                $customer = Customer::findOrFail($request->customer_id);
+                if (Reservation::where('customer_id', $request->customer_id)->count() > 0) {
+                    $reservation->is_repeat = true;
+                }
+            } else {
                 $customer = new Customer([
                     'first_name' => $request->first_name,
                     'family_name' => $request->family_name,
                     'first_name_kana' => $request->first_name_kana,
                     'family_name_kana' => $request->family_name_kana,
                     'tel' => $request->tel,
-                    'registration_card_number' => $request->registration_card_number
+                    'registration_card_number' => $request->registration_card_number,
+                    'hospital_id' => session()->get('hospital_id'),
                 ]);
                 $customer->save();
-            } else if (Reservation::where('customer_id', $customer->id)->count() > 0) {
-                $reservation->is_repeat = true;
             }
 
             $reservation->customer_id = $customer->id;

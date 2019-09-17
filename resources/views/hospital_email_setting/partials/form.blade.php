@@ -1,17 +1,18 @@
 @include('layouts.partials.error_pan')
-<div class="form-entry">
+<div class="form-entry" id="hospital_email_setting">
     <div class="box-body">
     <h2>受付メール設定</h2>
-    <p class="text-bold">【メール設定】</p>
-    <p class='ml-3'>差出人メールアドレス：unei@eparkdock.com</p>
-
+    <fieldset class="form-group mt-3">
+        <legend>メール設定</legend>
+    <!--<p class="text-bold">【メール設定】</p>-->
+    <p class="sender-email">差出人メールアドレス：unei@eparkdock.com</p>
     <div class="form-group @if ($errors->has('hospital_email_setting')) has-error @endif">
       <input type="hidden" name="lock_version" value="{{ $hospital_email_setting->lock_version or '' }}" />
 
-        <div class="form-group py-sm-2 radio ml-3 in_hospital_email_reception_flg">
+        <div class="form-group py-sm-2 in_hospital_email_reception_flg">
             <input type="hidden" name="updated_at" value="{{ isset($staff) ? $staff->updated_at : null }}">
             <label for="status">受信希望者・院内受付メール送信設定</label>
-            <group class="inline-radio two-option-large">
+            <group class="inline-radio two-option-large" style="width: 350px;">
                 <div>
                     <input type="radio" name="in_hospital_email_reception_flg" id="in_hospital_email_reception_flg_true"
                     {{ old('in_hospital_email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }}
@@ -22,14 +23,13 @@
                     <input type="radio" name="in_hospital_email_reception_flg" id="in_hospital_email_reception_flg_false"
                     {{ old('in_hospital_email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::NOT_ACCEPT ? 'checked' : '' }}
                     value="{{ \App\Enums\ReceptionEmailSetting::NOT_ACCEPT }}">
-                    <label id="in_hospital_email_reception_flg_false">配信メール配信を希望しない</label>
+                    <label id="in_hospital_email_reception_flg_false">メール配信を希望しない</label>
                 </div>
             </group>
-            @if ($errors->has('in_hospital_email_reception_flg')) <p class="help-block has-error">{{ $errors->first('in_hospital_email_reception_flg') }}</p> @endif
         </div>
     </div>
 
-      <div class='form-group checkbox ml-3 confirmation_email_reception_flag @if ($errors->has('hospital_reception_email_transmission_setting')) has-error @endif'>
+      <div class='form-group checkbox ml-3 confirmation_email_reception_flag @if ($errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') != '受信メールアドレスを1つ以上入力してください。')) has-error @endif'>
 
           <p>{{ Form::hidden('in_hospital_confirmation_email_reception_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
               {{ Form::checkbox('in_hospital_confirmation_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('in_hospital_confirmation_email_reception_flg')) ? old('in_hospital_confirmation_email_reception_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_confirmation_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_confirmation_email_reception_flg_01']) }}
@@ -38,25 +38,25 @@
 
           <p>
               {{ Form::hidden('in_hospital_change_email_reception_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
-              {{ Form::checkbox('in_hospital_change_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_change_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_change_email_reception_flg_01']) }}
+              {{ Form::checkbox('in_hospital_change_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT,  (old('in_hospital_change_email_reception_flg')) ? old('in_hospital_change_email_reception_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_change_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_change_email_reception_flg_01']) }}
               <label for="in_hospital_change_email_reception_flg_01">受付変更時</label>
           </p>
 
           <p>
               {{ Form::hidden('in_hospital_cancellation_email_reception_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
-              {{ Form::checkbox('in_hospital_cancellation_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_cancellation_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_cancellation_email_reception_flg_01']) }}
+              {{ Form::checkbox('in_hospital_cancellation_email_reception_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('in_hospital_cancellation_email_reception_flg')) ? old('in_hospital_cancellation_email_reception_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_cancellation_email_reception_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_cancellation_email_reception_flg_01']) }}
               <label for="in_hospital_cancellation_email_reception_flg_01">受付キャンセル時</label>
           </p>
-        @if ($errors->has('hospital_reception_email_transmission_setting')) <p class="help-block">{{ $errors->first('hospital_reception_email_transmission_setting') }}</p> @endif
+        @if ($errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') != '受信メールアドレスを1つ以上入力してください。')) <p class="help-block">{{ $errors->first('in_hospital_email_reception_flg') }}</p> @endif
       </div>
 
         <div class="form-group @if ($errors->has('hospital_email_setting')) has-error @endif">
             <input type="hidden" name="lock_version" value="{{ $hospital_email_setting->lock_version or '' }}" />
 
-            <div class="form-group py-sm-2 radio ml-3 email_reception_flg">
+            <div class="form-group py-sm-2 email_reception_flg">
                 <input type="hidden" name="updated_at" value="{{ isset($staff) ? $staff->updated_at : null }}">
                 <label for="status">受付メール受信アドレス設定</label>
-                <group class="inline-radio two-option-middle">
+                <group class="inline-radio two-option-middle" style="width: 350px;">
                     <div>
                             <input type="radio" name="email_reception_flg" id="email_reception_flg_true"
                             {{ old('email_reception_flg', (isset($hospital_email_setting) ? $hospital_email_setting->email_reception_flg : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }}
@@ -70,25 +70,24 @@
                         <label for="email_reception_flg_false">受け取らない</label>
                     </div>
                 </group>
-                @if ($errors->has('email_reception_flg')) <p class="help-block has-error">{{ $errors->first('email_reception_flg') }}</p> @endif
             </div>
         </div>
 
-      <div class='form-group checkbox ml-3 reception_type_flag @if ($errors->has('reception_email_reception_address_setting')) has-error @endif'>
+      <div class='form-group checkbox ml-3 reception_type_flag @if ($errors->has('email_reception_flg')) has-error @endif'>
           <p>
               {{ Form::hidden('in_hospital_reception_email_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
-              {{ Form::checkbox('in_hospital_reception_email_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_reception_email_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_reception_email_flg_01']) }}
+              {{ Form::checkbox('in_hospital_reception_email_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('in_hospital_reception_email_flg')) ? old('in_hospital_reception_email_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->in_hospital_reception_email_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'in_hospital_reception_email_flg_01']) }}
               <label for="in_hospital_reception_email_flg_01">院内受付</label>
           </p>
 
           <p>
               {{ Form::hidden('web_reception_email_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
-              {{ Form::checkbox('web_reception_email_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->web_reception_email_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'web_reception_email_flg_01']) }}
+              {{ Form::checkbox('web_reception_email_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('web_reception_email_flg')) ? old('web_reception_email_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->web_reception_email_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'web_reception_email_flg_01']) }}
               <label for="web_reception_email_flg_01">WEB受付</label>
           </p>
-          @if ($errors->has('reception_email_reception_address_setting')) <p class="help-block">{{ $errors->first('reception_email_reception_address_setting') }}</p> @endif
+          @if ($errors->has('email_reception_flg')) <p class="help-block">{{ $errors->first('email_reception_flg') }}</p> @endif
       </div>
-      <div class='form-group @if ($errors->has('reception_email_group')) has-error @endif'>
+      <div class='form-group @if ($errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') === '受信メールアドレスを1つ以上入力してください。')) has-error @endif'>
         <div class="form-group @if ($errors->has('reception_email1')) has-error @endif">
             <label class='ml-3'>受信メールアドレス1</label>
             {{ Form::text('reception_email1' , (old('reception_email1')) ? old('reception_email1') : $hospital_email_setting->reception_email1, ['class' => 'form-control ml-3', 'id' => 'reception_email1', 'placeholder' => 'メールアドレスを入力してください']) }}
@@ -118,7 +117,7 @@
             {{ Form::text('reception_email5' , (old('reception_email5')) ? old('reception_email5') : $hospital_email_setting->reception_email5, ['class' => 'form-control ml-3', 'id' => 'reception_email5', 'placeholder' => 'メールアドレスを入力してください']) }}
             @if ($errors->has('reception_email5')) <p class="help-block ml-3">{{ $errors->first('reception_email5') }}</p> @endif
         </div>
-        @if ($errors->has('reception_email_group')) <p class="help-block">{{ $errors->first('reception_email_group') }}</p> @endif
+        @if ($errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') === '受信メールアドレスを1つ以上入力してください。') ) <p class="help-block">{{ $errors->first('in_hospital_email_reception_flg') }}</p> @endif
       </div>
 
       <div class="form-group">
@@ -126,38 +125,36 @@
           <div class='checkbox ml-3 epark_in_hospital_reception_mail'>
               <p>
                   {{ Form::hidden('epark_in_hospital_reception_mail_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
-                  {{ Form::checkbox('epark_in_hospital_reception_mail_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->epark_in_hospital_reception_mail_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'epark_in_hospital_reception_mail_flg_01']) }}
+                  {{ Form::checkbox('epark_in_hospital_reception_mail_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('epark_in_hospital_reception_mail_flg')) ? old('epark_in_hospital_reception_mail_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->epark_in_hospital_reception_mail_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'epark_in_hospital_reception_mail_flg_01']) }}
                   <label for="epark_in_hospital_reception_mail_flg_01">院内受付</label>
               </p>
 
               <p>
                   {{ Form::hidden('epark_web_reception_email_flg', \App\Enums\ReceptionEmailSetting::NOT_ACCEPT) }}
-                  {{ Form::checkbox('epark_web_reception_email_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (isset($hospital_email_setting) ? $hospital_email_setting->epark_web_reception_email_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'epark_web_reception_email_flg_01']) }}
+                  {{ Form::checkbox('epark_web_reception_email_flg', \App\Enums\ReceptionEmailSetting::ACCEPT, (old('epark_web_reception_email_flg')) ? old('epark_web_reception_email_flg') : (isset($hospital_email_setting) ? $hospital_email_setting->epark_web_reception_email_flg : null) == \App\Enums\ReceptionEmailSetting::ACCEPT ? true : false, ['id' => 'epark_web_reception_email_flg_01']) }}
                   <label for="epark_web_reception_email_flg_01">WEB受付</label>
               </p>
           </div>
       </div>
+    </fieldset>
+
+        <h2>請求メール設定</h2>
+
+        <div class="form-group py-sm-2">
+            <label for="status">{{ trans('messages.billing_email_flg') }}</label>
+            <group class="inline-radio two-option" style="width: 190px;">
+                <div>
+                    <input class="billing_email_flg" type="radio" name="billing_email_flg" @if( ( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '' ) == 1 ) || is_null($hospital_email_setting->billing_email_flg) ) checked @endif }}
+                    value="1"
+                    ><label>{{ trans('messages.billing_email_flg_receive') }}</label></div>
+                <div>
+                    <input class="billing_email_flg" type="radio" name="billing_email_flg" @if( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '') == 0 ) checked @endif
+                    value="0"><label>{{ trans('messages.billing_email_flg_not_accept') }}</label></div>
+            </group>
+        </div>
+
 
         <div class="bill-mail-setup bms">
-
-            <div class="form-group @if ($errors->has('billing_email_flg')) has-error @endif">
-                <div class="row mb-3 mt-3">
-                    <div class="col-md-4">
-                        <label for="billing_email_flg">{{ trans('messages.billing_email_flg') }} <span class="text-danger">*</span></label>
-                    </div>
-                    <div class="col-md-8">
-                        <label class="radio-inline">
-                            <input type="radio" class="billing_email_flg" name="billing_email_flg" value="1" @if( ( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '' ) == 1 ) || is_null($hospital_email_setting->billing_email_flg) ) checked @endif>{{ trans('messages.billing_email_flg_receive') }}
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" class="billing_email_flg" name="billing_email_flg" value="0" @if( old('billing_email_flg', $hospital_email_setting->billing_email_flg ?? '') == 0 ) checked @endif> {{ trans('messages.billing_email_flg_not_accept') }}
-                        </label>
-
-                        @if ($errors->has('billing_email_flg') && ($errors->first('billing_email_flg') == '請求メールの設定は、必ず指定してください。')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_email_flg') }}</p> @endif
-
-                    </div>
-                </div>
-            </div>
 
             <div class="bill-fields-box">
 
@@ -297,14 +294,9 @@
           (function () {
               const change = function() {
                   if ($('.in_hospital_email_reception_flg input[type=radio]:checked').val() == '0') {
-                    //   $(".in_hospital_confirmation_email_reception_flg").get(0).onclick = return false;
-                    //   $(".in_hospital_change_email_reception_flg").get(0).onclick = return false;
-                    //   $(".in_hospital_cancellation_email_reception_flg").get(0).onclick = return false;
+                      $('.confirmation_email_reception_flag input:checkbox').prop('disabled', true);
                   } else {
-                    //   $('.confirmation_email_reception_flag input:checkbox').prop('disabled', false);
-                    //   $(".in_hospital_confirmation_email_reception_flg").get(0).onclick = '';
-                    //   $(".in_hospital_change_email_reception_flg").get(0).onclick = '';
-                    //   $(".in_hospital_cancellation_email_reception_flg").get(0).onclick = '';
+                      $('.confirmation_email_reception_flag input:checkbox').prop('disabled', false);
                   }
               };
               $('.in_hospital_email_reception_flg input:radio').change(function() {
@@ -313,7 +305,7 @@
               change();
           })();
 
-        　/* ---------------------------------------------------
+        /* ---------------------------------------------------
            // 受付メール受信アドレス設定
           -----------------------------------------------------*/
           (function () {

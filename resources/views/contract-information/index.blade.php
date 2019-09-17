@@ -27,7 +27,7 @@
           <label for="status">状態</label>
           <select class="form-control" id="status" name="status">
             <option></option>
-            <option value="UNDER_CONTRACT" {{ (isset($status) && $status == 'UNDER_CONTRACT') ? "selected" : "" }}>契約中</option>
+            <option value="UNDER_CONTRACT" {{ (!isset($status) || $status == 'UNDER_CONTRACT') ? "selected" : "" }}>契約中</option>
             <option value="CANCELLED" {{ (isset($status) && $status == 'CANCELLED') ? "selected" : "" }}>解約済</option>
           </select>
         </div>
@@ -50,32 +50,52 @@
     <table id="example2" class="table table-bordered table-hover table-striped no-border staff-table">
       <thead>
       <tr>
-        <th>No.</th>
         <th>
           <a href="{{ route('contract.index', queryForSorting('property_no_sorting')) }}">
-          物件番号
+            {{ trans('messages.property_no') }}
             <i class="fa @if(request()->input('property_no_sorting') == 'asc')  fa-sort-asc @elseif(request()->input('property_no_sorting') == 'desc') fa-sort-desc @else fa-sort @endif"></i>
           </a>
         </th>
-        <th>契約者名</th>
-        <th>屋号</th>
-        <th>代表者名</th>
-        <th>申込日</th>
-        <th>解約日</th>
-        <th>電話番号</th>
+        <th>{{ trans('messages.contractor_name')  }}</th>
+        <th>{{ trans('messages.contractor_name_kana') }}</th>
+        <th>{{ trans('messages.application_date') }}</th>
+        <th>{{ trans('messages.billing_start_date') }}</th>
+        <th>{{ trans('messages.cancellation_date') }}</th>
+        <th>{{ trans('messages.representative_name') }}</th>
+        <th>{{ trans('messages.representative_name_kana') }}</th>
+        <th>{{ trans('messages.hospital_name') }}</th>
+        <th>{{ trans('messages.postcode') }}</th>
+        <th>{{ trans('messages.address') }}</th>
+        <th>{{ trans('messages.phone_number') }}</th>
+        <th>{{ trans('messages.fax_no') }}</th>
+        <th>{{ trans('messages.email') }}</th>
+        <th>{{ trans('messages.plan_code') }}</th>
+        <th>{{ trans('messages.plan_name') }}</th>
+        <th>{{ trans('messages.service_start_date') }}</th>
+        <th>{{ trans('messages.service_end_date') }}</th>
       </tr>
       </thead>
       <tbody>
       @foreach ($contract_informations as $contract_information)
       <tr>
-          <td>{{ $contract_information->id }}</td>
-          <td>{{ $contract_information->property_no }}</td>
-          <td>{{ $contract_information->contractor_name }}</td>
-          <td>{{ $contract_information->hospital->name or '-' }}</td>
-          <td>{{ $contract_information->representative_name }}</td>
-          <td>{{ $contract_information->application_date->format('Y/m/d') }}</td>
-          <td>{{ $contract_information->cancellation_date->format('Y/m/d') }}</td>
-          <td>{{ $contract_information->tel }}</td>
+        <td>{{ $contract_information->property_no }}</td>
+        <td>{{ $contract_information->contractor_name }}</td>
+        <td>{{ $contract_information->contractor_name_kana }}</td>
+        <td>{{ $contract_information->application_date->format('Y/m/d') }}</td>
+        <td>{{ $contract_information->billing_start_date->format('Y/m/d') }}</td>
+        <td>{{ $contract_information->cancellation_date->format('Y/m/d') }}</td>
+        <td>{{ $contract_information->representative_name }}</td>
+        <td>{{ $contract_information->representative_name_kana }}</td>
+        <td>{{ $contract_information->hospital->name or '-' }}</td>
+        <td>{{ $contract_information->postcode }}</td>
+        <td>{{ $contract_information->address }}</td>
+        <td>{{ $contract_information->tel }}</td>
+        <td>{{ $contract_information->fax }}</td>
+        <td>{{ $contract_information->email }}</td>
+        <td>{{ $contract_information->contract_plan->plan_code }}</td>
+        <td>{{ $contract_information->contract_plan->plan_name or '-' }}</td>
+        <td>{{ $contract_information->service_start_date->format('Y/m/d') }}</td>
+        <td>{{ $contract_information->service_end_date->format('Y/m/d') }}</td>
       </tr>
       @endforeach
       </tbody>
