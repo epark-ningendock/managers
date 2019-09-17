@@ -92,7 +92,7 @@
         <td>{{ $contract_information->tel }}</td>
         <td>{{ $contract_information->fax }}</td>
         <td>{{ $contract_information->email }}</td>
-        <td>{{ $contract_information->contract_plan_id }}</td>
+        <td>{{ $contract_information->contract_plan->plan_code }}</td>
         <td>{{ $contract_information->contract_plan->plan_name or '-' }}</td>
         <td>{{ $contract_information->service_start_date->format('Y/m/d') }}</td>
         <td>{{ $contract_information->service_end_date->format('Y/m/d') }}</td>
