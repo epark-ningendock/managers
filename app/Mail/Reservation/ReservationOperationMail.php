@@ -31,7 +31,7 @@ class ReservationOperationMail extends Mailable
     {
         return $this
             ->from("unei@eparkdock.com")
-            ->subject("【EPARK人間ドック】検査コース登録・変更・削除のお知らせ")
+            ->subject("【EPARK人間ドック】受付情報登録・変更・削除のお知らせ")
             ->view('reservation.email.operation-mail');
     }
 }
