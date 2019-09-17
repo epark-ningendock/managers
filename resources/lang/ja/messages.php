@@ -181,9 +181,9 @@ return [
     'need_to_login'                        => 'あなたは最初にログインする必要があります',
     'kana'                                 => 'よみ',
     'reservation' => [
-        'accept_confirmation'              => '予約を受け入れますか？',
+        'accept_confirmation'              => '予約を確定します',
         'cancel_confirmation'              => '予約をキャンセルしますか？',
-        'complete_confirmation'            => '予約を完了しますか？',
+        'complete_confirmation'            => '受診完了します',
         'accept_success'                   => '予約は承認されました。',
         'accept_error'                     => 'エラーが発生しました。',
         'cancel_success'                   => '予約がキャンセルされました。',

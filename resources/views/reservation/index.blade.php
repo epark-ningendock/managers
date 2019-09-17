@@ -208,14 +208,14 @@
               @if($reservation->reservation_status->is(ReservationStatus::Pending))
                 <button class="btn btn-success ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.accept_confirmation') }}"
-                        data-target-form="#accept-form" data-button-text="確認する">
+                        data-target-form="#accept-form" data-button-text="確定する">
                   仮予約
                 </button>
               @endif
               @if($reservation->reservation_status->is(ReservationStatus::ReceptionCompleted))
                 <button class="btn btn-primary ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.complete_confirmation') }}"
-                        data-target-form="#complete-form" data-button-text="確認する">
+                        data-target-form="#complete-form" data-button-text="完了する">
                   受付確定
                 </button>
               @endif
@@ -227,7 +227,7 @@
               @if(!$reservation->reservation_status->is(ReservationStatus::Cancelled) && !$reservation->reservation_status->is(ReservationStatus::Completed))
                 <button class="btn btn-danger ml-3 delete-popup-btn" data-id="{{ $reservation->id }}"
                         data-message="{{ trans('messages.reservation.cancel_confirmation') }}"
-                        data-target-form="#cancel-form" data-button-text="確認する">
+                        data-target-form="#cancel-form" data-button-text="キャンセルする">
                   キャンセル
                 </button>
               @endif
