@@ -80,9 +80,9 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         $hp_link_status,
                         $billing->contractPlan->plan_name ?? '',
                         isset($reservation->reservation_options) ? '有' : '',
-                        $the_amount,
+                        number_format($the_amount),
                         $the_amount / $reservation->tax_rate, //need to verify calculation1
-                        $reservation->fee,
+                        number_format($reservation->fee),
                         $billing->contractPlan->plan_name ?? '',
                         (isset($reservation->site_code) && ( $reservation->site_code == 'HP') ) ? 'HPリンク' : '',
                         $reservation->fee_rate . '%',

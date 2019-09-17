@@ -70,6 +70,7 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'fee' => $fee,
         'lock_version' => 1,
         'fee_rate' => $faker->numberBetween(1, 30),
+	    'is_free_hp_link' => 1,
     ];
 });
 

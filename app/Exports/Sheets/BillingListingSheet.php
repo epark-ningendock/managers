@@ -44,9 +44,9 @@ class BillingListingSheet implements FromCollection, WithHeadings, WithMapping, 
             $billing->hospital->contract_information->property_no,
             $billing->hospital->contract_information->contractor_name,
             $billing->hospital->name,
-            $billing->contractPlan->monthly_contract_fee,
+            number_format($billing->contractPlan->monthly_contract_fee),
             $totalMonthlyReservation,
-            $billing->contractPlan->monthly_contract_fee + $totalMonthlyReservation
+            number_format($billing->contractPlan->monthly_contract_fee + $totalMonthlyReservation)
         ];
     }    
 

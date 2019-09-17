@@ -41,14 +41,16 @@
                     </select>
                 </div>
             </div>
+
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="status">請求ステータス</label>
+
                     <select class="form-control" id="status" name="status">
                         <option value=""></option>
-                        @foreach(\App\Enums\BillingStatus::toArray() as $key)
+                        @foreach(\App\Enums\BillingStatus::toArray() as $key => $value)
                             <option
-                                    value="{{ $key }}" {{ (request('status') == $key) ? "selected" : "" }}>{{ \App\Enums\BillingStatus::getDescription($key) }}</option>
+                                    value="{{ $value }}" {{ (request('status') == $value) ? "selected" : "" }}>{{ \App\Enums\BillingStatus::getDescription($value) }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -116,9 +118,9 @@
                     <td>{{ $billing->hospital->name }}</td>
                     <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
                     <td>{{ $billing->contractPlan->plan_name }}</td>
-                    <td>{{ $billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() + $billing->contractPlan->monthly_contract_fee }}円</td>
+                    <td>{{ number_format($billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() + $billing->contractPlan->monthly_contract_fee) }}円</td>
                     <td>{{ $billing->contractPlan->monthly_contract_fee }}円</td>
-                    <td>{{ $billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() }}円</td>
+                    <td>{{ number_format($billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum()) }}円</td>
                     <td>{{ $billing->contractPlan->fee_rate }}%</td>
                     <td>
                         <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
@@ -126,7 +128,7 @@
                     <td>
                             <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2]) }}" class="btn btn-primary"
                             @if( $billing->status == 1 ) style="pointer-events: none;" @endif
-                            >未確認</a>
+                            >請求確認</a>
                     </td>
                     <td>
                         <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 4]) }}" class="btn btn-primary"

@@ -71,7 +71,7 @@ class BillingController extends Controller {
 		$billings = Billing::filter( $billingFilters )->whereBetween( 'created_at', [
 			$dateFilter['startedDate'],
 			$dateFilter['endedDate'],
-		] )->paginate( 100 );
+		] )->paginate( 10 );
 
 		return view( 'billing.index', [
 			'billings'        => $billings,
@@ -89,7 +89,7 @@ class BillingController extends Controller {
 		$billings = Billing::filter( $billingFilters )->whereBetween( 'created_at', [
 			$dateFilter['startedDate'],
 			$dateFilter['endedDate'],
-		] )->paginate( 100 );
+		] )->paginate( 10 );
 
 		return $this->excel->download( new BillingExport( $billings, $dateFilter['startedDate'], $dateFilter['endedDate'] ), 'billing.xlsx' );
 
