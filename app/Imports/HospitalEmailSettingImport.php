@@ -90,7 +90,6 @@ class HospitalEmailSettingImport extends ImportBAbstract implements WithEvents
 
     public static function afterImport(AfterImport $event)
     {
-        dump(static::$arr);
         $model = new HospitalEmailSetting(static::$arr);
         $model->save();
     }
