@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Billing extends Model
 {
     use Filterable;
-    protected $fillable = ['hospital_id', 'contract_plan_id', 'from', 'to', 'status'];
+    protected $fillable = ['hospital_id', 'billing_month', 'status'];
 
-    protected $dates = ['from', 'to'];
+    protected $dates = ['billing_month'];
 
 
     public function contractPlan()
