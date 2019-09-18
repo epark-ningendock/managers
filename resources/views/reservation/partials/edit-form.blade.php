@@ -315,6 +315,7 @@
         </div>
 
     </div>
+    
     <h2 class="section-title">申込者情報</h2>
 
     <div class="row form-group no-field">
@@ -689,6 +690,13 @@
             background: #ddd;
         }
 
+        td.daybox.red-background {
+            background: #FCE4E4;
+        }
+
+        td.daybox.blue-background {
+            background: #CBE0F8;
+        }
 
         td.daybox.it-can-reserve  {
             cursor: pointer;
