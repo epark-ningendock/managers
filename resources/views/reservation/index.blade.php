@@ -193,7 +193,7 @@
             </td> --}}
             <td>{{ $reservation->id }}</td>
             <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
-            <td>{{ $reservation->customer->name}}</td>
+            <td><a href="#">{{ $reservation->customer->name}}</a></td>
             <td>{{ $reservation->course->name }}</td>
             <td>2000円</td>
             <td>{{ $reservation->reservation_status->description }}</td>
