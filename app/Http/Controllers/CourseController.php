@@ -208,7 +208,7 @@ class CourseController extends Controller
             $course->hospital_id = session()->get('hospital_id');
             if ($course->auto_calc_application == '1') {
                 $course_price = $course->is_price == '1' ? $course->price : 0;
-                $course->pre_account_price =  $course_price * $hospital->pre_account_discount_rate;
+                $course->pre_account_price =  $course_price * ($hospital->pre_account_discount_rate/100);
             }
 
             // to clear existing value in edit case

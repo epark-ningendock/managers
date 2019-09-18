@@ -545,7 +545,7 @@
         <div class="box-body">
             <div class="form-group py-sm-2">
                 <label for="status">状態</label>
-                <group class="inline-radio two-option">
+                <group class="inline-radio two-option" style="width: 200px;">
                     <div class="status-btn">
                         <input type="radio" class="checkbox d-inline-block mr-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 1 ? 'checked' : '' }}
                         value="1"
@@ -796,7 +796,8 @@
                   if($('#auto_calc_application').prop('checked')) {
                       const price = $('#is_price').prop('checked') ? ($('#price').val() || 0) : 0;
                       const discountRate = $('#pre_account_discount_rate').val() || 0;
-                      $('#pre_account_price').val(price * discountRate);
+                      let accPrice = price * (discountRate/100);
+                      $('#pre_account_price').val(accPrice);
                       $('#pre_account_price').prop('disabled', true);
                   } else {
                       $('#pre_account_price').val('');
@@ -822,7 +823,8 @@
               if($('#auto_calc_application').prop('checked')) {
                   const price = $('#is_price').prop('checked') ? ($('#price').val() || 0) : 0;
                   const discountRate = $('#pre_account_discount_rate').val() || 0;
-                  $('#pre_account_price').val(price * discountRate);
+                  let accPrice = price * (discountRate/100);
+                  $('#pre_account_price').val(accPrice);
                   $('#pre_account_price').prop('disabled', true);
               }
           })();
