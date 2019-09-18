@@ -208,20 +208,20 @@
                 <button class="btn btn-success ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.accept_confirmation') }}"
                         data-target-form="#accept-form" data-button-text="確定する">
-                  仮予約
+                  受付確定
                 </button>
               @endif
               @if($reservation->reservation_status->is(ReservationStatus::ReceptionCompleted))
                 <button class="btn btn-primary ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.complete_confirmation') }}"
                         data-target-form="#complete-form" data-button-text="完了する">
-                  受付確定
+                  受診完了
                 </button>
               @endif
               @if($reservation->reservation_status->is(ReservationStatus::Completed))
-                <button class="btn btn-primary ml-3">
+                {{-- <button class="btn btn-primary ml-3">
                   受診完了
-                </button>
+                </button> --}}
               @endif
               @if(!$reservation->reservation_status->is(ReservationStatus::Cancelled) && !$reservation->reservation_status->is(ReservationStatus::Completed))
                 <button class="btn btn-danger ml-3 delete-popup-btn" data-id="{{ $reservation->id }}"

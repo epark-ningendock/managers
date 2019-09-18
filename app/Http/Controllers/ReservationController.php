@@ -333,6 +333,9 @@ class ReservationController extends Controller
             }
             $reservation->reservation_status = ReservationStatus::ReceptionCompleted;
             $reservation->save();
+
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+
             Session::flash('success', trans('messages.reservation.accept_success'));
             DB::commit();
 
@@ -363,6 +366,9 @@ class ReservationController extends Controller
             $reservation->reservation_status = ReservationStatus::Cancelled;
             $reservation->cancel_date = Carbon::now();
             $reservation->save();
+
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+            
             Session::flash('success', trans('messages.reservation.cancel_success'));
             DB::commit();
 
@@ -392,6 +398,9 @@ class ReservationController extends Controller
             $reservation->reservation_status = ReservationStatus::Completed;
             $reservation->completed_date = Carbon::now();
             $reservation->save();
+
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+
             Session::flash('success', trans('messages.reservation.complete_success'));
             DB::commit();
 
@@ -549,7 +558,7 @@ class ReservationController extends Controller
 
             $this->reservationAnswerCreate($request, $reservation);
 
-            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $customer);
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $customer, '登録');
 
             DB::commit();
 
@@ -758,7 +767,7 @@ class ReservationController extends Controller
 
             $this->reservationAnswerCreate($request, $reservation);
             
-            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer);
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '変更');
 
             DB::commit();
             
@@ -776,11 +785,13 @@ class ReservationController extends Controller
      * 受付確認メール送信
      * @param array $reservationDates
      */
-    public function sendReservationCheckMail($hospital, $reservation, $customer)
+    public function sendReservationCheckMail($hospital, $reservation, $customer, $processing)
     {
         $contract_information = ContractInformation::where('hospital_id', $hospital->id)->first();
 
         $mailContext = [
+            'staff_name' => Auth::user()->name,
+            'processing' => $processing,
             'hospital_name' => $hospital->name,
             'reservation' => $reservation
         ];
