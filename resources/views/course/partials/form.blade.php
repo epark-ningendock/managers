@@ -410,7 +410,7 @@
           }
         @endphp
           <td class="text-center">
-              <input type="checkbox" class="minor-checkbox" id="option_set_price{{ $option->id }}" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
+              <input type="checkbox" id="option_set_price{{ $option->id }}" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
               <label class="mr-2" for="option_set_price{{ $option->id }}">{{ $option->name }}</label></td>
           <td class="text-center">{{ number_format($option->price) }} 円</td>
         </tr>
@@ -714,13 +714,15 @@
           /* ---------------------------------------------------
           // minor checkbox values
           -----------------------------------------------------*/
+
           (function () {
               const change = function(ele) {
                   if (ele.prop('checked')) {
-                      ele.next('input:hidden').remove();
-                      ele.prev().remove();
+                      if (ele.next().next().attr('class') == 'dummy') {
+                        ele.next().next().remove();
+                      }
                   } else {
-                      $('<input type="hidden" name="minor_values[]" value="0"/>').insertBefore(ele);
+                    $('<input type="hidden" class="dummy" name="minor_values[]" value="0"/>').insertAfter(ele.next('label'));
                   }
               };
 
