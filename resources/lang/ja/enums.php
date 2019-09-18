@@ -63,8 +63,8 @@ return [
 
     ReservationStatus::class => [
         ReservationStatus::Pending => '仮受付',
-        ReservationStatus::ReceptionCompleted => '受付完了',
-        ReservationStatus::Completed => '完了',
+        ReservationStatus::ReceptionCompleted => '受付確定',
+        ReservationStatus::Completed => '受診完了',
         ReservationStatus::Cancelled => 'キャンセル'
     ],
 

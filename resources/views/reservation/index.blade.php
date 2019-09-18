@@ -219,7 +219,7 @@
                 </button>
               @endif
               @if($reservation->reservation_status->is(ReservationStatus::Completed))
-                <button class="btn btn-primary ml-3 delete-popup-btn">
+                <button class="btn btn-primary ml-3">
                   受診完了
                 </button>
               @endif
