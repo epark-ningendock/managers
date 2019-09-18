@@ -8,8 +8,9 @@ use Reshadman\OptimisticLocking\OptimisticLocking;
 class HospitalEmailSetting extends Model
 {
     use OptimisticLocking;
-    
+
     protected $fillable = [
+        'hospital_id',
         'in_hospital_email_reception_flg',
         'in_hospital_confirmation_email_reception_flg',
         'in_hospital_change_email_reception_flg',

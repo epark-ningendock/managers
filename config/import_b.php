@@ -33,6 +33,10 @@ return [
         'model' => \App\Customer::class,
         'import' => \App\Imports\CustomerImport::class,
     ],
+    'T_AP_M_COMMON_SETTING.csv' => [
+        'model' => \App\HospitalEmailSetting::class,
+        'import' => \App\Imports\HospitalEmailSettingImport::class,
+    ],
     'T_OP_T_HYB_APPOINT.csv' => [
         'model' => \App\Reservation::class,
         'import' => \App\Imports\ReservationImport::class,
