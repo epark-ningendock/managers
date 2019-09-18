@@ -398,13 +398,16 @@
     </div>
     <h1 class="box-title">オプションの設定</h1>
   </div>
-  <div class="box-body" id="option-setting">
+
+  <div class="form-entry">
+    <div class="box-body" id="option-setting">
     <table class="table no-border table-hover table-striped ">
       <tr>
-        <td class="text-center">オプション名</td>
-        <td class="text-center">価格</td>
+        <td class="option-name"><span>オプション名</span></td>
+        <td class="option-price">価格</td>
       </tr>
       @foreach($options as $option)
+        <tr>
         @php
           $is_checked = false;
           if ($o_option_ids->isNotEmpty()) {
@@ -413,13 +416,14 @@
             $is_checked = $course_options->where('option_id', $option->id)->isNotEmpty();
           }
         @endphp
-          <td class="text-center">
+          <td class="option-name">
               <input type="checkbox" class="minor-checkbox" id="option_set_price{{ $option->id }}" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
               <label class="mr-2" for="option_set_price{{ $option->id }}">{{ $option->name }}</label></td>
-          <td class="text-center">{{ number_format($option->price) }} 円</td>
+          <td class="option-price">{{ number_format($option->price) }} 円</td>
         </tr>
       @endforeach
     </table>
+  </div>
   </div>
 </div>
 
