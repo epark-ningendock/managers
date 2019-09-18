@@ -117,7 +117,6 @@
               <label for="is_cancelled">キャンセル</label>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -273,6 +272,39 @@
                   $('#search_form').submit();
               });
           })();
+
+          (function(){
+              $('#is_pending').change(function(){
+                if($('#is_pending').prop('checked')){
+                  $('#is_pending').val('1')
+                }
+              });
+          })();
+          
+          (function(){
+              $('#is_reception_completed').change(function(){
+                if($('#is_reception_completed').prop('checked')){
+                  $('#is_reception_completed').val('2')
+                }
+              });
+          })();
+
+          (function(){
+              $('#is_completed').change(function(){
+                if($('#is_completed').prop('checked')){
+                  $('#is_completed').val('3')
+                }
+              });
+          })();
+
+          (function(){
+              $('#is_cancelled').change(function(){
+                if($('#is_cancelled').prop('checked')){
+                  $('#is_cancelled').val('4')
+                }
+              });
+          })();
+
 
           /* ---------------------------------------------------
           // clear all input

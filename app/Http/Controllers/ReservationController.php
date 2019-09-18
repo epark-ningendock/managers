@@ -110,6 +110,7 @@ class ReservationController extends Controller
      */
     protected function get_reception_list_query(Request $request)
     {
+        // dd($request->all());
         $query = Reservation::where('hospital_id', session('hospital_id'))->with([
             'course',
             'customer',
