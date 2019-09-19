@@ -35,6 +35,7 @@
         <table id="example2" class="table no-border table-hover table-striped mb-5">
             <thead>
             <tr>
+                <th>顧客ID</th>
                 <th>
                     <a href="{{ route('customer.index', ['name_sorting' => columnSorting('name_sorting')]) }}">
                         {{ trans('messages.name') }}
@@ -52,6 +53,7 @@
                     {{--</a>--}}
                 {{--</th>--}}
                 <th>{{ trans('messages.gender') }}</th>
+                <th>生年月日</th>
                 <th></th>
                 <th></th>
             </tr>
@@ -62,6 +64,7 @@
                 @foreach ($customers as $customer)
 
                     <tr class="customer-{{ $customer->id }}">
+                        <td>{{ $customer->id }}</td>
                         <td>
                             <a class="detail-link" href="#" data-id="{{ $customer->id }}" data-route="{{ route('customer.detail') }}">
                                 {{ $customer->name }}
@@ -75,6 +78,7 @@
                             {{--</a>--}}
                         {{--</td>--}}
                         <td>{{ $customer->sex->description or '-' }}</td>
+                        <td>{{ $customer->birthday }}</td>
                         <td>
                             <a class="btn btn-primary"
                                href="{{ route('customer.edit', $customer->id) }}">
