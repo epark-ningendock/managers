@@ -28,8 +28,8 @@ class HospitalCreateFormRequest extends FormRequest
         $status = HospitalEnums::getValues();
         return  [
             'status' => ['required', Rule::in($status)],
-            'latitude' => 'longitude_latitude',
-            'longitude' => 'longitude_latitude',
+            'latitude' => 'latitude',
+            'longitude' => 'longitude',
             'kana' => [
                 'required',
                 'max:50',
@@ -74,7 +74,9 @@ class HospitalCreateFormRequest extends FormRequest
             'station5.required_with' => '駅が未選択のため入力できません。',
             'medical_treatment_time.*.start.date_format' => '時間はHH：MMにしてください',
             'medical_treatment_time.*.end.date_format' => '時間はHH：MMにしてください',
-	        'medical_treatment_time.*.end.after' => trans('messages.time_invalid')
+	        'medical_treatment_time.*.end.after' => trans('messages.time_invalid'),
+            'latitude.latitude' => 'フォーマットが正しくありません。',
+            'latitude.longitude' => 'フォーマットが正しくありません。',
         ];
     }
 }

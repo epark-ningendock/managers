@@ -192,7 +192,6 @@ class HospitalController extends Controller
      */
     public function update(HospitalCreateFormRequest $request, Hospital $hospital)
     {
-
         try {
 	        DB::beginTransaction();
 
