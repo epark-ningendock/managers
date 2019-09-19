@@ -186,4 +186,44 @@ class Reservation extends SoftDeleteModel
         return '-';
     }
 
+    /**
+     * 既予約数取得
+     *
+     * @param $request
+     * @param $reservation_date
+     *
+     * @return 取得結果
+     */
+    public static function getReservationCount($request, $reservation_date)
+    {
+        return self::where('hospital_id', $request->input('hospital_id'))
+            ->where('course_id', $request->input('course_id'))
+            ->whereIn('reservation_status', [1, 2, 3])
+            ->whereDate('reservation_date', $reservation_date)->count();
+    }
+
+    /**
+     * 既予約情報取得
+     *
+     * @param $request
+     * @param $reservation_date
+     *
+     * @return 取得結果
+     */
+    public static function getUpdateTarget($request, $reservation_date) {
+
+        $entity = Reservation::with([
+            'customer' => function ($query) use ($request) {
+                $query->where('email', $request->input('email'));
+            }
+        ])
+            ->where('hospital_id', $request->input('hospital_id'))
+            ->where('course_id', $request->input('course_id'))
+            ->where('reservation_date', $reservation_date)
+            // 1 => 「仮受付」のもの
+            ->where('reservation_status', '1')
+            // reservation_id 若番のもの１件
+            ->first();
+        return $entity;
+    }
 }

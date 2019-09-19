@@ -55,8 +55,10 @@ class Kernel extends HttpKernel
         'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'authority.level.admin' => \App\Http\Middleware\AuthorityLevelAdmin::class,
         'permission.hospital.edit' => \App\Http\Middleware\isHospitalEdit::class,
@@ -65,6 +67,24 @@ class Kernel extends HttpKernel
         'permission.cource-classification.edit' => \App\Http\Middleware\isCourceClassificationEdit::class,
         'permission.invoice.edit' => \App\Http\Middleware\isInvoiceEdit::class,
         'authority.level.contract-staff' => \App\Http\Middleware\AuthorityLebelContractStaff::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'authority.level.not-contract-staff' => \App\Http\Middleware\AuthorityLevelNotContractStaff::class,
+        'jsonp' => \App\Http\Middleware\ResponseJsonp::class,
+    ];
+
+    /**
+     * The priority-sorted list of middleware.
+     *
+     * This forces non-global middleware to always be in the given order.
+     *
+     * @var array
+     */
+    protected $middlewarePriority = [
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \App\Http\Middleware\Authenticate::class,
+        \Illuminate\Session\Middleware\AuthenticateSession::class,
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        \Illuminate\Auth\Middleware\Authorize::class,
     ];
 }

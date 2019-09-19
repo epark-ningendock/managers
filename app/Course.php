@@ -97,4 +97,165 @@ class Course extends SoftDeleteModel
         ];
         return $attributes;
     }
+
+    public function course_meta_informations()
+    {
+        return $this->hasMany('App\CourseMetaInformation');
+    }
+
+    public function calendar_days()
+    {
+        return $this->hasMany('App\CalendarDay', 'calender_id', 'calender_id');
+    }
+
+    public function tax_class()
+    {
+        return $this->belongsTo('App\TaxClass');
+    }
+
+    /**
+     * 検査コース一覧検索
+     *
+     * @return クエリ
+     */
+    public function scopeWhereForSearchAPI($query, $request)
+    {
+        // フリーワード（施設名など）
+        if ($request->input('freewords') !== null)
+            $query->whereHas('course_meta_informations', function ($query) use ($request) {
+                $query->where('freewords', 'like', '%' . $request->input('freewords') . '%');
+            });
+
+        // フリーワード（エリアなど）
+        if ($request->input('freewords_area') !== null)
+            $query->whereHas('course_meta_informations', function ($query) use ($request) {
+                $query->where('area_station', 'like', '%' . $request->input('freewords_area') . '%');
+            });
+
+        // フリーワード（施設特徴）
+        if ($request->input('freewords_hospital_point') !== null)
+            $query->whereHas('course_meta_informations', function ($query) use ($request) {
+                $query->where('hospital_classification', 'like', '%' . $request->input('freewords_hospital_point') . '%');
+            });
+
+        // フリーワード（路線）
+        if ($request->input('freewords_rail') !== null)
+            $query->whereHas('course_meta_informations', function ($query) use ($request) {
+                $query->where('rails', 'like', '%' . $request->input('freewords_rail') . '%');
+            });
+
+        // 都道府県コード
+        $pref_cd = $request->input('pref_cd');
+        if (isset($pref_cd)) {
+            $query->whereHas('hospital', function ($query) use ($pref_cd) {
+                $query->where('prefecture_id', $pref_cd);
+            });
+        }
+
+        // 市区町村コード
+        $district_no = $request->input('district_no');
+        if (isset($district_no)) {
+            $query->whereHas('hospital.district_code', function ($query) use ($district_no) {
+                $query->where('district_code', $district_no);
+            });
+        }
+
+        // 路線コード
+        $rail_no = $request->input('rail_no');
+        if (isset($rail_no)) {
+            $query->whereHas('hospital', function ($query) use ($rail_no) {
+                $query->where('rail1', $rail_no)->orWhere('rail2', $rail_no)->orWhere('rail3', $rail_no)->orWhere('rail4', $rail_no)->orWhere('rail5', $rail_no);
+            });
+        }
+
+        // 駅コード
+        $station_no = $request->input('station_no');
+        if (isset($station_no)) {
+            $query->whereHas('hospital', function ($query) use ($station_no) {
+                $query->where('station1', $station_no)->orWhere('station2', $station_no)->orWhere('station3', $station_no)->orWhere('station4', $station_no)->orWhere('station5', $station_no);
+            });
+        }
+
+        $from = $request->input('reservation_dt_from');
+        $to = $request->input('reservation_dt_to');
+        // 受信希望日FROM TO
+        if (isset($from) and isset($to)) {
+            $query->whereHas('calendar_days', function ($query) use ($from, $to) {
+                $query->where('date', '>=', $from)
+                    ->where('date', '<=', $to)
+                    ->where('is_reservation_acceptance', 1);
+            });
+        }
+        // 受診希望日FROM
+        else if (isset($from) and empty($to)) {
+            $query->whereHas('calendar_days', function ($query) use ($from) {
+                $query->where('date', '>=', $from)->where('is_reservation_acceptance', 1);
+            });
+        }
+        // 受診希望日TO
+        else if (empty($from) and isset($to)) {
+            $query->whereHas('calendar_days', function ($query) use ($to) {
+                $query->where('date', '<=', $to)->where('is_reservation_acceptance', 1);
+            });
+        }
+
+        // 検査コース金額検索
+        $price_upper_limit = $request->input('price_upper_limit');
+        if (isset($price_upper_limit)) {
+            $query->where('price', '<=', $price_upper_limit);
+        }
+        $price_lower_limit = $request->input('price_lower_limit');
+        if (isset($price_lower_limit)) {
+            $query->where('price', '>=', $price_lower_limit);
+        }
+
+        // 施設分類コード
+        if ($request->input('hospital_category_code') !== null) {
+            $hospital_category_code = explode(",", $request->input('hospital_category_code'));
+            $query->whereHas('hospital.hospital_details', function ($query) use ($hospital_category_code) {
+                $query->whereIn('hospital_category_sho_id', $hospital_category_code);
+            });
+        }
+        // 検査コース分類コード
+        if ($request->input('course_category_code') !== null) {
+            $course_category_code = explode(",", $request->input('course_category_code'));
+            $query->whereHas('course_details', function ($query) use ($course_category_code) {
+                $query->whereIn('minor_classification_id', $course_category_code);
+            });
+        }
+
+        // コースの料金による並べ替え
+        if (intval($request->input('course_price_sort')) === 0) {
+            $query->orderBy('price');
+        }
+        else {
+            $query->orderBy('price', 'desc');
+        }
+        Log::debug($query->toSql());
+
+        return $query;
+    }
+
+    const AILIAS_FOR_HOSPITAL_API = [
+        'id',
+        'hospital_id',
+        'hospital_id as no',
+        'id as course_no',
+        'code as course_code',
+        'name as course_name',
+        'web_reception',
+        'course_point',
+        'is_price as flg_price',
+        'price',
+        'is_price_memo as flg_price_memo',
+        'price_memo',
+        'regular_price as price_2',
+        'discounted_price as price_3',
+        'tax_class_id',
+        'pre_account_price',
+        'is_local_payment as flg_local_payment',
+        'is_pre_account as flg_pre_account',
+        'auto_calc_application',
+        'calender_id',
+    ];
 }

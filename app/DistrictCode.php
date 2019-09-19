@@ -18,4 +18,14 @@ class DistrictCode extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function prefecture()
+    {
+        return $this->belongsTo('App\Prefecture');
+    }
+
+    public function hospitals()
+    {
+        return $this->hasMany('App\Hospital');
+    }
 }

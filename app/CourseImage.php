@@ -19,4 +19,14 @@ class CourseImage extends SoftDeleteModel
     {
         return str_replace('App\\', '', get_class($this)).'/'.strval($this->id).'/'.$name;
     }
+
+    public function hospital_image()
+    {
+        return $this->belongsTo('App\HospitalImage');
+    }
+
+    public function image_order()
+    {
+        return $this->belongsTo('App\ImageOrder');
+    }
 }
