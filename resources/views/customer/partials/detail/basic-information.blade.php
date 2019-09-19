@@ -60,12 +60,6 @@
                 <tr>
                     <td class="gray-cell-bg">{{ trans('messages.memo') }}</td>
                     <td>{{ $customer_detail->memo }}</td>
-                    <td class="gray-cell-bg">{{ trans('messages.reservation_memo') }}</td>
-                    <td>
-                        @if ( !empty($customer_detail->reservations()->NearestDate()->first()->reservation_date) )
-                            {{ $customer_detail->reservations()->NearestDate()->first()->reservation_date }}
-                        @endif
-                    </td>
                 </tr>
                 <tr>
                     <td class="gray-cell-bg">{{ trans('messages.claim_count') }}</td>
