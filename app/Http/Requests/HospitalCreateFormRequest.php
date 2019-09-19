@@ -30,7 +30,15 @@ class HospitalCreateFormRequest extends FormRequest
             'status' => ['required', Rule::in($status)],
             'latitude' => 'longitude_latitude',
             'longitude' => 'longitude_latitude',
-            'kana' => 'required|max:50',
+            'kana' => [
+                'required',
+                'max:50',
+                function ($attribute, $value, $fail) {
+                    if (preg_match('/[^ぁ-んー]/u', $value) !== 0) {
+                        return $fail('よみはひらがなで入力してください');
+                    }
+                },
+            ],
             'name' => 'required|max:50',
             'postcode' => 'regex:/^\d{3}-?\d{4}$/',
             'address1' => 'max:256',
