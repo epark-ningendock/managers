@@ -457,7 +457,7 @@
   <script src="{{ asset('js/yubinbango.js') }}" charset="UTF-8"></script>
   <script src="{{ asset('vendor/adminlte/plugins/iCheck/icheck.min.js') }}"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}"></script>
-  
+
   <script>
     (function ($) {
 
@@ -552,6 +552,10 @@
           $('select[id=station' + dom_index + ']').append(options);
         })
         .fail(function(data) {
+          //取得できなければ駅を初期値にする
+          $('select[id=station' + dom_index + '] option').remove();
+          $init_station_option = $('<option>', { value: "", text: "駅を選択", id: 'init-station' + dom_index});
+          $('select[id=station' + dom_index + ']').append($init_station_option);
           console.log('fail');
           console.log(JSON.stringify(data.data));
         });
@@ -631,7 +635,13 @@
       路線に応じた駅をプルダウンにセットする
       -----------------------------------------------------*/
       $(document).on('change', "[id^=rail]", function () {
-        station_selector($(this).val(), $(this).attr('name'));
+          console.log($(this).val());
+        if($(this).val()) {
+          station_selector($(this).val(), $(this).attr('name'));
+        } else {
+          console.log($(this).attr('name'));
+          station_selector('', $(this).attr('name'));
+        }
       });
 
     })(jQuery);
