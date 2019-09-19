@@ -373,6 +373,10 @@ class CourseController extends Controller
     public function update(CourseFormRequest $request, Course $course)
     {
         try {
+            $request->merge([
+                'is_price' => (integer)$request->has('is_price'),
+                'is_price_memo' => (integer)$request->has('is_price_memo'),
+            ]);
             $this->saveCourse($request, $course);
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.course')]));
             return redirect('course');
