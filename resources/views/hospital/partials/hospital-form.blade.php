@@ -298,9 +298,11 @@
           </div>
 
           <div class="col-md-4">
-            <div class="form-group ml-0 mr-0">
+            <div class="form-group ml-0 mr-0 @if ($errors->has("station{$i}")) has-error @endif">
               <input type="text" class="form-control" id="access{{$i}}" name="access{{$i}}" placeholder="A4出口から、徒歩5分"
                      value="{{ old("access{$i}", (isset($hospital->{'access'. $i})) ? $hospital->{'access'. $i} : null) }}"/>
+              @if ($errors->has("station{$i}")) <p class="help-block text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first("station{$i}") }}</p>
+              @endif
             </div>
           </div>
         @endfor
