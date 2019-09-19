@@ -90,31 +90,41 @@
       <div class='form-group @if ($errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') === '受信メールアドレスを1つ以上入力してください。')) has-error @endif'>
         <div class="form-group @if ($errors->has('reception_email1')) has-error @endif">
             <label class='ml-3'>受信メールアドレス1</label>
-            {{ Form::text('reception_email1' , (old('reception_email1')) ? old('reception_email1') : $hospital_email_setting->reception_email1, ['class' => 'form-control ml-3', 'id' => 'reception_email1', 'placeholder' => 'メールアドレスを入力してください']) }}
+            {{ Form::text('reception_email1' , 
+                (old('reception_email1') || $errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') === '受信メールアドレスを1つ以上入力してください。')) ? old('reception_email1') : $hospital_email_setting->reception_email1,
+                ['class' => 'form-control ml-3', 'id' => 'reception_email1', 'placeholder' => 'メールアドレスを入力してください']) }}
             @if ($errors->has('reception_email1')) <p class="help-block ml-3">{{ $errors->first('reception_email1') }}</p> @endif
         </div>
 
         <div class="form-group @if ($errors->has('reception_email2')) has-error @endif">
             <label class='ml-3'>受信メールアドレス2</label>
-            {{ Form::text('reception_email2' , (old('reception_email2')) ? old('reception_email2') : $hospital_email_setting->reception_email2, ['class' => 'form-control ml-3', 'id' => 'reception_email2', 'placeholder' => 'メールアドレスを入力してください']) }}
+            {{ Form::text('reception_email2' ,
+                (old('reception_email2') || $errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') === '受信メールアドレスを1つ以上入力してください。')) ? old('reception_email2') : $hospital_email_setting->reception_email2, 
+                ['class' => 'form-control ml-3', 'id' => 'reception_email2', 'placeholder' => 'メールアドレスを入力してください']) }}
             @if ($errors->has('reception_email2')) <p class="help-block ml-3">{{ $errors->first('reception_email2') }}</p> @endif
         </div>
 
         <div class="form-group @if ($errors->has('reception_email3')) has-error @endif">
             <label class='ml-3'>受信メールアドレス3</label>
-            {{ Form::text('reception_email3' , (old('reception_email3')) ? old('reception_email3') : $hospital_email_setting->reception_email3, ['class' => 'form-control ml-3', 'id' => 'reception_email3', 'placeholder' => 'メールアドレスを入力してください']) }}
+            {{ Form::text('reception_email3' , 
+                (old('reception_email3') || $errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') === '受信メールアドレスを1つ以上入力してください。')) ? old('reception_email3') : $hospital_email_setting->reception_email3, 
+                ['class' => 'form-control ml-3', 'id' => 'reception_email3', 'placeholder' => 'メールアドレスを入力してください']) }}
             @if ($errors->has('reception_email3')) <p class="help-block ml-3">{{ $errors->first('reception_email3') }}</p> @endif
         </div>
 
         <div class="form-group @if ($errors->has('reception_email4')) has-error @endif">
             <label class='ml-3'>受信メールアドレス4</label>
-            {{ Form::text('reception_email4' , (old('reception_email4')) ? old('reception_email4') : $hospital_email_setting->reception_email4, ['class' => 'form-control ml-3', 'id' => 'reception_email4', 'placeholder' => 'メールアドレスを入力してください']) }}
+            {{ Form::text('reception_email4', 
+                (old('reception_email4') || $errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') === '受信メールアドレスを1つ以上入力してください。')) ? old('reception_email4') : $hospital_email_setting->reception_email4, 
+                ['class' => 'form-control ml-3', 'id' => 'reception_email4', 'placeholder' => 'メールアドレスを入力してください']) }}
             @if ($errors->has('reception_email4')) <p class="help-block ml-3">{{ $errors->first('reception_email4') }}</p> @endif
         </div>
 
         <div class="form-group @if ($errors->has('reception_email5')) has-error @endif">
             <label class='ml-3'>受信メールアドレス5</label>
-            {{ Form::text('reception_email5' , (old('reception_email5')) ? old('reception_email5') : $hospital_email_setting->reception_email5, ['class' => 'form-control ml-3', 'id' => 'reception_email5', 'placeholder' => 'メールアドレスを入力してください']) }}
+            {{ Form::text('reception_email5', 
+                (old('reception_email5') || $errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') === '受信メールアドレスを1つ以上入力してください。')) ? old('reception_email5') : $hospital_email_setting->reception_email5, 
+                ['class' => 'form-control ml-3', 'id' => 'reception_email5', 'placeholder' => 'メールアドレスを入力してください']) }}
             @if ($errors->has('reception_email5')) <p class="help-block ml-3">{{ $errors->first('reception_email5') }}</p> @endif
         </div>
         @if ($errors->has('in_hospital_email_reception_flg') && ($errors->first('in_hospital_email_reception_flg') === '受信メールアドレスを1つ以上入力してください。') ) <p class="help-block">{{ $errors->first('in_hospital_email_reception_flg') }}</p> @endif
