@@ -309,7 +309,7 @@ class CourseController extends Controller
                 $course_question->question_number = $i + 1;
                 $course_question->course_id = $course->id;
                 $course_question->is_question = $is_questions[$i];
-                //if ($is_questions[$i] == '1') { //利用しないにチェックを入れていても保存したい
+                // 利用しないにチェックを入れていても保存したい
                 $course_question->question_title = $question_titles[$i];
                 $course_question->answer01 = $answer01s[$i];
                 $course_question->answer02 = $answer02s[$i];
@@ -321,7 +321,6 @@ class CourseController extends Controller
                 $course_question->answer08 = $answer08s[$i];
                 $course_question->answer09 = $answer09s[$i];
                 $course_question->answer10 = $answer10s[$i];
-                //}
                 $course_question->save();
             }
 
