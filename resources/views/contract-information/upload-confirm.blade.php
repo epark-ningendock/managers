@@ -104,12 +104,12 @@
               {{ $contract->contract_plan->plan_name }}
             </td>
             <td class="@if(isset($contract->id) && $contract->isDirty('service_start_date')) text-red @endif">
-              {{ $contract->service_start_date->format('Y/m/d') }}
-              <input type="hidden" name="contracts[{{$i}}][service_start_date]" value="{{ $contract->service_start_date->format('Ymd') }}">
+              {{ isset($contract->service_start_date) ? $contract->service_start_date->format('Y/m/d') : '-' }}
+              <input type="hidden" name="contracts[{{$i}}][service_start_date]" value="{{ isset($contract->service_start_date) ? $contract->service_start_date->format('Ymd') : '' }}">
             </td>
             <td class="@if(isset($contract->id) && $contract->isDirty('service_end_date')) text-red @endif">
-              {{ $contract->service_end_date->format('Y/m/d') }}
-              <input type="hidden" name="contracts[{{$i}}][service_end_date]" value="{{ $contract->service_end_date->format('Ymd') }}">
+              {{ isset($contract->service_end_date) ?  $contract->service_end_date->format('Y/m/d') : '-' }}
+              <input type="hidden" name="contracts[{{$i}}][service_end_date]" value="{{ isset($contract->service_end_date) ? $contract->service_end_date->format('Ymd') : '' }}">
             </td>
           </tr>
         @endforeach
