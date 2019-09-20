@@ -25,11 +25,12 @@ class HospitalCreateFormRequest extends FormRequest
      */
     public function rules()
     {
+        $data = $this->validationData();
         $status = HospitalEnums::getValues();
         return  [
             'status' => ['required', Rule::in($status)],
-            'latitude' => 'latitude',
-            'longitude' => 'longitude',
+            'latitude' => 'nullable|latitude',
+            'longitude' => 'nullable|longitude',
             'kana' => [
                 'required',
                 'max:50',
@@ -39,11 +40,51 @@ class HospitalCreateFormRequest extends FormRequest
                     }
                 },
             ],
-            'station1' => 'required_with:access1',
-            'station2' => 'required_with:access2',
-            'station3' => 'required_with:access3',
-            'station4' => 'required_with:access4',
-            'station5' => 'required_with:access5',
+            'access1' => [
+                function ($attribute, $value, $fail) {
+                    $data = $this->validationData();
+                    if(!empty($value) && is_null($data['station1'])) {
+                        return $fail('駅を選択してください');
+                    }
+                },
+            ],
+            'access2' => [
+                function ($attribute, $value, $fail) {
+                    $data = $this->validationData();
+                    if(!empty($value) && is_null($data['station2'])) {
+                        return $fail('駅を選択してください');
+                    }
+                },
+            ],
+            'access3' => [
+                function ($attribute, $value, $fail) {
+                    $data = $this->validationData();
+                    if(!empty($value) && is_null($data['station3'])) {
+                        return $fail('駅を選択してください');
+                    }
+                },
+            ],
+            'access4' => [
+                function ($attribute, $value, $fail) {
+                    $data = $this->validationData();
+                    if(!empty($value) && is_null($data['station4'])) {
+                        return $fail('駅を選択してください');
+                    }
+                },
+            ],
+            'access5' => [
+                function ($attribute, $value, $fail) {
+                    $data = $this->validationData();
+                    if(!empty($value) && is_null($data['station5'])) {
+                        return $fail('駅を選択してください');
+                    }
+                },
+            ],
+            'station1' => 'required_with:rail1',
+            'station2' => 'required_with:rail2',
+            'station3' => 'required_with:rail3',
+            'station4' => 'required_with:rail4',
+            'station5' => 'required_with:rail5',
             'name' => 'required|max:50',
             'postcode' => 'regex:/^\d{3}-?\d{4}$/',
             'address1' => 'max:256',
@@ -67,16 +108,31 @@ class HospitalCreateFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'station1.required_with' => '駅が未選択のため入力できません。',
-            'station2.required_with' => '駅が未選択のため入力できません。',
-            'station3.required_with' => '駅が未選択のため入力できません。',
-            'station4.required_with' => '駅が未選択のため入力できません。',
-            'station5.required_with' => '駅が未選択のため入力できません。',
             'medical_treatment_time.*.start.date_format' => '時間はHH：MMにしてください',
             'medical_treatment_time.*.end.date_format' => '時間はHH：MMにしてください',
 	        'medical_treatment_time.*.end.after' => trans('messages.time_invalid'),
             'latitude.latitude' => 'フォーマットが正しくありません。',
             'latitude.longitude' => 'フォーマットが正しくありません。',
+        ];
+    }
+    /**
+     * 項目名
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'station1' => '駅',
+            'rail1' => '路線',
+            'station2' => '駅',
+            'rail2' => '路線',
+            'station3' => '駅',
+            'rail3' => '路線',
+            'station4' => '駅',
+            'rail4' => '路線',
+            'station5' => '駅',
+            'rail5' => '路線',
         ];
     }
 }
