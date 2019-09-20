@@ -8,6 +8,17 @@ use App\Customer;
 use App\Course;
 
 $factory->define(Reservation::class, function (Faker $faker) {
+
+    $reservation_status = $faker->randomElement([1, 2, 3, 4]);
+
+    if ( $reservation_status == 4 ) {
+        $site_code = 'HP';
+        $fee = 0;
+    } else {
+        $site_code = $faker->randomElement(['HP', $faker->shuffle('abcdefghijklmnopqrstuvwxyz')]);
+        $fee = $faker->numberBetween(0, 5000);
+    }
+
     return [
         'hospital_id' => $faker->numberBetween(1, 50),
         'course_id' => $faker->numberBetween(1, 50),
@@ -18,11 +29,11 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'end_time_min' => sprintf('%02d', $faker->numberBetween(0, 59)),
         'channel' => $faker->randomElement([0, 1, 2]),
         'is_billable' => $faker->randomElement(['0', '1']),
-        'reservation_status' => $faker->randomElement([1, 2, 3, 4]),
+        'reservation_status' => $reservation_status,
         'completed_date' => $faker->dateTimeBetween('now','1 day'),
         'cancel_date' => $faker->dateTimeThisMonth->format('Y-m-d H:i:s'),
         'user_message' => $faker->sentence(10),
-        'site_code' => $faker->shuffle('abcdefghijklmnopqrstuvwxyz'),
+        'site_code' => $site_code,
         'customer_id' => null,
         'epark_member_id' => null,
         'member_number' => $faker->numberBetween(1, 50),
@@ -30,9 +41,9 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'time_selected' => $faker->randomElement([0, 1]),
         'is_repeat' => $faker->randomElement([0, 1]),
         'is_representative' => $faker->randomElement([0, 1]),
-        'tax_included_price' => null,
+        'tax_included_price' => $faker->numberBetween(1000, 8000),
         'adjustment_price' => null,
-        'tax_rate' => null,
+        'tax_rate' => $faker->numberBetween(1, 30),
         'second_date' => null,
         'third_date' => null,
         'is_choose' => null,
@@ -56,7 +67,9 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'internal_memo' => $faker->sentence(10),
         'acceptance_number' => $faker->numberBetween(1000, 4000),
         'y_uid' => null,
+        'fee' => $fee,
         'lock_version' => 1,
+        'fee_rate' => $faker->numberBetween(1, 30),
     ];
 });
 

@@ -10,6 +10,7 @@ use App\FeeRate;
 use App\Holiday;
 use App\Hospital;
 use App\Mail\Reservation\ReservationCheckMail;
+use App\Mail\Reservation\ReservationOperationMail;
 use App\Http\Requests\ReservationCreateFormRequest;
 use App\Http\Requests\ReservationFormRequest;
 use App\Http\Requests\ReservationUpdateFormRequest;
@@ -27,6 +28,8 @@ use App\TaxClass;
 
 class ReservationController extends Controller
 {
+    const EPARK_MAIL_ADDRESS = "dock_all@eparkdock.com";
+
     protected $reservation;
     protected $hospital;
     protected $customer;
@@ -77,16 +80,16 @@ class ReservationController extends Controller
         $query = $this->get_reception_list_query($request);
         $reservations = $query->paginate($page_per_record)
             ->appends($request->query());
-        $courses = Course::all();
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))->get();
 
         $params = $request->input();
 
         // for initial default value if it has not been set empty purposely
         if (!$request->has('reservation_start_date')) {
-            $params['reservation_start_date'] = Carbon::now()->format('Y/m/d');
+            $params['reservation_start_date'] = Carbon::now()->startOfMonth()->format('Y/m/d');
         }
         if (!$request->has('reservation_end_date')) {
-            $params['reservation_end_date'] = Carbon::now()->format('Y/m/d');
+            $params['reservation_end_date'] = Carbon::now()->endOfMonth()->format('Y/m/d');
         }
 
         return view('reservation.index', compact('reservations', 'courses'))
@@ -492,7 +495,7 @@ class ReservationController extends Controller
 
             request()->merge([
                 'hospital_id' => session('hospital_id'),
-                'reservation_status' => ReservationStatus::Pending,
+                'reservation_status' => ReservationStatus::ReceptionCompleted,
                 'is_repeat' => false
             ]);
 
@@ -539,6 +542,7 @@ class ReservationController extends Controller
 
             $reservation->customer_id = $customer->id;
             $reservation->save();
+
             $this->reservationCourseOptionSaveOrUpdate($request, $reservation);
 
             $this->reservationAnswerCreate($request, $reservation);
@@ -546,6 +550,13 @@ class ReservationController extends Controller
             $this->sendReservationCheckMail(Hospital::find(session('hospital_id'))->name, $reservation);
 
             DB::commit();
+
+            $data = [
+                'reservation' => $reservation,
+                'staff_name' => Auth::user()->name,
+                'processing' => '登録'
+                ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new ReservationOperationMail($data));
 
             return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
 
@@ -751,8 +762,15 @@ class ReservationController extends Controller
             $reservation->reservation_answers()->forceDelete();
 
             $this->reservationAnswerCreate($request, $reservation);
-
+            
             DB::commit();
+
+            $data = [
+                'reservation' => $reservation,
+                'staff_name' => Auth::user()->name,
+                'processing' => '変更'
+                ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new ReservationOperationMail($data));
 
             return redirect('reservation')->with('success', trans('messages.reservation.update_success'));
 

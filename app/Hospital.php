@@ -104,4 +104,9 @@ class Hospital extends Model
         return $this->hasOne('App\Lock');
     }
 
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
 }

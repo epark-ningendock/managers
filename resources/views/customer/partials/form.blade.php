@@ -100,8 +100,8 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group @if ($errors->has('birthday')) has-error @endif">
-                    <label for="birthday">{{ trans('messages.birthday') }}</label>
-                    <div class="input-group date datepicker"  data-date-format="yyyy-mm-dd" data-provide="datepicker">
+                    <label for="birthday">{{ trans('messages.birthday') }}<span style="display: inline-block;text-indent: 15px;">yyyy-MM-dd形式で入力してください</span></label>
+                    <div class="input-group date datepicker mt-1"  data-date-format="yyyy-mm-dd" data-provide="datepicker">
                         <input type="text" class="form-control date-picker" name="birthday" id="birthday"
                                value="{{ old('birthday', ( isset($customer_detail) ? $customer_detail->birthday : '')) }}"/>
                         <div class="input-group-addon">
@@ -198,8 +198,7 @@
                 <div class="form-group py-sm-1 @if ($errors->has('memo')) has-error @endif">
                     <label for="memo">{{ trans('messages.memo') }}
                     </label>
-                    <input type="text" class="form-control" name="memo" id="memo"
-                           value="{{ old('memo', ( isset($customer_detail) ? $customer_detail->memo : '')) }}"/>
+                    <textarea class="form-control" name="memo" id="memo" cols="30" rows="5">{{ old('memo', ( isset($customer_detail) ? $customer_detail->memo : '')) }}</textarea>
                     @if ($errors->has('memo')) <p class="help-block">{{ $errors->first('memo') }}</p> @endif
                 </div>
             </div>

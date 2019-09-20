@@ -25,6 +25,7 @@ use Reshadman\OptimisticLocking\StaleModelLockingException;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Course\CourseSettingNotificationMail;
 use Illuminate\Support\Facades\Auth;
+use App\Enums\Permission;
 
 class CourseController extends Controller
 {
@@ -60,6 +61,10 @@ class CourseController extends Controller
         $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
             ->whereDate('life_time_to', '>=', $today)->get()->first();
 
+        $is_presettlement = $hospital->is_pre_account == '1' &&
+            (Auth::user()->staff_auth->is_pre_account == Permission::Edit
+                || Auth::user()->staff_auth->is_pre_account == Permission::Upload);
+
         return view('course.create')
             ->with('calendars', $calendars)
             ->with('tax_class', $tax_class)
@@ -69,7 +74,8 @@ class CourseController extends Controller
             ->with('disp_date_start', $disp_date_start)
             ->with('disp_date_end', $disp_date_end)
             ->with('hospital', $hospital)
-            ->with('images', $images);
+            ->with('images', $images)
+            ->with('is_presettlement', $is_presettlement);
     }
 
     /**
@@ -141,6 +147,9 @@ class CourseController extends Controller
         $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
             ->whereDate('life_time_to', '>=', $today)->get()->first();
 
+        $is_presettlement = $hospital->is_pre_account == '1' &&
+            (Auth::user()->staff_auth->is_pre_account == Permission::Edit
+                || Auth::user()->staff_auth->is_pre_account == Permission::Upload);
 
         return view('course.edit')
             ->with('calendars', $calendars)
@@ -152,7 +161,8 @@ class CourseController extends Controller
             ->with('disp_date_start', $disp_date_start)
             ->with('disp_date_end', $disp_date_end)
             ->with('hospital', $hospital)
-            ->with('course', $course);
+            ->with('course', $course)
+            ->with('is_presettlement', $is_presettlement);
     }
 
     protected function saveCourse(CourseFormRequest $request, $course_param)
@@ -160,6 +170,7 @@ class CourseController extends Controller
         try {
             DB::beginTransaction();
 
+            $hospital = Hospital::findOrFail(session()->get('hospital_id'));
             //Course
             $course_data = $request->only([
                 'hospital_id',
@@ -184,7 +195,8 @@ class CourseController extends Controller
                 'course_display_start',
                 'course_display_end',
                 'is_pre_account',
-                'reception_acceptance_day_end'
+                'reception_acceptance_day_end',
+                'auto_calc_application'
             ]);
             $reception_start_day = $request->input('reception_start_day');
             $reception_start_month = $request->input('reception_start_month');
@@ -205,6 +217,15 @@ class CourseController extends Controller
             }
             $course->fill($course_data);
             $course->hospital_id = session()->get('hospital_id');
+            if ($course->auto_calc_application == '1') {
+                $course_price = $course->is_price == '1' ? $course->price : 0;
+                $course->pre_account_price =  $course_price * ($hospital->pre_account_discount_rate/100);
+            }
+
+            // to clear existing value in edit case
+            if($course->is_pre_account == '0') {
+                $course->pre_account_price = null;
+            }
             //force to update updated_at. otherwise version will not be updated
             $course->touch();
             $course->save();
