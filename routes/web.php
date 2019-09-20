@@ -1,5 +1,28 @@
 <?php
 
+use App\Billing;
+use App\Hospital;
+use Carbon\Carbon;
+
+Route::get('/yyy', function(){
+    $hospitals = Hospital::all();
+
+    $x = 1;
+    while ($x < 36) {
+        $month_years = Carbon::today()->subMonth($x);
+        $monthList = $month_years->year .'/'. $month_years->month;
+        dump($monthList);
+        $x++;
+    }
+
+    foreach( $hospitals as $hospital ) {
+
+//        factory(Billing::class, 50)->make(['hospital_id' => $hospital->id]);
+
+
+    }
+});
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes

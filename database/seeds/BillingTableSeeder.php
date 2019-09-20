@@ -16,7 +16,10 @@ class BillingTableSeeder extends Seeder
         $hospitals = Hospital::all();
 
         foreach( $hospitals as $hospital ) {
+
             factory(Billing::class, 50)->create(['hospital_id' => $hospital->id]);
+
+
         }
     }
 }

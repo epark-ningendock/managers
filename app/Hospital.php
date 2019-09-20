@@ -109,4 +109,9 @@ class Hospital extends Model
         return $this->hasMany(Reservation::class);
     }
 
+    public function hospitalPlans()
+    {
+        return $this->hasMany(HospitalPlan::class);
+    }
+
 }

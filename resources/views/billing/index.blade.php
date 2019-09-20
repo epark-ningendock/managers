@@ -117,11 +117,19 @@
                     <td>{{ $billing->hospital->contract_information->property_no ?? '' }}</td>
                     <td>{{ $billing->hospital->name }}</td>
                     <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
-                    <td>{{ $billing->contractPlan->plan_name }}</td>
-                    <td>{{ number_format($billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() + $billing->contractPlan->monthly_contract_fee) }}円</td>
-                    <td>{{ $billing->contractPlan->monthly_contract_fee }}円</td>
+                    <td>
+{{--                        {{ $billing->contractPlan->plan_name }}--}}
+                    </td>
+                    <td>
+{{--                        {{ number_format($billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() + $billing->contractPlan->monthly_contract_fee) }}円--}}
+                    </td>
+                    <td>
+{{--                        {{ $billing->contractPlan->monthly_contract_fee }}円--}}
+                    </td>
                     <td>{{ number_format($billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum()) }}円</td>
-                    <td>{{ $billing->contractPlan->fee_rate }}%</td>
+                    <td>
+{{--                        {{ $billing->contractPlan->fee_rate }}%--}}
+                    </td>
                     <td>
                         <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
                     </td>

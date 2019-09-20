@@ -10,7 +10,7 @@ class Billing extends Model
     use Filterable;
     protected $fillable = ['hospital_id', 'billing_month', 'status'];
 
-    protected $dates = ['billing_month'];
+//    protected $dates = ['billing_month'];
 
 
     public function contractPlan()
