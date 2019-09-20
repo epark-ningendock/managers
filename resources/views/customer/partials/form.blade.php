@@ -102,7 +102,7 @@
                 <div class="form-group @if ($errors->has('birthday')) has-error @endif">
                     <label for="birthday">{{ trans('messages.birthday') }}</label>
                     <div class="input-group date datepicker"  data-date-format="yyyy-mm-dd" data-provide="datepicker">
-                        <input type="text" class="form-control date-picker" name="birthday" id="birthday"
+                        <input type="text" class="form-control date-picker" name="birthday" id="birthday" placeholder="yyyy-MM-dd形式で入力してください"
                                value="{{ old('birthday', ( isset($customer_detail) ? $customer_detail->birthday : '')) }}"/>
                         <div class="input-group-addon">
                             <span class="glyphicon glyphicon-th"></span>
@@ -198,8 +198,7 @@
                 <div class="form-group py-sm-1 @if ($errors->has('memo')) has-error @endif">
                     <label for="memo">{{ trans('messages.memo') }}
                     </label>
-                    <input type="text" class="form-control" name="memo" id="memo"
-                           value="{{ old('memo', ( isset($customer_detail) ? $customer_detail->memo : '')) }}"/>
+                    <textarea class="form-control" name="memo" id="memo">{{ old('memo', ( isset($customer_detail) ? $customer_detail->memo : '')) }}</textarea>
                     @if ($errors->has('memo')) <p class="help-block">{{ $errors->first('memo') }}</p> @endif
                 </div>
             </div>

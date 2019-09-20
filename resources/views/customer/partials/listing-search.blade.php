@@ -43,25 +43,7 @@
             </div>
         </div>
 
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label for="email">{{ trans('messages.email') }}</label>
-                <input value="{{ request('email') }}" id="email" type="text" class="form-control" name="email" />
-            </div>
-        </div>
-
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label for="updated_at">{{ trans('messages.updated_at') }}</label>
-                <div class="input-group date datepicker"  data-date-format="yyyy-mm-dd" data-provide="datepicker">
-                    <input  autocomplete="off"  class="form-control" name="update_at" id="update_at"
-                            value="{{ request('update_at') }}"/>
-                    <div class="input-group-addon">
-                        <span class="glyphicon glyphicon-th"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="clearfix"></div>
 
         <div class="col-sm-6">
             <label for=""></label>
@@ -69,13 +51,15 @@
 
                 <button type="submit" class="btn btn-primary">{{ trans('messages.search') }}</button>
                 <a href="{{ route('customer.index') }}" class="btn btn-default">{{ trans('messages.clear_search') }}</a>
-
             </div>
         </div>
 
     </div>
 
 </form>
+<div class="action-btn-bar text-right mt-4 mb-4">
+    <a href="{{ route('customer.create') }}" class="btn btn-primary">{{ trans('messages.create_new') }}</a>
+</div>
 
 <div class="paginate-select-box text-right">
     <label for="record_per_page">表示件数</label>

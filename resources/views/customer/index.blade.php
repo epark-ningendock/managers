@@ -20,12 +20,7 @@
 @stop
 
 @section('search')
-
-
-    @includeIf('customer.partials.action-bar')
     @includeIf('customer.partials.listing-search')
-
-
 @stop
 
 
@@ -35,6 +30,7 @@
         <table id="example2" class="table no-border table-hover table-striped mb-5">
             <thead>
             <tr>
+                <th>ID</th>
                 <th>
                     <a href="{{ route('customer.index', ['name_sorting' => columnSorting('name_sorting')]) }}">
                         {{ trans('messages.name') }}
@@ -46,6 +42,7 @@
                     </a>
                 </th>
                 <th>{{ trans('messages.phone_number') }}</th>
+                <th>{{ trans('messages.birthday') }}</th>
                 {{--<th>--}}
                     {{--<a href="{{ route('customer.index', ['email_sorting' => columnSorting('email_sorting')]) }}">--}}
                         {{--{{ trans('messages.email') }}--}}
@@ -63,17 +60,16 @@
 
                     <tr class="customer-{{ $customer->id }}">
                         <td>
+                            {{ $customer->id }}
+                        </td>
+                        <td>
                             <a class="detail-link" href="#" data-id="{{ $customer->id }}" data-route="{{ route('customer.detail') }}">
                                 {{ $customer->name }}
                             </a>
                         </td>
                         <td>{{ $customer->registration_card_number }}</td>
                         <td>{{ $customer->tel }}</td>
-                        {{--<td>--}}
-                            {{--<a href="#" class="send-email"  data-id="{{ $customer->id }}" data-route="{{ route('customer.show.email.form', ['customer_id' => $customer->id]) }}">--}}
-                                {{--{{ $customer->email }}--}}
-                            {{--</a>--}}
-                        {{--</td>--}}
+                        <td>{{ $customer->birthday }}</td>
                         <td>{{ $customer->sex->description or '-' }}</td>
                         <td>
                             <a class="btn btn-primary"

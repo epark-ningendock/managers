@@ -72,7 +72,7 @@
                         {{ $name_identifications->links() }}
                     </div>
                     <div class="text-center">
-                        <button class="btn btn-primary" id="perform-integration">
+                        <button class="btn btn-primary" id="perform-integration" disabled="disabled">
                             {{ trans('messages.perform_identification') }}
                         </button>
                     </div>
