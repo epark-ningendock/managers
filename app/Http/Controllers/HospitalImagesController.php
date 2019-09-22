@@ -164,20 +164,20 @@ class HospitalImagesController extends Controller
         }
         //タブ staff
         for($i = 1; $i <= 30; $i++){
-            if(isset($file['staff_tab_'.$i]) or isset($file['staff_tab_'.$i.'_memo2']) or isset($file['staff_tab_'.$i.'_order'])) {
+            if(isset($file['staff_tab_'.$i]) or isset($file['staff_tab_'.$i.'_category_id'])) {
                 $this->hospitalImageUploader($file, 'staff_tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
             }
         }
         //タブ facility
         for($i = 1; $i <= 30; $i++){
-            if(isset($file['facility_tab_'.$i]) or isset($file['facility_tab_'.$i.'_memo2']) or isset($file['facility_tab_'.$i.'_order'])) {
+            if(isset($file['facility_tab_'.$i]) or isset($file['facility_tab_'.$i.'_category_id'])) {
                 $this->hospitalImageUploader($file, 'facility_tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
             }
         }
 
         //タブ internal
         for($i = 1; $i <= 30; $i++){
-            if(isset($file['internal_tab_'.$i]) or isset($file['internal_tab_'.$i.'_memo2']) or isset($file['internal_tab_'.$i.'_order'])) {
+            if(isset($file['internal_tab_'.$i]) or isset($file['internal_tab_'.$i.'_category_id'])) {
                 $this->hospitalImageUploader($file, 'internal_tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
             }
         }
@@ -185,14 +185,14 @@ class HospitalImagesController extends Controller
 
         //タブ external
         for($i = 1; $i <= 30; $i++){
-            if(isset($file['external_tab_'.$i]) or isset($file['external_tab_'.$i.'_memo2']) or isset($file['external_tab_'.$i.'_order'])) {
+            if(isset($file['external_tab_'.$i]) or isset($file['external_tab_'.$i.'_category_id'])) {
                 $this->hospitalImageUploader($file, 'external_tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
             }
         }
 
         //タブ another
         for($i = 1; $i <= 30; $i++){
-            if(isset($file['another_tab_'.$i]) or isset($file['another_tab_'.$i.'_memo2']) or isset($file['another_tab_'.$i.'_order'])) {
+            if(isset($file['another_tab_'.$i]) or isset($file['another_tab_'.$i.'_category_id'])) {
                 $this->hospitalImageUploader($file, 'another_tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
             }
         }
