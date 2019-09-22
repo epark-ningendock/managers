@@ -41,7 +41,7 @@ class HospitalImageFormRequest extends FormRequest
             "staff_tab_{$i}" => 'file|image|max:4000',
 
             "staff_tab_{$i}_order2" => [
-                "required_with:staff_tab_{$i}_category_id",
+                "required_with:staff_tab_{$i}_category_id,staff_tab_{$i}_memo2,staff_tab_{$i}",
                 'nullable',
                 'numeric',
                 'max:99',
@@ -64,7 +64,7 @@ class HospitalImageFormRequest extends FormRequest
             $tab_facility_valid += [
                 "facility_tab_{$i}" => 'file|image|max:4000',
                 "facility_tab_{$i}_order2" => [
-                    "required_with:facility_tab_{$i}_category_id",
+                    "required_with:facility_tab_{$i}_category_id,facility_tab_{$i}_memo2,facility_tab_{$i}",
                     'nullable',
                     'numeric',
                     'max:99',
@@ -87,7 +87,7 @@ class HospitalImageFormRequest extends FormRequest
             $tab_internal_valid += [
                 "internal_tab_{$i}" => 'file|image|max:4000',
                 "internal_tab_{$i}_order2" => [
-                    "required_with:internal_tab_{$i}_category_id",
+                    "required_with:internal_tab_{$i}_category_id,internal_tab_{$i}_memo2,internal_tab_{$i}",
                     'nullable',
                     'numeric',
                     'max:99',
@@ -110,7 +110,7 @@ class HospitalImageFormRequest extends FormRequest
             $tab_external_valid += [
                 "external_tab_{$i}" => 'file|image|max:4000',
                 "external_tab_{$i}_order2" => [
-                    "required_with:external_tab_{$i}_category_id",
+                    "required_with:external_tab_{$i}_category_id,external_tab_{$i}_memo2,external_tab_{$i}",
                     'nullable',
                     'numeric',
                     'max:99',
@@ -133,7 +133,7 @@ class HospitalImageFormRequest extends FormRequest
             $tab_another_valid += [
                 "another_tab_{$i}" => 'file|image|max:4000',
                 "another_tab_{$i}_order2" => [
-                    "required_with:another_tab_{$i}_category_id",
+                    "required_with:another_tab_{$i}_category_id,another_tab_{$i}_memo2,another_tab_{$i}",
                     'nullable',
                     'numeric',
                     'max:99',
