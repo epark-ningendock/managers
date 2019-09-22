@@ -254,8 +254,8 @@ class HospitalImageFormRequest extends FormRequest
             'interview_1_title' => 'nullable|max:100',
             'interview_1_caption' => 'nullable|max:5000',
 
-            'interview.*.question' => 'max:5000',
-            'interview.*.answer' => 'max:5000',
+            'interview.*.question' => 'required|max:5000',
+            'interview.*.answer' => 'required|max:5000',
 
             'interview_new.*.question' => 'max:5000',
             'interview_new.*.answer' => 'max:5000',

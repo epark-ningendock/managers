@@ -206,9 +206,9 @@ class HospitalImagesController extends Controller
         if(isset($file['interview'])) {
             $interviews = $file['interview'];
             foreach ($interviews as $key => $interview) {
-                if(!is_null($interview['answer']) && !is_null($interview['question'])) {
+                //if(!is_null($interview['answer']) && !is_null($interview['question'])) {
                     $this->interview_detail->where('id', $key)->update($interview);
-                }
+                //}
             }
         }
 
