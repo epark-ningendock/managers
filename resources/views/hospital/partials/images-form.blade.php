@@ -894,6 +894,7 @@
                             ファイル削除
                         </a>
                     </p>
+                    {{Form::hidden('staff_'.$i.'_category_id', $staff['id'] )}}
                 </div>
             @else
                 <div class="staff_image_area">

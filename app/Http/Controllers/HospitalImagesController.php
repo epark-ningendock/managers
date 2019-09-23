@@ -157,8 +157,8 @@ class HospitalImagesController extends Controller
             }
         }
         //スタッフ
-        for($i = 1; $i <= 30; $i++){
-            if(isset($file['staff_'.$i]) or isset($file['staff_'.$i.'_name']) or isset($file['staff_'.$i.'_career']) or isset($file['staff_'.$i.'_memo'])) {
+        for($i = 1; $i <= 10; $i++){
+            if(isset($file['staff_'.$i.'_category_id']) or isset($file['staff_'.$i]) or isset($file['staff_'.$i.'_name']) or isset($file['staff_'.$i.'_career']) or isset($file['staff_'.$i.'_memo'])) {
             $this->hospitalImageUploader($file, 'staff_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_STAFF,$file['staff_'.$i.'_name'],$file['staff_'.$i.'_career'],$file['staff_'.$i.'_memo'] );
             }
         }
