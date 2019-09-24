@@ -38,11 +38,11 @@ class MemberLoginInfoImport extends ImportAbstract
 
         $model = new MemberLoginInfo([
             'epark_member_id' => $row['epark_member_id'],
-            'mail_info_delivery' => $row['mail_info_delivery'],
+            'mail_info_delivery' => (is_null($row['optin'])) ? 1 : $row['optin'],
             'nick_use' => $row['nick_use'],
             'contact' => $row['contact'],
             'contact_name' => $row['contact_name'],
-            'status' => $row['status'],
+            'status' => (is_null($row['status'])) ? 1 : $row['status'],
         ]);
 
         $model->save();

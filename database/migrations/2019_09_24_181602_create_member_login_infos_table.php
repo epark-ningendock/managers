@@ -19,7 +19,7 @@ class CreateMemberLoginInfosTable extends Migration
             $table->char('mail_info_delivery', 1)->default(1);
             $table->char('nick_use', 1)->default(1);
             $table->unsignedTinyInteger('contact')->default(1);
-            $table->string('contact_name', 32);
+            $table->string('contact_name', 32)->nullable();
             $table->char('status', 1)->default(1);
             $table->timestamps();
         });

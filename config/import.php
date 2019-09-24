@@ -31,46 +31,46 @@ use App\Station;
 
 return [
     // ステージングでのインポートの為、一部コメントアウトしています
-    'm_pref.csv' => [
-        'model' => Prefecture::class,
-        'import' => PrefectureImport::class,
-    ],
-    'm_district.csv' => [
-        'model' => DistrictCode::class,
-        'import' => DistrictCodeImport::class
-    ],
-    'm_item_type.csv' => [
-        'model' => ClassificationType::class,
-        'import' => ClassificationTypeImport::class,
-    ],
-    'm_item_category_dai.csv' => [
-        'model' => MajorClassification::class,
-        'import' => MajorClassificationImport::class,
-    ],
-    'm_item_category_chu.csv' => [
-        'model' => MiddleClassification::class,
-        'import' => MiddleClassificationImport::class,
-    ],
-    'm_item_category_sho.csv' => [
-        'model' => MinorClassification::class,
-        'import' => MinorClassificationImport::class,
-    ],
-    'm_hospital.csv' => [
-        'model' => Hospital::class,
-        'import' => HospitalImport::class,
-    ],
-    'm_hospital_category_dai.csv' => [
-        'model' => HospitalMajorClassification::class,
-        'import' => HospitalMajorClassificationImport::class,
-    ],
-    'm_hospital_category_chu.csv' => [
-        'model' => HospitalMiddleClassification::class,
-        'import' => HospitalMiddleClassificationImport::class,
-    ],
-    'm_hospital_category_sho.csv' => [
-        'model' => HospitalMinorClassification::class,
-        'import' => HospitalMinorClassificationImport::class,
-    ],
+//    'm_pref.csv' => [
+//        'model' => Prefecture::class,
+//        'import' => PrefectureImport::class,
+//    ],
+//    'm_district.csv' => [
+//        'model' => DistrictCode::class,
+//        'import' => DistrictCodeImport::class
+//    ],
+//    'm_item_type.csv' => [
+//        'model' => ClassificationType::class,
+//        'import' => ClassificationTypeImport::class,
+//    ],
+//    'm_item_category_dai.csv' => [
+//        'model' => MajorClassification::class,
+//        'import' => MajorClassificationImport::class,
+//    ],
+//    'm_item_category_chu.csv' => [
+//        'model' => MiddleClassification::class,
+//        'import' => MiddleClassificationImport::class,
+//    ],
+//    'm_item_category_sho.csv' => [
+//        'model' => MinorClassification::class,
+//        'import' => MinorClassificationImport::class,
+//    ],
+//    'm_hospital.csv' => [
+//        'model' => Hospital::class,
+//        'import' => HospitalImport::class,
+//    ],
+//    'm_hospital_category_dai.csv' => [
+//        'model' => HospitalMajorClassification::class,
+//        'import' => HospitalMajorClassificationImport::class,
+//    ],
+//    'm_hospital_category_chu.csv' => [
+//        'model' => HospitalMiddleClassification::class,
+//        'import' => HospitalMiddleClassificationImport::class,
+//    ],
+//    'm_hospital_category_sho.csv' => [
+//        'model' => HospitalMinorClassification::class,
+//        'import' => HospitalMinorClassificationImport::class,
+//    ],
     // 'm_staff.csv' => [
     //     'model' => Staff::class,
     //     'import' => StaffImport::class,
@@ -115,26 +115,26 @@ return [
     //     'model' => HospitalCategory::class,
     //     'import' => HospitalCategoryImport::class,
     // ],
-    'm_rail_corp.csv' => [
-        'model' => RailwayCompany::class,
-        'import' => RailwayCompanyImport::class,
-    ],
-    'm_rail.csv' => [
-        'model' => Rail::class,
-        'import' => RailImport::class,
-    ],
-    'm_station.csv' => [
-        'model' => Station::class,
-        'import' => StationImport::class,
-    ],
-    'm_rail_station.csv' => [
-        'model' => null, // 中間テーブルのため null
-        'import' => RailStationImport::class,
-    ],
-    'm_rail_pref.csv' => [
-        'model' => null, // 中間テーブルのため null
-        'import' => PrefectureRailImport::class,
-    ],
+//    'm_rail_corp.csv' => [
+//        'model' => RailwayCompany::class,
+//        'import' => RailwayCompanyImport::class,
+//    ],
+//    'm_rail.csv' => [
+//        'model' => Rail::class,
+//        'import' => RailImport::class,
+//    ],
+//    'm_station.csv' => [
+//        'model' => Station::class,
+//        'import' => StationImport::class,
+//    ],
+//    'm_rail_station.csv' => [
+//        'model' => null, // 中間テーブルのため null
+//        'import' => RailStationImport::class,
+//    ],
+//    'm_rail_pref.csv' => [
+//        'model' => null, // 中間テーブルのため null
+//        'import' => PrefectureRailImport::class,
+//    ],
     // 'm_option.csv' => [
     //     'model' => Option::class,
     //     'import' => OptionImport::class,
@@ -143,4 +143,8 @@ return [
     //     'model' => PvRecord::class,
     //     'import' => PvRecordImport::class,
     // ],
+    'm_user.csv' => [
+        'model' => \App\MemberLoginInfo::class,
+        'import' => \App\Imports\MemberLoginInfoImport::class,
+    ],
 ];
