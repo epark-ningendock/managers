@@ -114,4 +114,12 @@ class Hospital extends Model
         return $this->hasMany(HospitalPlan::class);
     }
 
+    public function hospitalPlanByDate($date)
+    {
+        return $this->hospitalPlans()->where([
+            ['from','<', $date],
+            ['to','>', $date]
+        ])->first();
+    }
+
 }

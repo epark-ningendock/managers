@@ -22,6 +22,12 @@ class BillingController extends Controller {
 		$this->excel = $excel;
 	}
 
+	public function getSelectedMonth() {
+
+		return ( request('billing_month') ) ? request('billing_month') : now()->format('Y-m');
+
+	}
+
 	public function billingDateFilter() {
 
 		if ( request( 'billing_month' ) ) {
@@ -66,12 +72,19 @@ class BillingController extends Controller {
 
 	public function index( BillingFilters $billingFilters ) {
 
+		$selectedMonth = $this->getSelectedMonth();
+
 		$dateFilter = $this->billingDateFilter();
 
-		$billings = Billing::filter( $billingFilters )->whereBetween( 'created_at', [
-			$dateFilter['startedDate'],
-			$dateFilter['endedDate'],
-		] )->paginate( 10 );
+//		$billings = Billing::filter( $billingFilters )->whereBetween( 'created_at', [
+//			$dateFilter['startedDate'],
+//			$dateFilter['endedDate'],
+//		] )->paginate( 10 );
+
+		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(10);
+// dump($dateFilter);
+
+		// dump($billings[0]->hospital->hospitalPlanByDate($dateFilter['endedDate']));
 
 		return view( 'billing.index', [
 			'billings'        => $billings,

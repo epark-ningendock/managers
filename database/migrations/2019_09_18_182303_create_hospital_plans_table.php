@@ -19,8 +19,8 @@ class CreateHospitalPlansTable extends Migration
 	        $table->increments('id');
 	        $table->integer('hospital_id');
 	        $table->integer('contract_plan_id');
-	        $table->string('from');
-	        $table->string('to')->nullable();
+	        $table->date('from');
+	        $table->date('to')->nullable();
 	        $this->addCommonColumns($table);
         });
     }

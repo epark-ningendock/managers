@@ -118,7 +118,7 @@
                     <td>{{ $billing->hospital->name }}</td>
                     <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
                     <td>
-{{--                        {{ $billing->contractPlan->plan_name }}--}}
+                            {{ $billing->hospital->hospitalPlanByDate($endedMonth)->contractPlan->plan_name }}
                     </td>
                     <td>
 {{--                        {{ number_format($billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() + $billing->contractPlan->monthly_contract_fee) }}円--}}

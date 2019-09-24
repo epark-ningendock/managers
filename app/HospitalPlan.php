@@ -9,4 +9,10 @@ class HospitalPlan extends Model
 	protected $fillable = ['hospital_id', 'contract _plan_id', 'from', 'to'];
 
 	protected $dates = ['from', 'to'];
+
+	public function contractPlan()
+	{
+		return $this->belongsTo(ContractPlan::class);
+	}
+
 }
