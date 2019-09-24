@@ -159,6 +159,11 @@ Route::middleware('auth:staffs')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->group(function () {
+
+    Route::get('billing/excel-export', 'BillingController@excelExport')->name('billing.excel.export');
+    Route::resource('billing', 'BillingController');
+    Route::get('billing/{billing}/{hospital_id}/status/update', 'BillingController@statusUpdate')->name('billing.status.update');
+
     /*
     |--------------------------------------------------------------------------
     | Hospital staff Routes
@@ -232,7 +237,6 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     */
     Route::get('/reception/csv', 'ReservationController@reception_csv')->name('reception.csv');
     Route::patch('/reception/reservation_status', 'ReservationController@reservation_status')->name('reservation.bulk_status');
-    Route::get('/reception', 'ReservationController@reception');
 
     Route::patch('/reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
     Route::delete('/reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');

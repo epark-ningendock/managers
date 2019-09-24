@@ -7,6 +7,7 @@
  */
 
 use \App\Enums\Authority;
+use App\Enums\BillingStatus;
 use \App\Enums\CourseImageType;
 use App\Enums\HospitalEnums;
 use App\Enums\StaffStatus;
@@ -57,8 +58,8 @@ return [
     ],
 
     CalendarDisplay::class => [
-        CalendarDisplay::Hide => '非表示',
-        CalendarDisplay::Show => '表示'
+        CalendarDisplay::Hide => 'カレンダー非表示',
+        CalendarDisplay::Show => 'カレンダー表示'
     ],
 
     ReservationStatus::class => [
@@ -92,5 +93,12 @@ return [
         CourseImageType::Main => '検査コースメイン',
         CourseImageType::Pc => '受診の流れメイン（PC）',
         CourseImageType::Sp => '受診の流れメイン（SP）',
+    ],
+
+    BillingStatus::class => [
+        BillingStatus::Unconfirmed => '未確認',
+        BillingStatus::Checking => '確認中',
+        BillingStatus::Confirmed => '確認済',
+        BillingStatus::Confirm => '確定',
     ]
 ];

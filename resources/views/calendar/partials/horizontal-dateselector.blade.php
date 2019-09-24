@@ -13,7 +13,7 @@
                 }
             }
 
-            function dateLoader(ajaxRoute) {
+            function dateLoader(ajaxRoute, chooseByCalendar = false) {
 
                 $.ajax({
                     url: ajaxRoute,
@@ -23,7 +23,10 @@
                     },
                     success: function (response) {
 
-                        if ( $('.hor-date-table').length > 0 ) {
+                        if (chooseByCalendar) {
+                            $('.calendar-box').html(response.data);
+                            $('.hor-date-table tbody tr').addClass('hide-tr').first('tr').addClass('show-tr');
+                        } else if ( $('.hor-date-table').length > 0 ) {
                             $('.hor-date-table tbody').append($(response.data).find('tbody').children());
                         } else {
                             $('.calendar-box').html(response.data);
@@ -70,10 +73,7 @@
                             $('#reservation_date').val($reserveDate);
                         }, 500);
                     }
-
                 }
-
-
             });
 
             /* ---------------------------------------------------
@@ -107,8 +107,7 @@
 
                 week_row.removeClass('show-tr');
 
-                if ( show_tr.nextAll('tr').length == 3 ) {
-                    console.log(week_row.last().find('td').last().data('date'));
+                if ( show_tr.nextAll('tr').length == 14 ) {
                     const lastDate = new Date(week_row.last().find('td').last().data('date'));
                     lastDate.setDate(lastDate.getDate() + 1);
                     const  startDate = lastDate.getFullYear() + '/' + (lastDate.getMonth() + 1) + '/' + lastDate.getDate();
@@ -126,8 +125,18 @@
 
                 // year label
                 const temp = $('.show-tr td:last').data('date').split('-');
-                $('.year-label th').html(temp[0]);
+                $('#year-label').text(temp[0]);
+            });
 
+            /* ---------------------------------------------------
+            Load calendarpicker through ajax
+            -----------------------------------------------------*/
+            $(document).on('change', '#startdate', function(){
+                event.preventDefault();
+
+                let startdate = $(this).val();
+                let ajaxRoute = "{{  route('course.reservation.days', ['course_id' => ':1']) }}".replace(":1", $('#course_id').val()) + '?start_date=' + startdate;
+                dateLoader(ajaxRoute, true);
             });
 
 

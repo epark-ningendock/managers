@@ -44,26 +44,6 @@
         </div>
 
         <div class="col-sm-6">
-            <div class="form-group">
-                <label for="email">{{ trans('messages.email') }}</label>
-                <input value="{{ request('email') }}" id="email" type="text" class="form-control" name="email" />
-            </div>
-        </div>
-
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label for="updated_at">{{ trans('messages.updated_at') }}</label>
-                <div class="input-group date datepicker"  data-date-format="yyyy-mm-dd" data-provide="datepicker">
-                    <input  autocomplete="off"  class="form-control" name="update_at" id="update_at"
-                            value="{{ request('update_at') }}"/>
-                    <div class="input-group-addon">
-                        <span class="glyphicon glyphicon-th"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-6">
             <label for=""></label>
             <div class="action-btn-wrapper text-right">
 
@@ -78,7 +58,8 @@
 </form>
 
 <div class="paginate-select-box text-right">
-    <select class="form-control" name="pagination" id="paginate-selection" style="display: inline-block; width: 50px;">
+    <label for="record_per_page">表示件数</label>
+    <select class="form-control ml-2" name="pagination" id="paginate-selection" style="display: inline-block; width: 50px;">
         <option value="{{ route('customer.index', ['pagination' => 10]) }}" {{ inputSelectBoxSelected('pagination', 10) }}>10</option>
         <option value="{{ route('customer.index', ['pagination' => 20]) }}" {{ inputSelectBoxSelected('pagination', 20) }}>20</option>
         <option value="{{ route('customer.index', ['pagination' => 50]) }}" {{ inputSelectBoxSelected('pagination', 50) }}>50</option>

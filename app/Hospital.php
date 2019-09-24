@@ -69,6 +69,9 @@ class Hospital extends Model
         'created_at',
         'updated_at',
         'lock_version',
+        'biography',
+        'representative',
+
     ];
 
     /**
@@ -102,6 +105,11 @@ class Hospital extends Model
     public function lock()
     {
         return $this->hasOne('App\Lock');
+    }
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
     }
 
 }

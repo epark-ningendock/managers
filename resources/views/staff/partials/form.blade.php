@@ -3,7 +3,6 @@
   use App\Enums\Authority;
   use \App\Enums\Permission;
 @endphp
-@include('layouts.partials.error_pan')
 
 @include('layouts.partials.message')
 <div class="form-entry">
@@ -29,7 +28,7 @@
       <div class="col-md-6">
         <div class="form-group py-sm-1 @if ($errors->has('name')) has-error @endif">
           <label for="name">スタッフ名
-            <span class="form_required">必須</span>
+              <span class="form_required">必須</span>
           </label>
           <input type="text" class="form-control" id="name" name="name"
                  value="{{ old('name', (isset($staff) ? $staff->name : null)) }}"

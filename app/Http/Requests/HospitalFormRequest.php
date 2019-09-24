@@ -38,4 +38,5 @@ class HospitalFormRequest extends FormRequest
             'status.in' => '「状態」を正しく選択してください。',
         ];
     }
+
 }

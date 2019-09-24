@@ -4,6 +4,7 @@
 namespace App\Imports;
 
 
+use App\ConvertedId;
 use App\ConvertedIdString;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -21,14 +22,17 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
     use SkipsErrors;
 
     protected $hospital_no;
+    protected static $realpath;
 
     /**
      * ImportBAbstract constructor.
      * @param $hospital_no
+     * @param $realpath
      */
-    public function __construct($hospital_no)
+    public function __construct($hospital_no, $realpath)
     {
         $this->hospital_no = $hospital_no;
+        static::$realpath = $realpath;
     }
 
     public function getValue(array $row, string $key)
@@ -73,6 +77,18 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
     protected function getId($table, $old_id)
     {
         $model = ConvertedIdString::where('table_name', $table)
+            ->where('old_id', $old_id)
+            ->first();
+        if (!is_null($model)) {
+            return $model->new_id;
+        }
+        Log::error(sprintf('%s に %d が存在しません。', $table, $old_id));
+        return null;
+    }
+
+    protected function getIdForA($table, $old_id)
+    {
+        $model = ConvertedId::where('table_name', $table)
             ->where('old_id', $old_id)
             ->first();
         if (!is_null($model)) {

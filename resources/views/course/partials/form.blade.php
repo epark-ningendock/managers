@@ -95,7 +95,7 @@
     </div>
 
     <div class="form-group">
-      <label>コース画像</label>
+      <legend>コース画像</legend>
       <div class="row">
         <div class="col-sm-4">
           {{Form::label('course_image_main', '検査コースメイン' , ['class' => 'form_label'])}}
@@ -263,7 +263,18 @@
       @if ($errors->has('reception_end_day')) <p class="help-block text-red">{{ $errors->first('reception_end_day') }}</p> @endif
       @if ($errors->has('reception_end_month')) <p class="help-block text-red">{{ $errors->first('reception_end_month') }}</p> @endif
     </div>
-    <div class="form-group">
+
+
+        <div class="form-group @if ($errors->has('reception_acceptance_day_end')) has-error @endif">
+            <div class="form-horizontal display-period">
+                <label>受付終了日</label>
+                {{ Form::text('reception_acceptance_day_end', old('reception_acceptance_day_end', (isset($course) ? $course->reception_acceptance_day_end : null)),
+                    ['class' => 'd-inline-block w16em form-control', 'id' => 'reception_acceptance_day_end', 'placeholder' => $disp_date_end]) }}
+            </div>
+        </div>
+
+
+    <!--<div class="form-group">
       <label>受付許可日  <span class="form_required">必須</span></label>
       <div class="form-horizontal">
           本日から
@@ -279,7 +290,7 @@
       </div>
       @if ($errors->has('reception_acceptance_day')) <p class="help-block text-red">{{ $errors->first('reception_acceptance_day') }}</p>@endif
       @if ($errors->has('reception_acceptance_month')) <p class="help-block text-red">{{ $errors->first('reception_acceptance_month') }}</p> @endif
-    </div>
+    </div>-->
     <div class="form-group @if ($errors->has('cancellation_deadline')) has-error @endif" >
       <label for="cancellation_deadline">変更キャンセル受付期限</label>
       <div>
@@ -349,40 +360,44 @@
   </div>
   <div class="form-entry">
     <div class="box-body">
-    <h4 class="d-inline-block">価格</h4></span>
-    <div class="form-group @if ($errors->has('pre_account_price')) has-error @endif">
-      <label>事前決済価格</label>
-        @if(Auth::user()->authority && Auth::user()->authority->value == Authority::Admin && $hospital && $hospital->is_pre_account)
-          <div class="form-horizontal">
-            <input type="number" class="d-inline-block form-control w16em" id="pre_account_price" name="pre_account_price"
-                   value="{{ old('pre_account_price', (isset($course) ? $course->pre_account_price : null)) }}"
-                   placeholder="10000">（税込）
-          </div>
-          @if ($errors->has('pre_account_price')) <p class="help-block has-error">{{ $errors->first('pre_account_price') }}</p> @endif
-        @else
-          <div>0円（税込）</div>
-        @endif
-    </div>
-    <div class="separator mb-3"></div>
-    <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif" >
+      <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif">
+        <label>事前決済価格</label>
+        <div>
+          <input type="hidden" name="is_pre_account" value="0" />
+          <input type="checkbox" id="is_pre_account" name="is_pre_account" value="1"
+                 {{ (old('is_pre_account', (isset($course) ? $course->is_pre_account : null) ) == 1 && $is_presettlement) ? 'checked' : '' }}
+                 @if(!$is_presettlement) disabled @endif>
+          <label for="is_pre_account">利用する</label>
+          @if ($errors->has('is_pre_account')) <p class="help-block has-error">{{ $errors->first('is_pre_account') }}</p> @endif
+        </div>
+      </div>
 
-    <fieldset class="form-group">
-        <legend class="mb-0">利用設定</legend>
-        <div class="radio">
-            <input type="radio" name="is_pre_account" id="is_pre_account_0" value="0"
-                   {{ old('is_pre_account', (isset($course) ? $course->is_pre_account : null) ) == 0 ? 'checked' : 'checked' }}
-                   class="permission-check">
-            <label for="is_pre_account_0" class="radio-label">通常決済利用</label>
+      <div class="form-group">
+        <label>割引率</label>
+        <p>{{ $hospital->pre_account_discount_rate }}%
+          <input type="hidden" value="{{ $hospital->pre_account_discount_rate }}" id="pre_account_discount_rate" />
+        </p>
+      </div>
+
+      <div class="form-group">
+        <lablel>値引率自動適用</lablel>
+        <div>
+          <input type="hidden" name="auto_calc_application" value="0" />
+          <input type="checkbox" id="auto_calc_application" name="auto_calc_application" value="1"
+              {{ old('auto_calc_application', (isset($course) ? $course->auto_calc_application : 1) ) == 1 ? 'checked' : '' }}/>
+          <label for="auto_calc_application">利用する</label>
         </div>
-        <div class="radio">
-            <input type="radio" id="is_pre_account_1" name="is_pre_account" value="1" class="permission-check"
-                    {{ old('is_pre_account', (isset($course) ? $course->is_pre_account : null) ) == 1 ? 'checked' : '' }}>
-            <label for="is_pre_account_1" class="radio-label">事前決済利用</label>
+      </div>
+      <div class="form-group @if ($errors->has('pre_account_price')) has-error @endif">
+        <label>事前決済価格</label>
+        <div class="form-horizontal">
+          <input type="number" class="d-inline-block form-control w16em" id="pre_account_price" name="pre_account_price"
+                 value="{{ old('pre_account_price', (isset($course) ? $course->pre_account_price : null)) }}"
+                 placeholder="10000"> 円
         </div>
-        @if ($errors->has('is_pre_account')) <p class="help-block has-error">{{ $errors->first('is_pre_account') }}</p> @endif
-    </fieldset>
+        @if ($errors->has('pre_account_price')) <p class="help-block has-error">{{ $errors->first('pre_account_price') }}</p> @endif
+      </div>
     </div>
-  </div>
   </div>
 </div>
 
@@ -394,13 +409,16 @@
     </div>
     <h1 class="box-title">オプションの設定</h1>
   </div>
-  <div class="box-body" id="option-setting">
+
+  <div class="form-entry">
+    <div class="box-body" id="option-setting">
     <table class="table no-border table-hover table-striped ">
       <tr>
-        <td class="text-center">オプション名</td>
-        <td class="text-center">価格</td>
+        <td class="option-name"><span>オプション名</span></td>
+        <td class="option-price">価格</td>
       </tr>
       @foreach($options as $option)
+        <tr>
         @php
           $is_checked = false;
           if ($o_option_ids->isNotEmpty()) {
@@ -409,13 +427,14 @@
             $is_checked = $course_options->where('option_id', $option->id)->isNotEmpty();
           }
         @endphp
-          <td class="text-center">
-              <input type="checkbox" class="minor-checkbox" id="option_set_price{{ $option->id }}" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
+          <td class="option-name">
+              <input type="checkbox" id="option_set_price{{ $option->id }}" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
               <label class="mr-2" for="option_set_price{{ $option->id }}">{{ $option->name }}</label></td>
-          <td class="text-center">{{ $option->price }} 円</td>
+          <td class="option-price">{{ number_format($option->price) }} 円</td>
         </tr>
       @endforeach
     </table>
+  </div>
   </div>
 </div>
 
@@ -427,21 +446,19 @@
     </div>
     <h1 class="box-title">設定項目</h1>
   </div>
-    <div class="box-body">
-    {{-- @todo デザイン --}}
-    {{-- <table id="setting-list" class="vertical-middle table no-border table-hover table-striped mb-5"> --}}
-    <table id="setting-list" class="vertical-middle table no-border mb-5">
+    <div class="form-entry">
+    <div class="box-body" id="setting-list">
       @foreach($majors as $key => $major)
         @foreach($major->middle_classifications as $middle)
-        <tr>
           @if(!isset($last) || $major != $last)
-          <td rowspan="{{$major->middle_classifications->count()}}">{{ $major->name }}</td>
+            <h4 class="d-inline-block">{{ $major->name }}</h4>
             @php
               $last = $major
             @endphp
           @endif
-          <td>{{ $middle->name }}</td>
-          <td>
+          <fieldset>
+          <legend>{{ $middle->name }}</legend>
+          <div class="row mb-4">
             @foreach($middle->minors_with_fregist_order as $index => $minor)
               @php
                 $minor_value = '';
@@ -459,26 +476,32 @@
                   }
                 }
               @endphp
-              <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
+                  <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
               @if($minor->is_fregist == '1')
-                <div>
+                <p class="col-sm-4">
                 <input type="checkbox" class="checkbox d-inline-block minor-checkbox" name="minor_values[]"
                        id="{{ 'minor_id_'.$minor->id }}"
                        {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
-                <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label></div>
+                <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label></p>
               @else
-                <input type="text" name="minor_values[]"
-                       class="form-control minor-text minor-text-{{$key}} @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
-                  value = "{{ $minor_value }}" />
+                <p class="col-sm-12">
+                    @if($minor->max_length >= 500 )
+                        <textarea class="form-control" name="minor_values[]" rows="7">{{ $minor_value }}</textarea>
+                    @else
+                        <input type="text" name="minor_values[]"
+                               class="form-control minor-text minor-text-{{$key}} @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
+                               value = "{{ $minor_value }}" />
+                    @endif
                 <span class="pull-right">0/{{ $minor->max_length }}文字</span>
+                </p>
               @endif
             @endforeach
-          </td>
-        </tr>
+          </div>
+          </fieldset>
         @endforeach
       @endforeach
-    </table>
-  </div>
+    </div>
+    </div>
   </div>
 
 @for($qi = 0; $qi < 5; $qi++)
@@ -537,7 +560,7 @@
         <div class="box-body">
             <div class="form-group py-sm-2">
                 <label for="status">状態</label>
-                <group class="inline-radio two-option">
+                <group class="inline-radio two-option" style="width: 200px;">
                     <div class="status-btn">
                         <input type="radio" class="checkbox d-inline-block mr-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 1 ? 'checked' : '' }}
                         value="1"
@@ -654,20 +677,6 @@
 @section('script')
   <script>
       (function ($) {
-          const is_pre_account = $('input[name="is_pre_account"]');
-          if(is_pre_account.val() == 0) {
-              $('#pre_account_price').attr('disabled','disabled');
-          }
-
-          $( 'input[name="is_pre_account"]:radio' ).change( function() {
-              var radioval = $(this).val();
-              if(radioval == 1){
-                  $('#pre_account_price').removeAttr('disabled');
-              }else{
-                  $('#pre_account_price').attr('disabled','disabled');
-              }
-          });
-
           $('.status-btn').on('click', function() {
               const is_q_val = $(this).find('.is_question').val();
               $(this).parent().find('.hidden-q').val(is_q_val);
@@ -710,13 +719,15 @@
           /* ---------------------------------------------------
           // minor checkbox values
           -----------------------------------------------------*/
+
           (function () {
               const change = function(ele) {
                   if (ele.prop('checked')) {
-                      ele.next('input:hidden').remove();
-                      ele.prev().remove();
+                      if (ele.next().next().attr('class') == 'dummy') {
+                        ele.next().next().remove();
+                      }
                   } else {
-                      $('<input type="hidden" name="minor_values[]" value="0"/>').insertBefore(ele);
+                    $('<input type="hidden" class="dummy" name="minor_values[]" value="0"/>').insertAfter(ele.next('label'));
                   }
               };
 
@@ -739,6 +750,7 @@
                   } else {
                       $('#price').prop('disabled', true);
                   }
+                  $('#auto_calc_application').change();
               };
               change();
               $('#is_price').change(change);
@@ -775,6 +787,64 @@
                   change(ele);
               })
           })();
+
+          /* ---------------------------------------------------
+          // is_pre_acc change
+          -----------------------------------------------------*/
+          (function(){
+              const change = function() {
+                  if($('#is_pre_account').prop('checked')) {
+                      $('#auto_calc_application').prop('checked', true);
+                      $('#auto_calc_application, #pre_account_price').prop('disabled', false);
+                  } else {
+                      $('#auto_calc_application').prop('checked', false);
+                      $('#auto_calc_application, #pre_account_price').prop('disabled', true);
+                  }
+                  $('#auto_calc_application').change();
+              };
+              $('#is_pre_account').change(change);
+          })();
+
+          /* ---------------------------------------------------
+          // auto_calc_application change
+          -----------------------------------------------------*/
+          (function(){
+              const change = function() {
+                  if($('#auto_calc_application').prop('checked')) {
+                      const price = $('#is_price').prop('checked') ? ($('#price').val() || 0) : 0;
+                      const discountRate = $('#pre_account_discount_rate').val() || 0;
+                      let accPrice = price * (discountRate/100);
+                      $('#pre_account_price').val(accPrice);
+                      $('#pre_account_price').prop('disabled', true);
+                  } else {
+                      $('#pre_account_price').val('');
+                      if($('#is_pre_account').prop('checked')) {
+                          $('#pre_account_price').prop('disabled', false);
+                      }
+                  }
+              };
+              $('#auto_calc_application, #price').change(change);
+          })();
+
+          /* ---------------------------------------------------
+          // initial setting for is_pre_acc and auto_calc_application
+          -----------------------------------------------------*/
+          (function(){
+              if($('#is_pre_account').prop('checked')) {
+                  $('#auto_calc_application, #pre_account_price').prop('disabled', false);;
+              } else {
+                  $('#auto_calc_application, #pre_account_price').prop('disabled', true);
+                  $('#auto_calc_application').prop('checked', false);
+                  $('#pre_account_price').val('');
+              }
+              if($('#auto_calc_application').prop('checked')) {
+                  const price = $('#is_price').prop('checked') ? ($('#price').val() || 0) : 0;
+                  const discountRate = $('#pre_account_discount_rate').val() || 0;
+                  let accPrice = price * (discountRate/100);
+                  $('#pre_account_price').val(accPrice);
+                  $('#pre_account_price').prop('disabled', true);
+              }
+          })();
       })(jQuery);
   </script>
 @stop
@@ -795,6 +865,10 @@
                 format: 'yyyy-mm-dd',
             });
             $('#datetimepicker-disp-end').datepicker({
+                language:'ja',
+                format: 'yyyy-mm-dd',
+            });
+            $('#reception_acceptance_day_end').datepicker({
                 language:'ja',
                 format: 'yyyy-mm-dd',
             });

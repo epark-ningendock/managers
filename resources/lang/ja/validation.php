@@ -139,6 +139,9 @@ return [
             'alpha_num' => 'パスワードは、8~20文字以内の半角英数字でご入力ください。',
             'different' => '新しいパスワードと現在のパスワードは、異なるものを指定してください。'
         ],
+        'billing_fax_number' => [
+            'regex' => 'fax番号は、7~14文字以内,半角数字,記号（-のみ利用可能）でご入力ください。'
+        ],
         'email' => [
             'email' => '正しいメールアドレスの書式でご入力ください。'
         ],
@@ -229,7 +232,7 @@ return [
         'confirm' => 'オプションの説明',
         'tax_classification' => '税区分',
         'calendar_name' => 'カレンダー名',
-        'is_calendar_display' => 'カレンダー受付可否',
+        'is_calendar_display' => 'カレンダー表示',
         'title' => '件名',
         'text' => '本文',
         'contents' => '本文',
@@ -274,7 +277,6 @@ return [
         'birthday' => '生年月日',
         'memo' => '顧客メモ',
         'prefecture_id' => '都道府県',
-        'hospital_reception_email_transmission_setting' => '院内受付メール送信設定',
         'property_no' => '物件番号',
         'code' => '顧客番号',
         'contractor_name_kana' => '顧客名（フリガナ）',
@@ -293,6 +295,25 @@ return [
         'rate' => '手数料率',
         'from_date' => '適用期間',
         'pre_payment_rate' => '手数料率',
-        'pre_payment_from_date' => '適用期間'
+        'pre_payment_from_date' => '適用期間',
+        'pre_payment_from_date' => '適用期間',
+        // Contract information
+        '*.property_no' => '物件番号',
+        '*.code' => '顧客番号',
+        '*.contractor_name_kana' => '顧客名（フリガナ）',
+        '*.contractor_name' => '契約者名',
+        '*.representative_name_kana' => '代表者名（フリガナ）',
+        '*.representative_name' => '代表者名',
+        '*.address' => '住所',
+        '*.tel' => '電話番号',
+        '*.fax' => 'FAX番号',
+        '*.email' => 'メールアドレス',
+        '*.application_date' => '新規申込日',
+        '*.cancellation_date' => '解約予定日',
+        '*.billing_start_date' => '従量課金開始日',
+        '*.plan_code' => 'プランコード',
+        '*.service_start_date' => 'サービス開始日',
+        '*.service_end_date' => 'サービス終了日',
+        '*.hospital_name' => '屋号'
     ],
 ];
