@@ -39,14 +39,14 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
         $row = [];
         foreach( $this->dataCollection as $billing ) {
 
-            $reservations = $billing->hospital->reservations->sortBy('hospital_id');
+            $reservations = $billing->hospital->reservationByCompletedDate($this->startedDate, $this->endedDate)->sortBy('hospital_id');
 
             if ( isset($reservations) )
 
                 foreach( $reservations as $key => $reservation) {
 
                     if ( count($reservations) == ($key+1) ) {
-                        $channel = $billing->contractPlan->monthly_contract_fee;
+                        $channel = $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->monthly_contract_fee;
                     } else {
 
                         if ( $reservation->channel == 2 || $reservation->channel == 3 ) {
@@ -78,7 +78,7 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         $channel,
                         $reservation->completed_date->format('Y/m/d'),
                         $hp_link_status,
-                        $billing->contractPlan->plan_name ?? '',
+                        $reservation->course->name ?? '',
                         isset($reservation->reservation_options) ? '有' : '',
                         number_format($the_amount),
                         $the_amount / $reservation->tax_rate, //need to verify calculation1

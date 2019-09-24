@@ -78,7 +78,7 @@ class BillingController extends Controller {
 
 		$dateFilter = $this->billingDateFilter();
 
-		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(10);
+		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(100);
 
 
 		return view( 'billing.index', [
@@ -96,7 +96,7 @@ class BillingController extends Controller {
 
 		$dateFilter = $this->billingDateFilter();
 
-        $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(10);
+        $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(100);
 
 		return $this->excel->download( new BillingExport( $billings, $dateFilter['startedDate'], $dateFilter['endedDate'] ), 'billing.xlsx' );
 

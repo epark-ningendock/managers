@@ -34,19 +34,17 @@ class BillingListingSheet implements FromCollection, WithHeadings, WithMapping, 
 
     public function map($billing): array
     {
-        $totalMonthlyReservation = $billing->hospital->reservations()->whereBetween( 'created_at', [
-            $this->startedDate,
-            $this->endedDate,
-        ] )->get()->pluck('fee')->sum();
+        $totalMonthlyReservation = $billing->hospital->reservationByCompletedDate($this->startedDate, $this->endedDate)->pluck('fee')->sum();
+        $monthlyContractFee = $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->monthly_contract_fee;
 
         return [
             $billing->created_at->format('Y/m'),
             $billing->hospital->contract_information->property_no,
             $billing->hospital->contract_information->contractor_name,
             $billing->hospital->name,
-            number_format($billing->contractPlan->monthly_contract_fee),
-            $totalMonthlyReservation,
-            number_format($billing->contractPlan->monthly_contract_fee + $totalMonthlyReservation)
+            number_format($monthlyContractFee),
+            number_format($totalMonthlyReservation),
+            number_format($monthlyContractFee + $totalMonthlyReservation)
         ];
     }    
 
