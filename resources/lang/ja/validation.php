@@ -297,6 +297,8 @@ return [
         'pre_payment_rate' => '手数料率',
         'pre_payment_from_date' => '適用期間',
         'pre_payment_from_date' => '適用期間',
+        'claim_count' => 'クレーム数',
+        'recall_count' => 'リコール数',
         // Contract information
         '*.property_no' => '物件番号',
         '*.code' => '顧客番号',

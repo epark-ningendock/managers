@@ -7,7 +7,7 @@
 @section('form')
 
     <div class="note-msg m-4">
-      <span class="text-danger">(*)</span>の欄は必ず入力してください
+      <span class="text-danger">必須</span>の欄は必ず入力してください
     </div>
     <form method="POST" action="{{ route('customer.store') }}" class="h-adr">
       {{ csrf_field() }}

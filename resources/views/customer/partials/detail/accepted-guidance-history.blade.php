@@ -18,7 +18,7 @@
 
                         @foreach( $reservations as $reservation )
                             <tr>
-                                <td>{{ $reservation->reservation_date }}</td>
+                                <td>{{ $reservation->reservation_date->format('Y-m-d') }}</td>
                                 <td>
                                     <a href="{{ route('reservation.edit', $reservation->id) }}">
                                         {{ $customer_detail->name }}
