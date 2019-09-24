@@ -28,10 +28,12 @@ class BillingController extends Controller {
 
 	}
 
-	public function billingDateFilter() {
+	public function billingDateFilter($yearMonth = 0) {
 
-		if ( request( 'billing_month' ) ) {
-			$date = Carbon::parse( request( 'billing_month' ) . '-' . 28 );
+	    $yearMonth = $yearMonth ?? request('billing_month');
+
+		if ( $yearMonth ) {
+			$date = Carbon::parse( $yearMonth . '-' . 28 );
 			$date = ( $date->isCurrentMonth() ) ? now() : $date;
 
 		} else {
@@ -76,20 +78,13 @@ class BillingController extends Controller {
 
 		$dateFilter = $this->billingDateFilter();
 
-//		$billings = Billing::filter( $billingFilters )->whereBetween( 'created_at', [
-//			$dateFilter['startedDate'],
-//			$dateFilter['endedDate'],
-//		] )->paginate( 10 );
-
 		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(10);
-// dump($dateFilter);
 
-		// dump($billings[0]->hospital->hospitalPlanByDate($dateFilter['endedDate']));
 
 		return view( 'billing.index', [
 			'billings'        => $billings,
 			'startedDate'     => $dateFilter['startedDate'],
-			'endedMonth'      => $dateFilter['endedDate'],
+			'endedDate'      => $dateFilter['endedDate'],
 			'selectBoxMonths' => $dateFilter['selectBoxMonths'],
 		] );
 	}
@@ -97,12 +92,11 @@ class BillingController extends Controller {
 
 	public function excelExport( BillingFilters $billingFilters ) {
 
+        $selectedMonth = $this->getSelectedMonth();
+
 		$dateFilter = $this->billingDateFilter();
 
-		$billings = Billing::filter( $billingFilters )->whereBetween( 'created_at', [
-			$dateFilter['startedDate'],
-			$dateFilter['endedDate'],
-		] )->paginate( 10 );
+        $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(10);
 
 		return $this->excel->download( new BillingExport( $billings, $dateFilter['startedDate'], $dateFilter['endedDate'] ), 'billing.xlsx' );
 
@@ -136,7 +130,14 @@ class BillingController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show( Billing $billing ) {
-		return view( 'billing.show', [ 'billing' => $billing ] );
+
+        $dateFilter = $this->billingDateFilter($billing->billing_month);
+
+		return view( 'billing.show', [
+		    'billing' => $billing,
+            'startedDate'     => $dateFilter['startedDate'],
+            'endedDate'      => $dateFilter['endedDate'],
+        ] );
 	}
 
 	/**

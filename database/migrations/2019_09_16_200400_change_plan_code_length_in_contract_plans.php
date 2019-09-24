@@ -26,7 +26,7 @@ class ChangePlanCodeLengthInContractPlans extends Migration
     public function down()
     {
         Schema::table('contract_plans', function (Blueprint $table) {
-            $table->string('plan_code',2)->change();
+            $table->char('plan_code',2)->change();
         });
     }
 }

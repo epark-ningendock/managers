@@ -34,7 +34,7 @@
                                     @if ( request('billing_month') && (request('billing_month') == $selectBoxMonth) )
                                         selected="selected"
                                     @else
-                                        {{ ( empty(request('billing_month')) && $endedMonth->format('Y-m') == $selectBoxMonth ) ? 'selected="selected"' : '' }}
+                                        {{ ( empty(request('billing_month')) && $endedDate->format('Y-m') == $selectBoxMonth ) ? 'selected="selected"' : '' }}
                                     @endif
                             >{{ $selectBoxMonth }}</option>
                         @endforeach
@@ -118,17 +118,19 @@
                     <td>{{ $billing->hospital->name }}</td>
                     <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
                     <td>
-                            {{ $billing->hospital->hospitalPlanByDate($endedMonth)->contractPlan->plan_name }}
+                            {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name }}
                     </td>
                     <td>
-{{--                        {{ number_format($billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() + $billing->contractPlan->monthly_contract_fee) }}円--}}
+                       {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum() + $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee)}}円
                     </td>
                     <td>
-{{--                        {{ $billing->contractPlan->monthly_contract_fee }}円--}}
+                        {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee )}}円
                     </td>
-                    <td>{{ number_format($billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum()) }}円</td>
                     <td>
-{{--                        {{ $billing->contractPlan->fee_rate }}%--}}
+                        {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
+                    </td>
+                    <td>
+                        {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate }}%
                     </td>
                     <td>
                         <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>

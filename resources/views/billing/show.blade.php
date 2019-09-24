@@ -22,19 +22,25 @@
         </li>
         <li>
             <small class="text-bold label-text">プラン名</small>
-            <span class="value-text">{{ $billing->contractPlan->plan_name ?? '' }}</span>
+            <span class="value-text">{{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}</span>
         </li>
         <li>
             <small class="text-bold label-text">月額契約料（税抜金額）</small>
-            <span class="value-text">{{ number_format($billing->contractPlan->monthly_contract_fee) }}円</span>
+            <span class="value-text">
+                {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee )}}円
+            </span>
         </li>
         <li>
             <small class="text-bold label-text">成果コース</small>
-            <span class="value-text">{{ $billing->contractPlan->fee_rate }}%</span>
+            <span class="value-text">
+                {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate }}%
+            </span>
         </li>
         <li>
             <small class="text-bold label-text">手数料合計金額（税抜価格）</small>
-            <span class="value-text">{{ number_format($billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum()) }}円</span>
+            <span class="value-text">
+                {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
+            </span>
         </li>
     </ul>
 
@@ -77,8 +83,8 @@
             </tr>
             </thead>
             <tbody>
-            @if ( isset($billing->hospital->reservations) )
-            @foreach( $billing->hospital->reservations as $reservation)
+            @if (! $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->isEmpty() )
+            @foreach( $billing->hospital->reservationByCompletedDate($startedDate, $endedDate) as $reservation)
                 <tr>
                     <td>{{ $reservation->id }}</td>
                     <td>{{ $reservation->completed_date->format('Y-m-d') }}</td>

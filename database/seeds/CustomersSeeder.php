@@ -25,7 +25,7 @@ class CustomersSeeder extends Seeder
         $hospital = Hospital::orderby('created_at', 'desc')->first();
 
         factory(Customer::class, 50)->create()->each(function ($customer, $index) use ($faker, $options, $courses) {
-            $reservations = factory(Reservation::class, 3)->create([
+            $reservations = factory(Reservation::class, 10)->create([
                 'customer_id' => $customer->id,
                 'course_id' => $faker->randomElement($courses)->id
             ]);

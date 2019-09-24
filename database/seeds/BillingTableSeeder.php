@@ -20,7 +20,7 @@ class BillingTableSeeder extends Seeder
 
 	        $x = 1;
 	        while ($x < 36) {
-		        $month_years = ($x == 1) ? Carbon::today() : Carbon::today()->subMonth($x);
+		        $month_years = ($x == 1) ? Carbon::today() : Carbon::today()->subMonth($x-1);
 		        $monthList = $month_years->year .'-'. $month_years->format('m');
 		        factory(Billing::class)->create([
 			        'hospital_id' => $hospital->id,

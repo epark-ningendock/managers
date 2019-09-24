@@ -109,6 +109,11 @@ class Hospital extends Model
         return $this->hasMany(Reservation::class);
     }
 
+    public function reservationByCompletedDate($start, $end)
+    {
+        return $this->reservations()->whereBetween('completed_date', [ $start, $end ])->get();
+    }
+
     public function hospitalPlans()
     {
         return $this->hasMany(HospitalPlan::class);
