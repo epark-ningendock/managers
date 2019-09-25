@@ -269,7 +269,7 @@
           </div>
 
           <div class="col-md-4">
-            <div class="form-group ml-0 mr-0">
+            <div class="form-group ml-0 mr-0 @if ($errors->has("station{$i}")) has-error @endif">
               <select id="station{{$i}}" name="station{{$i}}" class="custom-select form-control">
                 <option value="" id="init-station{{$i}}">駅を選択</option>
                 @if (!old('rail' . $i))
@@ -294,13 +294,17 @@
                   @endforeach
                 @endif
               </select>
+              @if ($errors->has("station{$i}")) <p class="help-block text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first("station{$i}") }}</p>
+              @endif
             </div>
           </div>
 
           <div class="col-md-4">
-            <div class="form-group ml-0 mr-0">
+            <div class="form-group ml-0 mr-0 @if ($errors->has("access{$i}")) has-error @endif">
               <input type="text" class="form-control" id="access{{$i}}" name="access{{$i}}" placeholder="A4出口から、徒歩5分"
                      value="{{ old("access{$i}", (isset($hospital->{'access'. $i})) ? $hospital->{'access'. $i} : null) }}"/>
+              @if ($errors->has("access{$i}")) <p class="help-block text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first("access{$i}") }}</p>
+              @endif
             </div>
           </div>
         @endfor
@@ -409,6 +413,39 @@
         </div>
       </div>
 
+
+      <!--医療機関-->
+      <div class="row">
+        <div class="col-md-12">
+          <legend>代表者</legend>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group margin-none py-sm-1 @if ($errors->has('representative')) has-error @endif">
+            <label for="name">名前</label>
+            <input type="text" class="form-control" id="representative" name="representative"
+                   value="{{ old('name', (isset($hospital->representative) ) ? $hospital->representative : null) }}"
+                   placeholder="代表者名">
+            @if ($errors->has('representative')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('representative') }}</p> @endif
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group margin-none py-sm-1 @if( $errors->has('biography'))  has-error @endif">
+            <label for="history">略歴</label>
+            <textarea name="biography" id="biography" rows="5"
+                      class="form-control">{{ old('biography',(isset($hospital->biography)) ? $hospital->biography : null) }}</textarea>
+
+            @if ($errors->has('biography')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('biography') }}</p> @endif
+          </div>
+        </div>
+
+      </div>
+      <!--//医療機関-->
+
+
+
+      </div>
+
       <div class="col-md-12 mt-5">
         <legend>{{ trans('messages.examination_system_name') }}</legend>
         <select name="medical_examination_system_id" id="medical_examination_system_id" class="form-control w20em">
@@ -455,7 +492,7 @@
   <script src="{{ asset('js/yubinbango.js') }}" charset="UTF-8"></script>
   <script src="{{ asset('vendor/adminlte/plugins/iCheck/icheck.min.js') }}"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}"></script>
-  
+
   <script>
     (function ($) {
 
@@ -550,6 +587,10 @@
           $('select[id=station' + dom_index + ']').append(options);
         })
         .fail(function(data) {
+          //取得できなければ駅を初期値にする
+          $('select[id=station' + dom_index + '] option').remove();
+          $init_station_option = $('<option>', { value: "", text: "駅を選択", id: 'init-station' + dom_index});
+          $('select[id=station' + dom_index + ']').append($init_station_option);
           console.log('fail');
           console.log(JSON.stringify(data.data));
         });
@@ -629,7 +670,13 @@
       路線に応じた駅をプルダウンにセットする
       -----------------------------------------------------*/
       $(document).on('change', "[id^=rail]", function () {
-        station_selector($(this).val(), $(this).attr('name'));
+          console.log($(this).val());
+        if($(this).val()) {
+          station_selector($(this).val(), $(this).attr('name'));
+        } else {
+          console.log($(this).attr('name'));
+          station_selector('', $(this).attr('name'));
+        }
       });
 
     })(jQuery);

@@ -90,4 +90,17 @@ class ValidatorExtended extends IlluminateValidator
     {
         return preg_match("/^\d*(\.\d{7})?$/", $value) ? true : false;
     }
+
+    protected function validateLongitude($attribute, $value='')
+    {
+        if(preg_match("/^\d*(\.\d{7})?$/", $value))
+        $value = sprintf('%.7f',$value);
+        return preg_match("/^-?([1]?[1-7][1-9]|[1]?[1-8][0]|[1-9]?[0-9])\.{1}\d{1,7}$/", $value) ? true : false;
+    }
+
+    protected function validateLatitude($attribute, $value='')
+    {
+        $value = sprintf('%.7f',$value);
+        return preg_match("/^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,7}$/", $value) ? true : false;
+    }
 }

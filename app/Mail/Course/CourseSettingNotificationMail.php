@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Mail\Reservation;
+namespace App\Mail\Course;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ReservationOperationMail extends Mailable
+class CourseSettingNotificationMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
@@ -29,9 +29,10 @@ class ReservationOperationMail extends Mailable
      */
     public function build()
     {
+        // dd($this->data);
         return $this
             ->from("unei@eparkdock.com")
-            ->subject("【EPARK人間ドック】受付情報登録・変更・削除のお知らせ")
-            ->view('reservation.email.operation-mail');
+            ->subject($this->data['subject'])
+            ->view('course.email.mail');
     }
 }

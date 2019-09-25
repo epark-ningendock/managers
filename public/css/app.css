@@ -2532,10 +2532,6 @@ label {
   line-height: 2em;
 }
 
-.color-gray {
-  color: #777777;
-}
-
 .help-block {
   display: block;
   margin-top: 2px;
@@ -3232,9 +3228,24 @@ input[type=checkbox] + label:before {
   margin: 0 9px 0 0;
 }
 
+#option-setting .option-name {
+  width: 30%;
+  text-align: left;
+}
+
+#option-setting .option-name span {
+  text-indent: 30px;
+}
+
+#option-setting .option-price {
+  width: 70%;
+  text-align: left;
+}
+
 #option-setting .mr-2 {
   cursor: pointer;
   text-indent: 15px;
+  text-align: left;
 }
 
 #option-setting input[type=checkbox] + label:before {
