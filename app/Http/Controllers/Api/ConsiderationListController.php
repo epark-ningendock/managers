@@ -25,16 +25,16 @@ class ConsiderationListController extends Controller
         $messages = config('api.consideration_list_api.message');
         $sysErrorMessages = config('api.sys_error.message');
         // パラメータチェック
-        if (!isset($request->eparkMemberId) || !is_numeric($request->eparkMemberId)) {
+        if (!isset($request->epark_member_id) || !is_numeric($request->epark_member_id)) {
             return $this->createResponse($messages['errorEparkMemberId']);
         }
-        if (isset($request->hospitalId) && !is_numeric($request->hospitalId)) {
+        if (isset($request->hospital_id) && !is_numeric($request->hospital_id)) {
             return $this->createResponse($messages['errorHospitalId']);
         }
-        if (isset($request->courseId) && !is_numeric($request->courseId)) {
+        if (isset($request->course_id) && !is_numeric($request->course_id)) {
             return $this->createResponse($messages['errorCourseId']);
         }
-        if (!isset($request->displayKbn) || !DispKbn::hasValue($request->displayKbn)) {
+        if (!isset($request->display_kbn) || !DispKbn::hasValue($request->display_kbn)) {
             return $this->createResponse($messages['errorDisplayKbn']);
         }
         if (!isset($request->status) || !NickUse::hasValue($request->status)) {
@@ -42,10 +42,10 @@ class ConsiderationListController extends Controller
         }
 
         $params = [
-            'epark_member_id' => $request->eparkMemberId,
-            'hospital_id' => $request->hospitalId,
-            'course_id' => $request->courseId,
-            'display_kbn' => $request->displayKbn,
+            'epark_member_id' => $request->epark_member_id,
+            'hospital_id' => $request->hospital_id,
+            'course_id' => $request->course_id,
+            'display_kbn' => $request->display_kbn,
             'status' => $request->status,
         ];
 
@@ -57,7 +57,7 @@ class ConsiderationListController extends Controller
         } catch (\Throwable $e) {
             $message = '[検討中リストAPI] DBの登録に失敗しました。';
             Log::error($message, [
-                'epark_member_id' => $request->eparkMemberId,
+                'epark_member_id' => $request->epark_member_id,
                 'exception' => $e,
             ]);
             DB::rollback();
@@ -76,13 +76,13 @@ class ConsiderationListController extends Controller
         $messages = config('api.consideration_list_api.message');
         $sysErrorMessages = config('api.sys_error.message');
         // パラメータチェック
-        if (!isset($request->eparkMemberId) || !is_numeric($request->eparkMemberId)) {
+        if (!isset($request->epark_member_id) || !is_numeric($request->epark_member_id)) {
             return $this->createResponse($messages['errorEparkMemberId']);
         }
 
         try {
             //
-            $results = MemberLoginInfo::where('epark_member_id', $request->eparkMemberId)
+            $results = MemberLoginInfo::where('epark_member_id', $request->epark_member_id)
                 ->where('status', Status::Valid)
                 ->get();
             if (! $results) {
@@ -91,7 +91,7 @@ class ConsiderationListController extends Controller
         } catch (\Throwable $e) {
             $message = '[検討中リストAPI] DB処理に失敗しました。';
             Log::error($message, [
-                'epark_member_id' => $request->eparkMemberId,
+                'epark_member_id' => $request->epark_member_id,
                 'exception' => $e,
             ]);
             return $this->createResponse($sysErrorMessages['errorDB']);
@@ -110,28 +110,28 @@ class ConsiderationListController extends Controller
         $messages = config('api.consideration_list_api.message');
         $sysErrorMessages = config('api.sys_error.message');
         // パラメータチェック
-        if (!isset($request->eparkMemberId) || !is_numeric($request->eparkMemberId)) {
+        if (!isset($request->epark_member_id) || !is_numeric($request->epark_member_id)) {
             return $this->createResponse($messages['errorEparkMemberId']);
         }
-        if (!isset($request->displayKbn) || !DispKbn::hasValue($request->displayKbn)) {
+        if (!isset($request->display_kbn) || !DispKbn::hasValue($request->display_kbn)) {
             return $this->createResponse($messages['errorDisplayKbn']);
         }
 
-        if (Disp::FACILITY == $request->displayKbn) {
-            if (! isset($request->hospitalId) || !is_numeric($request->hospitalId)) {
+        if (Disp::FACILITY == $request->display_kbn) {
+            if (! isset($request->hospital_id) || !is_numeric($request->hospital_id)) {
                 return $this->createResponse($messages['errorHospitalId']);
             }
         } else {
-            if (!isset($request->courseId) || !is_numeric($request->courseId)) {
+            if (!isset($request->course_id) || !is_numeric($request->course_id)) {
                 return $this->createResponse($messages['errorCourseId']);
             }
         }
 
         $params = [
-            'epark_member_id' => $request->eparkMemberId,
-            'hospital_id' => $request->hospitalId,
-            'course_id' => $request->courseId,
-            'display_kbn' => $request->displayKbn,
+            'epark_member_id' => $request->epark_member_id,
+            'hospital_id' => $request->hospital_id,
+            'course_id' => $request->course_id,
+            'display_kbn' => $request->display_kbn,
         ];
 
         DB::beginTransaction();
@@ -142,7 +142,7 @@ class ConsiderationListController extends Controller
         } catch (\Throwable $e) {
             $message = '[検討中リストAPI] DBの削除に失敗しました。';
             Log::error($message, [
-                'epark_member_id' => $request->eparkMemberId,
+                'epark_member_id' => $request->epark_member_id,
                 'exception' => $e,
             ]);
             DB::rollback();
@@ -157,6 +157,7 @@ class ConsiderationListController extends Controller
      * レスポンスを生成する
      *
      * @param array $message
+     * @param $statusCode
      * @return response
      */
     protected function createResponse(array $message, $statusCode = 200) {

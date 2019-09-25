@@ -23,19 +23,19 @@ class MemberLoginInfoController extends Controller
         $messages = config('api.member_login_info_api.message');
         $sysErrorMessages = config('api.sys_error.message');
         // パラメータチェック
-        if (!isset($request->eparkMemberId) || !is_numeric($request->eparkMemberId)) {
+        if (!isset($request->epark_member_id) || !is_numeric($request->epark_member_id)) {
             return $this->createResponse($messages['errorEparkMemberId']);
         }
-        if (!isset($request->mailInfoDelivery) || !MailInfoDelivery::hasValue($request->mailInfoDelivery)) {
+        if (!isset($request->mail_info_delivery) || !MailInfoDelivery::hasValue($request->mail_info_delivery)) {
             return $this->createResponse($messages['errorMailInfoDelivery']);
         }
-        if (!isset($request->nickUse) || !NickUse::hasValue($request->nickUse)) {
+        if (!isset($request->nick_use) || !NickUse::hasValue($request->nick_use)) {
             return $this->createResponse($messages['errorNickUse']);
         }
         if (!isset($request->contact) || !NickUse::hasValue($request->contact)) {
             return $this->createResponse($messages['errorContact']);
         }
-        if (mb_strlen($request->contactName) > 32) {
+        if (mb_strlen($request->contact_name) > 32) {
             return $this->createResponse($messages['errorContactName']);
         }
         if (!isset($request->status) || !NickUse::hasValue($request->status)) {
@@ -43,11 +43,11 @@ class MemberLoginInfoController extends Controller
         }
 
         $params = [
-            'epark_member_id' => $request->eparkMemberId,
-            'mail_info_delivery' => $request->mailInfoDelivery,
-            'nick_use' => $request->nickUse,
+            'epark_member_id' => $request->epark_member_id,
+            'mail_info_delivery' => $request->mail_info_delivery,
+            'nick_use' => $request->nick_use,
             'contact' => $request->contact,
-            'contact_name' => $request->contactName,
+            'contact_name' => $request->contact_name,
             'status' => $request->status,
         ];
 
@@ -59,7 +59,7 @@ class MemberLoginInfoController extends Controller
         } catch (\Throwable $e) {
             $message = '[EPARK会員ログイン情報API] DBの登録に失敗しました。';
             Log::error($message, [
-                'epark_member_id' => $request->eparkMemberId,
+                'epark_member_id' => $request->epark_member_id,
                 'exception' => $e,
             ]);
             DB::rollback();
@@ -78,20 +78,20 @@ class MemberLoginInfoController extends Controller
         $messages = config('api.member_login_info_api.message');
         $sysErrorMessages = config('api.sys_error.message');
         // パラメータチェック
-        if (!isset($request->eparkMemberId) || !is_numeric($request->eparkMemberId)) {
+        if (!isset($request->epark_member_id) || !is_numeric($request->epark_member_id)) {
             return $this->createResponse($messages['errorEparkMemberId']);
         }
 
         try {
             //
-            $memberLoginInfo = MemberLoginInfo::where('epark_member_id', $request->eparkMemberId)->get();
+            $memberLoginInfo = MemberLoginInfo::where('epark_member_id', $request->epark_member_id)->get();
             if (! $memberLoginInfo) {
                 return $this->createResponse($messages['errorNotExistInfo']);
             }
         } catch (\Throwable $e) {
             $message = '[EPARK会員ログイン情報API] DB処理に失敗しました。';
             Log::error($message, [
-                'epark_member_id' => $request->eparkMemberId,
+                'epark_member_id' => $request->epark_member_id,
                 'exception' => $e,
             ]);
             return $this->createResponse($sysErrorMessages['errorDB']);
@@ -119,6 +119,7 @@ class MemberLoginInfoController extends Controller
      * EPARK会員ログイン情報レスポンスを生成する
      *
      * @param array $message
+     * @param MemberLoginInfo $memberLoginInfo
      * @return response
      */
     protected function createLoginInfoResponse(array $message, MemberLoginInfo $memberLoginInfo) {
@@ -126,18 +127,18 @@ class MemberLoginInfoController extends Controller
             'statusCode' => strval(200),
             'message' => $message['description'],
             'messageId' => $message['code'],
-            'eparkMemberId' => $memberLoginInfo->eparkMemberId,
-            'mailInfoDelivery' => $memberLoginInfo->mailInfoDelivery,
-            'nickUse' => $memberLoginInfo->nickUse,
+            'eparkMemberId' => $memberLoginInfo->epark_member_id,
+            'mailInfoDelivery' => $memberLoginInfo->mail_info_delivery,
+            'nickUse' => $memberLoginInfo->nick_use,
             'contact' => $memberLoginInfo->contact,
-            'contactName' => $memberLoginInfo->contactName,
+            'contactName' => $memberLoginInfo->contact_name,
             'status' => $memberLoginInfo->status,
         ], 200)->header('Content-Type', 'application/json; charset=utf-8');
     }
 
     /**
      * ログイン情報登録を行う
-     * @param int $hospitalId
+     * @param array $params
      */
     protected function registMemberLoginInfo(array $params) {
 
