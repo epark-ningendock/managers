@@ -106,9 +106,7 @@ class HospitalContractInformationController extends Controller
         // checking separate field for address
         $validator = Validator::make($uploaded_contracts->toArray(), [
             '*.state' => 'required|max:200',
-            '*.county' => 'required|max:200',
-            '*.town' => 'required|max:200',
-            '*.building' => 'required|max:200'
+            '*.town' => 'required|max:200'
         ]);
 
         if($validator->fails()) {
@@ -257,7 +255,7 @@ class HospitalContractInformationController extends Controller
             '*.email' => 'nullable|email',
             '*.application_date' => 'required|date_format:Ymd',
             '*.cancellation_date' => 'nullable|date_format:Ymd',
-            '*.billing_start_date' => 'required|date_format:Ymd',
+            '*.billing_start_date' => 'nullable|date_format:Ymd',
             '*.plan_code' => 'required|max:4|exists:contract_plans,plan_code',
             '*.service_start_date' => 'required|date_format:Ymd',
             '*.service_end_date' => 'nullable|date_format:Ymd',
