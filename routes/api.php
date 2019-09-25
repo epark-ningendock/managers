@@ -81,4 +81,12 @@ Route::post('reservation-store', 'Api\ReservationController@store');
 Route::get('reservation-conf', 'Api\ReservationController@conf');
 // 予約キャンセルAPI
 Route::post('reservation-cancel', 'Api\ReservationController@cancel');
-Route::post('pvRegist', 'PvRegistController@store');
+// PV登録
+Route::post('pvRegist', 'PvRegistController@store')->name('pv-regist.store');
+// EPARK会員ログイン情報
+Route::post('memberLoginInfo', 'MemberLoginInfoController@store')->name('member-login-info.store');
+Route::get('memberLoginInfo', 'MemberLoginInfoController@show')->name('member-login-info.show');
+// 検討中リスト
+Route::post('considerationList', 'ConsiderationListController@store')->name('consideration-list.store');
+Route::get('considerationList', 'ConsiderationListController@show')->name('consideration-list.show');
+Route::delete('considerationList', 'ConsiderationListController@destroy')->name('consideration-list.destroy');
