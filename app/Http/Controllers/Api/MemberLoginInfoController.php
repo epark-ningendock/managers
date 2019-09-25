@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Enums\MailInfoDelivery;
 use App\Enums\NickUse;
+use App\Enums\Status;
 use App\MemberLoginInfo;
 use App\Http\Controllers\Controller;
 
@@ -84,7 +85,9 @@ class MemberLoginInfoController extends Controller
 
         try {
             //
-            $memberLoginInfo = MemberLoginInfo::where('epark_member_id', $request->epark_member_id)->get();
+            $memberLoginInfo = MemberLoginInfo::where('epark_member_id', $request->epark_member_id)
+                ->where('status', Status::Valid)
+                ->get();
             if (! $memberLoginInfo) {
                 return $this->createResponse($messages['errorNotExistInfo']);
             }
