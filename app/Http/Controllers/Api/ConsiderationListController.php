@@ -179,18 +179,18 @@ class ConsiderationListController extends Controller
         $params = [];
         foreach ($results as $result) {
             $param = [
-              'eparkMemberId' => $result->epark_member_id,
-                'hospitalId' => $result->hospital_id,
-                'courseId' => $result->course_id,
-                'displayKbn' => $result->display_kbn,
+              'epark_member_id' => $result->epark_member_id,
+                'hospital_id' => $result->hospital_id,
+                'course_id' => $result->course_id,
+                'display_kbn' => $result->display_kbn,
                 'status' => $result->status
             ];
             $params = $param;
         }
         return response([
-            'statusCode' => strval(200),
+            'status_code' => strval(200),
             'message' => $message['description'],
-            'messageId' => $message['code'],
+            'message_id' => $message['code'],
             'data' => $params,
         ], 200)->header('Content-Type', 'application/json; charset=utf-8');
     }

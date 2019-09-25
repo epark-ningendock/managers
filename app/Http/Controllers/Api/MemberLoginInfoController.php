@@ -109,9 +109,9 @@ class MemberLoginInfoController extends Controller
      */
     protected function createResponse(array $message, $statusCode = 200) {
         return response([
-            'statusCode' => strval($statusCode),
+            'status_code' => strval($statusCode),
             'message' => $message['description'],
-            'messageId' => $message['code'],
+            'message_id' => $message['code'],
         ], $statusCode)->header('Content-Type', 'application/json; charset=utf-8');
     }
 
@@ -127,11 +127,11 @@ class MemberLoginInfoController extends Controller
             'statusCode' => strval(200),
             'message' => $message['description'],
             'messageId' => $message['code'],
-            'eparkMemberId' => $memberLoginInfo->epark_member_id,
-            'mailInfoDelivery' => $memberLoginInfo->mail_info_delivery,
-            'nickUse' => $memberLoginInfo->nick_use,
+            'epark_member_id' => $memberLoginInfo->epark_member_id,
+            'mail_info_delivery' => $memberLoginInfo->mail_info_delivery,
+            'nick_use' => $memberLoginInfo->nick_use,
             'contact' => $memberLoginInfo->contact,
-            'contactName' => $memberLoginInfo->contact_name,
+            'contact_name' => $memberLoginInfo->contact_name,
             'status' => $memberLoginInfo->status,
         ], 200)->header('Content-Type', 'application/json; charset=utf-8');
     }
