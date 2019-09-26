@@ -46,8 +46,9 @@ class CourseController extends Controller
     {
         $course_no = $request->input('course_no');
         $hospital_code = $request->input('hospital_code');
+        $course_code = $request->input('course_code');
 
-        $basics = $this->basicCourse($hospital_code, $course_no);
+        $basics = $this->basicCourse($hospital_code, $course_no, $course_code);
 
         return new CourseBasicResource($basics);
     }
@@ -73,11 +74,11 @@ class CourseController extends Controller
      *
      * @param  $hospital_code
      * @param  $course_no
-     * @return \Illuminate\Http\Response
+     * @return array
      */
-    private function basicCourse($hospital_code, $course_no)
+    private function basicCourse($hospital_code, $course_no, $course_code)
     {
-        $data = Course::with(
+        return Course::with(
             'hospital',
             'hospital.contract_information',
             'hospital.district_code',
@@ -91,8 +92,9 @@ class CourseController extends Controller
             ->whereHas('hospital.contract_information', function ($query) use ($hospital_code) {
                 $query->where('code', $hospital_code);
             })
-            ->find($course_no);
-        return $data;
+            ->where('code', $course_code)
+            ->where('id', $course_no)
+            ->get();
     }
 
     /**
@@ -100,7 +102,7 @@ class CourseController extends Controller
      *
      * @param  $hospital_code
      * @param  $course_no
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     private function getCourseContents($hospital_code, $course_no)
     {
@@ -130,7 +132,7 @@ class CourseController extends Controller
      * 検査コース空満情報（月別）取得API
      *
      * @param  App\Http\Requests\CalendarMonthlyRequest
-     * @return \Illuminate\Http\Response
+     * @return
      */
     public function calendar_monthly(CalendarMonthlyRequest $request)
     {
