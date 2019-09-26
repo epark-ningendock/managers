@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\ValidationRequest;
-use Illuminate\Validation\Rule;
 
 class HospitalRequest extends ValidationRequest
 {

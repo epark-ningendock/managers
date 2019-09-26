@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\ValidationRequest;
 use Log;
 class CalendarMonthlyRequest extends ValidationRequest
 {
