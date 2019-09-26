@@ -166,54 +166,70 @@ class BillingController extends Controller {
 
 	public function statusUpdate( Billing $billing, Request $request ) {
 
-		$email_send = true;
-		if ( $request->status != "4" ) {
+        $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
 
-			$email_send =  ( $request->status == 2 && $billing->status == 1 );
+            $confirmMailComposition = [
+                'subject' => '【EPARK人間ドック】請求内容確認のお願い',
+                'billing' => $billing
+            ];
+return new BillingConfirmationSendMail( $confirmMailComposition );
+//            Mail::to( [
+//                $hospitalEmailSetting->billing_email1,
+//                $hospitalEmailSetting->billing_email2,
+//                $hospitalEmailSetting->billing_email3,
+//                $hospitalEmailSetting->billing_fax_number,
+//            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition ) );
 
-			$billing->update( [ 'status' => $request->status ] );
 
-
-			if ( $email_send  ){
-
-				$hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
-
-				if ( $hospitalEmailSetting ) {
-
-					$confirmMailComposition = [
-						'subject' => '【EPARK人間ドック】請求内容確認のお願い',
-					];
-
-					Mail::to( [
-						$hospitalEmailSetting->billing_email1,
-						$hospitalEmailSetting->billing_email2,
-						$hospitalEmailSetting->billing_email3,
-						$hospitalEmailSetting->billing_fax_number,
-					] )->send( new BillingConfirmationSendMail( $confirmMailComposition ) );
-
-					$billingMailHistory = new BillingMailHistory();
-
-					$billingMailHistory->create( [
-						'hospital_id' => $hospitalEmailSetting->hospital_id,
-						'to_address1' => $hospitalEmailSetting->billing_email1,
-						'to_address2' => $hospitalEmailSetting->billing_email2,
-						'to_address3' => $hospitalEmailSetting->billing_email3,
-						'cc_name'     => $hospitalEmailSetting->hospital->name,
-						'fax'         => $hospitalEmailSetting->billing_fax_number,
-						'mail_type'   => ( $hospitalEmailSetting->mail_type == 1 ) ? 1 : 2,
-					] );
-
-				}
-
-			}
-
-		}
-
-		if ($request->route()->getName() == "billing.status.update" ) {
-			return redirect('billing')->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
-		} else {
-			return back()->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
-		}
+//		$email_send = true;
+//		if ( $request->status != "4" ) {
+//
+//			$email_send =  ( $request->status == 2 && $billing->status == 1 );
+//
+//			$billing->update( [ 'status' => $request->status ] );
+//
+//
+//			if ( $email_send  ){
+//
+//				$hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
+//
+//				if ( $hospitalEmailSetting ) {
+//
+//					$confirmMailComposition = [
+//						'subject' => '【EPARK人間ドック】請求内容確認のお願い',
+//                        'billing' => $billing
+//					];
+//
+//					Mail::to( [
+//						$hospitalEmailSetting->billing_email1,
+//						$hospitalEmailSetting->billing_email2,
+//						$hospitalEmailSetting->billing_email3,
+//						$hospitalEmailSetting->billing_fax_number,
+//					] )->send( new BillingConfirmationSendMail( $confirmMailComposition ) );
+//
+//					$billingMailHistory = new BillingMailHistory();
+//
+//					$billingMailHistory->create( [
+//						'hospital_id' => $hospitalEmailSetting->hospital_id,
+//						'to_address1' => $hospitalEmailSetting->billing_email1,
+//						'to_address2' => $hospitalEmailSetting->billing_email2,
+//						'to_address3' => $hospitalEmailSetting->billing_email3,
+//						'cc_name'     => $hospitalEmailSetting->hospital->name,
+//						'fax'         => $hospitalEmailSetting->billing_fax_number,
+//						'mail_type'   => ( $hospitalEmailSetting->mail_type == 1 ) ? 1 : 2,
+//					] );
+//
+//				}
+//
+//			}
+//
+//		}
+//
+//		if ($request->route()->getName() == "billing.status.update" ) {
+//			return redirect('billing')->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
+//		} else {
+//			return back()->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
+//		}
 	}
 
 	/**

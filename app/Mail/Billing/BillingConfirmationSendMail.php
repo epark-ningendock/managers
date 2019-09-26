@@ -35,8 +35,8 @@ class BillingConfirmationSendMail extends Mailable
     public function build()
     {
         return $this
-            ->from($this->emailFrom())
+//            ->from($this->emailFrom())
             ->subject($this->data['subject'])
-            ->view('billing.mail.billing-confirmation', []);
+            ->view('billing.mail.billing-confirmation', ['billing' => $this->data['billing']]);
     }
 }
