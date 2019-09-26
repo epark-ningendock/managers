@@ -272,14 +272,12 @@ return [
         'reservation_memo' => '受付・予約メモ',
         'internal_memo' => '医療機関備考',
         'registration_card_number' => '診察券番号',
-        'tel' => '電話番号',
         'family_name_kana' => 'お名前 かな (せい)',
         'first_name_kana' => 'お名前 かな (めい)',
         'family_name' => 'お名前 (姓)',
         'first_name' => 'お名前 (名)',
         'pvad' => 'PV数',
         'customer_id' => '顧客',
-        'pvad' => 'PV数',
         'birthday' => '生年月日',
         'memo' => '顧客メモ',
         'prefecture_id' => '都道府県',
@@ -302,7 +300,8 @@ return [
         'from_date' => '適用期間',
         'pre_payment_rate' => '手数料率',
         'pre_payment_from_date' => '適用期間',
-        'pre_payment_from_date' => '適用期間',
+        'claim_count' => 'クレーム数',
+        'recall_count' => 'リコール数',
         // Contract information
         '*.property_no' => '物件番号',
         '*.code' => '顧客番号',
@@ -320,6 +319,11 @@ return [
         '*.plan_code' => 'プランコード',
         '*.service_start_date' => 'サービス開始日',
         '*.service_end_date' => 'サービス終了日',
-        '*.hospital_name' => '屋号'
+        '*.hospital_name' => '屋号',
+        '*.postcode' => '郵便番号',
+        '*.state' => '住所都道府県',
+        '*.county' =>  '住所市区郡',
+        '*.town' => '住所町村字番地',
+        '*.building' => '住所建物名'
     ],
 ];

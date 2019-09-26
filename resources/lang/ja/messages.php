@@ -89,6 +89,7 @@ return [
         'hospital_email_setting'           => '受付メール設定',
         'holiday_setting'                  => '休日設定',
         'attetion_information'             => '医療機関こだわり情報',
+        'billing' => '請求メ',
     ],
     'course'                               => '検査コース',
     'name'                                 => 'お名前',
@@ -212,6 +213,7 @@ return [
     'billing_email2'                       => '請求メール受信アドレス2',
     'billing_email3'                       => '請求メール受信アドレス3',
     'billing_fax_number'                   => '請求メール受信fax番号',
+    'billing' => '請求メ',
     'property_no'                          => '物件番号',
     'customer_no'                          => '顧客番号',
     'contractor_name'                      => '契約者名',
@@ -227,6 +229,7 @@ return [
     'plan_name'                            => 'プラン名',
     'service_start_date'                   => 'サービス開始日',
     'service_end_date'                     => 'サービス終了日',
+
     'integrate'                            => '統合対象',
     'action'                               => '操作',
     'display_switching'                    => '表示切替',

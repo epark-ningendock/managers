@@ -188,4 +188,10 @@ class Reservation extends SoftDeleteModel
         return '-';
     }
 
+
+    public function taxIncludedPrice()
+    {
+        return $this->belongsTo(TaxClass::class);
+    }
+
 }

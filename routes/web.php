@@ -82,15 +82,7 @@ Route::middleware('auth:staffs')->group(function () {
             Route::get('/search', 'HospitalController@index')->name('hospital.search');
             Route::get('/search/text', 'HospitalController@searchText')->name('hospital.search.text');
             Route::get('/select/{id}', 'HospitalController@selectHospital')->name('hospital.select');
-            /*
-            |--------------------------------------------------------------------------
-            | 契約情報
-            |--------------------------------------------------------------------------
-            */
-            Route::post('/contract/upload', 'HospitalContractInformationController@upload')->name('contract.upload');
-            Route::post('/contract/upload/store', 'HospitalContractInformationController@storeUpload')->name('contract.upload.store');
-            Route::get('/contract', 'HospitalContractInformationController@index')->name('contract.index');
-            Route::get('/{hospital_id}/contract/show', 'HospitalContractInformationController@show')->name('contract.show');
+
             /*
             |--------------------------------------------------------------------------
             | 医療機関 画像情報
@@ -141,6 +133,19 @@ Route::middleware('auth:staffs')->group(function () {
         Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
     });
 
+
+    /*
+     |--------------------------------------------------------------------------
+     | 契約情報
+     |--------------------------------------------------------------------------
+     */
+    Route::group(['prefix' => 'hospital'], function() {
+        Route::post('/contract/upload', 'HospitalContractInformationController@upload')->name('contract.upload');
+        Route::post('/contract/upload/store', 'HospitalContractInformationController@storeUpload')->name('contract.upload.store');
+        Route::get('/contract', 'HospitalContractInformationController@index')->name('contract.index');
+        Route::get('/{hospital_id}/contract/show', 'HospitalContractInformationController@show')->name('contract.show');
+    });
+
     /*
     |--------------------------------------------------------------------------
     | Course Classification Routes
@@ -159,6 +164,11 @@ Route::middleware('auth:staffs')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->group(function () {
+
+    Route::get('billing/excel-export', 'BillingController@excelExport')->name('billing.excel.export');
+    Route::resource('billing', 'BillingController');
+    Route::get('billing/{billing}/{hospital_id}/status/update', 'BillingController@statusUpdate')->name('billing.status.update');
+
     /*
     |--------------------------------------------------------------------------
     | Hospital staff Routes

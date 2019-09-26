@@ -29,6 +29,7 @@ class ClassificationTypeImport extends ImportAbstract
     /**
      * @param Row $row
      * @return mixed
+     * @throws \Exception
      */
     public function onRow(Row $row)
     {
