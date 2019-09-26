@@ -40,14 +40,14 @@ class CourseFormRequest extends FormRequest
                 'reception_start_month' => 'required|integer|min:0',
                 'reception_end_day' => 'required|integer|min:0',
                 'reception_end_month' => 'required|integer|min:0',
-                'reception_acceptance_day' => 'required|integer|min:0',
-                'reception_acceptance_month' => 'required|integer|min:0',
+                //'reception_acceptance_day' => 'required|integer|min:0',
+                //'reception_acceptance_month' => 'required|integer|min:0',
                 'cancellation_deadline' => 'required|integer|min:0',
                 'pre_account_price' => 'nullable|integer',
                 'is_price' => [Rule::in([0, 1])],
                 'is_price_memo' => [Rule::in([0, 1])],
-                'price' => 'required_if:is_price,1|numeric',
-                'price_memo' => 'required_if:is_price_memo,1',
+                'price' => 'required_if:is_price,1|numeric|required_without:price_memo',
+                'price_memo' => 'required_if:is_price_memo,1|required_without:price',
                 'is_pre_account' => ['required', Rule::in([0, 1])],
                 'course_option_ids' => 'array',
                 'course_option_ids.*' => 'sometimes|integer',
@@ -68,6 +68,7 @@ class CourseFormRequest extends FormRequest
                 'answer10s' => 'array',
                 'course_display_start' => 'date|nullable',
                 'course_display_end' => 'date|nullable',
+                'reception_acceptance_day_end' => 'date|nullable',
             ];
         }
     }

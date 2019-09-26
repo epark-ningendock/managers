@@ -140,7 +140,11 @@ class HospitalController extends Controller
         $five_stations = [];
         for ($i = 1; $i <= 5; $i++) {
             if ($hospital->{'rail' . $i}) {
-                array_push($five_stations, Rail::find($hospital->{'rail' . $i})->stations()->get());
+                if(!is_null( Rail::find($hospital->{'rail' . $i}))) {
+                    array_push($five_stations, Rail::find($hospital->{'rail' . $i})->stations()->get());
+                } else {
+                    array_push($five_stations, []);
+                }
             } else {
                 array_push($five_stations, []);
             }
@@ -192,7 +196,6 @@ class HospitalController extends Controller
      */
     public function update(HospitalCreateFormRequest $request, Hospital $hospital)
     {
-
         try {
 	        DB::beginTransaction();
 
