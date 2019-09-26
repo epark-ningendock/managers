@@ -22,6 +22,11 @@ class BillingConfirmationSendMail extends Mailable
         $this->data = $data;
     }
 
+
+	public function emailFrom() {
+		return ( env('EPARK_UNEI_MAIL_FROM') ) ? env('EPARK_UNEI_MAIL_FROM') : env('MAIL_FROM_ADDRESS');
+    }
+
     /**
      * Build the message.
      *
@@ -30,8 +35,8 @@ class BillingConfirmationSendMail extends Mailable
     public function build()
     {
         return $this
-            ->from('unei@eparkdock.com')
+            ->from($this->emailFrom())
             ->subject($this->data['subject'])
-            ->view('billing.mail.billing-confirmation', ['content' => $this->data['content']]);
+            ->view('billing.mail.billing-confirmation', []);
     }
 }

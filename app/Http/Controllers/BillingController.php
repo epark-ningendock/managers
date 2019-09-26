@@ -181,8 +181,7 @@ class BillingController extends Controller {
 				if ( $hospitalEmailSetting ) {
 
 					$confirmMailComposition = [
-						'subject' => '請求確認メール',
-						'content' => '請求確認メール',
+						'subject' => '【EPARK人間ドック】請求内容確認のお願い',
 					];
 
 					Mail::to( [
