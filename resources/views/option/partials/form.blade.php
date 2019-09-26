@@ -35,7 +35,7 @@
                 <select name="tax_class_id" id="tax_class_id" class="w16em form-control">
                     @foreach ($tax_classes as $tax_class)
                         <option
-                                @if ( (old('tax_class_id') == $tax_class->id) ||  isset($option->tax_class_id) && ($option->tax_class_id ==$tax_class->id) )
+                                @if ( (old('tax_class_id') == $tax_class->id) ||  isset($option->tax_class_id) && ($option->tax_class_id == $tax_class->id) )
                                 selected="selected"
                                 @endif
                                 value="{{ $tax_class->id }}"> {{ $tax_class->name }}</option>
