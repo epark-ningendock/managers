@@ -11,15 +11,17 @@ class BillingConfirmationSendMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
+    public $attchment;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($data, $attchment)
     {
         $this->data = $data;
+        $this->attchment = $attchment;
     }
 
 
@@ -34,9 +36,13 @@ class BillingConfirmationSendMail extends Mailable
      */
     public function build()
     {
+
         return $this
-//            ->from($this->emailFrom())
+            ->from($this->emailFrom())
             ->subject($this->data['subject'])
+            ->attachData($this->attchment->output(), $this->data['attachment_file_name'] . 'pdf',[
+                'mime' => 'application/pdf',
+            ])
             ->view('billing.mail.billing-confirmation', ['billing' => $this->data['billing']]);
     }
 }

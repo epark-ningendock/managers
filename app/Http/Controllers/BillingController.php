@@ -9,6 +9,7 @@ use App\Exports\BillingExport;
 use App\Filters\Billing\BillingFilters;
 use App\HospitalEmailSetting;
 use App\Mail\Billing\BillingConfirmationSendMail;
+use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -166,19 +167,32 @@ class BillingController extends Controller {
 
 	public function statusUpdate( Billing $billing, Request $request ) {
 
+        $dateFilter = $this->billingDateFilter($billing->billing_month);
+
+        $pdf =  PDF::loadView( 'billing.claim-check-pdf', [
+            'billing' => $billing,
+            'startedDate'     => $dateFilter['startedDate'],
+            'endedDate'      => $dateFilter['endedDate'],
+        ] );
+
+        return $pdf->stream("test.pdf");
+
         $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
 
             $confirmMailComposition = [
                 'subject' => '【EPARK人間ドック】請求内容確認のお願い',
-                'billing' => $billing
+                'billing' => $billing,
+                'attachment_file_name' => '請求確認',
             ];
-return new BillingConfirmationSendMail( $confirmMailComposition );
+//return new BillingConfirmationSendMail( $confirmMailComposition );
 //            Mail::to( [
 //                $hospitalEmailSetting->billing_email1,
 //                $hospitalEmailSetting->billing_email2,
 //                $hospitalEmailSetting->billing_email3,
 //                $hospitalEmailSetting->billing_fax_number,
-//            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition ) );
+//            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf ) );
+
+            return 'here';
 
 
 //		$email_send = true;
