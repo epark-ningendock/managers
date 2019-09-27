@@ -12,16 +12,18 @@ class BillingConfirmationSendMail extends Mailable
     use Queueable, SerializesModels;
     public $data;
     public $attchment;
+    public $attributes;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($data, $attchment)
+    public function __construct($data, $attchment, $attributes = [])
     {
         $this->data = $data;
         $this->attchment = $attchment;
+        $this->attributes = $attributes;
     }
 
 
@@ -37,12 +39,27 @@ class BillingConfirmationSendMail extends Mailable
     public function build()
     {
 
-        return $this
-            ->from($this->emailFrom())
-            ->subject($this->data['subject'])
-            ->attachData($this->attchment->output(), $this->data['attachment_file_name'] . 'pdf',[
-                'mime' => 'application/pdf',
-            ])
-            ->view('billing.mail.billing-confirmation', ['billing' => $this->data['billing']]);
+        if ( $this->attributes['email_type'] === 'claim_confirmation') {
+
+            return $this
+                ->from($this->emailFrom())
+                ->subject($this->data['subject'])
+                ->attachData($this->attchment->output(), $this->data['attachment_file_name'] . 'pdf',[
+                    'mime' => 'application/pdf',
+                ])
+                ->view('billing.mail.billing-claim-confirmation', ['billing' => $this->data['billing']]);
+
+        } else {
+
+            return $this
+                ->from($this->emailFrom())
+                ->subject($this->data['subject'])
+                ->attachData($this->attchment->output(), $this->data['attachment_file_name'] . 'pdf',[
+                    'mime' => 'application/pdf',
+                ])
+                ->view('billing.mail.billing-confirmation', ['billing' => $this->data['billing']]);
+
+        }
+
     }
 }

@@ -203,9 +203,13 @@ class BillingController extends Controller {
             $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
 
             $confirmMailComposition = [
-                'subject' => '【EPARK人間ドック】請求内容確認のお願い',
+                'subject' => $request->has('claim_check') ? '【EPARK人間ドック】請求内容確認のお願い' : '【EPARK人間ドック】請求金額確定のお知らせ',
                 'billing' => $billing,
-                'attachment_file_name' => '請求確認',
+                'attachment_file_name' => $request->has('claim_check') ? '請求確認PDF' : '請求確定PDF',
+            ];
+
+            $attributes = [
+                'email_type' => $request->has('claim_check') ? 'claim_check' : 'claim_confirmation'
             ];
 
 
@@ -214,7 +218,7 @@ class BillingController extends Controller {
                 $hospitalEmailSetting->billing_email2,
                 $hospitalEmailSetting->billing_email3,
                 $hospitalEmailSetting->billing_fax_number,
-            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf ) );
+            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
 
             $billingMailHistory = new BillingMailHistory();
 

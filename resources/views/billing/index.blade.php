@@ -16,7 +16,6 @@
 @stop
 
 @section('search')
-
     <div class="excel-btn-wrapper mb-5 text-right">
         <a href="{{ route('billing.excel.export', ['billing_month' => request('billing_month'), 'status' => request('status'), 'hospital_name' => request('hospital_name')]) }}" class="btn btn-primary btn-lg">請求一覧EXCELダウンロード</a>
     </div>
