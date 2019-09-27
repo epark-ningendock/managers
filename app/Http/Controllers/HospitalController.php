@@ -253,7 +253,8 @@ class HospitalController extends Controller
         }
 
         $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());
+        $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());
 
-        return view('hospital.index', ['hospitals' => $hospitals])->with('success', trans('messages.operation'));
+        return redirect()->route('reservation.index');
     }
 }

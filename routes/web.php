@@ -131,6 +131,7 @@ Route::middleware('auth:staffs')->group(function () {
         Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
         Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
         Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
+        Route::get('/reservation', 'ReservationController@index')->name('reservation.index');
     });
 
 
