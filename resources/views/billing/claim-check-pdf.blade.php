@@ -22,7 +22,7 @@
 
         .table th,
         .table td {
-            padding: 0.75rem;
+            padding: 3px;
             vertical-align: top;
             border-top: 1px solid #eceeef;
         }
@@ -203,10 +203,11 @@
     </li>
 </ul>
 
+<br><br><br>
 
 <div class="table-responsive">
 
-    <table id="example2" class="table table-bordered table-hover table-striped mb-5">
+    <table id="example2" class="table table-bordered table-hover table-striped mb-5 pdftable">
 
         <thead>
         <tr>

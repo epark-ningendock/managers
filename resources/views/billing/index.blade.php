@@ -113,8 +113,8 @@
         <tbody>
         @if ( isset($billings) && count($billings) > 0 )
             @foreach ($billings as $billing)
-                <tr class="billing-id-{{ $billing->id }}">
-                    <td><span style="background: red;color: #fff;">{{ $billing->id }}</span>{{ $billing->hospital->contract_information->property_no ?? '' }}</td>
+                <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
+                    <td>{{ $billing->hospital->contract_information->property_no ?? '' }}</td>
                     <td>{{ $billing->hospital->name }}</td>
                     <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
                     <td>
@@ -136,19 +136,19 @@
                         <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
                     </td>
                     <td>
-                            <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2]) }}" class="btn @if( $billing->status == 2 || $billing->status == 3 ) btn-default @else btn-primary @endif"
-                               @if( $billing->status == 2 || $billing->status == 3 ) style="pointer-events: none;" @endif
+                            <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'claim_check' => 'yes']) }}" class="btn @if( $billing->status != \App\Enums\BillingStatus::Unconfirmed ) btn-default @else btn-primary @endif"
+                               @if( $billing->status != \App\Enums\BillingStatus::Unconfirmed ) style="pointer-events: none;" @endif
                             >請求確認</a>
                     </td>
                     <td>
-                        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 4]) }}" class="btn btn-primary"
-                           @if( $billing->status == 2  || $billing->status == 3) style="pointer-events: none;" @endif
+                        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 4, 'claim_confirmation' => 'yes']) }}" class="btn @if( ($billing->status == \App\Enums\BillingStatus::Checking) || ($billing->status == \App\Enums\BillingStatus::Confirmed) ) btn-primary @else btn-default @endif"
+                           @if( ($billing->status == \App\Enums\BillingStatus::Checking) || ($billing->status == \App\Enums\BillingStatus::Confirmed) )  style="pointer-events: unset;" @else style="pointer-events: none;" @endif
                         >請求確定</a>
                     </td>
 
                     <td>
-                        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2]) }}" class="btn btn-primary"
-                           @if( $billing->status != 4) style="pointer-events: none;" @endif
+                        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'undo_commit' => 'yes']) }}" class="btn @if( $billing->status == 4) btn-primary @else btn-default @endif"
+                           @if( $billing->status == 4) style="pointer-events: unset;" @else style="pointer-events: none;" @endif
                         >確定取消</a>
                     </td>
                 </tr>

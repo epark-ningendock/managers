@@ -167,83 +167,68 @@ class BillingController extends Controller {
 
 	public function statusUpdate( Billing $billing, Request $request ) {
 
+        $email_send =  ( $request->has('claim_check') || $request->has('claim_confirmation') ) ? true : false;
+
+        $billing->update( [ 'status' => $request->status ] );
+
+
+        if ( $email_send  ){
+
+            $this->claimEmailCheck($request, $billing, []);
+
+        }
+		if ($request->route()->getName() == "billing.status.update" ) {
+			return redirect('billing')->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
+		} else {
+			return back()->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
+		}
+	}
+
+    public function claimEmailCheck($request, $billing, $attributes = [])
+    {
         $dateFilter = $this->billingDateFilter($billing->billing_month);
 
-        $pdf =  PDF::loadView( 'billing.claim-check-pdf', [
-            'billing' => $billing,
-            'startedDate'     => $dateFilter['startedDate'],
-            'endedDate'      => $dateFilter['endedDate'],
-        ] );
-
-        return $pdf->stream("test.pdf");
-
         $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
+
+        if ( $hospitalEmailSetting ) {
+
+            $pdf =  PDF::loadView( 'billing.claim-check-pdf', [
+                'billing' => $billing,
+                'startedDate'     => $dateFilter['startedDate'],
+                'endedDate'      => $dateFilter['endedDate'],
+            ] )->setPaper('legal', 'landscape');
+
+
+
+            $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
 
             $confirmMailComposition = [
                 'subject' => '【EPARK人間ドック】請求内容確認のお願い',
                 'billing' => $billing,
                 'attachment_file_name' => '請求確認',
             ];
-//return new BillingConfirmationSendMail( $confirmMailComposition );
-//            Mail::to( [
-//                $hospitalEmailSetting->billing_email1,
-//                $hospitalEmailSetting->billing_email2,
-//                $hospitalEmailSetting->billing_email3,
-//                $hospitalEmailSetting->billing_fax_number,
-//            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf ) );
-
-            return 'here';
 
 
-//		$email_send = true;
-//		if ( $request->status != "4" ) {
-//
-//			$email_send =  ( $request->status == 2 && $billing->status == 1 );
-//
-//			$billing->update( [ 'status' => $request->status ] );
-//
-//
-//			if ( $email_send  ){
-//
-//				$hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
-//
-//				if ( $hospitalEmailSetting ) {
-//
-//					$confirmMailComposition = [
-//						'subject' => '【EPARK人間ドック】請求内容確認のお願い',
-//                        'billing' => $billing
-//					];
-//
-//					Mail::to( [
-//						$hospitalEmailSetting->billing_email1,
-//						$hospitalEmailSetting->billing_email2,
-//						$hospitalEmailSetting->billing_email3,
-//						$hospitalEmailSetting->billing_fax_number,
-//					] )->send( new BillingConfirmationSendMail( $confirmMailComposition ) );
-//
-//					$billingMailHistory = new BillingMailHistory();
-//
-//					$billingMailHistory->create( [
-//						'hospital_id' => $hospitalEmailSetting->hospital_id,
-//						'to_address1' => $hospitalEmailSetting->billing_email1,
-//						'to_address2' => $hospitalEmailSetting->billing_email2,
-//						'to_address3' => $hospitalEmailSetting->billing_email3,
-//						'cc_name'     => $hospitalEmailSetting->hospital->name,
-//						'fax'         => $hospitalEmailSetting->billing_fax_number,
-//						'mail_type'   => ( $hospitalEmailSetting->mail_type == 1 ) ? 1 : 2,
-//					] );
-//
-//				}
-//
-//			}
-//
-//		}
-//
-//		if ($request->route()->getName() == "billing.status.update" ) {
-//			return redirect('billing')->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
-//		} else {
-//			return back()->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
-//		}
+            Mail::to( [
+                $hospitalEmailSetting->billing_email1,
+                $hospitalEmailSetting->billing_email2,
+                $hospitalEmailSetting->billing_email3,
+                $hospitalEmailSetting->billing_fax_number,
+            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf ) );
+
+            $billingMailHistory = new BillingMailHistory();
+
+            $billingMailHistory->create( [
+                'hospital_id' => $hospitalEmailSetting->hospital_id,
+                'to_address1' => $hospitalEmailSetting->billing_email1,
+                'to_address2' => $hospitalEmailSetting->billing_email2,
+                'to_address3' => $hospitalEmailSetting->billing_email3,
+                'cc_name'     => $hospitalEmailSetting->hospital->name,
+                'fax'         => $hospitalEmailSetting->billing_fax_number,
+                'mail_type'   => ( $hospitalEmailSetting->mail_type == 1 ) ? 1 : 2,
+            ] );
+
+        }
 	}
 
 	/**

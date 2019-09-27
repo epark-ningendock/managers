@@ -46,16 +46,16 @@
 
     <p class="action-button-list text-center m-3 mb-5">
 
-        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2]) }}" class="btn btn-primary"
-           @if( $billing->status == 1 ) style="pointer-events: none;" @endif
-        >未確認</a>
+        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'claim_check' => 'yes']) }}" class="btn @if( $billing->status != \App\Enums\BillingStatus::Unconfirmed ) btn-default @else btn-primary @endif"
+           @if( $billing->status != \App\Enums\BillingStatus::Unconfirmed ) style="pointer-events: none;" @endif
+        >請求確認</a>
 
-        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 4]) }}" class="btn btn-primary"
-           @if( $billing->status == 2  || $billing->status == 3) style="pointer-events: none;" @endif
+        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 4, 'claim_confirmation' => 'yes']) }}" class="btn @if( ($billing->status == \App\Enums\BillingStatus::Checking) || ($billing->status == \App\Enums\BillingStatus::Confirmed) ) btn-primary @else btn-default @endif"
+           @if( ($billing->status == \App\Enums\BillingStatus::Checking) || ($billing->status == \App\Enums\BillingStatus::Confirmed) )  style="pointer-events: unset;" @else style="pointer-events: none;" @endif
         >請求確定</a>
 
-        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2]) }}" class="btn btn-primary"
-           @if( $billing->status != 4) style="pointer-events: none;" @endif
+        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'undo_commit' => 'yes']) }}" class="btn @if( $billing->status == 4) btn-primary @else btn-default @endif"
+           @if( $billing->status == 4) style="pointer-events: unset;" @else style="pointer-events: none;" @endif
         >確定取消</a>
 
     </p>
