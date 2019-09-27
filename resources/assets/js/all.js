@@ -10,9 +10,16 @@
             let message = $(this).data('message');
             let btnText = $(this).data('button-text') || '削除';
             let targetFormAction = $(targetForm).attr('action').replace(':id', id);
+            let modal = $(this).data('modal') || '#confirm-modal';
             $(targetForm).attr('action', targetFormAction);
 
-            Modal.showConfirm(message, btnText, function() {
+            Modal.showConfirm(message, btnText, modal, function() {
+                $(modal).find('input, select, textarea').each(function(i, e){
+                    e = $(e);
+                    $(`<input type="hidden" name="${e.prop('name')}" />`)
+                        .val(e.val())
+                        .appendTo($(targetForm));
+                });
                 $(targetForm).submit();
             });
             return false;

@@ -365,6 +365,7 @@ class ReservationController extends Controller
             }
             $reservation->reservation_status = ReservationStatus::Cancelled;
             $reservation->cancel_date = Carbon::now();
+            $reservation->cancellation_reason = request()->input('cancellation_reason');
             $reservation->save();
 
             $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
