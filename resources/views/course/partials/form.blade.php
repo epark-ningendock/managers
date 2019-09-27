@@ -453,7 +453,7 @@
           @if(!isset($last) || $major != $last)
             <h4 class="d-inline-block">{{ $major->name }}</h4>
             @php
-              $last = $major
+              $last = $major;
             @endphp
           @endif
           <fieldset>
@@ -481,7 +481,7 @@
                 <p class="col-sm-4">
                 <input type="checkbox" class="checkbox d-inline-block minor-checkbox" name="minor_values[]"
                        id="{{ 'minor_id_'.$minor->id }}"
-                       {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
+                       {{ $minor_value == 1 ? 'checked' : '' }} value="1" />
                 <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label></p>
               @else
                 <p class="col-sm-12">
