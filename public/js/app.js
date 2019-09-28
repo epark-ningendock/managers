@@ -92,33 +92,20 @@ __webpack_require__(4);
  * @param callback function after confirm
  */
 module.exports.showConfirm = function () {
-    var message = typeof arguments[0] != 'function' ? arguments[0] : null;
-    var btnText = typeof arguments[1] != 'function' ? arguments[1] : null;
-    var callback = typeof arguments[arguments.length - 1] == 'function' ? arguments[arguments.length - 1] : function () {};
+    const message =  typeof arguments[0] != 'function' ? arguments[0] : null;
+    const btnText = typeof arguments[1] != 'function' ? arguments[1] : null;
+    const modal = typeof arguments[2] != 'function' ? arguments[2] : null;
+    const callback = typeof arguments[arguments.length - 1] == 'function' ? arguments[arguments.length - 1] : function() {};
 
-    // 予約キャンセルの場合
-    if (message === "予約をキャンセルしますか？") {
-        if (message) {
-            $('#reservation-cancel-modal .modal-body p').html(message);
-        }
-        if (btnText) {
-            $('#reservation-cancel-modal #confirm-button').html(btnText);
-        }
-        $('#reservation-cancel-modal .btn-danger').click(callback);
-    
-        $('#reservation-cancel-modal').modal('show');
-    // それ以外
-    } else {
-        if (message) {
-            $('#confirm-modal .modal-body p').html(message);
-        }
-        if (btnText) {
-            $('#confirm-modal #confirm-button').html(btnText);
-        }
-        $('#confirm-modal .btn-danger').click(callback);
-    
-        $('#confirm-modal').modal('show');
+    if (message) {
+        $(modal).find('.modal-body p').html(message);
     }
+    if (btnText) {
+        $(modal).find('#confirm-button').html(btnText);
+    }
+    $(modal).find('#confirm-button').click(callback);
+
+    $(modal).modal('show');
 };
 
 module.exports.showHospitalOperation = function () {
@@ -216,8 +203,15 @@ module.exports.addScrollToTop = function () {
             var message = $(this).data('message');
             var btnText = $(this).data('button-text') || 'OK';
             var targetFormAction = $(targetForm).attr('action').replace(':id', id);
+            let modal = $(this).data('modal') || '#confirm-modal';
             $(targetForm).attr('action', targetFormAction);
-            Modal.showConfirm(message, btnText, function () {
+            Modal.showConfirm(message, btnText, modal, function () {
+                $(modal).find('input, select, textarea').each(function(i, e){
+                    e = $(e);
+                    $(`<input type="hidden" name="${e.prop('name')}" />`)
+                        .val(e.val())
+                        .appendTo($(targetForm));
+                });
                 $(targetForm).submit();
             });
             return false;
