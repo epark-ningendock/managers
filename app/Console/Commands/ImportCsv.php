@@ -18,7 +18,7 @@ class ImportCsv extends Command
      *
      * @var string
      */
-    protected $signature = 'import:csv {--backup} {--fresh : 既存のデータベースを再構築します。} {--a= : ディレクトリを指定} {--b= : ディレクトリを指定}';
+    protected $signature = 'import:csv {--backup} {--fresh : 既存のデータベースを再構築します。} {--seed : seed 時に指定する} {--a= : ディレクトリを指定} {--b= : ディレクトリを指定}';
 
     /**
      * The console command description.
@@ -127,12 +127,19 @@ class ImportCsv extends Command
      */
     private function import_a()
     {
+        $seed = $this->option('seed');
         $files = array_keys($this->classes);
         foreach ($files as $i => $basename) {
             $realpath = $this->directory . '/' . $basename;
             if (!file_exists($realpath)) {
                 $this->warn('Skipped: %s is not found.', $basename);
             }
+
+            // seed => false をスキップする
+            if ($seed && !$this->getClass('a', $basename, 'seed')) {
+                continue;
+            }
+
             $classname = $this->getClass('a', $basename, 'import');
             $this->line(sprintf("A[ %d / %d ] %s", $i + 1, count($files), $classname));
             (new $classname)->withOutput($this->output)->import($realpath);
