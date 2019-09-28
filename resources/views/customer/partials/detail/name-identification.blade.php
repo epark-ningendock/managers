@@ -18,7 +18,7 @@
                             <th>{{ trans('messages.phone_number') }}</th>
                             <th>{{ trans('messages.operation') }}</th>
                         </tr>
-                        {{-- <tr class="source">
+                        <tr class="source">
                             <td></td>
                             <td>{{ $source_customer->id }}</td>
                             <td>{{ $source_customer->registration_card_number }}</td>
@@ -36,7 +36,7 @@
                                     {{ trans('messages.display_switching') }}
                                 </button>
                             </td>
-                        </tr> --}}
+                        </tr>
                         @if ( !empty($name_identifications) )
                             @foreach( $name_identifications as $name_identification )
                                 <tr>
