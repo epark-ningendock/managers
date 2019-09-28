@@ -963,9 +963,21 @@ input[type=checkbox] + label:before {
 }
 
 #option-setting {
+  .option-name {
+    width: 30%;
+    text-align: left;
+    span {
+      text-indent: 30px;
+    }
+  }
+  .option-price {
+    width: 70%;
+    text-align: left;
+  }
   .mr-2 {
     cursor: pointer;
     text-indent: 15px;
+    text-align: left;
   }
   input[type=checkbox] + label:before {
     margin: 0 9px 0 0;

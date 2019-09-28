@@ -263,7 +263,18 @@
       @if ($errors->has('reception_end_day')) <p class="help-block text-red">{{ $errors->first('reception_end_day') }}</p> @endif
       @if ($errors->has('reception_end_month')) <p class="help-block text-red">{{ $errors->first('reception_end_month') }}</p> @endif
     </div>
-    <div class="form-group">
+
+
+        <div class="form-group @if ($errors->has('reception_acceptance_day_end')) has-error @endif">
+            <div class="form-horizontal display-period">
+                <label>受付終了日</label>
+                {{ Form::text('reception_acceptance_day_end', old('reception_acceptance_day_end', (isset($course) ? $course->reception_acceptance_day_end : null)),
+                    ['class' => 'd-inline-block w16em form-control', 'id' => 'reception_acceptance_day_end', 'placeholder' => $disp_date_end]) }}
+            </div>
+        </div>
+
+
+    <!--<div class="form-group">
       <label>受付許可日  <span class="form_required">必須</span></label>
       <div class="form-horizontal">
           本日から
@@ -279,7 +290,7 @@
       </div>
       @if ($errors->has('reception_acceptance_day')) <p class="help-block text-red">{{ $errors->first('reception_acceptance_day') }}</p>@endif
       @if ($errors->has('reception_acceptance_month')) <p class="help-block text-red">{{ $errors->first('reception_acceptance_month') }}</p> @endif
-    </div>
+    </div>-->
     <div class="form-group @if ($errors->has('cancellation_deadline')) has-error @endif" >
       <label for="cancellation_deadline">変更キャンセル受付期限</label>
       <div>
@@ -398,13 +409,16 @@
     </div>
     <h1 class="box-title">オプションの設定</h1>
   </div>
-  <div class="box-body" id="option-setting">
+
+  <div class="form-entry">
+    <div class="box-body" id="option-setting">
     <table class="table no-border table-hover table-striped ">
       <tr>
-        <td class="text-center">オプション名</td>
-        <td class="text-center">価格</td>
+        <td class="option-name"><span>オプション名</span></td>
+        <td class="option-price">価格</td>
       </tr>
       @foreach($options as $option)
+        <tr>
         @php
           $is_checked = false;
           if ($o_option_ids->isNotEmpty()) {
@@ -413,13 +427,14 @@
             $is_checked = $course_options->where('option_id', $option->id)->isNotEmpty();
           }
         @endphp
-          <td class="text-center">
-              <input type="checkbox" class="minor-checkbox" id="option_set_price{{ $option->id }}" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
+          <td class="option-name">
+              <input type="checkbox" id="option_set_price{{ $option->id }}" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
               <label class="mr-2" for="option_set_price{{ $option->id }}">{{ $option->name }}</label></td>
-          <td class="text-center">{{ number_format($option->price) }} 円</td>
+          <td class="option-price">{{ number_format($option->price) }} 円</td>
         </tr>
       @endforeach
     </table>
+  </div>
   </div>
 </div>
 
@@ -438,7 +453,7 @@
           @if(!isset($last) || $major != $last)
             <h4 class="d-inline-block">{{ $major->name }}</h4>
             @php
-              $last = $major
+              $last = $major;
             @endphp
           @endif
           <fieldset>
@@ -466,7 +481,7 @@
                 <p class="col-sm-4">
                 <input type="checkbox" class="checkbox d-inline-block minor-checkbox" name="minor_values[]"
                        id="{{ 'minor_id_'.$minor->id }}"
-                       {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
+                       {{ $minor_value == 1 ? 'checked' : '' }} value="1" />
                 <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label></p>
               @else
                 <p class="col-sm-12">
@@ -704,13 +719,15 @@
           /* ---------------------------------------------------
           // minor checkbox values
           -----------------------------------------------------*/
+
           (function () {
               const change = function(ele) {
                   if (ele.prop('checked')) {
-                      ele.next('input:hidden').remove();
-                      ele.prev().remove();
+                      if (ele.next().next().attr('class') == 'dummy') {
+                        ele.next().next().remove();
+                      }
                   } else {
-                      $('<input type="hidden" name="minor_values[]" value="0"/>').insertBefore(ele);
+                    $('<input type="hidden" class="dummy" name="minor_values[]" value="0"/>').insertAfter(ele.next('label'));
                   }
               };
 
@@ -848,6 +865,10 @@
                 format: 'yyyy-mm-dd',
             });
             $('#datetimepicker-disp-end').datepicker({
+                language:'ja',
+                format: 'yyyy-mm-dd',
+            });
+            $('#reception_acceptance_day_end').datepicker({
                 language:'ja',
                 format: 'yyyy-mm-dd',
             });

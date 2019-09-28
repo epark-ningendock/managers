@@ -39,8 +39,8 @@ class CustomerFormRequest extends FormRequest
             'email' => 'nullable|email',
             'memo' => 'nullable|max:255',
 //            'reservation_memo' => 'required',
-            'claim_count' => 'nullable|integer|min:0',
-            'recall_count' => 'nullable|integer|min:0',
+            'claim_count' => 'nullable|regex:/^[0-9]+$/',
+            'recall_count' => 'nullable|regex:/^[0-9]+$/',
         ];
     }
 

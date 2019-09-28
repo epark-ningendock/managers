@@ -18,6 +18,11 @@ use Illuminate\Validation\ValidationException;
 
 class HospitalContractInformationController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        $this->middleware('authority.level.contract-staff');
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -73,6 +78,10 @@ class HospitalContractInformationController extends Controller
                 'representative_name' => $row[6],
                 'postcode' => $row[7],
                 'address' => trimToNull(join(array_slice($row, 8, 4), ' ')),
+                'state' => $row[8],
+                'county' => $row[9],
+                'town' => $row[10],
+                'building' => $row[11],
                 'tel' => trimToNull($row[12]),
                 'fax' => trimToNull($row[13]),
                 'email' => trimToNull($row[14]),
@@ -85,10 +94,20 @@ class HospitalContractInformationController extends Controller
                 'hospital_name' => $row[25]
             ]);
         }
-        //skip title
+        // skip title
         $uploaded_contracts->forget(0);
         $validator = Validator::make($uploaded_contracts->toArray(), $this->rules(), $this->messages());
 
+        if($validator->fails()) {
+            Session::flash('errors', $validator->messages());
+            return redirect()->route('contract.index');
+        }
+
+        // checking separate field for address
+        $validator = Validator::make($uploaded_contracts->toArray(), [
+            '*.state' => 'required|max:200',
+            '*.town' => 'required|max:200'
+        ]);
 
         if($validator->fails()) {
             Session::flash('errors', $validator->messages());
@@ -195,6 +214,7 @@ class HospitalContractInformationController extends Controller
                 }
 
                 $hospital->name = $contract_arr['hospital_name'];
+                $hospital->status = '1';
                 $hospital->save();
 
                 $contract->contract_plan_id = $contract_plans->get($contract_arr['plan_code'])->first()->id;
@@ -228,16 +248,16 @@ class HospitalContractInformationController extends Controller
             '*.contractor_name' => 'required|max:50',
             '*.representative_name_kana' => 'required|max:50',
             '*.representative_name' => 'required|max:50',
-            '*.postcode' => 'nullable|regex:/^\d{3}-?\d{4}$/',
-            '*.address' => 'nullable|max:200',
+            '*.postcode' => 'required|regex:/^\d{3}-?\d{4}$/',
+            '*.address' => 'required|max:200',
             '*.tel' => 'required|regex:/^\d{2,4}-?\d{2,4}-?\d{3,4}$/',
             '*.fax' => 'nullable|regex:/^\d{2,4}-?\d{2,4}-?\d{3,4}$/',
             '*.email' => 'nullable|email',
             '*.application_date' => 'required|date_format:Ymd',
             '*.cancellation_date' => 'nullable|date_format:Ymd',
-            '*.billing_start_date' => 'required|date_format:Ymd',
+            '*.billing_start_date' => 'nullable|date_format:Ymd',
             '*.plan_code' => 'required|max:4|exists:contract_plans,plan_code',
-            '*.service_start_date' => 'nullable|date_format:Ymd',
+            '*.service_start_date' => 'required|date_format:Ymd',
             '*.service_end_date' => 'nullable|date_format:Ymd',
             '*.hospital_name' => 'required|max:50'
         ];

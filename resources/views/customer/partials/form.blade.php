@@ -198,7 +198,7 @@
                 <div class="form-group py-sm-1 @if ($errors->has('memo')) has-error @endif">
                     <label for="memo">{{ trans('messages.memo') }}
                     </label>
-                    <textarea class="form-control" name="memo" id="memo">{{ old('memo', ( isset($customer_detail) ? $customer_detail->memo : '')) }}</textarea>
+                    <textarea class="form-control" name="memo" id="memo" cols="30" rows="5">{{ old('memo', ( isset($customer_detail) ? $customer_detail->memo : '')) }}</textarea>
                     @if ($errors->has('memo')) <p class="help-block">{{ $errors->first('memo') }}</p> @endif
                 </div>
             </div>

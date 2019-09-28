@@ -130,6 +130,12 @@ return [
     |
     */
     'custom' => [
+        'family_name_kana' => [
+            'regex' => 'お名前 かな (せい)は、ひらがなのみでご入力ください。'
+        ],
+        'first_name_kana' > [
+            'regex' => 'お名前 かな (めい)は、ひらがなのみでご入力ください。'
+        ],
         'login_id' => [
             'between' => 'ログインIDは、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。',
             'regex' => 'ログインIDは、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。'
@@ -294,8 +300,8 @@ return [
         'from_date' => '適用期間',
         'pre_payment_rate' => '手数料率',
         'pre_payment_from_date' => '適用期間',
-        'recall_count' => 'リコール数',
         'claim_count' => 'クレーム数',
+        'recall_count' => 'リコール数',
         // Contract information
         '*.property_no' => '物件番号',
         '*.code' => '顧客番号',
@@ -313,6 +319,11 @@ return [
         '*.plan_code' => 'プランコード',
         '*.service_start_date' => 'サービス開始日',
         '*.service_end_date' => 'サービス終了日',
-        '*.hospital_name' => '屋号'
+        '*.hospital_name' => '屋号',
+        '*.postcode' => '郵便番号',
+        '*.state' => '住所都道府県',
+        '*.county' =>  '住所市区郡',
+        '*.town' => '住所町村字番地',
+        '*.building' => '住所建物名'
     ],
 ];
