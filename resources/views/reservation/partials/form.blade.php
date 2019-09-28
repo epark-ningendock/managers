@@ -176,6 +176,21 @@
 
     </div>
 
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="internal_memo">医療機関備考</label>
+        </div>
+
+        <div class="col-md-9">
+            <div class=" @if ($errors->has('internal_memo')) has-error @endif">
+                <textarea class="form-control" name="internal_memo" id="internal_memo">{{ old('internal_memo') }}</textarea>
+                @if ($errors->has('internal_memo')) <p class="help-block">{{ $errors->first('internal_memo') }}</p> @endif
+            </div>
+        </div>
+
+    </div>
+
     <h2 class="section-title">受診者情報</h2>
     <div class="row mt-5">
         <div class="col-md-3">
@@ -470,6 +485,14 @@
 
         td.daybox.gray-background {
             background: #ddd;
+        }
+
+        td.daybox.red-background {
+            background: #FCE4E4;
+        }
+
+        td.daybox.blue-background {
+            background: #CBE0F8;
         }
 
         td.daybox.it-can-reserve  {

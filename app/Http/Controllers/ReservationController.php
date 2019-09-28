@@ -8,6 +8,7 @@ use App\Enums\Permission;
 use App\Enums\ReservationStatus;
 use App\FeeRate;
 use App\Holiday;
+use App\ContractInformation;
 use App\Hospital;
 use App\Mail\Reservation\ReservationCheckMail;
 use App\Mail\Reservation\ReservationOperationMail;
@@ -110,6 +111,7 @@ class ReservationController extends Controller
      */
     protected function get_reception_list_query(Request $request)
     {
+        // dd($request->all());
         $query = Reservation::where('hospital_id', session('hospital_id'))->with([
             'course',
             'customer',
@@ -331,6 +333,9 @@ class ReservationController extends Controller
             }
             $reservation->reservation_status = ReservationStatus::ReceptionCompleted;
             $reservation->save();
+
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+
             Session::flash('success', trans('messages.reservation.accept_success'));
             DB::commit();
 
@@ -361,6 +366,9 @@ class ReservationController extends Controller
             $reservation->reservation_status = ReservationStatus::Cancelled;
             $reservation->cancel_date = Carbon::now();
             $reservation->save();
+
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+            
             Session::flash('success', trans('messages.reservation.cancel_success'));
             DB::commit();
 
@@ -390,6 +398,9 @@ class ReservationController extends Controller
             $reservation->reservation_status = ReservationStatus::Completed;
             $reservation->completed_date = Carbon::now();
             $reservation->save();
+
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+
             Session::flash('success', trans('messages.reservation.complete_success'));
             DB::commit();
 
@@ -547,16 +558,9 @@ class ReservationController extends Controller
 
             $this->reservationAnswerCreate($request, $reservation);
 
-            $this->sendReservationCheckMail(Hospital::find(session('hospital_id'))->name, $reservation);
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $customer, '登録');
 
             DB::commit();
-
-            $data = [
-                'reservation' => $reservation,
-                'staff_name' => Auth::user()->name,
-                'processing' => '登録'
-                ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new ReservationOperationMail($data));
 
             return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
 
@@ -763,15 +767,10 @@ class ReservationController extends Controller
 
             $this->reservationAnswerCreate($request, $reservation);
             
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '変更');
+
             DB::commit();
-
-            $data = [
-                'reservation' => $reservation,
-                'staff_name' => Auth::user()->name,
-                'processing' => '変更'
-                ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new ReservationOperationMail($data));
-
+            
             return redirect('reservation')->with('success', trans('messages.reservation.update_success'));
 
         } catch (\Exception $i) {
@@ -786,13 +785,26 @@ class ReservationController extends Controller
      * 受付確認メール送信
      * @param array $reservationDates
      */
-    public function sendReservationCheckMail($hospital_name, $reservation)
+    public function sendReservationCheckMail($hospital, $reservation, $customer, $processing)
     {
+        $contract_information = ContractInformation::where('hospital_id', $hospital->id)->first();
+
         $mailContext = [
-            'hospital_name' => $hospital_name,
+            'staff_name' => Auth::user()->name,
+            'processing' => $processing,
+            'hospital_name' => $hospital->name,
             'reservation' => $reservation
         ];
+
         Mail::to('dock_all@eparkdock.com')->send(new ReservationCheckMail($mailContext));
+
+        if (isset($customer->email)) {
+            Mail::to($customer->email)->send(new ReservationCheckMail($mailContext));
+        }
+
+        if (isset($contract_information)) {
+            Mail::to($contract_information->email)->send(new ReservationCheckMail($mailContext));
+        }
     }
 
 }

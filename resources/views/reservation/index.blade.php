@@ -117,7 +117,6 @@
               <label for="is_cancelled">キャンセル</label>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -194,7 +193,7 @@
             </td> --}}
             <td>{{ $reservation->id }}</td>
             <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
-            <td>{{ $reservation->customer->name}}</td>
+            <td><a href="#">{{ $reservation->customer->name}}</a></td>
             <td>{{ $reservation->course->name }}</td>
             <td>2000円</td>
             <td>{{ $reservation->reservation_status->description }}</td>
@@ -209,20 +208,20 @@
                 <button class="btn btn-success ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.accept_confirmation') }}"
                         data-target-form="#accept-form" data-button-text="確定する">
-                  仮予約
+                  受付確定
                 </button>
               @endif
               @if($reservation->reservation_status->is(ReservationStatus::ReceptionCompleted))
                 <button class="btn btn-primary ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.complete_confirmation') }}"
                         data-target-form="#complete-form" data-button-text="完了する">
-                  受付確定
+                  受診完了
                 </button>
               @endif
               @if($reservation->reservation_status->is(ReservationStatus::Completed))
-                <button class="btn btn-primary ml-3 delete-popup-btn">
+                {{-- <button class="btn btn-primary ml-3">
                   受診完了
-                </button>
+                </button> --}}
               @endif
               @if(!$reservation->reservation_status->is(ReservationStatus::Cancelled) && !$reservation->reservation_status->is(ReservationStatus::Completed))
                 <button class="btn btn-danger ml-3 delete-popup-btn" data-id="{{ $reservation->id }}"
@@ -273,6 +272,39 @@
                   $('#search_form').submit();
               });
           })();
+
+          (function(){
+              $('#is_pending').change(function(){
+                if($('#is_pending').prop('checked')){
+                  $('#is_pending').val('1')
+                }
+              });
+          })();
+          
+          (function(){
+              $('#is_reception_completed').change(function(){
+                if($('#is_reception_completed').prop('checked')){
+                  $('#is_reception_completed').val('2')
+                }
+              });
+          })();
+
+          (function(){
+              $('#is_completed').change(function(){
+                if($('#is_completed').prop('checked')){
+                  $('#is_completed').val('3')
+                }
+              });
+          })();
+
+          (function(){
+              $('#is_cancelled').change(function(){
+                if($('#is_cancelled').prop('checked')){
+                  $('#is_cancelled').val('4')
+                }
+              });
+          })();
+
 
           /* ---------------------------------------------------
           // clear all input

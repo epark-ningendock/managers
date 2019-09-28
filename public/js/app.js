@@ -95,15 +95,30 @@ module.exports.showConfirm = function () {
     var message = typeof arguments[0] != 'function' ? arguments[0] : null;
     var btnText = typeof arguments[1] != 'function' ? arguments[1] : null;
     var callback = typeof arguments[arguments.length - 1] == 'function' ? arguments[arguments.length - 1] : function () {};
-    if (message) {
-        $('#confirm-modal .modal-body p').html(message);
-    }
-    if (btnText) {
-        $('#confirm-modal #confirm-button').html(btnText);
-    }
-    $('#confirm-modal .btn-danger').click(callback);
 
-    $('#confirm-modal').modal('show');
+    // 予約キャンセルの場合
+    if (message === "予約をキャンセルしますか？") {
+        if (message) {
+            $('#reservation-cancel-modal .modal-body p').html(message);
+        }
+        if (btnText) {
+            $('#reservation-cancel-modal #confirm-button').html(btnText);
+        }
+        $('#reservation-cancel-modal .btn-danger').click(callback);
+    
+        $('#reservation-cancel-modal').modal('show');
+    // それ以外
+    } else {
+        if (message) {
+            $('#confirm-modal .modal-body p').html(message);
+        }
+        if (btnText) {
+            $('#confirm-modal #confirm-button').html(btnText);
+        }
+        $('#confirm-modal .btn-danger').click(callback);
+    
+        $('#confirm-modal').modal('show');
+    }
 };
 
 module.exports.showHospitalOperation = function () {

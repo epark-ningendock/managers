@@ -19,13 +19,11 @@ class OptionController extends Controller
         return view('option.index', [ 'options' => $options ]);
     }
 
-
     public function create()
     {
         $tax_classes = TaxClass::all();
         return view('option.create', [ 'tax_classes' => $tax_classes ]);
     }
-
 
     public function store(OptionformStore $request)
     {

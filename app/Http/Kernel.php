@@ -64,7 +64,7 @@ class Kernel extends HttpKernel
         'permission.pre-account.edit' => \App\Http\Middleware\isPreAccountEdit::class,
         'permission.cource-classification.edit' => \App\Http\Middleware\isCourceClassificationEdit::class,
         'permission.invoice.edit' => \App\Http\Middleware\isInvoiceEdit::class,
-        'authority.level.contract-staff' => \App\Http\Middleware\AuthorityLebelContractStaff::class,
+        'authority.level.contract-staff' => \App\Http\Middleware\AuthorityLevelContractStaff::class,
         'authority.level.not-contract-staff' => \App\Http\Middleware\AuthorityLevelNotContractStaff::class,
     ];
 }

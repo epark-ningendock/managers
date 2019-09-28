@@ -22,7 +22,6 @@
 @section('search')
 
 
-    @includeIf('customer.partials.action-bar')
     @includeIf('customer.partials.listing-search')
 
 
@@ -59,7 +58,7 @@
             </tr>
             </thead>
             <tbody>
-
+            @includeIf('customer.partials.action-bar')
             @if ( isset($customers) && count($customers) > 0 )
                 @foreach ($customers as $customer)
 
