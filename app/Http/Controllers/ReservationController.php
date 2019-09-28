@@ -130,10 +130,16 @@ class ReservationController extends Controller
 
         if ($request->input('reservation_start_date', '') != '') {
             $query->whereDate('reservation_date', '>=', $request->input('reservation_start_date'));
+        // 初期表示は月初を指定する
+        } else {
+            $query->whereDate('reservation_date', '>=', Carbon::now()->startOfMonth()->format('Y/m/d'));
         }
 
         if ($request->input('reservation_end_date', '') != '') {
             $query->whereDate('reservation_date', '<=', $request->input('reservation_end_date'));
+        // 初期表示は月末を指定する
+        } else {
+            $query->whereDate('reservation_date', '<=', Carbon::now()->endOfMonth()->format('Y/m/d'));
         }
 
 
