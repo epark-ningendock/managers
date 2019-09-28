@@ -285,7 +285,6 @@ class CalendarController extends Controller
      */
     public function updateSetting($id, CalendarFormRequest $request)
     {
-
         try {
             DB::beginTransaction();
 
@@ -295,7 +294,7 @@ class CalendarController extends Controller
             $calendar->touch();
             $calendar->save();
 
-            $start = Carbon::now()->startOfMonth();
+            $start = Carbon::parse($request->input('days')[0]);
             $end = Carbon::now()->addMonth(5)->endOfMonth();
 
             $calendar_days = CalendarDay::where('calendar_id', $id)
@@ -307,10 +306,6 @@ class CalendarController extends Controller
             $reservation_frames = collect($request->input('reservation_frames'));
 
             while ($start->lt($end)) {
-                if ($start->isPast() && !$start->isToday()) {
-                    $start->addDay(1);
-                    continue;
-                }
                 $calendar_day = $calendar_days->first(function ($day) use ($start) {
                     return $day->date->isSameDay($start);
                 });
@@ -320,7 +315,7 @@ class CalendarController extends Controller
                 });
                 $is_reservation_acceptance = $is_reservation_acceptances->get($index);
                 $reservation_frame = $reservation_frames->get($index);
-
+                
                 if (!isset($calendar_day)) {
                     $calendar_day = new CalendarDay();
                     $calendar_day->date = $start->copy();
