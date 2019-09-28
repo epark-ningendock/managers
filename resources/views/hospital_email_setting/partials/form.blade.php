@@ -11,7 +11,7 @@
 
         <div class="form-group py-sm-2 in_hospital_email_reception_flg">
             <input type="hidden" name="updated_at" value="{{ isset($staff) ? $staff->updated_at : null }}">
-            <label for="status">受信希望者・院内受付メール送信設定</label>
+            <label for="status">受診希望者・院内受付メール送信設定</label>
             <group class="inline-radio two-option-large" style="width: 350px;">
                 <div>
                     <input type="radio" name="in_hospital_email_reception_flg" id="in_hospital_email_reception_flg_true"
@@ -299,7 +299,7 @@
 
 
           /* ---------------------------------------------------
-           // 受信希望者・院内受付メール送信設定
+           // 受診希望者・院内受付メール送信設定
           -----------------------------------------------------*/
           (function () {
               const change = function() {
