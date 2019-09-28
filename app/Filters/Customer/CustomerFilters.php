@@ -3,7 +3,7 @@
 namespace App\Filters\Customer;
 
 use App\Filters\QueryFilters;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class CustomerFilters extends QueryFilters
 {
@@ -19,11 +19,8 @@ class CustomerFilters extends QueryFilters
 
     public function name($name)
     {
-        $names = explode(" ", $name);
-
         return $this->builder
-            ->whereIn('family_name', $names);
-//            ->orWhere('first_name', $names);
+            ->where(DB::raw("concat(family_name, first_name)"), 'LIKE', '%' . str_replace(' ', '', $name) . '%');
     }
 
     public function tel($tel)

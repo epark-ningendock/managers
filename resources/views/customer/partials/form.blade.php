@@ -218,7 +218,6 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group py-sm-1 @if ($errors->has('recall_count')) has-error @endif">
-                    @if ($errors->has('recall_count')) <p class="help-block">{{ $errors->first('recall_count') }}</p> @endif
                     <label for="name">{{ trans('messages.recall_count') }}
                     </label>
                     <input type="text" class="form-control" name="recall_count" id="recall_count"

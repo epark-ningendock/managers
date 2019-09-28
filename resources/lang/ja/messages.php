@@ -235,5 +235,6 @@ return [
     'display_switching'                    => '表示切替',
     'perform_identification'               => '名寄せを実行する',
     'integration-success'                  => '名寄せが完了しました。',
-    'integration-error'                    => 'エラーが発生しました。'
+    'integration-error'                    => 'エラーが発生しました。',
+    'input-required'                       => '入力内容をご確認ください。'
 ];
