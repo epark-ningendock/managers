@@ -143,4 +143,8 @@ return [
     //     'model' => PvRecord::class,
     //     'import' => PvRecordImport::class,
     // ],
+    'm_user.csv' => [
+        'model' => \App\MemberLoginInfo::class,
+        'import' => \App\Imports\MemberLoginInfoImport::class,
+    ],
 ];
