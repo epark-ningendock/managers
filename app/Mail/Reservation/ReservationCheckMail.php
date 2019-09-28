@@ -38,7 +38,7 @@ class ReservationCheckMail extends Mailable
     {
         return $this
             ->from("unei@eparkdock.com")
-            ->subject("【EPARK人間ドック】受付情報登録のお知らせ")
+            ->subject("【EPARK人間ドック】受付情報登録・変更のお知らせ")
             ->view('reservation.email.reservation-mail');
     }
 }
