@@ -193,7 +193,11 @@
             </td> --}}
             <td>{{ $reservation->id }}</td>
             <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
-            <td><a href="#">{{ $reservation->customer->name}}</a></td>
+            <td>
+              <a class="detail-link" href="#" data-id="{{ $reservation->customer->id }}" data-route="{{ route('customer.detail') }}">
+                  {{ $reservation->customer->name }}
+              </a>
+            </td>
             <td>{{ $reservation->course->name }}</td>
             <td>2000円</td>
             <td>{{ $reservation->reservation_status->description }}</td>
@@ -261,6 +265,14 @@
     }
   </style>
 @stop
+
+@includeIf('customer.partials.detail.detail-popup')
+@includeIf('customer.partials.detail.detail-popup-script')
+
+@include('customer.partials.email-history-detail')
+
+@includeIf('commons.std-modal-box')
+@includeIf('customer.partials.email-popup-script')
 
 @section('script')
   <script>
