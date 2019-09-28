@@ -146,7 +146,7 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
                               <div class="form-inline">
                                   <input type='hidden' name='pre_payment_fee_rate_ids[]' value='{{ $prePaymentFeeRate->id }}' />
                                   <label class="mt-5 ml-5">手数料率</label>
-                                  <input type="number" name="pre_payment_rates[]" value="{{ isset($prePaymentFeeRate->rate) ? $prePaymentFeeRate->rate : '' }}"> %
+                                  <input type="number" class="form-control" name="pre_payment_rates[]" value="{{ isset($prePaymentFeeRate->rate) ? $prePaymentFeeRate->rate : '' }}"> %
                                   <label class="mt-5 ml-5">適用期間</label>
                                   <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd"
                                        data-date-autoclose="true" data-date-language="ja">
