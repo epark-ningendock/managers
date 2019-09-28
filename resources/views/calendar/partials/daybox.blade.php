@@ -32,17 +32,17 @@
 
 					@foreach($week as $day)
 
-					<td data-date="{{ $day['date']->format('Y-m-d') }}" class="daybox {{  ( $day['is_holiday'] || !$day['is_reservation_acceptance'] ) ? 'not-reservable' : 'it-can-reserve' }}
+					<td data-date="{{ $day['date']->format('Y-m-d') }}" class="daybox {{  ( $day['is_holiday'] || !$day['is_reservation_acceptance'] || $day['frame'] <= 0 ) ? 'not-reservable' : 'it-can-reserve' }}
 							@if($day['date']->isSaturday()) blue-background @endif>
 							@if($day['date']->isSunday() || isset($day['holiday'])) red-background @endif>
 							@if($day['is_holiday'] || !$day['is_reservation_acceptance']) gray-background @endif">
 						<div class="txt">
 							{{ $day['date']->format('m') }}月
 							{{ $day['date']->format('d')  }}日
-							({{  strtoupper(substr($day['date']->format('l'), 0, 2)) }})
+							({{ strtoupper(substr($day['date']->format('l'), 0, 2)) }})
 						</div>
 						<div class="des-box">
-							@if($day['is_holiday'] || !$day['is_reservation_acceptance'])
+							@if($day['is_holiday'] || !$day['is_reservation_acceptance'] || $day['frame'] <= 0 )
 								−
 							@else
 								◯
