@@ -226,6 +226,7 @@
               @if(!$reservation->reservation_status->is(ReservationStatus::Cancelled) && !$reservation->reservation_status->is(ReservationStatus::Completed))
                 <button class="btn btn-danger ml-3 delete-popup-btn" data-id="{{ $reservation->id }}"
                         data-message="{{ trans('messages.reservation.cancel_confirmation') }}"
+                        data-modal="#reservation-cancel-modal"
                         data-target-form="#cancel-form" data-button-text="キャンセルする">
                   キャンセル
                 </button>
