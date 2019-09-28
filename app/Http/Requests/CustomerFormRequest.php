@@ -29,7 +29,7 @@ class CustomerFormRequest extends FormRequest
             'family_name' => 'required',
             'first_name' => 'required',
 //            'name_kana' => 'required',
-            'tel' => 'nullable|regex:/^\d{2,4}-?\d{2,4}-?\d{3,4}$/',
+            'tel' => 'nullable|regex:/^[0-9]{10,11}$/',
             'sex' => 'required|enum_value:' . Gender::class . ',false',
             'birthday' => 'nullable|date',
             'postcode' => 'nullable|regex:/^\d{3}-?\d{4}$/',
