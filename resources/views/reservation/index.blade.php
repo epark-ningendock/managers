@@ -110,7 +110,7 @@
             </div>
             <div class="checkbox ml-2">
               <input type="checkbox" id="is_completed" name="is_completed" value="3" @if(isset($is_completed)) checked @endif />
-              <label for="is_completed">完了</label>
+              <label for="is_completed">受診完了</label>
             </div>
             <div class="checkbox ml-2">
               <input type="checkbox" id="is_cancelled" name="is_cancelled" value="4" @if(isset($is_cancelled)) checked @endif/>
@@ -207,14 +207,14 @@
               @if($reservation->reservation_status->is(ReservationStatus::Pending))
                 <button class="btn btn-success ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.accept_confirmation') }}"
-                        data-target-form="#accept-form" data-button-text="確定する">
+                        data-target-form="#accept-form" data-button-text="確定">
                   受付確定
                 </button>
               @endif
               @if($reservation->reservation_status->is(ReservationStatus::ReceptionCompleted))
                 <button class="btn btn-primary ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.complete_confirmation') }}"
-                        data-target-form="#complete-form" data-button-text="完了する">
+                        data-target-form="#complete-form" data-button-text="完了">
                   受診完了
                 </button>
               @endif
