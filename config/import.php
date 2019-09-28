@@ -200,9 +200,11 @@ return [
     't_consideration_list.csv' => [
         'model' => \App\ConsiderationList::class,
         'import' => \App\Imports\ConsiderationListImport::class,
+        'seed' => false,
      ],
     'm_user.csv' => [
         'model' => \App\MemberLoginInfo::class,
         'import' => \App\Imports\MemberLoginInfoImport::class,
+        'seed' => false,
     ],
 ];
