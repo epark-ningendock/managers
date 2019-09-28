@@ -116,7 +116,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{ $reservation->payment_status->description or '-' }}</span>
+            <span class="ml-2">{{ $reservation->payment_status->description or '-' }}</span>
         </div>
 
     </div>
@@ -128,7 +128,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">
+            <span class="ml-2">
                 @if($reservation->settlement_price)
                     {{ number_format($reservation->settlement_price) }}
                  @else
@@ -147,7 +147,7 @@
          </div>
 
          <div class="col-md-9">
-             <span id="total" class="ml-2">
+             <span class="ml-2">
                  @if($reservation->cashpo_used_price)
                      {{ number_format($reservation->cashpo_used_price) }}
                  @else
@@ -167,7 +167,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">
+            <span class="ml-2">
                 {{ $reservation->is_payment == '0' ? '0円' : number_format($reservation->fee).'円' }}
             </span>
         </div>
