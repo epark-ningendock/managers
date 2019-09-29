@@ -3363,3 +3363,7 @@ input[type=checkbox]:checked:disabled + label:before {
   clear: both;
 }
 
+.form-support-txt {
+  color: #777777;
+}
+
