@@ -509,14 +509,11 @@ class ReservationController extends Controller
                 }
             }
 
-
-
             request()->merge([
                 'hospital_id' => session('hospital_id'),
                 'reservation_status' => ReservationStatus::ReceptionCompleted,
                 'is_repeat' => false
             ]);
-
 
             $fee_rate = FeeRate::where('hospital_id', session()->get('hospital_id'))
                 ->whereDate('from_date', '<=', Carbon::today())
@@ -531,14 +528,16 @@ class ReservationController extends Controller
             $reservation->applicant_tel = str_replace(['－', '-', '‐', '−', '‒', '—', '–', '―', 'ー', 'ｰ', '─', '━', '一'], '', $request->tel);
             $reservation->acceptance_number = $acceptance_number;
 
-            $reservation->fee = $request->input('adjustment_price', 0) + ($course->is_price == '1' ? $course->price : 0) + $this->calculateCourseOptionTotalPrice($request);
+            $reservation->tax_included_price = $course->is_price == '1' ? $course->price : 0;
 
             if (isset($fee_rate)) {
                 $reservation->fee_rate = $fee_rate->rate;
-                $reservation->fee += $fee_rate->rate;
+                $reservation->fee = (
+                        $reservation->tax_included_price +
+                        $this->calculateCourseOptionTotalPrice($request) +
+                        $request->input('adjustment_price', 0)
+                    ) * ($fee_rate->rate / 100);
             }
-
-            $reservation->tax_included_price = $reservation->fee;
 
             if ($request->customer_id) {
                 $customer = Customer::findOrFail($request->customer_id);
@@ -562,7 +561,6 @@ class ReservationController extends Controller
             $reservation->save();
 
             $this->reservationCourseOptionSaveOrUpdate($request, $reservation);
-
             $this->reservationAnswerCreate($request, $reservation);
 
             $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $customer, '登録');
@@ -755,19 +753,20 @@ class ReservationController extends Controller
             }
 
             $params = $request->all();
-            $params['fee'] = $request->input('adjustment_price', 0) + ($course->is_price == '1' ? $course->price : 0) + $this->calculateCourseOptionTotalPrice($request);
+
+            $params['tax_included_price'] = $course->is_price == '1' ? $course->price : 0;
 
             if (isset($fee_rate)) {
-                $params['fee_rate'] = $fee_rate->rate;
-                $params['fee'] += $fee_rate->rate;
+                $params['fee'] = (
+                        $params['tax_included_price'] +
+                        $this->calculateCourseOptionTotalPrice($request) +
+                        $request->input('adjustment_price', 0)
+                    ) * ($fee_rate->rate / 100);
             }
-
-            $params['tax_included_price'] = $params['fee'];
 
             $reservation->update($params);
 
             $reservation->reservation_options()->forceDelete();
-
             $this->reservationCourseOptionSaveOrUpdate($request, $reservation);
 
             $reservation->reservation_answers()->forceDelete();
