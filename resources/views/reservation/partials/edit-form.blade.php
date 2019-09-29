@@ -103,7 +103,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2"> 0円</span>
+            <span id="total" class="ml-2">0円</span>
         </div>
 
     </div>
@@ -168,7 +168,7 @@
 
         <div class="col-md-9">
             <span class="ml-2">
-                {{ $reservation->is_payment == '0' ? '0円' : number_format($reservation->fee).'円' }}
+                {{ $reservation->is_payment == '0' ? '0円' : number_format($reservation->tax_included_price + $reservation->reservation_options()->get()->pluck('option_price')->sum() + $reservation->adjustment_price).'円' }}
             </span>
         </div>
 

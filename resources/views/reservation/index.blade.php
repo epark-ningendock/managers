@@ -199,7 +199,7 @@
               </a>
             </td>
             <td>{{ $reservation->course->name }}</td>
-            <td>2000円</td>
+            <td>{{ number_format($reservation->tax_included_price + $reservation->reservation_options()->get()->pluck('option_price')->sum() + $reservation->adjustment_price) }}円</td>
             <td>{{ $reservation->reservation_status->description }}</td>
             <td>{{ $reservation->created_at->format('Y/m/d') }}</td>
             <td>
