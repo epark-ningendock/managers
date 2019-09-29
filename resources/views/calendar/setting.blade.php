@@ -264,6 +264,9 @@
       background-color: #eee;
       opacity: 1;
     }
+    .bg-changed {
+      background-color: #fbfbbf;
+    }
   </style>
 @stop
 
