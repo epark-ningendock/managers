@@ -76,6 +76,7 @@
       <div class="row mt-5">
         <div class="col-md-12">
           <legend>所在地</legend>
+          <p class="form-support-txt">下記住所でGoogleMapが正しい位置を示さない場合、北緯と東経を入力して下さい。</p>
         </div>
 
         <div class="col-md-12">
@@ -184,6 +185,7 @@
                            value="{{ old('longitude', (isset($hospital->longitude)) ? $hospital->longitude : null) }}"
                            placeholder="0.0000000"/>
                     @if ($errors->has('longitude')) <p class="help-block">{{ $errors->first('longitude') }}</p> @endif
+                  <p class="form-support-txt">※北緯・東経は整数11桁、小数点以下7桁（マイナス記号、小数点含めて20文字）まで入力可能です。<br>※例）-122345678901.1234567</p>
                   </div>
                 </div>
               </div>
