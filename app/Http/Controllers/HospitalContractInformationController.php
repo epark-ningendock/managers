@@ -243,7 +243,7 @@ class HospitalContractInformationController extends Controller
     {
         return [
             '*.property_no' => 'required|max:20',
-            '*.code' => 'required|max:20',
+            '*.code' => 'nullable|max:20',
             '*.contractor_name_kana' => 'required|max:50',
             '*.contractor_name' => 'required|max:50',
             '*.representative_name_kana' => 'required|max:50',
