@@ -65,6 +65,7 @@
                    value="{{ old('kana', (isset($hospital->kana) ) ? $hospital->kana : null) }}"
                    placeholder="{{ trans('messages.kana') }}">
             @if ($errors->has('kana')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('kana') }}</p> @endif
+            <p class="form-support-txt">※並べ替えに使用します。 「医療法人」などの法人名を除いて下さい</p>
           </div>
         </div>
 
