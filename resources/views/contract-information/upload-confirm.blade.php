@@ -56,8 +56,8 @@
               <input type="hidden" name="contracts[{{$i}}][application_date]" value="{{ $contract->application_date->format('Ymd') }}">
             </td>
             <td class="@if(isset($contract->id) && $contract->isDirty('billing_start_date')) text-red @endif">
-              {{ $contract->billing_start_date->format('Y/m/d') }}
-              <input type="hidden" name="contracts[{{$i}}][billing_start_date]" value="{{ $contract->billing_start_date->format('Ymd') }}">
+              {{ isset($contract->billing_start_date) ? $contract->billing_start_date->format('Y/m/d') : '-' }}
+              <input type="hidden" name="contracts[{{$i}}][billing_start_date]" value="{{ isset($contract->billing_start_date) ? $contract->billing_start_date->format('Ymd') : '' }}">
             </td>
             <td class="@if(isset($contract->id) && $contract->isDirty('cancellation_date')) text-red @endif">
               {{ isset($contract->cancellation_date) ? $contract->cancellation_date->format('Y/m/d') : '-' }}

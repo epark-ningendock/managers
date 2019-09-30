@@ -20,12 +20,7 @@
 @stop
 
 @section('search')
-
-
-    @includeIf('customer.partials.action-bar')
     @includeIf('customer.partials.listing-search')
-
-
 @stop
 
 
@@ -47,19 +42,14 @@
                     </a>
                 </th>
                 <th>{{ trans('messages.phone_number') }}</th>
-                {{--<th>--}}
-                    {{--<a href="{{ route('customer.index', ['email_sorting' => columnSorting('email_sorting')]) }}">--}}
-                        {{--{{ trans('messages.email') }}--}}
-                    {{--</a>--}}
-                {{--</th>--}}
+                <th>{{ trans('messages.birthday') }}</th>
                 <th>{{ trans('messages.gender') }}</th>
-                <th>生年月日</th>
                 <th></th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
-
+            @includeIf('customer.partials.action-bar')
             @if ( isset($customers) && count($customers) > 0 )
                 @foreach ($customers as $customer)
 
@@ -72,13 +62,8 @@
                         </td>
                         <td>{{ $customer->registration_card_number }}</td>
                         <td>{{ $customer->tel }}</td>
-                        {{--<td>--}}
-                            {{--<a href="#" class="send-email"  data-id="{{ $customer->id }}" data-route="{{ route('customer.show.email.form', ['customer_id' => $customer->id]) }}">--}}
-                                {{--{{ $customer->email }}--}}
-                            {{--</a>--}}
-                        {{--</td>--}}
-                        <td>{{ $customer->sex->description or '-' }}</td>
                         <td>{{ $customer->birthday }}</td>
+                        <td>{{ $customer->sex->description or '-' }}</td>
                         <td>
                             <a class="btn btn-primary"
                                href="{{ route('customer.edit', $customer->id) }}">

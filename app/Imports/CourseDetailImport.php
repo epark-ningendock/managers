@@ -4,9 +4,10 @@ namespace App\Imports;
 
 use App\CourseDetail;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class CourseDetailImport extends ImportAbstract
+class CourseDetailImport extends ImportAbstract implements WithChunkReading
 {
 
     /**
@@ -52,5 +53,13 @@ class CourseDetailImport extends ImportAbstract
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function chunkSize(): int
+    {
+        return 10000;
     }
 }

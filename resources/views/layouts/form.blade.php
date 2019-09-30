@@ -11,6 +11,14 @@
       <!-- Error -->
       {{-- @include('layouts.partials.errorbag') --}}
 
+      @if ($errors->any())
+        <div class="alert alert-danger">
+          <ul>
+              <li>{{ trans('messages.input-required') }}</li>
+          </ul>
+        </div>
+      @endif
+
 
       @yield('form')
 

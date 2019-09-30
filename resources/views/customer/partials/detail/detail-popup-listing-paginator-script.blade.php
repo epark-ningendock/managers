@@ -85,6 +85,14 @@
                 loadNameIdenticals(1);
             });
 
+            $(document).on('change', '.identical_ids', function(){
+                if ($('.identical_ids:checked').length == 0) {
+                    $('#perform-integration').prop('disabled', true);
+                } else {
+                    $('#perform-integration').prop('disabled', false);
+                }
+            });
+
             $(document).on('click', '#perform-integration', function(e) {
                 e.preventDefault();
                 if ($('.identical_ids:checked').length == 0) {

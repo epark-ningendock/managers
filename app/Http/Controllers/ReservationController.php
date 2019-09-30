@@ -8,6 +8,7 @@ use App\Enums\Permission;
 use App\Enums\ReservationStatus;
 use App\FeeRate;
 use App\Holiday;
+use App\ContractInformation;
 use App\Hospital;
 use App\Mail\Reservation\ReservationCheckMail;
 use App\Mail\Reservation\ReservationOperationMail;
@@ -110,6 +111,7 @@ class ReservationController extends Controller
      */
     protected function get_reception_list_query(Request $request)
     {
+        // dd($request->all());
         $query = Reservation::where('hospital_id', session('hospital_id'))->with([
             'course',
             'customer',
@@ -128,10 +130,16 @@ class ReservationController extends Controller
 
         if ($request->input('reservation_start_date', '') != '') {
             $query->whereDate('reservation_date', '>=', $request->input('reservation_start_date'));
+        // 初期表示は月初を指定する
+        } else {
+            $query->whereDate('reservation_date', '>=', Carbon::now()->startOfMonth()->format('Y/m/d'));
         }
 
         if ($request->input('reservation_end_date', '') != '') {
             $query->whereDate('reservation_date', '<=', $request->input('reservation_end_date'));
+        // 初期表示は月末を指定する
+        } else {
+            $query->whereDate('reservation_date', '<=', Carbon::now()->endOfMonth()->format('Y/m/d'));
         }
 
 
@@ -331,6 +339,9 @@ class ReservationController extends Controller
             }
             $reservation->reservation_status = ReservationStatus::ReceptionCompleted;
             $reservation->save();
+
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+
             Session::flash('success', trans('messages.reservation.accept_success'));
             DB::commit();
 
@@ -360,7 +371,11 @@ class ReservationController extends Controller
             }
             $reservation->reservation_status = ReservationStatus::Cancelled;
             $reservation->cancel_date = Carbon::now();
+            $reservation->cancellation_reason = request()->input('cancellation_reason');
             $reservation->save();
+
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+            
             Session::flash('success', trans('messages.reservation.cancel_success'));
             DB::commit();
 
@@ -390,6 +405,9 @@ class ReservationController extends Controller
             $reservation->reservation_status = ReservationStatus::Completed;
             $reservation->completed_date = Carbon::now();
             $reservation->save();
+
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+
             Session::flash('success', trans('messages.reservation.complete_success'));
             DB::commit();
 
@@ -491,14 +509,11 @@ class ReservationController extends Controller
                 }
             }
 
-
-
             request()->merge([
                 'hospital_id' => session('hospital_id'),
                 'reservation_status' => ReservationStatus::ReceptionCompleted,
                 'is_repeat' => false
             ]);
-
 
             $fee_rate = FeeRate::where('hospital_id', session()->get('hospital_id'))
                 ->whereDate('from_date', '<=', Carbon::today())
@@ -513,14 +528,16 @@ class ReservationController extends Controller
             $reservation->applicant_tel = str_replace(['－', '-', '‐', '−', '‒', '—', '–', '―', 'ー', 'ｰ', '─', '━', '一'], '', $request->tel);
             $reservation->acceptance_number = $acceptance_number;
 
-            $reservation->fee = $request->input('adjustment_price', 0) + ($course->is_price == '1' ? $course->price : 0) + $this->calculateCourseOptionTotalPrice($request);
+            $reservation->tax_included_price = $course->is_price == '1' ? $course->price : 0;
 
             if (isset($fee_rate)) {
                 $reservation->fee_rate = $fee_rate->rate;
-                $reservation->fee += $fee_rate->rate;
+                $reservation->fee = (
+                        $reservation->tax_included_price +
+                        $this->calculateCourseOptionTotalPrice($request) +
+                        $request->input('adjustment_price', 0)
+                    ) * ($fee_rate->rate / 100);
             }
-
-            $reservation->tax_included_price = $reservation->fee;
 
             if ($request->customer_id) {
                 $customer = Customer::findOrFail($request->customer_id);
@@ -544,19 +561,11 @@ class ReservationController extends Controller
             $reservation->save();
 
             $this->reservationCourseOptionSaveOrUpdate($request, $reservation);
-
             $this->reservationAnswerCreate($request, $reservation);
 
-            $this->sendReservationCheckMail(Hospital::find(session('hospital_id'))->name, $reservation);
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $customer, '登録');
 
             DB::commit();
-
-            $data = [
-                'reservation' => $reservation,
-                'staff_name' => Auth::user()->name,
-                'processing' => '登録'
-                ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new ReservationOperationMail($data));
 
             return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
 
@@ -744,34 +753,30 @@ class ReservationController extends Controller
             }
 
             $params = $request->all();
-            $params['fee'] = $request->input('adjustment_price', 0) + ($course->is_price == '1' ? $course->price : 0) + $this->calculateCourseOptionTotalPrice($request);
+
+            $params['tax_included_price'] = $course->is_price == '1' ? $course->price : 0;
 
             if (isset($fee_rate)) {
-                $params['fee_rate'] = $fee_rate->rate;
-                $params['fee'] += $fee_rate->rate;
+                $params['fee'] = (
+                        $params['tax_included_price'] +
+                        $this->calculateCourseOptionTotalPrice($request) +
+                        $request->input('adjustment_price', 0)
+                    ) * ($fee_rate->rate / 100);
             }
-
-            $params['tax_included_price'] = $params['fee'];
 
             $reservation->update($params);
 
             $reservation->reservation_options()->forceDelete();
-
             $this->reservationCourseOptionSaveOrUpdate($request, $reservation);
 
             $reservation->reservation_answers()->forceDelete();
 
             $this->reservationAnswerCreate($request, $reservation);
             
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '変更');
+
             DB::commit();
-
-            $data = [
-                'reservation' => $reservation,
-                'staff_name' => Auth::user()->name,
-                'processing' => '変更'
-                ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new ReservationOperationMail($data));
-
+            
             return redirect('reservation')->with('success', trans('messages.reservation.update_success'));
 
         } catch (\Exception $i) {
@@ -786,13 +791,26 @@ class ReservationController extends Controller
      * 受付確認メール送信
      * @param array $reservationDates
      */
-    public function sendReservationCheckMail($hospital_name, $reservation)
+    public function sendReservationCheckMail($hospital, $reservation, $customer, $processing)
     {
+        $contract_information = ContractInformation::where('hospital_id', $hospital->id)->first();
+
         $mailContext = [
-            'hospital_name' => $hospital_name,
+            'staff_name' => Auth::user()->name,
+            'processing' => $processing,
+            'hospital_name' => $hospital->name,
             'reservation' => $reservation
         ];
+
         Mail::to('dock_all@eparkdock.com')->send(new ReservationCheckMail($mailContext));
+
+        if (isset($customer->email)) {
+            Mail::to($customer->email)->send(new ReservationCheckMail($mailContext));
+        }
+
+        if (isset($contract_information)) {
+            Mail::to($contract_information->email)->send(new ReservationCheckMail($mailContext));
+        }
     }
 
 }

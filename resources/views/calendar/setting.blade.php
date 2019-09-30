@@ -149,49 +149,38 @@
                             {{ $day['date']->day }}
                           </span>
 
-                          <div class="data-box @if(($day['date']->isPast() && !$day['date']->isToday()) || (isset($day['calendar_day']) && $day['calendar_day']->reservation_frames === 0)) bg-gray @endif">
+                          <div class="data-box @if((isset($day['calendar_day']) && $day['calendar_day']->reservation_frames === 0)) bg-gray @endif">
                             <!-- holiday and reservation acceptance -->
                             @if($day['is_holiday'])
                               <span class="day-label text-red">休</span>
-                            @elseif(!($day['date']->isPast() && !$day['date']->isToday()))
+                            @else
                               <a class="is_reservation_acceptance day-label" data-origin="{{  isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">
                                 {{ isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0' ? '✕' : '◯' }}
                               </a>
-                            @else
-                              <span class="day-label">&nbsp;</span>
                             @endif
-                            <input type="hidden" name="is_reservation_acceptances[]" value="{{ isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">
-
-                            {{-- 今日以外かつ過去の日付の場合、SelectBoxを表示しない --}}
-                            @if($day['date']->isPast() && !$day['date']->isToday())
-                              {{  isset($day['calendar_day']) ? $day['calendar_day']->calendar_frame : 0}}
-                              <input type="hidden" name="reservation_frames[]" value="{{  isset($day['calendar_day']) ? $day['calendar_day']->reservation_frames : 0}}" />
-                            
-                            {{-- 今日含めた未来の日付は、SelectBoxを表示する --}}
-                            @else
-                              @php
-                                $reservation_frames = 0;
-                                if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0')) {
-                                  $reservation_frames = '';
-                                } else if (isset($day['calendar_day']) || $day['is_holiday'] == 1) {
-                                  if(isset($day['calendar_day'])) $reservation_frames = $day['calendar_day']->reservation_frames;
-                                }
-                              @endphp
-                              <select name="reservation_frames[]" @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0')) disabled @endif class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
-                                      @if($day['is_holiday']) data-holiday="true" @endif
-                                      @if(isset($day['holiday'])) data-public-holiday="true" @endif
-                                      data-origin="{{ $reservation_frames }}">
-                                <option></option>
-                                @foreach(range(0, 99) as $i)
-                                  <option @if($reservation_frames === $i) selected @endif>
-                                    {{ $i }}
-                                  </option>
-                                @endforeach
-                              </select>
-                              {{-- 受付不可の場合、受付枠数ををhidden属性にする --}}
-                              @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0'))
-                                <input type="hidden" name="reservation_frames[]" />
-                              @endif
+                            <input type="hidden" name="is_reservation_acceptances[]" value="{{ isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">                
+                            @php
+                              $reservation_frames = 0;
+                              if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0')) {
+                                $reservation_frames = '';
+                              } else if (isset($day['calendar_day']) || $day['is_holiday'] == 1) {
+                                if(isset($day['calendar_day'])) $reservation_frames = $day['calendar_day']->reservation_frames;
+                              }
+                            @endphp
+                            <select name="reservation_frames[]" @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0')) disabled @endif class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
+                                    @if($day['is_holiday']) data-holiday="true" @endif
+                                    @if(isset($day['holiday'])) data-public-holiday="true" @endif
+                                    data-origin="{{ $reservation_frames }}">
+                              <option></option>
+                              @foreach(range(0, 99) as $i)
+                                <option @if($reservation_frames === $i) selected @endif>
+                                  {{ $i }}
+                                </option>
+                              @endforeach
+                            </select>
+                            {{-- 受付不可の場合、受付枠数ををhidden属性にする --}}
+                            @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0'))
+                              <input type="hidden" name="reservation_frames[]" />
                             @endif
 
                             <!-- reservation count -->
@@ -274,6 +263,9 @@
       cursor: not-allowed;
       background-color: #eee;
       opacity: 1;
+    }
+    .bg-changed {
+      background-color: #fbfbbf;
     }
   </style>
 @stop
