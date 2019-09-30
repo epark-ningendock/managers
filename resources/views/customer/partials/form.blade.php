@@ -87,7 +87,7 @@
                            id="sex{{ $gender }}"
                            name="sex"
                            value="{{ $gender }}"
-                           {{ old('sex', (isset($customer_detail) ? $customer_detail->sex->value : Gender::Male)) == $gender ? 'checked' : '' }}
+                           {{ old('sex', (isset($customer_detail) && isset($customer_detail->sex) ? $customer_detail->sex->value : Gender::Male)) == $gender ? 'checked' : '' }}
                     />
 
                     <label for="sex{{ $gender }}" class="radio-label">{{ Gender::getDescription($gender) }}</label>
@@ -218,7 +218,6 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group py-sm-1 @if ($errors->has('recall_count')) has-error @endif">
-                    @if ($errors->has('recall_count')) <p class="help-block">{{ $errors->first('recall_count') }}</p> @endif
                     <label for="name">{{ trans('messages.recall_count') }}
                     </label>
                     <input type="text" class="form-control" name="recall_count" id="recall_count"

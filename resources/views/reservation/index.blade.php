@@ -110,14 +110,13 @@
             </div>
             <div class="checkbox ml-2">
               <input type="checkbox" id="is_completed" name="is_completed" value="3" @if(isset($is_completed)) checked @endif />
-              <label for="is_completed">完了</label>
+              <label for="is_completed">受診完了</label>
             </div>
             <div class="checkbox ml-2">
               <input type="checkbox" id="is_cancelled" name="is_cancelled" value="4" @if(isset($is_cancelled)) checked @endif/>
               <label for="is_cancelled">キャンセル</label>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -194,9 +193,13 @@
             </td> --}}
             <td>{{ $reservation->id }}</td>
             <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
-            <td>{{ $reservation->customer->name}}</td>
+            <td>
+              <a class="detail-link" href="#" data-id="{{ $reservation->customer->id }}" data-route="{{ route('customer.detail') }}">
+                  {{ $reservation->customer->name }}
+              </a>
+            </td>
             <td>{{ $reservation->course->name }}</td>
-            <td>2000円</td>
+            <td>{{ number_format($reservation->tax_included_price + $reservation->reservation_options()->get()->pluck('option_price')->sum() + $reservation->adjustment_price) }}円</td>
             <td>{{ $reservation->reservation_status->description }}</td>
             <td>{{ $reservation->created_at->format('Y/m/d') }}</td>
             <td>
@@ -208,25 +211,26 @@
               @if($reservation->reservation_status->is(ReservationStatus::Pending))
                 <button class="btn btn-success ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.accept_confirmation') }}"
-                        data-target-form="#accept-form" data-button-text="確定する">
-                  仮予約
+                        data-target-form="#accept-form" data-button-text="確定">
+                  受付確定
                 </button>
               @endif
               @if($reservation->reservation_status->is(ReservationStatus::ReceptionCompleted))
                 <button class="btn btn-primary ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.complete_confirmation') }}"
-                        data-target-form="#complete-form" data-button-text="完了する">
-                  受付確定
+                        data-target-form="#complete-form" data-button-text="完了">
+                  受診完了
                 </button>
               @endif
               @if($reservation->reservation_status->is(ReservationStatus::Completed))
-                <button class="btn btn-primary ml-3 delete-popup-btn">
+                {{-- <button class="btn btn-primary ml-3">
                   受診完了
-                </button>
+                </button> --}}
               @endif
               @if(!$reservation->reservation_status->is(ReservationStatus::Cancelled) && !$reservation->reservation_status->is(ReservationStatus::Completed))
                 <button class="btn btn-danger ml-3 delete-popup-btn" data-id="{{ $reservation->id }}"
                         data-message="{{ trans('messages.reservation.cancel_confirmation') }}"
+                        data-modal="#reservation-cancel-modal"
                         data-target-form="#cancel-form" data-button-text="キャンセルする">
                   キャンセル
                 </button>
@@ -262,6 +266,14 @@
   </style>
 @stop
 
+@includeIf('customer.partials.detail.detail-popup')
+@includeIf('customer.partials.detail.detail-popup-script')
+
+@include('customer.partials.email-history-detail')
+
+@includeIf('commons.std-modal-box')
+@includeIf('customer.partials.email-popup-script')
+
 @section('script')
   <script>
       (function ($) {
@@ -273,6 +285,39 @@
                   $('#search_form').submit();
               });
           })();
+
+          (function(){
+              $('#is_pending').change(function(){
+                if($('#is_pending').prop('checked')){
+                  $('#is_pending').val('1')
+                }
+              });
+          })();
+          
+          (function(){
+              $('#is_reception_completed').change(function(){
+                if($('#is_reception_completed').prop('checked')){
+                  $('#is_reception_completed').val('2')
+                }
+              });
+          })();
+
+          (function(){
+              $('#is_completed').change(function(){
+                if($('#is_completed').prop('checked')){
+                  $('#is_completed').val('3')
+                }
+              });
+          })();
+
+          (function(){
+              $('#is_cancelled').change(function(){
+                if($('#is_cancelled').prop('checked')){
+                  $('#is_cancelled').val('4')
+                }
+              });
+          })();
+
 
           /* ---------------------------------------------------
           // clear all input

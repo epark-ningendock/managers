@@ -79,7 +79,8 @@ class Reservation extends SoftDeleteModel
         'is_free_hp_link',
         'lock_version',
         'is_health_insurance',
-        'internal_memo'
+        'internal_memo',
+        'cancellation_reason'
     ];
 
 	protected $appends = ['tax_excluded_price'];

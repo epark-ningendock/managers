@@ -110,13 +110,15 @@
                 @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_pre_account !== Permission::None)
                   <li class="{{ Request::segment(1) === '#' ? 'active' : null }}"><a href="/#"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;事前決済管理</a></li>
                 @endif
-                {{--@if (Auth::user()->authority->value === Authority::ContractStaff)--}}
+                @if (Auth::user()->authority->value === Authority::ContractStaff)
                   <li class="{{ request()->path() === 'hospital/contract' ? 'active' : null }}"><a href="/hospital/contract"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;契約管理</a></li>
-                {{--@endif--}}
+                @endif
                 @if(Auth::user()->getTable() == "staffs")
                   <li class="{{ request()->path() === 'staff/edit-password-personal' ? 'active' : null }}"><a href="/staff/edit-password-personal"><i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;パスワードの変更</a></li>
                 @endif
+                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_invoice !== Permission::None)
                   <li class="{ ( request()->is(['billing/*', 'billing'])  ) ? 'active' : '' }}"><a href="/billing"><i class="fa fa-dollar"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
+                @endif
               </ul>
           @endif
           {{-- 医療機関スタッフの機能 --}}

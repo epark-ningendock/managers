@@ -227,21 +227,24 @@
     <div id="interview_detail_box">
         @foreach($interviews as $key => $interview)
             <div class="interview_detail_{{$loop->iteration}} interview_list">
-                <div>
+
+                <div class="form-group @if ($errors->has('interview.'.$interview->id.'.question')) has-error @endif">
+
                     {{Form::label('interview['. $interview->id .']', '質問',['class' => 'form_label'])}}
-                    {{Form::text('interview['. $interview->id .'][question]', is_null($interview) ? '' : $interview->question, ['class' => 'form-control'])}}
-                    @if ($errors->has('interview['. $key .'][question]'))
+                    {{Form::text('interview['. $interview->id .'][question]', old('interview.'.$interview->id.'.question', $interview->question), ['class' => 'form-control'])}}
+                    @if ($errors->has('interview.'.$interview->id.'.question'))
                         <div class="error_message">
-                        {{ $errors->first('interview['. $key .'][question]') }}
+                            {{ $errors->first('interview.'.$interview->id.'.question') }}
                         </div>
                     @endif
                 </div>
-                <div>
+                <div class="form-group @if ($errors->has('interview.'.$interview->id.'.answer')) has-error @endif">
                     {{Form::label('interview['. $interview->id .'][answer]', '回答',['class' => 'form_label'])}}
-                    {{Form::text('interview['. $interview->id .'][answer]', is_null($interview) ? '' : $interview->answer, ['class' => 'form-control'])}}
-                    @if ($errors->has('interview['. $interview->id .'][answer]'))
+                    {{Form::text('interview['. $interview->id .'][answer]', old('interview.'.$interview->id.'.answer', $interview->answer) , ['class' => 'form-control'])
+                     }}
+                    @if ('interview.'.$interview->id.'.answer')
                         <div class="error_message">
-                            {{ $errors->first('interview['. $interview->id .'][answer]') }}
+                            {{ $errors->first('interview.'.$interview->id.'.answer') }}
                         </div>
                     @endif
                 </div>
@@ -316,18 +319,19 @@
                     </div>
                 @endif
                     {{Form::hidden('staff_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_STAFF )}}
+                    {{Form::hidden('staff_tab_'.$i.'_category_id', $staff_tab['id'] )}}
             </div>
             <div class="col-sm-6">
                 <div class="form-group @if ($errors->has('staff_tab_'.$i.'_order2')) has-error @endif">
                 {{Form::label('staff_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
-                {{Form::text('staff_tab_'.$i.'_order2', is_null($staff_tab) ? null : $staff_tab['order2'], ['class' => 'form-control'])}}
+                {{Form::text('staff_tab_'.$i.'_order2', old('staff_tab_'.$i.'_order2',$staff_tab['order2']), ['class' => 'form-control'])}}
                 @if ($errors->has('staff_tab_'.$i.'_order2'))
                     <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_order2') }}</div>
                 @endif
                 </div>
                 <div class="form-group @if ($errors->has('staff_tab_'.$i.'_memo2')) has-error @endif">
                 {{Form::label('staff_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
-                {{Form::textarea('staff_tab_'.$i.'_memo2', is_null($staff_tab) ? '' : $staff_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
+                {{Form::textarea('staff_tab_'.$i.'_memo2', old('staff_tab_'.$i.'_memo2',$staff_tab->hospital_image->memo2), ['class' => 'form-control','rows' => "2"])}}
                 @if ($errors->has('staff_tab_'.$i.'_memo2'))
                     <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_memo2') }}</div>
                 @endif
@@ -435,11 +439,12 @@
                         </div>
                     @endif
                         {{Form::hidden('facility_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_FACILITY )}}
+                        {{Form::hidden('facility_tab_'.$i.'_category_id', $facility_tab['id'] )}}
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('facility_tab_'.$i.'_order2')) has-error @endif">
                     {{Form::label('facility_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
-                    {{Form::text('facility_tab_'.$i.'_order2', is_null($facility_tab) ? null : $facility_tab['order2'], ['class' => 'form-control'])}}
+                    {{Form::text('facility_tab_'.$i.'_order2', old('facility_tab_'.$i.'_order2',$facility_tab['order2']), ['class' => 'form-control'])}}
                     @if ($errors->has('facility_tab_'.$i.'_order2'))
                         <div class="error_message">{{ $errors->first('facility_tab_'.$i.'_order2') }}</div>
                     @endif
@@ -555,11 +560,12 @@
                         </div>
                     @endif
                     {{Form::hidden('internal_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_INTERNAL )}}
+                    {{Form::hidden('internal_tab_'.$i.'_category_id', $internal_tab['id'] )}}
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('internal_tab_'.$i.'_order2')) has-error @endif">
                     {{Form::label('internal_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
-                    {{Form::text('internal_tab_'.$i.'_order2', is_null($internal_tab) ? null : $internal_tab['order2'], ['class' => 'form-control'])}}
+                    {{Form::text('internal_tab_'.$i.'_order2', old('internal_tab_'.$i.'_order2',$internal_tab['order2']), ['class' => 'form-control'])}}
                     @if ($errors->has('internal_tab_'.$i.'_order2'))
                         <div class="error_message"> {{ $errors->first('internal_tab_'.$i.'_order2') }} </div>
                     @endif
@@ -614,7 +620,7 @@
                         </div>
                         <div class="form-group @if ($errors->has('internal_tab_'.$i.'_memo2')) has-error @endif">
                         {{Form::label('internal_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
-                        {{Form::text('internal_tab_'.$i.'_memo2', null, ['class' => 'form-control'])}}
+                        {{Form::textarea('internal_tab_'.$i.'_memo2', null, ['class' => 'form-control'])}}
                         @if ($errors->has('internal_tab_'.$i.'_memo2'))
                             <div class="error_message">{{ $errors->first('internal_tab_'.$i.'_memo2') }}</div>
                         @endif
@@ -675,11 +681,12 @@
                         </div>
                     @endif
                     {{Form::hidden('external_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_EXTERNAL )}}
+                    {{Form::hidden('external_tab_'.$i.'_category_id', $external_tab['id'] )}}
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('external_tab_'.$i.'_order2')) has-error @endif">
                     {{Form::label('external_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
-                    {{Form::text('external_tab_'.$i.'_order2', is_null($external_tab) ? null : $external_tab['order2'], ['class' => 'form-control'])}}
+                    {{Form::text('external_tab_'.$i.'_order2', old('external_tab_'.$i.'_order2',$external_tab['order2']), ['class' => 'form-control'])}}
                     @if ($errors->has('external_tab_'.$i.'_order2'))
                         <div class="error_message">{{ $errors->first('external_tab_'.$i.'_order2') }}</div>
                     @endif
@@ -789,14 +796,17 @@
                         </div>
                     @endif
                     {{Form::hidden('another_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_ANOTHER )}}
+                    {{Form::hidden('another_tab_'.$i.'_category_id', $another_tab['id'] )}}
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('another_tab_'.$i.'_order2')) has-error @endif">
                     {{Form::label('another_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
-                    {{Form::text('another_tab_'.$i.'_order2', is_null($another_tab) ? null : $another_tab['order2'], ['class' => 'form-control'])}}
+                    {{Form::text('another_tab_'.$i.'_order2', old('another_tab_'.$i.'_order2',$another_tab['order2']), ['class' => 'form-control'])}}
                     @if ($errors->has('another_tab_'.$i.'_order2'))
                         <div class="error_message">{{ $errors->first('another_tab_'.$i.'_order2') }}</div>
                     @endif
+                    </div>
+
 
                     <div class="form-group @if ($errors->has('another_tab_'.$i.'_memo2')) has-error @endif">
                     {{Form::label('another_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
@@ -884,6 +894,7 @@
                             ファイル削除
                         </a>
                     </p>
+                    {{Form::hidden('staff_'.$i.'_category_id', $staff['id'] )}}
                 </div>
             @else
                 <div class="staff_image_area">

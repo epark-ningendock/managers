@@ -103,7 +103,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2"> 0円</span>
+            <span id="total" class="ml-2">0円</span>
         </div>
 
     </div>
@@ -116,7 +116,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">{{ $reservation->payment_status->description or '-' }}</span>
+            <span class="ml-2">{{ $reservation->payment_status->description or '-' }}</span>
         </div>
 
     </div>
@@ -128,7 +128,7 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">
+            <span class="ml-2">
                 @if($reservation->settlement_price)
                     {{ number_format($reservation->settlement_price) }}
                  @else
@@ -147,7 +147,7 @@
          </div>
 
          <div class="col-md-9">
-             <span id="total" class="ml-2">
+             <span class="ml-2">
                  @if($reservation->cashpo_used_price)
                      {{ number_format($reservation->cashpo_used_price) }}
                  @else
@@ -167,8 +167,8 @@
         </div>
 
         <div class="col-md-9">
-            <span id="total" class="ml-2">
-                {{ $reservation->is_payment == '0' ? '0円' : number_format($reservation->fee).'円' }}
+            <span class="ml-2">
+                {{ $reservation->is_payment == '0' ? '0円' : number_format($reservation->tax_included_price + $reservation->reservation_options()->get()->pluck('option_price')->sum() + $reservation->adjustment_price).'円' }}
             </span>
         </div>
 
@@ -315,6 +315,7 @@
         </div>
 
     </div>
+    
     <h2 class="section-title">申込者情報</h2>
 
     <div class="row form-group no-field">
@@ -689,6 +690,13 @@
             background: #ddd;
         }
 
+        td.daybox.red-background {
+            background: #FCE4E4;
+        }
+
+        td.daybox.blue-background {
+            background: #CBE0F8;
+        }
 
         td.daybox.it-can-reserve  {
             cursor: pointer;

@@ -29,7 +29,7 @@ class CustomerFormRequest extends FormRequest
             'family_name' => 'required',
             'first_name' => 'required',
 //            'name_kana' => 'required',
-            'tel' => 'nullable|regex:/^\d{2,4}\d{2,4}\d{3,4}$/',
+            'tel' => 'nullable|regex:/^[0-9]{10,11}$/',
             'sex' => 'required|enum_value:' . Gender::class . ',false',
             'birthday' => 'nullable|date',
             'postcode' => 'nullable|regex:/^\d{3}-?\d{4}$/',
@@ -39,8 +39,8 @@ class CustomerFormRequest extends FormRequest
             'email' => 'nullable|email',
             'memo' => 'nullable|max:255',
 //            'reservation_memo' => 'required',
-            'claim_count' => 'nullable|integer',
-            'recall_count' => 'nullable|integer',
+            'claim_count' => 'nullable|regex:/^[0-9]+$/',
+            'recall_count' => 'nullable|regex:/^[0-9]+$/',
         ];
     }
 
