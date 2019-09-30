@@ -84,6 +84,22 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
           </div>
           @endforeach
           <div class="col-md-12 mt-5">
+            <div class="form-group py-sm-1 " style="margin-left: 0;">
+              <legend>フリーエリア </legend>
+              <textarea class="form-control minor-text" name="free_area" cols="30" rows="5"></textarea>
+              <p class="mt-1" style="color: #737373; font-size: 1.3rem;">※HTMLで記述することが可能です。</p>
+            </div>
+          </div>
+          <div class="col-md-12 mt-5">
+            <div class="form-group py-sm-1 " style="margin-left: 0;">
+              <legend>検索ワード </legend>
+              <textarea class="form-control minor-text" name="search_word" cols="30" rows="5"></textarea>
+              <p class="mt-1" style="color: #737373; font-size: 1.3rem;">※検索する単語をカンマ(,)区切りで入力してください。</p>
+              <p style="color: #737373; font-size: 1.3rem;">※HTMLで記述することが可能です。</p>
+            </div>
+          </div>
+        </div>
+          <div class="col-md-12 mt-5">
               <h2>手数料率</h2>
               <div class="form-group py-sm-1 " style="margin-left: 0;">
                   <div class="form-inline">
