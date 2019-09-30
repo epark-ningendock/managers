@@ -160,6 +160,11 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
           <div class="col-md-12 mt-5">
               <h2>手数料率</h2>
               <div class="form-group py-sm-1 " style="margin-left: 0;">
+                  <div class="form-group">
+                    <label for="plan_code">プラン</label>
+                    <select class="form-control" id="plan_code" name="plan_code">
+                    </select>
+                  </div>
                   <div class="form-inline">
                       <label style="font-size: 1.2em; margin: 0 12px 0 0;">通常手数料</label><button type="button" class="btn btn-primary" id="add-fee-rate-button">追加</button>
                   </div>
