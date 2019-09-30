@@ -17,14 +17,4 @@ class Prefecture extends BaseModel
     {
         return $this->belongsToMany(Rail::class);
     }
-
-    public function hospitals()
-    {
-        return $this->hasMany('App\Hospital');
-    }
-
-    public function district_codes()
-    {
-        return $this->hasMany('App\DistrictCode');
-    }
 }
