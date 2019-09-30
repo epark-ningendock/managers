@@ -33,6 +33,10 @@ class HospitalImport extends ImportAbstract
     {
         $row = $row->toArray();
 
+        if (is_null($row['pref'])) {
+            return;
+        }
+
         $model = new Hospital([
             'old_karada_dog_id' => $row['id'],
             'name' => $row['name'],
@@ -88,6 +92,7 @@ class HospitalImport extends ImportAbstract
             'pre_account_commission_rate' => $row['pre_account_commission_rate'],
             'created_at' => $row['rgst'],
             'updated_at' => $row['updt'],
+            'prefecture_id' => $row['pref'],
         ]);
 
         $model->save();
