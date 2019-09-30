@@ -73,6 +73,17 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
                                  id="{{ 'minor_id_'.$minor->id }}"
                                  {{ $minor_value == 1 ? 'checked' : '' }} value="1" />
                           <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label>
+                      @elseif($minor->is_fregist == '2')
+                          <div class="form-group mt-3">
+                            <input type="checkbox" 
+                              class="fregist-2-checkbox"
+                              id="{{ 'minor_id_'.$minor->id }}" 
+                              {{ $minor_value ? 'checked' : '' }}
+                              value="{{ $minor->id }}" />
+                            <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label> 
+                            <input type="hidden" class="fregist-2-text-dummy" name="minor_values[]" disabled value="" />
+                            <input type="text" class="fregist-2-text" name="minor_values[]" value="{{ $minor_value }}" />
+                          </div>
                       @else
                           <div class="form-group mt-3">
                               <label>{{ $minor->name }}</label>
@@ -96,6 +107,29 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
               <textarea class="form-control minor-text" name="search_word" cols="30" rows="5"></textarea>
               <p class="mt-1" style="color: #737373; font-size: 1.3rem;">※検索する単語をカンマ(,)区切りで入力してください。</p>
               <p style="color: #737373; font-size: 1.3rem;">※HTMLで記述することが可能です。</p>
+            </div>
+          </div>
+          <div class="col-md-12 mt-5">
+            <div class="form-group py-sm-1 " style="margin-left: 0;">
+              <legend>HPリンク </legend>
+              <div>
+                <input type="radio" name="hp_link" id="none"
+                {{-- {{ old('none', (isset($hospital_email_setting) ? $hospital_email_setting->none : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }} --}}
+                value="1">
+                <label for="none">無し</label>
+              </div>
+              <div>
+                <input type="radio" name="hp_link" id="pay_per_use"
+                {{-- {{ old('pay_per_use', (isset($hospital_email_setting) ? $hospital_email_setting->pay_per use: null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }} --}}
+                value="2">
+                <label for="pay_per_use">従量課金</label>
+              </div>
+              <div>
+                <input type="radio" name="hp_link" id="monthly_fixed"
+                {{-- {{ old('monthly_fixed', (isset($hospital_email_setting) ? $hospital_email_setting->monthly_fixed : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }} --}}
+                value="3">
+                <label for="monthly_fixed">月額固定</label>
+              </div>
             </div>
           </div>
         </div>
