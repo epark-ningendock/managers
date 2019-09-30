@@ -47,10 +47,10 @@
         <div class="text-center">
           @if($request->path() == 'hospital/search')
             <a class="btn btn-default" href="{{ route('hospital.index') }}">
-              検索用にクリア
+              検索条件クリア
             </a>
           @else
-            <button type="reset" class="btn btn-default">検索用にクリア</button>
+            <button type="reset" class="btn btn-default">検索条件クリア</button>
           @endif
           <button type="submit" class="btn btn-primary">
             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
