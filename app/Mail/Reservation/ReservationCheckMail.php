@@ -11,6 +11,7 @@ class ReservationCheckMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $data;
+    public $total;
 
     /**
      * Create a new message instance.
@@ -20,6 +21,12 @@ class ReservationCheckMail extends Mailable
     public function __construct($data)
     {
         $this->data = $data;
+        
+        $this->total = $data['reservation']->course->price + $data['reservation']->adjustment_price;
+
+        foreach ($data['reservation']->reservation_options as $reservation_option) {
+            $this->total += $reservation_option->option->price;
+        }
     }
 
     /**
@@ -31,7 +38,7 @@ class ReservationCheckMail extends Mailable
     {
         return $this
             ->from("unei@eparkdock.com")
-            ->subject("【EPARK人間ドック】受付情報登録のお知らせ")
+            ->subject("【EPARK人間ドック】受付情報登録・変更のお知らせ")
             ->view('reservation.email.reservation-mail');
     }
 }

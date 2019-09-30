@@ -34,10 +34,10 @@ class ReservationCreateFormRequest extends FormRequest
             'internal_memo' => 'max:255',
             'family_name' => 'required|max:32',
             'first_name' => 'required|max:32',
-            'family_name_kana' => 'required|max:32',
-            'first_name_kana' => 'required|max:32',
-            'tel' => 'required|regex:/^\d{2,4}-?\d{2,4}-?\d{3,4}$/',
-            'registration_card_number' => 'required|max:32',
+            'family_name_kana' => ['required', 'max:32', 'regex:/^[\p{Hiragana}|ー]+$/u'],
+            'first_name_kana' => ['required', 'max:32', 'regex:/^[\p{Hiragana}|ー]+$/u'],
+            'tel' => 'required|regex:/^\d{2,4}\d{2,4}\d{3,4}$/',
+            'registration_card_number' => 'nullable|max:32',
         ];
     }
 }

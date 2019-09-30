@@ -30,16 +30,6 @@ class HospitalEmailSettingController extends Controller
         
         try {
             DB::beginTransaction();
-
-            if ($request->get('in_hospital_email_reception_flg') == '1'
-                && ($request->get('in_hospital_confirmation_email_reception_flg') != '1'
-                    && $request->get('in_hospital_change_email_reception_flg') != '1'
-                && $request->get('in_hospital_cancellation_email_reception_flg') != '1')) {
-                DB::rollback();
-
-                $message = trans('validation.required', ['attribute' => trans('validation.attributes.hospital_reception_email_transmission_setting')]);
-                return redirect()->back()->withErrors(['hospital_reception_email_transmission_setting' => $message ]);
-            }
             
             $hospital_email_setting = HospitalEmailSetting::findOrFail($id);
             $inputs = request()->all();

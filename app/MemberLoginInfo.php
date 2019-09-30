@@ -7,6 +7,8 @@ use App\Filters\Filterable;
 class MemberLoginInfo extends SoftDeleteModel
 {
     use Filterable;
+  
+    protected $table = 'member_login_info';
 
     protected $fillable = [
         'epark_member_id',
@@ -20,5 +22,4 @@ class MemberLoginInfo extends SoftDeleteModel
     protected $guarded = [
         'id',
     ];
-
 }

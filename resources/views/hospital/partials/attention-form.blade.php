@@ -1,4 +1,6 @@
 @php
+use App\FeeRate;
+
 if(isset($hospital)) {
   $hospital_details = $hospital->hospital_details;
 }
@@ -10,11 +12,13 @@ $o_minor_values = collect(old('minor_values'));
 $o_fee_rate_ids = collect(old('fee_rate_ids'));
 $o_rates = collect(old('rates'));
 $o_from_dates = collect(old('from_dates'));
+$fee_rate_count = $o_fee_rate_ids->isNotEmpty() ? $o_fee_rate_ids->count() : $feeRates->count();
 
 // 事前決済手数料
 $o_pre_payment_fee_rate_ids = collect(old('pre_payment_fee_rate_ids'));
 $o_pre_payment_rates = collect(old('pre_payment_rates'));
 $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
+$pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre_payment_fee_rate_ids->count() : $prePaymentFeeRates->count();
 
 @endphp
 <div class="form-entry">
@@ -28,12 +32,12 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                       <span>{{ $hospital->pv_count }}</span> 件
                   </p>
                   <label for="pvad">PR</label>
-                  <input class="form-control w8em" type="number" id="pvad" name="pvad" value="{{ isset($hospital->pvad) ? $hospital->pvad : 0 }}">
+                  <input class="form-control w8em" type="number" id="pvad" name="pvad" value="{{ old('pvad', (isset($hospital->pvad) ? $hospital->pvad : 0)) }}">
                   @if ($errors->has('pvad')) <p class="has-error">{{ $errors->first('pvad') }}</p> @endif
                   <div class="mt-5">
-                      {{ Form::hidden('is_pickup') }}
-                      {{ Form::checkbox('is_pickup', 1, $hospital->is_pickup, array('id'=>'is_pickup')) }}
-                      <label for="is_pickup">ピックアップ</label>
+                    <input type="hidden" name="is_pickup" value="0" />
+                    <input type="checkbox" name="is_pickup" id="is_pickup" value="1" @if(old('is_pickup', $hospital->is_pickup) == 1) checked @endif/>
+                    <label for="is_pickup">ピックアップ</label>
                   </div>
               </div>
           </div>
@@ -67,7 +71,7 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                       @if($minor->is_fregist == '1')
                           <input type="checkbox" class="minor-checkbox" name="minor_values[]"
                                  id="{{ 'minor_id_'.$minor->id }}"
-                                 {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
+                                 {{ $minor_value == 1 ? 'checked' : '' }} value="1" />
                           <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label>
                       @else
                           <div class="form-group mt-3">
@@ -86,12 +90,23 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                       <label style="font-size: 1.2em; margin: 0 12px 0 0;">通常手数料</label><button type="button" class="btn btn-primary" id="add-fee-rate-button">追加</button>
                   </div>
                   <div id='fee-rate-block'>
-                      @foreach($feeRates as $feeRate)
+                      @for($i = 0; $i < $fee_rate_count; $i++)
+                        @php
+                          if($o_fee_rate_ids->isNotEmpty()) {
+                            $feeRate = new FeeRate([
+                              'id' => $o_fee_rate_ids[$i],
+                              'rate' => $o_rates[$i],
+                              'from_date' => $o_from_dates[$i]
+                            ]);
+                          } else {
+                            $feeRate = $feeRates[$i];
+                          }
+                        @endphp
                           <div class="form-group">
                               <div class="form-inline">
                                   <input type="hidden" name="fee_rate_ids[]" value="{{ $feeRate->id }}" />
                                   <label class="mt-5 ml-5">手数料率</label>
-                                  <input type="number" class="form-control" id="{{ 'rate'.$feeRate->id }}" name="rates[]" value="{{ isset($feeRate->rate) ? $feeRate->rate : 0 }}"> %
+                                  <input type="number" class="form-control" id="{{ 'rate'.$feeRate->id }}" name="rates[]" value="{{ isset($feeRate->rate) ? $feeRate->rate : '' }}"> %
                                   <label class="mt-5 ml-5">適用期間</label>
                                   <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd"
                                        data-date-autoclose="true" data-date-language="ja">
@@ -105,7 +120,7 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                                   <span class="ml-2 mr-2">~</span>
                               </div>
                           </div>
-                      @endforeach
+                      @endfor
                   </div>
                   @if ($errors->has('rate')) <p class="has-error">{{ $errors->first('rate') }}</p> @endif
                   @if ($errors->has('from_date')) <p class="has-error">{{ $errors->first('from_date') }}</p> @endif
@@ -115,12 +130,23 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                   </div>
 
                   <div id='pre-payment-block'>
-                      @foreach($prePaymentFeeRates as $prePaymentFeeRate)
+                    @for($i = 0; $i < $pre_payment_fee_rate_count; $i++)
+                      @php
+                        if($o_fee_rate_ids->isNotEmpty()) {
+                          $prePaymentFeeRate = new FeeRate([
+                            'id' => $o_pre_payment_fee_rate_ids[$i],
+                            'rate' => $o_pre_payment_rates[$i],
+                            'from_date' => $o_pre_payment_from_dates[$i]
+                          ]);
+                        } else {
+                          $prePaymentFeeRate = $prePaymentFeeRates[$i];
+                        }
+                      @endphp
                           <div class="form-group">
                               <div class="form-inline">
                                   <input type='hidden' name='pre_payment_fee_rate_ids[]' value='{{ $prePaymentFeeRate->id }}' />
                                   <label class="mt-5 ml-5">手数料率</label>
-                                  <input type="number" name="pre_payment_rates[]" value="{{ isset($prePaymentFeeRate->rate) ? $prePaymentFeeRate->rate : 0 }}"> %
+                                  <input type="number" class="form-control" name="pre_payment_rates[]" value="{{ isset($prePaymentFeeRate->rate) ? $prePaymentFeeRate->rate : '' }}"> %
                                   <label class="mt-5 ml-5">適用期間</label>
                                   <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd"
                                        data-date-autoclose="true" data-date-language="ja">
@@ -134,7 +160,7 @@ $o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
                                   <span class="ml-2 mr-2">~</span>
                               </div>
                           </div>
-                      @endforeach
+                      @endfor
                   </div>
                   @if ($errors->has('pre_payment_rate')) <p class="has-error">{{ $errors->first('pre_payment_rate') }}</p> @endif
                   @if ($errors->has('pre_payment_from_date')) <p class="has-error">{{ $errors->first('pre_payment_from_date') }}</p> @endif

@@ -55,8 +55,10 @@ class Reservation extends SoftDeleteModel
         'hospital_id',
         'course_id',
         'reservation_date',
-	    'start_time_hour',
-	    'start_time_min',
+        'start_time_hour',
+        'start_time_min',
+        'end_time_hour',
+        'end_time_min',
         'tax_included_price',
         'adjustment_price',
         'customer_id',
@@ -77,7 +79,8 @@ class Reservation extends SoftDeleteModel
         'is_free_hp_link',
         'lock_version',
         'is_health_insurance',
-        'internal_memo'
+        'internal_memo',
+        'cancellation_reason'
     ];
 
     //todo channelがどういうケースが発生するのか未定なので、とりあえず仮で
@@ -185,7 +188,7 @@ class Reservation extends SoftDeleteModel
         }
         return '-';
     }
-
+  
     /**
      * 既予約数取得
      *
@@ -225,5 +228,10 @@ class Reservation extends SoftDeleteModel
             // reservation_id 若番のもの１件
             ->first();
         return $entity;
+    }
+
+    public function taxIncludedPrice()
+    {
+        return $this->belongsTo(TaxClass::class);
     }
 }

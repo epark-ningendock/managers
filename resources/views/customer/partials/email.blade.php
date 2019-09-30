@@ -84,7 +84,7 @@
         </table>
 
         <div class="text-center mb-5">
-            <button type="submit" class="btn btn-primary btn-lg" id="btn-send">{{trans('messages.send_email') }}</button>
+            <button type="submit" class="btn btn-primary btn-lg" id="btn-send">{{trans('messages.send_mail') }}</button>
         </div>
 
     </form>
@@ -184,7 +184,7 @@
                         }
                     },
                     complete: function() {
-                        $('#btn-send').html("{{trans('messages.send_email') }}").prop('disabled', false);
+                        $('#btn-send').html("{{trans('messages.send_mail') }}").prop('disabled', false);
                     }
                 });
             });
