@@ -58,48 +58,6 @@ class Handler extends ExceptionHandler
             return redirect()->back()->with('error', ' 他のユーザーが操作しています。');
         }
 
-        if ($request->wantsJson()) {
-
-            $response['status']  = 1;
-
-            if ($exception instanceof ReservationUpdateException) {
-                $response['code_number']  = '04';
-                $response['code_detail']  = '12';
-                $response['message']  = '予約ステータス更新エラー';
-                return response()->json($response, 400);
-            }
-
-            if ($exception instanceof ReservationDateException) {
-                $response['code_number']  = '00';
-                $response['code_detail']  = '03';
-                // 受付期間外？
-                $response['message']  = '予約枠埋まり';
-                return response()->json($response, 400);
-            }
-
-            if ($exception instanceof ReservationFrameException) {
-                $response['code_number']  = '00';
-                $response['code_detail']  = '04';
-                $response['message']  = '予約枠なし';
-                return response()->json($response, 400);
-            }
-
-            if (
-                $exception instanceof JsonEncodingException || $exception instanceof MassAssignmentException
-                || $exception instanceof ModelNotFoundException || $exception instanceof RelationNotFoundException || $exception instanceof QueryException
-            ) {
-                $response['code_number']  = '00';
-                $response['code_detail']  = '02';
-                $response['message']  = 'DB接続エラー';
-                return response()->json($response, 400);
-            }
-
-            $response['code_number']  = '01';
-            $response['code_detail']  = '01';
-            $response['message']  = '内部エラー';
-            return response()->json($response, 500);
-        }
-
         return parent::render($request, $exception);
     }
 }

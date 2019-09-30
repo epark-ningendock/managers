@@ -15,8 +15,6 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\PvAggregateCommand::class,
         Commands\TemporaryReservationCheckCommand::class,
-        /** 路線情報更新バッチ */
-        Commands\EkiSpertManagerCommand::class,
     ];
 
     /**

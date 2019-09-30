@@ -2,31 +2,18 @@
 
 namespace App;
 
-use App\Filters\Filterable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ConsiderationList extends SoftDeleteModel
+class ConsiderationList extends Model
 {
-    use Filterable;
+    use SoftDeletes;
 
     protected $fillable = [
         'epark_member_id',
         'hospital_id',
         'course_id',
         'display_kbn',
-        'status'
+        'status',
     ];
-
-    protected $guarded = [
-        'id',
-    ];
-
-    public function hospital()
-    {
-        return $this->belongsTo('App\Hospital');
-    }
-
-    public function course()
-    {
-        return $this->belongsTo('App\Course');
-    }
 }
