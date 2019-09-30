@@ -1,4 +1,5 @@
 <div class="box box-primary form-box">
+    <div class="box-body staff-form">
     <input type="hidden" name="lock_version" value="{{ $hospital->lock->lock_version or ''}}" />
     @include('layouts.partials.error_pan')
     @include('layouts.partials.message_lock')
@@ -9,9 +10,9 @@
     @includeIf('hospital.partials.nav-bar')
     <div class="form-entry">
     <input type="hidden" name="lock_version" value="{{ $hospital->lock->lock_version or ''}}" />
-    <div class="form_title"><div class="number_circle">1</div> <span class="input_title">施設画像登録</span></div>
+    <h2>施設メイン登録</h2>
     <div class="form-group ">
-        {{Form::label('main', '施設メイン画像',['class' => 'form_label'])}}
+        {{Form::label('main', '施設メイン',['class' => 'form_label'])}}
         <?php $main_image_category = $hospital->hospital_categories->firstWhere('image_order', $image_order::IMAGE_GROUP_FACILITY_MAIN); ?>
 
         @if(!is_null($main_image_category) && !is_null($main_image_category->hospital_image->path))
@@ -35,39 +36,19 @@
             {{ $errors->first('main') }}
         @endif
     </div>
-
-    <div class="form-group @if($errors->has('title')) has-error @endif">
-        {{Form::label('interview_1_caption', 'タイトル',['class' => 'form_label'])}}
-        <?php $title = $hospital->hospital_categories->firstWhere('image_order', $image_order::IMAGE_GROUP_TOP); ?>
-        {{Form::text('title', is_null($title) ? '' : $title->title, ['class' => 'form-control'])}}
-        @if ($errors->has('title'))
-            <p class="help-block">
-                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('title') }}
-            </p>
-        @endif
-    </div>
-
-    <div class="form-group @if($errors->has('caption')) has-error @endif">
-        {{Form::label('caption', '本文 200字以内',['class' => 'form_label'])}}
-        {{Form::textarea('caption', is_null($title) ? '' : $title->caption, ['class' => 'form-control', 'rows' => 4])}}
-        @if ($errors->has('caption'))
-            <div class="error_message">
-                <p class="help-block">
-                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('caption') }}
-                </p>
-            </div>
-        @endif
     </div>
     </div>
 </div>
 
+
+
 <div class="box box-primary form-box">
-    <div class="form-entry">
-    <div class="form_title"><div class="number_circle">2</div> <span class="input_title">施設サブ画像</span></div>
+    <div class="form-entry box-body">
+   <h2>サブメイン</h2>
     <div class="row">
         @for ($i = 1; $i <= 4; $i++)
         <div class="col-sm-6">
-            {{Form::label('sub_'.$i, '施設サブ画像'.$i,['class' => 'form_label'])}}
+            {{Form::label('sub_'.$i, 'サブメイン'.$i,['class' => 'form_label'])}}
             <?php $sub_image_category = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_FACILITY_SUB)->where('order', $i)->first(); ?>
             @if (!is_null($sub_image_category))
                 <div class="sub_image_area">
@@ -94,72 +75,104 @@
         </div>
         @endfor
     </div>
+
     </div>
 </div>
-<div class="box box-primary form-box" id="speciality_section">
-    <div class="form-entry">
-    <div class="form_title"><div class="number_circle">3</div> <span class="input_title">こだわり</span></div>
-    <div class="row">
-        @for ($i = 1; $i <= 4; $i++)
-            <?php $image_speciality = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_SPECIALITY)->where('order', $i)->first(); ?>
-            <div class="col-sm-6" @if(is_null($image_speciality) && $i != 1) style="display: none" @endif>
-                {{Form::label('speciality_1_caption', 'こだわり'.$i,['class' => 'form_label'])}}
-                @if (!is_null($image_speciality) && !is_null($image_speciality->hospital_image->path))
-                    <div class="speciality_image_area">
-                        <img class="object-fit" src="{{$image_speciality->hospital_image->path}}" width="150">
-                        <p class="file_delete_text">
-                            <a class="btn btn-mini btn-danger" onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $image_speciality->hospital_image_id]) }}">
-                                <i class="icon-trash icon-white"></i>
-                                ファイル削除
-                            </a>
-                        </p>
-                    </div>
-                @else
-                    <div class="speciality_image_area">
-                        <img src="/img/no_image.png">
-                    </div>
-                @endif
-                <label class="file-upload btn btn-primary">
-                    ファイル選択 {{Form::file("speciality_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
-                </label>
 
-                @if ($errors->has('speciality_'.$i))
-                    <div class="error_message">
-                    {{ $errors->first('speciality_'.$i) }}
-                    </div>
-                @endif
 
-                <div class="form-group @if($errors->has('speciality_'.$i.'_title')) has-error @endif">
-                    {{Form::label('interview_1_caption', 'タイトル',['class' => 'form_label'])}}
-                    {{Form::text('speciality_'.$i.'_title', is_null($image_speciality) ? '' : $image_speciality->title, ['class' => 'form-control'])}}
-                    @if ($errors->has('speciality_'.$i.'_title'))
-                        <p class="help-block">
-                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('speciality_'.$i.'_title') }}
-                        </p>
-                    @endif
+<div class="box box-primary form-box">
+    <div class="form-entry box-body">
+        <h2>TOP</h2>
+        <div class="form-group @if($errors->has('title')) has-error @endif">
+            {{Form::label('interview_1_caption', 'タイトル',['class' => 'form_label'])}}
+            <?php $title = $hospital->hospital_categories->firstWhere('image_order', $image_order::IMAGE_GROUP_TOP); ?>
+            {{Form::text('title', is_null($title) ? '' : $title->title, ['class' => 'form-control'])}}
+            @if ($errors->has('title'))
+                <p class="help-block">
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('title') }}
+                </p>
+            @endif
+        </div>
+
+        <div class="form-group @if($errors->has('caption')) has-error @endif">
+            {{Form::label('caption', '本文 200字以内',['class' => 'form_label'])}}
+            {{Form::textarea('caption', is_null($title) ? '' : $title->caption, ['class' => 'form-control', 'rows' => 4])}}
+            @if ($errors->has('caption'))
+                <div class="error_message">
+                    <p class="help-block">
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('caption') }}
+                    </p>
                 </div>
-
-                <div class="form-group @if($errors->has('speciality_'.$i.'_caption')) has-error @endif">
-                    {{Form::label('caption', '本文',['class' => 'form_label'])}}
-                    {{Form::textarea('speciality_'.$i.'_caption', is_null($image_speciality) ? '' : $image_speciality->caption, ['class' => 'form-control', 'rows' => 4])}}
-                    @if ($errors->has('speciality_'.$i.'_caption'))
-                        <p class="help-block">
-                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('speciality_'.$i.'_caption') }}
-                        </p>
-                    @endif
-                </div>
-            </div>
-            <a href="javascript:void(0)" class="speciality_add btn btn-info" style="@if(!is_null($image_speciality) OR $i == 1)display: none; @endif z-index: {{ 100 - $i}}">
-                <i class="icon-trash icon-white"></i>
-                追加
-            </a>
-        @endfor
-    </div>
+            @endif
+        </div>
     </div>
 </div>
 <div class="box box-primary form-box">
     <div class="form-entry">
-    <div class="form_title"><div class="number_circle">4</div> <span class="input_title">地図・アクセス</span></div>
+        <div class="box-body" style="padding-bottom: 0px">
+            <h2>こだわり</h2>
+            <div class="row" style="position: relative;padding: 0 0 44px 0;">
+                @for ($i = 1; $i <= 4; $i++)
+                    <?php $image_speciality = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_SPECIALITY)->where('order', $i)->first(); ?>
+                    <div class="col-sm-6" @if(is_null($image_speciality) && $i != 1) style="display: none" @endif>
+                        {{Form::label('speciality_1_caption', 'こだわり'.$i,['class' => 'form_label'])}}
+                        @if (!is_null($image_speciality) && !is_null($image_speciality->hospital_image->path))
+                            <div class="speciality_image_area">
+                                <img class="object-fit" src="{{$image_speciality->hospital_image->path}}" width="150">
+                                <p class="file_delete_text">
+                                    <a class="btn btn-mini btn-danger" onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $image_speciality->hospital_image_id]) }}">
+                                        <i class="icon-trash icon-white"></i>
+                                        ファイル削除
+                                    </a>
+                                </p>
+                            </div>
+                        @else
+                            <div class="speciality_image_area">
+                                <img src="/img/no_image.png">
+                            </div>
+                        @endif
+                        <label class="file-upload btn btn-primary">
+                            ファイル選択 {{Form::file("speciality_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
+                        </label>
+
+                        @if ($errors->has('speciality_'.$i))
+                            <div class="error_message">
+                            {{ $errors->first('speciality_'.$i) }}
+                            </div>
+                        @endif
+
+                        <div class="form-group @if($errors->has('speciality_'.$i.'_title')) has-error @endif">
+                            {{Form::label('interview_1_caption', 'タイトル',['class' => 'form_label'])}}
+                            {{Form::text('speciality_'.$i.'_title', is_null($image_speciality) ? '' : $image_speciality->title, ['class' => 'form-control'])}}
+                            @if ($errors->has('speciality_'.$i.'_title'))
+                                <p class="help-block">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('speciality_'.$i.'_title') }}
+                                </p>
+                            @endif
+                        </div>
+
+                        <div class="form-group @if($errors->has('speciality_'.$i.'_caption')) has-error @endif">
+                            {{Form::label('caption', '本文',['class' => 'form_label'])}}
+                            {{Form::textarea('speciality_'.$i.'_caption', is_null($image_speciality) ? '' : $image_speciality->caption, ['class' => 'form-control', 'rows' => 4])}}
+                            @if ($errors->has('speciality_'.$i.'_caption'))
+                                <p class="help-block">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('speciality_'.$i.'_caption') }}
+                                </p>
+                            @endif
+                        </div>
+                    </div>
+                    <a href="javascript:void(0)" class="speciality_add btn btn-info" style="@if(!is_null($image_speciality) OR $i == 1)display: none; @endif z-index: {{ 100 - $i}}">
+                        <i class="icon-trash icon-white"></i>
+                        追加
+                    </a>
+                @endfor
+            </div>
+    </div>
+    </div>
+</div>
+<div class="box box-primary form-box">
+    <div class="form-entry box-body">
+        <h2>地図・アクセス</h2>
     <div class="form-group @if($errors->has('map_url')) has-error @endif">
         {{Form::label('map_url', '地図・アクセス',['class' => 'form_label'])}}
         <?php $map = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_MAP)->first(); ?>
@@ -174,9 +187,9 @@
 </div>
 
 <div class="box box-primary form-box" id="interview_section">
-    <div class="form-entry">
-    <div class="form_title"><div class="number_circle">5</div> <span class="input_title">インタビュー</span></div>
-    <div class="row">
+    <div class="form-entry box-body">
+        <h2>インタビュー</h2>
+    <div class="row" style="position: relative">
         <div class="col-sm-6">
             {{Form::label('interview_1', 'インタビューメイン画像',['class' => 'form_label'])}}
             @if(!is_null($interview_top) && !is_null($interview_top->hospital_image->path))
@@ -272,16 +285,16 @@
                 </div>
             </div>
     </div>
+        <a href="javascript:void(0)" id="interview_add" class="btn btn-info">
+            <i class="icon-trash icon-white"></i>
+            追加
+        </a>
     </div>
-    <a href="javascript:void(0)" id="interview_add" class="btn btn-info">
-        <i class="icon-trash icon-white"></i>
-        追加
-    </a>
 </div>
 <div class="box box-primary form-box">
-    <div class="form-entry">
+    <div class="form-entry box-body">
     <!--スタッフタブ-->
-    <div class="form_title"><div class="number_circle">6</div> <span class="input_title">写真タブ</span></div>
+        <h2>写真タブ</h2>
         <p class="tab_name">
             スタッフ
             <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
@@ -877,10 +890,10 @@
     </div>
 </div>
 
-<div class="box box-primary form-box" id="staff_section">
-    <div class="form-entry">
-    <div class="form_title"><div class="number_circle">7</div> <span class="input_title">医師・スタッフ</span></div>
-    <div class="row">
+<div class="box box-primary form-box">
+    <div class="form-entry box-body" style="position: relative">
+        <h2>医師・スタッフ</h2>
+    <div class="row" style="margin-top: 50px">
     @for ($i = 1; $i <= 10; $i++)
         <?php $staff = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_STAFF)->where('order', $i)->first();?>
         <div class="col-sm-6 staff_box" data-order="{{$i}}" @if(is_null($staff) && $i != 1) style="display: none" @endif>
