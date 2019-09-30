@@ -39,7 +39,7 @@
         <li>
             <small class="text-bold label-text">手数料合計金額（税抜価格）</small>
             <span class="value-text">
-                {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
+                {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('tax_excluded_price')->sum()) }}円
             </span>
         </li>
     </ul>

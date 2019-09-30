@@ -82,7 +82,10 @@ class Reservation extends SoftDeleteModel
         'internal_memo'
     ];
 
-    //todo channelがどういうケースが発生するのか未定なので、とりあえず仮で
+	protected $appends = ['tax_excluded_price'];
+
+
+	//todo channelがどういうケースが発生するのか未定なので、とりあえず仮で
     public static function getChannel($channel)
     {
         if (array_key_exists($channel, self::$channel)) {
@@ -192,6 +195,11 @@ class Reservation extends SoftDeleteModel
     public function taxIncludedPrice()
     {
         return $this->belongsTo(TaxClass::class);
+    }
+
+
+	public function getTaxExcludedPriceAttribute() {
+		return ( ! $this->fee ) ? 0 : $this->fee / ($this->tax_rate/100+1);
     }
 
 }

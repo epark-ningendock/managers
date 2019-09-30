@@ -81,8 +81,8 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         $reservation->course->name ?? '',
                         isset($reservation->reservation_options) ? '有' : '',
                         number_format($the_amount),
-                        $the_amount / $reservation->tax_rate, //need to verify calculation1
-                        number_format($reservation->fee),
+                        number_format($the_amount / $reservation->tax_rate), //need to verify calculation1
+                        number_format($reservation->tax_excluded_price),
                         $billing->contractPlan->plan_name ?? '',
                         (isset($reservation->site_code) && ( $reservation->site_code == 'HP') ) ? 'HPリンク' : '',
                         $reservation->fee_rate . '%',

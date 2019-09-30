@@ -81,7 +81,6 @@ class BillingController extends Controller {
 
 		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(10);
 
-
 		return view( 'billing.index', [
 			'billings'        => $billings,
 			'startedDate'     => $dateFilter['startedDate'],

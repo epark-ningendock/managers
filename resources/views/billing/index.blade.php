@@ -126,7 +126,7 @@
                         {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee )}}円
                     </td>
                     <td>
-                        {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
+                        {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('tax_excluded_price')->sum()) }}円
                     </td>
                     <td>
                         {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate }}%
