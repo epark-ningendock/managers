@@ -7,6 +7,7 @@
  */
 
 use \App\Enums\Authority;
+use App\Enums\BillingStatus;
 use \App\Enums\CourseImageType;
 use App\Enums\HospitalEnums;
 use App\Enums\StaffStatus;
@@ -63,8 +64,8 @@ return [
 
     ReservationStatus::class => [
         ReservationStatus::Pending => '仮受付',
-        ReservationStatus::ReceptionCompleted => '受付完了',
-        ReservationStatus::Completed => '完了',
+        ReservationStatus::ReceptionCompleted => '受付確定',
+        ReservationStatus::Completed => '受診完了',
         ReservationStatus::Cancelled => 'キャンセル'
     ],
 
@@ -92,5 +93,12 @@ return [
         CourseImageType::Main => '検査コースメイン',
         CourseImageType::Pc => '受診の流れメイン（PC）',
         CourseImageType::Sp => '受診の流れメイン（SP）',
+    ],
+
+    BillingStatus::class => [
+        BillingStatus::Unconfirmed => '未確認',
+        BillingStatus::Checking => '確認中',
+        BillingStatus::Confirmed => '確認済',
+        BillingStatus::Confirm => '確定',
     ]
 ];

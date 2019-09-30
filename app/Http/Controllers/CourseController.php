@@ -22,9 +22,14 @@ use App\TaxClass;
 use App\Calendar;
 use Mockery\Exception;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Course\CourseSettingNotificationMail;
+use Illuminate\Support\Facades\Auth;
+use App\Enums\Permission;
 
 class CourseController extends Controller
 {
+    const EPARK_MAIL_ADDRESS = "dock_all@eparkdock.com";
     /**
      * Display a listing of the course.
      * @return \Illuminate\Contracts\View\Factory\Illuminate\View\View
@@ -56,6 +61,10 @@ class CourseController extends Controller
         $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
             ->whereDate('life_time_to', '>=', $today)->get()->first();
 
+        $is_presettlement = $hospital->is_pre_account == '1' &&
+            (Auth::user()->staff_auth->is_pre_account == Permission::Edit
+                || Auth::user()->staff_auth->is_pre_account == Permission::Upload);
+
         return view('course.create')
             ->with('calendars', $calendars)
             ->with('tax_class', $tax_class)
@@ -65,7 +74,8 @@ class CourseController extends Controller
             ->with('disp_date_start', $disp_date_start)
             ->with('disp_date_end', $disp_date_end)
             ->with('hospital', $hospital)
-            ->with('images', $images);
+            ->with('images', $images)
+            ->with('is_presettlement', $is_presettlement);
     }
 
     /**
@@ -88,7 +98,14 @@ class CourseController extends Controller
     public function store(CourseFormRequest $request)
     {
         try {
-            $this->saveCourse($request, null);
+            $course = $this->saveCourse($request, null);
+            $data = [
+                'course' => $course,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
+                'processing' => '登録'
+            ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CourseSettingNotificationMail($data));
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.course')]));
             return redirect('course');
         } catch (Exception $e) {
@@ -130,6 +147,9 @@ class CourseController extends Controller
         $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
             ->whereDate('life_time_to', '>=', $today)->get()->first();
 
+        $is_presettlement = $hospital->is_pre_account == '1' &&
+            (Auth::user()->staff_auth->is_pre_account == Permission::Edit
+                || Auth::user()->staff_auth->is_pre_account == Permission::Upload);
 
         return view('course.edit')
             ->with('calendars', $calendars)
@@ -141,7 +161,8 @@ class CourseController extends Controller
             ->with('disp_date_start', $disp_date_start)
             ->with('disp_date_end', $disp_date_end)
             ->with('hospital', $hospital)
-            ->with('course', $course);
+            ->with('course', $course)
+            ->with('is_presettlement', $is_presettlement);
     }
 
     protected function saveCourse(CourseFormRequest $request, $course_param)
@@ -149,6 +170,7 @@ class CourseController extends Controller
         try {
             DB::beginTransaction();
 
+            $hospital = Hospital::findOrFail(session()->get('hospital_id'));
             //Course
             $course_data = $request->only([
                 'hospital_id',
@@ -172,7 +194,9 @@ class CourseController extends Controller
                 'lock_version',
                 'course_display_start',
                 'course_display_end',
-                'is_pre_account'
+                'is_pre_account',
+                'reception_acceptance_day_end',
+                'auto_calc_application'
             ]);
             $reception_start_day = $request->input('reception_start_day');
             $reception_start_month = $request->input('reception_start_month');
@@ -193,6 +217,15 @@ class CourseController extends Controller
             }
             $course->fill($course_data);
             $course->hospital_id = session()->get('hospital_id');
+            if ($course->auto_calc_application == '1') {
+                $course_price = $course->is_price == '1' ? $course->price : 0;
+                $course->pre_account_price =  $course_price * ($hospital->pre_account_discount_rate/100);
+            }
+
+            // to clear existing value in edit case
+            if($course->is_pre_account == '0') {
+                $course->pre_account_price = null;
+            }
             //force to update updated_at. otherwise version will not be updated
             $course->touch();
             $course->save();
@@ -297,19 +330,18 @@ class CourseController extends Controller
                 $course_question->question_number = $i + 1;
                 $course_question->course_id = $course->id;
                 $course_question->is_question = $is_questions[$i];
-                if ($is_questions[$i] == '1') {
-                    $course_question->question_title = $question_titles[$i];
-                    $course_question->answer01 = $answer01s[$i];
-                    $course_question->answer02 = $answer02s[$i];
-                    $course_question->answer03 = $answer03s[$i];
-                    $course_question->answer04 = $answer04s[$i];
-                    $course_question->answer05 = $answer05s[$i];
-                    $course_question->answer06 = $answer06s[$i];
-                    $course_question->answer07 = $answer07s[$i];
-                    $course_question->answer08 = $answer08s[$i];
-                    $course_question->answer09 = $answer09s[$i];
-                    $course_question->answer10 = $answer10s[$i];
-                }
+                // 利用しないにチェックを入れていても保存したい
+                $course_question->question_title = $question_titles[$i];
+                $course_question->answer01 = $answer01s[$i];
+                $course_question->answer02 = $answer02s[$i];
+                $course_question->answer03 = $answer03s[$i];
+                $course_question->answer04 = $answer04s[$i];
+                $course_question->answer05 = $answer05s[$i];
+                $course_question->answer06 = $answer06s[$i];
+                $course_question->answer07 = $answer07s[$i];
+                $course_question->answer08 = $answer08s[$i];
+                $course_question->answer09 = $answer09s[$i];
+                $course_question->answer10 = $answer10s[$i];
                 $course_question->save();
             }
 
@@ -318,6 +350,7 @@ class CourseController extends Controller
             DB::rollback();
             throw $e;
         }
+        return $course;
     }
 
     private function saveCourseImage(CourseFormRequest $request, String $target_image, String $target_type, int $course_id)
@@ -351,7 +384,19 @@ class CourseController extends Controller
     public function update(CourseFormRequest $request, Course $course)
     {
         try {
-            $this->saveCourse($request, $course);
+            $request->merge([
+                'is_price' => (integer)$request->has('is_price'),
+                'is_price_memo' => (integer)$request->has('is_price_memo'),
+            ]);
+            $course = $this->saveCourse($request, $course);
+            $data = [
+                'course' => $course,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
+                'processing' => '更新'
+            ];
+            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CourseSettingNotificationMail($data));
+
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.course')]));
             return redirect('course');
         }  catch(StaleModelLockingException $e) {
@@ -377,6 +422,14 @@ class CourseController extends Controller
         $course->course_questions()->delete();
         $course->course_images()->delete();
         $course->delete();
+        $data = [
+            'course' => $course,
+            'staff_name' => Auth::user()->name,
+            'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
+            'processing' => '削除'
+        ];
+        Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CourseSettingNotificationMail($data));
+
         $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.course')]));
         return redirect()->back();
     }

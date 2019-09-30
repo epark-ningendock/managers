@@ -53,7 +53,7 @@
                         <td>{{ $option->id }}</td>
                         <td>{{ $option->name }}</td>
                         <td>{{ $option->confirm }}</td>
-                        <td>{{ $option->price }}</td>
+                        <td>{{ number_format($option->price) }}</td>
                         <td>
                             <a href="{{ route('option.edit', $option->id) }}"
                                class="btn btn-primary">

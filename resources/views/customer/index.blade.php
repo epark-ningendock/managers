@@ -20,21 +20,17 @@
 @stop
 
 @section('search')
-
-
-    @includeIf('customer.partials.action-bar')
     @includeIf('customer.partials.listing-search')
-
-
 @stop
 
 
 @section('table')
     <div class="table-responsive">
         @include('layouts.partials.pagination-label', ['paginator' => $customers])
-        <table id="example2" class="table table-bordered table-hover table-striped mb-5">
+        <table id="example2" class="table no-border table-hover table-striped mb-5">
             <thead>
             <tr>
+                <th>顧客ID</th>
                 <th>
                     <a href="{{ route('customer.index', ['name_sorting' => columnSorting('name_sorting')]) }}">
                         {{ trans('messages.name') }}
@@ -46,22 +42,19 @@
                     </a>
                 </th>
                 <th>{{ trans('messages.phone_number') }}</th>
-                {{--<th>--}}
-                    {{--<a href="{{ route('customer.index', ['email_sorting' => columnSorting('email_sorting')]) }}">--}}
-                        {{--{{ trans('messages.email') }}--}}
-                    {{--</a>--}}
-                {{--</th>--}}
+                <th>{{ trans('messages.birthday') }}</th>
                 <th>{{ trans('messages.gender') }}</th>
-                <th>{{ trans('messages.edit') }}</th>
-                <th>{{ trans('messages.delete') }}</th>
+                <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
-
+            @includeIf('customer.partials.action-bar')
             @if ( isset($customers) && count($customers) > 0 )
                 @foreach ($customers as $customer)
 
                     <tr class="customer-{{ $customer->id }}">
+                        <td>{{ $customer->id }}</td>
                         <td>
                             <a class="detail-link" href="#" data-id="{{ $customer->id }}" data-route="{{ route('customer.detail') }}">
                                 {{ $customer->name }}
@@ -69,20 +62,14 @@
                         </td>
                         <td>{{ $customer->registration_card_number }}</td>
                         <td>{{ $customer->tel }}</td>
-                        {{--<td>--}}
-                            {{--<a href="#" class="send-email"  data-id="{{ $customer->id }}" data-route="{{ route('customer.show.email.form', ['customer_id' => $customer->id]) }}">--}}
-                                {{--{{ $customer->email }}--}}
-                            {{--</a>--}}
-                        {{--</td>--}}
-                        <td>{{ $customer->sex->description }}</td>
+                        <td>{{ $customer->birthday }}</td>
+                        <td>{{ $customer->sex->description or '-' }}</td>
                         <td>
                             <a class="btn btn-primary"
                                href="{{ route('customer.edit', $customer->id) }}">
-                               <i class="fa fa-edit text-bold"> 編集</i>
+                                <i class="fa fa-edit"> 編集</i>
                             </a>
-                        </td>
-                        <td>
-                            <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $customer->id }}">
+                            <button class="btn btn-primary delete-btn delete-popup-btn" data-id="{{ $customer->id }}">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </td>

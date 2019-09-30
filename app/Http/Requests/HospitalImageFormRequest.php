@@ -41,7 +41,7 @@ class HospitalImageFormRequest extends FormRequest
             "staff_tab_{$i}" => 'file|image|max:4000',
 
             "staff_tab_{$i}_order2" => [
-                "required_with:staff_tab_{$i},staff_tab_{$i}_memo2",
+                "required_with:staff_tab_{$i}_category_id,staff_tab_{$i}_memo2,staff_tab_{$i}",
                 'nullable',
                 'numeric',
                 'max:99',
@@ -50,7 +50,8 @@ class HospitalImageFormRequest extends FormRequest
                     ->ignore($id)
                     ->where('hospital_id', $this->hospital)
                     ->where('image_order', ImageOrder::IMAGE_GROUP_TAB)
-                    ->where('file_location_no', HospitalCategory::TAB_CATEGORY_STAFF),
+                    ->where('file_location_no', HospitalCategory::TAB_CATEGORY_STAFF)
+                    ->whereNull('deleted_at')
             ],
             "staff_tab_{$i}_memo2" => 'nullable|max:200',
             "staff_tab_{$i}_location" => 'nullable',
@@ -63,7 +64,7 @@ class HospitalImageFormRequest extends FormRequest
             $tab_facility_valid += [
                 "facility_tab_{$i}" => 'file|image|max:4000',
                 "facility_tab_{$i}_order2" => [
-                    "required_with:facility_tab_{$i},facility_tab_{$i}_memo2",
+                    "required_with:facility_tab_{$i}_category_id,facility_tab_{$i}_memo2,facility_tab_{$i}",
                     'nullable',
                     'numeric',
                     'max:99',
@@ -72,7 +73,8 @@ class HospitalImageFormRequest extends FormRequest
                         ->ignore($id)
                         ->where('hospital_id', $this->hospital)
                         ->where('image_order', ImageOrder::IMAGE_GROUP_TAB)
-                        ->where('file_location_no', HospitalCategory::TAB_CATEGORY_FACILITY),
+                        ->where('file_location_no', HospitalCategory::TAB_CATEGORY_FACILITY)
+                        ->whereNull('deleted_at')
                 ],
                 "facility_tab_{$i}_memo2" => 'nullable|max:200',
                 "facility_tab_{$i}_location" => 'nullable',
@@ -85,7 +87,7 @@ class HospitalImageFormRequest extends FormRequest
             $tab_internal_valid += [
                 "internal_tab_{$i}" => 'file|image|max:4000',
                 "internal_tab_{$i}_order2" => [
-                    "required_with:internal_tab_{$i},internal_tab_{$i}_memo2",
+                    "required_with:internal_tab_{$i}_category_id,internal_tab_{$i}_memo2,internal_tab_{$i}",
                     'nullable',
                     'numeric',
                     'max:99',
@@ -94,7 +96,8 @@ class HospitalImageFormRequest extends FormRequest
                         ->ignore($id)
                         ->where('hospital_id', $this->hospital)
                         ->where('image_order', ImageOrder::IMAGE_GROUP_TAB)
-                        ->where('file_location_no', HospitalCategory::TAB_CATEGORY_INTERNAL),
+                        ->where('file_location_no', HospitalCategory::TAB_CATEGORY_INTERNAL)
+                        ->whereNull('deleted_at'),
                 ],
                 "internal_tab_{$i}_memo2" => 'nullable|max:200',
                 "internal_tab_{$i}_location" => 'nullable',
@@ -107,7 +110,7 @@ class HospitalImageFormRequest extends FormRequest
             $tab_external_valid += [
                 "external_tab_{$i}" => 'file|image|max:4000',
                 "external_tab_{$i}_order2" => [
-                    "required_with:external_tab_{$i},external_tab_{$i}_memo2",
+                    "required_with:external_tab_{$i}_category_id,external_tab_{$i}_memo2,external_tab_{$i}",
                     'nullable',
                     'numeric',
                     'max:99',
@@ -116,7 +119,8 @@ class HospitalImageFormRequest extends FormRequest
                         ->ignore($id)
                         ->where('hospital_id', $this->hospital)
                         ->where('image_order', ImageOrder::IMAGE_GROUP_TAB)
-                        ->where('file_location_no', HospitalCategory::TAB_CATEGORY_EXTERNAL),
+                        ->where('file_location_no', HospitalCategory::TAB_CATEGORY_EXTERNAL)
+                        ->whereNull('deleted_at'),
                 ],
                 "external_tab_{$i}_memo2" => 'nullable|max:200',
                 "external_tab_{$i}_location" => 'nullable',
@@ -129,7 +133,7 @@ class HospitalImageFormRequest extends FormRequest
             $tab_another_valid += [
                 "another_tab_{$i}" => 'file|image|max:4000',
                 "another_tab_{$i}_order2" => [
-                    "required_with:another_tab_{$i},another_tab_{$i}_memo2",
+                    "required_with:another_tab_{$i}_category_id,another_tab_{$i}_memo2,another_tab_{$i}",
                     'nullable',
                     'numeric',
                     'max:99',
@@ -138,7 +142,8 @@ class HospitalImageFormRequest extends FormRequest
                         ->ignore($id)
                         ->where('hospital_id', $this->hospital)
                         ->where('image_order', ImageOrder::IMAGE_GROUP_TAB)
-                        ->where('file_location_no', HospitalCategory::TAB_CATEGORY_ANOTHER),
+                        ->where('file_location_no', HospitalCategory::TAB_CATEGORY_ANOTHER)
+                        ->whereNull('deleted_at'),
                 ],
                 "another_tab_{$i}_memo2" => 'nullable|max:200',
                 "another_tab_{$i}_location" => 'nullable',
@@ -254,8 +259,8 @@ class HospitalImageFormRequest extends FormRequest
             'interview_1_title' => 'nullable|max:100',
             'interview_1_caption' => 'nullable|max:5000',
 
-            'interview.*.question' => 'max:5000',
-            'interview.*.answer' => 'max:5000',
+            'interview.*.question' => 'required|max:5000',
+            'interview.*.answer' => 'required|max:5000',
 
             'interview_new.*.question' => 'max:5000',
             'interview_new.*.answer' => 'max:5000',

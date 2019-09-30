@@ -69,6 +69,9 @@ class Hospital extends Model
         'created_at',
         'updated_at',
         'lock_version',
+        'biography',
+        'representative',
+
     ];
 
     /**
@@ -259,4 +262,10 @@ class Hospital extends Model
 
         return $query;
     }
+  
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
+
 }

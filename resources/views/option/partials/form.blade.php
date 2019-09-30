@@ -29,13 +29,13 @@
             <span class="input-side-text">円（税込）</span>
             @if ($errors->has('price')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('price') }}</p> @endif
         </div>
-        <div class="form-group @if ($errors->has('tax_class_id')) has-error @endif">
+        <div class="form-group @if ($errors->has('tax_class_id')) has-error @endif" style="display: none">
             <label for="tax_class_id">{{ trans('messages.tax_classification') }}<span class="form_required">必須</span></label>
             @if(isset($tax_classes))
                 <select name="tax_class_id" id="tax_class_id" class="w16em form-control">
                     @foreach ($tax_classes as $tax_class)
                         <option
-                                @if ( (old('tax_class_id') == $tax_class->id) ||  isset($option->tax_class_id) && ($option->tax_class_id ==$tax_class->id) )
+                                @if ( (old('tax_class_id') == $tax_class->id) ||  isset($option->tax_class_id) && ($option->tax_class_id == $tax_class->id) )
                                 selected="selected"
                                 @endif
                                 value="{{ $tax_class->id }}"> {{ $tax_class->name }}</option>

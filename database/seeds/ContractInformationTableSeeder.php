@@ -16,6 +16,7 @@ class ContractInformationTableSeeder extends Seeder
         $hospitals = Hospital::all();
         foreach ($hospitals as $hospital) {
             factory(ContractInformation::class)->create([
+                'hospital_id' => $hospital->id
             ]);
         }
     }

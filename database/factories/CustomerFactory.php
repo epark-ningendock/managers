@@ -22,5 +22,6 @@ $factory->define(App\Customer::class, function (Faker $faker) {
         'memo' => '',
         'claim_count' => $faker->numberBetween(0, 10),
         'recall_count' => $faker->numberBetween(1000, 4000),
+	    'hospital_id' => random_int(1, 50),
     ];
 });
