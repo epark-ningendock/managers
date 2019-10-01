@@ -19,10 +19,10 @@ use App\Enums\TerminalType;
 
 return [
     Authority::class => [
-        Authority::Admin => 'System Administrator',
-        Authority::Member => 'Member',
-        Authority::ExternalStaff => 'External Staff',
-        Authority::ContractStaff => 'Contract Staff'
+        Authority::ADMIN => 'System Administrator',
+        Authority::MEMBER => 'Member',
+        Authority::EXTERNAL_STAFF => 'External Staff',
+        Authority::CONTRACT_STAFF => 'Contract Staff'
     ],
 
     StaffStatus::class => [

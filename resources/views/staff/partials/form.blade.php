@@ -98,31 +98,31 @@
     <fieldset class="form-group mt-3">
       <legend class="mt-3">スタッフ権限</legend>
       <div class="radio mt-0">
-        @if (Auth::user()->authority->value === Authority::Admin)
+        @if (Auth::user()->authority->value === Authority::ADMIN)
           <div class="radio">
-            <input  value="{{ Authority::Admin }}" id="authority_admin" name="authority" type="radio" checked
+            <input  value="{{ Authority::ADMIN }}" id="authority_admin" name="authority" type="radio" checked
               class="permission-check"
-              {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::Admin ? 'checked' : '' }}
+              {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::ADMIN ? 'checked' : '' }}
             >
-            <label for="authority_admin" class="radio-label">{{ Authority::Admin()->description }}</label>
+            <label for="authority_admin" class="radio-label">{{ Authority::ADMIN()->description }}</label>
           </div>
         @endif
         <div class="radio">
-          <input type="radio" name="authority" id="authority_member" value="{{ Authority::Member }}"
-                  {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::Member ? 'checked' : '' }}
+          <input type="radio" name="authority" id="authority_member" value="{{ Authority::MEMBER }}"
+                  {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::MEMBER ? 'checked' : '' }}
                   class="permission-check">
-          <label for="authority_member" class="radio-label">{{ Authority::Member()->description }}</label>
+          <label for="authority_member" class="radio-label">{{ Authority::MEMBER()->description }}</label>
         </div>
         <div class="radio">
-          <input type="radio" name="authority" id="authority_external_staff" value="{{ Authority::ExternalStaff }}"
-                  {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::ExternalStaff ? 'checked' : '' }}
+          <input type="radio" name="authority" id="authority_external_staff" value="{{ Authority::EXTERNAL_STAFF }}"
+                  {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::EXTERNAL_STAFF ? 'checked' : '' }}
                   class="permission-check">
-          <label for="authority_external_staff" class="radio-label">{{ Authority::ExternalStaff()->description }}</label>
+          <label for="authority_external_staff" class="radio-label">{{ Authority::EXTERNAL_STAFF()->description }}</label>
         </div>
         <div class="radio">
-          <input type="radio" id="authority_contract_staff" name="authority" value="{{ Authority::ContractStaff }}" class="permission-check"
-              {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::ContractStaff ? 'checked' : '' }}>
-          <label for="authority_contract_staff" class="radio-label">{{ Authority::ContractStaff()->description }}</label>
+          <input type="radio" id="authority_contract_staff" name="authority" value="{{ Authority::CONTRACT_STAFF }}" class="permission-check"
+              {{ old('authority', (isset($staff) ? $staff->authority->value : -1)) == Authority::CONTRACT_STAFF ? 'checked' : '' }}>
+          <label for="authority_contract_staff" class="radio-label">{{ Authority::CONTRACT_STAFF()->description }}</label>
         </div>
       @if ($errors->has('authority')) <p class="help-block has-error">{{ $errors->first('authority') }}</p> @endif
     </fieldset>

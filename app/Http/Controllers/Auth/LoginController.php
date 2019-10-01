@@ -75,7 +75,7 @@ class LoginController extends Controller
         $is_staff = self::is_staff_login($data['login_id'], $data['password']);
         if ($is_staff) {
             // スタッフの権限が契約管理者だった場合、契約管理に遷移する
-            if (Auth::user()->authority->value === Authority::ContractStaff) {
+            if (Auth::user()->authority->value === Authority::CONTRACT_STAFF) {
                 if (!Auth::user()->first_login_at) {
                     return redirect($this->staff_first_login_redirectTo);
                 }

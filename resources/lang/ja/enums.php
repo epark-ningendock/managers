@@ -22,10 +22,10 @@ use App\Enums\TerminalType;
 
 return [
     Authority::class => [
-        Authority::Admin => 'システム管理者',
-        Authority::Member => 'メンバー',
-        Authority::ExternalStaff => '外部スタッフ',
-        Authority::ContractStaff => '契約管理者'
+        Authority::ADMIN => 'システム管理者',
+        Authority::MEMBER => 'メンバー',
+        Authority::EXTERNAL_STAFF => '外部スタッフ',
+        Authority::CONTRACT_STAFF => '契約管理者'
     ],
 
     StaffStatus::class => [
