@@ -130,6 +130,12 @@ return [
     |
     */
     'custom' => [
+        'family_name_kana' => [
+            'regex' => 'お名前 かな (せい)は、ひらがなのみでご入力ください。'
+        ],
+        'first_name_kana' => [
+            'regex' => 'お名前 かな (めい)は、ひらがなのみでご入力ください。'
+        ],
         'login_id' => [
             'between' => 'ログインIDは、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。',
             'regex' => 'ログインIDは、8~50文字以内の英数記号（.-_@のみ利用可能）でご入力ください。'
@@ -138,6 +144,9 @@ return [
             'between' => 'パスワードは、8~20文字以内の半角英数字でご入力ください。',
             'alpha_num' => 'パスワードは、8~20文字以内の半角英数字でご入力ください。',
             'different' => '新しいパスワードと現在のパスワードは、異なるものを指定してください。'
+        ],
+        'billing_fax_number' => [
+            'regex' => 'fax番号は、7~14文字以内,半角数字,記号（-のみ利用可能）でご入力ください。'
         ],
         'email' => [
             'email' => '正しいメールアドレスの書式でご入力ください。'
@@ -200,9 +209,9 @@ return [
         'is_fregist' => '登録区分',
         'max_length' => 'テキスト長',
         'address' => '住所',
-        'application_date' => '出願日',
-        'billing_start_date' => '請求開始日',
-        'cancellation_date' => '退職日',
+        'application_date' => '新規申込日',
+        'billing_start_date' => '従量課金開始日',
+        'cancellation_date' => '解約予定日',
         'postcode' => '郵便番号',
         'tel' => '電話番号',
         'fax' => 'FAX番号',
@@ -229,9 +238,10 @@ return [
         'confirm' => 'オプションの説明',
         'tax_classification' => '税区分',
         'calendar_name' => 'カレンダー名',
-        'is_calendar_display' => 'カレンダー受付可否',
+        'is_calendar_display' => 'カレンダー表示',
         'title' => '件名',
         'text' => '本文',
+        'contents' => '本文',
         'hospital_id' => '医療機関ID',
         // 受付メール設定系
         'in_hospital_email_reception_flg' => '院内受付メール受信フラグ',
@@ -253,10 +263,69 @@ return [
         'completed_start_date' => '受診開始日',
         'completed_end_date' => '受診終了日',
         'customer_name' => '受診者名',
+        //Reservation
+        'regular_price' => 'コース料金',
+        'course_id' => '検査コース',
+        'reservation_date' => '予約日',
+        'course_options' => 'オプション',
+        'adjustment_price' => '調整額',
+        'reservation_memo' => '受付・予約メモ',
+        'internal_memo' => '医療機関備考',
+        'registration_card_number' => '診察券番号',
+        'family_name_kana' => 'お名前 かな (せい)',
+        'first_name_kana' => 'お名前 かな (めい)',
+        'family_name' => 'お名前 (姓)',
+        'first_name' => 'お名前 (名)',
         'pvad' => 'PV数',
+        'customer_id' => '顧客',
         'birthday' => '生年月日',
         'memo' => '顧客メモ',
         'prefecture_id' => '都道府県',
-        'hospital_reception_email_transmission_setting' => '院内受付メール送信設定'
+        'property_no' => '物件番号',
+        'code' => '顧客番号',
+        'contractor_name_kana' => '顧客名（フリガナ）',
+        'representative_name_kana' => '代表者名（フリガナ）',
+        'representative_name' => '代表者名',
+        'service_start_date' => 'サービス開始日',
+        'service_end_date' => 'サービス終了日',
+        'hospital_name' => '屋号',
+        'billing_email_flg' => '請求メールの設定',
+        'billing_email1' => '請求メール受信アドレス1',
+        'billing_email2' => '請求メール受信アドレス2',
+        'billing_email3' => '請求メール受信アドレス3',
+        'billing_fax_number' => '請求メール受信fax番号',
+        'paycall' => 'ペイパーコール',
+        'kana' => '仮名',
+        'rate' => '手数料率',
+        'from_date' => '適用期間',
+        'pre_payment_rate' => '手数料率',
+        'pre_payment_from_date' => '適用期間',
+        'claim_count' => 'クレーム数',
+        'recall_count' => 'リコール数',
+        'search_word' => '検索ワード',
+        'free_area' => 'フリーエリア',
+        // Contract information
+        '*.property_no' => '物件番号',
+        '*.code' => '顧客番号',
+        '*.contractor_name_kana' => '顧客名（フリガナ）',
+        '*.contractor_name' => '契約者名',
+        '*.representative_name_kana' => '代表者名（フリガナ）',
+        '*.representative_name' => '代表者名',
+        '*.address' => '住所',
+        '*.tel' => '電話番号',
+        '*.fax' => 'FAX番号',
+        '*.email' => 'メールアドレス',
+        '*.application_date' => '新規申込日',
+        '*.cancellation_date' => '解約予定日',
+        '*.billing_start_date' => '従量課金開始日',
+        '*.plan_code' => 'プランコード',
+        '*.service_start_date' => 'サービス開始日',
+        '*.service_end_date' => 'サービス終了日',
+        '*.hospital_name' => '屋号',
+        '*.postcode' => '郵便番号',
+        '*.state' => '住所都道府県',
+        '*.county' =>  '住所市区郡',
+        '*.town' => '住所町村字番地',
+        '*.building' => '住所建物名'
     ],
 ];

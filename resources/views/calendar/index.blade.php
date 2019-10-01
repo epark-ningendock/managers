@@ -7,68 +7,80 @@
             ];
 @endphp
 
-@extends('layouts.list', $params)
+@extends('layouts.calendar', $params)
 
 <!-- ページの見出しを入力 -->
 @section('content_header')
-  <h1>    
+  <h1>
     <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
     -
-    <i class="fa fa-calendar"> カレンダー管理</i>
+    <span>カレンダー管理</span>
   </h1>
 @stop
 
 <!-- search section -->
 @section('search')
-  <h4>カレンダーの登録</h4>
-  <div class="mb-4">下記のボタンをクリックすると新しいカレンダーを登録することができます。</div>
-  <a class="btn btn-success" href="{{ route('calendar.create') }}">カレンダーの新規登録</a>
-  <a class="btn btn-primary ml-2" href="{{ route('calendar.holiday') }}">休日設定</a>
+  <div class="row" id="calendar_header">
+    <div class="col-xs-12">
+      <div class="box box-primary">
+        <div class="box-header">
+          <h2 class="box-title">
+            カレンダーの登録
+          </h2>
+        </div>
+        <div class="box-body">
+          <p class="mb-4">下記のボタンをクリックすると新しいカレンダーを登録することができます。</p>
+          <a class="btn btn-success" href="{{ route('calendar.create') }}">カレンダーの新規登録</a>
+          <a class="btn btn-primary ml-2" href="{{ route('calendar.holiday') }}">休日設定</a>
+        </div>
+      </div>
+    </div>
+  </div>
 @stop
 
 @section('table')
-  <div class="box box-solid mt-4" id="accordion">
-    <table class="table table-bordered">
-      <tbody>
+  <div class="row edit-calendar">
+    <div class="col-xs-12">
       @foreach($calendars as $index => $calendar)
-        <tr>
-          <td colspan="3" style="background-color:#f4f4f4;">
-            <div>
-              <h4 style="display:inline-block;">
-                <a href="#">
-                  {{ $calendar->name }}
-                </a>
-                「カレンダー受付可否 : {{ $calendar->is_calendar_display->description }}」
-              </h4>
-              <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('calendar.edit', $calendar->id) }}">
-                    <i class="fa fa-edit text-bold"> 編集</i>
-                </a>
-                <a class="btn btn-primary ml-2" href="{{ route('calendar.setting', $calendar->id) }}">カレンダー設定</a>
-              </div>
+      <div class="box box-primary">
+        <div class="box-header">
+          <h3 class="box-title">
+              <span><a href="{{ route('calendar.edit', $calendar->id) }}">{{ $calendar->name }}</a></span>
+            「カレンダー表示 : {{ $calendar->is_calendar_display->description }}」</h3>
+
+          <div class="box-tools">
+            <div class="input-group input-group-sm hidden-xs">
+
+              <a class="btn btn-primary btn-mini" href="{{ route('calendar.setting', $calendar->id) }}">カレンダー設定</a>
+              <button class="btn btn-primary btn-mini ml-2 delete-btn delete-popup-btn" data-id="{{ $calendar->id }}">
+                  <i class="fa fa-trash"></i>
+              </button>
             </div>
-          </td>
-        </tr>
-        @if($calendar->courses->isNotEmpty())
-          <tr>
-            <th>検査コースID</th>
-            <th>検査コース名</th>
-            <th>WEB受付</th>
-          </tr>
-          @foreach($calendar->courses as $course)
-            <tr>
-              <td>{{ $course->id }}</td>
-              <td>{{ $course->name }}</td>
-              <td>{{ $course->web_reception->description }}</td>
-            </tr>
-          @endforeach
-        @else
-          <tr>
-            <td colspan="3"></td>
-          </tr>
+          </div>
+        </div>
+        <!-- /.box-header -->
+        @if(!$calendar->courses->isEmpty())
+          <div class="box-body table-responsive no-padding">
+            <table class="table table-hover">
+              <tbody><tr>
+                <th>検査コースID</th>
+                <th>検査コース名</th>
+                <th>WEB受付</th>
+              </tr>
+              @foreach($calendar->courses as $course)
+              <tr>
+                <td>{{ $course->id }}</td>
+                <td>{{ $course->name }}</td>
+                <td><span class="label label-danger">{{ $course->web_reception->description }}</span></td>
+              </tr>
+              @endforeach
+              </tbody></table>
+          </div>
         @endif
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
       @endforeach
-      </tbody>
-    </table>
+    </div>
   </div>
 @stop

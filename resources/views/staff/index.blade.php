@@ -30,7 +30,7 @@
       <div class="col-md-3">
         <div class="form-group">
           <label for="name">スタッフ名</label>
-          <input type="text" class="form-control" id="name" name="name" placeholder="" value="{{ $name or '' }}">
+          <input type="text" class="form-control" id="name" name="name" value="{{ $name or '' }}">
         </div>
       </div>
       <div class="col-md-3">
@@ -83,14 +83,14 @@
           <th></th>
           <th></th>
         @endif
-        @if (Auth::user()->authority->value === Authority::Admin && Auth::user()->staff_auth->is_staff === 3)
+        @if (Auth::user()->authority->value === Authority::ADMIN && Auth::user()->staff_auth->is_staff === 3)
           <th></th>
         @endif
       </tr>
       </thead>
       <tbody>
       @foreach ($staffs as $staff)
-      <tr class="{{ $staff->status->is(StaffStatus::Deleted) ? 'dark-gray' : ($staff->status->is(StaffStatus::Invalid) ? 'light-gray' : '') }}">
+      <tr class="{{ $staff->status->is(StaffStatus::DELETED) ? 'dark-gray' : ($staff->status->is(StaffStatus::INVALID) ? 'light-gray' : '') }}">
           <td>{{ $staff->id }}</td>
           <td>{{ $staff->name }}</td>
           <td>{{ $staff->login_id }}</td>
@@ -106,7 +106,7 @@
           <td>{{ $staff->status->description  }}</td>
           @if (Auth::user()->staff_auth->is_staff === 3)
             <td>
-              @if ( $staff->status->value !== StaffStatus::Deleted)
+              @if ( $staff->status->value !== StaffStatus::DELETED)
                 <a class="btn btn-primary"
                   href="{{ route('staff.edit', $staff->id) }}">
                   <i class="fa fa-edit"> 編集</i>
@@ -114,7 +114,7 @@
               @endif
             </td>
             <td>
-              @if ( $staff->status->value !== StaffStatus::Deleted)
+              @if ( $staff->status->value !== StaffStatus::DELETED)
                 <button class="btn btn-primary delete-btn delete-popup-btn" data-id="{{ $staff->id }}">
                   <i class="fa fa-trash"></i>
                 </button>
@@ -122,9 +122,9 @@
             </td>
           @endif
           
-          @if (Auth::user()->authority->value === Authority::Admin && Auth::user()->staff_auth->is_staff === 3)
+          @if (Auth::user()->authority->value === Authority::ADMIN && Auth::user()->staff_auth->is_staff === 3)
             <td>
-              @if ( $staff->status->value !== StaffStatus::Deleted)
+              @if ( $staff->status->value !== StaffStatus::DELETED)
                 <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-primary">
                   <i class="fa fa-key"> 変更</i>
                 </a>

@@ -7,7 +7,7 @@ use BenSampo\Enum\Enum;
 
 final class StaffStatus extends Enum implements LocalizedEnum
 {
-    const Valid = 1;
-    const Invalid = 2;
-    const Deleted = 99;
+    const VALID = 1;
+    const INVALID = 2;
+    const DELETED = 99;
 }

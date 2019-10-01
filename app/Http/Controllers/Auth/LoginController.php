@@ -75,30 +75,30 @@ class LoginController extends Controller
         $is_staff = self::is_staff_login($data['login_id'], $data['password']);
         if ($is_staff) {
             // スタッフの権限が契約管理者だった場合、契約管理に遷移する
-            if (Auth::user()->authority->value === Authority::ContractStaff) {
+            if (Auth::user()->authority->value === Authority::CONTRACT_STAFF) {
                 if (!Auth::user()->first_login_at) {
                     return redirect($this->staff_first_login_redirectTo);
                 }
                 return redirect($this->contract_staff_redirectTo);
             } else {
                 // staff_auths権限によって遷移先を変える
-                if (Auth::user()->staff_auth->is_hospital === Permission::None) {
-                    if (Auth::user()->staff_auth->is_staff !== Permission::None) {
+                if (Auth::user()->staff_auth->is_hospital === Permission::NONE) {
+                    if (Auth::user()->staff_auth->is_staff !== Permission::NONE) {
                         if (!Auth::user()->first_login_at) {
                             return redirect($this->staff_first_login_redirectTo);
                         }
                         return redirect('/staff');
-                    } elseif (Auth::user()->staff_auth->is_cource_classification !== Permission::None) {
+                    } elseif (Auth::user()->staff_auth->is_cource_classification !== Permission::NONE) {
                         if (!Auth::user()->first_login_at) {
                             return redirect($this->staff_first_login_redirectTo);
                         }
                         return redirect('/classification');
-                    } elseif (Auth::user()->staff_auth->is_invoice !== Permission::None) {
+                    } elseif (Auth::user()->staff_auth->is_invoice !== Permission::NONE) {
                         if (!Auth::user()->first_login_at) {
                             return redirect($this->staff_first_login_redirectTo);
                         }
                         return redirect('/reservation');
-                    } elseif (Auth::user()->staff_auth->is_pre_account !== Permission::None) {
+                    } elseif (Auth::user()->staff_auth->is_pre_account !== Permission::NONE) {
                         if (!Auth::user()->first_login_at) {
                             return redirect($this->staff_first_login_redirectTo);
                         }
@@ -139,12 +139,13 @@ class LoginController extends Controller
         if (Auth::guard($this->staff_role)->attempt(['login_id' => $login_id, 'password' => $password])) {
             $staff = Auth::guard($this->staff_role)->user();
             session()->put('staffs', $staff->id);
+            session()->put('name', $staff->name);
             session()->put('login_id', $staff->login_id);
             session()->put('staff_email', $staff->email);
             // 1:Validのユーザーのみログイン
-            if ($staff->status->value == StaffStatus::Valid) {
+            if ($staff->status->value == StaffStatus::VALID) {
                 return true;
-            } elseif ($staff->status->value == StaffStatus::Invalid) {
+            } elseif ($staff->status->value == StaffStatus::INVALID) {
                 $validator = Validator::make([], []);
                 $validator->errors()->add('fail_login', 'スタッフが無効です。');
                 throw new ValidationException($validator);
@@ -161,6 +162,7 @@ class LoginController extends Controller
         if (Auth::guard($this->hospital_staff_role)->attempt(['login_id' => $login_id, 'password' => $password])) {
             $hospital_staff = Auth::guard($this->hospital_staff_role)->user();
             session()->put('staffs', $hospital_staff->id);
+            session()->put('name', $hospital_staff->name);
             session()->put('login_id', $hospital_staff->login_id);
             session()->put('staff_email', $hospital_staff->email);
             session()->put('hospital_id', $hospital_staff->hospital_id);

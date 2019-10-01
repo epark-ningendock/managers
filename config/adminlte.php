@@ -157,7 +157,7 @@ return [
         // ],
         // [
         //    'text'        => '受付一覧',
-        //    'url'         => '/reception',
+        //    'url'         => '/reservation',
         //    'icon'        => 'list-alt',
         // ],
         // [
@@ -167,7 +167,7 @@ return [
         // ],
         // [
         //     'text'        => '受付メール設定',
-        //     'url'         => '/reception-email-setting',
+        //     'url'         => '/hospital-email-setting',
         //     'icon'        => 'gear ',
         // ],
     ],

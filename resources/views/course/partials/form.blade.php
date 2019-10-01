@@ -1,15 +1,15 @@
 @php
   use \App\Enums\WebReception;
+  use \App\Enums\CourseImageType;
+  use \App\Enums\Authority;
+  use App\Enums\RegistrationDivision;
 
   if(isset($course)) {
     $course_details = $course->course_details;
     $course_options = $course->course_options;
-    $course_images = $course->course_images;
     $course_questions = $course->course_questions;
   }
 
-  $c_images = collect(old('course_images', []));
-  $c_image_orders = collect(old('course_image_orders', []));
   $o_option_ids = collect(old('option_ids', []));
   $o_minor_ids = collect(old('minor_ids'));
   $o_minor_values = collect(old('minor_values'));
@@ -26,7 +26,7 @@
   $o_answer09s = collect(old('answer09s', []));
   $o_answer10s = collect(old('answer10s', []));
 @endphp
-
+@include('layouts.partials.error_pan')
 <div class="box box-primary">
   <div></div>
   <div class="box-header with-border">
@@ -36,37 +36,38 @@
     </div>
     <h1 class="box-title">検査コースの登録</h1>
   </div>
-  <div class="box-body">
+  <div class="form-entry">
+    <div class="box-body">
+    <input type="hidden" name="lock_version" value="{{ $course->lock_version or ''}}" />
+    <input type="hidden" name="hospital_id" value="{{ session()->get('hospital_id') }}" />
     <div class="form-group @if ($errors->has('name')) has-error @endif">
-      <label for="name">検査コース名 <span class="text-red">必須</span></label>
-      <input type="text" class="form-control" id="name" name="name"
+      <label for="name">検査コース名
+        <span class="form_required">必須</span>
+      </label>
+      <input type="text" class="form-control w16em" id="name" name="name"
              value="{{ old('name', (isset($course) ? $course->name : null)) }}"
              placeholder="検査コース名">
-      @if ($errors->has('name')) <p class="help-block">{{ $errors->first('name') }}</p> @endif
+      @if ($errors->has('name')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('name') }}</p> @endif
     </div>
 
-    <div class="form-group @if ($errors->has('web_reception')) has-error @endif">
-      <label for="web_reception">WEBの受付</label>
-      <div class="radio">
-        <label>
-          <input type="radio" name="web_reception"
-                 {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::Accept ? 'checked' : '' }}
-                 value="{{ WebReception::Accept }}">
-          受け付ける
-        </label>
-        <label class="ml-3">
-          <input type="radio" name="web_reception"
-                 {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::NotAccept ? 'checked' : '' }}
-                 value="{{ WebReception::NotAccept }}">
-          受け付け
-        </label>
-      </div>
-      @if ($errors->has('web_reception')) <p class="help-block">{{ $errors->first('web_') }}</p> @endif
+
+    <div class="form-group py-sm-2">
+        <label for="web_reception">WEB公開</label>
+        <group class="inline-radio two-option">
+            <div>
+                <input type="radio" name="web_reception" {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::ACCEPT ? 'checked' : 'checked' }}
+                value="{{ WebReception::ACCEPT }}"
+                ><label>{{ WebReception::ACCEPT()->description }}</label></div>
+            <div>
+                <input type="radio" name="web_reception" {{ old('web_reception', (isset($course) ? $course->web_reception->value : null)) == WebReception::NOT_ACCEPT ? 'checked' : '' }}
+                value="{{ WebReception::NOT_ACCEPT }}"><label>{{ WebReception::NOT_ACCEPT()->description }}</label></div>
+        </group>
+        @if ($errors->has('web_reception')) <p class="help-block has-error">{{ $errors->first('web_reception') }}</p> @endif
     </div>
 
     <div class="form-group @if ($errors->has('calendar_id')) has-error @endif" >
       <label for="calendar_id">カレンダーの設定</label>
-      <select name="calendar_id" id="calendar_id" class="form-control" >
+      <select name="calendar_id" id="calendar_id" class="form-control w20em" >
         <option value="">なし</option>
         @foreach ($calendars as $calendar)
           <option {{ old('calendar_id', isset($course) ? $course->calendar_id : null) == $calendar->id ? 'selected' : '' }}
@@ -77,91 +78,163 @@
     </div>
 
     <div class="form-group @if ($errors->has('is_category')) has-error @endif">
-      <label for="web_reception">コースの種別</label>
-      <div class="radio">
-        <label>
-          <input type="radio" name="is_category"
-                 {{ old('is_category', (isset($course) ? $course->is_category : null) ) == '1' ? 'checked' : '' }}
-                 value="1">
-          通常コース
-        </label>
-        <label class="ml-3">
-          <input type="radio" name="is_category"
-                 {{ old('is_category', (isset($course) ? $course->is_category : null)) == '2' ? 'checked' : '' }}
-                 value="2">
-          健保コース
-        </label>
-      </div>
-      @if ($errors->has('is_category')) <p class="help-block">{{ $errors->first('is_category') }}</p> @endif
+        <fieldset class="form-group">
+            <legend class="mb-0">コースの種別</legend>
+            <div class="radio">
+                <input type="radio" name="is_category" id="is_category_1" value="1"
+                       {{ old('is_category', (isset($course) ? $course->is_category : null) ) == 1 ? 'checked' : 'checked' }}
+                       class="permission-check">
+                <label for="is_category_1" class="radio-label">通常コース</label>
+            </div>
+            <div class="radio">
+                <input type="radio" id="is_category_2" name="is_category" value="2" class="permission-check"
+                        {{ old('is_category', (isset($course) ? $course->is_category : null) ) == 2 ? 'checked' : '' }}>
+                <label for="is_category_2" class="radio-label">健保コース</label>
+            </div>
+            @if ($errors->has('is_category')) <p class="help-block has-error">{{ $errors->first('is_hospital') }}</p> @endif
+        </fieldset>
     </div>
 
     <div class="form-group">
-      <label>画像の選択	</label>
+      <legend>コース画像</legend>
       <div class="row">
-        @foreach($images as $index => $image)
-          @php
-            $is_checked = false;
-            $order_value = 0;
-            if($c_images->isNotEmpty()) {
-              $order_value = $c_image_orders[$index];
-              $is_checked = $order_value != '';
-            } else if(isset($course_images)) {
-              $temp = $course_images->where('hospital_image_id', $image->id)->flatten(1);
-              if ($temp->isNotEmpty()) {
-                $is_checked = true;
-                $order_value = $temp[0]->image_order_id;
-              }
-            }
-          @endphp
-          <div class="col-xs-4 mb-3">
-            <div>
-              <input type="checkbox" class="checkbox d-inline-block image-checkbox" name="course_images[]"
-                     {{ $is_checked ? 'checked' : '' }}
-                     id="course_images_{{$image->id}}" value="{{$image->id}}" />
-              <label for="course_images_{{$image->id}}">{{ $image->name }}.{{ $image->extension }}</label>
+        <div class="col-sm-4">
+          {{Form::label('course_image_main', '検査コースメイン' , ['class' => 'form_label'])}}
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::MAIN)->first()))
+            <div class="sub_image_area">
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::MAIN)->first()->path}}">
+              <p class="file_delete_text">
+                <a onclick="return confirm('この画像を削除します、よろしいですか？')"
+                   class="btn btn-mini btn-danger"
+                   href="{{ route('course.image.delete', [
+                     'course_image_id' => $course->course_images()->where('type', CourseImageType::MAIN)->first()->id
+                   ]) }}"
+                >
+                  ファイル削除
+                </a>
+              </p>
             </div>
-            <div class="mb-3 text-center">
-              <image src="{{ $image->path }}" style="width: 40px; height: 40px;"></image>
+          @else
+            <div class="sub_image_area">
+              <img src="/img/no_image.png">
             </div>
-            <select name="course_image_orders[]" class="form-control">
-              @foreach($image_orders as $image_order)
-                <option value="{{ $image_order->id }}"
-                    {{ $order_value == $image_order->id ? 'selected' : '' }} >
-                  {{ $image_order->name }}
-                </option>
-`             @endforeach
-            </select>
-          </div>
-        @endforeach
+          @endif
+          <label class="file-upload btn btn-primary">
+            ファイル選択 {{Form::file("course_image_main", ['class' => 'field', 'accept' => 'image/*'])}}
+          </label>
+          @if ($errors->has('course_image_main'))
+            <div class="error_message">
+              {{ $errors->first('course_image_main') }}
+            </div>
+          @endif
+        </div>
+        <div class="col-sm-4">
+          {{Form::label('course_image_pc', '受診の流れメイン（PC）' , ['class' => 'form_label'])}}
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::PC)->first()))
+            <div class="sub_image_area">
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::PC)->first()->path}}">
+              <p class="file_delete_text">
+                <a onclick="return confirm('この画像を削除します、よろしいですか？')"
+                    class="btn btn-mini btn-danger"
+                    href="{{ route('course.image.delete', [
+                      'course_image_id' => $course->course_images()->where('type', CourseImageType::PC)->first()->id
+                    ]) }}"
+                >
+                  ファイル削除
+                </a>
+              </p>
+            </div>
+          @else
+            <div class="sub_image_area">
+              <img src="/img/no_image.png">
+            </div>
+          @endif
+          <label class="file-upload btn btn-primary">
+            ファイル選択 {{Form::file("course_image_pc", ['class' => 'field', 'accept' => 'image/*'])}}
+          </label>
+          @if ($errors->has('course_image_pc'))
+            <div class="error_message">
+              {{ $errors->first('course_image_pc') }}
+            </div>
+          @endif
+        </div>
+        <div class="col-sm-4">
+          {{Form::label('course_image_sp', '受診の流れメイン（SP）' , ['class' => 'form_label'])}}
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::SP)->first()))
+            <div class="sub_image_area">
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::SP)->first()->path}}">
+              <p class="file_delete_text">
+                <a onclick="return confirm('この画像を削除します、よろしいですか？')"
+                  class="btn btn-mini btn-danger"
+                  href="{{ route('course.image.delete', [
+                    'course_image_id' => $course->course_images()->where('type', CourseImageType::SP)->first()->id
+                  ]) }}"
+                >
+                  ファイル削除
+                </a>
+              </p>
+            </div>
+          @else
+            <div class="sub_image_area">
+              <img src="/img/no_image.png">
+            </div>
+          @endif
+          <label class="file-upload btn btn-primary">
+            ファイル選択 {{Form::file("course_image_sp", ['class' => 'field', 'accept' => 'image/*'])}}
+          </label>
+          @if ($errors->has('course_image_sp'))
+            <div class="error_message">
+              {{ $errors->first('course_image_sp') }}
+            </div>
+          @endif
+        </div>
       </div>
     </div>
 
     <div class="form-group">
       <label for="course_point">コースの特徴</label>
-      <textarea class="form-control" id="course_point" name="course_point" rows="5">
-        {{ old('course_point', (isset($course) ? $course->course_point : null)) }}
-      </textarea>
+      <textarea class="form-control" id="course_point" name="course_point" rows="5">{{ old('course_point', (isset($course) ? $course->course_point : null)) }}</textarea>
       <span class="pull-right">0/1000文字</span>
     </div>
 
     <div class="form-group">
       <label for="course_notice">注意事項</label>
-      <textarea class="form-control" id="course_notice" name="course_notice">
-        {{ old('course_notice', (isset($course) ? $course->course_notice : null)) }}
-      </textarea>
+      <textarea class="form-control" id="course_notice" name="course_notice">{{ old('course_notice', (isset($course) ? $course->course_notice : null)) }}</textarea>
       <span class="pull-right">0/1000文字</span>
     </div>
 
     <div class="form-group">
       <label for="course_cancel">キャンセルについて</label>
-      <textarea class="form-control" id="course_cancel" name="course_cancel">
-        {{ old('course_cancel', (isset($course) ? $course->course_cancel : null)) }}
-      </textarea>
+      <textarea class="form-control" id="course_cancel" name="course_cancel">{{ old('course_cancel', (isset($course) ? $course->course_cancel : null)) }}</textarea>
       <span class="pull-right">0/1000文字</span>
     </div>
 
+     <div class="form-group @if ($errors->has('course_display_start') or $errors->has('course_display_end')) has-error @endif">
+         <label>コース表示期間</label>
+         <div class="form-horizontal display-period">
+             <span>表示開始</span>
+                {{ Form::text('course_display_start', old('course_display_start', (isset($course) ? $course->course_display_start : (isset($disp_date_start) ? $disp_date_start : null))),
+                    ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-start', 'placeholder' => $disp_date_start]) }}
+             <span>表示終了</span>
+                {{ Form::text('course_display_end', old('course_display_end', (isset($course) ? $course->course_display_end : (isset($disp_date_end) ? $disp_date_end : null))),
+                    ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-end', 'placeholder' => $disp_date_end]) }}
+        </div>
+        @if ($errors->has('course_display_start'))
+          <p class="help-block">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            {{ $errors->first('course_display_start') }}
+          </p>
+        @endif
+        @if ($errors->has('course_display_end'))
+          <p class="help-block">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            {{ $errors->first('course_display_end') }}
+          </p>
+        @endif
+     </div>
+
     <div class="form-group">
-      <label>受付時間 <span class="text-red">必須</span></label>
+      <label>受付期間 <span class="form_required">必須</span></label>
       <div class="form-horizontal">
           本日から
           <div class="d-inline-block @if ($errors->has('reception_start_day')) has-error @endif" >
@@ -191,8 +264,19 @@
       @if ($errors->has('reception_end_day')) <p class="help-block text-red">{{ $errors->first('reception_end_day') }}</p> @endif
       @if ($errors->has('reception_end_month')) <p class="help-block text-red">{{ $errors->first('reception_end_month') }}</p> @endif
     </div>
-    <div class="form-group">
-      <label>受付許可日  <span class="text-red">必須</span></label>
+
+
+        <div class="form-group @if ($errors->has('reception_acceptance_day_end')) has-error @endif">
+            <div class="form-horizontal display-period">
+                <label>受付終了日</label>
+                {{ Form::text('reception_acceptance_day_end', old('reception_acceptance_day_end', (isset($course) ? $course->reception_acceptance_day_end : null)),
+                    ['class' => 'd-inline-block w16em form-control', 'id' => 'reception_acceptance_day_end', 'placeholder' => $disp_date_end]) }}
+            </div>
+        </div>
+
+
+    <!--<div class="form-group">
+      <label>受付許可日  <span class="form_required">必須</span></label>
       <div class="form-horizontal">
           本日から
           <div class="d-inline-block @if ($errors->has('reception_acceptance_day')) has-error @endif" >
@@ -207,7 +291,7 @@
       </div>
       @if ($errors->has('reception_acceptance_day')) <p class="help-block text-red">{{ $errors->first('reception_acceptance_day') }}</p>@endif
       @if ($errors->has('reception_acceptance_month')) <p class="help-block text-red">{{ $errors->first('reception_acceptance_month') }}</p> @endif
-    </div>
+    </div>-->
     <div class="form-group @if ($errors->has('cancellation_deadline')) has-error @endif" >
       <label for="cancellation_deadline">変更キャンセル受付期限</label>
       <div>
@@ -224,6 +308,7 @@
     </div>
 
   </div>
+  </div>
 </div>
 
 <div class="box box-primary">
@@ -234,24 +319,25 @@
     </div>
     <h1 class="box-title">価格の設定</h1>
   </div>
-  <div class="box-body">
-    <h4 class="d-inline-block">価格</h4> <span class="text-red text-bold">必須</span>
+  <div class="form-entry">
+    <div class="box-body">
+    <h4 class="d-inline-block">価格</h4> <span class="form_required">必須</span>
     <div class="form-group @if ($errors->has('price')) has-error @endif">
-      <label for="name">表示価格</label>
+      <label for="name">表示価格（税込）</label>
       <div>
         <input type="checkbox" class="checkbox d-inline-block mr-2" name="is_price" value="1"
                id="is_price" {{ old('is_price', (isset($course)? $course->is_price : null)) == 1 ? 'checked' : '' }} />
         <label for="is_price">価格</label>
+        <input type="hidden" id="tax_rate" value="{{ $tax_class->rate }}" />
         <input type="number" class="form-control d-inline-block mr-2 ml-2" id="price" name="price" style="width: 100px;"
                value="{{ old('price', (isset($course) ? $course->price : null)) }}">
         円
-        <span id="tax_amt" class="ml-5">０円（税込）</span>
       </div>
       @if ($errors->has('price')) <p class="help-block">{{ $errors->first('price') }}</p> @endif
     </div>
 
     <div class="form-group @if ( $errors->has('price_memo')) has-error @endif">
-      <label for="name">手動設定金額</label>
+      <label for="price_memo">手動設定金額</label>
       <div>
         <input type="checkbox" class="checkbox d-inline-block mr-2" name="is_price_memo" value="1"
                id="is_price_memo" {{ old('is_price_memo', (isset($course)? $course->is_price_memo : null)) == 1 ? 'checked' : '' }} />
@@ -261,22 +347,7 @@
       </div>
       @if ($errors->has('price_memo')) <p class="help-block">{{ $errors->first('price_memo') }}</p> @endif
     </div>
-    <div class="separator mb-3"></div>
-    <div class="form-group" >
-      <label for="tax_class">税区分<span class="text-red 必須"></span></label>
-      <div class="row">
-        <div class="col-md-12">
-          <select name="tax_class" id="tax_class" class="form-control">
-            @foreach ($tax_classes as $tax_class)
-              <option {{ old('tax_class', isset($course) ? $course->$tax_class : null) == $tax_class->id ? 'selected' : '' }}
-                  data-rate="{{ $tax_class->rate }}"
-              value="{{ $tax_class->id }}"> {{ $tax_class->name }}</option>
-            @endforeach
-          </select>
-        </div>
-      </div>
-    </div>
-
+  </div>
   </div>
 </div>
 
@@ -288,29 +359,46 @@
     </div>
     <h1 class="box-title">事前決済の設定</h1>
   </div>
-  <div class="box-body">
-    <h4 class="d-inline-block">価格</h4></span>
-    <div class="form-group">
-      <label for="name">事前決済価格</label>
-      <div>０円（税込）</div>
-    </div>
-    <div class="separator mb-3"></div>
-    <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif" >
-      <label for="tax_class">利用設定 <span class="text-red">必須</span></label>
-      <div>
-        <input type="radio" class="checkbox d-inline-block" id="is_pre_account_normal_payment"
-               {{ old('is_pre_account', isset($course) ? $course->is_pre_account : null) == 0 ? 'checked' : '' }}
-               name="is_pre_account" value="0"/>
-        <label for="is_pre_account_normal_payment">通常決済利用</label>
-        <input type="radio" class="checkbox d-inline-block ml-2" name="is_pre_account" id="is_pre_account_pre_payment"
-               {{ old('is_pre_account', isset($course) ? $course->is_pre_account : null) == 1 ? 'checked' : '' }}
-               value="1"/>
-        <label for="is_pre_account_pre_payment">事前決済利用</label>
-
+  <div class="form-entry">
+    <div class="box-body">
+      <div class="form-group @if ($errors->has('is_pre_account')) has-error @endif">
+        <label>事前決済価格</label>
+        <div>
+          <input type="hidden" name="is_pre_account" value="0" />
+          <input type="checkbox" id="is_pre_account" name="is_pre_account" value="1"
+                 {{ (old('is_pre_account', (isset($course) ? $course->is_pre_account : null) ) == 1 && $is_presettlement) ? 'checked' : '' }}
+                 @if(!$is_presettlement) disabled @endif>
+          <label for="is_pre_account">利用する</label>
+          @if ($errors->has('is_pre_account')) <p class="help-block has-error">{{ $errors->first('is_pre_account') }}</p> @endif
+        </div>
       </div>
-      @if ($errors->has('is_pre_account')) <p class="help-block">{{ $errors->first('is_pre_account') }}</p> @endif
-    </div>
 
+      <div class="form-group">
+        <label>割引率</label>
+        <p>{{ $hospital->pre_account_discount_rate }}%
+          <input type="hidden" value="{{ $hospital->pre_account_discount_rate }}" id="pre_account_discount_rate" />
+        </p>
+      </div>
+
+      <div class="form-group">
+        <lablel>値引率自動適用</lablel>
+        <div>
+          <input type="hidden" name="auto_calc_application" value="0" />
+          <input type="checkbox" id="auto_calc_application" name="auto_calc_application" value="1"
+              {{ old('auto_calc_application', (isset($course) ? $course->auto_calc_application : 1) ) == 1 ? 'checked' : '' }}/>
+          <label for="auto_calc_application">利用する</label>
+        </div>
+      </div>
+      <div class="form-group @if ($errors->has('pre_account_price')) has-error @endif">
+        <label>事前決済価格</label>
+        <div class="form-horizontal">
+          <input type="number" class="d-inline-block form-control w16em" id="pre_account_price" name="pre_account_price"
+                 value="{{ old('pre_account_price', (isset($course) ? $course->pre_account_price : null)) }}"
+                 placeholder="10000"> 円
+        </div>
+        @if ($errors->has('pre_account_price')) <p class="help-block has-error">{{ $errors->first('pre_account_price') }}</p> @endif
+      </div>
+    </div>
   </div>
 </div>
 
@@ -322,15 +410,16 @@
     </div>
     <h1 class="box-title">オプションの設定</h1>
   </div>
-  <div class="box-body">
-    <h4 class="d-inline-block">オプションの内容</h4></span>
-    <table class="table table-bordered">
+
+  <div class="form-entry">
+    <div class="box-body" id="option-setting">
+    <table class="table no-border table-hover table-striped ">
       <tr>
-        <td class="text-center">選択</td>
-        <td class="text-center">オプション名</td>
-        <td class="text-center">価格</td>
+        <td class="option-name"><span>オプション名</span></td>
+        <td class="option-price">価格</td>
       </tr>
       @foreach($options as $option)
+        <tr>
         @php
           $is_checked = false;
           if ($o_option_ids->isNotEmpty()) {
@@ -339,15 +428,14 @@
             $is_checked = $course_options->where('option_id', $option->id)->isNotEmpty();
           }
         @endphp
-        <tr>
-          <td style="width: 60px;text-align: center;">
-            <input type="checkbox" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
-          </td>
-          <td class="text-center">{{ $option->name }}</td>
-          <td class="text-center">{{ $option->price }} 円</td>
+          <td class="option-name">
+              <input type="checkbox" id="option_set_price{{ $option->id }}" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
+              <label class="mr-2" for="option_set_price{{ $option->id }}">{{ $option->name }}</label></td>
+          <td class="option-price">{{ number_format($option->price) }} 円</td>
         </tr>
       @endforeach
     </table>
+  </div>
   </div>
 </div>
 
@@ -358,21 +446,20 @@
         <i class="fa fa-minus"></i></button>
     </div>
     <h1 class="box-title">設定項目</h1>
-    <di></dI>
   </div>
-  <div class="box-body">
-    <table class="table table-bordered">
-      @foreach($majors as $major)
+    <div class="form-entry">
+    <div class="box-body" id="setting-list">
+      @foreach($majors as $key => $major)
         @foreach($major->middle_classifications as $middle)
-        <tr>
           @if(!isset($last) || $major != $last)
-            <td colspan="{{ count($major->middle_classifications) }}">{{ $major->name }}</td>
+            <h4 class="d-inline-block">{{ $major->name }}</h4>
             @php
-              $last = $major
+              $last = $major;
             @endphp
           @endif
-          <td>{{ $middle->name }}</td>
-          <td>
+          <fieldset>
+          <legend>{{ $middle->name }}</legend>
+          <div class="row mb-4">
             @foreach($middle->minors_with_fregist_order as $index => $minor)
               @php
                 $minor_value = '';
@@ -386,30 +473,37 @@
                 } else if (isset($course_details)) {
                   $temp = $course_details->where('minor_classification_id', $minor->id)->flatten(1);
                   if ($temp->isNotEmpty()) {
-                    $minor_value = $minor->is_fregist == '1' ? $temp[0]->select_status : $temp[0]->inputstring;
+                    $minor_value = $minor->is_fregist == RegistrationDivision::CHECK_BOX ? $temp[0]->select_status : $temp[0]->inputstring;
                   }
                 }
               @endphp
-              <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
-              @if($minor->is_fregist == '1')
+                  <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
+              @if($minor->is_fregist == RegistrationDivision::CHECK_BOX)
+                <p class="col-sm-4">
                 <input type="checkbox" class="checkbox d-inline-block minor-checkbox" name="minor_values[]"
                        id="{{ 'minor_id_'.$minor->id }}"
-                       {{ $minor_value == 1 ? 'checked' : '' }} value="{{ $minor->id }}" />
-                <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label>
+                       {{ $minor_value == 1 ? 'checked' : '' }} value="1" />
+                <label class="mr-2" for="{{ 'minor_id_'.$minor->id }}">{{ $minor->name }}</label></p>
               @else
-                <input type="text" name="minor_values[]"
-                       class="form-control minor-text @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
-                  value = "{{ $minor_value }}" />
+                <p class="col-sm-12">
+                    @if($minor->max_length >= 500 )
+                        <textarea class="form-control" name="minor_values[]" rows="7">{{ $minor_value }}</textarea>
+                    @else
+                        <input type="text" name="minor_values[]"
+                               class="form-control minor-text minor-text-{{$key}} @if ($index > 0) mt-2 @endif" data-maxlength="{{ $minor->max_length }}"
+                               value = "{{ $minor_value }}" />
+                    @endif
                 <span class="pull-right">0/{{ $minor->max_length }}文字</span>
+                </p>
               @endif
             @endforeach
-          </td>
-        </tr>
+          </div>
+          </fieldset>
         @endforeach
       @endforeach
-    </table>
+    </div>
+    </div>
   </div>
-</div>
 
 @for($qi = 0; $qi < 5; $qi++)
   @php
@@ -462,19 +556,25 @@
       </div>
       <h1 class="box-title">{{ $qi + 1 }}. 質問・回答の設定</h1>
     </div>
-    <div class="box-body">
-      <div class="form-group">
-        <label for="name">質問事項の利用</label>
-        <div>
-          <input type="radio" class="checkbox d-inline-block mr-2 is_question" {{ $is_question == 1 ? 'checked' : '' }}
-                 id="is_question_use_{{$qi}}" name="is_question_{{ $qi }}" value="1"/>
-          <label for="is_question_use_{{$qi}}">利用する</label>
-          <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" {{ $is_question == 0 ? 'checked' : '' }}
-                 id="is_question_not_use_{{$qi}}" name="is_question_{{ $qi }}" value="0"/>
-          <label for="is_question_not_use_{{$qi}}">利用しない</label>
-            <input type="hidden" value="{{ $is_question }}" name="is_questions[]"/>
-        </div>
-      </div>
+
+    <div class="form-entry">
+        <div class="box-body">
+            <div class="form-group py-sm-2">
+                <label for="status">状態</label>
+                <group class="inline-radio two-option" style="width: 200px;">
+                    <div class="status-btn">
+                        <input type="radio" class="checkbox d-inline-block mr-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 1 ? 'checked' : '' }}
+                        value="1"
+                        ><label>利用する</label>
+                    </div>
+                    <div class="status-btn">
+                        <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 0 ? 'checked' : '' }}
+                        value="0"><label>利用しない</label>
+                    </div>
+                    <input type="hidden" class="hidden-q" value="{{ $is_question }}" name="is_questions[]"/>
+                </group>
+                @if ($errors->has('is_question_'.$qi)) <p class="help-block has-error">{{ $errors->first('is_question_'.$qi) }}</p> @endif
+            </div>
 
       <div class="form-group">
         <label for="question_title_{{$qi}}">質問事項タイトル</label>
@@ -553,6 +653,7 @@
       </div>
 
     </div>
+    </div>
   </div>
 @endfor
 
@@ -577,65 +678,57 @@
 @section('script')
   <script>
       (function ($) {
+          $('.status-btn').on('click', function() {
+              const is_q_val = $(this).find('.is_question').val();
+              $(this).parent().find('.hidden-q').val(is_q_val);
+          });
           /* ---------------------------------------------------
           // character count
           -----------------------------------------------------*/
           (function () {
-              $('textarea').on('keyup', function() {
-                  const len = $(this).val().length;
-                  if (len > 1000) {
-                      $(this).val($(this).val().substring(0, 999));
-                  } else {
-                      $(this).next('span').text(len + '/1000文字');
-                  }
-              });
+              const textAreaChange = function(ele, max) {
+                  const len = ele.val().length;
 
-              $('.minor-text').on('keyup', function() {
-                  const max = parseInt($(this).data('maxlength'));
-                  const len = $(this).val().length;
                   if (len > max) {
-                      $(this).val($(this).val().substring(0, max));
+                      ele.val(ele.val().substring(0, max));
                   } else {
-                      $(this).next('span').text(len + '/' + max + '文字');
-                  }
-              });
-          })();
-
-          /* ---------------------------------------------------
-          // image order enable/disable
-          -----------------------------------------------------*/
-          (function () {
-              const change = function(ele) {
-                  const orderEle = ele.parent().parent().find('select');
-                  if (ele.prop('checked')) {
-                      orderEle.prop('disabled', false);
-                      ele.siblings('input:hidden').remove();
-                      orderEle.next('input:hidden').remove();
-                  } else {
-                      $('<input type="hidden" name="course_images[]" />').val('0').appendTo(ele.parent());
-                      $('<input type="hidden" name="course_image_orders[]" value=""/>').insertAfter(orderEle);
-                      orderEle.prop('disabled', true);
+                      ele.next('span').text(len + '/' + max + '文字');
                   }
               };
 
-              $('.image-checkbox').each(function(index, ele) {
+              $('textarea').each(function(index, ele) {
+
                   ele = $(ele);
-                  ele.change(function() {
-                      change(ele);
+                  ele.on('keyup', function() {
+                    textAreaChange(ele, 1000);
                   });
-                  change(ele);
+                  textAreaChange(ele, 1000);
               });
+
+
+              $('.minor-text').on('keyup', function() {
+                  const max = parseInt($(this).data('maxlength'));
+                  textAreaChange($(this), max);
+              });
+              @for ($i = 0; $i <= $majors->count(); $i++)
+              if($('.minor-text-{{$i}}').length){
+                  textAreaChange($('.minor-text-{{$i}}'), parseInt($('.minor-text-{{$i}}').data('maxlength')));
+              }
+              @endfor
           })();
 
           /* ---------------------------------------------------
           // minor checkbox values
           -----------------------------------------------------*/
+
           (function () {
               const change = function(ele) {
                   if (ele.prop('checked')) {
-                      ele.next('input:hidden').remove();
+                      if (ele.next().next().attr('class') == 'dummy') {
+                        ele.next().next().remove();
+                      }
                   } else {
-                      $('<input type="hidden" name="minor_values[]" value="0"/>').insertAfter(ele);
+                    $('<input type="hidden" class="dummy" name="minor_values[]" value="0"/>').insertAfter(ele.next('label'));
                   }
               };
 
@@ -658,6 +751,7 @@
                   } else {
                       $('#price').prop('disabled', true);
                   }
+                  $('#auto_calc_application').change();
               };
               change();
               $('#is_price').change(change);
@@ -696,24 +790,89 @@
           })();
 
           /* ---------------------------------------------------
-          // Tax
+          // is_pre_acc change
           -----------------------------------------------------*/
-          (function () {
+          (function(){
               const change = function() {
-                  if ($('#is_price').is(':checked') && $('#price').val()) {
-                      const price = parseInt($('#price').val());
-                      const total = price + (price * $('#tax_class option:selected').data('rate') / 100);
-                      $('#tax_amt').html(total + '円（税込）');
+                  if($('#is_pre_account').prop('checked')) {
+                      $('#auto_calc_application').prop('checked', true);
+                      $('#auto_calc_application, #pre_account_price').prop('disabled', false);
                   } else {
-                      $('#tax_amt').html('0円（税込）');
+                      $('#auto_calc_application').prop('checked', false);
+                      $('#auto_calc_application, #pre_account_price').prop('disabled', true);
                   }
+                  $('#auto_calc_application').change();
               };
-
-              $('#tax_class, #is_price').change(change);
-              $('#price').on('change paste keyup', change);
-              change();
+              $('#is_pre_account').change(change);
           })();
 
+          /* ---------------------------------------------------
+          // auto_calc_application change
+          -----------------------------------------------------*/
+          (function(){
+              const change = function() {
+                  if($('#auto_calc_application').prop('checked')) {
+                      const price = $('#is_price').prop('checked') ? ($('#price').val() || 0) : 0;
+                      const discountRate = $('#pre_account_discount_rate').val() || 0;
+                      let accPrice = price * (discountRate/100);
+                      $('#pre_account_price').val(accPrice);
+                      $('#pre_account_price').prop('disabled', true);
+                  } else {
+                      $('#pre_account_price').val('');
+                      if($('#is_pre_account').prop('checked')) {
+                          $('#pre_account_price').prop('disabled', false);
+                      }
+                  }
+              };
+              $('#auto_calc_application, #price').change(change);
+          })();
+
+          /* ---------------------------------------------------
+          // initial setting for is_pre_acc and auto_calc_application
+          -----------------------------------------------------*/
+          (function(){
+              if($('#is_pre_account').prop('checked')) {
+                  $('#auto_calc_application, #pre_account_price').prop('disabled', false);;
+              } else {
+                  $('#auto_calc_application, #pre_account_price').prop('disabled', true);
+                  $('#auto_calc_application').prop('checked', false);
+                  $('#pre_account_price').val('');
+              }
+              if($('#auto_calc_application').prop('checked')) {
+                  const price = $('#is_price').prop('checked') ? ($('#price').val() || 0) : 0;
+                  const discountRate = $('#pre_account_discount_rate').val() || 0;
+                  let accPrice = price * (discountRate/100);
+                  $('#pre_account_price').val(accPrice);
+                  $('#pre_account_price').prop('disabled', true);
+              }
+          })();
       })(jQuery);
   </script>
 @stop
+
+@push('css')
+    <link rel="stylesheet" type="text/css" href="{{ url('css/bootstrap-datepicker.min.css') }}">
+@endpush
+
+@push('js')
+    <script src="{{ url('js/handlebars.js') }}"></script>
+    <script src="{{ url('js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ url('js/bootstrap-datepicker.ja.min.js') }}"></script>
+    <script src="{{ url('js/bootstrap3-typeahead.min.js') }}"></script>
+    <script type="text/javascript">
+        (function ($) {
+            $('#datetimepicker-disp-start').datepicker({
+                language:'ja',
+                format: 'yyyy-mm-dd',
+            });
+            $('#datetimepicker-disp-end').datepicker({
+                language:'ja',
+                format: 'yyyy-mm-dd',
+            });
+            $('#reception_acceptance_day_end').datepicker({
+                language:'ja',
+                format: 'yyyy-mm-dd',
+            });
+        })(jQuery);
+    </script>
+@endpush

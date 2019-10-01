@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Tokyo',
 
     /*
     |--------------------------------------------------------------------------
@@ -127,6 +127,8 @@ return [
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
+    'Excel' => 'Maatwebsite\Excel\Facades\Excel',
+    
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -171,6 +173,7 @@ return [
          * Package Service Providers...
          */
         Barryvdh\Debugbar\ServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -184,6 +187,7 @@ return [
         App\Providers\CsvTestServiceProvider::class,
         App\Providers\ReservationExportServiceProvider::class,
         App\Providers\ValidationExtensionServiceProvider::class,
+        //App\Providers\MinIOStorageServiceProvider::class
     ],
 
     /*
@@ -235,6 +239,7 @@ return [
         'Input' => \Illuminate\Support\Facades\Input::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
     'faker_locale' => 'ja_JP',

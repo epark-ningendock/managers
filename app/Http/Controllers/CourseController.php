@@ -7,10 +7,13 @@ use App\CourseDetail;
 use App\CourseImage;
 use App\CourseOption;
 use App\CourseQuestion;
+use App\Enums\CourseImageType;
+use App\Hospital;
 use App\HospitalImage;
 use App\Http\Requests\CourseFormRequest;
 use App\MajorClassification;
 use App\MinorClassification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Option;
@@ -18,6 +21,11 @@ use App\ImageOrder;
 use App\TaxClass;
 use App\Calendar;
 use Mockery\Exception;
+use Reshadman\OptimisticLocking\StaleModelLockingException;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Course\CourseSettingNotificationMail;
+use Illuminate\Support\Facades\Auth;
+use App\Enums\Permission;
 
 class CourseController extends Controller
 {
@@ -27,7 +35,8 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = Course::orderBy('order')->paginate(10);
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))
+            ->orderBy('order')->paginate(10);
         return view('course.index', ['courses' => $courses]);
     }
 
@@ -37,20 +46,35 @@ class CourseController extends Controller
      */
     public function create()
     {
-        $images = HospitalImage::all();
+        
+        $hospital_id = session()->get('hospital_id');
+        $hospital = Hospital::find($hospital_id);
+        $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('order')->get();
-        $options = Option::orderBy('order')->get();
+        $options = Option::where('hospital_id', $hospital_id)->orderBy('order')->get();
         $image_orders = ImageOrder::orderBy('order')->get();
-        $tax_classes = TaxClass::all();
-        $calendars = Calendar::all();
+        $calendars = Calendar::where('hospital_id', $hospital_id)->get();
+        $disp_date_start = Carbon::today()->addDay(7)->format('Y-m-d');
+        $disp_date_end = Carbon::today()->addMonth(12)->format('Y-m-d');
+        $today = Carbon::today();
+        $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
+            ->whereDate('life_time_to', '>=', $today)->get()->first();
+
+        $is_presettlement = $hospital->is_pre_account == '1' &&
+            (Auth::user()->staff_auth->is_pre_account == Permission::EDIT
+                || Auth::user()->staff_auth->is_pre_account == Permission::UPLOAD);
 
         return view('course.create')
             ->with('calendars', $calendars)
-            ->with('tax_classes', $tax_classes)
+            ->with('tax_class', $tax_class)
             ->with('image_orders', $image_orders)
             ->with('options', $options)
             ->with('majors', $majors)
-            ->with('images', $images);
+            ->with('disp_date_start', $disp_date_start)
+            ->with('disp_date_end', $disp_date_end)
+            ->with('hospital', $hospital)
+            ->with('images', $images)
+            ->with('is_presettlement', $is_presettlement);
     }
 
     /**
@@ -73,11 +97,19 @@ class CourseController extends Controller
     public function store(CourseFormRequest $request)
     {
         try {
-            $this->saveCourse($request, null);
+            $course = $this->saveCourse($request, null);
+            $data = [
+                'course' => $course,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
+                'processing' => '登録'
+            ];
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CourseSettingNotificationMail($data));
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.course')]));
             return redirect('course');
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(trans('messages.create_error'))->withInput();
+            $request->session()->flash('error', trans('messages.create_error'));
+            return redirect()->back()->withInput();
         }
     }
 
@@ -101,21 +133,35 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
-        $images = HospitalImage::all();
+        $hospital_id = session()->get('hospital_id');
+        $hospital = Hospital::find($hospital_id);
+        $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('order')->get();
-        $options = Option::orderBy('order')->get();
+        $options = Option::where('hospital_id', $hospital_id)->orderBy('order')->get();
         $image_orders = ImageOrder::orderBy('order')->get();
-        $tax_classes = TaxClass::all();
-        $calendars = Calendar::all();
+        $calendars = Calendar::where('hospital_id', $hospital_id)->get();
+        $disp_date_start = Carbon::today()->addDay(7)->format('Y-m-d');
+        $disp_date_end = Carbon::today()->addMonth(12)->format('Y-m-d');
+        $today = Carbon::today();
+        $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
+            ->whereDate('life_time_to', '>=', $today)->get()->first();
+
+        $is_presettlement = $hospital->is_pre_account == '1' &&
+            (Auth::user()->staff_auth->is_pre_account == Permission::EDIT
+                || Auth::user()->staff_auth->is_pre_account == Permission::UPLOAD);
 
         return view('course.edit')
             ->with('calendars', $calendars)
-            ->with('tax_classes', $tax_classes)
+            ->with('tax_class', $tax_class)
             ->with('image_orders', $image_orders)
             ->with('options', $options)
             ->with('majors', $majors)
             ->with('images', $images)
-            ->with('course', $course);
+            ->with('disp_date_start', $disp_date_start)
+            ->with('disp_date_end', $disp_date_end)
+            ->with('hospital', $hospital)
+            ->with('course', $course)
+            ->with('is_presettlement', $is_presettlement);
     }
 
     protected function saveCourse(CourseFormRequest $request, $course_param)
@@ -123,9 +169,14 @@ class CourseController extends Controller
         try {
             DB::beginTransaction();
 
+            $hospital = Hospital::findOrFail(session()->get('hospital_id'));
             //Course
             $course_data = $request->only([
+                'hospital_id',
                 'name',
+                'course_image_main',
+                'course_image_pc',
+                'course_image_sp',
                 'web_reception',
                 'calendar_id',
                 'is_category',
@@ -137,8 +188,14 @@ class CourseController extends Controller
                 'price',
                 'is_price_memo',
                 'price_memo',
-                'tax_class',
-                'is_pre_account_price'
+                'pre_account_price',
+                'is_pre_account_price',
+                'lock_version',
+                'course_display_start',
+                'course_display_end',
+                'is_pre_account',
+                'reception_acceptance_day_end',
+                'auto_calc_application'
             ]);
             $reception_start_day = $request->input('reception_start_day');
             $reception_start_month = $request->input('reception_start_month');
@@ -146,10 +203,10 @@ class CourseController extends Controller
             $reception_end_month = $request->input('reception_end_month');
             $reception_acceptance_day = $request->input('reception_acceptance_day');
             $reception_acceptance_month = $request->input('reception_acceptance_month');
+            $course_data['hospital_id'] = $request->input('hospital_id');
             $course_data['reception_start_date'] = $reception_start_month * 1000 + $reception_start_day;
             $course_data['reception_end_date'] = $reception_end_month * 1000 + $reception_end_day;
             $course_data['reception_acceptance_date'] = $reception_acceptance_month * 1000 + $reception_acceptance_day;
-            $course_data['course_cancel'] = '0';
             $course_data['order'] = 0;
 
             if (isset($course_param)) {
@@ -158,38 +215,36 @@ class CourseController extends Controller
                 $course = new Course();
             }
             $course->fill($course_data);
+            $course->hospital_id = session()->get('hospital_id');
+            if ($course->auto_calc_application == '1') {
+                $course_price = $course->is_price == '1' ? $course->price : 0;
+                $course->pre_account_price =  $course_price * ($hospital->pre_account_discount_rate/100);
+            }
+
+            // to clear existing value in edit case
+            if($course->is_pre_account == '0') {
+                $course->pre_account_price = null;
+            }
+            //force to update updated_at. otherwise version will not be updated
+            $course->touch();
             $course->save();
 
-            //Course Image
-            $image_ids = collect($request->input('course_images'));
-            $image_order_ids = collect($request->input('course_image_orders'));
-
-            $filtered_image_ids = $image_ids->filter(function ($id) {
-                return $id != 0;
-            });
-
-            $images = HospitalImage::whereIn('id', $filtered_image_ids)->get();
-            if ($images->count() != count($filtered_image_ids)) {
-                $request->session()->flash('error', trans('messages.invalid_hospital_image_id'));
-                return redirect()->back();
+            //Course Images
+            if ($request->has('course_image_main')) {
+                $target_image = 'course_image_main';
+                $target_type = CourseImageType::MAIN;
+                $this->saveCourseImage($request, $target_image, $target_type, $course->id);
             }
-
-            if (isset($course_param)) {
-                $course->course_images()->forceDelete();
+            if ($request->has('course_image_pc')) {
+                $target_image = 'course_image_pc';
+                $target_type = CourseImageType::PC;
+                $this->saveCourseImage($request, $target_image, $target_type, $course->id);
             }
-
-            foreach ($image_ids as $index => $image_id) {
-                if ($image_id == 0) {
-                    continue;
-                }
-                $image_order_id = $image_order_ids[$index];
-                $course_image = new CourseImage();
-                $course_image->course_id = $course->id;
-                $course_image->hospital_image_id = $image_id;
-                $course_image->image_order_id = $image_order_id;
-                $course_image->save();
+            if ($request->has('course_image_sp')) {
+                $target_image = 'course_image_sp';
+                $target_type = CourseImageType::SP;
+                $this->saveCourseImage($request, $target_image, $target_type, $course->id);
             }
-
 
             //Course Options
             $option_ids = collect($request->input('option_ids', []));
@@ -274,6 +329,7 @@ class CourseController extends Controller
                 $course_question->question_number = $i + 1;
                 $course_question->course_id = $course->id;
                 $course_question->is_question = $is_questions[$i];
+                // 利用しないにチェックを入れていても保存したい
                 $course_question->question_title = $question_titles[$i];
                 $course_question->answer01 = $answer01s[$i];
                 $course_question->answer02 = $answer02s[$i];
@@ -293,6 +349,28 @@ class CourseController extends Controller
             DB::rollback();
             throw $e;
         }
+        return $course;
+    }
+
+    private function saveCourseImage(CourseFormRequest $request, String $target_image, String $target_type, int $course_id)
+    {
+        $image = \Image::make(file_get_contents($request->file($target_image)));
+        $course_image = CourseImage::firstOrCreate([
+            'course_id' => $course_id,
+            'type' => $target_type
+        ]);
+
+        $name = $course_image->name_for_upload($request->file($target_image)->getClientOriginalName());
+        \Storage::disk(env('FILESYSTEM_CLOUD'))->put($name, (string) $image->encode(), 'public');
+        $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($name);
+
+        $course_image_data = [
+            'name' => $name,
+            'extension' => $request->file($target_image)->getClientOriginalExtension(),
+            'path' => $image_path,
+        ];
+        $course_image->fill($course_image_data);
+        $course_image->save();
     }
 
     /**
@@ -305,11 +383,27 @@ class CourseController extends Controller
     public function update(CourseFormRequest $request, Course $course)
     {
         try {
-            $this->saveCourse($request, $course);
+            $request->merge([
+                'is_price' => (integer)$request->has('is_price'),
+                'is_price_memo' => (integer)$request->has('is_price_memo'),
+            ]);
+            $course = $this->saveCourse($request, $course);
+            $data = [
+                'course' => $course,
+                'staff_name' => Auth::user()->name,
+                'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
+                'processing' => '更新'
+            ];
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CourseSettingNotificationMail($data));
+
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.course')]));
             return redirect('course');
+        }  catch(StaleModelLockingException $e) {
+            $request->session()->flash('error', trans('messages.model_changed_error'));
+            return redirect()->back();
         } catch (Exception $e) {
-            return redirect()->back()->withErrors(trans('messages.update_error'))->withInput();
+            $request->session()->flash('error', trans('messages.update_error'));
+            return redirect()->back()->withInput();
         }
     }
 
@@ -327,6 +421,14 @@ class CourseController extends Controller
         $course->course_questions()->delete();
         $course->course_images()->delete();
         $course->delete();
+        $data = [
+            'course' => $course,
+            'staff_name' => Auth::user()->name,
+            'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
+            'processing' => '削除'
+        ];
+        Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CourseSettingNotificationMail($data));
+
         $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.course')]));
         return redirect()->back();
     }
@@ -337,7 +439,8 @@ class CourseController extends Controller
      */
     public function sort()
     {
-        $courses = Course::orderBy('order')->get();
+
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))->orderBy('order')->get();
         return view('course.sort')->with('courses', $courses);
     }
 
@@ -349,7 +452,8 @@ class CourseController extends Controller
     public function updateSort(CourseFormRequest $request)
     {
         $ids = $request->input('course_ids');
-        $courses = Course::whereIn('id', $ids)->get();
+        $courses = Course::where('hospital_id', session()->get('hospital_id'))
+            ->whereIn('id', $ids)->get();
 
         if (count($ids) != $courses->count()) {
             $request->session()->flash('error', trans('messages.invalid_course_id'));
@@ -372,5 +476,31 @@ class CourseController extends Controller
             $request->session()->flash('error', trans('messages.create_error'));
             return redirect()->back();
         }
+    }
+
+    /**
+     * getting course details
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function course_detail($id)
+    {
+        $course = Course::with([ 'course_options', 'course_options.option', 'course_questions' ])
+            ->where('id', $id)
+            ->get();
+        return response()->json($course);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $course_image_id
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteImage(int $course_image_id)
+    {
+        $course = CourseImage::find($course_image_id)->course;
+        CourseImage::find($course_image_id)->delete();
+        return redirect()->route('course.edit', ['course' => $course])->with('success', trans('messages.deleted', ['name' => trans('messages.names.course_image')]));
     }
 }

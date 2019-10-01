@@ -4,12 +4,8 @@
         <div class="table-responsive">
 
             <h5 class="std-title">受付案内履歴</h5>
-
+            @include('layouts.partials.pagination-label', ['paginator' => $reservations])
             <div class="table-responsive">
-
-                <div class="right-paginate-bar ajax-paginator">
-                    {{ $reservations->links() }}
-                </div>
 
                 <table class="table table-bordered table-hover mb-5 mt-3">
                     <tr>
@@ -22,10 +18,14 @@
 
                         @foreach( $reservations as $reservation )
                             <tr>
-                                <td>{{ $reservation->reservation_date }}</td>
-                                <td>{{ $customer_detail->name }}</td>
+                                <td>{{ $reservation->reservation_date->format('Y-m-d') }}</td>
                                 <td>
-                                    {{ ( !empty($reservation->course->name) ?? '-') }}
+                                    <a href="{{ route('reservation.edit', $reservation->id) }}">
+                                        {{ $customer_detail->name }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {{ isset($reservation->course) ? $reservation->course->name : '-' }}
                                 </td>
                                 <td>{{ $reservation->reservation_status->description }}</td>
                             </tr>
@@ -37,6 +37,9 @@
 
                     @endif
                 </table>
+                <div class="right-paginate-bar reservation ajax-paginator">
+                    {{ $reservations->links() }}
+                </div>
             </div>
 
         </div>

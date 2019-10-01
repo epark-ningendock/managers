@@ -27,29 +27,9 @@ class HospitalFormRequest extends FormRequest
     {
         $status = HospitalEnums::getValues();
 
-
-        if (request()->route()->uri === 'hospital') {
-            return [
-                'status' => Rule::in($status),
-            ];
-        } else {
-            return [
-                'status' => ['required', Rule::in($status)],
-                'latitude' => 'longitude_latitude',
-                'longitude' => 'longitude_latitude',
-                'kana' => 'max:50',
-                'name' => 'max:50',
-                'postcode' => 'number_dash',
-                'address1' => 'max:256',
-                'address2' => 'max:256',
-                'tel' => 'number_dash',
-                'paycall' => 'number_dash',
-                'consultation_note' => 'max:256',
-//            'medical_treatment_time.[1].start' => 'date_format:H:i',
-//            'medical_treatment_time[1][start]' => 'date_format:H:i',
-//            'medical_treatment_time[1][end]' => 'date_format:H:i',
-            ];
-        }
+        return [
+            'status' => Rule::in($status),
+        ];
     }
 
     public function messages()
@@ -58,4 +38,5 @@ class HospitalFormRequest extends FormRequest
             'status.in' => '「状態」を正しく選択してください。',
         ];
     }
+
 }

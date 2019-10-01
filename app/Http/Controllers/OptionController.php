@@ -7,17 +7,17 @@ use App\Option;
 use App\TaxClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Reshadman\OptimisticLocking\StaleModelLockingException;
 
 class OptionController extends Controller
 {
     public function index()
     {
         $pagination = config('epark.pagination.option_index');
-        $options    = Option::orderBy('order')->paginate($pagination);
+        $options    = Option::where('hospital_id', session()->get('hospital_id'))->orderBy('order')->paginate($pagination);
 
         return view('option.index', [ 'options' => $options ]);
     }
-
 
     public function create()
     {
@@ -25,12 +25,11 @@ class OptionController extends Controller
         return view('option.create', [ 'tax_classes' => $tax_classes ]);
     }
 
-
     public function store(OptionformStore $request)
     {
         $request->request->add([
             'hospital_id' => session()->get('hospital_id'),
-            'order'       => 1,
+            'order'       => 0,
         ]);
         Option::create($request->all());
 
@@ -39,21 +38,37 @@ class OptionController extends Controller
 
     public function edit($id)
     {
-        $option = Option::findOrFail($id);
+        $option = Option::where('id', $id)->where('hospital_id', session()->get('hospital_id'))->first();
+        if (!isset($option)) {
+            abort(404);
+        }
         $tax_classes = TaxClass::all();
         return view('option.edit', ['option' => $option, 'tax_classes' => $tax_classes]);
     }
 
 
-    public function update(Request $request, $id)
+    public function update(OptionformStore $request, $id)
     {
-        $option = Option::findOrFail($id);
-        $request->request->add([
-            'hospital_id' => session()->get('hospital_id')
-        ]);
-        $option->update($request->all());
+        try{
+            DB::beginTransaction();
+            $option = Option::where('id', $id)->where('hospital_id', session()->get('hospital_id'))->first();
+            if (!isset($option)) {
+                abort(404);
+            }
+            $request->request->add([
+                'hospital_id' => session()->get('hospital_id')
+            ]);
+            $option->update($request->all());
+            DB::commit();
 
-        return redirect(route('option.index'))->with('success', trans('messages.updated', ['name' => trans('messages.option_name')]));
+            return redirect(route('option.index'))->with('success', trans('messages.updated_common'));
+        } catch (StaleModelLockingException $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', trans('messages.model_changed_error'));
+        } catch (Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', trans('messages.update_error'))->withInput();
+        }
     }
 
 
@@ -68,7 +83,7 @@ class OptionController extends Controller
 
     public function sort()
     {
-        $options = Option::orderBy('order')->get();
+        $options = Option::where('hospital_id', session()->get('hospital_id'))->orderBy('order')->get();
         return view('option.sort', ['options' => $options]);
     }
 
@@ -76,7 +91,7 @@ class OptionController extends Controller
     public function updateSort(OptionformStore $request)
     {
         $ids = $request->input('option_ids');
-        $options = Option::whereIn('id', $ids)->get();
+        $options = Option::where('hospital_id', session()->get('hospital_id'))->whereIn('id', $ids)->get();
 
         if (count($ids) != $options->count()) {
             $request->session()->flash('error', trans('messages.invalid_option_id'));

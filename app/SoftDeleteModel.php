@@ -43,11 +43,11 @@ class SoftDeleteModel extends BaseModel
 
         $columns = [
             $this->getDeletedAtColumn() => $this->fromDateTime($time),
-            'status' => Status::Deleted
+            'status' => Status::DELETED
         ];
 
         $this->{$this->getDeletedAtColumn()} = $time;
-        $this->status = Status::Deleted;
+        $this->status = Status::DELETED;
 
         if ($this->timestamps && ! is_null($this->getUpdatedAtColumn())) {
             $this->{$this->getUpdatedAtColumn()} = $time;
@@ -73,7 +73,7 @@ class SoftDeleteModel extends BaseModel
         }
 
         $this->{$this->getDeletedAtColumn()} = null;
-        $this->status = Status::Valid;
+        $this->status = Status::VALID;
 
         // Once we have saved the model, we will fire the "restored" event so this
         // developer will do anything they need to after a restore operation is

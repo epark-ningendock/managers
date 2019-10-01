@@ -19,6 +19,22 @@ if (! function_exists('columnSorting')) :
 
 endif;
 
+if (! function_exists('queryForSorting')) :
+    function queryForSorting($sorting_name)
+    {
+        return array_merge(request()->except($sorting_name), [$sorting_name => columnSorting($sorting_name)]);
+    }
+endif;
+
+if (! function_exists('trimToNull')) :
+    function trimToNull($value)
+    {
+        if (is_null($value)) {
+            return null;
+        }
+        return strlen(trim($value)) == 0 ? null : trim($value);
+    }
+endif;
 
 if (! function_exists('csvToArray')) :
 

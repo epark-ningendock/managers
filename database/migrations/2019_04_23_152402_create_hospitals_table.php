@@ -1,13 +1,14 @@
 <?php
 
 use App\Helpers\DBCommonColumns;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateHospitalsTable extends Migration
 {
     use DBCommonColumns;
+
     /**
      * Run the migrations.
      *
@@ -17,6 +18,7 @@ class CreateHospitalsTable extends Migration
     {
         Schema::create('hospitals', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('old_karada_dog_id')->nullable()->comment('旧からだドックID');
             $table->string('name', 200);
             $table->string('kana', 100);
             $table->char('postcode', 8)->nullable();
@@ -57,16 +59,16 @@ class CreateHospitalsTable extends Migration
             $table->text('principal_history')->nullable();
             $table->integer('pv_count')->default(0);
             $table->integer('pvad')->default(0);
-            $table->integer('is_pickup')->nullable();
+            $table->tinyInteger('is_pickup', false, 1)->nullable();
             $table->unsignedInteger('hospital_staff_id');
-            $table->char('status')->default(0);
+            $table->char('status', 1)->default(0);
             $table->text('free_area')->nullable();
             $table->text('search_word')->nullable();
             $table->char('plan_code', 2)->nullable();
             $table->char('hplink_contract_type', 1)->default(0)->nullable();
             $table->integer('hplink_count')->nullable();
             $table->integer('hplink_price')->nullable();
-            $table->char('is_pre_account')->nullable();
+            $table->char('is_pre_account', 1)->nullable();
             $table->integer('pre_account_discount_rate')->nullable();
             $table->decimal('pre_account_commission_rate', 5, 2)->nullable();
             $this->addCommonColumns($table);

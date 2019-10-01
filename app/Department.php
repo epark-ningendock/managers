@@ -12,4 +12,5 @@ class Department extends Model
     {
         return $this->hasOne('App\Staff');
     }
+
 }

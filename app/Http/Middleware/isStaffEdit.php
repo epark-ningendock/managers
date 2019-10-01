@@ -19,7 +19,7 @@ class isStaffEdit
     public function handle($request, Closure $next)
     {
         if (Auth::user()->getTable() == "staffs") {
-            if (Auth::user()->staff_auth->is_staff !== Permission::Edit) {
+            if (Auth::user()->staff_auth->is_staff !== Permission::EDIT) {
                 request()->session()->forget('hospital_id');
                 return redirect('/hospital');
             }

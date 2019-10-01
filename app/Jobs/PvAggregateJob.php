@@ -19,7 +19,7 @@ class PvAggregateJob implements ShouldQueue
 
     public function __construct($aggregateDate, $deleteFlg)
     {
-        $this->$aggregateDate = $aggregateDate;
+        $this->aggregateDate = $aggregateDate;
         $this->deleteFlg = $deleteFlg;
     }
 
@@ -30,21 +30,32 @@ class PvAggregateJob implements ShouldQueue
     {
 
         // pv集計数をリセットする
-        $query = PvRecord::all();
-        $query->update(['pv_count' => 0]);
+        $this->resetPvCount();
 
         // 医療機関ごとの指定日付分のpv数を取得する。
         $query = PvRecord::getPvData($this->aggregateDate);
         $pvRecords = collect($query->get()->toArray());
 
         // 医療機関のpv数を更新する
-        $this->updatePvCount($pvRecords);
+        if (count($pvRecords)) {
+            $this->updatePvCount($pvRecords);
+        }
 
         // 過のpvデータを削除する
         if ($this->deleteFlg) {
             $this->deletePvData();
         }
 
+    }
+
+    /**
+     * PV数をリセットする
+     */
+    protected function resetPvCount() {
+        $pvRecords = PvRecord::all();
+        foreach ($pvRecords as $pvRecord) {
+            $pvRecord->update(['pv_count' => 0]);
+        }
     }
 
     /**
@@ -66,7 +77,7 @@ class PvAggregateJob implements ShouldQueue
      */
     protected function deletePvData() {
         $date = Carbon::today();
-        $date->subDay(($this->aggregateDate + 3));
+        $date->subDay((config('constant.pv_aggregate_day') + 3));
         PvRecord::where('created_at', '<=', $date)->delete();
 
     }

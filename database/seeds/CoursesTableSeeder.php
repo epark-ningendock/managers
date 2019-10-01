@@ -15,6 +15,7 @@ use App\HospitalImage;
 use App\ImageOrder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Enums\RegistrationDivision;
 
 class CoursesTableSeeder extends Seeder
 {
@@ -34,6 +35,7 @@ class CoursesTableSeeder extends Seeder
         $calendars = Calendar::all()->groupBy('hospital_id');
 
         $courses = factory(Course::class, 50)->make();
+
         foreach ($courses as $index => $course) {
             $hospital = $faker->randomElement($hospitals);
             $course->hospital_id = $hospital->id;
@@ -52,7 +54,7 @@ class CoursesTableSeeder extends Seeder
                     'middle_classification_id' => $minor->middle_classification_id,
                     'major_classification_id' => $minor->major_classification_id,
                 ];
-                if ($minor->is_fregist == '1') {
+                if ($minor->is_fregist == RegistrationDivision::CHECK_BOX) {
                     $detail['inputstring'] = null;
                     $detail['select_status'] = $faker->randomElement([0, 1]);
                 } else {
@@ -63,13 +65,11 @@ class CoursesTableSeeder extends Seeder
             }
 
             $images = $faker->randomElements($hospital_images->get($hospital->id), 1);
-            foreach ($images as $image) {
-                factory(CourseImage::class)->create([
-                    'course_id' => $course->id,
-                    'hospital_image_id' => $image->id,
-                    'image_order_id' => $faker->randomElement($image_orders)->id
-                ]);
-            }
+            // foreach ($images as $image) {
+            //     factory(CourseImage::class)->create([
+            //         'course_id' => $course->id,
+            //     ]);
+            // }
 
             foreach ($options->get($hospital->id) as $option) {
                 //random option
