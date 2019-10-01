@@ -493,7 +493,7 @@ class CalendarController extends Controller
             }
 
             Holiday::insert($new_holidays->toArray());
-            $hospital = Hospital::findOrFail(1);
+            $hospital = Hospital::findOrFail(session()->get('hospital_id'));
             
             $data = [
                 'hospital' => $hospital,
