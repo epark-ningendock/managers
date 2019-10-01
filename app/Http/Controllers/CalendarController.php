@@ -25,8 +25,6 @@ use Illuminate\Support\Facades\Auth;
 
 class CalendarController extends Controller
 {
-    const EPARK_MAIL_ADDRESS = "dock_all@eparkdock.com";
-
     /**
      * Display a listing of the calendar.
      *
@@ -65,7 +63,7 @@ class CalendarController extends Controller
                 'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
                 'processing' => '登録'
              ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CalendarSettingNotificationMail($data));
 
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.calendar')]));
             return redirect('calendar');
@@ -150,7 +148,7 @@ class CalendarController extends Controller
                 'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
                 'processing' => '更新'
              ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CalendarSettingNotificationMail($data));
 
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar')]));
             return redirect('calendar');
@@ -181,7 +179,7 @@ class CalendarController extends Controller
                 'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
                 'processing' => '削除'
              ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CalendarSettingNotificationMail($data));
 
             return redirect('calendar')->with('error', trans('messages.deleted', ['name' => trans('messages.names.calendar')]));
         } catch (StaleModelLockingException $e) {
@@ -337,7 +335,7 @@ class CalendarController extends Controller
                 'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
                 'processing' => 'カレンダー設定の更新'
              ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CalendarSettingNotificationMail($data));
 
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar_setting')]));
             DB::commit();
@@ -502,7 +500,7 @@ class CalendarController extends Controller
                 'subject' => '【EPARK人間ドック】休日設定更新のお知らせ',
                 'processing' => '更新'
              ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CalendarSettingNotificationMail($data));
 
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.holiday_setting')]));
             DB::commit();
