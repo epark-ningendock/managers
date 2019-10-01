@@ -206,8 +206,8 @@ class CustomerController extends Controller
 
         $attributes = $request->only([ 'customer_id', 'title', 'contents']);
         $attributes = array_merge($attributes, [
-           'sender_name' => 'unei@eparkdock.com',
-           'sender_address' => 'unei@eparkdock.com',
+           'sender_name' => env('EPARK_EMAIL_ADDRESS'),
+           'sender_address' => env('EPARK_EMAIL_ADDRESS'),
            'email' => $customer->email
         ]);
 
