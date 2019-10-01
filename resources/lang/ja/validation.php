@@ -133,7 +133,7 @@ return [
         'family_name_kana' => [
             'regex' => 'お名前 かな (せい)は、ひらがなのみでご入力ください。'
         ],
-        'first_name_kana' > [
+        'first_name_kana' => [
             'regex' => 'お名前 かな (めい)は、ひらがなのみでご入力ください。'
         ],
         'login_id' => [
