@@ -38,7 +38,7 @@ class ReservationController extends Controller
     public function conf(ReservationShowRequest $request)
     {
         // パラメータ取得
-        $reservation_id = $request->input('appoint_id');
+        $reservation_id = $request->input('reservation_id');
 
         // 対象取得
         $entity = $this->_reservation_service->find($reservation_id);
