@@ -620,7 +620,7 @@
                         </div>
                         <div class="form-group @if ($errors->has('internal_tab_'.$i.'_memo2')) has-error @endif">
                         {{Form::label('internal_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
-                        {{Form::textarea('internal_tab_'.$i.'_memo2', null, ['class' => 'form-control'])}}
+                        {{Form::textarea('internal_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows'=>'2'])}}
                         @if ($errors->has('internal_tab_'.$i.'_memo2'))
                             <div class="error_message">{{ $errors->first('internal_tab_'.$i.'_memo2') }}</div>
                         @endif
