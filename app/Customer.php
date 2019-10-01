@@ -44,14 +44,6 @@ class Customer extends SoftDeleteModel
         'sex' => Gender::class
     ];
 
-    const MALE = 'M';
-    const FEMALE = 'F';
-
-    public static $sex = [
-        self::MALE => '男性',
-        self::FEMALE => '女性',
-    ];
-
     public function setParentCustomerIdAttribute($value)
     {
         $this->attributes['parent_customer_id'] = ($value == 'NULL' || empty($value)) ? null : $value;

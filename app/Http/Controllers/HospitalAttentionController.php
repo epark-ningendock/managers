@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 use App\Enums\RegistrationDivision;
+use App\Enums\Rate;
 
 class HospitalAttentionController extends Controller
 {
@@ -30,10 +31,10 @@ class HospitalAttentionController extends Controller
         $hospital = Hospital::findOrFail($hospital_id);
 
         // 通常手数料
-        $feeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', FeeRate::FEE_RATE)->orderBy('from_date', 'asc')->get();
+        $feeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', Rate::FEE_RATE)->orderBy('from_date', 'asc')->get();
 
         // 事前決済手数料
-        $prePaymentFeeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', FeeRate::PRE_PAYMENT_FEE_RATE)->orderBy('from_date', 'asc')->get();
+        $prePaymentFeeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', Rate::PRE_PAYMENT_FEE_RATE)->orderBy('from_date', 'asc')->get();
 
         return view('hospital.create-attention')
             ->with('hospital', $hospital)
@@ -90,7 +91,7 @@ class HospitalAttentionController extends Controller
 
                             if (count($sorted_fee_rates) - 1 <= $key) {
                                 $to_date = null;
-                                $this->saveFeeRate($value, $hospital_id, FeeRate::FEE_RATE, $to_date);
+                                $this->saveFeeRate($value, $hospital_id, Rate::FEE_RATE, $to_date);
                             } else {
                                 $next_from_date = new Carbon($sorted_fee_rates[$key + 1]['from_date']);
                                 if ($value['from_date'] == $next_from_date) {
@@ -101,7 +102,7 @@ class HospitalAttentionController extends Controller
                                 
                                 $date = new Carbon($sorted_fee_rates[$key + 1]['from_date']);
                                 $to_date = $date->subDay();
-                                $this->saveFeeRate($value, $hospital_id, FeeRate::FEE_RATE, $to_date);
+                                $this->saveFeeRate($value, $hospital_id, Rate::FEE_RATE, $to_date);
                             }
                         }
                     }
@@ -137,7 +138,7 @@ class HospitalAttentionController extends Controller
 
                             if (count($sorted_pre_payment_fee_rates) - 1 <= $key) {
                                 $to_date = null;
-                                $this->saveFeeRate($value, $hospital_id, FeeRate::PRE_PAYMENT_FEE_RATE, $to_date);
+                                $this->saveFeeRate($value, $hospital_id, Rate::PRE_PAYMENT_FEE_RATE, $to_date);
                             } else {
                                 $next_from_date = new Carbon($sorted_pre_payment_fee_rates[$key + 1]['from_date']);
                                 if ($value['from_date'] == $next_from_date) {
@@ -147,7 +148,7 @@ class HospitalAttentionController extends Controller
                                 }
     
                                 $to_date = new Carbon($sorted_pre_payment_fee_rates[$key + 1]['from_date']->subDay());
-                                $this->saveFeeRate($value, $hospital_id, FeeRate::PRE_PAYMENT_FEE_RATE, $to_date);                       
+                                $this->saveFeeRate($value, $hospital_id, Rate::PRE_PAYMENT_FEE_RATE, $to_date);                       
                             }
                         }
                     }
@@ -247,8 +248,8 @@ class HospitalAttentionController extends Controller
 
             $middles = HospitalMiddleClassification::all();
             $hospital = Hospital::findOrFail($hospital_id);
-            $feeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', FeeRate::FEE_RATE)->orderBy('from_date', 'asc')->get();
-            $prePaymentFeeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', FeeRate::PRE_PAYMENT_FEE_RATE)->orderBy('from_date', 'asc')->get();
+            $feeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', Rate::FEE_RATE)->orderBy('from_date', 'asc')->get();
+            $prePaymentFeeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', Rate::PRE_PAYMENT_FEE_RATE)->orderBy('from_date', 'asc')->get();
             return redirect()->route('hospital.attention.create', ['hospital_id' => $hospital_id])->with('success', trans('messages.updated', ['name' => trans('messages.names.attetion_information')]));
 
         } catch (Exception $e) {
@@ -266,7 +267,7 @@ class HospitalAttentionController extends Controller
      */
     protected function saveFeeRate(Array $value, int $hospital_id, int $type, $to_date) {
         if ($value['id']) {
-            $fee_rate = FeeRate::findOrFail($value['id']);
+            $fee_rate = Rate::findOrFail($value['id']);
             $fee_rate->rate = $value['rate'];
             $fee_rate->from_date = $value['from_date'];
             $fee_rate->to_date = $to_date;

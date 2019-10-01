@@ -7,12 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class HospitalCategory extends SoftDeleteModel
 {
     use SoftDeletes;
-    //image_group_number
-    const TAB_CATEGORY_STAFF = 1;//タブ スタッフ
-    const TAB_CATEGORY_FACILITY = 2;//タブ 設備
-    const TAB_CATEGORY_INTERNAL = 3;//タブ 院内
-    const TAB_CATEGORY_EXTERNAL = 4;//外観
-    const TAB_CATEGORY_ANOTHER = 5;//その他
     protected $dates = ['deleted_at'];
 
     protected $guarded = ['id'];
