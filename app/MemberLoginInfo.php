@@ -2,10 +2,12 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Filters\Filterable;
 
-class MemberLoginInfo extends Model
+class MemberLoginInfo extends SoftDeleteModel
 {
+    use Filterable;
+  
     protected $table = 'member_login_info';
 
     protected $fillable = [
@@ -14,6 +16,10 @@ class MemberLoginInfo extends Model
         'nick_use',
         'contact',
         'contact_name',
-        'status',
+        'status'
+    ];
+
+    protected $guarded = [
+        'id',
     ];
 }
