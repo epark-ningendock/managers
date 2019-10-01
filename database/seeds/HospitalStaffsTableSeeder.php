@@ -18,7 +18,7 @@ class HospitalStaffsTableSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         foreach ($hospitals as $hospital) {
-            factory(HospitalStaff::class, 50)->create([
+            factory(HospitalStaff::class, 10)->create([
                 'hospital_id' => $hospital->id,
             ]);
         }

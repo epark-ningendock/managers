@@ -33,7 +33,7 @@
                 <tr>
                     <td class="gray-cell-bg"><label for="gender">{{ trans('messages.gender') }}</label></td>
                     <td>
-                        {{ $customer_detail->sex->description }}
+                        {{ $customer_detail->sex->description or '-' }}
                     </td>
                     <td class="gray-cell-bg">{{ trans('messages.birthday') }}</td>
                     <td>{{ $customer_detail->birthday }}</td>
@@ -41,31 +41,31 @@
                 <tr>
                     <td class="gray-cell-bg">{{ trans('messages.address') }}</td>
                     <td colspan="3">
-                        {{ trans('messages.postcode') }} - {{ $customer_detail->postcode }}<br/>
-                        {{ trans('messages.prefectures') }} - {{ $customer_detail->prefecture_id }}<br/>
-                        {{ $customer_detail->address1 }}<br/>
-                        {{ $customer_detail->address2 }}<br/>
+                        〒{{ $customer_detail->postcode }}<br/>
+                        @if(isset($customer_detail->prefecture))
+                            {{ $customer_detail->prefecture->name }}
+                        @endif
+                        {{ $customer_detail->address1 }}{{ $customer_detail->address2 }}<br/>
                     </td>
                 </tr>
                 <tr>
                     <td class="gray-cell-bg">{{ trans('messages.email') }}</td>
-                    <td colspan="3"> {{ $customer_detail->email }}<br/> <button class="btn btn-primary">{{ trans('messages.send_mail') }}</button></td>
+                    <td colspan="3"> {{ $customer_detail->email }}<br/>
+                        <button id="show-send-mail"
+                            data-id="{{ $customer_detail->id }}"
+                            data-route="{{ route('customer.show.email.form', ['customer_id' => $customer_detail->id]) }}"
+                            class="btn btn-primary">{{ trans('messages.send_mail') }}</button>
+                    </td>
                 </tr>
                 <tr>
                     <td class="gray-cell-bg">{{ trans('messages.memo') }}</td>
                     <td>{{ $customer_detail->memo }}</td>
-                    <td class="gray-cell-bg">{{ trans('messages.reservation_memo') }}</td>
-                    <td>
-                        @if ( !empty($customer_detail->reservations()->NearestDate()->first()->reservation_date) )
-                            {{ $customer_detail->reservations()->NearestDate()->first()->reservation_date }}
-                        @endif
-                    </td>
                 </tr>
                 <tr>
                     <td class="gray-cell-bg">{{ trans('messages.claim_count') }}</td>
-                    <td>{{ $customer_detail->claim_count }}</td>
+                    <td>{{ $customer_detail->claim_count }}回</td>
                     <td class="gray-cell-bg">{{ trans('messages.recall_count') }}</td>
-                    <td>{{ $customer_detail->recall_count }}</td>
+                    <td>{{ $customer_detail->recall_count }}回</td>
                 </tr>
 
             </table>
@@ -74,7 +74,7 @@
     </div>
     <div class="modal-footer">
         <div class="ft-action-btn-wrapper">
-            <button class="btn btn-primary" type="submit">Modify</button>
+            <a class="btn btn-primary" href="{{ route('customer.edit', $customer_detail->id) }}" >変更</a>
         </div>
     </div>
 

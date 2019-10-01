@@ -2,7 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\HospitalImage;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\HospitalCategory;
+use App\ImageOrder;
+use App\Enums\FileLocationNo;
+use App\Enums\ImageGroupNumber;
 
 class HospitalImageFormRequest extends FormRequest
 {
@@ -30,51 +36,125 @@ class HospitalImageFormRequest extends FormRequest
         $tab_another_valid = [];
 
         for ($i = 1; $i <= 30; $i++) {
+            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageGroupNumber::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_STAFF)->first();
+            $id = !is_null($hospital_category_data) ? $hospital_category_data->id : null ;
+
             $tab_staff_valid += [
             "staff_tab_{$i}" => 'file|image|max:4000',
-            "staff_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+
+            "staff_tab_{$i}_order2" => [
+                "required_with:staff_tab_{$i}_category_id,staff_tab_{$i}_memo2,staff_tab_{$i}",
+                'nullable',
+                'numeric',
+                'max:99',
+                'min:1',
+                Rule::unique('hospital_categories', 'order2')
+                    ->ignore($id)
+                    ->where('hospital_id', $this->hospital)
+                    ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
+                    ->where('file_location_no', FileLocationNo::TAB_CATEGORY_STAFF)
+                    ->whereNull('deleted_at')
+            ],
             "staff_tab_{$i}_memo2" => 'nullable|max:200',
             "staff_tab_{$i}_location" => 'nullable',
          ];
         }
 
         for ($i = 1; $i <= 30; $i++) {
+            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageGroupNumber::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_FACILITY)->first();
+            $id = !is_null($hospital_category_data) ? $hospital_category_data->id : null ;
             $tab_facility_valid += [
                 "facility_tab_{$i}" => 'file|image|max:4000',
-                "facility_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+                "facility_tab_{$i}_order2" => [
+                    "required_with:facility_tab_{$i}_category_id,facility_tab_{$i}_memo2,facility_tab_{$i}",
+                    'nullable',
+                    'numeric',
+                    'max:99',
+                    'min:1',
+                    Rule::unique('hospital_categories', 'order2')
+                        ->ignore($id)
+                        ->where('hospital_id', $this->hospital)
+                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
+                        ->where('file_location_no', FileLocationNo::TAB_CATEGORY_FACILITY)
+                        ->whereNull('deleted_at')
+                ],
                 "facility_tab_{$i}_memo2" => 'nullable|max:200',
                 "facility_tab_{$i}_location" => 'nullable',
             ];
         }
 
         for ($i = 1; $i <= 30; $i++) {
+            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageGroupNumber::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_INTERNAL)->first();
+            $id = !is_null($hospital_category_data) ? $hospital_category_data->id : null ;
             $tab_internal_valid += [
                 "internal_tab_{$i}" => 'file|image|max:4000',
-                "internal_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+                "internal_tab_{$i}_order2" => [
+                    "required_with:internal_tab_{$i}_category_id,internal_tab_{$i}_memo2,internal_tab_{$i}",
+                    'nullable',
+                    'numeric',
+                    'max:99',
+                    'min:1',
+                    Rule::unique('hospital_categories', 'order2')
+                        ->ignore($id)
+                        ->where('hospital_id', $this->hospital)
+                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
+                        ->where('file_location_no', FileLocationNo::TAB_CATEGORY_INTERNAL)
+                        ->whereNull('deleted_at'),
+                ],
                 "internal_tab_{$i}_memo2" => 'nullable|max:200',
                 "internal_tab_{$i}_location" => 'nullable',
             ];
         }
 
         for ($i = 1; $i <= 30; $i++) {
+            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageGroupNumber::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_EXTERNAL)->first();
+            $id = !is_null($hospital_category_data) ? $hospital_category_data->id : null ;
             $tab_external_valid += [
                 "external_tab_{$i}" => 'file|image|max:4000',
-                "external_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+                "external_tab_{$i}_order2" => [
+                    "required_with:external_tab_{$i}_category_id,external_tab_{$i}_memo2,external_tab_{$i}",
+                    'nullable',
+                    'numeric',
+                    'max:99',
+                    'min:1',
+                    Rule::unique('hospital_categories', 'order2')
+                        ->ignore($id)
+                        ->where('hospital_id', $this->hospital)
+                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
+                        ->where('file_location_no', FileLocationNo::TAB_CATEGORY_EXTERNAL)
+                        ->whereNull('deleted_at'),
+                ],
                 "external_tab_{$i}_memo2" => 'nullable|max:200',
                 "external_tab_{$i}_location" => 'nullable',
             ];
         }
 
         for ($i = 1; $i <= 30; $i++) {
+            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageGroupNumber::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_ANOTHER)->first();
+            $id = !is_null($hospital_category_data) ? $hospital_category_data->id : null ;
             $tab_another_valid += [
                 "another_tab_{$i}" => 'file|image|max:4000',
-                "another_tab_{$i}_order" => 'nullable|max:99|numeric|min:1',
+                "another_tab_{$i}_order2" => [
+                    "required_with:another_tab_{$i}_category_id,another_tab_{$i}_memo2,another_tab_{$i}",
+                    'nullable',
+                    'numeric',
+                    'max:99',
+                    'min:1',
+                    Rule::unique('hospital_categories', 'order2')
+                        ->ignore($id)
+                        ->where('hospital_id', $this->hospital)
+                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
+                        ->where('file_location_no', FileLocationNo::TAB_CATEGORY_ANOTHER)
+                        ->whereNull('deleted_at'),
+                ],
                 "another_tab_{$i}_memo2" => 'nullable|max:200',
                 "another_tab_{$i}_location" => 'nullable',
             ];
         }
 
         $valid = [
+            'lock_version' => 'nullable',
+
             'main' => 'file|image|max:4000',
             'sub_1' => 'file|image|max:4000',
             'sub_2' => 'file|image|max:4000',
@@ -181,8 +261,8 @@ class HospitalImageFormRequest extends FormRequest
             'interview_1_title' => 'nullable|max:100',
             'interview_1_caption' => 'nullable|max:5000',
 
-            'interview.*.question' => 'max:5000',
-            'interview.*.answer' => 'max:5000',
+            'interview.*.question' => 'required|max:5000',
+            'interview.*.answer' => 'required|max:5000',
 
             'interview_new.*.question' => 'max:5000',
             'interview_new.*.answer' => 'max:5000',
@@ -207,15 +287,14 @@ class HospitalImageFormRequest extends FormRequest
         $tab_facility_attributes = [];
         for ($i = 1; $i <= 30; $i++) {
             $tab_facility_attributes += [
-                "facility_tab_{$i}_order" => '表示順',
+                "facility_tab_{$i}_order2" => '表示順',
                 "facility_tab_{$i}_memo2" => '説明',
             ];
         }
-
         $tab_staff_attributes = [];
         for ($i = 1; $i <= 30; $i++) {
             $tab_staff_attributes += [
-                "staff_tab_{$i}_order" => '表示順',
+                "staff_tab_{$i}_order2" => '表示順',
                 "staff_tab_{$i}_memo2" => '説明',
             ];
         }
@@ -223,7 +302,7 @@ class HospitalImageFormRequest extends FormRequest
         $tab_internal_attributes = [];
         for ($i = 1; $i <= 30; $i++) {
             $tab_internal_attributes += [
-                "internal_tab_{$i}_order" => '表示順',
+                "internal_tab_{$i}_order2" => '表示順',
                 "internal_tab_{$i}_memo2" => '説明',
             ];
         }
@@ -231,7 +310,7 @@ class HospitalImageFormRequest extends FormRequest
         $tab_external_attributes = [];
         for ($i = 1; $i <= 30; $i++) {
             $tab_external_attributes += [
-                "external_tab_{$i}_order" => '表示順',
+                "external_tab_{$i}_order2" => '表示順',
                 "external_tab_{$i}_memo2" => '説明',
             ];
         }
@@ -239,7 +318,7 @@ class HospitalImageFormRequest extends FormRequest
         $tab_another_attributes = [];
         for ($i = 1; $i <= 30; $i++) {
             $tab_another_attributes += [
-                "another_tab_{$i}_order" => '表示順',
+                "another_tab_{$i}_order2" => '表示順',
                 "another_tab_{$i}_memo2" => '説明',
             ];
         }
@@ -292,8 +371,22 @@ class HospitalImageFormRequest extends FormRequest
 
     public function messages()
     {
-        return [
-            'status.in' => '「状態」を正しく選択してください。',
-        ];
+        $tab_error_messages = [];
+        for ($i = 1; $i <= 30; $i++) {
+            $tab_error_messages += [
+                "another_tab_{$i}_order2.required_with" => '必須項目です',
+                "external_tab_{$i}_order2.required_with" => '必須項目です',
+                "internal_tab_{$i}_order2.required_with" => '必須項目です',
+                "facility_tab_{$i}_order2.required_with" => '必須項目です',
+                "staff_tab_{$i}_order2.required_with" => '必須項目です',
+
+                "facility_tab_{$i}_order2.numeric" => '表示順は、半角数字で入力してください。',
+                "staff_tab_{$i}_order2.numeric" => '表示順は、半角数字で入力してください。',
+                "external_tab_{$i}_order2.numeric" => '表示順は、半角数字で入力してください。',
+                "another_tab_{$i}_order2.numeric" => '表示順は、半角数字で入力してください。',
+                "internal_tab_{$i}_order2.numeric" => '表示順は、半角数字で入力してください。',
+            ];
+        }
+        return $tab_error_messages;
     }
 }

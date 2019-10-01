@@ -2,10 +2,14 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class MajorClassification extends SoftDeleteModel
 {
+    use SoftDeletes;
+
     protected $fillable = [
-        'classification_type_id', 'name', 'status', 'order', 'is_icon', 'icon_name'
+        'classification_type_id', 'name', 'status', 'order', 'is_icon', 'icon_name', 'created_at', 'updated_at'
     ];
 
     public function classification_type()
@@ -28,6 +32,6 @@ class MajorClassification extends SoftDeleteModel
      */
     public function getUpdatedAtStrAttribute()
     {
-        return $this->updated_at->format('Y/m/d').'<br>'.$this->updated_at->format('H:i:s');
+        return $this->updated_at->format('Y/m/d') . '<br>' . $this->updated_at->format('H:i:s');
     }
 }

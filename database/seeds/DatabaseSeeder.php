@@ -1,5 +1,6 @@
 <?php
 
+use App\BillingMailHistory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,22 +13,31 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            ClassificationTypeSeeder::class,
+            // ClassificationTypeSeeder::class, CSVからインポート
             DepartmentsTableSeeder::class,
             StaffsTableSeeder::class,
-            DistrictCodeSeeder::class,
+            // MinorClassificationsTableSeeder::class, CSVからインポート
             HospitalTableSeeder::class,
             HospitalStaffsTableSeeder::class,
-            ContractInformationTableSeeder::class, // comment off if you need it
+            ContractPlansTableSeeder::class,
+            FeeRateSeeder::class,
+            ContractInformationTableSeeder::class,
             HospitalImagesTableSeeder::class,
             OptionsTableSeeder::class,
             TaxClassesTableSeeder::class,
             ImageOrdersTableSeeder::class,
             CalendarsTableSeeder::class,
+            CalendarDaysTableSeeder::class,
             CoursesTableSeeder::class,
             EmailTemplatesTableSeeder::class,
             CustomersSeeder::class,
-            PrefecturesSeeder::class
+            BillingTableSeeder::class,
+            BillingMailHistorySeeder::class,
+            // StationsTableSeeder::class, CSVからインポート
+            // RailsTableSeeder::class, CSVからインポート
+            MedicalExaminationSystemTableSeeder::class,
+            // PrefecturesSeeder::class, CSVからインポート
+            // DistrictCodeSeeder::class, CSVからインポート
         ]);
     }
 }

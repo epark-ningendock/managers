@@ -23,12 +23,12 @@ class PvAggregateCommand extends Command
         $aggregateDay = $this->option('aggregate_day');
         $deleteFlg = false;
         if (empty($aggregateDay)) {
-            $aggregateDate = config('constant.pv_aggregate_day');
+            $aggregateDay = config('constant.pv_aggregate_day');
             $deleteFlg = true;
         }
 
         $date = Carbon::today();
-        $date->subDay($aggregateDate);
+        $date->subDay($aggregateDay);
 
         // PV集計ジョブをキューに登録
         $this->queue($date, $deleteFlg);

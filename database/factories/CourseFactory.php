@@ -7,7 +7,7 @@ use App\Hospital;
 
 $factory->define(Course::class, function (Faker $faker) {
     $result = [
-        'name' => $faker->name,
+        'name' => '検査コース' . $faker->name,
         'web_reception' => $faker->randomElement(['0', '1']),
         'is_price' => $faker->randomElement([0, 1]),
         'is_price_memo' => $faker->randomElement([0, 1]),

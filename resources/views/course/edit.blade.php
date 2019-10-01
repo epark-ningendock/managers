@@ -4,14 +4,16 @@
   <h1>
       <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
       -
-      <i class="fa fa-book"> 検査コース管理</i>
+      <span> 検査コース管理</span>
+      -
+      <span> 変更</span>
   </h1>
 @stop
 
 <!-- ページの内容を入力 -->
 @section('main-content')
-  @include('layouts.partials.errorbag')
-  <form method="POST" action="{{ route('course.update', $course->id) }}">
+  @include('layouts.partials.message')
+  <form method="POST" action="{{ route('course.update', $course->id) }}" enctype="multipart/form-data">
     {!! csrf_field() !!}
     {!! method_field('PATCH') !!}
     @include('course.partials.form')

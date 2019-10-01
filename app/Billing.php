@@ -21,4 +21,14 @@ class Billing extends SoftDeleteModel
     protected $fillable = [
         'hospital_id', 'billing_month', 'status'
     ];
+
+    public function contractPlan()
+    {
+        return $this->belongsTo(ContractPlan::class);
+    }
+
+    public function hospital()
+    {
+        return $this->belongsTo(Hospital::class);
+    }
 }

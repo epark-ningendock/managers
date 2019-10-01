@@ -18,7 +18,9 @@
                     },
                     cache: false,
                     success: function (response) {
-                        $('.std-modal-box .modal-content').html(response.data);
+                        // to unbind js events
+                        $('.std-modal-box .modal-content').children().remove();
+                        $('.std-modal-box .modal-content').append($(response.data));
                         $('.std-modal-box').modal('show');
                     }
                 });

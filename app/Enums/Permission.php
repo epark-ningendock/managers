@@ -7,16 +7,16 @@ use BenSampo\Enum\Enum;
 
 final class Permission extends Enum implements LocalizedEnum
 {
-    const None = 0;
-    const View = 1;
-    const Edit = 3;
-    const Upload = 7;
+    const NONE = 0;
+    const VIEW = 1;
+    const EDIT = 3;
+    const UPLOAD = 7;
 
     private const permission_bits = [
-        Permission::None => 0,
-        Permission::View => 1,
-        Permission::Edit => 2,
-        Permission::Upload => 4,
+        Permission::NONE => 0,
+        Permission::VIEW => 1,
+        Permission::EDIT => 2,
+        Permission::UPLOAD => 4,
     ];
 
     public function getPermissionBit()

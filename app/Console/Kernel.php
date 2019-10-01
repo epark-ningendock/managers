@@ -18,6 +18,8 @@ class Kernel extends ConsoleKernel
         Commands\TemporaryReservationCheckCommand::class,
         Commands\ClaimRecordCreateCommand::class,
         Commands\CourseCloseCheckCommand::class,
+        /** 路線情報更新バッチ */
+        Commands\EkiSpertManagerCommand::class,
     ];
 
     /**

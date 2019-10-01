@@ -33,7 +33,7 @@ class RegisteredMail extends Mailable
     {
         return $this
         ->from('epark@example.com')
-        ->subject('[Epark]ご登録ありがとうございます')
+        ->subject('【EPARK人間ドック】ご登録ありがとうございます')
         ->view('hospital_staff.email.registered');
     }
 }

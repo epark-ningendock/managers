@@ -7,7 +7,7 @@
 
 @section('adminlte_css')
   <link rel="stylesheet"
-    href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 'blue') . '.min.css')}} ">
+        href="{{ asset('vendor/adminlte/dist/css/skins/skin-' . config('adminlte.skin', 'blue') . '.min.css')}} ">
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   @stack('css')
   @yield('css')
@@ -98,33 +98,31 @@
                 </span>
               </a>
               <ul class="treeview-menu">
-                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_hospital !== Permission::None)
-                  <li class="{{ Request::segment(1) === 'hospital' ? 'active' : null }}"><a href="/hospital"><i class="fa fa-hospital-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;医療機関管理</a></li>
+                @if (Auth::user()->authority->value !== Authority::CONTRACT_STAFF && Auth::user()->staff_auth->is_hospital !== Permission::NONE)
+                  <li class="{{ Request::segment(1) === 'hospital' && request()->path() !== 'hospital/contract' ? 'active' : null }}"><a href="/hospital"><i class="fa fa-hospital-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;医療機関管理</a></li>
                 @endif
-                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_staff !== Permission::None)
+                @if (Auth::user()->authority->value !== Authority::CONTRACT_STAFF && Auth::user()->staff_auth->is_staff !== Permission::NONE)
                   <li class="{{ Request::segment(1) === 'staff' && request()->path() !== 'staff/edit-password-personal' ? 'active' : null }}"><a href="/staff"><i class="fa fa-users"></i>&nbsp;&nbsp;&nbsp;&nbsp;スタッフ管理</a></li>
                 @endif
-                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_cource_classification !== Permission::None)
+                @if (Auth::user()->authority->value !== Authority::CONTRACT_STAFF && Auth::user()->staff_auth->is_cource_classification !== Permission::NONE)
                   <li class="{{ Request::segment(1) === 'classification' ? 'active' : null }}"><a href="/classification"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コース分類管理</a></li>
                 @endif
-                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_invoice !== Permission::None)
-                  <li class="{{ Request::segment(1) === 'reservation' ? 'active' : null }}"><a href="/reservation"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
-                @endif
-                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_pre_account !== Permission::None)
+                @if (Auth::user()->authority->value !== Authority::CONTRACT_STAFF && Auth::user()->staff_auth->is_pre_account !== Permission::NONE)
                   <li class="{{ Request::segment(1) === '#' ? 'active' : null }}"><a href="/#"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;事前決済管理</a></li>
                 @endif
-                {{-- 契約管理者のみ表示する --}}
-                @if (Auth::user()->authority->value === Authority::ContractStaff)
-                  <li class="{{ Request::segment(1) === '#' ? 'active' : null }}"><a href="/#"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;契約管理</a></li>
+                @if (Auth::user()->authority->value === Authority::CONTRACT_STAFF)
+                  <li class="{{ request()->path() === 'hospital/contract' ? 'active' : null }}"><a href="/hospital/contract"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;契約管理</a></li>
                 @endif
                 @if(Auth::user()->getTable() == "staffs")
-                  <li class="{{ request()->path()  === 'staff/edit-password-personal' ? 'active' : null }}"><a href="/staff/edit-password-personal"><i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;パスワードの変更</a></li>
+                  <li class="{{ request()->path() === 'staff/edit-password-personal' ? 'active' : null }}"><a href="/staff/edit-password-personal"><i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;パスワードの変更</a></li>
+                @endif
+                @if (Auth::user()->authority->value !== Authority::CONTRACT_STAFF && Auth::user()->staff_auth->is_invoice !== Permission::NONE)
+                  <li class="{ ( request()->is(['billing/*', 'billing'])  ) ? 'active' : '' }}"><a href="/billing"><i class="fa fa-dollar"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
                 @endif
               </ul>
           @endif
           {{-- 医療機関スタッフの機能 --}}
-          {{-- TODO: 編集権限がない場合、非表示 --}}
-          @if(request()->session()->get('hospital_id'))
+          @if ( request()->session()->get('hospital_id'))
             <li class="treeview @if (request()->session()->get('hospital_id')) active @endif">
                 <a href="#">
                   <i class="fa fa-list-ul"></i> <span>医療機関スタッフ機能</span>
@@ -138,10 +136,13 @@
                   <li class="{{ Request::segment(1) === '#' ? 'active' : null }}"><a href="#"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
                   <li class="{{ Request::segment(1) === 'course' ? 'active' : null }}"><a href="/course"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コース管理</a></li>
                   <li class="{{ Request::segment(1) === 'option' ? 'active' : null }}"><a href="/option"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コースオプション管理</a></li>
-                  <li class="{{ Request::segment(1) === 'reception' ? 'active' : null }}"><a href="/reception"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付一覧</a></li>
+                  <li class="{{ Request::segment(1) === 'reservation' ? 'active' : null }}"><a href="/reservation"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付一覧</a></li>
                   <li class="{{ Request::segment(1) === 'calendar' ? 'active' : null }}"><a href="/calendar"><i class="fa fa-calendar"></i>&nbsp;&nbsp;&nbsp;&nbsp;カレンダー管理</a></li>
                   <li class="{{ Request::segment(1) === 'email-template' ? 'active' : null }}"><a href="/email-template"><i class="fa fa-gears"></i>&nbsp;&nbsp;&nbsp;&nbsp;メールテンプレート管理</a></li>
-                  <li class="{{ Request::segment(1) === 'reception-email-setting' ? 'active' : null }}"><a href="/reception-email-setting"><i class="fa fa-gears"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付メール設定</a></li>
+                  {{-- EPARKスタッフのみ表示させる --}}
+                  @if(Auth::user()->getTable() == "staffs")
+                    <li class="{{ Request::segment(1) === 'hospital-email-setting' ? 'active' : null }}"><a href="/hospital-email-setting"><i class="fa fa-gears"></i>&nbsp;&nbsp;&nbsp;&nbsp;受付メール設定</a></li>
+                  @endif
                   @if(Auth::user()->getTable() == "hospital_staffs" && request()->session()->get('hospital_id'))
                     <li class="{{ request()->path()  === 'hospital-staff/edit-password' ? 'active' : null }}"><a href="{{ route('hospital-staff.edit.password') }}"><i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;パスワードの変更</a></li>
                   @endif
@@ -150,6 +151,7 @@
                 {{-- @each('adminlte::partials.menu-item', $adminlte->menu(), 'item') --}}
             </li>
           @endif
+        </ul>
         <!-- /.sidebar-menu -->
       </section>
       <!-- /.sidebar -->

@@ -18,7 +18,7 @@ class AuthorityLevelAdmin
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::user()->authority->value !== Authority::Admin) {
+        if (Auth::user()->authority->value !== Authority::ADMIN) {
             return redirect('/hospital');
         }
         return $next($request);

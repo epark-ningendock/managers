@@ -7,7 +7,7 @@
 @section('form')
 
     <div class="note-msg m-4">
-      <span class="text-danger">(*)</span>必ず列を入力してください
+      <span class="text-danger">必須</span>の欄は必ず入力してください
     </div>
     <form method="POST" action="{{ route('customer.store') }}" class="h-adr">
       {{ csrf_field() }}
@@ -15,7 +15,8 @@
       @includeIf('customer.partials.form')
 
       <div class="text-center mb-5 pb-5">
-        <button type="submit" class="btn btn-primary btn-lg">{{trans('messages.registration') }}</button>
+        <a href="{{ route('customer.index') }}" class="btn btn-default">戻る</a>
+        <button type="submit" class="btn btn-primary">{{trans('messages.registration') }}</button>
       </div>
 
     </form>
