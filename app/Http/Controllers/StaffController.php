@@ -61,7 +61,7 @@ class StaffController extends Controller
 
     public function store(StaffFormRequest $request)
     {
-        if (intval($request->authority) === Authority::ContractStaff) {
+        if (intval($request->authority) === Authority::CONTRACT_STAFF) {
             $staff_auths = [
                 'is_hospital' => 0,
                 'is_staff' => 0,
@@ -138,7 +138,7 @@ class StaffController extends Controller
 
     public function update(StaffFormRequest $request, $id)
     {
-        if (intval($request->authority) === Authority::ContractStaff) {
+        if (intval($request->authority) === Authority::CONTRACT_STAFF) {
             $staff_auths = [
                 'is_hospital' => 0,
                 'is_staff' => 0,

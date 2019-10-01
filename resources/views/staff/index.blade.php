@@ -83,7 +83,7 @@
           <th></th>
           <th></th>
         @endif
-        @if (Auth::user()->authority->value === Authority::Admin && Auth::user()->staff_auth->is_staff === 3)
+        @if (Auth::user()->authority->value === Authority::ADMIN && Auth::user()->staff_auth->is_staff === 3)
           <th></th>
         @endif
       </tr>
@@ -122,7 +122,7 @@
             </td>
           @endif
           
-          @if (Auth::user()->authority->value === Authority::Admin && Auth::user()->staff_auth->is_staff === 3)
+          @if (Auth::user()->authority->value === Authority::ADMIN && Auth::user()->staff_auth->is_staff === 3)
             <td>
               @if ( $staff->status->value !== StaffStatus::Deleted)
                 <a href="{{ route('staff.edit.password', ['staff_id' =>  $staff->id]) }}" class="btn btn-primary">

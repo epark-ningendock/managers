@@ -98,25 +98,25 @@
                 </span>
               </a>
               <ul class="treeview-menu">
-                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_hospital !== Permission::None)
+                @if (Auth::user()->authority->value !== Authority::CONTRACT_STAFF && Auth::user()->staff_auth->is_hospital !== Permission::None)
                   <li class="{{ Request::segment(1) === 'hospital' && request()->path() !== 'hospital/contract' ? 'active' : null }}"><a href="/hospital"><i class="fa fa-hospital-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;医療機関管理</a></li>
                 @endif
-                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_staff !== Permission::None)
+                @if (Auth::user()->authority->value !== Authority::CONTRACT_STAFF && Auth::user()->staff_auth->is_staff !== Permission::None)
                   <li class="{{ Request::segment(1) === 'staff' && request()->path() !== 'staff/edit-password-personal' ? 'active' : null }}"><a href="/staff"><i class="fa fa-users"></i>&nbsp;&nbsp;&nbsp;&nbsp;スタッフ管理</a></li>
                 @endif
-                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_cource_classification !== Permission::None)
+                @if (Auth::user()->authority->value !== Authority::CONTRACT_STAFF && Auth::user()->staff_auth->is_cource_classification !== Permission::None)
                   <li class="{{ Request::segment(1) === 'classification' ? 'active' : null }}"><a href="/classification"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コース分類管理</a></li>
                 @endif
-                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_pre_account !== Permission::None)
+                @if (Auth::user()->authority->value !== Authority::CONTRACT_STAFF && Auth::user()->staff_auth->is_pre_account !== Permission::None)
                   <li class="{{ Request::segment(1) === '#' ? 'active' : null }}"><a href="/#"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;事前決済管理</a></li>
                 @endif
-                @if (Auth::user()->authority->value === Authority::ContractStaff)
+                @if (Auth::user()->authority->value === Authority::CONTRACT_STAFF)
                   <li class="{{ request()->path() === 'hospital/contract' ? 'active' : null }}"><a href="/hospital/contract"><i class="fa fa-paper-plane-o"></i>&nbsp;&nbsp;&nbsp;&nbsp;契約管理</a></li>
                 @endif
                 @if(Auth::user()->getTable() == "staffs")
                   <li class="{{ request()->path() === 'staff/edit-password-personal' ? 'active' : null }}"><a href="/staff/edit-password-personal"><i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;パスワードの変更</a></li>
                 @endif
-                @if (Auth::user()->authority->value !== Authority::ContractStaff && Auth::user()->staff_auth->is_invoice !== Permission::None)
+                @if (Auth::user()->authority->value !== Authority::CONTRACT_STAFF && Auth::user()->staff_auth->is_invoice !== Permission::None)
                   <li class="{ ( request()->is(['billing/*', 'billing'])  ) ? 'active' : '' }}"><a href="/billing"><i class="fa fa-dollar"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
                 @endif
               </ul>
