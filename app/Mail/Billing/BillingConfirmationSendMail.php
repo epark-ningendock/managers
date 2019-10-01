@@ -30,7 +30,7 @@ class BillingConfirmationSendMail extends Mailable
     public function build()
     {
         return $this
-            ->from('unei@eparkdock.com')
+            ->from(env('EPARK_EMAIL_ADDRESS'))
             ->subject($this->data['subject'])
             ->view('billing.mail.billing-confirmation', ['content' => $this->data['content']]);
     }

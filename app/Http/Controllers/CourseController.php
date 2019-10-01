@@ -29,7 +29,6 @@ use App\Enums\Permission;
 
 class CourseController extends Controller
 {
-    const EPARK_MAIL_ADDRESS = "dock_all@eparkdock.com";
     /**
      * Display a listing of the course.
      * @return \Illuminate\Contracts\View\Factory\Illuminate\View\View
@@ -105,7 +104,7 @@ class CourseController extends Controller
                 'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
                 'processing' => '登録'
             ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CourseSettingNotificationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CourseSettingNotificationMail($data));
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.course')]));
             return redirect('course');
         } catch (Exception $e) {
@@ -395,7 +394,7 @@ class CourseController extends Controller
                 'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
                 'processing' => '更新'
             ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CourseSettingNotificationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CourseSettingNotificationMail($data));
 
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.course')]));
             return redirect('course');
@@ -428,7 +427,7 @@ class CourseController extends Controller
             'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
             'processing' => '削除'
         ];
-        Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CourseSettingNotificationMail($data));
+        Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CourseSettingNotificationMail($data));
 
         $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.course')]));
         return redirect()->back();

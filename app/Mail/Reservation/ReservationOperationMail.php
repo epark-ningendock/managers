@@ -30,7 +30,7 @@ class ReservationOperationMail extends Mailable
     public function build()
     {
         return $this
-            ->from("unei@eparkdock.com")
+            ->from(env('EPARK_EMAIL_ADDRESS'))
             ->subject("【EPARK人間ドック】受付情報登録・変更・削除のお知らせ")
             ->view('reservation.email.operation-mail');
     }
