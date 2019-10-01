@@ -203,7 +203,7 @@ class StaffInputFieldsTest extends TestCase
         $response = $this->call('DELETE', "/staff/$staff->id", ['_token' => csrf_token()]);
         $this->assertEquals(302, $response->getStatusCode());
         $staff = Staff::find($staff->id);
-        $this->assertEquals(StaffStatus::Deleted, $staff->status->value);
+        $this->assertEquals(StaffStatus::DELETED, $staff->status->value);
     }
 
     /**

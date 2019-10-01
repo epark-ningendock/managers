@@ -7,6 +7,6 @@ use BenSampo\Enum\Enum;
 
 final class CalendarDisplay extends Enum implements LocalizedEnum
 {
-    const Hide = 0;
-    const Show = 1;
+    const HIDE = 0;
+    const SHOW = 1;
 }

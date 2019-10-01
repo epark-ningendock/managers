@@ -334,10 +334,10 @@ class ReservationController extends Controller
         try {
             DB::beginTransaction();
             $reservation = Reservation::findOrFail($id);
-            if (!$reservation->reservation_status->is(ReservationStatus::Pending)) {
+            if (!$reservation->reservation_status->is(ReservationStatus::PENDING)) {
                 return redirect()->back()->withErrors(trans('messages.reservation.invalid_reservation_status'))->withInput();
             }
-            $reservation->reservation_status = ReservationStatus::ReceptionCompleted;
+            $reservation->reservation_status = ReservationStatus::RECEPTION_COMPLETED;
             $reservation->save();
 
             $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
@@ -365,11 +365,11 @@ class ReservationController extends Controller
         try {
             DB::beginTransaction();
             $reservation = Reservation::findOrFail($id);
-            if (!$reservation->reservation_status->is(ReservationStatus::ReceptionCompleted) &&
-                !$reservation->reservation_status->is(ReservationStatus::Pending)) {
+            if (!$reservation->reservation_status->is(ReservationStatus::RECEPTION_COMPLETED) &&
+                !$reservation->reservation_status->is(ReservationStatus::PENDING)) {
                 return redirect()->back()->withErrors(trans('messages.reservation.invalid_reservation_status'))->withInput();
             }
-            $reservation->reservation_status = ReservationStatus::Cancelled;
+            $reservation->reservation_status = ReservationStatus::CANCELLED;
             $reservation->cancel_date = Carbon::now();
             $reservation->cancellation_reason = request()->input('cancellation_reason');
             $reservation->save();
@@ -399,10 +399,10 @@ class ReservationController extends Controller
         try {
             DB::beginTransaction();
             $reservation = Reservation::findOrFail($id);
-            if (!$reservation->reservation_status->is(ReservationStatus::ReceptionCompleted)) {
+            if (!$reservation->reservation_status->is(ReservationStatus::RECEPTION_COMPLETED)) {
                 return redirect()->back()->withErrors(trans('messages.reservation.invalid_reservation_status'))->withInput();
             }
-            $reservation->reservation_status = ReservationStatus::Completed;
+            $reservation->reservation_status = ReservationStatus::COMPLETED;
             $reservation->completed_date = Carbon::now();
             $reservation->save();
 
@@ -434,15 +434,15 @@ class ReservationController extends Controller
             $reservation_status = ReservationStatus::getInstance($request->input('reservation_status'));
             $update_data = ['reservation_status' => $reservation_status->value];
             $update_query = Reservation::whereIn('id', $ids);
-            if ($reservation_status->is(ReservationStatus::ReceptionCompleted)) {
-                $update_query->where('reservation_status', ReservationStatus::Pending);
-            } elseif ($reservation_status->is(ReservationStatus::Completed)) {
+            if ($reservation_status->is(ReservationStatus::RECEPTION_COMPLETED)) {
+                $update_query->where('reservation_status', ReservationStatus::PENDING);
+            } elseif ($reservation_status->is(ReservationStatus::COMPLETED)) {
                 $update_data['completed_date'] = Carbon::now();
-                $update_query->where('reservation_status', ReservationStatus::ReceptionCompleted);
-            } elseif ($reservation_status->is(ReservationStatus::Cancelled)) {
+                $update_query->where('reservation_status', ReservationStatus::RECEPTION_COMPLETED);
+            } elseif ($reservation_status->is(ReservationStatus::CANCELLED)) {
                 $update_data['cancel_date'] = Carbon::now();
-                $update_query->where('reservation_status', ReservationStatus::Pending)
-                    ->orWhere('reservation_status', ReservationStatus::ReceptionCompleted);
+                $update_query->where('reservation_status', ReservationStatus::PENDING)
+                    ->orWhere('reservation_status', ReservationStatus::RECEPTION_COMPLETED);
             }
             $update_query->update($update_data);
             Session::flash('success', trans('messages.reservation.status_update_success'));
@@ -511,7 +511,7 @@ class ReservationController extends Controller
 
             request()->merge([
                 'hospital_id' => session('hospital_id'),
-                'reservation_status' => ReservationStatus::ReceptionCompleted,
+                'reservation_status' => ReservationStatus::RECEPTION_COMPLETED,
                 'is_repeat' => false
             ]);
 
