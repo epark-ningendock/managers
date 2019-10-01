@@ -97,14 +97,14 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
           <div class="col-md-12 mt-5">
             <div class="form-group py-sm-1 " style="margin-left: 0;">
               <legend>フリーエリア </legend>
-              <textarea class="form-control minor-text" name="free_area" cols="30" rows="5"></textarea>
+              <textarea class="form-control minor-text" name="free_area" cols="30" rows="5">{{ $hospital->free_area }}</textarea>
               <p class="mt-1" style="color: #737373; font-size: 1.3rem;">※HTMLで記述することが可能です。</p>
             </div>
           </div>
           <div class="col-md-12 mt-5">
             <div class="form-group py-sm-1 " style="margin-left: 0;">
               <legend>検索ワード </legend>
-              <textarea class="form-control minor-text" name="search_word" cols="30" rows="5"></textarea>
+              <textarea class="form-control minor-text" name="search_word" cols="30" rows="5">{{ $hospital->search_word }}</textarea>
               <p class="mt-1" style="color: #737373; font-size: 1.3rem;">※検索する単語をカンマ(,)区切りで入力してください。</p>
               <p style="color: #737373; font-size: 1.3rem;">※HTMLで記述することが可能です。</p>
             </div>
@@ -115,7 +115,7 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
               {{-- 無し --}}
               <div>
                 <input type="radio" name="hplink_contract_type" id="none"
-                {{-- {{ old('none', (isset($hospital_email_setting) ? $hospital_email_setting->none : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }} --}}
+                {{-- {{ old('none', (isset($hospital->hplink_contract_type) ? $hospital_email_setting->none : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }} --}}
                 value="1">
                 <label for="none">無し</label>
               </div>
@@ -131,13 +131,13 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
                   <p style="color: #737373;">無料の回数:</p>
                 </div>
                 <div class="col-md-3">
-                  <input type="number" name="hplink_count" value="" />
+                  <input type="number" name="hplink_count" value="{{ $hospital->hplink_count }}" />
                 </div>
                 <div class="col-md-2">
                   <p style="color: #737373;">一回あたりの料金:</p>
                 </div>
                 <div class="col-md-3">
-                  <input type="number" name="hplink_price" value="" />
+                  <input type="number" name="hplink_price" value="{{ $hospital->hplink_price }}" />
                 </div>
               </div>
               <div class="row">
@@ -151,7 +151,7 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
                     <p style="color: #737373;">月額料金:</p>
                   </div>
                   <div class="col-md-3">
-                    <input type="number" name="hplink_price" value="" />
+                    <input type="number" name="hplink_price" value="{{ $hospital->hplink_price }}" />
                   </div>
               </div>
             </div>
