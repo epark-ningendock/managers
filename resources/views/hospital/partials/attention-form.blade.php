@@ -99,6 +99,7 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
               <legend>フリーエリア </legend>
               <textarea class="form-control minor-text" name="free_area" cols="30" rows="5">{{ $hospital->free_area }}</textarea>
               <p class="mt-1" style="color: #737373; font-size: 1.3rem;">※HTMLで記述することが可能です。</p>
+              @if ($errors->has('free_area')) <p class="has-error" style="font-size: 1.3rem;">{{ $errors->first('free_area') }}</p> @endif
             </div>
           </div>
           <div class="col-md-12 mt-5">
@@ -107,6 +108,7 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
               <textarea class="form-control minor-text" name="search_word" cols="30" rows="5">{{ $hospital->search_word }}</textarea>
               <p class="mt-1" style="color: #737373; font-size: 1.3rem;">※検索する単語をカンマ(,)区切りで入力してください。</p>
               <p style="color: #737373; font-size: 1.3rem;">※HTMLで記述することが可能です。</p>
+              @if ($errors->has('search_word')) <p class="has-error" style="font-size: 1.3rem;">{{ $errors->first('search_word') }}</p> @endif
             </div>
           </div>          
         </div>
