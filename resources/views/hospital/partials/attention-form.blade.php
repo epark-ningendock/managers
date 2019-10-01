@@ -108,63 +108,11 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
               <p class="mt-1" style="color: #737373; font-size: 1.3rem;">※検索する単語をカンマ(,)区切りで入力してください。</p>
               <p style="color: #737373; font-size: 1.3rem;">※HTMLで記述することが可能です。</p>
             </div>
-          </div>
-          <div class="col-md-12 mt-5">
-            <div class="form-group py-sm-1 " style="margin-left: 0;">
-              <legend>HPリンク </legend>
-              {{-- 無し --}}
-              <div>
-                <input type="radio" name="hplink_contract_type" id="none"
-                {{-- {{ old('none', (isset($hospital->hplink_contract_type) ? $hospital_email_setting->none : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }} --}}
-                value="1">
-                <label for="none">無し</label>
-              </div>
-              {{-- 従量課金 --}}
-              <div class="row mt-3">
-                <div class="col-md-2">
-                  <input type="radio" name="hplink_contract_type" id="pay_per_use"
-                  {{-- {{ old('pay_per_use', (isset($hospital_email_setting) ? $hospital_email_setting->pay_per use: null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }} --}}
-                  value="2">
-                  <label for="pay_per_use">従量課金</label>
-                </div>
-                <div class="col-md-2">
-                  <p style="color: #737373;">無料の回数:</p>
-                </div>
-                <div class="col-md-3">
-                  <input type="number" name="hplink_count" value="{{ $hospital->hplink_count }}" />
-                </div>
-                <div class="col-md-2">
-                  <p style="color: #737373;">一回あたりの料金:</p>
-                </div>
-                <div class="col-md-3">
-                  <input type="number" name="hplink_price" value="{{ $hospital->hplink_price }}" />
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-2">
-                  <input type="radio" name="hplink_contract_type" id="monthly_fixed"
-                  {{-- {{ old('monthly_fixed', (isset($hospital_email_setting) ? $hospital_email_setting->monthly_fixed : null) ) == \App\Enums\ReceptionEmailSetting::ACCEPT ? 'checked' : '' }} --}}
-                  value="3">
-                  <label for="monthly_fixed">月額固定</label>
-                </div>
-                <div class="col-md-2">
-                    <p style="color: #737373;">月額料金:</p>
-                  </div>
-                  <div class="col-md-3">
-                    <input type="number" name="hplink_price" value="{{ $hospital->hplink_price }}" />
-                  </div>
-              </div>
-            </div>
-          </div>
+          </div>          
         </div>
           <div class="col-md-12 mt-5">
               <h2>手数料率</h2>
               <div class="form-group py-sm-1 " style="margin-left: 0;">
-                  <div class="form-group">
-                    <label for="plan_code">プラン</label>
-                    <select class="form-control" id="plan_code" name="plan_code">
-                    </select>
-                  </div>
                   <div class="form-inline">
                       <label style="font-size: 1.2em; margin: 0 12px 0 0;">通常手数料</label><button type="button" class="btn btn-primary" id="add-fee-rate-button">追加</button>
                   </div>

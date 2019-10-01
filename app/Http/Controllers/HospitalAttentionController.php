@@ -161,9 +161,6 @@ class HospitalAttentionController extends Controller
                 }
                 $hospital->free_area = $request->get('free_area');
                 $hospital->search_word = $request->get('search_word');
-                $hospital->hplink_contract_type = $request->get('hplink_contract_type');
-                $hospital->hplink_count = $request->get('hplink_count');
-                $hospital->hplink_price = $request->get('hplink_price');
                 $hospital->save();
     
                 $minor_ids = collect($request->input('minor_ids'), []);
