@@ -65,6 +65,7 @@
                    value="{{ old('kana', (isset($hospital->kana) ) ? $hospital->kana : null) }}"
                    placeholder="{{ trans('messages.kana') }}">
             @if ($errors->has('kana')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('kana') }}</p> @endif
+            <p class="form-support-txt">※並べ替えに使用します。 「医療法人」などの法人名を除いて下さい</p>
           </div>
         </div>
 
@@ -75,6 +76,7 @@
       <div class="row mt-5">
         <div class="col-md-12">
           <legend>所在地</legend>
+          <p class="form-support-txt">下記住所でGoogleMapが正しい位置を示さない場合、北緯と東経を入力して下さい。</p>
         </div>
 
         <div class="col-md-12">
@@ -183,6 +185,7 @@
                            value="{{ old('longitude', (isset($hospital->longitude)) ? $hospital->longitude : null) }}"
                            placeholder="0.0000000"/>
                     @if ($errors->has('longitude')) <p class="help-block">{{ $errors->first('longitude') }}</p> @endif
+                  <p class="form-support-txt">※北緯・東経は整数11桁、小数点以下7桁（マイナス記号、小数点含めて20文字）まで入力可能です。<br>※例）-122345678901.1234567</p>
                   </div>
                 </div>
               </div>
@@ -311,7 +314,7 @@
       </div>
     </div>
 
-  <div class="box-body staff-form">
+  <div class="box-body consultation-hours">
     <h2>休診日・診療時間</h2>
     <div class="wrapbox" style="padding: 20px;">
       <table class="table table-bordered">
@@ -327,38 +330,38 @@
                          value="{{ $medical_treatment_times[$i-1]->id }}">
                 </div>
               @endif
+              <div class="row">
+                <div class="col-md-4 start-time-box">
+                  <div class="form-group  @if( $errors->has("medical_treatment_time." .$i. ".start")) has-error @endif">
+                    <label for="start-time-{{ $i }}"
+                           class="start-time col-md-3"></label>
+                    <div class="col-md-9">
+                      <input size="5" type="text" class="form-control time-picker"
+                             id="start-time-{{ $i }}" name="medical_treatment_time[{{$i}}][start]"
+                             value="{{ old('medical_treatment_time.' . $i . '.start', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->start : null)) }}"
+                      />
+                      @if( $errors->has("medical_treatment_time." .$i. ".start"))
+                        <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".start") }}</p>
+                      @endif
+                    </div>
+                  </div>
+                </div>
 
-              <div class="col-md-6">
-                <div class="form-group  @if( $errors->has("medical_treatment_time." .$i. ".start")) has-error @endif">
-                  <label for="start-time-{{ $i }}"
-                         class="col-md-3">{{ trans('messages.start') }} </label>
-                  <div class="col-md-9">
-                    <input size="5" type="text" class="form-control time-picker"
-                           id="start-time-{{ $i }}" name="medical_treatment_time[{{$i}}][start]"
-                           value="{{ old('medical_treatment_time.' . $i . '.start', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->start : null)) }}"
-                    />
-                    @if( $errors->has("medical_treatment_time." .$i. ".start"))
-                      <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".start") }}</p>
-                    @endif
+                <div class="col-md-4">
+                  <div class="form-group   @if( $errors->has("medical_treatment_time." .$i. ".end")) has-error @endif">
+                    <label for="end-time-{{$i}}" class="end-time col-md-3">〜</label>
+                    <div class="col-md-9">
+                      <input size="5" type="text" class="form-control time-picker"
+                             id="end-time-{{$i}}" name="medical_treatment_time[{{$i}}][end]"
+                             value="{{ old('medical_treatment_time.' . $i . '.end', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->end : null)) }}"
+                      />
+                      @if( $errors->has("medical_treatment_time." .$i. ".end"))
+                        <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".end") }}</p>
+                      @endif
+                    </div>
                   </div>
                 </div>
               </div>
-
-              <div class="col-md-6">
-                <div class="form-group   @if( $errors->has("medical_treatment_time." .$i. ".end")) has-error @endif">
-                  <label for="end-time-{{$i}}" class="col-md-3">〜</label>
-                  <div class="col-md-9">
-                    <input size="5" type="text" class="form-control time-picker"
-                           id="end-time-{{$i}}" name="medical_treatment_time[{{$i}}][end]"
-                           value="{{ old('medical_treatment_time.' . $i . '.end', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->end : null)) }}"
-                    />
-                    @if( $errors->has("medical_treatment_time." .$i. ".end"))
-                      <p class="help-block">{{ $errors->first("medical_treatment_time." .$i. ".end") }}</p>
-                    @endif
-                  </div>
-                </div>
-              </div>
-
               <div class="daybox">
                 <label class="checkbox-inline">
                   <input type="checkbox" name="medical_treatment_time[{{$i}}][mon]" value="1"
@@ -398,8 +401,7 @@
       <div class="form-group @if( $errors->has('consultation_note'))  has-error @endif">
         <label for="consultation_note" class="col-md-2">{{ trans('messages.consultation_note') }} </label>
         <div class="col-md-10">
-            <textarea name="consultation_note" id="consultation_note" rows="5"
-                      class="form-control">{{ old('consultation_note',(isset($hospital->consultation_note)) ? $hospital->consultation_note : null) }}</textarea>
+            <input type="text" placeholder="例）年末年始は休業" name="consultation_note" id="consultation_note" class="form-control" value="{{ old('consultation_note',(isset($hospital->consultation_note)) ? $hospital->consultation_note : null) }}">
           @if ($errors->has('consultation_note')) <p class="help-block">{{ $errors->first('consultation_note') }}</p> @endif
         </div>
       </div>
@@ -410,6 +412,7 @@
             <textarea name="memo" id="memo" rows="5"
                       class="form-control">{{ old('memo', (isset($hospital->memo)) ? $hospital->memo : null) }}</textarea>
           @if ($errors->has('memo')) <p class="help-block">{{ $errors->first('memo') }}</p> @endif
+          <p class="form-support-txt">※HTMLで記述することが可能です。</p>
         </div>
       </div>
 
