@@ -40,14 +40,14 @@ class HospitalController extends Controller
 
     public function index(HospitalFormRequest $request)
     {
-        if (Auth::user()->staff_auth->is_hospital === Permission::None) {
-            if (Auth::user()->staff_auth->is_staff !== Permission::None) {
+        if (Auth::user()->staff_auth->is_hospital === Permission::NONE) {
+            if (Auth::user()->staff_auth->is_staff !== Permission::NONE) {
                 return redirect('/staff');
-            } elseif (Auth::user()->staff_auth->is_cource_classification !== Permission::None) {
+            } elseif (Auth::user()->staff_auth->is_cource_classification !== Permission::NONE) {
                 return redirect('/classification');
-            } elseif (Auth::user()->staff_auth->is_invoice !== Permission::None) {
+            } elseif (Auth::user()->staff_auth->is_invoice !== Permission::NONE) {
                 return redirect('/reservation');
-            } elseif (Auth::user()->staff_auth->is_pre_account !== Permission::None) {
+            } elseif (Auth::user()->staff_auth->is_pre_account !== Permission::NONE) {
                 // TODO: 事前決済機能が出来次第実装する
                 return redirect('/');
             } else {
@@ -68,7 +68,7 @@ class HospitalController extends Controller
         }
 
         if (empty($request->get('s_text')) && empty($request->get('status')) && ($request->get('status') !== '0')) {
-            $query->where('status', HospitalEnums::Public);
+            $query->where('status', HospitalEnums::PUBLIC);
         }
 
         $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());
@@ -249,7 +249,7 @@ class HospitalController extends Controller
         }
 
         if (empty($request->get('s_text')) && empty($request->get('status')) && ($request->get('status') !== '0')) {
-            $query->where('status', HospitalEnums::Public);
+            $query->where('status', HospitalEnums::PUBLIC);
         }
 
         $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());

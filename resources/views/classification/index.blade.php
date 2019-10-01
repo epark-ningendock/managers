@@ -128,7 +128,7 @@
     </thead>
     <tbody>
     @foreach ($classifications as $item)
-      <tr class="{{ $item['status']->is(Status::Deleted) ? 'dark-gray' : '' }}">
+      <tr class="{{ $item['status']->is(Status::DELETED) ? 'dark-gray' : '' }}">
         <td>{{ $item['major_name'] }}</td>
         @if (isset($classification))
           @if (!isset($classification) || $classification == 'minor' || $classification == 'middle')
@@ -142,20 +142,18 @@
         <td>{{ $item['status']->description }}</td>
         @if (Auth::user()->staff_auth->is_cource_classification === 3)
           <td>
-            {{--@if($item['status']->is(Status::Valid) && auth()->check() && auth()->user()->hasPermission('is_cource_classification', Permission::Edit))--}}
-            @if($item['status']->is(Status::Valid))
+            @if($item['status']->is(Status::VALID))
               <a class="btn btn-primary"
                 href="{{ route('classification.edit', $item['id']).'?classification='.(isset($classification)? $classification : 'minor') }}">
                 <i class="fa fa-edit"> 編集</i>
               </a>
             @endif
-              {{--@if(auth()->check() && auth()->user()->hasPermission('is_cource_classification', Permission::Edit))--}}
-              @if($item['status']->is(Status::Valid))
+              @if($item['status']->is(Status::VALID))
                   <button class="btn btn-primary delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"
                           data-message="{{ trans('messages.classification_delete_popup_content') }}">
                       <i class="fa fa-trash"></i>
                   </button>
-              @elseif($item['status']->is(Status::Deleted))
+              @elseif($item['status']->is(Status::DELETED))
                   <button class="btn btn-danger delete-btn delete-popup-btn" data-id="{{ $item['id'] }}"
                           data-target-form="#restore-record-form" data-message="{{ trans('messages.classification_restore_popup_content') }}">
                       復元

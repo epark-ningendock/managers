@@ -34,7 +34,7 @@ class StaffController extends Controller
 
     public function index(StaffSearchFormRequest $request)
     {
-        if (Auth::user()->staff_auth->is_staff === Permission::None) {
+        if (Auth::user()->staff_auth->is_staff === Permission::NONE) {
             return view('staff.edit-password-personal');
         }
 
@@ -47,7 +47,7 @@ class StaffController extends Controller
             $loginId = strtolower($request->input('login_id'));
             $query->whereRaw("UPPER(login_id) LIKE '%$loginId%'");
         }
-        $query->where('status', $request->input('status', StaffStatus::Valid))->with(['staff_auth']);
+        $query->where('status', $request->input('status', StaffStatus::VALID))->with(['staff_auth']);
 
         return view('staff.index', ['staffs' => $query->paginate(10)])
             ->with($request->input());
@@ -61,7 +61,7 @@ class StaffController extends Controller
 
     public function store(StaffFormRequest $request)
     {
-        if (intval($request->authority) === Authority::ContractStaff) {
+        if (intval($request->authority) === Authority::CONTRACT_STAFF) {
             $staff_auths = [
                 'is_hospital' => 0,
                 'is_staff' => 0,
@@ -138,7 +138,7 @@ class StaffController extends Controller
 
     public function update(StaffFormRequest $request, $id)
     {
-        if (intval($request->authority) === Authority::ContractStaff) {
+        if (intval($request->authority) === Authority::CONTRACT_STAFF) {
             $staff_auths = [
                 'is_hospital' => 0,
                 'is_staff' => 0,
@@ -194,7 +194,7 @@ class StaffController extends Controller
     public function destroy($id, Request $request)
     {
         $staff = Staff::find($id);
-        $staff->status = StaffStatus::Deleted;
+        $staff->status = StaffStatus::DELETED;
         $staff->save();
         $request->session()->flash('error', trans('messages.deleted', ['name' => trans('messages.names.staff')]));
         return redirect()->back();

@@ -19,45 +19,45 @@ use App\Enums\TerminalType;
 
 return [
     Authority::class => [
-        Authority::Admin => 'System Administrator',
-        Authority::Member => 'Member',
-        Authority::ExternalStaff => 'External Staff',
-        Authority::ContractStaff => 'Contract Staff'
+        Authority::ADMIN => 'System Administrator',
+        Authority::MEMBER => 'Member',
+        Authority::EXTERNAL_STAFF => 'External Staff',
+        Authority::CONTRACT_STAFF => 'Contract Staff'
     ],
 
     StaffStatus::class => [
-        StaffStatus::Valid => 'Valid',
-        StaffStatus::Invalid => 'Invalid',
-        StaffStatus::Deleted => 'Deleted'
+        StaffStatus::VALID => 'Valid',
+        StaffStatus::INVALID => 'Invalid',
+        StaffStatus::DELETED => 'Deleted'
     ],
 
     Permission::class => [
-        Permission::None => 'None',
-        Permission::View => 'View',
-        Permission::Edit => 'Edit',
-        Permission::Upload => 'Upload'
+        Permission::NONE => 'None',
+        Permission::VIEW => 'View',
+        Permission::EDIT => 'Edit',
+        Permission::UPLOAD => 'Upload'
     ],
 
     Status::class => [
-        Status::Valid => 'Valid',
-        Status::Deleted => 'Deleted'
+        Status::VALID => 'Valid',
+        Status::DELETED => 'Deleted'
     ],
 
     WebReception::class => [
-        WebReception::NotAccept => 'Not Accept',
-        WebReception::Accept => 'Accept'
+        WebReception::NOT_ACCEPT => 'Not Accept',
+        WebReception::ACCEPT => 'Accept'
     ],
 
     CalendarDisplay::class => [
-        CalendarDisplay::Hide => 'Hide',
-        CalendarDisplay::Show => 'Show'
+        CalendarDisplay::HIDE => 'Hide',
+        CalendarDisplay::SHOW => 'Show'
     ],
 
     ReservationStatus::class => [
-        ReservationStatus::Pending => 'Pending',
-        ReservationStatus::ReceptionCompleted => 'Reception Completed',
-        ReservationStatus::Completed => 'Completed',
-        ReservationStatus::Cancelled => 'Cancelled'
+        ReservationStatus::PENDING => 'Pending',
+        ReservationStatus::RECEPTION_COMPLETED => 'Reception Completed',
+        ReservationStatus::COMPLETED => 'Completed',
+        ReservationStatus::CANCELLED => 'Cancelled'
     ],
 
     PaymentStatus::class => [
@@ -68,22 +68,22 @@ return [
     ],
 
     Gender::class =>[
-        Gender::Male => 'Male',
-        Gender::Female => 'Female'
+        Gender::MALE => 'Male',
+        Gender::FEMALE => 'Female'
     ],
 
     TerminalType::class => [
-        TerminalType::Hospital => 'Hospital',
+        TerminalType::HOSPITAL => 'Hospital',
         TerminalType::PC => 'PC',
-        TerminalType::SmartPhone => 'Smart Phone',
-        TerminalType::PhoneReservationAPI => 'Phone Reservation(API)',
-        TerminalType::PhoneReservationPPC => 'Phone Reservation(PPC)'
+        TerminalType::SMART_PHONE => 'Smart Phone',
+        TerminalType::PHONE_RESERVATION_API => 'Phone Reservation(API)',
+        TerminalType::PHONE_RESERVATION_PPC => 'Phone Reservation(PPC)'
     ],
 
     CourseImageType::class => [
-        CourseImageType::Main => 'MainCourse',
-        CourseImageType::Pc => 'Detail for pc',
-        CourseImageType::Sp => 'Detail for sp',
+        CourseImageType::MAIN => 'MainCourse',
+        CourseImageType::PC => 'Detail for pc',
+        CourseImageType::SP => 'Detail for sp',
     ]
 
 ];

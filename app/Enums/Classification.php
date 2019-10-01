@@ -7,7 +7,7 @@ use BenSampo\Enum\Enum;
 
 final class Classification extends Enum implements LocalizedEnum
 {
-    const MAJOR = 'major';
-    const MIDDLE = 'middle';
-    const MINOR = 'minor';
+    const MAJOR = 'MAJOR';
+    const MIDDLE = 'MIDDLE';
+    const MINOR = 'MINOR';
 }
