@@ -40,9 +40,9 @@ class Reservation extends SoftDeleteModel
     public static $english_names = [
         TerminalType::HOSPITAL => '院内',
         TerminalType::PC => 'PC',
-        TerminalType::SP => 'スマホ',
-        TerminalType::TEL_API => '電話予約(API）',
-        TerminalType::TEL_PPC => '電話予約(PPC)'
+        TerminalType::SMART_PHONE => 'スマホ',
+        TerminalType::PHONE_RESERVATION_API => '電話予約(API）',
+        TerminalType::PHONE_RESERVATION_PPC => '電話予約(PPC)'
     ];
 
 
