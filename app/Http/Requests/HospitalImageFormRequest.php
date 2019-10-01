@@ -377,6 +377,12 @@ class HospitalImageFormRequest extends FormRequest
                 "internal_tab_{$i}_order2.required_with" => '必須項目です',
                 "facility_tab_{$i}_order2.required_with" => '必須項目です',
                 "staff_tab_{$i}_order2.required_with" => '必須項目です',
+
+                "facility_tab_{$i}_order2.numeric" => '表示順は、半角数字で入力してください。',
+                "staff_tab_{$i}_order2.numeric" => '表示順は、半角数字で入力してください。',
+                "external_tab_{$i}_order2.numeric" => '表示順は、半角数字で入力してください。',
+                "another_tab_{$i}_order2.numeric" => '表示順は、半角数字で入力してください。',
+                "internal_tab_{$i}_order2.numeric" => '表示順は、半角数字で入力してください。',
             ];
         }
         return $tab_error_messages;
