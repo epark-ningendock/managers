@@ -800,7 +800,7 @@ class ReservationController extends Controller
             'reservation' => $reservation
         ];
 
-        Mail::to('dock_all@eparkdock.com')->send(new ReservationCheckMail($mailContext));
+        Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new ReservationCheckMail($mailContext));
 
         if (isset($customer->email)) {
             Mail::to($customer->email)->send(new ReservationCheckMail($mailContext));
