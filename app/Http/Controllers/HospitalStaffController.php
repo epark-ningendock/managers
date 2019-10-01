@@ -20,9 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Exceptions\ExclusiveLockException;
 
 class HospitalStaffController extends Controller
-{
-    const EPARK_MAIL_ADDRESS = "dock_all@eparkdock.com";
-    
+{   
     public function index()
     {
         $hospital_staffs = HospitalStaff::where('hospital_id', session()->get('hospital_id'));
@@ -71,7 +69,7 @@ class HospitalStaffController extends Controller
                 'subject' => '【EPARK人間ドック】医療機関スタッフ登録・更新・削除のお知らせ',
                 'processing' => '登録'
                 ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new HospitalStaffOperationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new HospitalStaffOperationMail($data));
 
             DB::commit();
             return redirect('hospital-staff')->with('success', trans('messages.created', ['name' => trans('messages.names.hospital_staff')]));
@@ -115,7 +113,7 @@ class HospitalStaffController extends Controller
                 'subject' => '【EPARK人間ドック】医療機関スタッフ登録・更新・削除のお知らせ',
                 'processing' => '更新'
                 ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new HospitalStaffOperationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new HospitalStaffOperationMail($data));
 
             return redirect('hospital-staff')->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_staff')]));
         } catch (ExclusiveLockException $e) {
@@ -140,7 +138,7 @@ class HospitalStaffController extends Controller
                 'subject' => '【EPARK人間ドック】医療機関スタッフ登録・更新・削除のお知らせ',
                 'processing' => '削除'
                 ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new HospitalStaffOperationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new HospitalStaffOperationMail($data));
             
             return redirect('hospital-staff')->with('error', trans('messages.deleted', ['name' => trans('messages.names.hospital_staff')]));
 

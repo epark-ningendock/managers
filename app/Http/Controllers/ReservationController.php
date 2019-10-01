@@ -29,8 +29,6 @@ use App\TaxClass;
 
 class ReservationController extends Controller
 {
-    const EPARK_MAIL_ADDRESS = "dock_all@eparkdock.com";
-
     protected $reservation;
     protected $hospital;
     protected $customer;

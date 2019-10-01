@@ -31,7 +31,7 @@ class HospitalEmailSettingOperationMail extends Mailable
     {
         // dd($this->data);
         return $this
-            ->from("unei@eparkdock.com")
+            ->from(env('EPARK_EMAIL_ADDRESS'))
             ->subject("【EPARK人間ドック】メール設定登録・変更のお知らせ")
             ->view('hospital_email_setting.email.operation-mail');
     }
