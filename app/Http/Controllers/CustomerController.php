@@ -279,7 +279,7 @@ class CustomerController extends Controller
             Customer::whereIn('id', $identical_ids)
                 ->update([
                     'deleted_at' => Carbon::now(),
-                    'status' => Status::Deleted
+                    'status' => Status::DELETED
                 ]);
 
             DB::commit();

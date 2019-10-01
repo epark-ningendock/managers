@@ -87,7 +87,7 @@
                            id="sex{{ $gender }}"
                            name="sex"
                            value="{{ $gender }}"
-                           {{ old('sex', (isset($customer_detail) && isset($customer_detail->sex) ? $customer_detail->sex->value : Gender::Male)) == $gender ? 'checked' : '' }}
+                           {{ old('sex', (isset($customer_detail) && isset($customer_detail->sex) ? $customer_detail->sex->value : Gender::MALE)) == $gender ? 'checked' : '' }}
                     />
 
                     <label for="sex{{ $gender }}" class="radio-label">{{ Gender::getDescription($gender) }}</label>

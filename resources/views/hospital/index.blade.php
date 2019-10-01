@@ -82,9 +82,9 @@
       @if ( isset($hospitals) && count($hospitals) > 0 )
         @foreach ($hospitals as $hospital)
           <tr class="
-          {{ ($hospital->status === HospitalEnums::Private) ? 'light-gray ' : '' }}
-          {{ ($hospital->status === HospitalEnums::Public) ? '' : '' }}
-          {{ ($hospital->status === HospitalEnums::Delete) ? 'dark-gray' : '' }}
+          {{ ($hospital->status === HospitalEnums::PUBLIC) ? 'light-gray ' : '' }}
+          {{ ($hospital->status === HospitalEnums::PRIVATE) ? '' : '' }}
+          {{ ($hospital->status === HospitalEnums::DELETE) ? 'dark-gray' : '' }}
               ">
             <td>{{ $hospital->id }}</td>
             <td>{{ $hospital->name }}</td>
@@ -105,13 +105,13 @@
                 <form class="hide" id="select-hospital-form" method="GET"  action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
                   {{ csrf_field() }}
                 </form>
-                @if ($hospital->status !== HospitalEnums::Delete)
+                @if ($hospital->status !== HospitalEnums::DELETE)
                   <a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}"
                      class="btn btn-primary">
                     <i class="fa fa-edit"> 編集</i>
                   </a>
                 @endif
-                @if ($hospital->status !== HospitalEnums::Delete)
+                @if ($hospital->status !== HospitalEnums::DELETE)
                   <button class="btn  btn-primary delete-btn delete-popup-btn"
                           data-id="{{ $hospital->id }}">
                     <i class="fa fa-trash"></i>

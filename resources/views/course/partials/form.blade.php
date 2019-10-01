@@ -54,12 +54,12 @@
         <label for="web_reception">WEB公開</label>
         <group class="inline-radio two-option">
             <div>
-                <input type="radio" name="web_reception" {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::Accept ? 'checked' : 'checked' }}
-                value="{{ WebReception::Accept }}"
-                ><label>{{ WebReception::Accept()->description }}</label></div>
+                <input type="radio" name="web_reception" {{ old('web_reception', (isset($course) ? $course->web_reception->value : null) ) == WebReception::ACCEPT ? 'checked' : 'checked' }}
+                value="{{ WebReception::ACCEPT }}"
+                ><label>{{ WebReception::ACCEPT()->description }}</label></div>
             <div>
-                <input type="radio" name="web_reception" {{ old('web_reception', (isset($course) ? $course->web_reception->value : null)) == WebReception::NotAccept ? 'checked' : '' }}
-                value="{{ WebReception::NotAccept }}"><label>{{ WebReception::NotAccept()->description }}</label></div>
+                <input type="radio" name="web_reception" {{ old('web_reception', (isset($course) ? $course->web_reception->value : null)) == WebReception::NOT_ACCEPT ? 'checked' : '' }}
+                value="{{ WebReception::NOT_ACCEPT }}"><label>{{ WebReception::NOT_ACCEPT()->description }}</label></div>
         </group>
         @if ($errors->has('web_reception')) <p class="help-block has-error">{{ $errors->first('web_reception') }}</p> @endif
     </div>
@@ -99,14 +99,14 @@
       <div class="row">
         <div class="col-sm-4">
           {{Form::label('course_image_main', '検査コースメイン' , ['class' => 'form_label'])}}
-          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::Main)->first()))
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::MAIN)->first()))
             <div class="sub_image_area">
-              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::Main)->first()->path}}">
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::MAIN)->first()->path}}">
               <p class="file_delete_text">
                 <a onclick="return confirm('この画像を削除します、よろしいですか？')"
                    class="btn btn-mini btn-danger"
                    href="{{ route('course.image.delete', [
-                     'course_image_id' => $course->course_images()->where('type', CourseImageType::Main)->first()->id
+                     'course_image_id' => $course->course_images()->where('type', CourseImageType::MAIN)->first()->id
                    ]) }}"
                 >
                   ファイル削除
@@ -129,14 +129,14 @@
         </div>
         <div class="col-sm-4">
           {{Form::label('course_image_pc', '受診の流れメイン（PC）' , ['class' => 'form_label'])}}
-          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::Pc)->first()))
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::PC)->first()))
             <div class="sub_image_area">
-              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::Pc)->first()->path}}">
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::PC)->first()->path}}">
               <p class="file_delete_text">
                 <a onclick="return confirm('この画像を削除します、よろしいですか？')"
                     class="btn btn-mini btn-danger"
                     href="{{ route('course.image.delete', [
-                      'course_image_id' => $course->course_images()->where('type', CourseImageType::Pc)->first()->id
+                      'course_image_id' => $course->course_images()->where('type', CourseImageType::PC)->first()->id
                     ]) }}"
                 >
                   ファイル削除
@@ -159,14 +159,14 @@
         </div>
         <div class="col-sm-4">
           {{Form::label('course_image_sp', '受診の流れメイン（SP）' , ['class' => 'form_label'])}}
-          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::Sp)->first()))
+          @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::SP)->first()))
             <div class="sub_image_area">
-              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::Sp)->first()->path}}">
+              <img class="object-fit" src="{{$course->course_images->where('type', CourseImageType::SP)->first()->path}}">
               <p class="file_delete_text">
                 <a onclick="return confirm('この画像を削除します、よろしいですか？')"
                   class="btn btn-mini btn-danger"
                   href="{{ route('course.image.delete', [
-                    'course_image_id' => $course->course_images()->where('type', CourseImageType::Sp)->first()->id
+                    'course_image_id' => $course->course_images()->where('type', CourseImageType::SP)->first()->id
                   ]) }}"
                 >
                   ファイル削除
