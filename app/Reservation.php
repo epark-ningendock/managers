@@ -11,11 +11,6 @@ use Reshadman\OptimisticLocking\OptimisticLocking;
 class Reservation extends SoftDeleteModel
 {
     use OptimisticLocking;
-    const HOSPITAL = 1;
-    const PC = 2;
-    const SP = 3;
-    const TEL_API = 4;
-    const TEL_PPC = 5;
 
     protected $dates = [
         'completed_date',
@@ -43,11 +38,11 @@ class Reservation extends SoftDeleteModel
     ];
 
     public static $english_names = [
-        self::HOSPITAL => '院内',
-        self::PC => 'PC',
-        self::SP => 'スマホ',
-        self::TEL_API => '電話予約(API）',
-        self::TEL_PPC => '電話予約(PPC)'
+        TerminalType::HOSPITAL => '院内',
+        TerminalType::PC => 'PC',
+        TerminalType::SP => 'スマホ',
+        TerminalType::TEL_API => '電話予約(API）',
+        TerminalType::TEL_PPC => '電話予約(PPC)'
     ];
 
 

@@ -1,5 +1,6 @@
 @php
 use App\FeeRate;
+use App\Enums\RegistrationDivision;
 
 if(isset($hospital)) {
   $hospital_details = $hospital->hospital_details;
@@ -63,12 +64,12 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
                           } else if (isset($hospital_details)) {
                             $temp = $hospital_details->where('minor_classification_id', $minor->id)->flatten(1);
                             if ($temp->isNotEmpty()) {
-                              $minor_value = $minor->is_fregist == '1' ? $temp[0]->select_status : $temp[0]->inputstring;
+                              $minor_value = $minor->is_fregist == RegistrationDivision::CHECK_BOX ? $temp[0]->select_status : $temp[0]->inputstring;
                             }
                           }
                       @endphp
                       <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
-                      @if($minor->is_fregist == '1')
+                      @if($minor->is_fregist == RegistrationDivision::CHECK_BOX)
                           <input type="checkbox" class="minor-checkbox" name="minor_values[]"
                                  id="{{ 'minor_id_'.$minor->id }}"
                                  {{ $minor_value == 1 ? 'checked' : '' }} value="1" />

@@ -2,6 +2,7 @@
   use \App\Enums\WebReception;
   use \App\Enums\CourseImageType;
   use \App\Enums\Authority;
+  use App\Enums\RegistrationDivision;
 
   if(isset($course)) {
     $course_details = $course->course_details;
@@ -472,12 +473,12 @@
                 } else if (isset($course_details)) {
                   $temp = $course_details->where('minor_classification_id', $minor->id)->flatten(1);
                   if ($temp->isNotEmpty()) {
-                    $minor_value = $minor->is_fregist == '1' ? $temp[0]->select_status : $temp[0]->inputstring;
+                    $minor_value = $minor->is_fregist == RegistrationDivision::CHECK_BOX ? $temp[0]->select_status : $temp[0]->inputstring;
                   }
                 }
               @endphp
                   <input type="hidden" name="minor_ids[]" value="{{ $minor->id }}" />
-              @if($minor->is_fregist == '1')
+              @if($minor->is_fregist == RegistrationDivision::CHECK_BOX)
                 <p class="col-sm-4">
                 <input type="checkbox" class="checkbox d-inline-block minor-checkbox" name="minor_values[]"
                        id="{{ 'minor_id_'.$minor->id }}"

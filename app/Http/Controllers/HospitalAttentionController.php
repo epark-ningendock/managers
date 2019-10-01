@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
+use App\Enums\RegistrationDivision;
 
 class HospitalAttentionController extends Controller
 {
@@ -180,7 +181,7 @@ class HospitalAttentionController extends Controller
                             return $minor->id == $id;
                         });
 
-                        if ($input_index == -1 || ($minor->is_fregist == '1' && $minor_values[$input_index] == 0)
+                        if ($input_index == -1 || ($minor->is_fregist == RegistrationDivision::CHECK_BOX && $minor_values[$input_index] == 0)
                             || ($minor->is_fregist == '0' && $minor_values[$input_index] == '')) {
                             continue;
                         }
@@ -190,9 +191,9 @@ class HospitalAttentionController extends Controller
                         $hospital_details->hospital_id = $hospital->id;
                         $hospital_details->minor_classification_id = $minor->id;
                         $minor_id = $minor->id;
-                        if ($minor->is_fregist == '1') {
+                        if ($minor->is_fregist == RegistrationDivision::CHECK_BOX) {
                             $hospital_details->select_status = 1;
-                        } else if ($minor->is_fregist == '2') {
+                        } else if ($minor->is_fregist == RegistrationDivision::CHECK_BOX_AND_TEXT) {
                             if ($minor_values[$input_index]) {
                                 
                                 $validator = Validator::make(["minor_id_${minor_id}" => $minor_values[$input_index]], [
