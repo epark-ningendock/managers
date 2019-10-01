@@ -16,12 +16,12 @@
         <label for="status">カレンダー表示</label>
         <group class="inline-radio two-option-middle">
             <div>
-                <input type="radio" name="is_calendar_display" {{ old('is_calendar_display', (isset($calendar) ? $calendar->is_calendar_display->value : null) ) == CalendarDisplay::Show ? 'checked' : 'checked' }}
-                value="{{ CalendarDisplay::Show }}"
-                ><label>{{ CalendarDisplay::Show()->description }}</label></div>
+                <input type="radio" name="is_calendar_display" {{ old('is_calendar_display', (isset($calendar) ? $calendar->is_calendar_display->value : null) ) == CalendarDisplay::SHOW ? 'checked' : 'checked' }}
+                value="{{ CalendarDisplay::SHOW }}"
+                ><label>{{ CalendarDisplay::SHOW()->description }}</label></div>
             <div>
-                <input type="radio" name="is_calendar_display" {{ old('is_calendar_display', (isset($calendar) ? $calendar->is_calendar_display->value : null)) == CalendarDisplay::Hide ? 'checked' : '' }}
-                value="{{ CalendarDisplay::Hide }}"><label>{{ CalendarDisplay::Hide()->description }}</label></div>
+                <input type="radio" name="is_calendar_display" {{ old('is_calendar_display', (isset($calendar) ? $calendar->is_calendar_display->value : null)) == CalendarDisplay::HIDE ? 'checked' : '' }}
+                value="{{ CalendarDisplay::HIDE }}"><label>{{ CalendarDisplay::HIDE()->description }}</label></div>
         </group>
         @if ($errors->has('is_calendar_display')) <p class="help-block has-error">{{ $errors->first('is_calendar_display') }}</p> @endif
     </div>

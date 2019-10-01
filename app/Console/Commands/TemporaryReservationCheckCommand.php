@@ -39,7 +39,7 @@ class TemporaryReservationCheckCommand extends Command
 
         $date = Carbon::today();
         $date->subDay(config('constant.pv_aggregate_day'));
-        $reservationDates = Reservation::where('status', '=', ReservationStatus::Pending)
+        $reservationDates = Reservation::where('status', '=', ReservationStatus::PENDING)
             ->where('created_at', '<=', $date)
             ->orderBy('hospital_id', 'asc')
             ->orderBy('reservation_date', 'asc')

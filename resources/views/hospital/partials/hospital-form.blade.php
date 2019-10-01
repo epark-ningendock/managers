@@ -15,22 +15,22 @@
                 <div class="radio">
                   <label class="ml-5">
                     <input type="radio" name="status" id="private_status"
-                           value="{{ \App\Enums\HospitalEnums::Private }}"
-                           @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::Private ) checked @endif>
+                           value="{{ \App\Enums\HospitalEnums::PRIVATE }}"
+                           @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::PRIVATE ) checked @endif>
                     {{ \App\Enums\HospitalEnums::getDescription('0') }}
                   </label>
 
                   <label class="ml-3">
                     <input type="radio" name="status" id="public_status"
-                           value="{{ \App\Enums\HospitalEnums::Public }}"
-                           @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::Public ) checked @endif>
+                           value="{{ \App\Enums\HospitalEnums::PUBLIC }}"
+                           @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::PUBLIC ) checked @endif>
                     {{ \App\Enums\HospitalEnums::getDescription('1') }}
                   </label>
 
                   <label class="ml-3">
                     <input type="radio" name="status" id="deleted_status"
-                           value="{{ \App\Enums\HospitalEnums::Delete }}"
-                           @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::Delete ) checked @endif>
+                           value="{{ \App\Enums\HospitalEnums::DELETE }}"
+                           @if( old('status', (isset($hospital->status)) ? $hospital->status : null) == \App\Enums\HospitalEnums::DELETE ) checked @endif>
                     {{ \App\Enums\HospitalEnums::getDescription('X') }}
                   </label>
                 </div>

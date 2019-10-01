@@ -96,7 +96,7 @@
       </thead>
       <tbody>
         @foreach ($classifications as $i=>$item)
-          <tr class="{{ $item['status']->is(Status::Deleted) ? 'dark-gray' : '' }}">
+          <tr class="{{ $item['status']->is(Status::DELETED) ? 'dark-gray' : '' }}">
             <td>{{ $item[$classification.'_name'] }}</td>
             <td class="text-center">
               <input type="hidden" id="order" name="classification_ids[]" value="{{ $item['id'] }}" />
