@@ -160,6 +160,17 @@ class HospitalAttentionController extends Controller
                 } else {
                     $hospital->is_pickup = 0;
                 }
+                $validator = Validator::make(["free_area" => $request->get('free_area'), "search_word" => $request->get('search_word')], [
+                    "free_area" => 'nullable|between:0,2000',
+                    "search_word" => 'nullable|between:0,2000',
+                ]);
+                if ($validator->fails()) {
+                    DB::rollback();
+                    throw new ValidationException($validator);
+                    return redirect()->back();
+                }
+                $hospital->free_area = $request->get('free_area');
+                $hospital->search_word = $request->get('search_word');
                 $hospital->save();
     
                 $minor_ids = collect($request->input('minor_ids'), []);
