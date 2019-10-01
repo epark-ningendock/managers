@@ -82,8 +82,8 @@
       @if ( isset($hospitals) && count($hospitals) > 0 )
         @foreach ($hospitals as $hospital)
           <tr class="
-          {{ ($hospital->status === HospitalEnums::PUBLIC) ? 'light-gray ' : '' }}
-          {{ ($hospital->status === HospitalEnums::PRIVATE) ? '' : '' }}
+          {{ ($hospital->status === HospitalEnums::PRIVATE) ? 'light-gray ' : '' }}
+          {{ ($hospital->status === HospitalEnums::PUBLIC) ? '' : '' }}
           {{ ($hospital->status === HospitalEnums::DELETE) ? 'dark-gray' : '' }}
               ">
             <td>{{ $hospital->id }}</td>
