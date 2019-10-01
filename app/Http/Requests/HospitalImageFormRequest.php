@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use App\HospitalCategory;
 use App\ImageOrder;
 use App\Enums\FileLocationNo;
+use App\Enums\ImageGroupNumber;
 
 class HospitalImageFormRequest extends FormRequest
 {
@@ -35,7 +36,7 @@ class HospitalImageFormRequest extends FormRequest
         $tab_another_valid = [];
 
         for ($i = 1; $i <= 30; $i++) {
-            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageOrder::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_STAFF)->first();
+            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageGroupNumber::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_STAFF)->first();
             $id = !is_null($hospital_category_data) ? $hospital_category_data->id : null ;
 
             $tab_staff_valid += [
@@ -50,7 +51,7 @@ class HospitalImageFormRequest extends FormRequest
                 Rule::unique('hospital_categories', 'order2')
                     ->ignore($id)
                     ->where('hospital_id', $this->hospital)
-                    ->where('image_order', ImageOrder::IMAGE_GROUP_TAB)
+                    ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
                     ->where('file_location_no', FileLocationNo::TAB_CATEGORY_STAFF)
                     ->whereNull('deleted_at')
             ],
@@ -60,7 +61,7 @@ class HospitalImageFormRequest extends FormRequest
         }
 
         for ($i = 1; $i <= 30; $i++) {
-            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageOrder::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_FACILITY)->first();
+            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageGroupNumber::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_FACILITY)->first();
             $id = !is_null($hospital_category_data) ? $hospital_category_data->id : null ;
             $tab_facility_valid += [
                 "facility_tab_{$i}" => 'file|image|max:4000',
@@ -73,7 +74,7 @@ class HospitalImageFormRequest extends FormRequest
                     Rule::unique('hospital_categories', 'order2')
                         ->ignore($id)
                         ->where('hospital_id', $this->hospital)
-                        ->where('image_order', ImageOrder::IMAGE_GROUP_TAB)
+                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
                         ->where('file_location_no', FileLocationNo::TAB_CATEGORY_FACILITY)
                         ->whereNull('deleted_at')
                 ],
@@ -83,7 +84,7 @@ class HospitalImageFormRequest extends FormRequest
         }
 
         for ($i = 1; $i <= 30; $i++) {
-            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageOrder::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_INTERNAL)->first();
+            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageGroupNumber::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_INTERNAL)->first();
             $id = !is_null($hospital_category_data) ? $hospital_category_data->id : null ;
             $tab_internal_valid += [
                 "internal_tab_{$i}" => 'file|image|max:4000',
@@ -96,7 +97,7 @@ class HospitalImageFormRequest extends FormRequest
                     Rule::unique('hospital_categories', 'order2')
                         ->ignore($id)
                         ->where('hospital_id', $this->hospital)
-                        ->where('image_order', ImageOrder::IMAGE_GROUP_TAB)
+                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
                         ->where('file_location_no', FileLocationNo::TAB_CATEGORY_INTERNAL)
                         ->whereNull('deleted_at'),
                 ],
@@ -106,7 +107,7 @@ class HospitalImageFormRequest extends FormRequest
         }
 
         for ($i = 1; $i <= 30; $i++) {
-            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageOrder::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_EXTERNAL)->first();
+            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageGroupNumber::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_EXTERNAL)->first();
             $id = !is_null($hospital_category_data) ? $hospital_category_data->id : null ;
             $tab_external_valid += [
                 "external_tab_{$i}" => 'file|image|max:4000',
@@ -119,7 +120,7 @@ class HospitalImageFormRequest extends FormRequest
                     Rule::unique('hospital_categories', 'order2')
                         ->ignore($id)
                         ->where('hospital_id', $this->hospital)
-                        ->where('image_order', ImageOrder::IMAGE_GROUP_TAB)
+                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
                         ->where('file_location_no', FileLocationNo::TAB_CATEGORY_EXTERNAL)
                         ->whereNull('deleted_at'),
                 ],
@@ -129,7 +130,7 @@ class HospitalImageFormRequest extends FormRequest
         }
 
         for ($i = 1; $i <= 30; $i++) {
-            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageOrder::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_ANOTHER)->first();
+            $hospital_category_data = HospitalCategory::ByImageOrderAndFileLocationNo($this->hospital, ImageGroupNumber::IMAGE_GROUP_TAB, $i, FileLocationNo::TAB_CATEGORY_ANOTHER)->first();
             $id = !is_null($hospital_category_data) ? $hospital_category_data->id : null ;
             $tab_another_valid += [
                 "another_tab_{$i}" => 'file|image|max:4000',
@@ -142,7 +143,7 @@ class HospitalImageFormRequest extends FormRequest
                     Rule::unique('hospital_categories', 'order2')
                         ->ignore($id)
                         ->where('hospital_id', $this->hospital)
-                        ->where('image_order', ImageOrder::IMAGE_GROUP_TAB)
+                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
                         ->where('file_location_no', FileLocationNo::TAB_CATEGORY_ANOTHER)
                         ->whereNull('deleted_at'),
                 ],
