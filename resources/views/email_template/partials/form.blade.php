@@ -1,8 +1,8 @@
 <div class="form-entry">
     <div class="box-body">
         <h2>メールテンプレート</h2>
-      <p class="text-bold">差出人名：unei@eparkdock.com</p>
-      <p class="text-bold">差出人メールアドレス：unei@eparkdock.com</p>
+      <p class="text-bold">差出人名：{{ env('EPARK_EMAIL_ADDRESS') }}</p>
+      <p class="text-bold">差出人メールアドレス：{{ env('EPARK_EMAIL_ADDRESS') }}</p>
       <div class="form-group py-sm-1 @if ($errors->has('title')) has-error @endif">
         <label for="title">テンプレート名（件名）<span class="form_required">必須</span></label>
         {{ Form::text('title', old('title', (isset($email_template->title) ) ? $email_template->title : null), ['class' => 'form-control', 'id' => 'title', 'placeholder' => '件名を入力してください']) }}

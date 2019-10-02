@@ -20,13 +20,13 @@
       <p>調整金額：{{ $data['reservation']->adjustment_price }}</p>
       <p>金額：{{ $total }}</p>
       <p>健保：{{ $data['reservation']->is_health_insurance ? '◯' : '-' }}</p>
-      @if($data['reservation']->reservation_status->is(ReservationStatus::Pending))
+      @if($data['reservation']->reservation_status->is(ReservationStatus::PENDING))
         <p>受付ステータス：仮受付</p>
-      @elseif($data['reservation']->reservation_status->is(ReservationStatus::ReceptionCompleted))
+      @elseif($data['reservation']->reservation_status->is(ReservationStatus::RECEPTION_COMPLETED))
         <p>受付ステータス：受付確定</p>
-      @elseif($data['reservation']->reservation_status->is(ReservationStatus::Completed))
+      @elseif($data['reservation']->reservation_status->is(ReservationStatus::COMPLETED))
         <p>受付ステータス：受診完了</p>
-      @elseif(!$data['reservation']->reservation_status->is(ReservationStatus::Cancelled))
+      @elseif(!$data['reservation']->reservation_status->is(ReservationStatus::CANCELLED))
         <p>受付ステータス：キャンセル</p>
       @else
         <p>受付ステータス：なし</p>

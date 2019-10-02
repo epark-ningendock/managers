@@ -22,11 +22,10 @@ use Reshadman\OptimisticLocking\StaleModelLockingException;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Calander\CalendarSettingNotificationMail;
 use Illuminate\Support\Facades\Auth;
+use App\Enums\CalendarDisplay;
 
 class CalendarController extends Controller
 {
-    const EPARK_MAIL_ADDRESS = "dock_all@eparkdock.com";
-
     /**
      * Display a listing of the calendar.
      *
@@ -65,7 +64,7 @@ class CalendarController extends Controller
                 'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
                 'processing' => '登録'
              ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CalendarSettingNotificationMail($data));
 
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.calendar')]));
             return redirect('calendar');
@@ -150,7 +149,7 @@ class CalendarController extends Controller
                 'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
                 'processing' => '更新'
              ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CalendarSettingNotificationMail($data));
 
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar')]));
             return redirect('calendar');
@@ -181,7 +180,7 @@ class CalendarController extends Controller
                 'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
                 'processing' => '削除'
              ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CalendarSettingNotificationMail($data));
 
             return redirect('calendar')->with('error', trans('messages.deleted', ['name' => trans('messages.names.calendar')]));
         } catch (StaleModelLockingException $e) {
@@ -337,7 +336,7 @@ class CalendarController extends Controller
                 'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
                 'processing' => 'カレンダー設定の更新'
              ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CalendarSettingNotificationMail($data));
 
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar_setting')]));
             DB::commit();
@@ -494,7 +493,7 @@ class CalendarController extends Controller
             }
 
             Holiday::insert($new_holidays->toArray());
-            $hospital = Hospital::findOrFail(1);
+            $hospital = Hospital::findOrFail(session()->get('hospital_id'));
             
             $data = [
                 'hospital' => $hospital,
@@ -502,7 +501,7 @@ class CalendarController extends Controller
                 'subject' => '【EPARK人間ドック】休日設定更新のお知らせ',
                 'processing' => '更新'
              ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CalendarSettingNotificationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CalendarSettingNotificationMail($data));
 
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.holiday_setting')]));
             DB::commit();
@@ -564,7 +563,7 @@ class CalendarController extends Controller
                     'date' => $date,
                     'is_holiday' => isset($holiday),
                     'frame' => isset($calendar_day)? $calendar_day->reservation_frames : -1,
-                    'is_reservation_acceptance' => (!isset($calendar_day) || $calendar_day->is_reservation_acceptance == '1')
+                    'is_reservation_acceptance' => (!isset($calendar_day) || $calendar_day->is_reservation_acceptance == CalendarDisplay::SHOW)
                 ]);
             }
         }

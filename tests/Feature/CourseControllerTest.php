@@ -20,6 +20,7 @@ use App\Hospital;
 use App\Option;
 use App\MinorClassification;
 use App\HospitalStaff;
+use App\Enums\RegistrationDivision;
 
 class CourseControllerTest extends TestCase
 {
@@ -67,7 +68,7 @@ class CourseControllerTest extends TestCase
                 'middle_classification_id' => $minor->middle_classification_id,
                 'major_classification_id' => $minor->major_classification_id
             ]);
-            if ($minor->is_fregist == '1') {
+            if ($minor->is_fregist == RegistrationDivision::CHECK_BOX) {
                 $detail['inputstring'] = null;
                 $detail['select_status'] = $this->faker->randomElement([0, 1]);
             } else {
@@ -457,7 +458,7 @@ class CourseControllerTest extends TestCase
             return $minor->id;
         })->toArray();
         $minor_values = $minors->map(function ($minor) {
-            return $minor->is_fregist == '1' ? $minor->id : $this->faker->text;
+            return $minor->is_fregist == RegistrationDivision::CHECK_BOX ? $minor->id : $this->faker->text;
         })->toArray();
 
         $fields = factory(Course::class)->raw([

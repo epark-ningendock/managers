@@ -11,14 +11,14 @@ class ContractInformationFilters extends QueryFilters
     public function search_text($search_text)
     {
         return $this->builder->where(function($q) use ($search_text){
-            $q->where('property_no', $search_text)
-                ->orWhere('contractor_name', $search_text)
-                ->orWhere('contractor_name_kana', $search_text)
-                ->orWhere('representative_name', $search_text)
-                ->orWhere('representative_name_kana', $search_text)
+            $q->where('property_no', 'like', "%$search_text%")
+                ->orWhere('contractor_name', 'like', "%$search_text%")
+                ->orWhere('contractor_name_kana', 'like', "%$search_text%")
+                ->orWhere('representative_name', 'like', "%$search_text%")
+                ->orWhere('representative_name_kana', 'like', "%$search_text%")
                 ->orWhere('tel', 'like', "%$search_text%")
                 ->orWhereHas('hospital', function($q) use ($search_text) {
-                    $q->where('name', $search_text)->orWhere('kana', $search_text);
+                    $q->where('name', 'like', "%$search_text%")->orWhere('kana', 'like', "%$search_text%");
                 });
         });
     }

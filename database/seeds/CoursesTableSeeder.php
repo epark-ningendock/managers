@@ -15,6 +15,7 @@ use App\HospitalImage;
 use App\ImageOrder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Enums\RegistrationDivision;
 
 class CoursesTableSeeder extends Seeder
 {
@@ -53,7 +54,7 @@ class CoursesTableSeeder extends Seeder
                     'middle_classification_id' => $minor->middle_classification_id,
                     'major_classification_id' => $minor->major_classification_id,
                 ];
-                if ($minor->is_fregist == '1') {
+                if ($minor->is_fregist == RegistrationDivision::CHECK_BOX) {
                     $detail['inputstring'] = null;
                     $detail['select_status'] = $faker->randomElement([0, 1]);
                 } else {

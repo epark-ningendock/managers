@@ -1,3 +1,8 @@
+@php
+    use App\Enums\FileLocationNo;
+    use App\Enums\ImageGroupNumber;
+@endphp
+
 <div class="box box-primary form-box">
     <div class="box-body staff-form">
     <input type="hidden" name="lock_version" value="{{ $hospital->lock->lock_version or ''}}" />
@@ -13,8 +18,7 @@
     <h2>施設メイン登録</h2>
     <div class="form-group ">
         {{Form::label('main', '施設メイン',['class' => 'form_label'])}}
-        <?php $main_image_category = $hospital->hospital_categories->firstWhere('image_order', $image_order::IMAGE_GROUP_FACILITY_MAIN); ?>
-
+        <?php $main_image_category = $hospital->hospital_categories->firstWhere('image_order', ImageGroupNumber::IMAGE_GROUP_FACILITY_MAIN); ?>
         @if(!is_null($main_image_category) && !is_null($main_image_category->hospital_image->path))
             <div class="main_image_area">
                 <img class="object-fit" src="{{$main_image_category->hospital_image->path}}" height="200">
@@ -49,7 +53,7 @@
         @for ($i = 1; $i <= 4; $i++)
         <div class="col-sm-6">
             {{Form::label('sub_'.$i, 'サブメイン'.$i,['class' => 'form_label'])}}
-            <?php $sub_image_category = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_FACILITY_SUB)->where('order', $i)->first(); ?>
+            <?php $sub_image_category = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB)->where('order', $i)->first(); ?>
             @if (!is_null($sub_image_category))
                 <div class="sub_image_area">
                     <img class="object-fit" src="{{$sub_image_category->hospital_image->path}}">
@@ -78,14 +82,12 @@
 
     </div>
 </div>
-
-
 <div class="box box-primary form-box">
     <div class="form-entry box-body">
         <h2>TOP</h2>
         <div class="form-group @if($errors->has('title')) has-error @endif">
             {{Form::label('interview_1_caption', 'タイトル',['class' => 'form_label'])}}
-            <?php $title = $hospital->hospital_categories->firstWhere('image_order', $image_order::IMAGE_GROUP_TOP); ?>
+            <?php $title = $hospital->hospital_categories->firstWhere('image_order', ImageGroupNumber::IMAGE_GROUP_TOP); ?>
             {{Form::text('title', is_null($title) ? '' : $title->title, ['class' => 'form-control'])}}
             @if ($errors->has('title'))
                 <p class="help-block">
@@ -113,7 +115,7 @@
             <h2>こだわり</h2>
             <div class="row" style="position: relative;padding: 0 0 44px 0;">
                 @for ($i = 1; $i <= 4; $i++)
-                    <?php $image_speciality = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_SPECIALITY)->where('order', $i)->first(); ?>
+                    <?php $image_speciality = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_SPECIALITY)->where('order', $i)->first(); ?>
                     <div class="col-sm-6" @if(is_null($image_speciality) && $i != 1) style="display: none" @endif>
                         {{Form::label('speciality_1_caption', 'こだわり'.$i,['class' => 'form_label'])}}
                         @if (!is_null($image_speciality) && !is_null($image_speciality->hospital_image->path))
@@ -175,7 +177,7 @@
         <h2>地図・アクセス</h2>
     <div class="form-group @if($errors->has('map_url')) has-error @endif">
         {{Form::label('map_url', '地図・アクセス',['class' => 'form_label'])}}
-        <?php $map = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_MAP)->first(); ?>
+        <?php $map = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_MAP)->first(); ?>
         {{Form::text('map_url', is_null($map) ? '' : $map->hospital_image()->first()->memo1, ['class' => 'form-control w20em','placeholder'=>'https://example.com/access'])}}
         @if ($errors->has('map_url'))
             <p class="help-block">
@@ -299,7 +301,7 @@
             スタッフ
             <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
         </p>
-    <?php $staff_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_STAFF);?>
+    <?php $staff_tab_box = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('file_location_no', FileLocationNo::TAB_CATEGORY_STAFF);?>
     <?php $staff_tab_box = $staff_tab_box->sortBy('order2');?>
     <?php $staff_show_order2 = $staff_tab_box->pluck('order')->toArray();?>
     <!--登録済のタブ画像フォーム-->
@@ -331,7 +333,7 @@
                         {{ $errors->first('staff_tab_').$i }}
                     </div>
                 @endif
-                    {{Form::hidden('staff_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_STAFF )}}
+                    {{Form::hidden('staff_tab_'.$i.'_location', FileLocationNo::TAB_CATEGORY_STAFF )}}
                     {{Form::hidden('staff_tab_'.$i.'_category_id', $staff_tab['id'] )}}
             </div>
             <div class="col-sm-6">
@@ -382,7 +384,7 @@
                 @if ($errors->has('staff_tab_'.$i))
                 <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('staff_tab_').$i }}</p>
                 @endif
-                {{Form::hidden('staff_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_STAFF )}}
+                {{Form::hidden('staff_tab_'.$i.'_location', FileLocationNo::TAB_CATEGORY_STAFF )}}
             </div>
             <div class="col-sm-6">
                 <div class="form-group @if ($errors->has('staff_tab_'.$i.'_order2')) has-error @endif">
@@ -418,7 +420,7 @@
         設備
         <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
     </p>
-    <?php $facility_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_FACILITY);?>
+    <?php $facility_tab_box = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('file_location_no', FileLocationNo::TAB_CATEGORY_FACILITY);?>
     <?php $facility_tab_box = $facility_tab_box->sortBy('order2');?>
     <?php $facility_show_order2 = $facility_tab_box->pluck('order')->toArray();?>
 
@@ -451,7 +453,7 @@
                             {{ $errors->first('facility_tab_').$i }}
                         </div>
                     @endif
-                        {{Form::hidden('facility_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_FACILITY )}}
+                        {{Form::hidden('facility_tab_'.$i.'_location', FileLocationNo::TAB_CATEGORY_FACILITY )}}
                         {{Form::hidden('facility_tab_'.$i.'_category_id', $facility_tab['id'] )}}
                 </div>
                 <div class="col-sm-6">
@@ -500,7 +502,7 @@
                             {{ $errors->first('facility_tab_').$i }}
                         </div>
                     @endif
-                    {{Form::hidden('facility_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_FACILITY )}}
+                    {{Form::hidden('facility_tab_'.$i.'_location', FileLocationNo::TAB_CATEGORY_FACILITY )}}
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('facility_tab_'.$i.'_order2')) has-error @endif">
@@ -539,7 +541,7 @@
         院内
         <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
     </p>
-    <?php $internal_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_INTERNAL);?>
+    <?php $internal_tab_box = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('file_location_no', FileLocationNo::TAB_CATEGORY_INTERNAL);?>
     <?php $internal_tab_box = $internal_tab_box->sortBy('order2');?>
     <?php $internal_show_order2 = $internal_tab_box->pluck('order')->toArray();?>
 
@@ -572,7 +574,7 @@
                             {{ $errors->first('internal_tab_').$i }}
                         </div>
                     @endif
-                    {{Form::hidden('internal_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_INTERNAL )}}
+                    {{Form::hidden('internal_tab_'.$i.'_location', FileLocationNo::TAB_CATEGORY_INTERNAL )}}
                     {{Form::hidden('internal_tab_'.$i.'_category_id', $internal_tab['id'] )}}
                 </div>
                 <div class="col-sm-6">
@@ -621,7 +623,7 @@
                                 {{ $errors->first('internal_tab_').$i }}
                             </div>
                         @endif
-                        {{Form::hidden('internal_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_INTERNAL )}}
+                        {{Form::hidden('internal_tab_'.$i.'_location', FileLocationNo::TAB_CATEGORY_INTERNAL )}}
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group @if ($errors->has('internal_tab_'.$i.'_order2')) has-error @endif">
@@ -633,7 +635,7 @@
                         </div>
                         <div class="form-group @if ($errors->has('internal_tab_'.$i.'_memo2')) has-error @endif">
                         {{Form::label('internal_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
-                        {{Form::textarea('internal_tab_'.$i.'_memo2', null, ['class' => 'form-control'])}}
+                        {{Form::textarea('internal_tab_'.$i.'_memo2', null, ['class' => 'form-control','rows'=>'2'])}}
                         @if ($errors->has('internal_tab_'.$i.'_memo2'))
                             <div class="error_message">{{ $errors->first('internal_tab_'.$i.'_memo2') }}</div>
                         @endif
@@ -660,7 +662,7 @@
         外観
         <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
     </p>
-<?php $external_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_EXTERNAL);?>
+<?php $external_tab_box = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('file_location_no', FileLocationNo::TAB_CATEGORY_EXTERNAL);?>
 <?php $external_tab_box = $external_tab_box->sortBy('order2');?>
 <?php $external_show_order2 = $external_tab_box->pluck('order')->toArray();?>
 
@@ -693,7 +695,7 @@
                             {{ $errors->first('external_tab_').$i }}
                         </div>
                     @endif
-                    {{Form::hidden('external_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_EXTERNAL )}}
+                    {{Form::hidden('external_tab_'.$i.'_location', FileLocationNo::TAB_CATEGORY_EXTERNAL )}}
                     {{Form::hidden('external_tab_'.$i.'_category_id', $external_tab['id'] )}}
                 </div>
                 <div class="col-sm-6">
@@ -742,7 +744,7 @@
                                 {{ $errors->first('external_tab_').$i }}
                             </div>
                         @endif
-                        {{Form::hidden('external_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_EXTERNAL )}}
+                        {{Form::hidden('external_tab_'.$i.'_location', FileLocationNo::TAB_CATEGORY_EXTERNAL )}}
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group @if ($errors->has('external_tab_'.$i.'_order2')) has-error @endif">
@@ -775,7 +777,7 @@
         その他
         <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
     </p>
-<?php $another_tab_box = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_TAB)->where('file_location_no', $hospital_category::TAB_CATEGORY_ANOTHER);?>
+<?php $another_tab_box = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('file_location_no', FileLocationNo::TAB_CATEGORY_ANOTHER);?>
 <?php $another_tab_box = $another_tab_box->sortBy('order2');?>
 <?php $another_show_order2 = $another_tab_box->pluck('order')->toArray();?>
 
@@ -808,7 +810,7 @@
                             {{ $errors->first('another_tab_').$i }}
                         </div>
                     @endif
-                    {{Form::hidden('another_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_ANOTHER )}}
+                    {{Form::hidden('another_tab_'.$i.'_location', FileLocationNo::TAB_CATEGORY_ANOTHER )}}
                     {{Form::hidden('another_tab_'.$i.'_category_id', $another_tab['id'] )}}
                 </div>
                 <div class="col-sm-6">
@@ -859,7 +861,7 @@
                                 {{ $errors->first('another_tab_').$i }}
                             </div>
                         @endif
-                        {{Form::hidden('another_tab_'.$i.'_location', $hospital_category::TAB_CATEGORY_ANOTHER )}}
+                        {{Form::hidden('another_tab_'.$i.'_location', FileLocationNo::TAB_CATEGORY_ANOTHER )}}
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group @if ($errors->has('another_tab_'.$i.'_order2')) has-error @endif">
@@ -895,7 +897,7 @@
         <h2>医師・スタッフ</h2>
     <div class="row" style="margin-top: 50px">
     @for ($i = 1; $i <= 10; $i++)
-        <?php $staff = $hospital->hospital_categories->where('image_order', $image_order::IMAGE_GROUP_STAFF)->where('order', $i)->first();?>
+        <?php $staff = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_STAFF)->where('order', $i)->first();?>
         <div class="col-sm-6 staff_box" data-order="{{$i}}" @if(is_null($staff) && $i != 1) style="display: none" @endif>
             <p class="box_staff_title">医師・スタッフ{{$i}}</p>
             @if(!is_null($staff) && !is_null($staff->hospital_image->path))

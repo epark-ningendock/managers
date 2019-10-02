@@ -19,4 +19,9 @@ class Option extends SoftDeleteModel
     {
         return $this->hasMany('App\ReservationOption');
     }
+
+    public function tax_class()
+    {
+        return $this->belongsTo('App\TaxClass');
+    }
 }

@@ -2,7 +2,8 @@
   use \App\Enums\Status;
   use \App\Enums\Authority;
   use \App\Enums\Permission;
-
+  use App\Enums\RegistrationDivision;
+  
   if ($type == 'major')
     $type_label = '大分類';
   else if ($type == 'middle')
@@ -119,7 +120,7 @@
                 </div>
                 <div class="radio">
                     <input type="radio" id="is_fregist_radio" name="is_fregist"
-                               {{ old('is_fregist', (isset($classification) ? $classification->is_fregist : '1')) === '1' ? 'checked' : '' }}
+                               {{ old('is_fregist', (isset($classification) ? $classification->is_fregist : RegistrationDivision::CHECK_BOX)) === RegistrationDivision::CHECK_BOX ? 'checked' : '' }}
                                value="1">
                     <label for="is_fregist_radio" class="radio-label">チェックボックス</label>
                 </div>
