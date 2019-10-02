@@ -129,11 +129,6 @@ class Hospital extends Model
         return $this->hasMany('App\Option');
     }
 
-    public function prefecture()
-    {
-        return $this->belongsTo('App\Prefecture');
-    }
-
     public function district_code()
     {
         return $this->belongsTo('App\DistrictCode');
