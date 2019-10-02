@@ -57,7 +57,7 @@ class HospitalController extends Controller
             $query->where('status', '=', $request->get('status'));
         }
 
-        if (empty($request->has('s_text')) && empty($request->get('status')) && ($request->get('status') !== '0')) {
+        if (empty($request->get('s_text')) && empty($request->get('status')) && ($request->get('status') !== '0')) {
             $query->where('status', HospitalEnums::PUBLIC);
         }
 
