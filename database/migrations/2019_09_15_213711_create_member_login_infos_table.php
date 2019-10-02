@@ -34,6 +34,6 @@ class MemberLoginInfosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hospital_middle_classifications');
+        Schema::dropIfExists('member_login_infos');
     }
 }
