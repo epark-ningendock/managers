@@ -82,20 +82,18 @@
     @if ( isset($hospitals) && count($hospitals) > 0 )
       @foreach ($hospitals as $hospital)
         <tr class="
-          {{ ($hospital->status === HospitalEnums::Private) ? 'light-gray ' : '' }}
-        {{ ($hospital->status === HospitalEnums::Public) ? '' : '' }}
-        {{ ($hospital->status === HospitalEnums::Delete) ? 'dark-gray' : '' }}
+          {{ ($hospital->status === HospitalEnums::PRIVATE) ? 'light-gray ' : '' }}
+        {{ ($hospital->status === HospitalEnums::PUBLIC) ? '' : '' }}
+        {{ ($hospital->status === HospitalEnums::DELETE) ? 'dark-gray' : '' }}
                 ">
           <td>{{ $hospital->id }}</td>
           <td>{{ $hospital->name }}</td>
           @if (!$hospital->prefecture_id && !$hospital->district_code_id)
             <td></td>
-          @elseif ($hospital->district_code_id)
-            <td>{{ $hospital->prefecture->name}}
-              {{$hospital->districtCode->name}}
-              {{$hospital->address1 }}</td>
+          @elseif (DistrictCode::find($hospital->district_code_id))
+            <td>{{ Prefecture::find($hospital->prefecture_id)->name . DistrictCode::find($hospital->district_code_id)->name . $hospital->address1 }}</td>
           @else
-            <td>{{ $hospital->prefecture->name . $hospital->address1 }}</td>
+            <td>{{ Prefecture::find($hospital->prefecture_id)->name . $hospital->address1 }}</td>
           @endif
           <td>{{ $hospital->tel }}</td>
           <td>{{ HospitalEnums::getDescription($hospital->status) }}</td>
@@ -108,13 +106,13 @@
                     action="{{ route('hospital.select', ['hospital->id' => ':id']) }}">
                 {{ csrf_field() }}
               </form>
-              @if ($hospital->status !== HospitalEnums::Delete)
+              @if ($hospital->status !== HospitalEnums::DELETE)
                 <a href="{{ route('hospital.edit', ['id' => $hospital->id]) }}"
                    class="btn btn-primary">
                   <i class="fa fa-edit"> 編集</i>
                 </a>
               @endif
-              @if ($hospital->status !== HospitalEnums::Delete)
+              @if ($hospital->status !== HospitalEnums::DELETE)
                 <button class="btn  btn-primary delete-btn delete-popup-btn"
                         data-id="{{ $hospital->id }}">
                   <i class="fa fa-trash"></i>
@@ -126,6 +124,7 @@
       @endforeach
     @else
       <tr>
+        <td colspan="8" class="text-center">{{ trans('messages.no_record') }}</td>
         <td colspan="8" class="text-center">{{ trans('messages.no_record') }}</td>
       </tr>
     @endif
