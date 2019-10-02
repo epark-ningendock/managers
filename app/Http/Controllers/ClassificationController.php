@@ -29,7 +29,7 @@ class ClassificationController extends Controller
      */
     public function index(ClassificationSearchFormRequest $request)
     {
-        if (Auth::user()->staff_auth->is_cource_classification === Permission::None) {
+        if (Auth::user()->staff_auth->is_cource_classification === Permission::NONE) {
             return view('staff.edit-password-personal');
         }
 
@@ -62,14 +62,14 @@ class ClassificationController extends Controller
             $classification = $request->input('classification', 'minor');
             if ($classification == 'major') {
                 $item = MajorClassification::find($id);
-                if ($item->middle_classifications->where('status', Status::Valid)->count() > 0) {
+                if ($item->middle_classifications->where('status', Status::VALID)->count() > 0) {
                     DB::rollback();
                     $request->session()->flash('error', trans('messages.major_classification.child_exist_error_on_delete'));
                     return redirect()->back();
                 }
             } elseif ($classification == 'middle') {
                 $item = MiddleClassification::find($id);
-                if ($item->minor_classifications->where('status', Status::Valid)->count() > 0) {
+                if ($item->minor_classifications->where('status', Status::VALID)->count() > 0) {
                     DB::rollback();
                     $request->session()->flash('error', trans('messages.middle_classification.child_exist_error_on_delete'));
                     return redirect()->back();
@@ -78,7 +78,7 @@ class ClassificationController extends Controller
                 $item = MinorClassification::find($id);
             }
 
-            $item->update(['status' => Status::Deleted]);
+            $item->update(['status' => Status::DELETED]);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
@@ -103,20 +103,20 @@ class ClassificationController extends Controller
                 $item = MajorClassification::withTrashed()->findOrFail($id);
             } elseif ($classification == 'middle') {
                 $item = MiddleClassification::withTrashed()->with('major_classification')->findOrFail($id);
-                if ($item->major_classification->where('status', Status::Deleted)) {
+                if ($item->major_classification->where('status', Status::DELETED)) {
                     DB::rollback();
                     $request->session()->flash('error', trans('messages.middle_classification.parent_deleted_error_on_restore'));
                     return redirect()->back();
                 }
             } else {
                 $item = MinorClassification::withTrashed()->with('middle_classification')->findOrFail($id);
-                if ($item->middle_classification->where('status', Status::Deleted)) {
+                if ($item->middle_classification->where('status', Status::DELETED)) {
                     DB::rollback();
                     $request->session()->flash('error', trans('messages.minor_classification.parent_deleted_error_on_restore'));
                     return redirect()->back();
                 }
             }
-            $item->update(['status' => Status::Valid]);
+            $item->update(['status' => Status::VALID]);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
@@ -147,10 +147,10 @@ class ClassificationController extends Controller
                 'major_classifications.name as major_name'
             );
             if ($filterByStatus) {
-                if ($request->input('status', Status::Valid) == Status::Deleted) {
-                    $query->where('major_classifications.status', Status::Deleted);
+                if ($request->input('status', Status::VALID) == Status::DELETED) {
+                    $query->where('major_classifications.status', Status::DELETED);
                 } else {
-                    $query->where('major_classifications.status', Status::Valid);
+                    $query->where('major_classifications.status', Status::VALID);
                 }
             }
             $main_table = 'major_classifications';
@@ -165,10 +165,10 @@ class ClassificationController extends Controller
                 'major_classifications.name as major_name'
             );
             if ($filterByStatus) {
-                if ($request->input('status', Status::Valid) == Status::Deleted) {
-                    $query->where('middle_classifications.status', Status::Deleted);
+                if ($request->input('status', Status::VALID) == Status::DELETED) {
+                    $query->where('middle_classifications.status', Status::DELETED);
                 } else {
-                    $query->where('middle_classifications.status', Status::Valid);
+                    $query->where('middle_classifications.status', Status::VALID);
                 }
             }
             $main_table = 'middle_classifications';
@@ -185,10 +185,10 @@ class ClassificationController extends Controller
                 'major_classifications.name as major_name'
             );
             if ($filterByStatus) {
-                if ($request->input('status', Status::Valid) == Status::Deleted) {
-                    $query->where('minor_classifications.status', Status::Deleted);
+                if ($request->input('status', Status::VALID) == Status::DELETED) {
+                    $query->where('minor_classifications.status', Status::DELETED);
                 } else {
-                    $query->where('minor_classifications.status', Status::Valid);
+                    $query->where('minor_classifications.status', Status::VALID);
                 }
             }
             $main_table = 'minor_classifications';
@@ -404,18 +404,18 @@ class ClassificationController extends Controller
             $classification = $request->input('classification', 'minor');
 
             $data = $request->only(['name', 'status']);
-            if ($request->input('status') == Status::Deleted) {
+            if ($request->input('status') == Status::DELETED) {
                 // this->destory() と同じなので、修正する場合、共に修正する必要がないかを確認すること
                 if ($classification == 'major') {
                     $item = MajorClassification::find($id);
-                    if ($item->middle_classifications->where('status', Status::Valid)->count() > 0) {
+                    if ($item->middle_classifications->where('status', Status::VALID)->count() > 0) {
                         DB::rollback();
                         $request->session()->flash('error', trans('messages.major_classification.child_exist_error_on_delete'));
                         return redirect()->back();
                     }
                 } elseif ($classification == 'middle') {
                     $item = MiddleClassification::find($id);
-                    if ($item->minor_classifications->where('status', Status::Valid)->count() > 0) {
+                    if ($item->minor_classifications->where('status', Status::VALID)->count() > 0) {
                         DB::rollback();
                         $request->session()->flash('error', trans('messages.middle_classification.child_exist_error_on_delete'));
                         return redirect()->back();

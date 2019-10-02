@@ -59,6 +59,7 @@ class CustomerController extends Controller
                         ->where(function($q) use ($source_customer) {
                             $q->orWhere('email', $source_customer->email)
                                 ->orWhere('birthday', $source_customer->birthday)
+                                ->orWhere('tel', $source_customer->tel)
                                 ->orWhere(function($nq) use($source_customer) {
                                     $nq->where('family_name', $source_customer->family_name)
                                         ->where('first_name', $source_customer->first_name);
@@ -206,8 +207,8 @@ class CustomerController extends Controller
 
         $attributes = $request->only([ 'customer_id', 'title', 'contents']);
         $attributes = array_merge($attributes, [
-           'sender_name' => 'unei@eparkdock.com',
-           'sender_address' => 'unei@eparkdock.com',
+           'sender_name' => env('EPARK_EMAIL_ADDRESS'),
+           'sender_address' => env('EPARK_EMAIL_ADDRESS'),
            'email' => $customer->email
         ]);
 
@@ -279,7 +280,7 @@ class CustomerController extends Controller
             Customer::whereIn('id', $identical_ids)
                 ->update([
                     'deleted_at' => Carbon::now(),
-                    'status' => Status::Deleted
+                    'status' => Status::DELETED
                 ]);
 
             DB::commit();

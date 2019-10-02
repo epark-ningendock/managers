@@ -208,26 +208,26 @@
               </a>
             </td>
             <td>
-              @if($reservation->reservation_status->is(ReservationStatus::Pending))
+              @if($reservation->reservation_status->is(ReservationStatus::PENDING))
                 <button class="btn btn-success ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.accept_confirmation') }}"
                         data-target-form="#accept-form" data-button-text="確定">
                   受付確定
                 </button>
               @endif
-              @if($reservation->reservation_status->is(ReservationStatus::ReceptionCompleted))
+              @if($reservation->reservation_status->is(ReservationStatus::RECEPTION_COMPLETED))
                 <button class="btn btn-primary ml-3 delete-popup-btn"
                         data-id="{{ $reservation->id }}" data-message="{{ trans('messages.reservation.complete_confirmation') }}"
                         data-target-form="#complete-form" data-button-text="完了">
                   受診完了
                 </button>
               @endif
-              @if($reservation->reservation_status->is(ReservationStatus::Completed))
+              @if($reservation->reservation_status->is(ReservationStatus::COMPLETED))
                 {{-- <button class="btn btn-primary ml-3">
                   受診完了
                 </button> --}}
               @endif
-              @if(!$reservation->reservation_status->is(ReservationStatus::Cancelled) && !$reservation->reservation_status->is(ReservationStatus::Completed))
+              @if(!$reservation->reservation_status->is(ReservationStatus::CANCELLED) && !$reservation->reservation_status->is(ReservationStatus::COMPLETED))
                 <button class="btn btn-danger ml-3 delete-popup-btn" data-id="{{ $reservation->id }}"
                         data-message="{{ trans('messages.reservation.cancel_confirmation') }}"
                         data-modal="#reservation-cancel-modal"

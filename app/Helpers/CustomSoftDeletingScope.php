@@ -25,7 +25,7 @@ class CustomSoftDeletingScope extends SoftDeletingScope
     public function apply(Builder $builder, Model $model)
     {
         $builder->whereNull($model->getQualifiedDeletedAtColumn())
-            ->where($model->getTable().'.status', '<>', Status::Deleted);
+            ->where($model->getTable().'.status', '<>', Status::DELETED);
     }
 
     /**
@@ -40,7 +40,7 @@ class CustomSoftDeletingScope extends SoftDeletingScope
             $builder->withTrashed();
 
             return $builder->update([
-                'status' => Status::Valid,
+                'status' => Status::VALID,
                 $builder->getModel()->getDeletedAtColumn() => null
             ]);
         });
@@ -59,7 +59,7 @@ class CustomSoftDeletingScope extends SoftDeletingScope
 
             $builder->withoutGlobalScope($this)->whereNull(
                 $model->getQualifiedDeletedAtColumn()
-            )->where($model->getTable().'.status', '<>', Status::Deleted);
+            )->where($model->getTable().'.status', '<>', Status::DELETED);
 
             return $builder;
         });
@@ -78,7 +78,7 @@ class CustomSoftDeletingScope extends SoftDeletingScope
 
             $builder->withoutGlobalScope($this)->whereNotNull(
                 $model->getQualifiedDeletedAtColumn()
-            )->where($model->getTable().'.status', Status::Deleted);
+            )->where($model->getTable().'.status', Status::DELETED);
 
             return $builder;
         });

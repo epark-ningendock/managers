@@ -133,7 +133,7 @@ return [
         'family_name_kana' => [
             'regex' => 'お名前 かな (せい)は、ひらがなのみでご入力ください。'
         ],
-        'first_name_kana' > [
+        'first_name_kana' => [
             'regex' => 'お名前 かな (めい)は、ひらがなのみでご入力ください。'
         ],
         'login_id' => [
@@ -302,6 +302,8 @@ return [
         'pre_payment_from_date' => '適用期間',
         'claim_count' => 'クレーム数',
         'recall_count' => 'リコール数',
+        'search_word' => '検索ワード',
+        'free_area' => 'フリーエリア',
         // Contract information
         '*.property_no' => '物件番号',
         '*.code' => '顧客番号',

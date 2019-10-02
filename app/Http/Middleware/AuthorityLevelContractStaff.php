@@ -21,7 +21,7 @@ class AuthorityLevelContractStaff
         if (Auth::user()->getTable() == "staffs") {
             $staff = Staff::findOrFail(request()->session()->get('staffs'));
             
-            if ($staff->authority->value !== Authority::ContractStaff) {
+            if ($staff->authority->value !== Authority::CONTRACT_STAFF) {
                 request()->session()->forget('hospital_id');
                 return redirect('/hospital');
             }

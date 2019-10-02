@@ -4,8 +4,7 @@
     <h2>受付メール設定</h2>
     <fieldset class="form-group mt-3">
         <legend>メール設定</legend>
-    <!--<p class="text-bold">【メール設定】</p>-->
-    <p class="sender-email">差出人メールアドレス：unei@eparkdock.com</p>
+    <p class="sender-email">差出人メールアドレス：{{ env('EPARK_EMAIL_ADDRESS') }}</p>
     <div class="form-group @if ($errors->has('hospital_email_setting')) has-error @endif">
       <input type="hidden" name="lock_version" value="{{ $hospital_email_setting->lock_version or '' }}" />
 

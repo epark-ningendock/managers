@@ -128,7 +128,9 @@ return [
 
     'to' => [
         // 管理者-予約用
-        'admin_reservation' => env('MAIL_TO_RESERVATION_ADMIN_ADDRESS', 'banana_dev@banana-877.com'),
+        'admin_reservation' => env('MAIL_TO_RESERVATION_ADMIN_ADDRESS'),
+        'admin_all' => env('MAIL_TO_ADMIN_ALL_ADDRESS'),
+        'admin_claim' => env('MAIL_TO_ADMIN_CLAIM_ADDRESS'),
         // システムアラートメール送信先
         'alert' => env('MAIL_TO_ALERT_ADDRESS'),
     ],
