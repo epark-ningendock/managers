@@ -19,7 +19,7 @@ class Hospital extends Model
         'postcode',
         'prefecture_id',
         'district_code_id',
-	    'medical_examination_system_id',
+        'medical_examination_system_id',
         'course_meta_information_id',
         'address1',
         'address2',
@@ -74,6 +74,18 @@ class Hospital extends Model
 
     ];
 
+    public function prefecture()
+    {
+        return $this->belongsTo(Prefecture::class)
+            ->withDefault();
+    }
+
+    public function districtCode()
+    {
+        return $this->belongsTo(DistrictCode::class)
+            ->withDefault();
+    }
+
     /**
      * 医療機関に関連する受付メール設定レコードを取得
      */
@@ -115,11 +127,6 @@ class Hospital extends Model
     public function options()
     {
         return $this->hasMany('App\Option');
-    }
-
-    public function prefecture()
-    {
-        return $this->belongsTo('App\Prefecture');
     }
 
     public function district_code()
