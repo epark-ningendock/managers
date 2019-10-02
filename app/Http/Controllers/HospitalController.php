@@ -58,7 +58,7 @@ class HospitalController extends Controller
         }
 
         if (empty($request->has('s_text')) && empty($request->get('status')) && ($request->get('status') !== '0')) {
-            $query->where('status', HospitalEnums::Public);
+            $query->where('status', HospitalEnums::PUBLIC);
         }
 
         $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());
