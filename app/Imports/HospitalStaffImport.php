@@ -43,7 +43,7 @@ class HospitalStaffImport extends ImportBAbstract
             $model = new HospitalStaff([
                 'name' => $this->getValue($row, 'NAME'),
                 'email' => $this->getValue($row, 'EMAIL'),
-                'login_id' => $this->getValue($row, 'UID'),
+                'login_id' => $this->getValue($row, 'USER_ID'),
                 'password' => Hash::make($this->getValue($row, 'PWD')),
                 'remember_token' => null,
                 'first_login_at' => now(),
