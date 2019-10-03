@@ -14,8 +14,8 @@ class DropContractPlanIdAndDropToRenameBillingMonthForFromColumn extends Migrati
     public function up()
     {
         Schema::table('billings', function (Blueprint $table) {
-            $table->dropColumn(['contract_plan_id', 'to']);
-            $table->renameColumn('from', 'billing_month');
+            $table->dropColumn(['contract_plan_id']);
+            $table->integer('status')->default(0)->change();
         });
     }
 
@@ -28,8 +28,7 @@ class DropContractPlanIdAndDropToRenameBillingMonthForFromColumn extends Migrati
     {
         Schema::table('billings', function (Blueprint $table) {
 	        $table->integer('contract_plan_id');
-	        $table->string('to');
-	        $table->renameColumn('billing_month', 'from');
+	        $table->char('status', 1)->default(0)->change();
         });
     }
 }
