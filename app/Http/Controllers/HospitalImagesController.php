@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use phpDocumentor\Reflection\File;
 use Illuminate\Support\Facades\DB;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
+use App\Enums\ImageGroupNumber;
 
 class HospitalImagesController extends Controller
 {
@@ -51,7 +52,7 @@ class HospitalImagesController extends Controller
     {
         $hospital = Hospital::with(['hospital_images', 'hospital_categories', 'lock'])->find($hospital_id);
 
-        $interview_top = $hospital->hospital_categories()->where('image_order', ImageOrder::IMAGE_GROUP_INTERVIEW)->first();
+        $interview_top = $hospital->hospital_categories()->where('image_order', ImageGroupNumber::IMAGE_GROUP_INTERVIEW)->first();
 
         //interviewのタイトルなどの情報が必要
         if(is_null($interview_top)){
@@ -61,11 +62,11 @@ class HospitalImagesController extends Controller
                 ]
             );
             $hospital->hospital_categories()->create(
-                ['hospital_image_id' => $hospital_dummy_img[0]->id,'image_order' => ImageOrder::IMAGE_GROUP_INTERVIEW,'image_order' => ImageOrder::IMAGE_GROUP_INTERVIEW,'order' => 1]
+                ['hospital_image_id' => $hospital_dummy_img[0]->id,'image_order' => ImageGroupNumber::IMAGE_GROUP_INTERVIEW,'image_order' => ImageGroupNumber::IMAGE_GROUP_INTERVIEW,'order' => 1]
             );
         }
 
-        $interviews = $hospital->hospital_categories()->where('image_order', ImageOrder::IMAGE_GROUP_INTERVIEW)->first()->interview_details()->interviewOrder()->get();
+        $interviews = $hospital->hospital_categories()->where('image_order', ImageGroupNumber::IMAGE_GROUP_INTERVIEW)->first()->interview_details()->interviewOrder()->get();
 
         $image_order = $this->image_order;
 
@@ -107,10 +108,10 @@ class HospitalImagesController extends Controller
         try {
             //TOPの保存
             $hospital->hospital_categories()->updateOrCreate(
-                ['hospital_id' => $hospital_id,'image_order' => ImageOrder::IMAGE_GROUP_TOP],
+                ['hospital_id' => $hospital_id,'image_order' => ImageGroupNumber::IMAGE_GROUP_TOP],
                 [
                     'hospital_id' => $hospital_id,
-                    'image_order' => ImageOrder::IMAGE_GROUP_TOP,
+                    'image_order' => ImageGroupNumber::IMAGE_GROUP_TOP,
                     'title' => $file['title'],
                     'caption' => $file['caption'],
                     'order2' => 1
@@ -131,14 +132,14 @@ class HospitalImagesController extends Controller
             $extension = $file['main']->getClientOriginalExtension();
             //hospital_categories table 保存情報のセット
             $save_images = ['extension' => $extension, 'name' => $img_info['pc_img_name'], 'path' => $img_info['pc_img_url']];
-            $save_image_categories = [ 'hospital_id' => $hospital_id, 'image_order' => ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 'file_location_no' => 1 ];
+            $save_image_categories = [ 'hospital_id' => $hospital_id, 'image_order' => ImageGroupNumber::IMAGE_GROUP_FACILITY_MAIN, 'file_location_no' => 1 ];
             $save_images_sp = ['extension' => $extension, 'name' => $img_info['sp_img_name'], 'path' => $img_info['sp_img_url']];
-            $save_image_categories_sp = [ 'hospital_id' => $hospital_id, 'image_order' => ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 'file_location_no' => 2 ];
+            $save_image_categories_sp = [ 'hospital_id' => $hospital_id, 'image_order' => ImageGroupNumber::IMAGE_GROUP_FACILITY_MAIN, 'file_location_no' => 2 ];
 
             //メイン画像の登録確認$hospital_id, $image_order, $i, $location_no
-            $image_category_pc = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 0, 1)->first();
+            $image_category_pc = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageGroupNumber::IMAGE_GROUP_FACILITY_MAIN, 0, 1)->first();
 
-            $image_category_sp = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageOrder::IMAGE_GROUP_FACILITY_MAIN, 0, 2)->first();
+            $image_category_sp = $this->hospital_category->byImageOrderAndFileLocationNo($hospital_id, ImageGroupNumber::IMAGE_GROUP_FACILITY_MAIN, 0, 2)->first();
 
             $this->saveImageAndDeleteOldImage ($hospital,$image_category_pc,$save_images,$save_image_categories);
             $this->saveImageAndDeleteOldImage ($hospital,$image_category_sp,$save_images_sp,$save_image_categories_sp);
@@ -147,38 +148,38 @@ class HospitalImagesController extends Controller
         //sub
         for($i = 1; $i <= 4; $i++){
             if(isset($file['sub_'.$i])) {
-                $this->hospitalImageUploader($file, 'sub_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_FACILITY_SUB);
+                $this->hospitalImageUploader($file, 'sub_', $i, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB);
             }
         }
         //こだわり
         for($i = 1; $i <= 4; $i++){
             if(isset($file['speciality_'.$i]) or isset($file['speciality_'.$i.'_title']) or isset($file['speciality_'.$i.'_caption'])) {
-                $this->hospitalImageUploader($file, 'speciality_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_SPECIALITY,null,null,null,$file['speciality_'.$i.'_title'],$file['speciality_'.$i.'_caption'] );
+                $this->hospitalImageUploader($file, 'speciality_', $i, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_SPECIALITY,null,null,null,$file['speciality_'.$i.'_title'],$file['speciality_'.$i.'_caption'] );
             }
         }
         //スタッフ
         for($i = 1; $i <= 10; $i++){
             if(isset($file['staff_'.$i.'_category_id']) or isset($file['staff_'.$i]) or isset($file['staff_'.$i.'_name']) or isset($file['staff_'.$i.'_career']) or isset($file['staff_'.$i.'_memo'])) {
-            $this->hospitalImageUploader($file, 'staff_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_STAFF,$file['staff_'.$i.'_name'],$file['staff_'.$i.'_career'],$file['staff_'.$i.'_memo'] );
+            $this->hospitalImageUploader($file, 'staff_', $i, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_STAFF,$file['staff_'.$i.'_name'],$file['staff_'.$i.'_career'],$file['staff_'.$i.'_memo'] );
             }
         }
         //タブ staff
         for($i = 1; $i <= 30; $i++){
             if(isset($file['staff_tab_'.$i]) or isset($file['staff_tab_'.$i.'_category_id']) or isset($file['staff_tab_'.$i.'_memo2']) or isset($file['staff_tab_'.$i.'_order2'])) {
-                $this->hospitalImageUploader($file, 'staff_tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
+                $this->hospitalImageUploader($file, 'staff_tab_', $i, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_TAB);
             }
         }
         //タブ facility
         for($i = 1; $i <= 30; $i++){
             if(isset($file['facility_tab_'.$i]) or isset($file['facility_tab_'.$i.'_category_id']) or isset($file['facility_tab_'.$i.'_memo2']) or isset($file['facility_tab_'.$i.'_order2'])) {
-                $this->hospitalImageUploader($file, 'facility_tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
+                $this->hospitalImageUploader($file, 'facility_tab_', $i, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_TAB);
             }
         }
 
         //タブ internal
         for($i = 1; $i <= 30; $i++){
             if(isset($file['internal_tab_'.$i]) or isset($file['internal_tab_'.$i.'_category_id']) or isset($file['internal_tab_'.$i.'_memo2']) or isset($file['internal_tab_'.$i.'_order2'])) {
-                $this->hospitalImageUploader($file, 'internal_tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
+                $this->hospitalImageUploader($file, 'internal_tab_', $i, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_TAB);
             }
         }
 
@@ -186,22 +187,22 @@ class HospitalImagesController extends Controller
         //タブ external
         for($i = 1; $i <= 30; $i++){
             if(isset($file['external_tab_'.$i]) or isset($file['external_tab_'.$i.'_category_id']) or isset($file['external_tab_'.$i.'_memo2']) or isset($file['external_tab_'.$i.'_order2'])) {
-                $this->hospitalImageUploader($file, 'external_tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
+                $this->hospitalImageUploader($file, 'external_tab_', $i, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_TAB);
             }
         }
 
         //タブ another
         for($i = 1; $i <= 30; $i++){
             if(isset($file['another_tab_'.$i]) or isset($file['another_tab_'.$i.'_category_id']) or isset($file['another_tab_'.$i.'_memo2']) or isset($file['another_tab_'.$i.'_order2'])) {
-                $this->hospitalImageUploader($file, 'another_tab_', $i, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_TAB);
+                $this->hospitalImageUploader($file, 'another_tab_', $i, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_TAB);
             }
         }
 
         //インタビュー
-        $this->hospitalImageUploader($file, 'interview_', 1, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_INTERVIEW,null,null,null,$file['interview_1_title'],$file['interview_1_caption']);
+        $this->hospitalImageUploader($file, 'interview_', 1, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_INTERVIEW,null,null,null,$file['interview_1_title'],$file['interview_1_caption']);
 
         //インタビュートップ取得
-        $image_category_interview = $this->hospital_category->ByImageOrder($hospital_id, ImageOrder::IMAGE_GROUP_INTERVIEW, 1)->first();
+        $image_category_interview = $this->hospital_category->ByImageOrder($hospital_id, ImageGroupNumber::IMAGE_GROUP_INTERVIEW, 1)->first();
         //interview 詳細　update
         if(isset($file['interview'])) {
             $interviews = $file['interview'];
@@ -224,7 +225,7 @@ class HospitalImagesController extends Controller
         }
 
         if(isset($file['map_url'])) {
-            $this->hospitalImageUploader($file, 'map_url', 1, $hospital, $hospital_id,ImageOrder::IMAGE_GROUP_MAP);
+            $this->hospitalImageUploader($file, 'map_url', 1, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_MAP);
         }
         return redirect()->route('hospital.image.create', ['hospital_id' => $hospital_id])->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_categories')]));
     }
@@ -356,7 +357,7 @@ class HospitalImagesController extends Controller
 
     private function hospitalImageUploader (array $file, string $image_prefix, int $i, object $hospital, int $hospital_id, int $image_order, string $name = null, $career = null, string $memo = null, string $title = null, string $caption = null) {
         //地図も画像情報として保存されるが、画像の実態はないのでダミーで保存するっぽい。
-        if ($image_order != ImageOrder::IMAGE_GROUP_MAP) {
+        if ($image_order != ImageGroupNumber::IMAGE_GROUP_MAP) {
             $memo1 = isset($file[$image_prefix.$i.'_memo1']) ? $file[$image_prefix.$i.'_memo1'] : '' ;
             $memo2 = isset($file[$image_prefix.$i.'_memo2']) ? $file[$image_prefix.$i.'_memo2'] : '' ;
             $order2 = isset($file[$image_prefix.$i.'_order2']) ? $file[$image_prefix.$i.'_order2'] : 0 ;
@@ -365,7 +366,7 @@ class HospitalImagesController extends Controller
             $location_no = isset($file[$image_prefix.$i.'_location']) ? $file[$image_prefix.$i.'_location'] : null ;
             //画像の登録確認
             //tab画像だけはタブのカテゴリ$file_locationもチェックする
-            if($image_order == $this->image_order::IMAGE_GROUP_TAB) {
+            if($image_order == ImageGroupNumber::IMAGE_GROUP_TAB) {
                 $image_order_exists = $this->hospital_category->ByImageOrderAndFileLocationNo($hospital_id, $image_order, $i, $location_no)->first();
             } else {
                 $image_order_exists = $this->hospital_category->ByImageOrder($hospital_id, $image_order, $i)->first();

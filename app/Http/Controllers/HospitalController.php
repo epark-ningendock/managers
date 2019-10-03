@@ -4,28 +4,17 @@ namespace App\Http\Controllers;
 
 use App\DistrictCode;
 use App\Enums\HospitalEnums;
+use App\Enums\Permission;
 use App\Hospital;
-use App\HospitalDetail;
-use App\HospitalMajorClassification;
-use App\HospitalMiddleClassification;
-use App\HospitalMinorClassification;
-use App\ContractInformation;
-use App\HospitalStaff;
 use App\Http\Requests\HospitalCreateFormRequest;
 use App\Http\Requests\HospitalFormRequest;
 use App\MedicalExaminationSystem;
 use App\MedicalTreatmentTime;
 use App\Prefecture;
 use App\Rail;
-use App\Station;
-use App\FeeRate;
-use Illuminate\Auth\SessionGuard;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Enums\Permission;
+use Illuminate\Support\Facades\DB;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
 
 
@@ -40,14 +29,14 @@ class HospitalController extends Controller
 
     public function index(HospitalFormRequest $request)
     {
-        if (Auth::user()->staff_auth->is_hospital === Permission::None) {
-            if (Auth::user()->staff_auth->is_staff !== Permission::None) {
+        if (Auth::user()->staff_auth->is_hospital === Permission::NONE) {
+            if (Auth::user()->staff_auth->is_staff !== Permission::NONE) {
                 return redirect('/staff');
-            } elseif (Auth::user()->staff_auth->is_cource_classification !== Permission::None) {
+            } elseif (Auth::user()->staff_auth->is_cource_classification !== Permission::NONE) {
                 return redirect('/classification');
-            } elseif (Auth::user()->staff_auth->is_invoice !== Permission::None) {
+            } elseif (Auth::user()->staff_auth->is_invoice !== Permission::NONE) {
                 return redirect('/reservation');
-            } elseif (Auth::user()->staff_auth->is_pre_account !== Permission::None) {
+            } elseif (Auth::user()->staff_auth->is_pre_account !== Permission::NONE) {
                 // TODO: 事前決済機能が出来次第実装する
                 return redirect('/');
             } else {
@@ -57,7 +46,8 @@ class HospitalController extends Controller
             }
         }
 
-        $query = Hospital::query();
+        $query = Hospital::query()
+            ->with(['prefecture', 'districtCode']);
 
         if ($request->get('s_text')) {
             $query->where('name', 'LIKE', "%" . $request->get('s_text') . "%");
@@ -68,7 +58,7 @@ class HospitalController extends Controller
         }
 
         if (empty($request->get('s_text')) && empty($request->get('status')) && ($request->get('status') !== '0')) {
-            $query->where('status', HospitalEnums::Public);
+            $query->where('status', HospitalEnums::PUBLIC);
         }
 
         $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());
@@ -140,7 +130,7 @@ class HospitalController extends Controller
         $five_stations = [];
         for ($i = 1; $i <= 5; $i++) {
             if ($hospital->{'rail' . $i}) {
-                if(!is_null( Rail::find($hospital->{'rail' . $i}))) {
+                if (!is_null(Rail::find($hospital->{'rail' . $i}))) {
                     array_push($five_stations, Rail::find($hospital->{'rail' . $i})->stations()->get());
                 } else {
                     array_push($five_stations, []);
@@ -167,7 +157,8 @@ class HospitalController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function findRails(Request $request) {
+    public function findRails(Request $request)
+    {
         $response = array();
         $response["status"] = \Illuminate\Http\Response::HTTP_OK;
         $response["data"] = Prefecture::find($request->prefecture_id)->rails()->get();
@@ -180,7 +171,8 @@ class HospitalController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function findStations(Request $request) {
+    public function findStations(Request $request)
+    {
         $response = array();
         $response["status"] = \Illuminate\Http\Response::HTTP_OK;
         $response["data"] = Rail::find($request->rail_id)->stations()->get();
@@ -197,33 +189,33 @@ class HospitalController extends Controller
     public function update(HospitalCreateFormRequest $request, Hospital $hospital)
     {
         try {
-	        DB::beginTransaction();
+            DB::beginTransaction();
 
-	        $hospital = Hospital::findOrFail( $hospital->id );
-	        $hospital->fill( $request->all() );
-	        $hospital->touch();
-	        $hospital->save();
+            $hospital = Hospital::findOrFail($hospital->id);
+            $hospital->fill($request->all());
+            $hospital->touch();
+            $hospital->save();
 
-	        if ( !empty( request()->medical_treatment_time ) ) {
-		        foreach ( request()->medical_treatment_time as $mtt ) {
-		            if ( isset($mtt['id']) && !empty($mtt['id']) ) {
-                        $medical_treatment_times = MedicalTreatmentTime::findOrFail( $mtt['id'] );
-                        $medical_treatment_times->update( MedicalTreatmentTime::getDefaultFieldValues( $mtt ) );
+            if (!empty(request()->medical_treatment_time)) {
+                foreach (request()->medical_treatment_time as $mtt) {
+                    if (isset($mtt['id']) && !empty($mtt['id'])) {
+                        $medical_treatment_times = MedicalTreatmentTime::findOrFail($mtt['id']);
+                        $medical_treatment_times->update(MedicalTreatmentTime::getDefaultFieldValues($mtt));
                     } else {
                         $mtt = array_merge($mtt, ['hospital_id' => $hospital->id]);
                         MedicalTreatmentTime::create($mtt);
                     }
-		        }
-	        }
+                }
+            }
             DB::commit();
             return redirect()->route('hospital.edit', ['id' => $hospital->id])->with('success', trans('messages.updated', ['name' => trans('messages.basic_information')]));
         } catch (Exception $e) {
-	        DB::rollback();
-	        $request->session()->flash('error', trans('messages.update_error'));
-	        return redirect()->back()->withInput();
-        }  catch(StaleModelLockingException $e) {
-	        $request->session()->flash('error', trans('messages.model_changed_error'));
-	        return redirect()->back();
+            DB::rollback();
+            $request->session()->flash('error', trans('messages.update_error'));
+            return redirect()->back()->withInput();
+        } catch (StaleModelLockingException $e) {
+            $request->session()->flash('error', trans('messages.model_changed_error'));
+            return redirect()->back();
         }
     }
 
@@ -249,7 +241,7 @@ class HospitalController extends Controller
         }
 
         if (empty($request->get('s_text')) && empty($request->get('status')) && ($request->get('status') !== '0')) {
-            $query->where('status', HospitalEnums::Public);
+            $query->where('status', HospitalEnums::PUBLIC);
         }
 
         $hospitals = $query->orderBy('created_at', 'desc')->paginate(10)->appends(request()->query());

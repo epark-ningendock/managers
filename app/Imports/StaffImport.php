@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Staff;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Row;
+use App\Enums\Status;
 
 class StaffImport extends ImportAbstract
 {
@@ -42,7 +43,7 @@ class StaffImport extends ImportAbstract
             'login_id' => $row['id'],
             'password' => $row['passwd'],
             'authority' => '1',
-            'status' => ($row['status'] == '1') ? 1 : 2,
+            'status' => ($row['status'] == Status::VALID) ? 1 : 2,
             'email' => sprintf('dummy-%s@example.com', $row['id']),
             'remember_token' => Str::random(10),
             'first_login_at' => null,

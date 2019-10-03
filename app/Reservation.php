@@ -11,11 +11,6 @@ use Reshadman\OptimisticLocking\OptimisticLocking;
 class Reservation extends SoftDeleteModel
 {
     use OptimisticLocking;
-    const HOSPITAL = 1;
-    const PC = 2;
-    const SP = 3;
-    const TEL_API = 4;
-    const TEL_PPC = 5;
 
     protected $dates = [
         'completed_date',
@@ -43,11 +38,11 @@ class Reservation extends SoftDeleteModel
     ];
 
     public static $english_names = [
-        self::HOSPITAL => '院内',
-        self::PC => 'PC',
-        self::SP => 'スマホ',
-        self::TEL_API => '電話予約(API）',
-        self::TEL_PPC => '電話予約(PPC)'
+        TerminalType::HOSPITAL => '院内',
+        TerminalType::PC => 'PC',
+        TerminalType::SMART_PHONE => 'スマホ',
+        TerminalType::PHONE_RESERVATION_API => '電話予約(API）',
+        TerminalType::PHONE_RESERVATION_PPC => '電話予約(PPC)'
     ];
 
 
@@ -192,6 +187,46 @@ class Reservation extends SoftDeleteModel
         return '-';
     }
 
+    /**
+     * 既予約数取得
+     *
+     * @param $request
+     * @param $reservation_date
+     *
+     * @return 取得結果
+     */
+    public static function getReservationCount($request, $reservation_date)
+    {
+        return self::where('hospital_id', $request->input('hospital_id'))
+            ->where('course_id', $request->input('course_id'))
+            ->whereIn('reservation_status', [1, 2, 3])
+            ->whereDate('reservation_date', $reservation_date)->count();
+    }
+
+    /**
+     * 既予約情報取得
+     *
+     * @param $request
+     * @param $reservation_date
+     *
+     * @return 取得結果
+     */
+    public static function getUpdateTarget($request, $reservation_date) {
+
+        $entity = Reservation::with([
+            'customer' => function ($query) use ($request) {
+                $query->where('email', $request->input('email'));
+            }
+        ])
+            ->where('hospital_id', $request->input('hospital_id'))
+            ->where('course_id', $request->input('course_id'))
+            ->where('reservation_date', $reservation_date)
+            // 1 => 「仮受付」のもの
+            ->where('reservation_status', '1')
+            // reservation_id 若番のもの１件
+            ->first();
+        return $entity;
+    }
 
     public function taxIncludedPrice()
     {

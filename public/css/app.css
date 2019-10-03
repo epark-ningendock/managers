@@ -2723,7 +2723,7 @@ legend {
 
 .staff_box {
   height: 610px;
-  margin-top: 20px;
+  margin-top: -50px;
 }
 
 .main_image_area {
@@ -3361,5 +3361,38 @@ input[type=checkbox]:checked:disabled + label:before {
 
 .contract-show h2 {
   clear: both;
+}
+
+.form-support-txt {
+  color: #777777;
+}
+
+.consultation-hours .timebox td {
+  padding: 14px 0px 14px 0px;
+}
+
+.consultation-hours .timebox .form-group {
+  margin: 0;
+}
+
+.consultation-hours .timebox .start-time {
+  margin: 0 -26px -10px 0;
+  padding-top: 5px;
+}
+
+.consultation-hours .timebox .start-time-box {
+  margin: 0 -88px 0 0;
+}
+
+.consultation-hours .timebox .end-time {
+  padding-top: 5px;
+}
+
+.consultation-hours .timebox .end-time-box {
+  margin: 0 0 0 0;
+}
+
+.consultation-hours .timebox .daybox {
+  text-align: left;
 }
 
