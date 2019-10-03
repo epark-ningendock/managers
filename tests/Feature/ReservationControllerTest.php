@@ -68,7 +68,7 @@ class ReservationControllerTest extends TestCase
 
     public function testInvalidStatusInAcceptReservation()
     {
-        $reservation = factory(Reservation::class, 'with_all')->create([ 'reservation_status' => ReservationStatus::Cancelled ]);
+        $reservation = factory(Reservation::class, 'with_all')->create([ 'reservation_status' => ReservationStatus::CANCELLED ]);
         $response = $this->patch('/reservation/'. $reservation->id .'/accept');
         $response->assertSessionHas('errors');
         $this->assertEquals(302, $response->getStatusCode());
@@ -76,17 +76,17 @@ class ReservationControllerTest extends TestCase
 
     public function testAcceptReservation()
     {
-        $reservation = factory(Reservation::class, 'with_all')->create([ 'reservation_status' => ReservationStatus::Pending ]);
+        $reservation = factory(Reservation::class, 'with_all')->create([ 'reservation_status' => ReservationStatus::PENDING ]);
         $response = $this->patch('/reservation/'. $reservation->id .'/accept');
         $response->assertSessionHas('success');
         $this->assertEquals(302, $response->getStatusCode());
         $reservation->refresh();
-        $this->assertTrue($reservation->reservation_status->is(ReservationStatus::ReceptionCompleted));
+        $this->assertTrue($reservation->reservation_status->is(ReservationStatus::RECEPTION_COMPLETED));
     }
 
     public function testInvalidStatusInCancelReservation()
     {
-        $reservation = factory(Reservation::class, 'with_all')->create([ 'reservation_status' => ReservationStatus::Completed ]);
+        $reservation = factory(Reservation::class, 'with_all')->create([ 'reservation_status' => ReservationStatus::COMPLETED ]);
         $response = $this->delete('/reservation/'. $reservation->id .'/cancel');
         $response->assertSessionHas('errors');
         $this->assertEquals(302, $response->getStatusCode());
@@ -94,17 +94,17 @@ class ReservationControllerTest extends TestCase
 
     public function testCancelReservation()
     {
-        $reservation = factory(Reservation::class, 'with_all')->create([ 'reservation_status' => ReservationStatus::Pending ]);
+        $reservation = factory(Reservation::class, 'with_all')->create([ 'reservation_status' => ReservationStatus::PENDING ]);
         $response = $this->delete('/reservation/'. $reservation->id .'/cancel');
         $response->assertSessionHas('success');
         $this->assertEquals(302, $response->getStatusCode());
         $reservation->refresh();
-        $this->assertTrue($reservation->reservation_status->is(ReservationStatus::Cancelled));
+        $this->assertTrue($reservation->reservation_status->is(ReservationStatus::CANCELLED));
     }
 
     public function testInvalidStatusInCompleteReservation()
     {
-        $reservation = factory(Reservation::class, 'with_all')->create([ 'reservation_status' => ReservationStatus::Cancelled ]);
+        $reservation = factory(Reservation::class, 'with_all')->create([ 'reservation_status' => ReservationStatus::CANCELLED ]);
         $response = $this->patch('/reservation/'. $reservation->id .'/complete');
         $response->assertSessionHas('errors');
         $this->assertEquals(302, $response->getStatusCode());
@@ -112,12 +112,12 @@ class ReservationControllerTest extends TestCase
 
     public function testCompleteReservation()
     {
-        $reservation = factory(Reservation::class, 'with_all')->create([ 'reservation_status' => ReservationStatus::ReceptionCompleted ]);
+        $reservation = factory(Reservation::class, 'with_all')->create([ 'reservation_status' => ReservationStatus::RECEPTION_COMPLETED ]);
         $response = $this->patch('/reservation/'. $reservation->id .'/complete');
         $response->assertSessionHas('success');
         $this->assertEquals(302, $response->getStatusCode());
         $reservation->refresh();
-        $this->assertTrue($reservation->reservation_status->is(ReservationStatus::Completed));
+        $this->assertTrue($reservation->reservation_status->is(ReservationStatus::COMPLETED));
     }
 
     public function testRequiredIdsInBulkReservationStatusUpdate()
@@ -186,7 +186,7 @@ class ReservationControllerTest extends TestCase
     {
         return [
             'hospital_id' => auth()->user()->hospital_id,
-            'reservation_status' => ReservationStatus::Pending,
+            'reservation_status' => ReservationStatus::PENDING,
             'terminal_type' => 1,
             'is_repeat' => 0,
             'is_representative' => 0,
@@ -231,19 +231,19 @@ class ReservationControllerTest extends TestCase
         $response->assertSessionHas('success');
         $reservations = Reservation::whereIn('id', $params['ids'])->get();
         foreach ($reservations as $reservation) {
-            $this->assertEquals(ReservationStatus::Completed, $reservation->reservation_status->value);
+            $this->assertEquals(ReservationStatus::COMPLETED, $reservation->reservation_status->value);
         }
     }
 
     protected function validBulkReservationStatusUpdateFields($overwrites = [])
     {
-        $reservations = factory(Reservation::class, 'with_all', 5)->create([ 'reservation_status' => ReservationStatus::ReceptionCompleted ]);
+        $reservations = factory(Reservation::class, 'with_all', 5)->create([ 'reservation_status' => ReservationStatus::RECEPTION_COMPLETED ]);
         $ids = $reservations->map(function ($reservation) {
             return $reservation->id;
         })->toArray();
         $fields = [
             'ids' => $ids,
-            'reservation_status' => ReservationStatus::Completed,
+            'reservation_status' => ReservationStatus::COMPLETED,
             '_token' => csrf_token()
         ];
         return array_merge($fields, $overwrites);

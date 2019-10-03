@@ -25,7 +25,7 @@
                 </td>
                 <td>
                     <div class="form-group">
-                        unei@eparkdock.com
+                        {{ env('EPARK_EMAIL_ADDRESS') }}
                     </div>
                 </td>
             </tr>
@@ -36,7 +36,7 @@
                 </td>
                 <td>
                     <div class="form-group">
-                        unei@eparkdock.com
+                        {{ env('EPARK_EMAIL_ADDRESS') }}
                     </div>
                 </td>
             </tr>

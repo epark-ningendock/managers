@@ -29,7 +29,6 @@ use App\Enums\Permission;
 
 class CourseController extends Controller
 {
-    const EPARK_MAIL_ADDRESS = "dock_all@eparkdock.com";
     /**
      * Display a listing of the course.
      * @return \Illuminate\Contracts\View\Factory\Illuminate\View\View
@@ -62,8 +61,8 @@ class CourseController extends Controller
             ->whereDate('life_time_to', '>=', $today)->get()->first();
 
         $is_presettlement = $hospital->is_pre_account == '1' &&
-            (Auth::user()->staff_auth->is_pre_account == Permission::Edit
-                || Auth::user()->staff_auth->is_pre_account == Permission::Upload);
+            (Auth::user()->staff_auth->is_pre_account == Permission::EDIT
+                || Auth::user()->staff_auth->is_pre_account == Permission::UPLOAD);
 
         return view('course.create')
             ->with('calendars', $calendars)
@@ -105,7 +104,7 @@ class CourseController extends Controller
                 'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
                 'processing' => '登録'
             ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CourseSettingNotificationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CourseSettingNotificationMail($data));
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.course')]));
             return redirect('course');
         } catch (Exception $e) {
@@ -148,8 +147,8 @@ class CourseController extends Controller
             ->whereDate('life_time_to', '>=', $today)->get()->first();
 
         $is_presettlement = $hospital->is_pre_account == '1' &&
-            (Auth::user()->staff_auth->is_pre_account == Permission::Edit
-                || Auth::user()->staff_auth->is_pre_account == Permission::Upload);
+            (Auth::user()->staff_auth->is_pre_account == Permission::EDIT
+                || Auth::user()->staff_auth->is_pre_account == Permission::UPLOAD);
 
         return view('course.edit')
             ->with('calendars', $calendars)
@@ -233,17 +232,17 @@ class CourseController extends Controller
             //Course Images
             if ($request->has('course_image_main')) {
                 $target_image = 'course_image_main';
-                $target_type = CourseImageType::Main;
+                $target_type = CourseImageType::MAIN;
                 $this->saveCourseImage($request, $target_image, $target_type, $course->id);
             }
             if ($request->has('course_image_pc')) {
                 $target_image = 'course_image_pc';
-                $target_type = CourseImageType::Pc;
+                $target_type = CourseImageType::PC;
                 $this->saveCourseImage($request, $target_image, $target_type, $course->id);
             }
             if ($request->has('course_image_sp')) {
                 $target_image = 'course_image_sp';
-                $target_type = CourseImageType::Sp;
+                $target_type = CourseImageType::SP;
                 $this->saveCourseImage($request, $target_image, $target_type, $course->id);
             }
 
@@ -395,7 +394,7 @@ class CourseController extends Controller
                 'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
                 'processing' => '更新'
             ];
-            Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CourseSettingNotificationMail($data));
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CourseSettingNotificationMail($data));
 
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.course')]));
             return redirect('course');
@@ -428,7 +427,7 @@ class CourseController extends Controller
             'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
             'processing' => '削除'
         ];
-        Mail::to(self::EPARK_MAIL_ADDRESS)->send(new CourseSettingNotificationMail($data));
+        Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CourseSettingNotificationMail($data));
 
         $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.course')]));
         return redirect()->back();

@@ -21,7 +21,7 @@ class isCourceClassificationEdit
         if (Auth::user()->getTable() == "staffs") {
             $staff = Staff::findOrFail(request()->session()->get('staffs'));
             
-            if ($staff->staff_auth->is_cource_classification !== Permission::Edit) {
+            if ($staff->staff_auth->is_cource_classification !== Permission::EDIT) {
                 request()->session()->forget('hospital_id');
                 return redirect('/hospital');
             }

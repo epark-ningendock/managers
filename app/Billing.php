@@ -3,15 +3,24 @@
 namespace App;
 
 use App\Filters\Filterable;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Billing extends Model
+class Billing extends SoftDeleteModel
 {
-    use Filterable;
-    protected $fillable = ['hospital_id', 'billing_month', 'status'];
+    use Filterable, SoftDeletes;
+    protected $fillable = ['hospital_id', 'contract_plan_id', 'from', 'to', 'status'];
 
-//    protected $dates = ['billing_month'];
+    protected $dates = ['from', 'to'];
 
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
+    protected $fillable = [
+        'hospital_id', 'billing_month', 'status'
+    ];
 
     public function contractPlan()
     {
@@ -22,5 +31,4 @@ class Billing extends Model
     {
         return $this->belongsTo(Hospital::class);
     }
-
 }

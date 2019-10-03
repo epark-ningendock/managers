@@ -16,6 +16,11 @@ class HospitalMinorClassification extends Model
         return $this->belongsTo('App\HospitalMiddleClassification', 'middle_classification_id')->withTrashed();
     }
 
+    public function major_classification()
+    {
+        return $this->belongsTo('App\HospitalMajorClassification', 'major_classification_id')->withTrashed();
+    }
+
     public function hospital_details()
     {
         return $this->hasMany('App\HospitalDetail')->orderBy('order');

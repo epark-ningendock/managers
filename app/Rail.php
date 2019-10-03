@@ -34,4 +34,52 @@ class Rail extends Model
     {
         return $this->belongsToMany(Prefecture::class);
     }
+
+    public function prefecture_rails()
+    {
+        return $this->hasMany('App\PrefectureRail', 'rail_id');
+    }
+    public function rail_station()
+    {
+        return $this->hasMany('App\RailStation', 'rail_id');
+    }
+
+    /** バリデーションrule */
+    private $_rules = array(
+        'es_code' => 'required|integer|min:0',
+        'name' => 'required|max:50',
+        'railway_company_id' => 'required|integer|min:0',
+    );
+
+    /** エラーメッセージリスト */
+    private $_errors;
+    // エラーメッセージ
+    private $_messages = [
+        'es_code.required' => '{A-00020}・・・駅すぱあとコード',
+        'es_code.integer'  => '{A-00021}・・・駅すぱあとコード',
+        'es_code.min' => '{A-00022}・・・駅すぱあとコード',
+        'Name.required' => '{A-00020}・・・路線名',
+        'Name.max' => '{A-00022}・・・路線名',
+        'railway_company_id.required' => '{A-00020}・・・企業番号',
+        'railway_company_id.integer'  => '{A-00021}・・・企業番号',
+        'railway_company_id.min' => '{A-00022}・・・企業番号',
+    ];
+    /**
+     * バリデーション
+     *
+     */
+    public function validate($data)
+    {
+        $v = Validator::make($data, $this->_rules, $this->_messages);
+        if ($v->fails()) {
+            $this->_errors = $v->errors();
+            return false;
+        }
+        return true;
+    }
+
+    public function errors()
+    {
+        return $this->_errors;
+    }
 }
