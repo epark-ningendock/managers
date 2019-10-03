@@ -19,8 +19,8 @@ class CreateBillingsTable extends Migration
             $table->increments('id');
             $table->integer('hospital_id')->comment('医療機関ID');
             $table->integer('contract_plan_id');
-            $table->char('billing_month', 6)->comment('請求月');
-            $table->char('status', 1)->nullable()->default(0)->comment('ステータス');
+            $table->char('billing_month', 7)->comment('請求月');
+            $table->char('status', 1)->default(0)->comment('ステータス');
             $this->addCommonColumns($table);
         });
     }
