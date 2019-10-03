@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use App\Helpers\DBCommonColumns;
 
-class CreatePrefectureRailTable extends Migration
+class AddColumnsPrefectureRailTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class CreatePrefectureRailTable extends Migration
      */
     public function up()
     {
-        Schema::table('prefecture_rails', function (Blueprint $table) {
+        Schema::table('prefecture_rail', function (Blueprint $table) {
             $table->char('status', 1)->default('1');
         });
     }
@@ -26,7 +26,7 @@ class CreatePrefectureRailTable extends Migration
      */
     public function down()
     {
-        Schema::table('prefecture_rails', function (Blueprint $table) {
+        Schema::table('prefecture_rail', function (Blueprint $table) {
             $table->dropColumn('status');
         });
     }
