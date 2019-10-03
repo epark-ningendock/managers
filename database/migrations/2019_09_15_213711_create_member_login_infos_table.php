@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use App\Helpers\DBCommonColumns;
 
-class MemberLoginInfosTable extends Migration
+class CreateMemberLoginInfosTable extends Migration
 {
     use DBCommonColumns;
     /**
@@ -20,8 +20,8 @@ class MemberLoginInfosTable extends Migration
             $table->integer('epark_member_id');
             $table->char('mail_info_delivery',1)->default('1');
             $table->char('nick_use', 1)->default('1');
-            $table->tinyInteger('contact', 1)->default(1);
-            $table->string('contact_name', 64)->nullable();
+            $table->tinyInteger('contact')->default(1);
+            $table->string('contact_name', 32)->nullable();
             $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
         });
