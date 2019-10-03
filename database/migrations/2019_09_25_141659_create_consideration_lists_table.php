@@ -3,9 +3,11 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Helpers\DBCommonColumns;
 
 class CreateConsiderationListsTable extends Migration
 {
+    use DBCommonColumns;
     /**
      * Run the migrations.
      *
@@ -20,7 +22,7 @@ class CreateConsiderationListsTable extends Migration
             $table->unsignedInteger('course_id')->nullable();
             $table->unsignedInteger('display_kbn');
             $table->char('status', 1);
-            $table->timestamps();
+            $this->addCommonColumns($table);
         });
     }
 
