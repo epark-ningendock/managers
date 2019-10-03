@@ -321,13 +321,14 @@ class ReservationService
             return isset($m);
         })->toArray()[0];
 
+        $entity = Customer::where('epark_member_id', $request->input('epark_member_id'))
+                            ->where('hospital_id', $request->input('hospital_id'));
+
         // 処理区分セット
         $process = intval($request->input('process_kbn'));
-        if ($process === self::REGISTRATION) { // 新規
+        if (! $entity) { // 新規
             $entity = new Customer();
 
-        } else { // 更新
-            $entity = Customer::find($request->input('customer_id'));
         }
         $entity->parent_customer_id = null;
         // 設定不要 ※テーブルからunique制約外す
