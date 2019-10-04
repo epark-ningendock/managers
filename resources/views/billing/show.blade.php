@@ -22,34 +22,40 @@
         </li>
         <li>
             <small class="text-bold label-text">プラン名</small>
-            <span class="value-text">{{ $billing->contractPlan->plan_name ?? '' }}</span>
+            <span class="value-text">{{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}</span>
         </li>
         <li>
             <small class="text-bold label-text">月額契約料（税抜金額）</small>
-            <span class="value-text">{{ $billing->contractPlan->monthly_contract_fee }}円</span>
+            <span class="value-text">
+                {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee )}}円
+            </span>
         </li>
         <li>
             <small class="text-bold label-text">成果コース</small>
-            <span class="value-text">{{ $billing->contractPlan->fee_rate }}%</span>
+            <span class="value-text">
+                {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate }}%
+            </span>
         </li>
         <li>
             <small class="text-bold label-text">手数料合計金額（税抜価格）</small>
-            <span class="value-text">{{ $billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() }}円</span>
+            <span class="value-text">
+                {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('tax_excluded_price')->sum()) }}円
+            </span>
         </li>
     </ul>
 
     <p class="action-button-list text-center m-3 mb-5">
 
-        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2]) }}" class="btn btn-primary"
-           @if( $billing->status == 1 ) style="pointer-events: none;" @endif
-        >未確認</a>
+        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'claim_check' => 'yes']) }}" class="btn @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
+           @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) style="pointer-events: none;" @endif
+        >請求確認</a>
 
-        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 4]) }}" class="btn btn-primary"
-           @if( $billing->status == 2  || $billing->status == 3) style="pointer-events: none;" @endif
+        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 4, 'claim_confirmation' => 'yes']) }}" class="btn @if( ($billing->status == \App\Enums\BillingStatus::CHECKING) || ($billing->status == \App\Enums\BillingStatus::CONFIRMED) ) btn-primary @else btn-default @endif"
+           @if( ($billing->status == \App\Enums\BillingStatus::CHECKING) || ($billing->status == \App\Enums\BillingStatus::CONFIRMED) )  style="pointer-events: unset;" @else style="pointer-events: none;" @endif
         >請求確定</a>
 
-        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2]) }}" class="btn btn-primary"
-           @if( $billing->status != 4) style="pointer-events: none;" @endif
+        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'undo_commit' => 'yes']) }}" class="btn @if( $billing->status == 4) btn-primary @else btn-default @endif"
+           @if( $billing->status == 4) style="pointer-events: unset;" @else style="pointer-events: none;" @endif
         >確定取消</a>
 
     </p>
@@ -77,22 +83,34 @@
             </tr>
             </thead>
             <tbody>
-            @if ( isset($billing->hospital->reservations) )
-            @foreach( $billing->hospital->reservations as $reservation)
+            @if (! $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->isEmpty() )
+            @foreach( $billing->hospital->reservationByCompletedDate($startedDate, $endedDate) as $reservation)
                 <tr>
                     <td>{{ $reservation->id }}</td>
                     <td>{{ $reservation->completed_date->format('Y-m-d') }}</td>
                     <td>{{ $reservation->customer->family_name .' ' . $reservation->customer->first_name }}</td>
-                    <td>{{ $reservation->channel ?? '' }}</td>
-                    <td>{{ \App\Enums\ReservationStatus::getDescription($reservation->status) }}</td>
-                    <td>{{ $reservation->is_payment ?? '' }}</td>
+                    <td>{{ ( isset($reservation->channel) && ( $reservation->channel == 1)) ? 'WEB' : 'TEL' }}</td>
+                    <td>
+                        @if ( $reservation->status == 1 )
+                            仮受付
+                            @elseif ( $reservation->status == 2 )
+                            受付確定
+                                @elseif ( $reservation->status == 3 )
+                            受診完了
+                                    @elseif ( $reservation->status == 4 )
+                            キャンセル
+
+                            @endif
+
+                    </td>
+                    <td>@if ( isset($reservation->is_payment) && ( $reservation->is_payment == 1 ) ) 事前決済 @else 現地決済、@endif</td>
                     <td>{{ $reservation->course->name }}</td>
-                    <td>{{ $reservation->tax_included_price ?? '' }}</td>
-                    <td><span class="text-danger">Relationship is wrong</span></td>
-                    <td>{{ $reservation->adjustment_price }}円</td>
+                    <td>{{ ( isset($reservation->tax_included_price) ) ? number_format($reservation->tax_included_price) : '' }}</td>
+                    <td>{{ ( $reservation->reservation_options->pluck('option_price')->sum() ) ? number_format($reservation->reservation_options->pluck('option_price')->sum()) . '円' : '' }}</td>
+                    <td>{{ (isset($reservation->adjustment_price) ) ? number_format($reservation->adjustment_price) . '円' : '' }}</td>
                     <td>{{ $reservation->fee_rate }}%</td>
-                    <td>{{ $reservation->fee }}円</td>
-                    <td>{{ (isset($reservation->is_fee_hp_link) && ( $reservation->is_fee_hp_link == 1) ) ? __('無料HPリンク') : '' }}</td>
+                    <td>{{ ( isset($reservation->fee) ) ? number_format($reservation->fee) . '円' : '' }}</td>
+                    <td>{{ (isset($reservation->is_free_hp_link) && ( $reservation->is_free_hp_link == 1) ) ? '無料HPリンク' : '' }}</td>
                 </tr>
             @endforeach
                 @else
