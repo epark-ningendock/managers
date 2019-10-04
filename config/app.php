@@ -188,6 +188,7 @@ return [
         App\Providers\ReservationExportServiceProvider::class,
         App\Providers\ValidationExtensionServiceProvider::class,
         //App\Providers\MinIOStorageServiceProvider::class
+        Barryvdh\DomPDF\ServiceProvider::class,
     ],
 
     /*
@@ -240,6 +241,8 @@ return [
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
+
     ],
 
     'faker_locale' => 'ja_JP',
