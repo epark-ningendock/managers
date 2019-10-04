@@ -37,7 +37,7 @@ class CustomerImport extends ImportBAbstract
     {
         $row = $row->toArray();
 
-        $arr = [
+        $model = new Customer([
             'parent_customer_id' => $this->getValue($row, 'PARENT_CUSTOMER_ID'),
             'member_number' => $this->getValue($row, 'MEMBER_NO'),
             'registration_card_number' => $this->getValue($row, 'EXAMINATION_NO'),
@@ -57,8 +57,7 @@ class CustomerImport extends ImportBAbstract
             'claim_count' => $this->getValue($row, 'CLAIM_COUNT'),
             'recall_count' => $this->getValue($row, 'RECALL_COUNT'),
             'hospital_id' => Hospital::query()->where('old_karada_dog_id', $this->hospital_no)->first()->id,
-        ];
-        $model = new Customer($arr);
+        ]);
         $model->save();
         $this->setId($model, $row);
     }
