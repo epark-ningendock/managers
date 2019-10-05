@@ -17,12 +17,14 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
     private $counter = 1;
     private $startedDate;
     private $endedDate;
+	private $selectedMonth;
 
-    public function __construct($collection, $startedDate, $endedDate)
+	public function __construct($collection, $startedDate, $endedDate, $selectedMonth)
     {
         $this->dataCollection = $collection;
         $this->startedDate = $startedDate;
         $this->endedDate = $endedDate;
+	    $this->selectedMonth = $selectedMonth;
     }
 
     /**
