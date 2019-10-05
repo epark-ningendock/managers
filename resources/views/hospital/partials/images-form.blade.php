@@ -79,7 +79,6 @@
         </div>
         @endfor
     </div>
-
     </div>
 </div>
 <div class="box box-primary form-box">
@@ -531,11 +530,6 @@
     </div>
     <!--・//設備タブ-->
 
-
-
-
-
-
     <!--院内タブ-->
     <p class="tab_name">
         院内
@@ -889,6 +883,55 @@
     <!--//未登録のタブ画像フォーム-->
     </div>
     <!--・//その他タブ-->
+    </div>
+    <div class="form-entry box-body">
+        <h2>写真</h2>
+        <div class="row">
+            @for ($i = 1; $i <= 4; $i++)
+                <div class="col-sm-6">
+                    {{Form::label('sub_'.$i, '画像選択'.$i,['class' => 'form_label'])}}
+                    <?php $sub_image_category = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB)->where('order', $i)->first(); ?>
+                    @if (!is_null($sub_image_category))
+                        <div class="sub_image_area">
+                            <img class="object-fit" src="{{$sub_image_category->hospital_image->path}}">
+                            <p class="file_delete_text">
+                                <a onclick="return confirm('この写真を削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.image.delete', ['hospital' => $hospital->id, 'hospital_category_id' => $sub_image_category->id, 'hospital_image_id' => $sub_image_category->hospital_image_id]) }}">
+                                    削除
+                                </a>
+                            </p>
+                        </div>
+                    @else
+                        <div class="sub_image_area">
+                            <img src="/img/no_image.png">
+                        </div>
+                    @endif
+                    <a href="javascript:void(0)" id="interview_add" class="btn btn-info">
+                        <i class="icon-trash icon-white"></i>
+                        ファイル選択
+                    </a>
+
+                    @if ($errors->has('sub_'.$i))
+                        <div class="error_message">
+                            {{ $errors->first('sub_'.$i) }}
+                        </div>
+                    @endif
+                </div>
+            @endfor
+        </div>
+    </div>
+    <div class="form-entry box-body">
+        <h2>写真選択</h2>
+        <div class="row">
+        <?php $select_tab_photos = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB);?>
+
+            @foreach($select_tab_photos as $key => $photo)
+            <div class="col-sm-3">
+                    <img class="object-fit" src="{{$photo->hospital_image->path}}" width="100%">
+
+            </div>
+            @endforeach
+        </div>
+
     </div>
 </div>
 
