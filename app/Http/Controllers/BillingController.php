@@ -25,7 +25,9 @@ class BillingController extends Controller {
 
 	public function getSelectedMonth() {
 
-		return ( request()->has('billing_month') ) ? request('billing_month') : now()->format('Y-m');
+		$billingDateFilter =  $this->billingDateFilter();
+
+		return $billingDateFilter['endedDate']->format('Y-m');
 
 	}
 
