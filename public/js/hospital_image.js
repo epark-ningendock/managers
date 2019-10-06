@@ -28,10 +28,13 @@ $(document).ready(function() {
         $(this).prev().show();
     });
 
+    $('#sampleModal').on('show.bs.modal', function (event) {
+        var clickBotton = $(event.relatedTarget).data('clickbotton');
+        $('#showBsModal').text(clickBotton+"をクリックしてshowメソッドを呼び出しましたね。");
+    });
 
     $('#interview_add').click(function() {
         let i = $('.interview_detail_new').length;
-        console.log(i);
         if(i >= 20) {
             alert('インタビューは20個までです');
             return false;
@@ -80,4 +83,31 @@ $(document).ready(function() {
             reader.readAsDataURL(file);
         });
     });
+
+
+
+    'use strict';
+    // JavaScript で表示
+    $('#staticModalButton').on('click', function() {
+        $('#staticModal').modal();
+    });
+    // ダイアログ表示前にJavaScriptで操作する
+    $('#staticModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var recipient = button.data('whatever');
+        var modal = $(this);
+        modal.find('.modal-body .recipient').text(recipient);
+        //modal.find('.modal-body input').val(recipient);
+    });
+    // ダイアログ表示直後にフォーカスを設定する
+    $('#staticModal').on('shown.bs.modal', function(event) {
+        $(this).find('.modal-footer .btn-default').focus();
+    });
+    $('#staticModal').on('click', '.modal-footer .btn-primary', function() {
+        $('#staticModal').modal('hide');
+        alert('変更を保存をクリックしました。');
+    });
+
+
+
 });

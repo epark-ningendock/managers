@@ -890,47 +890,50 @@
             @for ($i = 1; $i <= 4; $i++)
                 <div class="col-sm-6">
                     {{Form::label('sub_'.$i, '画像選択'.$i,['class' => 'form_label'])}}
-                    <?php $sub_image_category = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB)->where('order', $i)->first(); ?>
-                    @if (!is_null($sub_image_category))
-                        <div class="sub_image_area">
-                            <img class="object-fit" src="{{$sub_image_category->hospital_image->path}}">
-                            <p class="file_delete_text">
-                                <a onclick="return confirm('この写真を削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.image.delete', ['hospital' => $hospital->id, 'hospital_category_id' => $sub_image_category->id, 'hospital_image_id' => $sub_image_category->hospital_image_id]) }}">
-                                    削除
-                                </a>
-                            </p>
-                        </div>
-                    @else
                         <div class="sub_image_area">
                             <img src="/img/no_image.png">
+                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#staticModal">
+                                画像選択
+                            </button>
                         </div>
-                    @endif
-                    <a href="javascript:void(0)" id="interview_add" class="btn btn-info">
-                        <i class="icon-trash icon-white"></i>
-                        ファイル選択
-                    </a>
-
-                    @if ($errors->has('sub_'.$i))
-                        <div class="error_message">
-                            {{ $errors->first('sub_'.$i) }}
-                        </div>
-                    @endif
                 </div>
             @endfor
         </div>
+
     </div>
     <div class="form-entry box-body">
-        <h2>写真選択</h2>
-        <div class="row">
-        <?php $select_tab_photos = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB);?>
+        <!-- モーダルダイアログ -->
+        <div class="modal" id="staticModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true" data-show="true" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&#215;</span><span class="sr-only">閉じる</span>
+                        </button>
+                        <h4 class="modal-title">写真選択</h4>
+                    </div><!-- /modal-header -->
+                    <div class="modal-body">
+                        <?php $select_tab_photos = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB);?>
 
-            @foreach($select_tab_photos as $key => $photo)
-            <div class="col-sm-3">
-                    <img class="object-fit" src="{{$photo->hospital_image->path}}" width="100%">
-
-            </div>
-            @endforeach
-        </div>
+                        <div class="row">
+                        @foreach($select_tab_photos as $key => $photo)
+                            <div class="col-sm-4">
+                                @if($photo->hospital_image->path != "")
+                                    <img class="object-fit" src="{{$photo->hospital_image->path}}" width="100%">
+                                @else
+                                    <img class="object-fit" src="/img/no_image.png" width="100%">
+                                @endif
+                            </div>
+                        @endforeach
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                        <button type="button" class="btn btn-primary">変更を保存</button>
+                    </div>
+                </div> <!-- /.modal-content -->
+            </div> <!-- /.modal-dialog -->
+        </div> <!-- /.modal -->
 
     </div>
 </div>
