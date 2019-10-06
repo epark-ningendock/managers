@@ -18,7 +18,7 @@ class CreateHospitalPlansTable extends Migration
         Schema::create('hospital_plans', function (Blueprint $table) {
 	        $table->increments('id');
 	        $table->integer('hospital_id');
-	        $table->integer('contract_plan_id');
+            $table->char('contract_plan_id', 4);
 	        $table->date('from');
 	        $table->date('to')->nullable();
 	        $this->addCommonColumns($table);

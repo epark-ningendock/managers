@@ -99,7 +99,7 @@ class HospitalImport extends ImportAbstract
 
         // 医療機関プラン
         $model->hospitalPlans()->create([
-            'contract _plan_id' => sprintf('Y0%02d', $row['plan_code']),
+            'contract_plan_id' => sprintf('Y0%02d', $row['plan_cd']),
             'from' => '2019-01-01',
             'to' => null,
         ]);
