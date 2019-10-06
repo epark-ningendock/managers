@@ -96,6 +96,14 @@ class HospitalImport extends ImportAbstract
         ]);
 
         $model->save();
+
+        // 医療機関プラン
+        $model->hospitalPlans()->create([
+            'contract _plan_id' => sprintf('Y0%02d', $row['plan_code']),
+            'from' => '2019-01-01',
+            'to' => null,
+        ]);
+
         $this->deleteIf($model, $row, 'status', ['X']);
         $this->setId($model, $row);
     }
