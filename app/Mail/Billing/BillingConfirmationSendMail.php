@@ -47,7 +47,7 @@ class BillingConfirmationSendMail extends Mailable
                 ->attachData($this->attchment->output(), $this->data['attachment_file_name'] . 'pdf',[
                     'mime' => 'application/pdf',
                 ])
-                ->view('billing.mail.billing-claim-confirmation', ['billing' => $this->data['billing']]);
+                ->view('billing.mail.billing-claim-confirmation', ['billing' => $this->data['billing'], 'attributes' => $this->attributes]);
 
         } else {
 
@@ -57,7 +57,7 @@ class BillingConfirmationSendMail extends Mailable
                 ->attachData($this->attchment->output(), $this->data['attachment_file_name'] . 'pdf',[
                     'mime' => 'application/pdf',
                 ])
-                ->view('billing.mail.billing-confirmation', ['billing' => $this->data['billing']]);
+                ->view('billing.mail.billing-confirmation', ['billing' => $this->data['billing'], 'attributes' => $this->attributes ]);
 
         }
 
