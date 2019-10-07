@@ -9,7 +9,7 @@
 
 平素は弊社に格別のお引き立てを賜り、誠にありがとうございます。<br/>
 
-さてこの度は、{{ substr($billing->billing_month, 0, 4) }}年 {{ substr($billing->billing_month, -2) }}月 の請求内容のご確認をお願いしたくご連絡させていただきました。<br/>
+さてこの度は、{{ substr($attributes['selectedMonth'], 0, 4) }}年 {{ substr($attributes['selectedMonth'], -2) }}月 の請求内容のご確認をお願いしたくご連絡させていただきました。<br/>
 契約プラン、受付内容のご確認をお願いいたします。<br/>
 <br/>
 受付内容に変更が必要な場合は、EPARK人間ドック管理システムへログインいただき<br/>
