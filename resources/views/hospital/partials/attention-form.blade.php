@@ -121,12 +121,12 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
               <div class="radio">
                 {{-- ml ってマージン？ --}}
                 <div class="form-group mt-3">
-                  <label class="ml-12">
+                  <div class="ml-12 radio">
                     <input type="radio" name="hplink_contract_type" id="none"
                           value="{{ HplinkContractType::NONE }}"
                           @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::NONE ) checked @endif>
-                    {{ HplinkContractType::getDescription(0) }}
-                  </label>
+                      <label class="radio-label" for="none"> {{ HplinkContractType::getDescription(0) }}</label>
+                  </div>
                 </div>
                 <div class="form-group mt-3">
                   <label class="ml-4">
