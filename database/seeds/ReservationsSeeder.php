@@ -1,5 +1,7 @@
 <?php
 
+use App\Reservation;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use App\Option;
 use Faker\Factory;
@@ -15,7 +17,29 @@ class ReservationsSeeder extends Seeder
     {
         $faker = Factory::create();
         $options = Option::all();
-        $reservations = factory(App\Reservation::class, 50)->create();
+
+        $x = 1;
+        while ($x < 36) {
+
+            $carbonDateTime = ($x === 1 ) ? Carbon::today()->startOfMonth() : Carbon::today()->subMonth($x-1) ;
+
+            $days = 1;
+            while( $days < 27 ) {
+                $startedDayOfMonth = $carbonDateTime->startOfMonth()->addDay($days)->format('Y-m-d');
+
+                factory(Reservation::class)->create([
+                    'completed_date' => $startedDayOfMonth
+                ]);
+
+                $days++;
+            }
+
+            $days = ( $days === 27 ) ? 1 : $days;
+            $x++;
+
+        }
+
+        $reservations = Reservation::all();
 
         $reservations->each(function ($reservation) use ($faker, $options) {
             $reservation_options = collect($faker->randomElements($options, 3)).map(function ($option) {

@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\ContractInformation;
+use App\Hospital;
 use App\HospitalStaff;
 use Maatwebsite\Excel\Row;
 
@@ -36,8 +37,9 @@ class ContractInformationImport extends ImportBAbstract
     {
         $row = $row->toArray();
 
+        $hospital = Hospital::withTrashed()->where('old_karada_dog_id', $this->hospital_no)->get()->first();
+
         $model = new ContractInformation([
-            'id' => null, // @todo,
             'contractor_name_kana' => $this->getValue($row, 'SHOPOWNER_NAME_KANA'),
             'contractor_name' => $this->getValue($row, 'SHOPOWNER_NAME'),
             'application_date' => $this->getValue($row, 'NEW_APPLY_DATE'),
@@ -50,11 +52,16 @@ class ContractInformationImport extends ImportBAbstract
             'tel' => $this->getValue($row, 'TEL'),
             'fax' => $this->getValue($row, 'FAX'),
             'karada_dog_id' => $this->hospital_no, // @todo 確認
-            'code' => null, // @todo 対応するデータ不明
+            'code' => $hospital->code,
             'old_karada_dog_id' => $this->hospital_no, // @todo 確認
             'hospital_staff_id' => $this->getStaffIdByName($this->getValue($row, 'DELEGATE_NAME')), // @todo 確認
             'created_at' => $this->getValue($row, 'CREATE_DATE'),
             'updated_at' => $this->getValue($row, 'MODIFY_DATE'),
+            'property_no' => $this->getValue($row, 'CONTRACT_NO'),
+            'contract_plan_id' => sprintf('Y0%02d', $hospital->plan_code),
+            'hospital_id' => $hospital->id,
+            'service_start_date' => $this->getValue($row, 'SPECIFICFEE_START_DATE'),
+            'service_end_date' => $this->getValue($row, 'TERM_EXPECTED_DATE')
         ]);
 
         $model->save();

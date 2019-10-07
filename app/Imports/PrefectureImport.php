@@ -38,6 +38,8 @@ class PrefectureImport extends ImportAbstract
         $model = new Prefecture([
             'name' => $row['name'],
             'code' => $row['pref_no'],
+            'area_no' => $row['area_no'],
+            'order' => $row['order'],
             'created_at' => $row['rgst'],
             'updated_at' => $row['updt'],
         ]);

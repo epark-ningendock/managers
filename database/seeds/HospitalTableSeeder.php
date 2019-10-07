@@ -1,5 +1,6 @@
 <?php
 
+use App\Billing;
 use App\Hospital;
 use App\MedicalTreatmentTime;
 use Illuminate\Database\Seeder;

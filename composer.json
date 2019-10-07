@@ -8,6 +8,7 @@
         "php": "7.3.2",
         "azuyalabs/yasumi": "^2.1",
         "barryvdh/laravel-debugbar": "^3.1",
+        "barryvdh/laravel-dompdf": "^0.8.5",
         "bensampo/laravel-enum": "^1.17",
         "coraxster/flysystem-aws-s3-v3-minio": "^1.0",
         "doctrine/dbal": "^2.9",

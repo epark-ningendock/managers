@@ -2,21 +2,25 @@
 
 namespace App;
 
+use App\Filters\Filterable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Billing extends SoftDeleteModel
 {
-    use SoftDeletes;
+    use Filterable, SoftDeletes;
 
-    protected $guarded = [
-        'id',
-    ];
+	protected $enums = [];
 
     protected $dates = [
         'created_at',
         'updated_at',
         'deleted_at'
     ];
+
+	protected $casts = [
+		'id' => 'integer',
+		'status' => 'integer'
+	];
 
     protected $fillable = [
         'hospital_id', 'billing_month', 'status'

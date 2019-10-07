@@ -30,7 +30,7 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'channel' => $faker->randomElement([0, 1, 2]),
         'is_billable' => $faker->randomElement(['0', '1']),
         'reservation_status' => $reservation_status,
-        'completed_date' => $faker->dateTimeBetween('now','1 day'),
+        'completed_date' => $faker->dateTimeBetween('-200 days', now()),
         'cancel_date' => $faker->dateTimeThisMonth->format('Y-m-d H:i:s'),
         'user_message' => $faker->sentence(10),
         'site_code' => $site_code,
@@ -70,6 +70,7 @@ $factory->define(Reservation::class, function (Faker $faker) {
         'fee' => $fee,
         'lock_version' => 1,
         'fee_rate' => $faker->numberBetween(1, 30),
+	    'is_free_hp_link' => 1,
     ];
 });
 
