@@ -1,0 +1,99 @@
+@php
+    $params = [
+      'delete_route' => 'billing.destroy'
+    ];
+@endphp
+@extends('layouts.list', $params)
+
+<!-- ページタイトルを入力 -->
+@section('title', 'Epark')
+
+<!-- ページの見出しを入力 -->
+@section('content_header')
+    <h1>
+        <i class="fa fa-hospital-o"> </i> {{ trans('messages.billing') }}
+    </h1>
+@stop
+
+
+@section('table')
+
+    <div class="row">
+
+        <div class="col-sm-6">
+
+            <div class="mt-5">
+                @include('layouts.partials.pagination-label', ['paginator' => $billings])
+            </div>
+
+        </div>
+
+        <div class="col-sm-6">
+
+            {{ $billings->appends(request()->input())->links() }}
+
+        </div>
+
+
+    </div>
+
+
+    <div class="table-responsive">
+    <table id="example2" class="table table-bordered table-hover table-striped mb-5">
+        <thead>
+        <tr>
+            <th>請求月</th>
+            <th>請求ステータス</th>
+            <th>プラン</th>
+            <th>請求金額</th>
+            <th>プラン金額（税抜金額）</th>
+            <th>手数料合計金額（税抜金額）</th>
+            <th>成果コース</th>
+            <th colspan="2"></th>
+        </tr>
+        </thead>
+        <tbody>
+        @if ( isset($billings) && count($billings) > 0 )
+            @foreach ($billings as $billing)
+                <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
+                    <td style="width: 80px;">{{  $billing->billing_month }}</td>
+                    <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
+                    <td>
+                            {{ $billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->plan_name }}
+                    </td>
+                    <td>
+                       {{ number_format($billing->hospital->reservationByCompletedDate($billing->startedDate, $billing->endedDate)->pluck('fee')->sum() + $billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee)}}円
+                    </td>
+                    <td>
+                        {{ number_format($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee )}}円
+                    </td>
+                    <td>
+                        {{ number_format($billing->hospital->reservationByCompletedDate($billing->startedDate, $billing->endedDate)->pluck('tax_excluded_price')->sum()) }}円
+                    </td>
+                    <td>
+                        {{ $billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->fee_rate }}%
+                    </td>
+                    <td>
+                        <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
+                    </td>
+                    <td>
+
+                            <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'claim_check' => 'yes'] )) }}" class="btn @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
+                               @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) style="pointer-events: none;" @endif
+                            >請求確認</a>
+                    </td>
+                </tr>
+            @endforeach
+        @else
+            <tr>
+                <td colspan="8" class="text-center">{{ trans('messages.no_record') }}</td>
+            </tr>
+        @endif
+
+        </tbody>
+    </table>
+    </div>
+
+
+
+@stop

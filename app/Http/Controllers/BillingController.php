@@ -7,6 +7,7 @@ use App\BillingMailHistory;
 use App\Enums\ReservationStatus;
 use App\Exports\BillingExport;
 use App\Filters\Billing\BillingFilters;
+use App\Hospital;
 use App\HospitalEmailSetting;
 use App\Mail\Billing\BillingConfirmationSendMail;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -28,55 +29,11 @@ class BillingController extends Controller {
         return ( request('billing_month') ) ? request('billing_month') : $default_month;
 	}
 
-	public function billingDateFilter($yearMonth = 0) {
-
-	    $yearMonth = $yearMonth ?? request('billing_month');
-
-		if ( $yearMonth ) {
-			$date = Carbon::parse( $yearMonth . '-' . 28 );
-			$date = ( $date->isCurrentMonth() ) ? now() : $date;
-
-		} else {
-			$date = now();
-		}
-
-
-		if ( $date->day < 21 ) {
-
-			$startMonthNumber = ( $date->isCurrentMonth() ) ? $date->copy()->subMonth( 2 )->month : $date->copy()->subMonth( 1 )->month;
-			$endMonthNumber   = ( $date->isCurrentMonth() ) ? $date->copy()->subMonth( 1 )->month : $date->month;
-
-			$startedDate = $date->copy()->setDate( $date->year, $startMonthNumber, 21 );
-			$endedMonth  = $date->copy()->setDate( $date->year, $endMonthNumber, 20 );
-
-		} else {
-
-			$startedDate = $date->copy()->setDate( $date->year, $date->copy()->subMonth( 1 )->month, 21 );
-			$endedMonth  = $date->copy()->setDate( $date->year, $date->month, 20 );
-
-		}
-
-		$selectBoxMonths = [
-			$startedDate->copy()->subMonth( 2 )->format( 'Y-m' ),
-			$startedDate->copy()->subMonth( 1 )->format( 'Y-m' ),
-			$startedDate->format( 'Y-m' ),
-			$startedDate->copy()->addMonth( 1 )->format( 'Y-m' ),
-			$startedDate->copy()->addMonth( 2 )->format( 'Y-m' ),
-			$startedDate->copy()->addMonth( 3 )->format( 'Y-m' ),
-		];
-
-		return [
-			'startedDate'     => $startedDate->startOfDay(),
-			'endedDate'       => $endedMonth->endOfDay(),
-			'selectBoxMonths' => $selectBoxMonths,
-		];
-	}
-
 	public function index( BillingFilters $billingFilters ) {
 
 		$selectedMonth = $this->getSelectedMonth();
 
-		$dateFilter = $this->billingDateFilter();
+		$dateFilter = billingDateFilter();
 
 		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(100);
 
@@ -93,7 +50,7 @@ class BillingController extends Controller {
 
         $selectedMonth = $this->getSelectedMonth();
 
-		$dateFilter = $this->billingDateFilter();
+		$dateFilter = billingDateFilter();
 
         $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(100);
 
@@ -130,7 +87,7 @@ class BillingController extends Controller {
 	 */
 	public function show( Billing $billing ) {
 
-        $dateFilter = $this->billingDateFilter($billing->billing_month);
+        $dateFilter = billingDateFilter($billing->billing_month);
 
 		return view( 'billing.show', [
 		    'billing' => $billing,
@@ -172,11 +129,21 @@ class BillingController extends Controller {
 
         if ( $email_send  ){
 
-            $this->claimEmailCheck($request, $billing, []);
+        	if ( session('hospital_id') ) {
+        		$this->claimEmailCheckForHospital($request, $billing, []);
+        	} else {
+        		$this->claimEmailCheck($request, $billing, []);
+        	}
 
         }
 		if ($request->route()->getName() == "billing.status.update" ) {
-			return redirect('billing')->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
+
+			if ( session('hospital_id') ) {
+				return redirect(route('hospital.billing'))->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
+			} else {
+				return redirect('billing')->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
+			}
+
 		} else {
 			return back()->with( 'success', trans( 'messages.updated', [ 'name' => trans( 'messages.names.billing' ) ] ) );
 		}
@@ -186,7 +153,7 @@ class BillingController extends Controller {
     {
 	    $selectedMonth = $this->getSelectedMonth();
 
-        $dateFilter = $this->billingDateFilter($billing->billing_month);
+        $dateFilter = billingDateFilter($billing->billing_month);
 
         $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
 
@@ -236,14 +203,52 @@ class BillingController extends Controller {
         }
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param \App\Billing $billing
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy( Billing $billing ) {
-		//
+	public function claimEmailCheckForHospital($request, $billing, $attributes = [])
+	    {
+		    $selectedMonth = $this->getSelectedMonth();
+
+	        $dateFilter = billingDateFilter($billing->billing_month);
+
+	        $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', session('hospital_id') )->first();
+
+	        if ( $hospitalEmailSetting ) {
+
+	            $pdf =  PDF::loadView( 'billing.claim-check-pdf', [
+	                'billing' => $billing,
+	                'startedDate'     => $billing->startedDate,
+	                'endedDate'      => $billing->endedDate,
+	            ] )->setPaper('legal', 'landscape');
+
+	            $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', session('hospital_id') )->first();
+
+	            $confirmMailComposition = [
+	                'subject' => '【EPARK人間ドック】請求確認完了のお知らせ',
+	                'billing' => $billing,
+	                'attachment_file_name' => '請求確認PDF',
+	            ];
+
+	            $attributes = [
+	                'email_type' => $request->has('claim_check') ? 'claim_check' : 'claim_confirmation',
+		            'selectedMonth' => $billing->billing_month
+	            ];
+
+
+	            Mail::to( [
+	                ( env('EPARK_UNEI_MAIL_TO') ) ? env('EPARK_UNEI_MAIL_TO') : env('MAIL_FROM_ADDRESS'),
+	            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
+
+	        }
+		}	
+
+	public function hospitalBilling() {
+
+		$hospital_id = session('hospital_id');
+		
+		$billings = Billing::where('hospital_id', '=', $hospital_id)->orderBy('billing_month')->paginate(12);
+
+		return view( 'billing.hospital-billing-listing', [
+			'billings'        => $billings,
+		] );		
+
 	}
 }
