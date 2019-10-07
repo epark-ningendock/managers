@@ -136,10 +136,10 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
                     <label class="radio-label" for="pay_per_use"> {{ HplinkContractType::getDescription(1) }}</label>
                   </div>
                   <label class="mr-2" for="hplink_count">無料の回数</label>
-                  <input type="text" name="hplink_count"
+                  <input type="number" name="hplink_count"
                   value="{{ old('hplink_count', (isset($hospital->hplink_count) ) ? $hospital->hplink_count : null) }}" />回
                   <label class="mr-2" for="hplink_price">1回当たりの料金</label>
-                  <input type="text" name="hplink_price"
+                  <input type="number" name="hplink_price"
                   value="{{ old('hplink_price', (isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円
                 <div class="form-group mt-3">
                   <div class="ml-12 radio">
@@ -149,7 +149,7 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
                     <label class="radio-label" for="monthly_subscription"> {{ HplinkContractType::getDescription(2) }}</label>
                   </div>
                   {{-- <label class="mr-2" for="hplink_price">月額料金</label>
-                  <input type="text" name="hplink_price"
+                  <input type="number" name="hplink_price"
                   value="{{ old('hplink_price', (isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円 --}}
               </div>
               @if ($errors->has('hplink_contract_type')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('hplink_contract_type') }}</p> @endif
