@@ -131,24 +131,26 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
                 <div class="form-group mt-3">
                   <div class="ml-12 radio">
                     <input type="radio" name="hplink_contract_type" id="pay_per_use"
-                          value="{{ HplinkContractType::PAY_PER_USE }}"
-                          @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::PAY_PER_USE ) checked @endif>
+                           value="{{ HplinkContractType::PAY_PER_USE }}"
+                           @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::PAY_PER_USE ) checked @endif>
                     <label class="radio-label" for="pay_per_use"> {{ HplinkContractType::getDescription(1) }}</label>
+                  </div>
                   <label class="mr-2" for="hplink_count">無料の回数</label>
-                  <input type="text" class="fregist-2-text" name="hplink_count" />回
+                  <input type="text" name="hplink_count"
+                  value="{{ old('hplink_count', (isset($hospital->hplink_count) ) ? $hospital->hplink_count : null) }}" />回
                   <label class="mr-2" for="hplink_price">1回当たりの料金</label>
-                  <input type="text" class="fregist-2-text" name="hplink_price" />円
-                </div>
+                  <input type="text" name="hplink_price"
+                  value="{{ old('hplink_price', (isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円
                 <div class="form-group mt-3">
                   <div class="ml-12 radio">
                     <input type="radio" name="hplink_contract_type" id="monthly_subscription"
-                          value="{{ HplinkContractType::MONTHLY_SUBSCRIPTION }}"
-                          @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::MONTHLY_SUBSCRIPTION ) checked @endif>
+                           value="{{ HplinkContractType::MONTHLY_SUBSCRIPTION }}"
+                           @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::MONTHLY_SUBSCRIPTION ) checked @endif>
                     <label class="radio-label" for="monthly_subscription"> {{ HplinkContractType::getDescription(2) }}</label>
-                  </label>
-                  <label class="mr-2" for="hplink_price">月額料金</label>
-                  <input type="text" class="fregist-2-text" name="hplink_price" />円
-                </div>
+                  </div>
+                  {{-- <label class="mr-2" for="hplink_price">月額料金</label>
+                  <input type="text" name="hplink_price"
+                  value="{{ old('hplink_price', (isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円 --}}
               </div>
               @if ($errors->has('hplink_contract_type')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('hplink_contract_type') }}</p> @endif
             </div>

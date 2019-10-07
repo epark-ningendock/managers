@@ -15,6 +15,7 @@ use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 use App\Enums\RegistrationDivision;
 use App\Enums\Rate;
+use App\Enums\HplinkContractType;
 
 class HospitalAttentionController extends Controller
 {
@@ -172,6 +173,13 @@ class HospitalAttentionController extends Controller
                 }
                 $hospital->free_area = $request->get('free_area');
                 $hospital->search_word = $request->get('search_word');
+                $hospital->hplink_contract_type = $request->get('hplink_contract_type');
+                if ($hospital->hplink_contract_type == HplinkContractType::PAY_PER_USE) {
+                    $hospital->hplink_count = $request->get('hplink_count');
+                    $hospital->hplink_price = $request->get('hplink_price');
+                } elseif ($hospital->hplink_contract_type == HplinkContractType::MONTHLY_SUBSCRIPTION) {
+                    $hospital->hplink_price = $request->get('hplink_price');
+                }
                 $hospital->is_pre_account = $request->get('is_pre_account');
                 $hospital->save();
     
