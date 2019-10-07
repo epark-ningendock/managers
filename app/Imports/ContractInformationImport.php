@@ -58,7 +58,7 @@ class ContractInformationImport extends ImportBAbstract
             'created_at' => $this->getValue($row, 'CREATE_DATE'),
             'updated_at' => $this->getValue($row, 'MODIFY_DATE'),
             'property_no' => $this->getValue($row, 'CONTRACT_NO'),
-            'contract_plan_id' => $hospital->plan_code,
+            'contract_plan_id' => sprintf('Y0%02d', $hospital->plan_code),
             'hospital_id' => $hospital->id,
             'service_start_date' => $this->getValue($row, 'SPECIFICFEE_START_DATE'),
             'service_end_date' => $this->getValue($row, 'TERM_EXPECTED_DATE')
