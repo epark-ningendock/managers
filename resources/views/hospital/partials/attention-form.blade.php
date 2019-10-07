@@ -1,6 +1,7 @@
 @php
 use App\FeeRate;
 use App\Enums\RegistrationDivision;
+use App\Enums\HplinkContractType;
 
 if(isset($hospital)) {
   $hospital_details = $hospital->hospital_details;
@@ -113,6 +114,47 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
             </div>
           </div>          
         </div>
+        <div class="col-md-12 mt-5">
+          <div class="form-group py-sm-1 " style="margin-left: 0;">
+            <legend>HPリンク</legend>
+            <div class="form-group @if( $errors->has('hplink_contract_type'))  has-error @endif">
+              <div class="radio">
+                {{-- ml ってマージン？ --}}
+                <div class="form-group mt-3">
+                  <label class="ml-12">
+                    <input type="radio" name="hplink_contract_type" id="none"
+                          value="{{ HplinkContractType::NONE }}"
+                          @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->stahplink_contract_typeus : null) == HplinkContractType::NONE ) checked @endif>
+                    {{ HplinkContractType::getDescription(0) }}
+                  </label>
+                </div>
+                <div class="form-group mt-3">
+                  <label class="ml-4">
+                    <input type="radio" name="hplink_contract_type" id="pay_per_use"
+                          value="{{ HplinkContractType::PAY_PER_USE }}"
+                          @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::PAY_PER_USE ) checked @endif>
+                    {{ HplinkContractType::getDescription(1) }}
+                  </label>
+                  <label class="mr-2" for="hplink_count">無料の回数</label> 
+                  <input type="text" class="fregist-2-text" name="hplink_count" />回
+                  <label class="mr-2" for="hplink_price">1回当たりの料金</label> 
+                  <input type="text" class="fregist-2-text" name="hplink_price" />円
+                </div>
+                <div class="form-group mt-3">
+                  <label class="ml-4">
+                    <input type="radio" name="hplink_contract_type" id="monthly_subscription"
+                          value="{{ HplinkContractType::MONTHLY_SUBSCRIPTION }}"
+                          @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::MONTHLY_SUBSCRIPTION ) checked @endif>
+                    {{ HplinkContractType::getDescription(2) }}
+                  </label>
+                  <label class="mr-2" for="hplink_price">月額料金</label> 
+                  <input type="text" class="fregist-2-text" name="hplink_price" />円
+                </div>
+              </div>
+              @if ($errors->has('status')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('status') }}</p> @endif
+            </div>
+          </div>
+        </div>
           <div class="col-md-12 mt-5">
               <h2>手数料率</h2>
               <div class="form-group py-sm-1 " style="margin-left: 0;">
@@ -208,9 +250,33 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
   </div>
 </div>
 
+@push('css')
+<link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/iCheck/square/blue.css') }}">
+<style>
+.pr-input {
+  width: 50%
+}
+
+tr, td {
+  text-align: left !important;
+}
+</style>
+@endpush
+
+@include('commons.datepicker')
+
   @section('script')
   <script>
       (function ($) {
+
+          /* ---------------------------------------------------
+          Icheck
+          -----------------------------------------------------*/
+          $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%' // optional
+          });
 
           let index = 0;
           $('#add-fee-rate-button').click(function(e) {
@@ -303,15 +369,3 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
       })(jQuery);
   </script>
 @stop
-
-<style>
-.pr-input {
-  width: 50%
-}
-
-tr, td {
-  text-align: left !important;
-}
-</style>
-
-@include('commons.datepicker')
