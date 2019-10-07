@@ -124,7 +124,7 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
                   <label class="ml-12">
                     <input type="radio" name="hplink_contract_type" id="none"
                           value="{{ HplinkContractType::NONE }}"
-                          @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->stahplink_contract_typeus : null) == HplinkContractType::NONE ) checked @endif>
+                          @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::NONE ) checked @endif>
                     {{ HplinkContractType::getDescription(0) }}
                   </label>
                 </div>
@@ -151,7 +151,7 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
                   <input type="text" class="fregist-2-text" name="hplink_price" />円
                 </div>
               </div>
-              @if ($errors->has('status')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('status') }}</p> @endif
+              @if ($errors->has('hplink_contract_type')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('hplink_contract_type') }}</p> @endif
             </div>
           </div>
         </div>
