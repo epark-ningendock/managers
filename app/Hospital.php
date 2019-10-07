@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Reshadman\OptimisticLocking\OptimisticLocking;
+use App\Enums\HplinkContractType;
 
 class Hospital extends Model
 {
@@ -72,6 +73,10 @@ class Hospital extends Model
         'biography',
         'representative',
 
+    ];
+
+    protected $enumCasts = [
+        'hplink_contract_type' => HplinkContractType::class,
     ];
 
     public function prefecture()
