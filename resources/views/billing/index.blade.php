@@ -1,4 +1,5 @@
 @php
+    use App\TaxClass;
     $params = [
       'delete_route' => 'billing.destroy'
     ];
