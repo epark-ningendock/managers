@@ -34,12 +34,14 @@ class HospitalImageImport extends ImportAbstract
     public function onRow(Row $row)
     {
         $row = $row->toArray();
+        $domain = config('services.imported_image_path');
+        $path = trim($domain, '/') . '/' . trim($row['path'], '/');
 
         $model = new HospitalImage([
             'hospital_id' => $this->getId('hospitals', $row['hospital_no']),
             'name' => $row['name'],
             'extension' => $row['extension'],
-            'path' => $row['path'],
+            'path' => $path,
             'memo1' => $row['memo1'],
             'memo2' => $row['memo2'],
             'is_display' => $row['flg_display'],

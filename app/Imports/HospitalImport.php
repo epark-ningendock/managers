@@ -104,6 +104,12 @@ class HospitalImport extends ImportAbstract
             'to' => null,
         ]);
 
+        // 請求
+        $model->billings->create([
+            'billing_month' => now()->addMonth(1)->format('Ym'),
+            'status' => 1
+        ]);
+
         $this->deleteIf($model, $row, 'status', ['X']);
         $this->setId($model, $row);
     }

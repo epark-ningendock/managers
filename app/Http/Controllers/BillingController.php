@@ -24,9 +24,8 @@ class BillingController extends Controller {
 	}
 
 	public function getSelectedMonth() {
-
-		return ( request('billing_month') ) ? request('billing_month') : now()->format('Y-m');
-
+        $default_month = (now()->day < 21 ? now()->subMonth(1)->format('Y-m') : now()->format('Y-m'));
+        return ( request('billing_month') ) ? request('billing_month') : $default_month;
 	}
 
 	public function billingDateFilter($yearMonth = 0) {
@@ -98,7 +97,7 @@ class BillingController extends Controller {
 
         $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(100);
 
-		return $this->excel->download( new BillingExport( $billings, $dateFilter['startedDate'], $dateFilter['endedDate'] ), 'billing.xlsx' );
+		return $this->excel->download( new BillingExport( $billings, $dateFilter['startedDate'], $dateFilter['endedDate'], $selectedMonth ), 'billing.xlsx' );
 
 	}
 
@@ -185,6 +184,8 @@ class BillingController extends Controller {
 
     public function claimEmailCheck($request, $billing, $attributes = [])
     {
+	    $selectedMonth = $this->getSelectedMonth();
+
         $dateFilter = $this->billingDateFilter($billing->billing_month);
 
         $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
@@ -208,7 +209,8 @@ class BillingController extends Controller {
             ];
 
             $attributes = [
-                'email_type' => $request->has('claim_check') ? 'claim_check' : 'claim_confirmation'
+                'email_type' => $request->has('claim_check') ? 'claim_check' : 'claim_confirmation',
+	            'selectedMonth' => $selectedMonth
             ];
 
 
