@@ -35,4 +35,6 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'imported_image_path' => env('IMG_DOMAIN', 'https://www.img.docknet.jp')
+
 ];
