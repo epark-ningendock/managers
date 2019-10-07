@@ -35,17 +35,20 @@ class HospitalImageImport extends ImportAbstract
     {
         $row = $row->toArray();
         $domain = config('services.imported_image_path');
+
         $hospital_id = $this->getId('hospitals', $row['hospital_no']);
 
         if (is_null($hospital_id)) {
             return;
         }
 
+        $path = trim($domain, '/') . '/' . trim($row['path'], '/');
+
         $model = new HospitalImage([
             'hospital_id' => $hospital_id,
             'name' => $row['name'],
             'extension' => $row['extension'],
-            'path' => trim($domain, '/') . '/' . trim($row['path'], '/'),
+            'path' => $path,
             'memo1' => $row['memo1'],
             'memo2' => $row['memo2'],
             'is_display' => $row['flg_display'],

@@ -128,6 +128,8 @@ return [
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
     'Excel' => 'Maatwebsite\Excel\Facades\Excel',
+
+    'default' => env('LOG_CHANNEL', 'stack'),
     
     /*
     |--------------------------------------------------------------------------
