@@ -37,8 +37,14 @@ class MedicalTreatmentTimeImport extends ImportAbstract
     {
         $row = $row->toArray();
 
+        $hospital_id= $this->getId('hospitals', $row['hospital_no']);
+
+        if (is_null($hospital_id)) {
+            return;
+        }
+
         $model = new MedicalTreatmentTime([
-            'hospital_id' => $this->getId('hospitals', $row['hospital_no']),
+            'hospital_id' => $hospital_id,
             'start' => $row['start'],
             'end' => $row['end'],
             'mon' => $row['mon'],

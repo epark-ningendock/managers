@@ -36,8 +36,14 @@ class HospitalDetailImport extends ImportAbstract
     {
         $row = $row->toArray();
 
+        $hospital_id = $this->getId('hospitals', $row['hospital_no']);
+
+        if (is_null($hospital_id)) {
+            return;
+        }
+
         $model = new HospitalDetail([
-            'hospital_id' => $this->getId('hospitals', $row['hospital_no']),
+            'hospital_id' => $hospital_id,
             'minor_classification_id' => $this->getId('minor_classifications', $row['item_category_sho_no']),
             'select_status' => $row['select_status'],
             'inputstring' => $row['inputstring'],

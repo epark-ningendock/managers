@@ -33,15 +33,19 @@ class CourseExtraImport extends ImportBAbstract
      */
     public function onRow(Row $row)
     {
+        $row = $row->toArray();
+
         // LINEGROUP_ID == old_course_id とみなす
-        $old_course_id = $row['LINEGROUP_ID'];
-        $course_id = $this->getIdForA('courses', $old_course_id);
+        $course_id = $this->getValue($row, 'LINEGROUP_ID');
 
         $course = Course::find($course_id);
+        if (is_null($course)) {
+            return;
+        }
         $course->update([
-            'cancellation_deadline' => $row['LINEGROUP_CANCELLATION_DAYS'],
-            'reception_start_date' => $row['LINEGROUP_START_DAYS'],
-            'reception_end_date' => $row['LINEGROUP_END_DAYS'],
+            'cancellation_deadline' => $this->getValue($row, 'LINEGROUP_CANCELLATION_DAYS'),
+            'reception_start_date' => $this->getValue($row, 'LINEGROUP_START_DAYS'),
+            'reception_end_date' => $this->getValue($row, 'LINEGROUP_END_DAYS'),
         ]);
     }
 }

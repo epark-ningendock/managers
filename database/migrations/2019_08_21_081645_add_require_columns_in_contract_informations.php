@@ -22,7 +22,7 @@ class AddRequireColumnsInContractInformations extends Migration
             $table->string('property_no', 20)->nullable();
 //            $table->integer('contract_plan_id')->unsigned()->nullable();
             $table->char('contract_plan_id', 4)->nullable();
-            $table->foreign('contract_plan_id')->references('id')->on('contract_plans')->onDelete('cascade');
+//            $table->foreign('contract_plan_id')->references('plan_code')->on('contract_plans');
             $table->integer('hospital_id')->unsigned()->nullable();
             $table->foreign('hospital_id')->references('id')->on('hospitals');
             $table->datetime('service_start_date')->nullable();

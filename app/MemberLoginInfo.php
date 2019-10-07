@@ -8,7 +8,7 @@ class MemberLoginInfo extends SoftDeleteModel
 {
     use Filterable;
   
-    protected $table = 'member_login_info';
+    protected $table = 'member_login_infos';
 
     protected $fillable = [
         'epark_member_id',

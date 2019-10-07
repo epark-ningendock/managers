@@ -15,7 +15,7 @@ class CreateContractPlansTable extends Migration
     {
         Schema::create('contract_plans', function (Blueprint $table) {
             $table->increments('id');
-            $table->char('plan_code',2);
+            $table->char('plan_code',4)->nullable();
             $table->string('plan_name', 100);
             $table->unsignedTinyInteger('fee_rate');
             $table->unsignedBigInteger('monthly_contract_fee');
