@@ -220,15 +220,13 @@ class Hospital extends Model
                     ->where('date', '<=', $to)
                     ->where('is_reservation_acceptance', 1);
             });
-        }
-        // 受診希望日FROM
+        } // 受診希望日FROM
         else if (isset($from) and empty($to)) {
             $query->whereHas('courses.calendar_days', function ($query) use ($from) {
                 $query->where('date', '>=', $from)
                     ->where('is_reservation_acceptance', 1);
             });
-        }
-        // 受診希望日TO
+        } // 受診希望日TO
         else if (empty($from) and isset($to)) {
             $query->whereHas('courses.calendar_days', function ($query) use ($to) {
                 $query->where('date', '<=', $to)
@@ -269,7 +267,7 @@ class Hospital extends Model
 
         return $query;
     }
-  
+
     public function reservations()
     {
         return $this->hasMany(Reservation::class);
@@ -277,7 +275,7 @@ class Hospital extends Model
 
     public function reservationByCompletedDate($start, $end)
     {
-        return $this->reservations()->whereBetween('completed_date', [ $start, $end ])->get();
+        return $this->reservations()->whereBetween('completed_date', [$start, $end])->get();
     }
 
     public function hospitalPlans()
@@ -288,9 +286,14 @@ class Hospital extends Model
     public function hospitalPlanByDate($date)
     {
         return $this->hospitalPlans()->where([
-            ['from','<', $date],
-            ['to','>', $date]
+            ['from', '<', $date],
+            ['to', '>', $date]
         ])->first();
+    }
+
+    public function billings()
+    {
+        return $this->hasMany(Billing::class);
     }
 
 }
