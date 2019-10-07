@@ -172,6 +172,7 @@ class HospitalAttentionController extends Controller
                 }
                 $hospital->free_area = $request->get('free_area');
                 $hospital->search_word = $request->get('search_word');
+                $hospital->is_pre_account = $request->get('is_pre_account');
                 $hospital->save();
     
                 $minor_ids = collect($request->input('minor_ids'), []);

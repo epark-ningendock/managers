@@ -154,6 +154,27 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
             </div>
           </div>
         </div>
+        <div class="col-md-12 mt-5">
+          <div class="form-group py-sm-1 " style="margin-left: 0;">
+            <legend>事前決済</legend>
+            <div class="form-group @if( $errors->has('is_pre_account'))  has-error @endif">
+              <div class="ml-12 radio">
+                {{-- mt ってマージン？ --}}
+                <div class="form-group mt-3">
+                  <input type="radio" name="is_pre_account" value="0" id="is_pre_account_true"
+                        @if( old('is_pre_account', (isset($hospital->is_pre_account)) ? $hospital->is_pre_account : null) == false ) checked @endif>
+                  <label class="radio-label" for="is_pre_account_true">利用なし</label>
+                </div>
+                <div class="form-group mt-3">
+                  <input type="radio" name="is_pre_account" value="1" id="is_pre_account_false"
+                        @if( old('is_pre_account', (isset($hospital->is_pre_account)) ? $hospital->is_pre_account : null) == true ) checked @endif>
+                  <label class="radio-label" for="is_pre_account_false">利用あり</label>
+                </div>
+              </div>
+              @if ($errors->has('is_pre_account')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('is_pre_account') }}</p> @endif
+            </div>
+          </div>
+        </div>
           <div class="col-md-12 mt-5">
               <h2>手数料率</h2>
               <div class="form-group py-sm-1 " style="margin-left: 0;">
