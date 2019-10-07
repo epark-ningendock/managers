@@ -149,6 +149,12 @@ class Hospital extends Model
         return $this->hasOne('App\ReceptionEmailSetting');
     }
 
+    public function hospital_plan()
+    {
+        // DB の構成的には hasMany だが、仕様的に hasOne となったため
+        return $this->hasOne('App\HospitalPlan');
+    }
+
     /**
      * 医療機関一覧検索
      *

@@ -6,7 +6,9 @@ use App\Hospital;
 use App\HospitalDetail;
 use App\HospitalMiddleClassification;
 use App\HospitalMinorClassification;
+use App\HospitalPlan;
 use App\FeeRate;
+use App\ContractPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -37,11 +39,15 @@ class HospitalAttentionController extends Controller
         // 事前決済手数料
         $prePaymentFeeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', Rate::PRE_PAYMENT_FEE_RATE)->orderBy('from_date', 'asc')->get();
 
+        // プラン
+        $contractPlans = ContractPlan::all();
+
         return view('hospital.create-attention')
             ->with('hospital', $hospital)
             ->with('middles', $middles)
             ->with('feeRates', $feeRates)
-            ->with('prePaymentFeeRates', $prePaymentFeeRates);
+            ->with('prePaymentFeeRates', $prePaymentFeeRates)
+            ->with('contractPlans', $contractPlans);
     }
 
     /**
@@ -182,6 +188,16 @@ class HospitalAttentionController extends Controller
                 }
                 $hospital->is_pre_account = $request->get('is_pre_account');
                 $hospital->save();
+
+                HospitalPlan::updateOrCreate([
+                    'hospital_id' => $hospital->id,
+                ],
+                [
+                    'hospital_id' => $hospital->id,
+                    'contract_plan_id' => $request->get('contract_plan_id'),
+                    'from' => new Carbon('2019-01-01'),
+                    'to' => new Carbon('2999-12-31'),
+                ]);
     
                 $minor_ids = collect($request->input('minor_ids'), []);
                 $minor_values = collect($request->input('minor_values'), []);

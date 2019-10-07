@@ -116,10 +116,27 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
         </div>
         <div class="col-md-12 mt-5">
           <div class="form-group py-sm-1 " style="margin-left: 0;">
+            <legend>プラン</legend>
+            <div class="form-group margin-none py-sm-1">
+              <select name="contract_plan_id" id="contract_plan" class="form-control">
+                <option value="">プランを選択</option>
+                @foreach($contractPlans as $contract_plan)
+                  <option value="{{ $contract_plan->id }}"
+                          @if ( (old('contract_plan_id', (isset($hospital->hospital_plan->contract_plan_id) ) ? $hospital->hospital_plan->contract_plan_id : null) == $contract_plan->id ) )
+                          selected="selected"
+                          @endif
+                  > {{ $contract_plan->plan_name }}</option>
+                @endforeach
+              </select>
+              @if ($errors->has('contract_plan_id')) <p class="help-block">{{ $errors->first('contract_plan_id') }}</p> @endif
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 mt-5">
+          <div class="form-group py-sm-1 " style="margin-left: 0;">
             <legend>HPリンク</legend>
             <div class="form-group @if( $errors->has('hplink_contract_type'))  has-error @endif">
               <div class="radio">
-                {{-- ml ってマージン？ --}}
                 <div class="form-group mt-3">
                   <div class="ml-12 radio">
                     <input type="radio" name="hplink_contract_type" id="none"
@@ -148,6 +165,7 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
                            @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::MONTHLY_SUBSCRIPTION ) checked @endif>
                     <label class="radio-label" for="monthly_subscription"> {{ HplinkContractType::getDescription(2) }}</label>
                   </div>
+                  {{-- TODO: JS でラジオに対応させて input を disable にすることができたら、同じ name を送信しなくなるので --}}
                   {{-- <label class="mr-2" for="hplink_price">月額料金</label>
                   <input type="number" name="hplink_price"
                   value="{{ old('hplink_price', (isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円 --}}
@@ -161,7 +179,6 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
             <legend>事前決済</legend>
             <div class="form-group @if( $errors->has('is_pre_account'))  has-error @endif">
               <div class="ml-12 radio">
-                {{-- mt ってマージン？ --}}
                 <div class="form-group mt-3">
                   <input type="radio" name="is_pre_account" value="0" id="is_pre_account_true"
                         @if( old('is_pre_account', (isset($hospital->is_pre_account)) ? $hospital->is_pre_account : null) == false ) checked @endif>
