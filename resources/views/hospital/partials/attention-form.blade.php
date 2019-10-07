@@ -123,31 +123,30 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
                 <div class="form-group mt-3">
                   <div class="ml-12 radio">
                     <input type="radio" name="hplink_contract_type" id="none"
-                          value="{{ HplinkContractType::NONE }}"
-                          @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::NONE ) checked @endif>
-                      <label class="radio-label" for="none"> {{ HplinkContractType::getDescription(0) }}</label>
+                           value="{{ HplinkContractType::NONE }}"
+                           @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::NONE ) checked @endif>
+                    <label class="radio-label" for="none"> {{ HplinkContractType::getDescription(0) }}</label>
                   </div>
                 </div>
                 <div class="form-group mt-3">
-                  <label class="ml-4">
+                  <div class="ml-12 radio">
                     <input type="radio" name="hplink_contract_type" id="pay_per_use"
                           value="{{ HplinkContractType::PAY_PER_USE }}"
                           @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::PAY_PER_USE ) checked @endif>
-                    {{ HplinkContractType::getDescription(1) }}
-                  </label>
-                  <label class="mr-2" for="hplink_count">無料の回数</label> 
+                    <label class="radio-label" for="pay_per_use"> {{ HplinkContractType::getDescription(1) }}</label>
+                  <label class="mr-2" for="hplink_count">無料の回数</label>
                   <input type="text" class="fregist-2-text" name="hplink_count" />回
-                  <label class="mr-2" for="hplink_price">1回当たりの料金</label> 
+                  <label class="mr-2" for="hplink_price">1回当たりの料金</label>
                   <input type="text" class="fregist-2-text" name="hplink_price" />円
                 </div>
                 <div class="form-group mt-3">
-                  <label class="ml-4">
+                  <div class="ml-12 radio">
                     <input type="radio" name="hplink_contract_type" id="monthly_subscription"
                           value="{{ HplinkContractType::MONTHLY_SUBSCRIPTION }}"
                           @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::MONTHLY_SUBSCRIPTION ) checked @endif>
-                    {{ HplinkContractType::getDescription(2) }}
+                    <label class="radio-label" for="monthly_subscription"> {{ HplinkContractType::getDescription(2) }}</label>
                   </label>
-                  <label class="mr-2" for="hplink_price">月額料金</label> 
+                  <label class="mr-2" for="hplink_price">月額料金</label>
                   <input type="text" class="fregist-2-text" name="hplink_price" />円
                 </div>
               </div>
@@ -250,33 +249,9 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
   </div>
 </div>
 
-@push('css')
-<link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/iCheck/square/blue.css') }}">
-<style>
-.pr-input {
-  width: 50%
-}
-
-tr, td {
-  text-align: left !important;
-}
-</style>
-@endpush
-
-@include('commons.datepicker')
-
   @section('script')
   <script>
       (function ($) {
-
-          /* ---------------------------------------------------
-          Icheck
-          -----------------------------------------------------*/
-          $('input').iCheck({
-            checkboxClass: 'icheckbox_square-blue',
-            radioClass: 'iradio_square-blue',
-            increaseArea: '20%' // optional
-          });
 
           let index = 0;
           $('#add-fee-rate-button').click(function(e) {
@@ -369,3 +344,15 @@ tr, td {
       })(jQuery);
   </script>
 @stop
+
+<style>
+.pr-input {
+  width: 50%
+}
+
+tr, td {
+  text-align: left !important;
+}
+</style>
+
+@include('commons.datepicker')
