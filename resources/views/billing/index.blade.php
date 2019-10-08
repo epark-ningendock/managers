@@ -1,4 +1,5 @@
 @php
+    use App\TaxClass;
     $params = [
       'delete_route' => 'billing.destroy'
     ];
@@ -102,9 +103,9 @@
             <th>医療機関名</th>
             <th>請求ステータス</th>
             <th>プラン</th>
-            <th>請求金額</th>
-            <th>プラン金額（税抜金額）</th>
-            <th>手数料合計金額（税抜金額）</th>
+            <th>請求金額（税抜価格）</th>
+            <th>プラン金額</th>
+            <th>手数料合計金額</th>
             <th>成果コース</th>
             <th colspan="4"></th>
         </tr>
@@ -117,16 +118,19 @@
                     <td>{{ $billing->hospital->name }}</td>
                     <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
                     <td>
-                            {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name }}
+                        {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name }}
                     </td>
                     <td>
-                       {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum() + $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee)}}円
+                        {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
+                            $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
+                        ( {{ number_format(($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
+                            $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) / TaxClass::TEN_PERCENT) }}円 )
                     </td>
                     <td>
                         {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee )}}円
                     </td>
                     <td>
-                        {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('tax_excluded_price')->sum()) }}円
+                        {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
                     </td>
                     <td>
                         {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate }}%
