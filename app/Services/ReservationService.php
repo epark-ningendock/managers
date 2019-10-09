@@ -385,8 +385,7 @@ class ReservationService
             $entity = new Reservation();
             $entity->id = 0;
         } else { // 更新
-            $reservation_date = intval(date('Ymd', strtotime($request->input('reservation_date'))));
-            $entity = Reservation::getUpdateTarget($request, $reservation_date);
+            $entity = Reservation::find($request->input('reservation_id'));
         }
 
         $entity->hospital_id = $request->input('hospital_id');
