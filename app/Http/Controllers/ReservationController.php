@@ -517,7 +517,7 @@ class ReservationController extends Controller
             $reservation->applicant_name_kana = "$request->family_name_kana $request->first_name_kana";
             $reservation->applicant_tel = str_replace(['－', '-', '‐', '−', '‒', '—', '–', '―', 'ー', 'ｰ', '─', '━', '一'], '', $request->tel);
             $reservation->acceptance_number = $acceptance_number;
-            
+
             $reservation->tax_included_price = $course->is_price == '1' ? $course->price : 0;
 
             $fee_rate = HospitalPlan::find('hospital_id', session()->get('hospital_id'))
