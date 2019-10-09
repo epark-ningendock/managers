@@ -1,13 +1,14 @@
 <?php
 
 use App\Helpers\DBCommonColumns;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateHospitalPlansTable extends Migration
 {
-	use DBCommonColumns;
+    use DBCommonColumns;
+
     /**
      * Run the migrations.
      *
@@ -16,12 +17,12 @@ class CreateHospitalPlansTable extends Migration
     public function up()
     {
         Schema::create('hospital_plans', function (Blueprint $table) {
-	        $table->increments('id');
-	        $table->integer('hospital_id');
+            $table->increments('id');
+            $table->integer('hospital_id');
             $table->integer('contract_plan_id');
-	        $table->date('from');
-	        $table->date('to')->nullable();
-	        $this->addCommonColumns($table);
+            $table->date('from');
+            $table->date('to')->nullable();
+            $this->addCommonColumns($table);
         });
     }
 
