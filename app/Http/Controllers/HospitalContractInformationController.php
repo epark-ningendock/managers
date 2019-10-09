@@ -20,7 +20,7 @@ class HospitalContractInformationController extends Controller
 {
     public function __construct(Request $request)
     {
-        $this->middleware('authority.level.contract-staff');
+        $this->middleware('authority.level.contract-staff')->except('show');
     }
 
     /**
