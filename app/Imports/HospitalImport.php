@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\ContractPlan;
 use App\Hospital;
 use Maatwebsite\Excel\Row;
 
@@ -98,11 +99,15 @@ class HospitalImport extends ImportAbstract
         $model->save();
 
         // 医療機関プラン
-        $model->hospitalPlans()->create([
-            'contract_plan_id' => sprintf('Y0%02d', $row['plan_cd']),
-            'from' => '2019-01-01',
-            'to' => null,
-        ]);
+        $contract_plan = ContractPlan::query()->where('plan_code', sprintf('Y0%02d', $row['plan_cd']))->first();
+
+        if (!is_null($contract_plan)) {
+            $model->hospitalPlans()->create([
+                'contract_plan_id' => $contract_plan->id,
+                'from' => '2019-01-01',
+                'to' => null,
+            ]);
+        }
 
         // 請求
         $model->billings()->create([
