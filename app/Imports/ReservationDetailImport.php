@@ -15,7 +15,7 @@ class ReservationDetailImport extends ImportBAbstract
      */
     public function getOldPrimaryKeyName(): string
     {
-        return '';
+        return 'ID';
     }
 
     /**
@@ -36,7 +36,7 @@ class ReservationDetailImport extends ImportBAbstract
     {
         $row = $row->toArray();
 
-        $reservation = Reservation::find($this->getId('reservations', $this->getValue($row, 'APPOINT_ID')));
+        $reservation = Reservation::findOrCreate($this->getId('reservations', $this->getValue($row, 'APPOINT_ID')));
 
         if (is_null($reservation)) {
             return;
@@ -64,9 +64,8 @@ class ReservationDetailImport extends ImportBAbstract
             'applicant_tel' => substr(str_replace('-', '', $this->getValue($row, 'TEL_NO')), 0, 11),
         ]);
 
-        $reservation->reservation_answers()->create([
-
-        ]);
+        $answers = $reservation->reservation_answers;
+        dd($answers);
 
         $reservation->save();
     }
