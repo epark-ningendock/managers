@@ -80,9 +80,9 @@ class HospitalAttentionController extends Controller
                 $hospital->hplink_contract_type = $request->get('hplink_contract_type');
                 if ($hospital->hplink_contract_type == HplinkContractType::PAY_PER_USE) {
                     $hospital->hplink_count = $request->get('hplink_count');
-                    $hospital->hplink_price = $request->get('hplink_price');
+                    $hospital->hplink_price = $request->get('hplink_price_one');
                 } elseif ($hospital->hplink_contract_type == HplinkContractType::MONTHLY_SUBSCRIPTION) {
-                    $hospital->hplink_price = $request->get('hplink_price');
+                    $hospital->hplink_price = $request->get('hplink_price_monthly');
                 }
                 $hospital->is_pre_account = $request->get('is_pre_account');
                 $hospital->save();
