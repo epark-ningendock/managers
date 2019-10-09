@@ -1,5 +1,4 @@
 @php
-use App\FeeRate;
 use App\Enums\RegistrationDivision;
 use App\Enums\HplinkContractType;
 

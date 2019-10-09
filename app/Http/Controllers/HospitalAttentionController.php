@@ -7,7 +7,6 @@ use App\HospitalDetail;
 use App\HospitalMiddleClassification;
 use App\HospitalMinorClassification;
 use App\HospitalPlan;
-use App\FeeRate;
 use App\ContractPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
