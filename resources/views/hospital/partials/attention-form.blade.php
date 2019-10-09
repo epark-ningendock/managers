@@ -140,11 +140,11 @@ $o_minor_values = collect(old('minor_values'));
                     <label class="radio-label" for="pay_per_use"> {{ HplinkContractType::getDescription(1) }}</label>
                   </div>
                   <label class="mr-2" for="hplink_count">無料の回数</label>
-                  <input type="number" name="hplink_count"
-                  value="{{ old('hplink_count', (isset($hospital->hplink_count) ) ? $hospital->hplink_count : null) }}" />回
-                  <label class="mr-2" for="hplink_price">1回当たりの料金</label>
-                  <input type="number" name="hplink_price"
-                  value="{{ old('hplink_price', (isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円
+                  <input type="number" name="hplink_count" id="hplink_count"
+                         value="{{ old('hplink_count', (isset($hospital->hplink_count) ) ? $hospital->hplink_count : null) }}" />回
+                  <label class="mr-2" for="hplink_price_one">1回当たりの料金</label>
+                  <input type="number" name="hplink_price_one" id="hplink_price_one"
+                         value="{{ old('hplink_price_one', (isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円
                 <div class="form-group mt-3">
                   <div class="ml-12 radio">
                     <input type="radio" name="hplink_contract_type" id="monthly_subscription"
@@ -152,10 +152,9 @@ $o_minor_values = collect(old('minor_values'));
                            @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::MONTHLY_SUBSCRIPTION ) checked @endif>
                     <label class="radio-label" for="monthly_subscription"> {{ HplinkContractType::getDescription(2) }}</label>
                   </div>
-                  {{-- TODO: JS でラジオに対応させて input を disable にすることができたら、同じ name を送信しなくなるので --}}
-                  {{-- <label class="mr-2" for="hplink_price">月額料金</label>
-                  <input type="number" name="hplink_price"
-                  value="{{ old('hplink_price', (isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円 --}}
+                  <label class="mr-2" for="hplink_price_monthly">月額料金</label>
+                  <input type="number" name="hplink_price_monthly" id="hplink_price_monthly"
+                         value="{{ old('hplink_price_monthly', (isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円
               </div>
               @if ($errors->has('hplink_contract_type')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('hplink_contract_type') }}</p> @endif
             </div>
@@ -245,6 +244,31 @@ $o_minor_values = collect(old('minor_values'));
                   change(ele);
               });
           })();
+
+          $('#none').change(function() {
+            if ($('#none').prop("checked")) {
+              $('#pay_per_use').prop('disabled', true);
+              $('#hplink_count').prop('disabled', true);
+              $('#hplink_price_one').prop('disabled', true);
+              $('#monthly_subscription').prop('disabled', true);
+              $('#hplink_price_monthly').prop('disabled', true);
+            }
+          });
+          $('#pay_per_use').change(function() {
+            if ($('#pay_per_use').prop("checked")) {
+              $('#none').prop('disabled', true);
+              $('#monthly_subscription').prop('disabled', true);
+              $('#hplink_price_monthly').prop('disabled', true);
+            }
+          });
+          $('#monthly_subscription').change(function() {
+            if ($('#monthly_subscription').prop("checked")) {
+              $('#none').prop('disabled', true);
+              $('#pay_per_use').prop('disabled', true);
+              $('#hplink_count').prop('disabled', true);
+              $('#hplink_price_one').prop('disabled', true);
+            }
+          });
 
       })(jQuery);
   </script>
