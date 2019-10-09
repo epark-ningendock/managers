@@ -51,8 +51,8 @@
             <span class="value-text">
                 {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
                     $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
-                ( {{ number_format(($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
-                    $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) / TaxClass::TEN_PERCENT) }}円 )
+                ( {{ number_format(floor(($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
+                    $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) / TaxClass::TEN_PERCENT)) }}円 )
             </span>
         </li>
     </ul>
