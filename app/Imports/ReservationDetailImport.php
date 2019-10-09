@@ -63,6 +63,11 @@ class ReservationDetailImport extends ImportBAbstract
             'applicant_name_kana' => $this->getValue($row, 'LAST_NAME_KANA') . $this->getValue($row, 'FIRST_NAME_KANA'),
             'applicant_tel' => substr(str_replace('-', '', $this->getValue($row, 'TEL_NO')), 0, 11),
         ]);
+
+        $reservation->reservation_answers()->create([
+
+        ]);
+
         $reservation->save();
     }
 }
