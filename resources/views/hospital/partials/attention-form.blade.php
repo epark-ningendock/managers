@@ -23,7 +23,7 @@ $o_minor_values = collect(old('minor_values'));
                   <label for="pvad">PR</label>
                   <input class="form-control w8em" type="number" id="pvad" name="pvad" value="{{ old('pvad', (isset($hospital->pvad) ? $hospital->pvad : 0)) }}">
                   @if ($errors->has('pvad')) <p class="has-error">{{ $errors->first('pvad') }}</p> @endif
-                  <div class="mt-5">
+                  <div class="mt-4">
                     <input type="hidden" name="is_pickup" value="0" />
                     <input type="checkbox" name="is_pickup" id="is_pickup" value="1" @if(old('is_pickup', $hospital->is_pickup) == 1) checked @endif/>
                     <label for="is_pickup">ピックアップ</label>
@@ -83,7 +83,7 @@ $o_minor_values = collect(old('minor_values'));
               </div>
           </div>
           @endforeach
-          <div class="col-md-12 mt-5">
+          <div class="col-md-12 mt-4">
             <div class="form-group py-sm-1 " style="margin-left: 0;">
               <legend>フリーエリア </legend>
               <textarea class="form-control minor-text" name="free_area" cols="30" rows="5">{{ $hospital->free_area }}</textarea>
@@ -91,7 +91,7 @@ $o_minor_values = collect(old('minor_values'));
               @if ($errors->has('free_area')) <p class="has-error" style="font-size: 1.3rem;">{{ $errors->first('free_area') }}</p> @endif
             </div>
           </div>
-          <div class="col-md-12 mt-5">
+          <div class="col-md-12 mt-4">
             <div class="form-group py-sm-1 " style="margin-left: 0;">
               <legend>検索ワード </legend>
               <textarea class="form-control minor-text" name="search_word" cols="30" rows="5">{{ $hospital->search_word }}</textarea>
@@ -100,83 +100,85 @@ $o_minor_values = collect(old('minor_values'));
               @if ($errors->has('search_word')) <p class="has-error" style="font-size: 1.3rem;">{{ $errors->first('search_word') }}</p> @endif
             </div>
           </div>          
-        </div>
-        <div class="col-md-12 mt-5">
-          <div class="form-group py-sm-1 " style="margin-left: 0;">
-            <legend>プラン</legend>
-            <div class="form-group margin-none py-sm-1">
-              <select name="contract_plan_id" id="contract_plan" class="form-control">
-                <option value="">プランを選択</option>
-                @foreach($contractPlans as $contract_plan)
-                  <option value="{{ $contract_plan->id }}"
-                          @if ( (old('contract_plan_id', (isset($hospital->hospital_plan->contract_plan_id) ) ? $hospital->hospital_plan->contract_plan_id : null) == $contract_plan->id ) )
-                          selected="selected"
-                          @endif
-                  > {{ $contract_plan->plan_name }}</option>
-                @endforeach
-              </select>
-              @if ($errors->has('contract_plan_id')) <p class="help-block">{{ $errors->first('contract_plan_id') }}</p> @endif
+          <div class="col-md-12 mt-4">
+            <div class="form-group py-sm-1 " style="margin-left: 0;">
+              <legend>プラン</legend>
+              <div class="form-group margin-none py-sm-1">
+                <select name="contract_plan_id" id="contract_plan" class="form-control">
+                  <option value="">プランを選択</option>
+                  @foreach($contractPlans as $contract_plan)
+                    <option value="{{ $contract_plan->id }}"
+                            @if ( (old('contract_plan_id', (isset($hospital->hospital_plan->contract_plan_id) ) ? $hospital->hospital_plan->contract_plan_id : null) == $contract_plan->id ) )
+                            selected="selected"
+                            @endif
+                    > {{ $contract_plan->plan_name }}</option>
+                  @endforeach
+                </select>
+                @if ($errors->has('contract_plan_id')) <p class="help-block">{{ $errors->first('contract_plan_id') }}</p> @endif
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-12 mt-5">
-          <div class="form-group py-sm-1 " style="margin-left: 0;">
-            <legend>HPリンク</legend>
-            <div class="form-group @if( $errors->has('hplink_contract_type'))  has-error @endif">
-              <div class="radio">
-                <div class="form-group mt-3">
-                  <div class="ml-12 radio">
-                    <input type="radio" name="hplink_contract_type" id="none"
-                           value="{{ HplinkContractType::NONE }}"
-                           @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::NONE ) checked @endif>
-                    <label class="radio-label" for="none"> {{ HplinkContractType::getDescription(0) }}</label>
+          <div class="col-md-12 mt-4">
+            <div class="form-group py-sm-1 " style="margin-left: 0;">
+              <legend>HPリンク</legend>
+              <div class="form-group @if( $errors->has('hplink_contract_type'))  has-error @endif">
+                <div class="radio">
+                  <div class="form-group mt-3">
+                    <div class="ml-12 radio">
+                      <input type="radio" name="hplink_contract_type" id="none"
+                            value="{{ HplinkContractType::NONE }}"
+                            @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::NONE ) checked @endif>
+                      <label class="radio-label" for="none"> {{ HplinkContractType::getDescription(0) }}</label>
+                    </div>
+                  </div>
+                  <div class="form-group mt-3">
+                    <div class="ml-12 radio">
+                      <input type="radio" name="hplink_contract_type" id="pay_per_use"
+                            value="{{ HplinkContractType::PAY_PER_USE }}"
+                            @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::PAY_PER_USE ) checked @endif>
+                      <label class="radio-label" for="pay_per_use"> {{ HplinkContractType::getDescription(1) }}</label>
+                    </div>
+                    <label class="mr-2" for="hplink_count">無料の回数</label>
+                    <input type="number" name="hplink_count" id="hplink_count"
+                          value="{{ old('hplink_count', ( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::PAY_PER_USE && isset($hospital->hplink_count) ) ? $hospital->hplink_count : null) }}" />回
+                    <label class="mr-2" for="hplink_price_one" style="margin-left: 12px;">1回当たりの料金</label>
+                    <input type="number" name="hplink_price_one" id="hplink_price_one"
+                          value="{{ old('hplink_price_one', ( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::PAY_PER_USE && isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円
+                  </div>
+                  <div class="form-group mt-3">
+                    <div class="ml-12 radio">
+                      <input type="radio" name="hplink_contract_type" id="monthly_subscription"
+                            value="{{ HplinkContractType::MONTHLY_SUBSCRIPTION }}"
+                            @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::MONTHLY_SUBSCRIPTION ) checked @endif>
+                      <label class="radio-label" for="monthly_subscription"> {{ HplinkContractType::getDescription(2) }}</label>
+                    </div>
+                    <label class="mr-2" for="hplink_price_monthly">月額料金</label>
+                    <input type="number" name="hplink_price_monthly" id="hplink_price_monthly"
+                          value="{{ old('hplink_price_monthly', ( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::MONTHLY_SUBSCRIPTION && isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円
                   </div>
                 </div>
-                <div class="form-group mt-3">
-                  <div class="ml-12 radio">
-                    <input type="radio" name="hplink_contract_type" id="pay_per_use"
-                           value="{{ HplinkContractType::PAY_PER_USE }}"
-                           @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::PAY_PER_USE ) checked @endif>
-                    <label class="radio-label" for="pay_per_use"> {{ HplinkContractType::getDescription(1) }}</label>
-                  </div>
-                  <label class="mr-2" for="hplink_count">無料の回数</label>
-                  <input type="number" name="hplink_count" id="hplink_count"
-                         value="{{ old('hplink_count', (isset($hospital->hplink_count) ) ? $hospital->hplink_count : null) }}" />回
-                  <label class="mr-2" for="hplink_price_one">1回当たりの料金</label>
-                  <input type="number" name="hplink_price_one" id="hplink_price_one"
-                         value="{{ old('hplink_price_one', (isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円
-                <div class="form-group mt-3">
-                  <div class="ml-12 radio">
-                    <input type="radio" name="hplink_contract_type" id="monthly_subscription"
-                           value="{{ HplinkContractType::MONTHLY_SUBSCRIPTION }}"
-                           @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::MONTHLY_SUBSCRIPTION ) checked @endif>
-                    <label class="radio-label" for="monthly_subscription"> {{ HplinkContractType::getDescription(2) }}</label>
-                  </div>
-                  <label class="mr-2" for="hplink_price_monthly">月額料金</label>
-                  <input type="number" name="hplink_price_monthly" id="hplink_price_monthly"
-                         value="{{ old('hplink_price_monthly', (isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円
+                @if ($errors->has('hplink_contract_type')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('hplink_contract_type') }}</p> @endif
               </div>
-              @if ($errors->has('hplink_contract_type')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('hplink_contract_type') }}</p> @endif
             </div>
           </div>
-        </div>
-        <div class="col-md-12 mt-5">
-          <div class="form-group py-sm-1 " style="margin-left: 0;">
-            <legend>事前決済</legend>
-            <div class="form-group @if( $errors->has('is_pre_account'))  has-error @endif">
-              <div class="ml-12 radio">
-                <div class="form-group mt-3">
-                  <input type="radio" name="is_pre_account" value="0" id="is_pre_account_true"
-                        @if( old('is_pre_account', (isset($hospital->is_pre_account)) ? $hospital->is_pre_account : null) == false ) checked @endif>
-                  <label class="radio-label" for="is_pre_account_true">利用なし</label>
+          <div class="col-md-12 mt-4">
+            <div class="form-group py-sm-1 " style="margin-left: 0;">
+              <legend>事前決済</legend>
+              <div class="form-group @if( $errors->has('is_pre_account'))  has-error @endif">
+                <div class="ml-12 radio">
+                  <div class="form-group mt-3">
+                    <input type="radio" name="is_pre_account" value="0" id="is_pre_account_true"
+                          @if( old('is_pre_account', (isset($hospital->is_pre_account)) ? $hospital->is_pre_account : null) == false ) checked @endif>
+                    <label class="radio-label" for="is_pre_account_true">利用なし</label>
+                  </div>
+                  <div class="form-group mt-3">
+                    <input type="radio" name="is_pre_account" value="1" id="is_pre_account_false"
+                          @if( old('is_pre_account', (isset($hospital->is_pre_account)) ? $hospital->is_pre_account : null) == true ) checked @endif>
+                    <label class="radio-label" for="is_pre_account_false">利用あり</label>
+                  </div>
                 </div>
-                <div class="form-group mt-3">
-                  <input type="radio" name="is_pre_account" value="1" id="is_pre_account_false"
-                        @if( old('is_pre_account', (isset($hospital->is_pre_account)) ? $hospital->is_pre_account : null) == true ) checked @endif>
-                  <label class="radio-label" for="is_pre_account_false">利用あり</label>
-                </div>
+                @if ($errors->has('is_pre_account')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('is_pre_account') }}</p> @endif
               </div>
-              @if ($errors->has('is_pre_account')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('is_pre_account') }}</p> @endif
             </div>
           </div>
         </div>
