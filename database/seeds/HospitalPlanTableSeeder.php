@@ -17,7 +17,7 @@ class HospitalPlanTableSeeder extends Seeder
 
 	    foreach( $hospitals as $hospital ) {
 		    $x = 1;
-		    while ($x < 36) {
+		    while ($x < 4) {
 			    $carbonDateTime = ($x === 1 ) ? Carbon::today() : Carbon::today()->subMonth($x-1) ;
 			    $startedDayOfMonth = $carbonDateTime->startOfMonth()->format('Y-m-d');
 			    $endDayOfMonth = $carbonDateTime->endOfMonth()->format('Y-m-d');
