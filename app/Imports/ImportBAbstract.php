@@ -78,6 +78,7 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
     {
         $model = ConvertedIdString::where('table_name', $table)
             ->where('old_id', $old_id)
+            ->where('hospital_no', $this->hospital_no)
             ->first();
         if (!is_null($model)) {
             return $model->new_id;
@@ -110,10 +111,12 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
         ConvertedIdString::firstOrCreate([
             'table_name' => $table,
             'old_id' => $old_id,
+            'hospital_no' => $this->hospital_no,
         ], [
             'table_name' => $table,
             'old_id' => $old_id,
             'new_id' => $model->id,
+            'hospital_no' => $this->hospital_no,
         ]);
     }
 }

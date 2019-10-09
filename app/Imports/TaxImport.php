@@ -2,10 +2,10 @@
 
 namespace App\Imports;
 
-use App\HospitalDetail;
+use App\TaxClass;
 use Maatwebsite\Excel\Row;
 
-class HospitalDetailImport extends ImportAbstract
+class TaxImport extends ImportAbstract
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -14,7 +14,7 @@ class HospitalDetailImport extends ImportAbstract
      */
     public function getOldPrimaryKeyName(): string
     {
-        return '';
+        return 'tax_class';
     }
 
     /**
@@ -24,7 +24,7 @@ class HospitalDetailImport extends ImportAbstract
      */
     public function getNewClassName(): string
     {
-        return HospitalDetail::class;
+        return TaxClass::class;
     }
 
     /**
@@ -36,21 +36,14 @@ class HospitalDetailImport extends ImportAbstract
     {
         $row = $row->toArray();
 
-        $hospital_id = $this->getId('hospitals', $row['hospital_no']);
-
-        if (is_null($hospital_id)) {
-            return;
-        }
-
-        $model = new HospitalDetail([
-            'hospital_id' => $hospital_id,
-            'minor_classification_id' => $this->getId('minor_classifications', $row['item_category_sho_no']),
-            'select_status' => $row['select_status'],
-            'inputstring' => $row['inputstring'],
-            'created_at' => $row['rgst'],
-            'updated_at' => $row['updt'],
+        $model = new TaxClass([
+            'name' => $row['tax_class_name'],
+            'rate' => $row['tax_rate'],
+            'life_time_from' => $row['life_time_from'],
+            'life_time_to' => $row['life_time_to'],
         ]);
 
         $model->save();
+        $this->setId($model, $row);
     }
 }

@@ -16,6 +16,7 @@ class CreateConvertedIdStringsTable extends Migration
         Schema::create('converted_id_strings', function (Blueprint $table) {
             $table->string('table_name');
             $table->string('old_id');
+            $table->string('hospital_no');
             $table->unsignedBigInteger('new_id');
             $table->timestamps();
 

@@ -1,3 +1,7 @@
+@php
+    use App\TaxClass;
+@endphp
+
 @extends('layouts.list', $params = [])
 
 <!-- ページタイトルを入力 -->
@@ -25,9 +29,9 @@
             <span class="value-text">{{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}</span>
         </li>
         <li>
-            <small class="text-bold label-text">月額契約料（税抜金額）</small>
+            <small class="text-bold label-text">月額契約料</small>
             <span class="value-text">
-                {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee )}}円
+                {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee) }}円
             </span>
         </li>
         <li>
@@ -37,10 +41,18 @@
             </span>
         </li>
         <li>
-            <small class="text-bold label-text">手数料合計金額（税抜価格）</small>
+            <small class="text-bold label-text">手数料合計金額</small>
             <span class="value-text">
-                {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('tax_included_price')->sum()) }}円
-                ( {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('tax_excluded_price')->sum()) }}円 )
+                {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
+            </span>
+        </li>
+        <li>
+            <small class="text-bold label-text">請求金額合計（税抜金額）</small>
+            <span class="value-text">
+                {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
+                    $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
+                ( {{ number_format(($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
+                    $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) / TaxClass::TEN_PERCENT) }}円 )
             </span>
         </li>
     </ul>

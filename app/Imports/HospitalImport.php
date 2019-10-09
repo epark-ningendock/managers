@@ -105,7 +105,7 @@ class HospitalImport extends ImportAbstract
         ]);
 
         // 請求
-        $model->billings->create([
+        $model->billings()->create([
             'billing_month' => now()->addMonth(1)->format('Ym'),
             'status' => 1
         ]);

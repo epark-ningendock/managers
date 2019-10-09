@@ -49,4 +49,8 @@ return [
         'model' => \App\Reservation::class,
         'import' => \App\Imports\ReservationPaymentImport::class,
     ],
+    'T_OP_M_HYB_APPOINT_LINEGROUP.csv'=>[
+        'model' => \App\Course::class,
+        'import' => \App\Imports\CourseExtraImport::class,
+    ],
 ];

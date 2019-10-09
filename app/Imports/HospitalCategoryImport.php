@@ -36,8 +36,15 @@ class HospitalCategoryImport extends ImportAbstract
     public function onRow(Row $row)
     {
         $row = $row->toArray();
+
+        $hospital_id = $this->getId('hospitals', $row['hospital_no']);
+
+        if (is_null($hospital_id)) {
+            return;
+        }
+
         $model = new HospitalCategory([
-            'hospital_id' => $this->getId('hospitals', $row['hospital_no']),
+            'hospital_id' => $hospital_id,
             'hospital_image_id' => $this->getId('hospital_images', $row['file_no']),
             'image_order' => ImageOrder::where('image_group_number', $row['file_group_no'])
                 ->where('image_location_number', $row['file_location_no'])->first()->id,

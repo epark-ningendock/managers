@@ -62,6 +62,11 @@ return [
         'import' => PrefectureImport::class,
         'seed' => true,
     ],
+    'm_tax_class.csv' => [
+        'model' => \App\TaxClass::class,
+        'import' => \App\Imports\TaxImport::class,
+        'seed' => true,
+    ],
     'm_district.csv' => [
         'model' => DistrictCode::class,
         'import' => DistrictCodeImport::class,
@@ -190,7 +195,7 @@ return [
     'm_option.csv' => [
         'model' => Option::class,
         'import' => OptionImport::class,
-        'seed' => false,
+        'seed' => true,
     ],
     't_pv.csv' => [
         'model' => PvRecord::class,

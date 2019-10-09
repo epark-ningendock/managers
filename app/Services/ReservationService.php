@@ -423,8 +423,8 @@ class ReservationService
         // option配列の先頭取得
         $options = $request->input('option_array');
         $option = collect(json_decode(json_encode($options)))->filter(function ($o) {
-            return isset($o->option_cd);
-        })->toArray()[0] ?? [];
+                return isset($o->option_cd);
+            })->toArray()[0] ?? [];
 
         $entity->second_date = $option->other_info->second_date ?? $entity->second_date;
         $entity->third_date = $option->other_info->third_date ?? $entity->third_date;
@@ -432,6 +432,7 @@ class ReservationService
         $entity->campaign_code = $option->other_info->campaign_cd ?? $entity->campaign_code;
         $entity->tel_timezone = $option->other_info->tel_timezone ?? $entity->tel_timezone;
         $entity->insurance_assoc_id = $option->other_info->insurer_number ?? $entity->insurance_assoc_id;
+        $entity->is_health_insurance = $option->other_info->is_health_insurance ?? $entity->is_health_insurance;
         $entity->insurance_assoc = $option->other_info->insurance_assoc ?? $entity->insurance_assoc;
 
         $entity->mail_type = $process === self::REGISTRATION ? '1' : '2';

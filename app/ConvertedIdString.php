@@ -10,5 +10,6 @@ class ConvertedIdString extends Model
         'table_name',
         'old_id',
         'new_id',
+        'hospital_no',
     ];
 }
