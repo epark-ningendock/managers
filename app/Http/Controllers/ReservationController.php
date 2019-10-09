@@ -6,7 +6,6 @@ use App\Course;
 use App\Customer;
 use App\Enums\Permission;
 use App\Enums\ReservationStatus;
-use App\FeeRate;
 use App\Holiday;
 use App\ContractInformation;
 use App\Hospital;
@@ -513,28 +512,28 @@ class ReservationController extends Controller
                 'is_repeat' => false
             ]);
 
-            $fee_rate = FeeRate::where('hospital_id', session()->get('hospital_id'))
-                ->whereDate('from_date', '<=', Carbon::today())
-                ->where(function($q) {
-                    $q->whereDate('to_date', '>=', Carbon::today())
-                        ->orWhere('to_date', '=', null);
-                })->get()->first();
-
             $reservation = new Reservation(request()->all());
             $reservation->applicant_name = "$request->family_name $request->first_name";
             $reservation->applicant_name_kana = "$request->family_name_kana $request->first_name_kana";
             $reservation->applicant_tel = str_replace(['－', '-', '‐', '−', '‒', '—', '–', '―', 'ー', 'ｰ', '─', '━', '一'], '', $request->tel);
             $reservation->acceptance_number = $acceptance_number;
-
+            
             $reservation->tax_included_price = $course->is_price == '1' ? $course->price : 0;
 
+            $fee_rate = HospitalPlan::find('hospital_id', session()->get('hospital_id'))
+                ->whereDate('from', '<=', Carbon::today())
+                ->where(function($q) {
+                    $q->whereDate('to', '>=', Carbon::today())
+                        ->orWhere('to', '=', null);
+                })->get()->first()->contractPlan;
+            
             if (isset($fee_rate)) {
-                $reservation->fee_rate = $fee_rate->rate;
+                $reservation->fee_rate = $fee_rate->fee_rate;
                 $reservation->fee = (
                         $reservation->tax_included_price +
                         $this->calculateCourseOptionTotalPrice($request) +
                         $request->input('adjustment_price', 0)
-                    ) * ($fee_rate->rate / 100);
+                    ) * ($fee_rate->fee_rate / 100);
             }
 
             if ($request->customer_id) {
@@ -754,12 +753,19 @@ class ReservationController extends Controller
 
             $params['tax_included_price'] = $course->is_price == '1' ? $course->price : 0;
 
+            $fee_rate = HospitalPlan::find('hospital_id', session()->get('hospital_id'))
+                ->whereDate('from', '<=', Carbon::today())
+                ->where(function($q) {
+                    $q->whereDate('to', '>=', Carbon::today())
+                        ->orWhere('to', '=', null);
+                })->get()->first()->contractPlan;
+
             if (isset($fee_rate)) {
                 $params['fee'] = (
                         $params['tax_included_price'] +
                         $this->calculateCourseOptionTotalPrice($request) +
                         $request->input('adjustment_price', 0)
-                    ) * ($fee_rate->rate / 100);
+                    ) * ($fee_rate->fee_rate / 100);
             }
 
             $reservation->update($params);

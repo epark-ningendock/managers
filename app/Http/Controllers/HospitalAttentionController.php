@@ -33,20 +33,12 @@ class HospitalAttentionController extends Controller
 
         $hospital = Hospital::findOrFail($hospital_id);
 
-        // 通常手数料
-        $feeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', Rate::FEE_RATE)->orderBy('from_date', 'asc')->get();
-
-        // 事前決済手数料
-        $prePaymentFeeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', Rate::PRE_PAYMENT_FEE_RATE)->orderBy('from_date', 'asc')->get();
-
         // プラン
         $contractPlans = ContractPlan::all();
 
         return view('hospital.create-attention')
             ->with('hospital', $hospital)
             ->with('middles', $middles)
-            ->with('feeRates', $feeRates)
-            ->with('prePaymentFeeRates', $prePaymentFeeRates)
             ->with('contractPlans', $contractPlans);
     }
 
@@ -67,99 +59,6 @@ class HospitalAttentionController extends Controller
     
             try {
                 DB::beginTransaction();
-    
-                // 通常手数料
-                if ($request->input('fee_rate_ids')) {
-                    foreach($request->input('fee_rate_ids') as $index => $fee_rate_id) {
-                        $fee_rates_array[$index] = [
-                            'id' => $fee_rate_id,
-                            'rate' => $request->input('rates')[$index],
-                            'from_date' => $request->input('from_dates')[$index] ? new Carbon($request->input('from_dates')[$index]) : null
-                        ];
-                    }
-                    
-                    // 期間(開始)を照準でソートする
-                    $fee_rates = collect($fee_rates_array);
-                    $sorted_fee_rates = $fee_rates->sortBy('from_date')->values();
-    
-                    if($sorted_fee_rates->isNotEmpty()) {
-                        foreach ($sorted_fee_rates as $key => $value) {
-                            
-                            $validator = Validator::make(["rate" => $value['rate'], "from_date" => $value['from_date']], [
-                                'rate' => 'required|numeric|digits_between:1,10',
-                                'from_date' => 'required|date'
-                            ]);
-                    
-                            if ($validator->fails()) {
-                                DB::rollback();
-                                throw new ValidationException($validator);
-                                return redirect()->back();
-                            }
-
-                            if (count($sorted_fee_rates) - 1 <= $key) {
-                                $to_date = null;
-                                $this->saveFeeRate($value, $hospital_id, Rate::FEE_RATE, $to_date);
-                            } else {
-                                $next_from_date = new Carbon($sorted_fee_rates[$key + 1]['from_date']);
-                                if ($value['from_date'] == $next_from_date) {
-                                    DB::rollback();
-                                    $request->session()->flash('error', '適用期間が重複しています。');
-                                    return redirect()->back();
-                                }
-                                
-                                $date = new Carbon($sorted_fee_rates[$key + 1]['from_date']);
-                                $to_date = $date->subDay();
-                                $this->saveFeeRate($value, $hospital_id, Rate::FEE_RATE, $to_date);
-                            }
-                        }
-                    }
-                }
-    
-                // 事前決済手数料
-                if ($request->input('pre_payment_fee_rate_ids')) {
-                    foreach($request->input('pre_payment_fee_rate_ids') as $index => $pre_payment_fee_rate_id) {
-                        $pre_payment_fee_rates_array[$index] = [
-                            'id' => $pre_payment_fee_rate_id,
-                            'rate' => $request->input('pre_payment_rates')[$index],
-                            'from_date' => $request->input('pre_payment_from_dates')[$index] ? new Carbon($request->input('pre_payment_from_dates')[$index]) : null
-                        ];
-                    }
-        
-                    // 期間(開始)を照準でソートする
-                    $pre_payment_fee_rates = collect($pre_payment_fee_rates_array);
-                    $sorted_pre_payment_fee_rates = $pre_payment_fee_rates->sortBy('from_date')->values();
-    
-                    if($sorted_pre_payment_fee_rates->isNotEmpty()) {
-                        foreach ($sorted_pre_payment_fee_rates as $key => $value) {
-                            
-                            $validator = Validator::make(["pre_payment_rate" => $value['rate'], "pre_payment_from_date" => $value['from_date']], [
-                                'pre_payment_rate' => 'required|numeric|between:0,99',
-                                'pre_payment_from_date' => 'required|date'
-                            ]);
-                    
-                            if ($validator->fails()) {
-                                DB::rollback();
-                                throw new ValidationException($validator);
-                                return redirect()->back();
-                            }
-
-                            if (count($sorted_pre_payment_fee_rates) - 1 <= $key) {
-                                $to_date = null;
-                                $this->saveFeeRate($value, $hospital_id, Rate::PRE_PAYMENT_FEE_RATE, $to_date);
-                            } else {
-                                $next_from_date = new Carbon($sorted_pre_payment_fee_rates[$key + 1]['from_date']);
-                                if ($value['from_date'] == $next_from_date) {
-                                    DB::rollback();
-                                    $request->session()->flash('error', '適用期間が重複しています。');
-                                    return redirect()->back();
-                                }
-    
-                                $to_date = new Carbon($sorted_pre_payment_fee_rates[$key + 1]['from_date']->subDay());
-                                $this->saveFeeRate($value, $hospital_id, Rate::PRE_PAYMENT_FEE_RATE, $to_date);                       
-                            }
-                        }
-                    }
-                }
     
                 $hospital = Hospital::findOrFail($hospital_id);
                 $hospital->pvad = $request->get('pvad');
@@ -273,38 +172,10 @@ class HospitalAttentionController extends Controller
 
             $middles = HospitalMiddleClassification::all();
             $hospital = Hospital::findOrFail($hospital_id);
-            $feeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', Rate::FEE_RATE)->orderBy('from_date', 'asc')->get();
-            $prePaymentFeeRates = FeeRate::where('hospital_id', $hospital_id)->where('type', Rate::PRE_PAYMENT_FEE_RATE)->orderBy('from_date', 'asc')->get();
             return redirect()->route('hospital.attention.create', ['hospital_id' => $hospital_id])->with('success', trans('messages.updated', ['name' => trans('messages.names.attetion_information')]));
 
         } catch (Exception $e) {
             return redirect()->back()->withErrors(trans('messages.create_error'))->withInput();
         }
-    }
-
-    /**
-     * 手数料率テーブルに保存する
-     *
-     * @param Array 手数料率
-     * @param Int 医療機関ID
-     * @param Int 手数料区分
-     * @param 期間(終了)
-     */
-    protected function saveFeeRate(Array $value, int $hospital_id, int $type, $to_date) {
-        if ($value['id']) {
-            $fee_rate = Rate::findOrFail($value['id']);
-            $fee_rate->rate = $value['rate'];
-            $fee_rate->from_date = $value['from_date'];
-            $fee_rate->to_date = $to_date;
-        } else {
-            $fee_rate = new FeeRate([
-                'hospital_id' => $hospital_id,
-                'type' => $type,
-                'rate' => $value['rate'],
-                'from_date' => $value['from_date'],
-                'to_date' => $to_date
-            ]);
-        }
-        $fee_rate->save();
     }
 }
