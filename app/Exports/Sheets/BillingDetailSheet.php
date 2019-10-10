@@ -48,7 +48,8 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                 foreach( $reservations as $key => $reservation) {
 
                     if ( count($reservations) == ($key+1) ) {
-                        $channel = $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->monthly_contract_fee;
+                        // $channel = $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->monthly_contract_fee;
+                        $channel = '月額';
                     } else {
 
                         if ( $reservation->channel == 2 || $reservation->channel == 3 ) {
