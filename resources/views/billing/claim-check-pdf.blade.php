@@ -247,7 +247,7 @@
                         @endif
 
                         }}</td>
-                    <td>@if ( isset($reservation->is_payment) && ( $reservation->is_payment == 1 ) ) 事前決済 @else 現地決済、@endif</td>
+                    <td>@if ( isset($reservation->is_payment) && ( $reservation->is_payment == 1 ) ) 事前決済 @else 現地決済 @endif</td>
                     <td>{{ $reservation->course->name }}</td>
                     <td>{{ $reservation->tax_included_price ?? '' }}</td>
                     <td>{{ ( $reservation->reservation_options->pluck('option_price')->sum() ) ? number_format($reservation->reservation_options->pluck('option_price')->sum()) . '円' : '' }}</td>
