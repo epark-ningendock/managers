@@ -52,6 +52,10 @@ class PvRecordImport extends ImportAbstract implements WithEvents
         $hospital_id = $this->getId('hospitals', $row['hospital_no']);
         $date_code = Carbon::createFromFormat('Y-m-d H:i:s', $row['dt'])->format('Ymd');
 
+        if (is_null($hospital_id)) {
+            return;
+        }
+
         if (!isset(static::$count[$hospital_id][$date_code])) {
             static::$count[$hospital_id][$date_code] = 0;
         }

@@ -63,3 +63,52 @@ if (! function_exists('csvToArray')) :
     }
 
 endif;
+
+
+if ( !function_exists('billingDateFilter') ) :
+
+    function billingDateFilter($yearMonth = 0) {
+
+        $yearMonth = $yearMonth ?? request('billing_month');
+
+        if ( $yearMonth ) {
+            $date = Carbon\Carbon::parse( $yearMonth . '-' . 28 );
+            $date = ( $date->isCurrentMonth() ) ? now() : $date;
+
+        } else {
+            $date = now();
+        }
+
+
+        if ( $date->day < 21 ) {
+
+            $startMonthNumber = ( $date->isCurrentMonth() ) ? $date->copy()->subMonth( 2 )->month : $date->copy()->subMonth( 1 )->month;
+            $endMonthNumber   = ( $date->isCurrentMonth() ) ? $date->copy()->subMonth( 1 )->month : $date->month;
+
+            $startedDate = $date->copy()->setDate( $date->year, $startMonthNumber, 21 );
+            $endedMonth  = $date->copy()->setDate( $date->year, $endMonthNumber, 20 );
+
+        } else {
+
+            $startedDate = $date->copy()->setDate( $date->year, $date->copy()->subMonth( 1 )->month, 21 );
+            $endedMonth  = $date->copy()->setDate( $date->year, $date->month, 20 );
+
+        }
+
+        $selectBoxMonths = [
+            $startedDate->copy()->subMonth( 2 )->format( 'Y-m' ),
+            $startedDate->copy()->subMonth( 1 )->format( 'Y-m' ),
+            $startedDate->format( 'Y-m' ),
+            $startedDate->copy()->addMonth( 1 )->format( 'Y-m' ),
+            $startedDate->copy()->addMonth( 2 )->format( 'Y-m' ),
+            $startedDate->copy()->addMonth( 3 )->format( 'Y-m' ),
+        ];
+
+        return [
+            'startedDate'     => $startedDate->startOfDay(),
+            'endedDate'       => $endedMonth->endOfDay(),
+            'selectBoxMonths' => $selectBoxMonths,
+        ];
+    }
+
+endif;

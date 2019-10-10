@@ -26,7 +26,7 @@ class AddReservationTable extends Migration
     public function down()
     {
         Schema::table('reservations', function (Blueprint $table) {
-	        $table->string('cancellation_reason')->nullable();
+            $table->dropColumn('cancellation_reason');
         });
     }
 }

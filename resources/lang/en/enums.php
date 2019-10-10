@@ -7,6 +7,8 @@
  */
 
 use \App\Enums\Authority;
+use App\Enums\BillingStatus;
+use App\Enums\CourseImageType;
 use App\Enums\Gender;
 use App\Enums\ReservationStatus;
 use App\Enums\StaffStatus;
@@ -84,6 +86,16 @@ return [
         CourseImageType::MAIN => 'MainCourse',
         CourseImageType::PC => 'Detail for pc',
         CourseImageType::SP => 'Detail for sp',
+//        CourseImageType::Main => 'MainCourse',
+//        CourseImageType::Pc => 'Detail for pc',
+//        CourseImageType::Sp => 'Detail for sp',
+    ],
+
+    BillingStatus::class => [
+	    BillingStatus::UNCONFIRMED => 'Unconfirmed',
+	    BillingStatus::CHECKING => 'Checking',
+	    BillingStatus::CONFIRMED => 'Confirmed',
+	    BillingStatus::CONFIRM => 'Confirm',
     ]
 
 ];

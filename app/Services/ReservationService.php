@@ -426,7 +426,7 @@ class ReservationService
         $entity->campaign_code = $other_info['campaign_cd'] ?? $entity->campaign_code;
         $entity->tel_timezone = $other_info['tel_timezone'] ?? $entity->tel_timezone;
         $entity->insurance_assoc_id = $other_info['insurer_number'] ?? $entity->insurance_assoc_id;
-        $entity->insurance_assoc = $other_info['insurance_assoc'] ?? $entity->insurance_assoc;
+        $entity->insurance_assoc = $other_info['insurance_assoc'] ?? $entity->insurance_assoc;       
         $entity->mail_type = $process === self::REGISTRATION ? '1' : '2';
         $entity->cancelled_appoint_code = $request->input('cancelled_appoint_code') ?? $entity->cancelled_appoint_code;
 

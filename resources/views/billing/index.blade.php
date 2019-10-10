@@ -1,4 +1,5 @@
 @php
+    use App\TaxClass;
     $params = [
       'delete_route' => 'billing.destroy'
     ];
@@ -16,13 +17,12 @@
 @stop
 
 @section('search')
-
     <div class="excel-btn-wrapper mb-5 text-right">
         <a href="{{ route('billing.excel.export', ['billing_month' => request('billing_month'), 'status' => request('status'), 'hospital_name' => request('hospital_name')]) }}" class="btn btn-primary btn-lg">請求一覧EXCELダウンロード</a>
     </div>
 
     <form method="get" role="form" action="{{ route('billing.index') }}">
-        {{ csrf_field() }}
+{{--        {{ csrf_field() }}--}}
 
         <div class="row">
             <div class="col-md-3">
@@ -34,21 +34,23 @@
                                     @if ( request('billing_month') && (request('billing_month') == $selectBoxMonth) )
                                         selected="selected"
                                     @else
-                                        {{ ( empty(request('billing_month')) && $endedMonth->format('Y-m') == $selectBoxMonth ) ? 'selected="selected"' : '' }}
+                                        {{ ( empty(request('billing_month')) && $endedDate->format('Y-m') == $selectBoxMonth ) ? 'selected="selected"' : '' }}
                                     @endif
                             >{{ $selectBoxMonth }}</option>
                         @endforeach
                     </select>
                 </div>
             </div>
+
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="status">請求ステータス</label>
+
                     <select class="form-control" id="status" name="status">
                         <option value=""></option>
-                        @foreach(\App\Enums\BillingStatus::toArray() as $key)
+                        @foreach(\App\Enums\BillingStatus::toArray() as $key => $value)
                             <option
-                                    value="{{ $key }}" {{ (request('status') == $key) ? "selected" : "" }}>{{ \App\Enums\BillingStatus::getDescription($key) }}</option>
+                                    value="{{ $value }}" {{ (request('status') == $value) ? "selected" : "" }}>{{ \App\Enums\BillingStatus::getDescription($value) }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -101,9 +103,9 @@
             <th>医療機関名</th>
             <th>請求ステータス</th>
             <th>プラン</th>
-            <th>請求金額</th>
-            <th>プラン金額（税抜金額）</th>
-            <th>手数料合計金額（税抜金額）</th>
+            <th>請求金額（税抜価格）</th>
+            <th>プラン金額</th>
+            <th>手数料合計金額</th>
             <th>成果コース</th>
             <th colspan="4"></th>
         </tr>
@@ -111,32 +113,46 @@
         <tbody>
         @if ( isset($billings) && count($billings) > 0 )
             @foreach ($billings as $billing)
-                <tr class="billing-id-{{ $billing->id }}">
+                <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
                     <td>{{ $billing->hospital->contract_information->property_no ?? '' }}</td>
                     <td>{{ $billing->hospital->name }}</td>
                     <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
-                    <td>{{ $billing->contractPlan->plan_name }}</td>
-                    <td>{{ $billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() + $billing->contractPlan->monthly_contract_fee }}円</td>
-                    <td>{{ $billing->contractPlan->monthly_contract_fee }}円</td>
-                    <td>{{ $billing->hospital->reservations()->whereMonth('created_at', now()->month)->get()->pluck('fee')->sum() }}円</td>
-                    <td>{{ $billing->contractPlan->fee_rate }}%</td>
+                    <td>
+                        {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name }}
+                    </td>
+                    <td>
+                        {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
+                            $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
+                        ( {{ number_format(($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
+                            $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) / TaxClass::TEN_PERCENT) }}円 )
+                    </td>
+                    <td>
+                        {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee )}}円
+                    </td>
+                    <td>
+                        {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
+                    </td>
+                    <td>
+                        {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate }}%
+                    </td>
                     <td>
                         <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
                     </td>
                     <td>
-                            <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2]) }}" class="btn btn-primary"
-                            @if( $billing->status == 1 ) style="pointer-events: none;" @endif
-                            >未確認</a>
+
+                            <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'claim_check' => 'yes'] )) }}" class="btn @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
+                               @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) style="pointer-events: none;" @endif
+                            >請求確認</a>
                     </td>
                     <td>
-                        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 4]) }}" class="btn btn-primary"
-                           @if( $billing->status == 2  || $billing->status == 3) style="pointer-events: none;" @endif
+                        <a href="{{ route('billing.status.update', array_merge(request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 4, 'claim_confirmation' => 'yes'])) }}" class="btn @if( ($billing->status == \App\Enums\BillingStatus::CHECKING) || ($billing->status == \App\Enums\BillingStatus::CONFIRMED) ) btn-primary @else btn-default @endif"
+                           @if( ($billing->status == \App\Enums\BillingStatus::CHECKING) || ($billing->status == \App\Enums\BillingStatus::CONFIRMED) )  style="pointer-events: unset;" @else style="pointer-events: none;" @endif
                         >請求確定</a>
                     </td>
 
                     <td>
-                        <a href="{{ route('billing.status.update', [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2]) }}" class="btn btn-primary"
-                           @if( $billing->status != 4) style="pointer-events: none;" @endif
+                        <a href="{{ route('billing.status.update', array_merge(request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'undo_commit' => 'yes'])) }}" class="btn @if( $billing->status == 4) btn-primary @else btn-default @endif"
+                           @if( $billing->status == 4) style="pointer-events: unset;" @else style="pointer-events: none;" @endif
                         >確定取消</a>
                     </td>
                 </tr>

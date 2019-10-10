@@ -10,6 +10,7 @@ use \App\Enums\Authority;
 use App\Enums\BillingStatus;
 use \App\Enums\CourseImageType;
 use App\Enums\HospitalEnums;
+use App\Enums\HplinkContractType;
 use App\Enums\StaffStatus;
 use App\Enums\Permission;
 use App\Enums\Status;
@@ -100,5 +101,11 @@ return [
         BillingStatus::CHECKING => '確認中',
         BillingStatus::CONFIRMED => '確認済',
         BillingStatus::CONFIRM => '確定',
-    ]
+    ],
+
+    HplinkContractType::class => [
+        HplinkContractType::NONE => '無し',
+        HplinkContractType::PAY_PER_USE => '従量課金',
+        HplinkContractType::MONTHLY_SUBSCRIPTION => '月額固定',
+    ],
 ];

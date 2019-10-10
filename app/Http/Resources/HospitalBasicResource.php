@@ -2,11 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\OpenResource;
+use Illuminate\Http\Resources\Json\Resource;
 use App\Station;
 
-class HospitalBasicResource extends JsonResource
+class HospitalBasicResource extends Resource
 {
     /**
      * Transform the resource into an array.
@@ -28,7 +27,7 @@ class HospitalBasicResource extends JsonResource
             'name' => $this->name,
             'zip_code' => $this->postcode,
             'pref_name' => $this->prefecture->name,
-            'district_name' => $this->district_code->name,
+            'district_name' => (isset($this->contract_information))? $this->contract_information->code : '',
             'address1' => $this->address1,
             'address2' => $this->address2,
             'pos_n' => $this->longitude,

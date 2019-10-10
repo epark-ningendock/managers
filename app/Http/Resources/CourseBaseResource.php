@@ -3,13 +3,13 @@
 namespace App\Http\Resources;
 
 use Carbon\Carbon;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 
 use App\Enums\WebReception;
 
 use Log;
 
-class CourseBaseResource extends JsonResource
+class CourseBaseResource extends Resource
 {
     /**
      * 検査コース基本情報 resource into an array.
@@ -29,12 +29,13 @@ class CourseBaseResource extends JsonResource
      */
     protected function baseCollections()
     {
+        $www_site = (empty($_SERVER['HTTPS']) ? 'http://' : 'https://').$_SERVER['HTTP_HOST'];
         return collect(
             [
                 'course_no' => $this->id,
                 'course_code' => $this->code,
                 'course_name' => $this->name,
-                'course_url' => WWW_SITE . "/detail_hospital/" . $this->hospital->contract_information->code . "/detail/" . $this->code . ".html",
+                'course_url' => $this->createURL() . "/detail_hospital/" . $this->hospital->contract_information->code . "/detail/" . $this->code . ".html",
                 'web_reception' => $this->createReception(),
                 'course_flg_category' => $this->is_category,
                 'course_img' => $this->getFlowImagePath($this->hospital->hospital_categories, 1),
@@ -71,7 +72,7 @@ class CourseBaseResource extends JsonResource
         });
         $files = $categories->map(function ($c) {
             if(isset($c->hospital_image->path) && isset($c->hospital_image->name) && isset($c->hospital_image->extension)) {
-                return WWW_SITE . $c->hospital_image->path . $c->hospital_image->name . $c->hospital_image->extension;
+                return $this->createURL() . $c->hospital_image->path . $c->hospital_image->name . $c->hospital_image->extension;
             }
         })->toArray();
         return $files[0] ?? '';
@@ -90,5 +91,8 @@ class CourseBaseResource extends JsonResource
         }
 
         return WebReception::NOT_ACCEPT;
+
+    private function createURL() {
+        return (empty($_SERVER['HTTPS']) ? 'http://' : 'https://').$_SERVER['HTTP_HOST'];
     }
 }

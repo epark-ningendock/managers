@@ -59,8 +59,12 @@ class ReservationImport extends ImportBAbstract implements WithEvents
         ];
 
         try {
-            $model = new Reservation($arr);
-            $model->save();
+            $model = Reservation::updateOrCreate([
+                'id' => $this->getId('reservations', $this->getValue($row, 'APPOINT_ID'))],
+                $arr
+            );
+//            $model = new Reservation($arr);
+//            $model->save();
 
             $this->setId($model, $row);
         } catch (\Exception $e) {

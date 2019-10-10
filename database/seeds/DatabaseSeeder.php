@@ -20,11 +20,10 @@ class DatabaseSeeder extends Seeder
             HospitalTableSeeder::class,
             HospitalStaffsTableSeeder::class,
             ContractPlansTableSeeder::class,
-            FeeRateSeeder::class,
             ContractInformationTableSeeder::class,
             HospitalImagesTableSeeder::class,
             OptionsTableSeeder::class,
-            TaxClassesTableSeeder::class,
+//            TaxClassesTableSeeder::class,
             ImageOrdersTableSeeder::class,
             CalendarsTableSeeder::class,
             CalendarDaysTableSeeder::class,
@@ -33,6 +32,7 @@ class DatabaseSeeder extends Seeder
             CustomersSeeder::class,
             BillingTableSeeder::class,
             BillingMailHistorySeeder::class,
+            HospitalPlanTableSeeder::class,
             // StationsTableSeeder::class, CSVからインポート
             // RailsTableSeeder::class, CSVからインポート
             MedicalExaminationSystemTableSeeder::class,

@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Reshadman\OptimisticLocking\OptimisticLocking;
+use App\Enums\HplinkContractType;
 
 class Hospital extends Model
 {
@@ -19,7 +20,7 @@ class Hospital extends Model
         'postcode',
         'prefecture_id',
         'district_code_id',
-	    'medical_examination_system_id',
+        'medical_examination_system_id',
         'course_meta_information_id',
         'address1',
         'address2',
@@ -74,6 +75,22 @@ class Hospital extends Model
 
     ];
 
+    protected $enumCasts = [
+        'hplink_contract_type' => HplinkContractType::class,
+    ];
+
+    public function prefecture()
+    {
+        return $this->belongsTo(Prefecture::class)
+            ->withDefault();
+    }
+
+    public function districtCode()
+    {
+        return $this->belongsTo(DistrictCode::class)
+            ->withDefault();
+    }
+
     /**
      * 医療機関に関連する受付メール設定レコードを取得
      */
@@ -99,7 +116,7 @@ class Hospital extends Model
 
     public function contract_information()
     {
-        return $this->hasOne('App\ContractInformation');
+        return $this->hasOne('App\ContractInformation', 'hospital_id', 'id');
     }
 
     public function lock()
@@ -117,11 +134,6 @@ class Hospital extends Model
         return $this->hasMany('App\Option');
     }
 
-    public function prefecture()
-    {
-        return $this->belongsTo('App\Prefecture');
-    }
-
     public function district_code()
     {
         return $this->belongsTo('App\DistrictCode');
@@ -135,6 +147,12 @@ class Hospital extends Model
     public function reception_email_setting()
     {
         return $this->hasOne('App\ReceptionEmailSetting');
+    }
+
+    public function hospital_plan()
+    {
+        // DB の構成的には hasMany だが、仕様的に hasOne となったため
+        return $this->hasOne('App\HospitalPlan');
     }
 
     /**
@@ -213,15 +231,13 @@ class Hospital extends Model
                     ->where('date', '<=', $to)
                     ->where('is_reservation_acceptance', 1);
             });
-        }
-        // 受診希望日FROM
+        } // 受診希望日FROM
         else if (isset($from) and empty($to)) {
             $query->whereHas('courses.calendar_days', function ($query) use ($from) {
                 $query->where('date', '>=', $from)
                     ->where('is_reservation_acceptance', 1);
             });
-        }
-        // 受診希望日TO
+        } // 受診希望日TO
         else if (empty($from) and isset($to)) {
             $query->whereHas('courses.calendar_days', function ($query) use ($to) {
                 $query->where('date', '<=', $to)
@@ -258,14 +274,37 @@ class Hospital extends Model
             });
         }
 
-        Log::debug($query->toSql());
+//        Log::debug($query->toSql());
 
         return $query;
     }
-  
+
     public function reservations()
     {
         return $this->hasMany(Reservation::class);
+    }
+
+    public function reservationByCompletedDate($start, $end)
+    {
+        return $this->reservations()->whereBetween('completed_date', [$start, $end])->get();
+    }
+
+    public function hospitalPlans()
+    {
+        return $this->hasMany(HospitalPlan::class);
+    }
+
+    public function hospitalPlanByDate($date)
+    {
+        return $this->hospitalPlans()->where([
+            ['from', '<', $date],
+            ['to', '>', $date]
+        ])->first();
+    }
+
+    public function billings()
+    {
+        return $this->hasMany(Billing::class);
     }
 
 }

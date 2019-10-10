@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class RailStation extends Model
 {
+    /**
+     * モデルと関連しているテーブル
+     *
+     * @var string
+     */
+    protected $table = 'rail_station';
+
     public function rails()
     {
         return $this->belongsTo('App\Rail');

@@ -2,15 +2,14 @@
 
 namespace App;
 
+use App\Filters\Filterable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Billing extends SoftDeleteModel
 {
-    use SoftDeletes;
+    use Filterable, SoftDeletes;
 
-    protected $guarded = [
-        'id',
-    ];
+	protected $enums = [];
 
     protected $dates = [
         'created_at',
@@ -18,9 +17,16 @@ class Billing extends SoftDeleteModel
         'deleted_at'
     ];
 
+	protected $casts = [
+		'id' => 'integer',
+		'status' => 'integer'
+	];
+
     protected $fillable = [
         'hospital_id', 'billing_month', 'status'
     ];
+
+    protected $appends = ['startedDate', 'endedDate'];
 
     public function contractPlan()
     {
@@ -31,4 +37,27 @@ class Billing extends SoftDeleteModel
     {
         return $this->belongsTo(Hospital::class);
     }
+
+    public function startedDate()
+    {
+        return billingDateFilter($this->billing_month)['startedDate'];
+    }
+
+    public function endedDate()
+    {
+        return billingDateFilter($this->billing_month)['endedDate'];
+    }
+
+
+    public function getStartedDateAttribute()
+    {
+        return $this->startedDate();
+    }
+
+    public function getEndedDateAttribute()
+    {
+        return $this->endedDate();
+    }
+
+
 }

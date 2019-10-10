@@ -15,7 +15,7 @@ class RouteRequest extends ValidationRequest
     {
         return [
             'place_code' => 'required|numeric|min:1|max:47',
-            'rail_no' => 'required|numeric',
+            'rail_no' => 'nullable|numeric',
         ];
 
     }

@@ -35,12 +35,19 @@ class OptionImport extends ImportAbstract
     public function onRow(Row $row)
     {
         $row = $row->toArray();
+
+        $hospital_id = $this->getId('hospitals', $row['hospital_no']);
+
+        if (is_null($hospital_id)) {
+            return;
+        }
+
         $model = new Option([
-            'hospital_id' => $this->getId('hospitals', $row['hospital_no']),
+            'hospital_id' => $hospital_id,
             'name' => $row['option_name'] ?? '----',
             'confirm' => $row['confirm'],
             'price' => $row['price'],
-            'tax_class_id' => null,  // @todo
+            'tax_class_id' => $this->getId('tax_classes', $row['tax_class']),
             'order' => $row['order'],
             'status' => $row['status'],
             'created_at' => $row['rgst'],

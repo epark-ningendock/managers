@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 
-class HospitalCoursesResource extends JsonResource
+class HospitalCoursesResource extends Resource
 {
     /**
      * 医療機関検査コース一覧 リソースクラス

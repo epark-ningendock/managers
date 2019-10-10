@@ -9,6 +9,8 @@ class Prefecture extends BaseModel
     protected $fillable = [
         'name',
         'code',
+        'area_no',
+        'order',
         'created_at',
         'updated_at'
     ];

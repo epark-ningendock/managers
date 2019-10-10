@@ -183,6 +183,13 @@ class CourseController extends Controller
             'hospital',
             'hospital.contract_information',
         ])
+//            ->join('hospitals', 'hospitals.id', 'courses.hospital_id')
+//            ->join('contract_informations', 'hospital_id', 'hospitals.id')
+//            ->join('contract_informations', function ($query) use ($serach_condition) {
+//                $query->on('contract_informations.hospital_id', '=', 'courses.hospital_id')
+//                    ->where('contract_informations.code', '=', $serach_condition->hospital_code);
+//            })
+//            ->join('calendar_days', 'calendar_days.calendar_id', 'courses.calendar_id')
             ->whereHas('hospital.contract_information', function ($q) use ($serach_condition) {
                 $q->where('contract_informations.code', $serach_condition->hospital_code);
             })
@@ -191,8 +198,8 @@ class CourseController extends Controller
         foreach ($entity->calendar_days as $c) {
 
             // 既予約数取得
-            $appoint_count = Reservation::where('hospital_id', $entity->hospital->id)
-                ->where('course_id', $entity->id)
+            $appoint_count = Reservation::where('hospital_id', $c->hospital->id)
+                ->where('course_id', $c->id)
                 ->whereIn('reservation_status', [1, 2, 3])
                 ->whereDate('reservation_date', $c->date)->count();
 
