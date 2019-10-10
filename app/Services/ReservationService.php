@@ -583,7 +583,6 @@ class ReservationService
         $targets = Reservation::where('hospital_id', $hospital->id)
             ->where('reservation_date', '>=', $fromDate)
             ->where('reservation_date', '<=', $toDate)
-            ->where('reservation_status', '<>', ReservationStatus::CANCELLED)
             ->where('site_code', 'HP')
             ->count();
 
