@@ -166,7 +166,7 @@ class SearchController extends Controller
                 'hospital_categories',
                 'hospital_categories.image_order',
                 'hospital_categories.hospital_image',
-                'districtCode',
+                'district_code',
                 'prefecture',
             ])
             ->whereForSearchAPI($request);
