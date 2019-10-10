@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 use Carbon\Carbon;
 
-class ReservationConfResource extends JsonResource
+class ReservationConfResource extends Resource
 {
     /**
      * 予約情報 resource into an array.

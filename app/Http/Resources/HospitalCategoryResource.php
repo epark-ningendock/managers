@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 
-class HospitalCategoryResource extends JsonResource
+class HospitalCategoryResource extends Resource
 {
     /**
      * 施設分類 into an array.

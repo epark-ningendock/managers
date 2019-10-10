@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Log;
+
 use App\Enums\WebReception;
 use App\Helpers\EnumTrait;
 use Reshadman\OptimisticLocking\OptimisticLocking;
@@ -93,8 +95,18 @@ class Course extends SoftDeleteModel
 
     public function hospital()
     {
-        return $this->hasOne('App\Hospital');
+        return $this->belongsTo('App\Hospital');
     }
+
+    public function contract_information()
+    {
+        return $this->hasOne('App\ContractInformation', 'hospital_id', 'hospital_id');
+    }
+
+//    public function hospital()
+//    {
+//        return $this->hasOne('App\Hospital');
+//    }
 
     public function calendar()
     {
@@ -117,7 +129,7 @@ class Course extends SoftDeleteModel
 
     public function calendar_days()
     {
-        return $this->hasMany('App\CalendarDay', 'calender_id', 'calender_id');
+        return $this->hasMany('App\CalendarDay', 'calendar_id', 'calendar_id');
     }
 
     public function tax_class()

@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 use Log;
 
-class HospitalContentBaseResource extends JsonResource
+class HospitalContentBaseResource extends Resource
 {
     /**
      * 医療機関コンテンツ into an array.

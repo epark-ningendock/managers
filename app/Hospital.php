@@ -111,7 +111,7 @@ class Hospital extends Model
 
     public function contract_information()
     {
-        return $this->hasOne('App\ContractInformation');
+        return $this->hasOne('App\ContractInformation', 'hospital_id', 'id');
     }
 
     public function lock()
@@ -263,7 +263,7 @@ class Hospital extends Model
             });
         }
 
-        Log::debug($query->toSql());
+//        Log::debug($query->toSql());
 
         return $query;
     }
