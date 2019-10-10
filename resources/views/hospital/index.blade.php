@@ -93,7 +93,7 @@
             @elseif (DistrictCode::find($hospital->district_code_id))
               <td>{{ Prefecture::find($hospital->prefecture_id)->name . DistrictCode::find($hospital->district_code_id)->name . $hospital->address1 }}</td>
             @else
-              <td>{{ Prefecture::find($hospital->prefecture_id)->name . $hospital->address1 }}</td>
+              <td>{{ Prefecture::find($hospital->prefecture_id)->name ?? '' . $hospital->address1 ?? '' }}</td>
             @endif
             <td>{{ $hospital->tel }}</td>
             <td>{{ HospitalEnums::getDescription($hospital->status) }}</td>
