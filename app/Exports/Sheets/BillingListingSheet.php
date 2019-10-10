@@ -40,7 +40,7 @@ class BillingListingSheet implements FromCollection, WithHeadings, WithMapping, 
         $monthlyContractFee = $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->monthly_contract_fee;
 
         return [
-            $billing->created_at->format('Y/m'),
+            $billing->created_at->format('m'),
             $billing->hospital->contract_information->property_no,
             $billing->hospital->contract_information->contractor_name,
             $billing->hospital->name,
