@@ -38,28 +38,28 @@ class BillingConfirmationSendMail extends Mailable
      */
     public function build()
     {
+        if ( session('hospital_id') ) {
 
-        if ( $this->attributes['email_type'] === 'claim_confirmation') {
+            $view = 'billing.mail.billing-claim-hospital-confirmation';
 
-            return $this
-                ->from($this->emailFrom())
-                ->subject($this->data['subject'])
-                ->attachData($this->attchment->output(), $this->data['attachment_file_name'] . 'pdf',[
-                    'mime' => 'application/pdf',
-                ])
-                ->view('billing.mail.billing-claim-confirmation', ['billing' => $this->data['billing'], 'attributes' => $this->attributes]);
+        } elseif ( $this->attributes['email_type'] === 'claim_confirmation') {
+
+            $view = 'billing.mail.billing-claim-confirmation';
+        
 
         } else {
 
-            return $this
+            $view = 'billing.mail.billing-confirmation';
+
+        }
+
+        return $this
                 ->from($this->emailFrom())
                 ->subject($this->data['subject'])
                 ->attachData($this->attchment->output(), $this->data['attachment_file_name'] . 'pdf',[
                     'mime' => 'application/pdf',
                 ])
-                ->view('billing.mail.billing-confirmation', ['billing' => $this->data['billing'], 'attributes' => $this->attributes ]);
-
-        }
+                ->view($view, ['billing' => $this->data['billing'], 'attributes' => $this->attributes]);
 
     }
 }
