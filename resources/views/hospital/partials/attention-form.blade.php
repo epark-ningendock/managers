@@ -247,28 +247,43 @@ $o_minor_values = collect(old('minor_values'));
               });
           })();
 
+          // 初期表示用
+          if ($('#none').prop("checked")) {
+            $('#hplink_count').prop('disabled', true);
+            $('#hplink_price_one').prop('disabled', true);
+            $('#hplink_price_monthly').prop('disabled', true);
+          }
+          if ($('#pay_per_use').prop("checked")) {
+            $('#hplink_price_monthly').prop('disabled', true);
+            $('#hplink_count').prop('disabled', false);
+            $('#hplink_price_one').prop('disabled', false);
+          }
+          if ($('#monthly_subscription').prop("checked")) {
+            $('#hplink_count').prop('disabled', true);
+            $('#hplink_price_one').prop('disabled', true);
+            $('#hplink_price_monthly').prop('disabled', false);
+          }
+
+          // 値が変わった時用
           $('#none').change(function() {
             if ($('#none').prop("checked")) {
-              $('#pay_per_use').prop('disabled', true);
               $('#hplink_count').prop('disabled', true);
               $('#hplink_price_one').prop('disabled', true);
-              $('#monthly_subscription').prop('disabled', true);
               $('#hplink_price_monthly').prop('disabled', true);
             }
           });
           $('#pay_per_use').change(function() {
             if ($('#pay_per_use').prop("checked")) {
-              $('#none').prop('disabled', true);
-              $('#monthly_subscription').prop('disabled', true);
               $('#hplink_price_monthly').prop('disabled', true);
+              $('#hplink_count').prop('disabled', false);
+              $('#hplink_price_one').prop('disabled', false);
             }
           });
           $('#monthly_subscription').change(function() {
             if ($('#monthly_subscription').prop("checked")) {
-              $('#none').prop('disabled', true);
-              $('#pay_per_use').prop('disabled', true);
               $('#hplink_count').prop('disabled', true);
               $('#hplink_price_one').prop('disabled', true);
+              $('#hplink_price_monthly').prop('disabled', false);
             }
           });
 
@@ -283,6 +298,18 @@ $o_minor_values = collect(old('minor_values'));
 
 tr, td {
   text-align: left !important;
+}
+
+#hplink_count:disabled {
+  background: #eee;
+}
+
+#hplink_price_one:disabled {
+  background: #eee;
+}
+
+#hplink_price_monthly:disabled {
+  background: #eee;
 }
 </style>
 
