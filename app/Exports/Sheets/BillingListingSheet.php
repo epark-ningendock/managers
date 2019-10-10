@@ -69,6 +69,6 @@ class BillingListingSheet implements FromCollection, WithHeadings, WithMapping, 
      */
     public function title(): string
     {
-        return '顧客請求対象_'. $this->collection()->first()->created_at->format('Ym');
+        return '請求金額';
     }    
 }
