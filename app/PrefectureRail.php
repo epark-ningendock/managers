@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class PrefectureRail extends Model
 {
+    /**
+     * モデルと関連しているテーブル
+     *
+     * @var string
+     */
+    protected $table = 'prefecture_rail';
+
     public function prefecture()
     {
         return $this->belongsTo('App\Prefecture');

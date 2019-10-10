@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 
-class ReservationStoreResource extends JsonResource
+class ReservationStoreResource extends Resource
 {
     /**
      * 予約完了情報 resource into an array.

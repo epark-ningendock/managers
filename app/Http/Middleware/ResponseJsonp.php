@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ResponseJsonp
 {
@@ -18,8 +19,8 @@ class ResponseJsonp
         $response = $next($request);
         // とりあえず型チェックはなし
         // if ($response instanceof JsonResponse) {
-            $response->setCallback($request->query('callback'));
+        return response()->json($response)->setCallback($request->query('callback'));
         // } 
-        return $response;
+//        return $response;
     }
 }

@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 
-class CalendarMonthlyResource extends JsonResource
+class CalendarMonthlyResource extends Resource
 {
     /**
      * 検査コース空満情報（月別） resource into an array.

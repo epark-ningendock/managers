@@ -166,7 +166,7 @@ class SearchController extends Controller
                 'hospital_categories',
                 'hospital_categories.image_order',
                 'hospital_categories.hospital_image',
-                'district_code',
+                'districtCode',
                 'prefecture',
             ])
             ->whereForSearchAPI($request);
@@ -213,7 +213,7 @@ class SearchController extends Controller
                 'hospital.contract_information',
                 'hospital.hospital_categories',
             ])
-            ->whereForSearchAPI($request)->orderBy('id');
+            ->whereForSearchAPI($request);
 
         // 件数のみ
         if ($isCount === true) return $query->count();
