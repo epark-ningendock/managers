@@ -16,10 +16,11 @@ class CreateConvertedIdStringsTable extends Migration
         Schema::create('converted_id_strings', function (Blueprint $table) {
             $table->string('table_name');
             $table->string('old_id');
+            $table->string('hospital_no');
             $table->unsignedBigInteger('new_id');
             $table->timestamps();
 
-            $table->unique(['table_name', 'old_id']);
+            $table->unique(['table_name', 'hospital_no', 'old_id']);
         });
     }
 

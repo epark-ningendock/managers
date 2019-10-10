@@ -2,10 +2,10 @@
 
 namespace App\Imports;
 
-use App\HospitalDetail;
+use App\Course;
 use Maatwebsite\Excel\Row;
 
-class HospitalDetailImport extends ImportAbstract
+class CourseExtraImport extends ImportBAbstract
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -24,33 +24,28 @@ class HospitalDetailImport extends ImportAbstract
      */
     public function getNewClassName(): string
     {
-        return HospitalDetail::class;
+        return Course::class;
     }
 
     /**
      * @param Row $row
      * @return mixed
-     * @throws \Exception
      */
     public function onRow(Row $row)
     {
         $row = $row->toArray();
 
-        $hospital_id = $this->getId('hospitals', $row['hospital_no']);
+        // LINEGROUP_ID == old_course_id とみなす
+        $course_id = $this->getValue($row, 'LINEGROUP_ID');
 
-        if (is_null($hospital_id)) {
+        $course = Course::find($course_id);
+        if (is_null($course)) {
             return;
         }
-
-        $model = new HospitalDetail([
-            'hospital_id' => $hospital_id,
-            'minor_classification_id' => $this->getId('minor_classifications', $row['item_category_sho_no']),
-            'select_status' => $row['select_status'],
-            'inputstring' => $row['inputstring'],
-            'created_at' => $row['rgst'],
-            'updated_at' => $row['updt'],
+        $course->update([
+            'cancellation_deadline' => $this->getValue($row, 'LINEGROUP_CANCELLATION_DAYS'),
+            'reception_start_date' => $this->getValue($row, 'LINEGROUP_START_DAYS'),
+            'reception_end_date' => $this->getValue($row, 'LINEGROUP_END_DAYS'),
         ]);
-
-        $model->save();
     }
 }

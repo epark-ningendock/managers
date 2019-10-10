@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 
-class CourseContentBaseResource extends JsonResource
+class CourseContentBaseResource extends Resource
 {
     /**
      * 検査コースコンテンツ基本情報 resource into an array.

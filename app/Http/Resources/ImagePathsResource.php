@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 
-class ImagePathsResource extends JsonResource
+class ImagePathsResource extends Resource
 {
     /**
      * 画像ファイルパス リソースクラス

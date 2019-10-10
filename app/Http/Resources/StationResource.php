@@ -1,8 +1,9 @@
 <?php
 namespace App\Http\Resources;
 use App\Hospital;
-use Illuminate\Http\Resources\Json\JsonResource;
-class StationResource extends JsonResource
+use Illuminate\Http\Resources\Json\Resource;
+
+class StationResource extends Resource
 {
     /**
      * Transform the resource into an array.

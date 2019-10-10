@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 use Carbon\Carbon;
 
-class ReservationConfResource extends JsonResource
+class ReservationConfResource extends Resource
 {
     /**
      * 予約情報 resource into an array.
@@ -72,8 +72,8 @@ class ReservationConfResource extends JsonResource
             ->put(
                 'facility_addr',
                 $this->hospital->district_code->prefecture->name . ' ' .
-                    $this->hospital->district_code->name . ' ' .
-                    $this->hospital->address1 . ' ' . $this->hospital->address2
+                $this->hospital->district_code->name . ' ' .
+                $this->hospital->address1 . ' ' . $this->hospital->address2
             )
             ->put('facility_tel', $this->hospital->tel)
             ->put('course_price_tax', $this->course->price)
@@ -86,6 +86,7 @@ class ReservationConfResource extends JsonResource
                     'choose_fg' => $this->is_choose,
                     'campaign_cd' => $this->campaign_code,
                     'tel_timezone' => $this->tel_timezone,
+                    'is_health_insurance' => $this->is_health_insurance,
                     'insurance_assoc' => $this->insurance_assoc,
                 ])
             )
@@ -97,7 +98,7 @@ class ReservationConfResource extends JsonResource
      * 受診者情報要素追加
      *
      * @param  予約情報  $reservation
-     * @return 受診者情報 
+     * @return 受診者情報
      */
     private function _regist_members($reservation)
     {

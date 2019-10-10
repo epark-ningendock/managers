@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 use App\Station;
 
-class SearchHospitalsResource extends JsonResource
+class SearchHospitalsResource extends Resource
 {
     /**
      * 医療機関一覧検索 リソースクラス
@@ -23,11 +23,11 @@ class SearchHospitalsResource extends JsonResource
         return [
             'no' => $this->id,
             'url_basic' => $this->url,
-            'hospital_code' => $this->contract_information->code,
+            'hospital_code' => (isset($this->contract_information))? $this->contract_information->code : '',
             'name' => $this->name,
             'update_dt' => $this->update_at,
             'pref_name' => $this->prefecture->name,
-            'district_name' => $this->district_code->name,
+            'district_name' => $this->districtCode->name,
             'address1' => $this->address1,
             'address2' => $this->address2,
             'stations' => Station::getStations($rails, $stations, $accesses),
@@ -53,7 +53,9 @@ class SearchHospitalsResource extends JsonResource
 
         $el = $hospital_categories->first(function ($v) {
             return isset($v->image_order) 
+                && isset($v->image_order->image_group_number)
                 && $v->image_order->image_group_number === 3
+                && isset($v->image_order->image_location_number)
                 && $v->image_order->image_location_number === 1;
         });
 
@@ -72,6 +74,7 @@ class SearchHospitalsResource extends JsonResource
 
         $elemens = $hospital_categories->map(function ($v) {
             if (isset($v->image_order) 
+                && isset($v->image_order->image_group_number)
                 && $v->image_order->image_group_number === 2) {
                     return $v->hospital_image;
                 }

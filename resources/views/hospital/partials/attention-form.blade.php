@@ -1,6 +1,6 @@
 @php
-use App\FeeRate;
 use App\Enums\RegistrationDivision;
+use App\Enums\HplinkContractType;
 
 if(isset($hospital)) {
   $hospital_details = $hospital->hospital_details;
@@ -8,18 +8,6 @@ if(isset($hospital)) {
 
 $o_minor_ids = collect(old('minor_ids'));
 $o_minor_values = collect(old('minor_values'));
-
-// 通常手数料
-$o_fee_rate_ids = collect(old('fee_rate_ids'));
-$o_rates = collect(old('rates'));
-$o_from_dates = collect(old('from_dates'));
-$fee_rate_count = $o_fee_rate_ids->isNotEmpty() ? $o_fee_rate_ids->count() : $feeRates->count();
-
-// 事前決済手数料
-$o_pre_payment_fee_rate_ids = collect(old('pre_payment_fee_rate_ids'));
-$o_pre_payment_rates = collect(old('pre_payment_rates'));
-$o_pre_payment_from_dates = collect(old('pre_payment_from_dates'));
-$pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre_payment_fee_rate_ids->count() : $prePaymentFeeRates->count();
 
 @endphp
 <div class="form-entry">
@@ -35,7 +23,7 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
                   <label for="pvad">PR</label>
                   <input class="form-control w8em" type="number" id="pvad" name="pvad" value="{{ old('pvad', (isset($hospital->pvad) ? $hospital->pvad : 0)) }}">
                   @if ($errors->has('pvad')) <p class="has-error">{{ $errors->first('pvad') }}</p> @endif
-                  <div class="mt-5">
+                  <div class="mt-4">
                     <input type="hidden" name="is_pickup" value="0" />
                     <input type="checkbox" name="is_pickup" id="is_pickup" value="1" @if(old('is_pickup', $hospital->is_pickup) == 1) checked @endif/>
                     <label for="is_pickup">ピックアップ</label>
@@ -95,7 +83,7 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
               </div>
           </div>
           @endforeach
-          <div class="col-md-12 mt-5">
+          <div class="col-md-12 mt-4">
             <div class="form-group py-sm-1 " style="margin-left: 0;">
               <legend>フリーエリア </legend>
               <textarea class="form-control minor-text" name="free_area" cols="30" rows="5">{{ $hospital->free_area }}</textarea>
@@ -103,7 +91,7 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
               @if ($errors->has('free_area')) <p class="has-error" style="font-size: 1.3rem;">{{ $errors->first('free_area') }}</p> @endif
             </div>
           </div>
-          <div class="col-md-12 mt-5">
+          <div class="col-md-12 mt-4">
             <div class="form-group py-sm-1 " style="margin-left: 0;">
               <legend>検索ワード </legend>
               <textarea class="form-control minor-text" name="search_word" cols="30" rows="5">{{ $hospital->search_word }}</textarea>
@@ -112,91 +100,88 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
               @if ($errors->has('search_word')) <p class="has-error" style="font-size: 1.3rem;">{{ $errors->first('search_word') }}</p> @endif
             </div>
           </div>          
-        </div>
-          <div class="col-md-12 mt-5">
-              <h2>手数料率</h2>
-              <div class="form-group py-sm-1 " style="margin-left: 0;">
-                  <div class="form-inline">
-                      <label style="font-size: 1.2em; margin: 0 12px 0 0;">通常手数料</label><button type="button" class="btn btn-primary" id="add-fee-rate-button">追加</button>
-                  </div>
-                  <div id='fee-rate-block'>
-                      @for($i = 0; $i < $fee_rate_count; $i++)
-                        @php
-                          if($o_fee_rate_ids->isNotEmpty()) {
-                            $feeRate = new FeeRate([
-                              'id' => $o_fee_rate_ids[$i],
-                              'rate' => $o_rates[$i],
-                              'from_date' => $o_from_dates[$i]
-                            ]);
-                          } else {
-                            $feeRate = $feeRates[$i];
-                          }
-                        @endphp
-                          <div class="form-group">
-                              <div class="form-inline">
-                                  <input type="hidden" name="fee_rate_ids[]" value="{{ $feeRate->id }}" />
-                                  <label class="mt-5 ml-5">手数料率</label>
-                                  <input type="number" class="form-control" id="{{ 'rate'.$feeRate->id }}" name="rates[]" value="{{ isset($feeRate->rate) ? $feeRate->rate : '' }}"> %
-                                  <label class="mt-5 ml-5">適用期間</label>
-                                  <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd"
-                                       data-date-autoclose="true" data-date-language="ja">
-                                      <input type="text" class="form-control"
-                                             id="{{ 'from_date'.$feeRate->id }}" name="from_dates[]"
-                                             placeholder="yyyy-mm-dd" value="{{ isset($feeRate->from_date) ? $feeRate->from_date : '' }}">
-                                      <div class="input-group-addon">
-                                          <span class="glyphicon glyphicon-calendar"></span>
-                                      </div>
-                                  </div>
-                                  <span class="ml-2 mr-2">~</span>
-                              </div>
-                          </div>
-                      @endfor
-                  </div>
-                  @if ($errors->has('rate')) <p class="has-error">{{ $errors->first('rate') }}</p> @endif
-                  @if ($errors->has('from_date')) <p class="has-error">{{ $errors->first('from_date') }}</p> @endif
-
-                  <div class="form-inline">
-                      <label style="font-size: 1.2em; margin: 0 12px 0 0;">事前決済手数料</label><button type="button" class="btn btn-primary" id="add-pre-payment-button">追加</button>
-                  </div>
-
-                  <div id='pre-payment-block'>
-                    @for($i = 0; $i < $pre_payment_fee_rate_count; $i++)
-                      @php
-                        if($o_fee_rate_ids->isNotEmpty()) {
-                          $prePaymentFeeRate = new FeeRate([
-                            'id' => $o_pre_payment_fee_rate_ids[$i],
-                            'rate' => $o_pre_payment_rates[$i],
-                            'from_date' => $o_pre_payment_from_dates[$i]
-                          ]);
-                        } else {
-                          $prePaymentFeeRate = $prePaymentFeeRates[$i];
-                        }
-                      @endphp
-                          <div class="form-group">
-                              <div class="form-inline">
-                                  <input type='hidden' name='pre_payment_fee_rate_ids[]' value='{{ $prePaymentFeeRate->id }}' />
-                                  <label class="mt-5 ml-5">手数料率</label>
-                                  <input type="number" class="form-control" name="pre_payment_rates[]" value="{{ isset($prePaymentFeeRate->rate) ? $prePaymentFeeRate->rate : '' }}"> %
-                                  <label class="mt-5 ml-5">適用期間</label>
-                                  <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd"
-                                       data-date-autoclose="true" data-date-language="ja">
-                                      <input type="text" class="form-control"
-                                             name="pre_payment_from_dates[]"
-                                             placeholder="yyyy-mm-dd" value="{{ isset($prePaymentFeeRate->from_date) ? $prePaymentFeeRate->from_date : '' }}">
-                                      <div class="input-group-addon">
-                                          <span class="glyphicon glyphicon-calendar"></span>
-                                      </div>
-                                  </div>
-                                  <span class="ml-2 mr-2">~</span>
-                              </div>
-                          </div>
-                      @endfor
-                  </div>
-                  @if ($errors->has('pre_payment_rate')) <p class="has-error">{{ $errors->first('pre_payment_rate') }}</p> @endif
-                  @if ($errors->has('pre_payment_from_date')) <p class="has-error">{{ $errors->first('pre_payment_from_date') }}</p> @endif
-
+          <div class="col-md-12 mt-4">
+            <div class="form-group py-sm-1 " style="margin-left: 0;">
+              <legend>プラン</legend>
+              <div class="form-group margin-none py-sm-1">
+                <select name="contract_plan_id" id="contract_plan" class="form-control">
+                  <option value="">プランを選択</option>
+                  @foreach($contractPlans as $contract_plan)
+                    <option value="{{ $contract_plan->id }}"
+                            @if ( (old('contract_plan_id', (isset($hospital->hospital_plan->contract_plan_id) ) ? $hospital->hospital_plan->contract_plan_id : null) == $contract_plan->id ) )
+                            selected="selected"
+                            @endif
+                    > {{ $contract_plan->plan_name }}</option>
+                  @endforeach
+                </select>
+                @if ($errors->has('contract_plan_id')) <p class="help-block">{{ $errors->first('contract_plan_id') }}</p> @endif
               </div>
+            </div>
           </div>
+          <div class="col-md-12 mt-4">
+            <div class="form-group py-sm-1 " style="margin-left: 0;">
+              <legend>HPリンク</legend>
+              <div class="form-group @if( $errors->has('hplink_contract_type'))  has-error @endif">
+                <div class="radio">
+                  <div class="form-group mt-3">
+                    <div class="ml-12 radio">
+                      <input type="radio" name="hplink_contract_type" id="none"
+                            value="{{ HplinkContractType::NONE }}"
+                            @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::NONE ) checked @endif>
+                      <label class="radio-label" for="none"> {{ HplinkContractType::getDescription(0) }}</label>
+                    </div>
+                  </div>
+                  <div class="form-group mt-3">
+                    <div class="ml-12 radio">
+                      <input type="radio" name="hplink_contract_type" id="pay_per_use"
+                            value="{{ HplinkContractType::PAY_PER_USE }}"
+                            @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::PAY_PER_USE ) checked @endif>
+                      <label class="radio-label" for="pay_per_use"> {{ HplinkContractType::getDescription(1) }}</label>
+                    </div>
+                    <label class="mr-2" for="hplink_count">無料の回数</label>
+                    <input type="number" name="hplink_count" id="hplink_count"
+                          value="{{ old('hplink_count', ( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::PAY_PER_USE && isset($hospital->hplink_count) ) ? $hospital->hplink_count : null) }}" />回
+                    <label class="mr-2" for="hplink_price_one" style="margin-left: 12px;">1回当たりの料金</label>
+                    <input type="number" name="hplink_price_one" id="hplink_price_one"
+                          value="{{ old('hplink_price_one', ( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::PAY_PER_USE && isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円
+                  </div>
+                  <div class="form-group mt-3">
+                    <div class="ml-12 radio">
+                      <input type="radio" name="hplink_contract_type" id="monthly_subscription"
+                            value="{{ HplinkContractType::MONTHLY_SUBSCRIPTION }}"
+                            @if( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::MONTHLY_SUBSCRIPTION ) checked @endif>
+                      <label class="radio-label" for="monthly_subscription"> {{ HplinkContractType::getDescription(2) }}</label>
+                    </div>
+                    <label class="mr-2" for="hplink_price_monthly">月額料金</label>
+                    <input type="number" name="hplink_price_monthly" id="hplink_price_monthly"
+                          value="{{ old('hplink_price_monthly', ( old('hplink_contract_type', (isset($hospital->hplink_contract_type)) ? $hospital->hplink_contract_type : null) == HplinkContractType::MONTHLY_SUBSCRIPTION && isset($hospital->hplink_price) ) ? $hospital->hplink_price : null) }}" />円
+                  </div>
+                </div>
+                @if ($errors->has('hplink_contract_type')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('hplink_contract_type') }}</p> @endif
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 mt-4">
+            <div class="form-group py-sm-1 " style="margin-left: 0;">
+              <legend>事前決済</legend>
+              <div class="form-group @if( $errors->has('is_pre_account'))  has-error @endif">
+                <div class="ml-12 radio">
+                  <div class="form-group mt-3">
+                    <input type="radio" name="is_pre_account" value="0" id="is_pre_account_true"
+                          @if( old('is_pre_account', (isset($hospital->is_pre_account)) ? $hospital->is_pre_account : null) == false ) checked @endif>
+                    <label class="radio-label" for="is_pre_account_true">利用なし</label>
+                  </div>
+                  <div class="form-group mt-3">
+                    <input type="radio" name="is_pre_account" value="1" id="is_pre_account_false"
+                          @if( old('is_pre_account', (isset($hospital->is_pre_account)) ? $hospital->is_pre_account : null) == true ) checked @endif>
+                    <label class="radio-label" for="is_pre_account_false">利用あり</label>
+                  </div>
+                </div>
+                @if ($errors->has('is_pre_account')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('is_pre_account') }}</p> @endif
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
   </div>
 
@@ -213,44 +198,6 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
       (function ($) {
 
           let index = 0;
-          $('#add-fee-rate-button').click(function(e) {
-            index += 1;
-            $('#fee-rate-block').append(
-              "<div class='form-group'>"
-              + "<div class='form-inline'>"
-              + "<input type='hidden' name='fee_rate_ids[]' value='' />"
-              + "<label class='mt-5 ml-5'>手数料率</label>"
-              + "<input class='ml-1 form-control' type='number' name='rates[]' value='' placeholder=''> %"
-              + "<label class='mt-5 ml-5'>適用期間</label>"
-              + "<div class='input-group date ml-2' data-provide='datepicker' data-date-format='yyyy/mm/dd' data-date-autoclose='true' data-date-language='ja'>"
-              + "<input type='text' class='form-control' name='from_dates[]' placeholder='yyyy/mm/dd' value=''>"
-              + "<div class='input-group-addon'>"
-              + "<span class='glyphicon glyphicon-calendar'></span>"
-              + "</div>"
-              + "</div>"
-              + "<span class='ml-2 mr-2'>~</span>"
-              + "</div>"
-              + "</div>");
-          });
-
-          $('#add-pre-payment-button').click(function(e) {
-            $('#pre-payment-block').append(
-              "<div class='form-group'>"
-              + "<div class='form-inline'>"
-              + "<input type='hidden' name='pre_payment_fee_rate_ids[]' value='' />"
-              + "<label class='mt-5 ml-5'>手数料率</label>"
-              + "<input class='ml-1 form-control' type='number' name='pre_payment_rates[]' value='' placeholder=''> %"
-              + "<label class='mt-5 ml-5'>適用期間</label>"
-              + "<div class='input-group date ml-2' data-provide='datepicker' data-date-format='yyyy/mm/dd' data-date-autoclose='true' data-date-language='ja'>"
-              + "<input type='text' class='form-control' name='pre_payment_from_dates[]' placeholder='yyyy/mm/dd' value=''>"
-              + "<div class='input-group-addon'>"
-              + "<span class='glyphicon glyphicon-calendar'></span>"
-              + "</div>"
-              + "</div>"
-              + "<span class='ml-2 mr-2'>~</span>"
-              + "</div>"
-              + "</div>");
-          });
 
           let fregistTwoText = $(".fregist-2-text").val();
 
@@ -300,6 +247,46 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
               });
           })();
 
+          // 初期表示用
+          if ($('#none').prop("checked")) {
+            $('#hplink_count').prop('disabled', true);
+            $('#hplink_price_one').prop('disabled', true);
+            $('#hplink_price_monthly').prop('disabled', true);
+          }
+          if ($('#pay_per_use').prop("checked")) {
+            $('#hplink_price_monthly').prop('disabled', true);
+            $('#hplink_count').prop('disabled', false);
+            $('#hplink_price_one').prop('disabled', false);
+          }
+          if ($('#monthly_subscription').prop("checked")) {
+            $('#hplink_count').prop('disabled', true);
+            $('#hplink_price_one').prop('disabled', true);
+            $('#hplink_price_monthly').prop('disabled', false);
+          }
+
+          // 値が変わった時用
+          $('#none').change(function() {
+            if ($('#none').prop("checked")) {
+              $('#hplink_count').prop('disabled', true);
+              $('#hplink_price_one').prop('disabled', true);
+              $('#hplink_price_monthly').prop('disabled', true);
+            }
+          });
+          $('#pay_per_use').change(function() {
+            if ($('#pay_per_use').prop("checked")) {
+              $('#hplink_price_monthly').prop('disabled', true);
+              $('#hplink_count').prop('disabled', false);
+              $('#hplink_price_one').prop('disabled', false);
+            }
+          });
+          $('#monthly_subscription').change(function() {
+            if ($('#monthly_subscription').prop("checked")) {
+              $('#hplink_count').prop('disabled', true);
+              $('#hplink_price_one').prop('disabled', true);
+              $('#hplink_price_monthly').prop('disabled', false);
+            }
+          });
+
       })(jQuery);
   </script>
 @stop
@@ -311,6 +298,18 @@ $pre_payment_fee_rate_count = $o_pre_payment_fee_rate_ids->isNotEmpty() ? $o_pre
 
 tr, td {
   text-align: left !important;
+}
+
+#hplink_count:disabled {
+  background: #eee;
+}
+
+#hplink_price_one:disabled {
+  background: #eee;
+}
+
+#hplink_price_monthly:disabled {
+  background: #eee;
 }
 </style>
 

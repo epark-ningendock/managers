@@ -1,8 +1,9 @@
 <?php
 namespace App\Http\Resources;
 use App\Hospital;
-use Illuminate\Http\Resources\Json\JsonResource;
-class RouteResource extends JsonResource
+use Illuminate\Http\Resources\Json\Resource;
+
+class RouteResource extends Resource
 {
     /**
      * Transform the resource into an array.

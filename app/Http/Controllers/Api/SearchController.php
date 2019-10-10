@@ -213,7 +213,7 @@ class SearchController extends Controller
                 'hospital.contract_information',
                 'hospital.hospital_categories',
             ])
-            ->whereForSearchAPI($request)->orderBy('id');
+            ->whereForSearchAPI($request);
 
         // 件数のみ
         if ($isCount === true) return $query->count();
