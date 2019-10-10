@@ -9,6 +9,7 @@ use App\Enums\ReservationStatus;
 use App\Holiday;
 use App\ContractInformation;
 use App\Hospital;
+use App\HospitalPlan;
 use App\Mail\Reservation\ReservationCheckMail;
 use App\Mail\Reservation\ReservationOperationMail;
 use App\Http\Requests\ReservationCreateFormRequest;
@@ -520,7 +521,7 @@ class ReservationController extends Controller
 
             $reservation->tax_included_price = $course->is_price == '1' ? $course->price : 0;
 
-            $fee_rate = HospitalPlan::find('hospital_id', session()->get('hospital_id'))
+            $fee_rate = HospitalPlan::where('hospital_id', session()->get('hospital_id'))
                 ->whereDate('from', '<=', Carbon::today())
                 ->where(function($q) {
                     $q->whereDate('to', '>=', Carbon::today())
@@ -753,7 +754,7 @@ class ReservationController extends Controller
 
             $params['tax_included_price'] = $course->is_price == '1' ? $course->price : 0;
 
-            $fee_rate = HospitalPlan::find('hospital_id', session()->get('hospital_id'))
+            $fee_rate = HospitalPlan::where('hospital_id', session()->get('hospital_id'))
                 ->whereDate('from', '<=', Carbon::today())
                 ->where(function($q) {
                     $q->whereDate('to', '>=', Carbon::today())
