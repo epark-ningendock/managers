@@ -3,6 +3,8 @@
 namespace App\Imports;
 
 use App\Reservation;
+use App\ReservationAnswer;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Row;
 
 class ReservationDetailImport extends ImportBAbstract
@@ -36,9 +38,10 @@ class ReservationDetailImport extends ImportBAbstract
     {
         $row = $row->toArray();
 
-        $reservation = Reservation::findOrCreate($this->getId('reservations', $this->getValue($row, 'APPOINT_ID')));
+        $reservation = Reservation::find($this->getId('reservations', $this->getValue($row, 'APPOINT_ID')));
 
         if (is_null($reservation)) {
+            Log::error(sprintf('Reservation[APPOINT_ID: %d] is missing.', $this->getValue($row, 'APPOINT_ID')));
             return;
         }
 
@@ -64,8 +67,39 @@ class ReservationDetailImport extends ImportBAbstract
             'applicant_tel' => substr(str_replace('-', '', $this->getValue($row, 'TEL_NO')), 0, 11),
         ]);
 
-        $answers = $reservation->reservation_answers;
-        dd($answers);
+        $answer_json = str_replace(['\"', '\\\\'], ['"', '\\'], $this->getValue($row, 'Q_ANSWER'));
+        $questions = json_decode($answer_json, false, 512, JSON_OBJECT_AS_ARRAY);
+
+        foreach ((array)$questions as $question) {
+            $question_title = $question->question ?? $question->question_title ?? null;
+            $course_questions = $reservation
+                ->course
+                ->course_questions
+                ->filter(function ($value, $key) use ($question_title) {
+                    return $value->question_title == $question_title;
+                });
+
+            if ($course_questions->count() === 1) {
+
+                $reservation->reservation_answers()->save(
+                    new ReservationAnswer([
+                        'course_id' => $reservation->course->id,
+                        'course_question_id' => 1,
+                        'question_answer01' => $question->answer[0],
+                        'question_answer02' => $question->answer[1],
+                        'question_answer03' => $question->answer[2],
+                        'question_answer04' => $question->answer[3],
+                        'question_answer05' => $question->answer[4],
+                        'question_answer06' => $question->answer[5],
+                        'question_answer07' => $question->answer[6],
+                        'question_answer08' => $question->answer[7],
+                        'question_answer09' => $question->answer[8],
+                        'question_answer10' => $question->answer[9],
+                    ])
+                );
+
+            }
+        }
 
         $reservation->save();
     }
