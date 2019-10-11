@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class DropFeeRates extends Migration
 {
+use DBCommonColumns;
     /**
      * Run the migrations.
      *
