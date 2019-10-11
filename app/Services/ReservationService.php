@@ -2,13 +2,19 @@
 
 namespace App\Services;
 
+use App\CourseQuestion;
+use App\Hospital;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Collection;
 
+use App\Enums\HplinkContractType;
+use App\Enums\IsFreeHpLink;
+use App\Enums\ReservationStatus;
 use App\Reservation;
 use App\Holiday;
+use App\HospitalPlans;
 use App\ReservationOption;
 use App\ReservationAnswer;
 use App\Course;
@@ -22,7 +28,6 @@ use App\Exceptions\ReservationDateException;
 use App\Exceptions\ReservationFrameException;
 
 use Carbon\Carbon;
-use \GuzzleHttp\Client;
 use Log;
 
 // epark本部宛てアドレス
@@ -234,10 +239,7 @@ class ReservationService
             ReservationAnswer::where('reservation_id', $reservation->id)->delete();
 
             // 予約回答entity生成/登録
-            $reservation_answers = $this->_reservation_answers_from_request($request, $reservation->id);
-            foreach ($reservation_answers as $ra) {
-                $ra->saveOrFail();
-            }
+            $this->_reservation_answers_from_request($request, $reservation->id);
 
             DB::commit();
         } catch (Exception $e) {
@@ -319,13 +321,14 @@ class ReservationService
             return isset($m);
         })->toArray()[0];
 
+        $entity = Customer::where('epark_member_id', $request->input('epark_member_id'))
+                            ->where('hospital_id', $request->input('hospital_id'));
+
         // 処理区分セット
         $process = intval($request->input('process_kbn'));
-        if ($process === self::REGISTRATION) { // 新規
+        if (! $entity) { // 新規
             $entity = new Customer();
-            $entity->id = 0;
-        } else { // 更新
-            $entity = Customer::find($request->input('customer_id'));
+
         }
         $entity->parent_customer_id = null;
         // 設定不要 ※テーブルからunique制約外す
@@ -354,6 +357,7 @@ class ReservationService
         $entity->recall_count = $process === self::REGISTRATION ? 0 : $entity->recall_count;
         $entity->epark_member_id = $request->input('epark_member_id') ?? $entity->epark_member_id;
 
+
         return $entity;
     }
 
@@ -363,7 +367,7 @@ class ReservationService
      * @param  \Illuminate\Http\Request  $request
      * @return App\Reservation entity
      */
-    private static function _reservation_from_request($request): Reservation
+    private function _reservation_from_request($request): Reservation
     {
         // コース情報取得
         $course = Course::with([
@@ -373,90 +377,91 @@ class ReservationService
         ])
             ->find($request->input('course_id'));
 
+        $hospital = Hospital::find($request->input('hospital_id'));
+
         // 受診者配列先頭取得
         $members = $request->input('regist_member');
-        $member = collect(json_decode(json_encode($members)))->filter(function ($m) {
-            return isset($m);
-        })->toArray()[0];
-
+        $member = $members[0];
         // 処理区分セット
         $process = intval($request->input('process_kbn'));
         if ($process === self::REGISTRATION) { // 新規
             $entity = new Reservation();
-            $entity->id = 0;
+            // 医療機関プラン取得
+            $hospitalPlan = $this->getApplyPlan($request->input('hospital_id'));
+            $entity->fee_rate = $hospitalPlan->contract_plan->fee_rate;
         } else { // 更新
             $entity = Reservation::find($request->input('reservation_id'));
         }
 
         $entity->hospital_id = $request->input('hospital_id');
         $entity->course_id = $request->input('course_id');
-        $entity->reservation_date = $request->input('reservation_date');
+        $entity->reservation_date = new Carbon($request->input('reservation_date'));
         $entity->start_time_hour = $request->input('start_time_hour') ?? $entity->start_time_hour;
         $entity->start_time_min = $request->input('start_time_min') ?? $entity->start_time_min;
         $entity->end_time_hour = $request->input('end_time_hour') ?? $entity->end_time_hour;
         $entity->end_time_min = $request->input('end_time_min') ?? $entity->end_time_min;
         $entity->channel = 1;
-        $entity->reservation_status = $process === self::REGISTRATION ? 1 : $entity->reservation_status;
+        $entity->reservation_status = $process === self::REGISTRATION ? ReservationStatus::PENDING : $entity->reservation_status;
         $entity->user_message = $request->input('user_message') ?? $entity->user_message;
         $entity->site_code = $request->input('site_code') ?? $entity->site_code;
         $entity->customer_id = $request->input('customer_id') ?? $entity->customer_id;
         $entity->epark_member_id = $request->input('epark_member_id') ?? $entity->epark_member_id;
-        // 設定必要なし 会員番号
-        $entity->member_number = 0;
         $entity->terminal_type = $request->input('terminal_tp');
         $entity->time_selected = $request->input('time_selected') ?? $entity->time_selected;
 
-        $entity->is_repeat = $member->repeat_fg ?? $entity->is_repeat;
-        $entity->is_representative = $member->representative_fg;
+        $entity->is_repeat = $member['repeat_fg'] ?? $entity->is_repeat;
+        $entity->is_representative = $member['representative_fg'];
 
-        // TODO: timezone_pattern_id/timezone_id/orderは「空満情報取得API」から取得する必要あり
-        // define('GET_VACANCY_URI', 'https://d-api.xaas.jp/appointManage/v1/hybappoint/getavailabilitydock');
         $entity->timezone_pattern_id = 0;
         $entity->timezone_id = 0;
         $entity->order = $entity->timezone_pattern_id . '_' . $entity->timezone_id . '_' . '0';
         $entity->tax_included_price = $request->input('course_price_tax') ?? $entity->tax_included_price;
-
-        // 設定必要なし 調整価格
-        $entity->adjustment_price = 0;
         $entity->tax_rate = $course->tax_class->rate ?? 0;
 
-        // option配列の先頭取得
-        $options = $request->input('option_array');
-        $option = collect(json_decode(json_encode($options)))->filter(function ($o) {
-                return isset($o->option_cd);
-            })->toArray()[0] ?? [];
-
-        $entity->second_date = $option->other_info->second_date ?? $entity->second_date;
-        $entity->third_date = $option->other_info->third_date ?? $entity->third_date;
-        $entity->is_choose = $option->other_info->choose_fg ?? $entity->is_choose;
-        $entity->campaign_code = $option->other_info->campaign_cd ?? $entity->campaign_code;
-        $entity->tel_timezone = $option->other_info->tel_timezone ?? $entity->tel_timezone;
-        $entity->insurance_assoc_id = $option->other_info->insurer_number ?? $entity->insurance_assoc_id;
-        $entity->is_health_insurance = $option->other_info->is_health_insurance ?? $entity->is_health_insurance;
-        $entity->insurance_assoc = $option->other_info->insurance_assoc ?? $entity->insurance_assoc;
-
+        $other_infos = $request->input('other_info');
+        $other_info = $other_infos[0];
+        $entity->second_date = $other_info['second_date'] ?? $entity->second_date;
+        $entity->third_date = $other_info['third_date'] ?? $entity->third_date;
+        $entity->is_choose = $other_info['choose_fg'] ?? $entity->is_choose;
+        $entity->campaign_code = $other_info['campaign_cd'] ?? $entity->campaign_code;
+        $entity->tel_timezone = $other_info['tel_timezone'] ?? $entity->tel_timezone;
+        $entity->insurance_assoc_id = $other_info['insurer_number'] ?? $entity->insurance_assoc_id;
+        $entity->insurance_assoc = $other_info['insurance_assoc'] ?? $entity->insurance_assoc;       
         $entity->mail_type = $process === self::REGISTRATION ? '1' : '2';
         $entity->cancelled_appoint_code = $request->input('cancelled_appoint_code') ?? $entity->cancelled_appoint_code;
 
         $entity->is_billable = $process === self::REGISTRATION ? 0 : $entity->is_billable;
-        $entity->claim_month = $process === self::REGISTRATION ? '0' : $entity->claim_month;
-
+        $entity->claim_month = $this->getClaimMonth($entity->reservation_date);
         $entity->is_payment = $request->input('payment_flg') ?? $entity->is_payment;
         $entity->payment_status = $request->input('payment_status') ?? $entity->payment_status;
         $entity->trade_id = $request->input('trade_id') ?? $entity->trade_id;
         $entity->order_id = $request->input('order_id') ?? $entity->order_id;
-
         $entity->settlement_price = $request->input('card_payment_amount') ?? $entity->settlement_price;
         $entity->payment_method = $request->input('payment_method') ?? $entity->payment_method;
         $entity->cashpo_used_price = $request->input('cashpo_used_amount') ?? $entity->cashpo_used_price;
         $entity->amount_unsettled = $request->input('amount_unsettled') ?? $entity->amount_unsettled;
-        $entity->reservation_memo = $request->input('user_message') ?? $entity->reservation_memo;
-        $entity->todays_memo = $entity->todays_memo;
-        $entity->internal_memo = $entity->internal_memo;
-        // 設定必要なし 受付番号
-        // $entity->acceptance_number = $process === self::REGISTRATION ? 0 : $entity->acceptance_number;
-
         $entity->y_uid = $request->input('y_uid') ?? $entity->y_uid;
+        $entity->applicant_name = $request->input('last_name') . $request->input('first_name');
+        $entity->applicant_name_kana = $request->input('last_name_kana') . $request->input('first_name_kana');
+        $entity->applicant_tel = $request->input('tel_no') ?? $entity->applicant_tel;
+
+        $options = $request->input('option_array');
+        if ($hospital->hplink_contract_type == HplinkContractType::NON) {
+            $option_price = 0;
+            foreach ($options as $option) {
+                $option_price += $option['option_price_tax'];
+            }
+            $entity->fee = ($request->input('course_price_tax')
+                    + $option_price + $entity->adjustment_price) * ($entity->fee_rate / 100);
+            $entity->is_free_hp_link = 0;
+        } else {
+            $entity->fee = $this->getHpfee($hospital);
+            if ($entity->fee > 0) {
+                $entity->is_free_hp_link = IsFreeHpLink::FREE;
+            } else {
+                $entity->is_free_hp_link = IsFreeHpLink::FEE;
+            }
+        }
 
         return $entity;
     }
@@ -487,70 +492,122 @@ class ReservationService
     }
 
     /**
-     * 予約回答 entity生成
+     * 予約回答登録
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  $reservation_id
-     * @return　Illuminate\Support\Collection
      */
-    private function _reservation_answers_from_request($request, $reservation_id): Collection
+    private function _reservation_answers_from_request($request, $reservation_id)
     {
-        // request q_anser取得
-        $q_answers = collect(json_decode(json_encode($request->input('q_anser'))))->filter(function ($q) {
-            return isset($q->question_title);
-        });
-
-        // course情報取得
-        $reservation = Reservation::with([
-            'course',
-            'course.course_questions',
-        ])->find($reservation_id);
-        $course_id = $reservation->course->id ?? 0;
-        $course_questions = $reservation->course->course_questions->toArray() ?? [];
-
-        $idx = 0;
-        foreach ($q_answers as $qa) {
-            $qa->reservation_id = $reservation_id;
-            $qa->course_id = $course_id;
-            // TODO: https://docknet.backlog.jp/view/APIENGINEDEV-36
-            $qa->course_question = $course_questions[$idx++] ?? null;
+        $q_answers = $request->input('q_anser');
+        $courseQuestions = CourseQuestion::where('course_id', $request->input('course_id'));
+        if (! $courseQuestions) {
+            return;
         }
+        $idx = 1;
+        foreach ($courseQuestions as $courseQuestion) {
+            foreach ($q_answers as $q_answer) {
+                if ($courseQuestion->id == $q_answer['id']) {
+                    $entity = new ReservationAnswer();
+                    $entity->reservation_id = $reservation_id;
+                    $entity->course_id = $request->input('course_id');
+                    $entity->course_question_id = $q_answer['id'];
+                    $entity->question_title = $q_answer['question_title'];
+                    $entity->question_answer01 = $courseQuestion->question_answer01;
+                    $entity->question_answer02 = $courseQuestion->question_answer02;
+                    $entity->question_answer03 = $courseQuestion->question_answer03;
+                    $entity->question_answer04 = $courseQuestion->question_answer04;
+                    $entity->question_answer05 = $courseQuestion->question_answer05;
+                    $entity->question_answer06 = $courseQuestion->question_answer06;
+                    $entity->question_answer07 = $courseQuestion->question_answer07;
+                    $entity->question_answer08 = $courseQuestion->question_answer08;
+                    $entity->question_answer09 = $courseQuestion->question_answer09;
+                    $entity->question_answer10 = $courseQuestion->question_answer10;
 
-        $results = collect(json_decode(json_encode($q_answers)))->map(function ($qa) {
+                    foreach ($q_answer['answer'] as $answer) {
+                        if ($idx == 1) {
+                            $entity->answer01 = intval($answer);
+                        } elseif ($idx == 2) {
+                            $entity->answer02 = intval($answer);
+                        } elseif ($idx == 3) {
+                            $entity->answer03 = intval($answer);
+                        } elseif ($idx == 4) {
+                            $entity->answer04 = intval($answer);
+                        } elseif ($idx == 5) {
+                            $entity->answer05 = intval($answer);
+                        } elseif ($idx == 6) {
+                            $entity->answer06 = intval($answer);
+                        } elseif ($idx == 7) {
+                            $entity->answer07 = intval($answer);
+                        } elseif ($idx == 8) {
+                            $entity->answer08 = intval($answer);
+                        } elseif ($idx == 9) {
+                            $entity->answer09 = intval($answer);
+                        } elseif ($idx == 10) {
+                            $entity->answer10 = intval($answer);
+                        }
 
-            foreach($qa->answers as $answer) {
-                $entity = new ReservationAnswer();
-                $entity->reservation_id = $qa->reservation_id;
-                $entity->course_id = $qa->course_id;
-                $entity->course_question_id = $qa->course_question->id ?? 0;
-                $entity->question_title = $qa->question_title ?? '';
-
-                $arr = explode('|', $answer->answer);
-                $entity->question_answer01 = $arr[0] ?? $entity->question_answer01;
-                $entity->answer01 = $arr[1] ?? intval($entity->answer01);
-                $entity->question_answer02 = $arr[2] ?? $entity->question_answer02;
-                $entity->answer02 = $arr[3] ?? intval($entity->answer02);
-                $entity->question_answer03 = $arr[4] ?? $entity->question_answer03;
-                $entity->answer03 = $arr[5] ?? intval($entity->answer03);
-                $entity->question_answer04 = $arr[6] ?? $entity->question_answer04;
-                $entity->answer04 = $arr[7] ?? intval($entity->answer04);
-                $entity->question_answer05 = $arr[8] ?? $entity->question_answer05;
-                $entity->answer05 = $arr[9] ?? intval($entity->answer05);
-                $entity->question_answer06 = $arr[10] ?? $entity->question_answer06;
-                $entity->answer06 = $arr[11] ?? intval($entity->answer06);
-                $entity->question_answer07 = $arr[12] ?? $entity->question_answer07;
-                $entity->answer07 = $arr[13] ?? intval($entity->answer07);
-                $entity->question_answer08 = $arr[14] ?? $entity->question_answer08;
-                $entity->answer08 = $arr[15] ?? intval($entity->answer08);
-                $entity->question_answer09 = $arr[16] ?? $entity->question_answer09;
-                $entity->answer09 = $arr[17] ?? intval($entity->answer09);
-                $entity->question_answer10 = $arr[18] ?? $entity->question_answer10;
-                $entity->answer10 = $arr[19] ?? intval($entity->answer10);
-
-                return $entity;
+                        $idx += 1;
+                    }
+                    $entity->saveOrFail();
+                }
             }
 
-        });
-        return $results;
+        }
+    }
+
+    private function getApplyPlan(int $hospitalId) {
+
+        $targetDay = Carbon::today();
+        return HospitalPlans::where('id', $hospitalId)
+            ->where('from', '<=', $targetDay)
+            ->where('to', '>=', $targetDay)
+            ->first();
+    }
+
+    private function getHpfee(Hospital $hospital) {
+
+        $fromDate = Carbon::today();
+        $toDate =Carbon::today();
+
+        if (Carbon::today()->day < 21) {
+            $fromDate->subMonth();
+            $fromDate->day = 21;
+            $toDate->day = 20;
+        } else {
+            $fromDate->day = 21;
+            $toDate->addMonth();
+            $toDate->day = 20;
+
+        }
+        $targets = Reservation::where('hospital_id', $hospital->id)
+            ->where('reservation_date', '>=', $fromDate)
+            ->where('reservation_date', '<=', $toDate)
+            ->where('site_code', 'HP')
+            ->count();
+
+        if ($hospital->hplink_contract_type == HplinkContractType::PAY_PAR_USE) {
+            $free_count = $hospital->hplink_count;
+            if ($targets < $free_count) {
+                return 0;
+            } else {
+                return $hospital->hplink_price;
+            }
+        } else {
+            if ($targets == 0) {
+                return $hospital->hplink_price;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    private function getClaimMonth(Carbon $reservationDate) {
+        $targetDate = Carbon::today();
+        if ($reservationDate->day < 21) {
+            return $targetDate->year . sprintf('%02d', $targetDate->month);
+        } else {
+            return $targetDate->year . sprintf('%02d', $targetDate->addMonth()->month);
+        }
     }
 }

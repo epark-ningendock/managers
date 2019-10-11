@@ -2,7 +2,10 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\Resource;
+
+use App\Enums\WebReception;
 
 use Log;
 
@@ -33,7 +36,7 @@ class CourseBaseResource extends Resource
                 'course_code' => $this->code,
                 'course_name' => $this->name,
                 'course_url' => $this->createURL() . "/detail_hospital/" . $this->hospital->contract_information->code . "/detail/" . $this->code . ".html",
-                'web_reception' => $this->web_reception,
+                'web_reception' => $this->createReception(),
                 'course_flg_category' => $this->is_category,
                 'course_img' => $this->getFlowImagePath($this->hospital->hospital_categories, 1),
                 'flow_pc_img' => $this->getFlowImagePath($this->hospital->hospital_categories, 2),
@@ -74,6 +77,20 @@ class CourseBaseResource extends Resource
         })->toArray();
         return $files[0] ?? '';
     }
+
+    private function createReception() {
+
+        if ($this->web_reception == WebReception::NOT_ACCEPT) {
+            return WebReception::NOT_ACCEPT;
+        }
+
+        $target = Carbon::today();
+        if (($this->publish_start_date <= $target)
+            && ($this->publish_end_date >= $target)) {
+            return WebReception::ACCEPT;
+        }
+
+        return WebReception::NOT_ACCEPT;
 
     private function createURL() {
         return (empty($_SERVER['HTTPS']) ? 'http://' : 'https://').$_SERVER['HTTP_HOST'];
