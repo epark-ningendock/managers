@@ -771,7 +771,7 @@
         その他
         <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
     </p>
-<?php $another_tab_box = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('file_location_no', FileLocationNo::TAB_CATEGORY_ANOTHER);?>
+<?php $another_tab_box = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('file_location_no', FileLocationNo::TAB_CATEGORY_ANOTHER)->where('is_display', 0);?>
 <?php $another_tab_box = $another_tab_box->sortBy('order2');?>
 <?php $another_show_order2 = $another_tab_box->pluck('order')->toArray();?>
 
@@ -891,51 +891,63 @@
                 <div class="col-sm-6">
                     {{Form::label('sub_'.$i, '画像選択'.$i,['class' => 'form_label'])}}
                         <div class="sub_image_area">
-                            <img src="/img/no_image.png">
-                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#staticModal">
-                                画像選択
-                            </button>
+                            <?php $select_photo = $select_photos->where('order', $i)->first(); ?>
+                            @if (isset($select_photo->hospital_image->id) && !is_null($select_photo->hospital_image->path))
+                                <input type="hidden" value="{{$select_photo->hospital_image->id}}" class="select-photo" name="select_photo[{{$i}}]">
+                                <img src="{{$select_photo->hospital_image->path}}">
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#staticModal{{$i}}">
+                                    画像選択
+                                </button>
+                                <button type="button" class="btn btn-default select-photo-delete" data-hospital_id="{{$select_photo->hospital_id}}" data-hospital_category="{{$select_photo->id}}" data-path="/img/no_image.png">
+                                        削除
+                                 </button>
+                            @else
+                                <input type="hidden" value="" class="select-photo" name="select_photo[{{$i}}]">
+                                <img src="/img/no_image.png">
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#staticModal{{$i}}">
+                                    画像選択
+                                </button>
+                                    <button type="button" class="btn btn-default unselect" data-path="/img/no_image.png">
+                                        削除
+                                    </button>
+
+                            @endif
+
                         </div>
                 </div>
+                <div class="modal" id="staticModal{{$i}}" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true" data-show="true" data-keyboard="false" data-backdrop="static">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span aria-hidden="true">&#215;</span><span class="sr-only">閉じる</span>
+                                </button>
+                                <h4 class="modal-title">写真選択</h4>
+                            </div><!-- /modal-header -->
+                            <div class="modal-body">
+                                <?php $select_tab_photos = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('is_display', 0);?>
+
+                                <div class="row">
+                                    @foreach($select_tab_photos as $key => $photo)
+                                        <div class="col-sm-4">
+                                            @if($photo->hospital_image->path != "")
+                                                <img class="object-fit" src="{{$photo->hospital_image->path}}" width="100%"><button type="button" class="btn btn-default select-tab-button" data-path="{{$photo->hospital_image->path}}" data-imageid="{{$photo->hospital_image->id}}">選択</button>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#staticModal">閉じる</button>
+                                <button type="button" class="btn btn-primary">変更を保存</button>
+                            </div>
+                        </div> <!-- /.modal-content -->
+                    </div> <!-- /.modal-dialog -->
+                </div> <!-- /.modal -->
             @endfor
         </div>
-
     </div>
-    <div class="form-entry box-body">
-        <!-- モーダルダイアログ -->
-        <div class="modal" id="staticModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true" data-show="true" data-keyboard="false" data-backdrop="static">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true">&#215;</span><span class="sr-only">閉じる</span>
-                        </button>
-                        <h4 class="modal-title">写真選択</h4>
-                    </div><!-- /modal-header -->
-                    <div class="modal-body">
-                        <?php $select_tab_photos = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB);?>
 
-                        <div class="row">
-                        @foreach($select_tab_photos as $key => $photo)
-                            <div class="col-sm-4">
-                                @if($photo->hospital_image->path != "")
-                                    <img class="object-fit" src="{{$photo->hospital_image->path}}" width="100%">
-                                @else
-                                    <img class="object-fit" src="/img/no_image.png" width="100%">
-                                @endif
-                            </div>
-                        @endforeach
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
-                        <button type="button" class="btn btn-primary">変更を保存</button>
-                    </div>
-                </div> <!-- /.modal-content -->
-            </div> <!-- /.modal-dialog -->
-        </div> <!-- /.modal -->
-
-    </div>
 </div>
 
 <div class="box box-primary form-box">
