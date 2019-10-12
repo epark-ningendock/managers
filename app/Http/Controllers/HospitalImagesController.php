@@ -336,7 +336,7 @@ class HospitalImagesController extends Controller
 
         $disk = \Storage::disk(env('FILESYSTEM_CLOUD'));
         $disk->delete($hospital_image->name);
-
+        $this->hospital_category->where('hospital_image_id',$hospital_image_id)->where('image_order',9)->delete();
         $hospital_image->path = null;
         $hospital_image->name = null;
         $hospital_image->save();

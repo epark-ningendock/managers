@@ -90,7 +90,7 @@ $(document).ready(function() {
     });
 
     $('.select-tab-button').on('click', function() {
-        const sub_image = $(this).parents('.modal').prev().find('.sub_image_area img');
+        const sub_image = $(this).parents('.modal').prev().find('.photo img');
         const sub_image_hidden = $(this).parents('.modal').prev().find('.select-photo');
         const selected_hospital_image_id = $(this).data('imageid');
         console.log($(this).data('selectnum'));

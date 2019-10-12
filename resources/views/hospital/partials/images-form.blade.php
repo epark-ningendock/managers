@@ -886,30 +886,30 @@
     </div>
     <div class="form-entry box-body">
         <h2>写真</h2>
-        <div class="row">
+        <div class="row" id="select-tab-photo">
             @for ($i = 1; $i <= 4; $i++)
-                <div class="col-sm-6">
+                <div class="col-sm-6 col-select-photo">
                     {{Form::label('sub_'.$i, '画像選択'.$i,['class' => 'form_label'])}}
-                        <div class="sub_image_area">
+                        <div class="select-photo-area">
                             <?php $select_photo = $select_photos->where('order', $i)->first(); ?>
                             @if (isset($select_photo->hospital_image->id) && !is_null($select_photo->hospital_image->path))
                                 <input type="hidden" value="{{$select_photo->hospital_image->id}}" class="select-photo" name="select_photo[{{$i}}]">
-                                <img src="{{$select_photo->hospital_image->path}}">
-                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#staticModal{{$i}}">
-                                    画像選択
+                                <p class="photo"><img src="{{$select_photo->hospital_image->path}}"></p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticModal{{$i}}">
+                                    写真選択
                                 </button>
                                 <button type="button" class="btn btn-default select-photo-delete" data-hospital_id="{{$select_photo->hospital_id}}" data-hospital_category="{{$select_photo->id}}" data-path="/img/no_image.png">
                                         削除
                                  </button>
                             @else
                                 <input type="hidden" value="" class="select-photo" name="select_photo[{{$i}}]">
-                                <img src="/img/no_image.png">
-                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#staticModal{{$i}}">
-                                    画像選択
+                                <p class="photo"><img src="/img/no_image.png"></p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticModal{{$i}}">
+                                    写真選択
                                 </button>
-                                    <button type="button" class="btn btn-default unselect" data-path="/img/no_image.png">
-                                        削除
-                                    </button>
+                                <button type="button" class="btn btn-default unselect" data-path="/img/no_image.png">
+                                    削除
+                                </button>
 
                             @endif
 
@@ -928,18 +928,22 @@
                                 <?php $select_tab_photos = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('is_display', 0);?>
 
                                 <div class="row">
+                                    <?php $select_photo_count = 0; ?>
                                     @foreach($select_tab_photos as $key => $photo)
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-4 select-photo">
                                             @if($photo->hospital_image->path != "")
                                                 <img class="object-fit" src="{{$photo->hospital_image->path}}" width="100%"><button type="button" class="btn btn-default select-tab-button" data-path="{{$photo->hospital_image->path}}" data-imageid="{{$photo->hospital_image->id}}">選択</button>
+                                                <?php $select_photo_count ++; ?>
                                             @endif
                                         </div>
                                     @endforeach
+                                    @if($select_photo_count === 0)
+                                        <p>写真タブにまだ画像が設定されていません。</p>
+                                    @endif
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#staticModal">閉じる</button>
-                                <button type="button" class="btn btn-primary">変更を保存</button>
                             </div>
                         </div> <!-- /.modal-content -->
                     </div> <!-- /.modal-dialog -->
