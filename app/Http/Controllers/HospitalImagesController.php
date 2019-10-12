@@ -14,6 +14,7 @@ use phpDocumentor\Reflection\File;
 use Illuminate\Support\Facades\DB;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
 use App\Enums\ImageGroupNumber;
+use App\Enums\SelectPhotoFlag;
 
 class HospitalImagesController extends Controller
 {
@@ -52,7 +53,7 @@ class HospitalImagesController extends Controller
     {
         $hospital = Hospital::with(['hospital_images', 'hospital_categories', 'lock'])->find($hospital_id);
 
-        $select_photos = $hospital->hospital_categories()->where('is_display', 1)->where('hospital_id', $hospital_id)->get();
+        $select_photos = $hospital->hospital_categories()->where('is_display', SelectPhotoFlag::SELECTED)->where('hospital_id', $hospital_id)->get();
         //dd($select_photos->where('order', 1)->first()->hospital_image);
 
 
@@ -94,25 +95,6 @@ class HospitalImagesController extends Controller
 
         $hospital = Hospital::find($hospital_id);
 
-        //dd($file['select_photo']);
-        foreach($file['select_photo'] as $key => $select_photo) {
-            if(is_null($select_photo)) continue;
-            $hospital_image = $this->hospital_category->byHospitalImageId(intval($select_photo))->first();
-
-            // todo is_display 1 enumにする
-            $this->hospital_category->updateOrCreate(
-                ['is_display' => 1,'order' => $key,'hospital_id' => $hospital_id,'image_order' => 9],
-                [
-                    'hospital_image_id' => intval($select_photo),
-                    'is_display' => 1,
-                    'order' => $key,
-                    'hospital_id' => $hospital_id,
-                    'image_order' => 9,//todo const
-                    //'file_location_no' => $hospital_image->file_location_no,
-                ]
-            );
-        }
-
         //排他的制御。
         $lock_flag = $this->isLockVersionTrue('HospitalImage',$hospital,$file['lock_version']);
         if(!$lock_flag) {
@@ -145,6 +127,20 @@ class HospitalImagesController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', trans('messages.update_error'));
+        }
+
+        foreach($file['select_photo'] as $key => $select_photo) {
+            if(is_null($select_photo)) continue;
+            $this->hospital_category->updateOrCreate(
+                ['is_display' => SelectPhotoFlag::SELECTED,'order' => $key,'hospital_id' => $hospital_id,'image_order' => ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB],
+                [
+                    'hospital_image_id' => intval($select_photo),
+                    'is_display' => SelectPhotoFlag::SELECTED,
+                    'order' => $key,
+                    'hospital_id' => $hospital_id,
+                    'image_order' => ImageGroupNumber::IMAGE_GROUP_SELECT,
+                ]
+            );
         }
 
         //main画像の保存
@@ -336,7 +332,7 @@ class HospitalImagesController extends Controller
 
         $disk = \Storage::disk(env('FILESYSTEM_CLOUD'));
         $disk->delete($hospital_image->name);
-        $this->hospital_category->where('hospital_image_id',$hospital_image_id)->where('image_order',9)->delete();
+        $this->hospital_category->where('hospital_image_id',$hospital_image_id)->where('image_order',ImageGroupNumber::IMAGE_GROUP_SELECT)->delete();
         $hospital_image->path = null;
         $hospital_image->name = null;
         $hospital_image->save();
@@ -433,7 +429,7 @@ class HospitalImagesController extends Controller
             } else {
                 $hospital_img = $hospital->hospital_images()->find($image_order_exists->hospital_image_id);
                 $hospital_img->update($save_sub_images);
-                $hospital_img->hospital_category()->where('is_display', 0)
+                $hospital_img->hospital_category()->where('is_display', SelectPhotoFlag::UNSELECTED)
                     ->update($save_sub_image_categories);
             }
         } else {

@@ -16,4 +16,5 @@ final class ImageGroupNumber extends Enum implements LocalizedEnum
     const IMAGE_GROUP_INTERVIEW = 6;// インタビュー
     const IMAGE_GROUP_STAFF = 7;// スタッフ
     const IMAGE_GROUP_TAB = 8;// 写真タブ
+    const IMAGE_GROUP_SELECT = 9;// 写真タブ選択写真
 }

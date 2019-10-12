@@ -1,6 +1,7 @@
 @php
     use App\Enums\FileLocationNo;
     use App\Enums\ImageGroupNumber;
+    use App\Enums\SelectPhotoFlag;
 @endphp
 
 <div class="box box-primary form-box">
@@ -771,7 +772,7 @@
         その他
         <button type="button" class="btn btn-light btn select-tab tab-normal-bt">選択</button>
     </p>
-<?php $another_tab_box = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('file_location_no', FileLocationNo::TAB_CATEGORY_ANOTHER)->where('is_display', 0);?>
+<?php $another_tab_box = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('file_location_no', FileLocationNo::TAB_CATEGORY_ANOTHER);?>
 <?php $another_tab_box = $another_tab_box->sortBy('order2');?>
 <?php $another_show_order2 = $another_tab_box->pluck('order')->toArray();?>
 
@@ -925,7 +926,7 @@
                                 <h4 class="modal-title">写真選択</h4>
                             </div><!-- /modal-header -->
                             <div class="modal-body">
-                                <?php $select_tab_photos = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('is_display', 0);?>
+                                <?php $select_tab_photos = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('is_display', SelectPhotoFlag::UNSELECTED);?>
 
                                 <div class="row">
                                     <?php $select_photo_count = 0; ?>
