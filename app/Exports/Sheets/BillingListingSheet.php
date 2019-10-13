@@ -42,7 +42,7 @@ class BillingListingSheet implements FromCollection, WithHeadings, WithMapping, 
         $taxExcludePrice = $taxIncludePrice / TaxClass::TEN_PERCENT;
 
         return [
-            $billing->created_at->format('m'),
+            $this->endedDate->format('m'),
             $billing->hospital->contract_information->property_no,
             $billing->hospital->contract_information->contractor_name,
             $billing->hospital->name,
