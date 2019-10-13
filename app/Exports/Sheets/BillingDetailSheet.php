@@ -78,12 +78,12 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         $channel,
                         $reservation->completed_date->format('Y/m/d'),
                         $hp_link_status,
-                        $reservation->course->name ?? '',
+                        $channel == '月額' ? $reservation->course->name : $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->plan_name,
                         $reservation->reservation_options->isEmpty() ? '' : '有',
                         number_format($the_amount),
                         number_format($the_amount / $reservation->tax_rate), //need to verify calculation1
                         number_format($reservation->tax_excluded_price),
-                        $billing->contractPlan->plan_name ?? '',
+                        $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->plan_name ?? '',
                         (isset($reservation->site_code) && ( $reservation->site_code == 'HP') ) ? 'HPリンク' : '',
                         $reservation->fee_rate . '%',
                     ];
