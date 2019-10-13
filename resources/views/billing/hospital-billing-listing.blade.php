@@ -58,29 +58,36 @@
                 <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
                     <td style="width: 80px;">{{  $billing->billing_month }}</td>
                     <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
-                    <td>
+                    @if (isset($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan))
+                        <td>
                             {{ $billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->plan_name }}
-                    </td>
-                    <td>
-                       {{ number_format($billing->hospital->reservationByCompletedDate($billing->startedDate, $billing->endedDate)->pluck('fee')->sum() + $billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee)}}円
-                    </td>
-                    <td>
-                        {{ number_format($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee )}}円
-                    </td>
-                    <td>
-                        {{ number_format($billing->hospital->reservationByCompletedDate($billing->startedDate, $billing->endedDate)->pluck('tax_excluded_price')->sum()) }}円
-                    </td>
-                    <td>
-                        {{ $billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->fee_rate }}%
-                    </td>
+                        </td>
+                        <td>
+                        {{ number_format($billing->hospital->reservationByCompletedDate($billing->startedDate, $billing->endedDate)->pluck('fee')->sum() + $billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee)}}円
+                        </td>
+                        <td>
+                            {{ number_format($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee )}}円
+                        </td>
+                        <td>
+                            {{ number_format($billing->hospital->reservationByCompletedDate($billing->startedDate, $billing->endedDate)->pluck('tax_excluded_price')->sum()) }}円
+                        </td>
+                        <td>
+                            {{ $billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->fee_rate }}%
+                        </td>
+                    @else
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    @endif
                     <td>
                         <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
                     </td>
                     <td>
-
-                            <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'claim_check' => 'yes'] )) }}" class="btn @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
-                               @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) style="pointer-events: none;" @endif
-                            >請求確認</a>
+                        <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'claim_check' => 'yes'] )) }}" class="btn @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
+                            @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) style="pointer-events: none;" @endif
+                        >請求確認</a>
                     </td>
                 </tr>
             @endforeach
