@@ -8,6 +8,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithTitle;
+use App\TaxClass;
 
 class BillingListingSheet implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithTitle
 {
@@ -36,17 +37,18 @@ class BillingListingSheet implements FromCollection, WithHeadings, WithMapping, 
 
     public function map($billing): array
     {
-        $totalMonthlyReservation = $billing->hospital->reservationByCompletedDate($this->startedDate, $this->endedDate)->pluck('tax_excluded_price')->sum();
-        $monthlyContractFee = $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->monthly_contract_fee;
+        $taxIncludePrice = $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->monthly_contract_fee + 
+            $billing->hospital->reservationByCompletedDate($this->startedDate, $this->endedDate)->pluck('fee')->sum();
+        $taxExcludePrice = $taxIncludePrice / TaxClass::TEN_PERCENT;
 
         return [
             $billing->created_at->format('m'),
             $billing->hospital->contract_information->property_no,
             $billing->hospital->contract_information->contractor_name,
             $billing->hospital->name,
-            number_format($monthlyContractFee),
-            number_format($totalMonthlyReservation),
-            number_format($monthlyContractFee + $totalMonthlyReservation)
+            number_format(floor($taxExcludePrice)),
+            number_format(floor($taxIncludePrice) - floor($taxExcludePrice)),
+            number_format(floor($taxIncludePrice))
         ];
     }    
 
