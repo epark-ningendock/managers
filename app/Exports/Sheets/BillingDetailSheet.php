@@ -67,10 +67,7 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         $hp_link_status = 'HP Link (Cancel)';
                     }
 
-
                     $the_amount = $reservation->tax_included_price + $reservation->adjustment_price + $reservation->reservation_options->pluck('option_price')->sum();
-
-
 
                     $row[] = [
                         // $reservation->hospital_id, sorting testing
@@ -82,7 +79,7 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         $reservation->completed_date->format('Y/m/d'),
                         $hp_link_status,
                         $reservation->course->name ?? '',
-                        isset($reservation->reservation_options) ? '有' : '',
+                        $reservation->reservation_options->isEmpty() ? '' : '有',
                         number_format($the_amount),
                         number_format($the_amount / $reservation->tax_rate), //need to verify calculation1
                         number_format($reservation->tax_excluded_price),
