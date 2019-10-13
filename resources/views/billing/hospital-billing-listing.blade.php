@@ -74,21 +74,23 @@
                         <td>
                             {{ $billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->fee_rate }}%
                         </td>
+                        <td>
+                            <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
+                        </td>
+                        <td>
+                            <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'claim_check' => 'yes'] )) }}" class="btn @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
+                                @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) style="pointer-events: none;" @endif
+                            >請求確認</a>
+                        </td>
                     @else
                         <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
+                        <td></td>
+                        <td></td>
                     @endif
-                    <td>
-                        <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
-                    </td>
-                    <td>
-                        <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'claim_check' => 'yes'] )) }}" class="btn @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
-                            @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) style="pointer-events: none;" @endif
-                        >請求確認</a>
-                    </td>
                 </tr>
             @endforeach
         @else
