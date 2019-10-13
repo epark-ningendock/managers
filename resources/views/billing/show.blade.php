@@ -1,5 +1,6 @@
 @php
     use App\TaxClass;
+    use \App\Enums\ReservationStatus;
 @endphp
 
 @extends('layouts.list', $params = [])
@@ -108,17 +109,15 @@
                     <td>{{ $reservation->customer->family_name .' ' . $reservation->customer->first_name }}</td>
                     <td>{{ ( isset($reservation->channel) && ( $reservation->channel == 1)) ? 'WEB' : 'TEL' }}</td>
                     <td>
-                        @if ( $reservation->status == 1 )
+                        @if ( $reservation->reservation_status->is(ReservationStatus::PENDING) )
                             仮受付
-                            @elseif ( $reservation->status == 2 )
+                        @elseif ( $reservation->reservation_status->is(ReservationStatus::RECEPTION_COMPLETED) )
                             受付確定
-                                @elseif ( $reservation->status == 3 )
+                        @elseif ( $reservation->reservation_status->is(ReservationStatus::COMPLETED) )
                             受診完了
-                                    @elseif ( $reservation->status == 4 )
+                        @elseif ( $reservation->reservation_status->is(ReservationStatus::CANCELLED) )
                             キャンセル
-
-                            @endif
-
+                        @endif
                     </td>
                     <td>@if ( isset($reservation->is_payment) && ( $reservation->is_payment == 1 ) ) 事前決済 @else 現地決済 @endif</td>
                     <td>{{ $reservation->course->name }}</td>
