@@ -61,10 +61,10 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                     }
 
                     $hp_link_status = '';
-                    if ( ($reservation->site_code == 'HP') && ( $reservation->fee == 0) && ( ReservationStatus::getKey($reservation->reservation_status) == 4) ) {
-                        $hp_link_status = 'HP Link';
+                    if ( ($reservation->site_code == 'HP') && ( $reservation->fee == 0) && ( $reservation->reservation_status->value == '4') ) {
+                        $hp_link_status = 'HPリンク（キャンセル）';
                     } elseif ( ($reservation->site_code == 'HP') && ( $reservation->fee == 0) ) {
-                        $hp_link_status = 'HP Link (Cancel)';
+                        $hp_link_status = 'HPリンク';
                     }
 
                     $the_amount = $reservation->tax_included_price + $reservation->adjustment_price + $reservation->reservation_options->pluck('option_price')->sum();
