@@ -20,15 +20,20 @@ class RouteController extends Controller
         $place_code = $request->input('place_code');
         $rail_no = $request->input('rail_no');
 
-        $data = Rail::with(
+        $query = Rail::with(
             'prefecture_rails.prefecture.hospitals',
             'rail_station.station'
-        )
-            ->where('id', $rail_no)
-            ->wherehas('rail_station.station', function ($q) use ($place_code) {
-                $q->where('prefecture_id', $place_code);
-            })
-            ->get();
+        );
+
+        if (! empty($rail_no)) {
+            $query->where('id', $rail_no);
+        }
+
+        $query->wherehas('rail_station.station', function ($q) use ($place_code) {
+            $q->where('prefecture_id', $place_code);
+        });
+
+        $data = $query->get();
 
         return RouteResource::collection($data);
     }

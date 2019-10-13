@@ -2,8 +2,8 @@
 
 namespace App;
 
-use App\Enums\ReservationStatus;
 use App\Enums\PaymentStatus;
+use App\Enums\ReservationStatus;
 use App\Enums\TerminalType;
 use Carbon\Carbon;
 use Reshadman\OptimisticLocking\OptimisticLocking;
@@ -78,10 +78,10 @@ class Reservation extends SoftDeleteModel
         'cancellation_reason'
     ];
 
-	protected $appends = ['tax_excluded_price'];
+    protected $appends = ['tax_excluded_price'];
 
 
-	//todo channelがどういうケースが発生するのか未定なので、とりあえず仮で
+    //todo channelがどういうケースが発生するのか未定なので、とりあえず仮で
     public static function getChannel($channel)
     {
         if (array_key_exists($channel, self::$channel)) {
@@ -111,6 +111,7 @@ class Reservation extends SoftDeleteModel
     {
         return $query->orderBy('reservation_date', 'asc');
     }
+
     public function scopeDescOrder($query)
     {
         return $query->orderBy('reservation_date', 'desc');
@@ -128,10 +129,8 @@ class Reservation extends SoftDeleteModel
 
     public function reservation_answers()
     {
-        return $this->hasMany('App\ReservationAnswer');
+        return $this->hasMany(ReservationAnswer::class);
     }
-
-
 
     public function scopeByRequest($query, $request)
     {
@@ -172,7 +171,7 @@ class Reservation extends SoftDeleteModel
     {
         if ($this->is_repeat == '0') {
             return 'はじめて受診する';
-        } else if($this->is_repeat == '1') {
+        } else if ($this->is_repeat == '1') {
             return '過去に受診あり';
         }
         return '-';
@@ -182,7 +181,7 @@ class Reservation extends SoftDeleteModel
     {
         if ($this->is_representative == '0') {
             return '本人以外';
-        } else if($this->is_representative == '1') {
+        } else if ($this->is_representative == '1') {
             return '本人';
         }
         return '-';
@@ -212,7 +211,8 @@ class Reservation extends SoftDeleteModel
      *
      * @return 取得結果
      */
-    public static function getUpdateTarget($request, $reservation_date) {
+    public static function getUpdateTarget($request, $reservation_date)
+    {
 
         $entity = Reservation::with([
             'customer' => function ($query) use ($request) {
@@ -235,8 +235,9 @@ class Reservation extends SoftDeleteModel
     }
 
 
-	public function getTaxExcludedPriceAttribute() {
-		return ( ! $this->fee ) ? 0 : $this->fee / ($this->tax_rate/100+1);
+    public function getTaxExcludedPriceAttribute()
+    {
+        return (!$this->fee) ? 0 : $this->fee / ($this->tax_rate / 100 + 1);
     }
 
 }

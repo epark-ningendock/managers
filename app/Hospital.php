@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Reshadman\OptimisticLocking\OptimisticLocking;
+use App\Enums\HplinkContractType;
 
 class Hospital extends Model
 {
@@ -74,6 +75,10 @@ class Hospital extends Model
 
     ];
 
+    protected $enumCasts = [
+        'hplink_contract_type' => HplinkContractType::class,
+    ];
+
     public function prefecture()
     {
         return $this->belongsTo(Prefecture::class)
@@ -111,7 +116,7 @@ class Hospital extends Model
 
     public function contract_information()
     {
-        return $this->hasOne('App\ContractInformation');
+        return $this->hasOne('App\ContractInformation', 'hospital_id', 'id');
     }
 
     public function lock()
@@ -142,6 +147,12 @@ class Hospital extends Model
     public function reception_email_setting()
     {
         return $this->hasOne('App\ReceptionEmailSetting');
+    }
+
+    public function hospital_plan()
+    {
+        // DB の構成的には hasMany だが、仕様的に hasOne となったため
+        return $this->hasOne('App\HospitalPlan');
     }
 
     /**
@@ -263,7 +274,7 @@ class Hospital extends Model
             });
         }
 
-        Log::debug($query->toSql());
+//        Log::debug($query->toSql());
 
         return $query;
     }

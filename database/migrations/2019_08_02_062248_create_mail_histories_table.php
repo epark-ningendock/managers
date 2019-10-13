@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Migrations\Migration;
 use App\Helpers\DBCommonColumns;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateMailHistoriesTable extends Migration
 {
@@ -26,7 +26,7 @@ class CreateMailHistoriesTable extends Migration
             $table->text('contents');
             $table->char('status', 1)->default('1');
             $table->integer('customer_id')->unsigned();
-            $table->foreign('customer_id')->references('id')->on('customers');
+//            $table->foreign('customer_id')->references('id')->on('customers'); // import のためにコメントアウト
             $this->addCommonColumns($table);
         });
     }

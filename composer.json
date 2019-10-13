@@ -23,7 +23,8 @@
         "league/flysystem-aws-s3-v3": "^1.0",
         "maatwebsite/excel": "^3.1",
         "rap2hpoutre/laravel-log-viewer": "^0.11.0",
-        "reshadman/laravel-optimistic-locking": "^1.1"
+        "reshadman/laravel-optimistic-locking": "^1.1",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

@@ -53,4 +53,8 @@ return [
         'model' => \App\Course::class,
         'import' => \App\Imports\CourseExtraImport::class,
     ],
+    'T_CR_M_EMAIL_HISTORY.csv' => [
+        'model' => \App\MailHistory::class,
+        'import' => \App\Imports\MailHistoryImport::class,
+    ],
 ];

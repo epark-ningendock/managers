@@ -2,12 +2,12 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\Resource;
 
 use App\Reservation;
 use App\Holiday;
 
-class CoursesBaseResource extends JsonResource
+class CoursesBaseResource extends Resource
 {
     /**
      * Transform the resource into an array.
@@ -31,7 +31,7 @@ class CoursesBaseResource extends JsonResource
             'course_no' => $this->id,
             'course_code' => $this->code,
             'course_name' => $this->name,
-            'course_url' => WWW_SITE . "/detail_hospital/" . $this->hospital->contract_information->code . "/detail/" . $this->code . ".html",
+            'course_url' => $this->createURL() . "/detail_hospital/" . $this->hospital->contract_information->code . "/detail/" . $this->code . ".html",
             'web_reception' => $this->web_reception,
             'flg_price' => $this->is_price,
             'price' => $this->price,
@@ -152,5 +152,9 @@ class CoursesBaseResource extends JsonResource
         } else { // 丸めなし
             return ($sString);
         }
+    }
+
+    private function createURL() {
+        return (empty($_SERVER['HTTPS']) ? 'http://' : 'https://').$_SERVER['HTTP_HOST'];
     }
 }
