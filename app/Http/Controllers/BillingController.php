@@ -35,12 +35,12 @@ class BillingController extends Controller {
 
 		$dateFilter = billingDateFilter();
 
-		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(100);
+		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', str_replace('-', '', $selectedMonth))->paginate(100);
 
 		return view( 'billing.index', [
 			'billings'        => $billings,
 			'startedDate'     => $dateFilter['startedDate'],
-			'endedDate'      => $dateFilter['endedDate'],
+			'endedDate'       => $dateFilter['endedDate'],
 			'selectBoxMonths' => $dateFilter['selectBoxMonths'],
 		] );
 	}
