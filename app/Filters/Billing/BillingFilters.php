@@ -19,7 +19,7 @@ class BillingFilters extends QueryFilters
         $hospitals = Hospital::where('name', 'LIKE', "%". $hospital_name . "%" )->get();
 
         if ( count($hospitals) > 0 ) {
-            return  $this->builder->whereIn('id', $hospitals->pluck('id')->toArray());
+            return  $this->builder->whereIn('hospital_id', $hospitals->pluck('id')->toArray());
         }
     }
 }
