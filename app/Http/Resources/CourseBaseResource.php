@@ -78,7 +78,8 @@ class CourseBaseResource extends Resource
         return $files[0] ?? '';
     }
 
-    private function createReception() {
+    private function createReception()
+    {
 
         if ($this->web_reception == WebReception::NOT_ACCEPT) {
             return WebReception::NOT_ACCEPT;
@@ -91,6 +92,7 @@ class CourseBaseResource extends Resource
         }
 
         return WebReception::NOT_ACCEPT;
+    }
 
     private function createURL() {
         return (empty($_SERVER['HTTPS']) ? 'http://' : 'https://').$_SERVER['HTTP_HOST'];
