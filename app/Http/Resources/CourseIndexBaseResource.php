@@ -9,7 +9,7 @@ use App\Enums\WebReception;
 
 use Log;
 
-class CourseBaseResource extends Resource
+class CourseIndexBaseResource extends Resource
 {
     /**
      * 検査コース基本情報 resource into an array.
@@ -31,29 +31,29 @@ class CourseBaseResource extends Resource
     {
         return collect(
             [
-                'course_no' => $this[0]->id,
-                'course_code' => $this[0]->code,
-                'course_name' => $this[0]->name,
-                'course_url' => $this->createURL() . "/detail_hospital/" . $this[0]->hospital->contract_information->code . "/detail/" . $this[0]->code . ".html",
+                'course_no' => $this->id,
+                'course_code' => $this->code,
+                'course_name' => $this->name,
+                'course_url' => $this->createURL() . "/detail_hospital/" . $this->hospital->contract_information->code . "/detail/" . $this->code . ".html",
                 'web_reception' => $this->createReception(),
-                'course_flg_category' => $this[0]->is_category,
-                'course_img' => $this->getFlowImagePath($this[0]->hospital->hospital_categories, 1),
-                'flow_pc_img' => $this->getFlowImagePath($this[0]->hospital->hospital_categories, 2),
-                'flow_sp_img' => $this->getFlowImagePath($this[0]->hospital->hospital_categories, 3),
-                'course_point' => $this[0]->course_point,
-                'course_notice' => $this[0]->course_notice,
-                'course_cancel' => $this[0]->course_cancel,
-                'flg_price' => $this[0]->is_price,
-                'price' => $this[0]->price,
-                'flg_price_memo' => $this[0]->is_price_memo,
-                'price_memo' => $this[0]->price_memo,
-                'price_2' => $this[0]->regular_price,
-                'price_3' => $this[0]->discounted_price,
-                'tax_class' => $this[0]->tax_class_id,
-                'pre_account_price' => $this[0]->pre_account_price,
-                'flg_local_payment' => $this[0]->is_local_payment,
-                'flg_pre_account' => $this[0]->is_pre_account,
-                'auto_calc_application' => $this[0]->auto_calc_application,
+                'course_flg_category' => $this->is_category,
+                'course_img' => $this->getFlowImagePath($this->hospital->hospital_categories, 1),
+                'flow_pc_img' => $this->getFlowImagePath($this->hospital->hospital_categories, 2),
+                'flow_sp_img' => $this->getFlowImagePath($this->hospital->hospital_categories, 3),
+                'course_point' => $this->course_point,
+                'course_notice' => $this->course_notice,
+                'course_cancel' => $this->course_cancel,
+                'flg_price' => $this->is_price,
+                'price' => $this->price,
+                'flg_price_memo' => $this->is_price_memo,
+                'price_memo' => $this->price_memo,
+                'price_2' => $this->regular_price,
+                'price_3' => $this->discounted_price,
+                'tax_class' => $this->tax_class_id,
+                'pre_account_price' => $this->pre_account_price,
+                'flg_local_payment' => $this->is_local_payment,
+                'flg_pre_account' => $this->is_pre_account,
+                'auto_calc_application' => $this->auto_calc_application,
             ]
         );
     }
@@ -80,13 +80,13 @@ class CourseBaseResource extends Resource
     private function createReception()
     {
 
-        if ($this[0]->web_reception == '0') {
+        if ($this->web_reception == '0') {
             return '0';
         }
 
         $target = Carbon::today();
-        if (($this[0]->publish_start_date <= $target)
-            && ($this[0]->publish_end_date >= $target)) {
+        if (($this->publish_start_date <= $target)
+            && ($this->publish_end_date >= $target)) {
             return '1';
         }
 

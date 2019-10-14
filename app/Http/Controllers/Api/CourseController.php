@@ -78,7 +78,7 @@ class CourseController extends Controller
      */
     private function basicCourse($hospital_code, $course_no, $course_code)
     {
-        return Course::with(
+        return Course::with([
             'hospital',
             'hospital.contract_information',
             'hospital.district_code',
@@ -88,10 +88,10 @@ class CourseController extends Controller
             'hospital.hospital_categories',
             'hospital.hospital_categories.image_order',
             'hospital.hospital_categories.hospital_image'
-        )
-            ->whereHas('hospital.contract_information', function ($query) use ($hospital_code) {
-                $query->where('code', $hospital_code);
-            })
+        ])
+//            ->whereHas('hospital.contract_information', function ($query) use ($hospital_code) {
+//                $query->where('code', $hospital_code);
+//            })
             ->where('code', $course_code)
             ->where('id', $course_no)
             ->get();
@@ -180,6 +180,7 @@ class CourseController extends Controller
                 )
                     ->orderBy('date', 'asc');
             },
+            'calendar_days.calendar',
             'hospital',
             'hospital.contract_information',
         ])
@@ -198,8 +199,8 @@ class CourseController extends Controller
         foreach ($entity->calendar_days as $c) {
 
             // 既予約数取得
-            $appoint_count = Reservation::where('hospital_id', $c->hospital->id)
-                ->where('course_id', $c->id)
+            $appoint_count = Reservation::where('hospital_id', $c->calendar->id)
+                ->where('course_id', $serach_condition->course_no)
                 ->whereIn('reservation_status', [1, 2, 3])
                 ->whereDate('reservation_date', $c->date)->count();
 

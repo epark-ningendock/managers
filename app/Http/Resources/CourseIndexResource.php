@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use App\Station;
 
-class CourseIndexResource extends CourseBaseResource
+class CourseIndexResource extends CourseIndexBaseResource
 {
     /**
      * 検査コース情報 resource into an array.
