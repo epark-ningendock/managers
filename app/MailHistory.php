@@ -8,6 +8,7 @@ class MailHistory extends SoftDeleteModel
 {
     protected $fillable = [
         'email',
+        'sent_datetime',
         'sender_name',
         'sender_address',
         'title',

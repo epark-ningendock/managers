@@ -35,12 +35,12 @@ class BillingController extends Controller {
 
 		$dateFilter = billingDateFilter();
 
-		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(100);
+		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', str_replace('-', '', $selectedMonth))->paginate(100);
 
 		return view( 'billing.index', [
 			'billings'        => $billings,
 			'startedDate'     => $dateFilter['startedDate'],
-			'endedDate'      => $dateFilter['endedDate'],
+			'endedDate'       => $dateFilter['endedDate'],
 			'selectBoxMonths' => $dateFilter['selectBoxMonths'],
 		] );
 	}
@@ -48,13 +48,15 @@ class BillingController extends Controller {
 
 	public function excelExport( BillingFilters $billingFilters ) {
 
-        $selectedMonth = $this->getSelectedMonth();
+    $selectedMonth = $this->getSelectedMonth();
 
 		$dateFilter = billingDateFilter();
 
-        $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(100);
+    $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(100);
 
-		return $this->excel->download( new BillingExport( $billings, $dateFilter['startedDate'], $dateFilter['endedDate'], $selectedMonth ), 'billing.xlsx' );
+		$yyyymm = str_replace('-', '', $selectedMonth);
+
+		return $this->excel->download( new BillingExport( $billings, $dateFilter['startedDate'], $dateFilter['endedDate'], $selectedMonth ), "顧客請求対象_$yyyymm.xlsx" );
 
 	}
 

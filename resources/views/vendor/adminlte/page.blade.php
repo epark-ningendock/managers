@@ -117,7 +117,7 @@
                   <li class="{{ request()->path() === 'staff/edit-password-personal' ? 'active' : null }}"><a href="/staff/edit-password-personal"><i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;パスワードの変更</a></li>
                 @endif
                 @if (Auth::user()->authority->value !== Authority::CONTRACT_STAFF && Auth::user()->staff_auth->is_invoice !== Permission::NONE)
-                  <li class="{ ( request()->is(['billing/*', 'billing'])  ) ? 'active' : '' }}"><a href="/billing"><i class="fa fa-dollar"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
+                  <li class="{{ request()->path() === 'billing' ? 'active' : null }}"><a href="/billing"><i class="fa fa-dollar"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
                 @endif
               </ul>
           @endif

@@ -1,5 +1,6 @@
 @php
     use App\TaxClass;
+    use \App\Enums\ReservationStatus;
 @endphp
 
 @extends('layouts.list', $params = [])
@@ -51,8 +52,8 @@
             <span class="value-text">
                 {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
                     $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
-                ( {{ number_format(($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
-                    $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) / TaxClass::TEN_PERCENT) }}円 )
+                ( {{ number_format(floor(($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
+                    $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) / TaxClass::TEN_PERCENT)) }}円 )
             </span>
         </li>
     </ul>
@@ -108,21 +109,19 @@
                     <td>{{ $reservation->customer->family_name .' ' . $reservation->customer->first_name }}</td>
                     <td>{{ ( isset($reservation->channel) && ( $reservation->channel == 1)) ? 'WEB' : 'TEL' }}</td>
                     <td>
-                        @if ( $reservation->status == 1 )
+                        @if ( $reservation->reservation_status->is(ReservationStatus::PENDING) )
                             仮受付
-                            @elseif ( $reservation->status == 2 )
+                        @elseif ( $reservation->reservation_status->is(ReservationStatus::RECEPTION_COMPLETED) )
                             受付確定
-                                @elseif ( $reservation->status == 3 )
+                        @elseif ( $reservation->reservation_status->is(ReservationStatus::COMPLETED) )
                             受診完了
-                                    @elseif ( $reservation->status == 4 )
+                        @elseif ( $reservation->reservation_status->is(ReservationStatus::CANCELLED) )
                             キャンセル
-
-                            @endif
-
+                        @endif
                     </td>
-                    <td>@if ( isset($reservation->is_payment) && ( $reservation->is_payment == 1 ) ) 事前決済 @else 現地決済、@endif</td>
+                    <td>@if ( isset($reservation->is_payment) && ( $reservation->is_payment == 1 ) ) 事前決済 @else 現地決済 @endif</td>
                     <td>{{ $reservation->course->name }}</td>
-                    <td>{{ ( isset($reservation->tax_included_price) ) ? number_format($reservation->tax_included_price) : '' }}</td>
+                    <td>{{ ( isset($reservation->tax_included_price) ) ? number_format($reservation->tax_included_price)  . '円' : '' }}</td>
                     <td>{{ ( $reservation->reservation_options->pluck('option_price')->sum() ) ? number_format($reservation->reservation_options->pluck('option_price')->sum()) . '円' : '' }}</td>
                     <td>{{ (isset($reservation->adjustment_price) ) ? number_format($reservation->adjustment_price) . '円' : '' }}</td>
                     <td>{{ $reservation->fee_rate }}%</td>

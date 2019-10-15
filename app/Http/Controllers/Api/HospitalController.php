@@ -102,9 +102,9 @@ class HospitalController extends Controller
         $entity = Hospital::with([
             'contract_information',
             'hospital_details',
-            'hospital_details.hospital_minor_classification',
-            'hospital_details.hospital_minor_classification.hospital_major_classification',
-            'hospital_details.hospital_minor_classification.hospital_middle_classification',
+            'hospital_details.minor_classification',
+            'hospital_details.minor_classification.major_classification',
+            'hospital_details.minor_classification.middle_classification',
             'hospital_categories',
             'hospital_categories.image_order',
             'hospital_categories.hospital_image',

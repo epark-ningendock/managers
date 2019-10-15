@@ -48,7 +48,8 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                 foreach( $reservations as $key => $reservation) {
 
                     if ( count($reservations) == ($key+1) ) {
-                        $channel = $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->monthly_contract_fee;
+                        // $channel = $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->monthly_contract_fee;
+                        $channel = '月額';
                     } else {
 
                         if ( $reservation->channel == 2 || $reservation->channel == 3 ) {
@@ -60,16 +61,13 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                     }
 
                     $hp_link_status = '';
-                    if ( ($reservation->site_code == 'HP') && ( $reservation->fee == 0) && ( ReservationStatus::getKey($reservation->reservation_status) == 4) ) {
-                        $hp_link_status = 'HP Link';
+                    if ( ($reservation->site_code == 'HP') && ( $reservation->fee == 0) && ( $reservation->reservation_status->value == '4') ) {
+                        $hp_link_status = 'HPリンク（キャンセル）';
                     } elseif ( ($reservation->site_code == 'HP') && ( $reservation->fee == 0) ) {
-                        $hp_link_status = 'HP Link (Cancel)';
+                        $hp_link_status = 'HPリンク';
                     }
 
-
                     $the_amount = $reservation->tax_included_price + $reservation->adjustment_price + $reservation->reservation_options->pluck('option_price')->sum();
-
-
 
                     $row[] = [
                         // $reservation->hospital_id, sorting testing
@@ -80,12 +78,12 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         $channel,
                         $reservation->completed_date->format('Y/m/d'),
                         $hp_link_status,
-                        $reservation->course->name ?? '',
-                        isset($reservation->reservation_options) ? '有' : '',
+                        $channel == '月額' ? $reservation->course->name : $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->plan_name,
+                        $reservation->reservation_options->isEmpty() ? '' : '有',
                         number_format($the_amount),
                         number_format($the_amount / $reservation->tax_rate), //need to verify calculation1
                         number_format($reservation->tax_excluded_price),
-                        $billing->contractPlan->plan_name ?? '',
+                        $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->plan_name ?? '',
                         (isset($reservation->site_code) && ( $reservation->site_code == 'HP') ) ? 'HPリンク' : '',
                         $reservation->fee_rate . '%',
                     ];

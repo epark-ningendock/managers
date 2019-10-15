@@ -12,4 +12,9 @@ class CalendarDay extends SoftDeleteModel
     {
         return $this->belongsTo('App\Calendar');
     }
+
+    public function hospital()
+    {
+        return $this->belongsTo('App\Hospital');
+    }
 }

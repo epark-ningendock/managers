@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             ContractInformationTableSeeder::class,
             HospitalImagesTableSeeder::class,
             OptionsTableSeeder::class,
-//            TaxClassesTableSeeder::class,
+            // TaxClassesTableSeeder::class,
             ImageOrdersTableSeeder::class,
             CalendarsTableSeeder::class,
             CalendarDaysTableSeeder::class,

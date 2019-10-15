@@ -15,43 +15,43 @@ class CourseBasicResource extends CourseBaseResource
     public function toArray($request)
     {
         $rails = [
-            $this->hospital->rail1,
-            $this->hospital->rail2,
-            $this->hospital->rail3,
-            $this->hospital->rail4,
-            $this->hospital->rail5
+            $this[0]->hospital->rail1,
+            $this[0]->hospital->rail2,
+            $this[0]->hospital->rail3,
+            $this[0]->hospital->rail4,
+            $this[0]->hospital->rail5
         ];
 
         $stations = [
-            $this->hospital->station1,
-            $this->hospital->station2,
-            $this->hospital->station3,
-            $this->hospital->station4,
-            $this->hospital->station5
+            $this[0]->hospital->station1,
+            $this[0]->hospital->station2,
+            $this[0]->hospital->station3,
+            $this[0]->hospital->station4,
+            $this[0]->hospital->station5
         ];
         $accesses = [
-            $this->hospital->access1,
-            $this->hospital->access2,
-            $this->hospital->access3,
-            $this->hospital->access4,
-            $this->hospital->access5
+            $this[0]->hospital->access1,
+            $this[0]->hospital->access2,
+            $this[0]->hospital->access3,
+            $this[0]->hospital->access4,
+            $this[0]->hospital->access5
         ];
 
         return collect([])
             ->put('status', 0)        
-            ->put('no', $this->id)
-            ->put('url_basic', $this->hospital->url)
-            ->put('hospital_code', $this->hospital->contract_information->code)
-            ->put('name', $this->hospital->name)
-            ->put('pref_name', $this->hospital->district_code->prefecture->name)
-            ->put('district_name', $this->hospital->district_code->name)
-            ->put('address1', $this->hospital->address1)
-            ->put('address2', $this->hospital->address2)
-            ->put('tel_ppc',  $this->hospital->paycall)
+            ->put('no', $this[0]->id)
+            ->put('url_basic', $this[0]->hospital->url)
+            ->put('hospital_code', $this[0]->hospital->contract_information->code)
+            ->put('name', $this[0]->hospital->name)
+            ->put('pref_name', $this[0]->hospital->district_code->prefecture->name)
+            ->put('district_name', $this[0]->hospital->district_code->name)
+            ->put('address1', $this[0]->hospital->address1)
+            ->put('address2', $this[0]->hospital->address2)
+            ->put('tel_ppc',  $this[0]->hospital->paycall)
             ->put('stations', Station::getStations($rails, $stations, $accesses))
-            ->put('non_consiltation', $this->hospital->consultation_note)
-            ->put('non_consultation_note', $this->hospital->memo)
-            ->put('hospital_category', HospitalCategoryResource::collection($this->hospital->hospital_details))
+            ->put('non_consiltation', $this[0]->hospital->consultation_note)
+            ->put('non_consultation_note', $this[0]->hospital->memo)
+            ->put('hospital_category', HospitalCategoryResource::collection($this[0]->hospital->hospital_details))
             ->merge(parent::baseCollections())
             ->toArray();
     }

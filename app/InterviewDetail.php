@@ -8,6 +8,13 @@ class InterviewDetail extends SoftDeleteModel
 {
     use SoftDeletes;
 
+    protected $fillable = [
+        'hospital_categorie_id',
+        'question',
+        'answer',
+        'order',
+    ];
+
     protected $dates = ['deleted_at'];
 
     protected $guarded = ['id'];

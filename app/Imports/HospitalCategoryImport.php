@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\HospitalCategory;
 use App\ImageOrder;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Row;
 
 class HospitalCategoryImport extends ImportAbstract
@@ -63,5 +64,36 @@ class HospitalCategoryImport extends ImportAbstract
         ]);
         $model->save();
         $this->deleteIf($model, $row, 'status', ['X']);
+
+        $interview = $row['interview'];
+        if (is_null($interview)) {
+            return;
+        }
+
+        try {
+            $xml = simplexml_load_string($interview);
+
+            $h4 = [];
+            $p = [];
+            foreach ($xml->li as $element) {
+                foreach ($element->h4 as $i => $elem) {
+                    $h4[] = $elem->__toString();
+                }
+                foreach ($element->p as $i => $elem) {
+                    $p[] = $elem->__toString();
+                }
+            }
+
+            foreach ($h4 as $i => $val) {
+                $model->interview_details()->create([
+                    'question' => $val,
+                    'answer' => $p[$i],
+                    'order' => $i + 1,
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 }

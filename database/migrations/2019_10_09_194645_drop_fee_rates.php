@@ -7,7 +7,7 @@ use App\Helpers\DBCommonColumns;
 
 class DropFeeRates extends Migration
 {
-use DBCommonColumns;
+    use DBCommonColumns;
     /**
      * Run the migrations.
      *
