@@ -338,7 +338,9 @@
             </div>
             <div class="col-sm-6">
                 <div class="form-group @if ($errors->has('staff_tab_'.$i.'_order2')) has-error @endif">
-                {{Form::label('staff_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                    <label for="staff_tab_{{$i}}_order2">表示順
+                        <span class="form_required">必須</span>
+                    </label>
                 {{Form::text('staff_tab_'.$i.'_order2', old('staff_tab_'.$i.'_order2',$staff_tab['order2']), ['class' => 'form-control'])}}
                 @if ($errors->has('staff_tab_'.$i.'_order2'))
                     <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_order2') }}</div>
@@ -388,7 +390,9 @@
             </div>
             <div class="col-sm-6">
                 <div class="form-group @if ($errors->has('staff_tab_'.$i.'_order2')) has-error @endif">
-                {{Form::label('staff_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                <label for="staff_tab_{{$i}}_order2">表示順
+                    <span class="form_required">必須</span>
+                </label>
                 {{Form::text('staff_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
                 @if ($errors->has('staff_tab_'.$i.'_order2'))
                     <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_order2') }}</div>
@@ -458,7 +462,9 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('facility_tab_'.$i.'_order2')) has-error @endif">
-                    {{Form::label('facility_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                    <label for="facility_tab_{{$i}}_order2">表示順
+                        <span class="form_required">必須</span>
+                    </label>
                     {{Form::text('facility_tab_'.$i.'_order2', old('facility_tab_'.$i.'_order2',$facility_tab['order2']), ['class' => 'form-control'])}}
                     @if ($errors->has('facility_tab_'.$i.'_order2'))
                         <div class="error_message">{{ $errors->first('facility_tab_'.$i.'_order2') }}</div>
@@ -506,7 +512,9 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('facility_tab_'.$i.'_order2')) has-error @endif">
-                    {{Form::label('facility_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                        <label for="facility_tab_{{$i}}_order2">表示順
+                            <span class="form_required">必須</span>
+                        </label>
                     {{Form::text('facility_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
                     @if ($errors->has('facility_tab_'.$i.'_order2'))
                         <div class="error_message"> {{ $errors->first('facility_tab_'.$i.'_order2') }} </div>
@@ -574,7 +582,9 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('internal_tab_'.$i.'_order2')) has-error @endif">
-                    {{Form::label('internal_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                        <label for="internal_tab_{{$i}}_order2">表示順
+                            <span class="form_required">必須</span>
+                        </label>
                     {{Form::text('internal_tab_'.$i.'_order2', old('internal_tab_'.$i.'_order2',$internal_tab['order2']), ['class' => 'form-control'])}}
                     @if ($errors->has('internal_tab_'.$i.'_order2'))
                         <div class="error_message"> {{ $errors->first('internal_tab_'.$i.'_order2') }} </div>
@@ -622,7 +632,9 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group @if ($errors->has('internal_tab_'.$i.'_order2')) has-error @endif">
-                        {{Form::label('internal_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                            <label for="internal_tab_{{$i}}_order2">表示順
+                                <span class="form_required">必須</span>
+                            </label>
                         {{Form::text('internal_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
                         @if ($errors->has('internal_tab_'.$i.'_order2'))
                             <div class="error_message">{{ $errors->first('internal_tab_'.$i.'_order2') }}</div>
@@ -646,12 +658,6 @@
     <!--//未登録のタブ画像フォーム-->
     </div>
     <!--・//院内タブ-->
-
-
-
-
-
-
     <!--外観タブ-->
     <p class="tab_name">
         外観
@@ -695,7 +701,9 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('external_tab_'.$i.'_order2')) has-error @endif">
-                    {{Form::label('external_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                        <label for="external_tab_{{$i}}_order2">表示順
+                            <span class="form_required">必須</span>
+                        </label>
                     {{Form::text('external_tab_'.$i.'_order2', old('external_tab_'.$i.'_order2',$external_tab['order2']), ['class' => 'form-control'])}}
                     @if ($errors->has('external_tab_'.$i.'_order2'))
                         <div class="error_message">{{ $errors->first('external_tab_'.$i.'_order2') }}</div>
@@ -743,7 +751,9 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group @if ($errors->has('external_tab_'.$i.'_order2')) has-error @endif">
-                        {{Form::label('external_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                            <label for="external_tab_{{$i}}_order2">表示順
+                                <span class="form_required">必須</span>
+                            </label>
                         {{Form::text('external_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
                         @if ($errors->has('external_tab_'.$i.'_order2'))
                             <div class="error_message">{{ $errors->first('external_tab_'.$i.'_order2') }}</div>
@@ -810,7 +820,9 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('another_tab_'.$i.'_order2')) has-error @endif">
-                    {{Form::label('another_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                        <label for="another_tab_{{$i}}_order2">表示順
+                            <span class="form_required">必須</span>
+                        </label>
                     {{Form::text('another_tab_'.$i.'_order2', old('another_tab_'.$i.'_order2',$another_tab['order2']), ['class' => 'form-control'])}}
                     @if ($errors->has('another_tab_'.$i.'_order2'))
                         <div class="error_message">{{ $errors->first('another_tab_'.$i.'_order2') }}</div>
@@ -860,7 +872,9 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group @if ($errors->has('another_tab_'.$i.'_order2')) has-error @endif">
-                        {{Form::label('another_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                            <label for="another_tab_{{$i}}_order2">表示順
+                                <span class="form_required">必須</span>
+                            </label>
                         {{Form::text('another_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
                         @if ($errors->has('another_tab_'.$i.'_order2'))
                             <div class="error_message"> {{ $errors->first('another_tab_'.$i.'_order2') }} </div>

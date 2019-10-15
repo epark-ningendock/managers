@@ -54,10 +54,6 @@ class HospitalImagesController extends Controller
         $hospital = Hospital::with(['hospital_images', 'hospital_categories', 'lock'])->find($hospital_id);
 
         $select_photos = $hospital->hospital_categories()->where('is_display', SelectPhotoFlag::SELECTED)->where('hospital_id', $hospital_id)->get();
-        //dd($select_photos->where('order', 1)->first()->hospital_image);
-
-
-
         $interview_top = $hospital->hospital_categories()->where('image_order', ImageGroupNumber::IMAGE_GROUP_INTERVIEW)->first();
 
         //interviewのタイトルなどの情報が必要

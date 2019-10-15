@@ -103,7 +103,6 @@ $(document).ready(function() {
                 modal_close.push(elem.value);
             }
         });
-        console.log(modal_close.length)
 
         if(modal_close.length >= 1 ) {
             alert('他の写真選択で設定済です');
@@ -126,9 +125,6 @@ $(document).ready(function() {
         const select_photo_val = $(this).parent().find('.select-photo');
         select_photo_val.val('');
         image.attr('src',$(this).data('path'));
-
-        console.log(select_photo_val);
-
     });
 
     $('.select-photo-delete').on('click', function() {
