@@ -93,6 +93,7 @@ Route::middleware('auth:staffs')->group(function () {
             Route::get('/{hospital}/images/{hospital_category_id}/{hospital_image_id}/delete', 'HospitalImagesController@delete')->name('hospital.image.delete');
             Route::get('/{hospital}/images/{hospital_image_id}/delete_image', 'HospitalImagesController@deleteImage')->name('hospital.delete_image');
             Route::get('/{hospital}/images/{hospital_image_id}/delete_main_image/{is_sp}', 'HospitalImagesController@deleteMainImage')->name('hospital.delete_main_image');
+            Route::get('/{hospital}/images/{hospital_image_id}/delete_hospital_category/', 'HospitalImagesController@deleteHospitalCategory')->name('hospital.delete_hospital_category');
             /*
             |--------------------------------------------------------------------------
             | 医療機関 こだわり情報

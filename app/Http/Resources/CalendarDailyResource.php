@@ -22,7 +22,7 @@ class CalendarDailyResource extends Resource
             'course_code' => $this->code,
             'all_calender' => $this->calendar_days->map(function ($c) {
                 return (object)[
-                    'yyyymmdd' => date('Ymd', strtotime($c->date)),
+                    date('Ymd', strtotime($c->date)) => date('Ymd', strtotime($c->date)),
                     'appoint_status' => $c->appoint_status,
                     'appoint_num' => $c->appoint_num,
                     'reservation_frames' => $c->reservation_frames,
