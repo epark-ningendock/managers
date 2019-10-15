@@ -1,6 +1,7 @@
 @php
     use App\Enums\FileLocationNo;
     use App\Enums\ImageGroupNumber;
+    use App\Enums\SelectPhotoFlag;
 @endphp
 
 <div class="box box-primary form-box">
@@ -79,7 +80,6 @@
         </div>
         @endfor
     </div>
-
     </div>
 </div>
 <div class="box box-primary form-box">
@@ -338,7 +338,9 @@
             </div>
             <div class="col-sm-6">
                 <div class="form-group @if ($errors->has('staff_tab_'.$i.'_order2')) has-error @endif">
-                {{Form::label('staff_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                    <label for="staff_tab_{{$i}}_order2">表示順
+                        <span class="form_required">必須</span>
+                    </label>
                 {{Form::text('staff_tab_'.$i.'_order2', old('staff_tab_'.$i.'_order2',$staff_tab['order2']), ['class' => 'form-control'])}}
                 @if ($errors->has('staff_tab_'.$i.'_order2'))
                     <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_order2') }}</div>
@@ -388,7 +390,9 @@
             </div>
             <div class="col-sm-6">
                 <div class="form-group @if ($errors->has('staff_tab_'.$i.'_order2')) has-error @endif">
-                {{Form::label('staff_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                <label for="staff_tab_{{$i}}_order2">表示順
+                    <span class="form_required">必須</span>
+                </label>
                 {{Form::text('staff_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
                 @if ($errors->has('staff_tab_'.$i.'_order2'))
                     <div class="error_message">{{ $errors->first('staff_tab_'.$i.'_order2') }}</div>
@@ -458,7 +462,9 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('facility_tab_'.$i.'_order2')) has-error @endif">
-                    {{Form::label('facility_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                    <label for="facility_tab_{{$i}}_order2">表示順
+                        <span class="form_required">必須</span>
+                    </label>
                     {{Form::text('facility_tab_'.$i.'_order2', old('facility_tab_'.$i.'_order2',$facility_tab['order2']), ['class' => 'form-control'])}}
                     @if ($errors->has('facility_tab_'.$i.'_order2'))
                         <div class="error_message">{{ $errors->first('facility_tab_'.$i.'_order2') }}</div>
@@ -506,7 +512,9 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('facility_tab_'.$i.'_order2')) has-error @endif">
-                    {{Form::label('facility_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                        <label for="facility_tab_{{$i}}_order2">表示順
+                            <span class="form_required">必須</span>
+                        </label>
                     {{Form::text('facility_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
                     @if ($errors->has('facility_tab_'.$i.'_order2'))
                         <div class="error_message"> {{ $errors->first('facility_tab_'.$i.'_order2') }} </div>
@@ -530,11 +538,6 @@
     <!--//未登録のタブ画像フォーム-->
     </div>
     <!--・//設備タブ-->
-
-
-
-
-
 
     <!--院内タブ-->
     <p class="tab_name">
@@ -579,7 +582,9 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('internal_tab_'.$i.'_order2')) has-error @endif">
-                    {{Form::label('internal_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                        <label for="internal_tab_{{$i}}_order2">表示順
+                            <span class="form_required">必須</span>
+                        </label>
                     {{Form::text('internal_tab_'.$i.'_order2', old('internal_tab_'.$i.'_order2',$internal_tab['order2']), ['class' => 'form-control'])}}
                     @if ($errors->has('internal_tab_'.$i.'_order2'))
                         <div class="error_message"> {{ $errors->first('internal_tab_'.$i.'_order2') }} </div>
@@ -627,7 +632,9 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group @if ($errors->has('internal_tab_'.$i.'_order2')) has-error @endif">
-                        {{Form::label('internal_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                            <label for="internal_tab_{{$i}}_order2">表示順
+                                <span class="form_required">必須</span>
+                            </label>
                         {{Form::text('internal_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
                         @if ($errors->has('internal_tab_'.$i.'_order2'))
                             <div class="error_message">{{ $errors->first('internal_tab_'.$i.'_order2') }}</div>
@@ -651,12 +658,6 @@
     <!--//未登録のタブ画像フォーム-->
     </div>
     <!--・//院内タブ-->
-
-
-
-
-
-
     <!--外観タブ-->
     <p class="tab_name">
         外観
@@ -700,7 +701,9 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('external_tab_'.$i.'_order2')) has-error @endif">
-                    {{Form::label('external_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                        <label for="external_tab_{{$i}}_order2">表示順
+                            <span class="form_required">必須</span>
+                        </label>
                     {{Form::text('external_tab_'.$i.'_order2', old('external_tab_'.$i.'_order2',$external_tab['order2']), ['class' => 'form-control'])}}
                     @if ($errors->has('external_tab_'.$i.'_order2'))
                         <div class="error_message">{{ $errors->first('external_tab_'.$i.'_order2') }}</div>
@@ -748,7 +751,9 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group @if ($errors->has('external_tab_'.$i.'_order2')) has-error @endif">
-                        {{Form::label('external_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                            <label for="external_tab_{{$i}}_order2">表示順
+                                <span class="form_required">必須</span>
+                            </label>
                         {{Form::text('external_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
                         @if ($errors->has('external_tab_'.$i.'_order2'))
                             <div class="error_message">{{ $errors->first('external_tab_'.$i.'_order2') }}</div>
@@ -815,7 +820,9 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group @if ($errors->has('another_tab_'.$i.'_order2')) has-error @endif">
-                    {{Form::label('another_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                        <label for="another_tab_{{$i}}_order2">表示順
+                            <span class="form_required">必須</span>
+                        </label>
                     {{Form::text('another_tab_'.$i.'_order2', old('another_tab_'.$i.'_order2',$another_tab['order2']), ['class' => 'form-control'])}}
                     @if ($errors->has('another_tab_'.$i.'_order2'))
                         <div class="error_message">{{ $errors->first('another_tab_'.$i.'_order2') }}</div>
@@ -865,7 +872,9 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group @if ($errors->has('another_tab_'.$i.'_order2')) has-error @endif">
-                        {{Form::label('another_tab_'.$i.'_order2', '表示順',['class' => 'form_label'])}}
+                            <label for="another_tab_{{$i}}_order2">表示順
+                                <span class="form_required">必須</span>
+                            </label>
                         {{Form::text('another_tab_'.$i.'_order2', null, ['class' => 'form-control'])}}
                         @if ($errors->has('another_tab_'.$i.'_order2'))
                             <div class="error_message"> {{ $errors->first('another_tab_'.$i.'_order2') }} </div>
@@ -890,6 +899,74 @@
     </div>
     <!--・//その他タブ-->
     </div>
+    <div class="form-entry box-body">
+        <h2>写真</h2>
+        <div class="row" id="select-tab-photo">
+            @for ($i = 1; $i <= 4; $i++)
+                <div class="col-sm-6 col-select-photo">
+                    {{Form::label('sub_'.$i, '画像選択'.$i,['class' => 'form_label'])}}
+                        <div class="select-photo-area">
+                            <?php $select_photo = $select_photos->where('order', $i)->first(); ?>
+                            @if (isset($select_photo->hospital_image->id) && !is_null($select_photo->hospital_image->path))
+                                <input type="hidden" value="{{$select_photo->hospital_image->id}}" class="select-photo" name="select_photo[{{$i}}]">
+                                <p class="photo"><img src="{{$select_photo->hospital_image->path}}"></p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticModal{{$i}}">
+                                    写真選択
+                                </button>
+                                <button type="button" class="btn btn-default select-photo-delete" data-hospital_id="{{$select_photo->hospital_id}}" data-hospital_category="{{$select_photo->id}}" data-path="/img/no_image.png">
+                                        削除
+                                 </button>
+                            @else
+                                <input type="hidden" value="" class="select-photo" name="select_photo[{{$i}}]">
+                                <p class="photo"><img src="/img/no_image.png"></p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticModal{{$i}}">
+                                    写真選択
+                                </button>
+                                <button type="button" class="btn btn-default unselect" data-path="/img/no_image.png">
+                                    削除
+                                </button>
+
+                            @endif
+
+                        </div>
+                </div>
+                <div class="modal" id="staticModal{{$i}}" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true" data-show="true" data-keyboard="false" data-backdrop="static">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span aria-hidden="true">&#215;</span><span class="sr-only">閉じる</span>
+                                </button>
+                                <h4 class="modal-title">写真選択</h4>
+                            </div><!-- /modal-header -->
+                            <div class="modal-body">
+                                <?php $select_tab_photos = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('is_display', SelectPhotoFlag::UNSELECTED);?>
+
+                                <div class="row">
+                                    <?php $select_photo_count = 0; ?>
+                                    @foreach($select_tab_photos as $key => $photo)
+                                        <div class="col-sm-4 select-photo">
+                                            @if($photo->hospital_image->path != "")
+                                                <img class="object-fit" src="{{$photo->hospital_image->path}}" width="100%"><button type="button" class="btn btn-default select-tab-button" data-path="{{$photo->hospital_image->path}}" data-imageid="{{$photo->hospital_image->id}}">選択</button>
+                                                <?php $select_photo_count ++; ?>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                    @if($select_photo_count === 0)
+                                        <p>写真タブにまだ画像が設定されていません。</p>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#staticModal">閉じる</button>
+                            </div>
+                        </div> <!-- /.modal-content -->
+                    </div> <!-- /.modal-dialog -->
+                </div> <!-- /.modal -->
+            @endfor
+        </div>
+    </div>
+
 </div>
 
 <div class="box box-primary form-box">

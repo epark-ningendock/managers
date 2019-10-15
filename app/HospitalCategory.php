@@ -49,4 +49,10 @@ class HospitalCategory extends SoftDeleteModel
 
         return $query;
     }
+
+    public function scopeByHospitalImageId($query, $hospital_image_id)
+    {
+        $query->where('hospital_image_id',$hospital_image_id);
+        return $query;
+    }
 }

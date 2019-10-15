@@ -14,6 +14,7 @@ use phpDocumentor\Reflection\File;
 use Illuminate\Support\Facades\DB;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
 use App\Enums\ImageGroupNumber;
+use App\Enums\SelectPhotoFlag;
 
 class HospitalImagesController extends Controller
 {
@@ -52,6 +53,7 @@ class HospitalImagesController extends Controller
     {
         $hospital = Hospital::with(['hospital_images', 'hospital_categories', 'lock'])->find($hospital_id);
 
+        $select_photos = $hospital->hospital_categories()->where('is_display', SelectPhotoFlag::SELECTED)->where('hospital_id', $hospital_id)->get();
         $interview_top = $hospital->hospital_categories()->where('image_order', ImageGroupNumber::IMAGE_GROUP_INTERVIEW)->first();
 
         //interviewのタイトルなどの情報が必要
@@ -74,7 +76,7 @@ class HospitalImagesController extends Controller
 
         $tab_name_list = [ 1 => 'スタッフ',  2 => '設備',  3 => '院内' , 4 => '外観',  5 => 'その他'];
 
-        return view('hospital.create-images', compact('hospital', 'hospital_id', 'image_order', 'tab_name_list', 'interview_top', 'interviews', 'hospital_category'));
+        return view('hospital.create-images', compact('hospital', 'hospital_id', 'image_order', 'tab_name_list', 'interview_top', 'interviews', 'hospital_category','select_photos'));
     }
 
     /**
@@ -123,9 +125,22 @@ class HospitalImagesController extends Controller
             return redirect()->back()->with('error', trans('messages.update_error'));
         }
 
+        foreach($file['select_photo'] as $key => $select_photo) {
+            if(is_null($select_photo)) continue;
+            $this->hospital_category->updateOrCreate(
+                ['is_display' => SelectPhotoFlag::SELECTED,'order' => $key,'hospital_id' => $hospital_id,'image_order' => ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB],
+                [
+                    'hospital_image_id' => intval($select_photo),
+                    'is_display' => SelectPhotoFlag::SELECTED,
+                    'order' => $key,
+                    'hospital_id' => $hospital_id,
+                    'image_order' => ImageGroupNumber::IMAGE_GROUP_SELECT,
+                ]
+            );
+        }
+
         //main画像の保存
         if(isset($file['main'])) {
-            //dd($file['main']);
             $img_info = $this->putFileStorageImage($file['main'], $hospital_id, true);
 
             //ファイル拡張子取得
@@ -313,7 +328,7 @@ class HospitalImagesController extends Controller
 
         $disk = \Storage::disk(env('FILESYSTEM_CLOUD'));
         $disk->delete($hospital_image->name);
-
+        $this->hospital_category->where('hospital_image_id',$hospital_image_id)->where('image_order',ImageGroupNumber::IMAGE_GROUP_SELECT)->delete();
         $hospital_image->path = null;
         $hospital_image->name = null;
         $hospital_image->save();
@@ -355,6 +370,24 @@ class HospitalImagesController extends Controller
         return redirect()->route('hospital.image.create', ['hospital_id' => $hospital_id])->with('success', trans('messages.deleted', ['name' => trans('messages.names.hospital_categories')]));
     }
 
+    /**
+     * 画像は削除せず、hospital_categoriesのデータだけ削除
+     * @param  int  $hospital_id
+     * @param  int  $hospital_category_id
+     * @param  bool $is_sp
+     * @return \Illuminate\Http\Response
+     * todo deleteメソッドじゃなくて、getメソッド 直したほうがいいかも。
+     */
+    public function deleteHospitalCategory(int $hospital_id,int $hospital_category_id)
+    {
+        $response = $this->hospital_category->destroy($hospital_category_id);
+        if( $response ) {
+            return response()->json(['status' => '200', 'message' => '削除しました']);
+        } else {
+            return response()->json(['status' => '500', 'message' => '削除に失敗しました']);
+        }
+    }
+
     private function hospitalImageUploader (array $file, string $image_prefix, int $i, object $hospital, int $hospital_id, int $image_order, string $name = null, $career = null, string $memo = null, string $title = null, string $caption = null) {
         //地図も画像情報として保存されるが、画像の実態はないのでダミーで保存するっぽい。
         if ($image_order != ImageGroupNumber::IMAGE_GROUP_MAP) {
@@ -392,7 +425,8 @@ class HospitalImagesController extends Controller
             } else {
                 $hospital_img = $hospital->hospital_images()->find($image_order_exists->hospital_image_id);
                 $hospital_img->update($save_sub_images);
-                $hospital_img->hospital_category()->update($save_sub_image_categories);
+                $hospital_img->hospital_category()->where('is_display', SelectPhotoFlag::UNSELECTED)
+                    ->update($save_sub_image_categories);
             }
         } else {
             $save_sub_images = ['extension' => 'dummy', 'name' => 'dummy', 'path' => 'dummy', 'memo1' => $file['map_url']];
