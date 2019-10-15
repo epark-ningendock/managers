@@ -24,7 +24,7 @@ class HospitalController extends Controller
      */
     public function index(HospitalRequest $request)
     {
-        return new HospitalIndexResource($this->getHospitalData($request->input('hospital_code')));
+        return json_encode(new HospitalIndexResource($this->getHospitalData($request->input('hospital_code'))));
     }
 
     /**
@@ -35,7 +35,7 @@ class HospitalController extends Controller
      */
     public function basic(HospitalRequest $request)
     {
-        return new HospitalBasicResource($this->getHospitalData($request->input('hospital_code')));
+        return json_encode(new HospitalBasicResource($this->getHospitalData($request->input('hospital_code'))));
     }
 
     /**
@@ -46,7 +46,7 @@ class HospitalController extends Controller
      */
     public function courses(HospitalRequest $request)
     {
-        return new HospitalCoursesResource($this->getHospitalData($request->input('hospital_code')));
+        return json_encode(new HospitalCoursesResource($this->getHospitalData($request->input('hospital_code'))));
     }
 
     /**
@@ -57,7 +57,7 @@ class HospitalController extends Controller
      */
     public function contents(HospitalRequest $request)
     {
-        return new HospitalContentsResource($this->getContent($request->input('hospital_code')));
+        return json_encode(new HospitalContentsResource($this->getContent($request->input('hospital_code'))));
     }
 
     /**

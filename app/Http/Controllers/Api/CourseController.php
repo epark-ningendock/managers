@@ -33,7 +33,7 @@ class CourseController extends Controller
         //検査コースコンテンツ情報取得
         $contents = $this->getCourseContents($hospital_code, $course_no);
 
-        return new CourseIndexResource($contents);
+        return json_encode(new CourseIndexResource($contents));
     }
 
     /**
@@ -50,7 +50,7 @@ class CourseController extends Controller
 
         $basics = $this->basicCourse($hospital_code, $course_no, $course_code);
 
-        return new CourseBasicResource($basics);
+        return json_encode(new CourseBasicResource($basics));
     }
 
     /**
@@ -66,7 +66,7 @@ class CourseController extends Controller
 
         $contents = $this->getCourseContents($hospital_code, $course_no);
 
-        return new CourseContentsResource($contents);
+        return json_encode(new CourseContentsResource($contents));
     }
 
     /**
@@ -143,7 +143,7 @@ class CourseController extends Controller
         $calendar_dailys = $this->getCourseWithCalendar($serach_condition);
 
         // response
-        return new CalendarMonthlyResource($calendar_dailys);
+        return json_encode(new CalendarMonthlyResource($calendar_dailys));
     }
 
     /**
@@ -161,7 +161,7 @@ class CourseController extends Controller
         $calendar_dailys = $this->getCourseWithCalendar($serach_condition);
 
         // response
-        return new CalendarDailyResource($calendar_dailys);
+        return json_encode(new CalendarDailyResource($calendar_dailys));
     }
 
     /**
