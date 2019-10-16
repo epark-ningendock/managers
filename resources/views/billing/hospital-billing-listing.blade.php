@@ -1,5 +1,6 @@
 @php
     use App\TaxClass;
+    use App\Enums\BillingStatus;
     $params = [
       'delete_route' => 'billing.destroy'
     ];
@@ -58,7 +59,7 @@
             @foreach ($billings as $billing)
                 <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
                     <td style="width: 80px;">{{  $billing->billing_month }}</td>
-                    <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
+                    <td>{{ BillingStatus::getDescription($billing->status) }}</td>
                     @if (isset($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan))
                         <td>
                             {{ $billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->plan_name }}
@@ -82,8 +83,9 @@
                             <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
                         </td>
                         <td>
-                            <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'claim_check' => 'yes'] )) }}" class="btn @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
-                                @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) style="pointer-events: none;" @endif
+                            <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CONFIRMED, 'claim_check' => 'yes'] )) }}"
+                                class="btn @if( $billing->status != BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
+                                @if( $billing->status != BillingStatus::CHECKING ) style="pointer-events: none;" @endif
                             >請求確認</a>
                         </td>
                     @else

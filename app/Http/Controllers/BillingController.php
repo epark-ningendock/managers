@@ -129,8 +129,7 @@ class BillingController extends Controller {
 
         $billing->update( [ 'status' => $request->status ] );
 
-
-        if ( $email_send  ){
+        if ( $email_send ){
 
         	if ( session('hospital_id') ) {
         		$this->claimEmailCheckForHospital($request, $billing, []);

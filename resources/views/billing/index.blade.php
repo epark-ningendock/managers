@@ -1,5 +1,6 @@
 @php
     use App\TaxClass;
+    use App\Enums\BillingStatus;
     $params = [
       'delete_route' => 'billing.destroy'
     ];
@@ -48,9 +49,9 @@
 
                     <select class="form-control" id="status" name="status">
                         <option value=""></option>
-                        @foreach(\App\Enums\BillingStatus::toArray() as $key => $value)
+                        @foreach(BillingStatus::toArray() as $key => $value)
                             <option
-                                    value="{{ $value }}" {{ (request('status') == $value) ? "selected" : "" }}>{{ \App\Enums\BillingStatus::getDescription($value) }}</option>
+                                    value="{{ $value }}" {{ (request('status') == $value) ? "selected" : "" }}>{{ BillingStatus::getDescription($value) }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -99,6 +100,7 @@
     <table id="example2" class="table table-bordered table-hover table-striped mb-5">
         <thead>
         <tr>
+            <th>医療機関id</th>
             <th>物件番号</th>
             <th>医療機関名</th>
             <th>請求ステータス</th>
@@ -114,9 +116,10 @@
         @if ( isset($billings) && count($billings) > 0 )
             @foreach ($billings as $billing)
                 <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
+                    <td>{{ $billing->hospital->id }}</td>
                     <td>{{ $billing->hospital->contract_information->property_no ?? '' }}</td>
                     <td>{{ $billing->hospital->name }}</td>
-                    <td>{{ \App\Enums\BillingStatus::getDescription($billing->status) }}</td>
+                    <td>{{ BillingStatus::getDescription($billing->status) }}</td>
                     <td>
                         {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name }}
                     </td>
@@ -139,18 +142,21 @@
                         <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
                     </td>
                     <td>
-                        <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'claim_check' => 'yes'] )) }}" class="btn @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
-                            @if( $billing->status != \App\Enums\BillingStatus::UNCONFIRMED ) style="pointer-events: none;" @endif
+                        <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CHECKING, 'claim_check' => 'yes'] )) }}"
+                            class="btn @if( $billing->status != BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
+                            @if( $billing->status != BillingStatus::UNCONFIRMED ) style="pointer-events: none;" @endif
                         >請求確認</a>
                     </td>
                     <td>
-                        <a href="{{ route('billing.status.update', array_merge(request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 4, 'claim_confirmation' => 'yes'])) }}" class="btn @if( ($billing->status == \App\Enums\BillingStatus::CHECKING) || ($billing->status == \App\Enums\BillingStatus::CONFIRMED) ) btn-primary @else btn-default @endif"
-                            @if( ($billing->status == \App\Enums\BillingStatus::CHECKING) || ($billing->status == \App\Enums\BillingStatus::CONFIRMED) )  style="pointer-events: unset;" @else style="pointer-events: none;" @endif
+                        <a href="{{ route('billing.status.update', array_merge(request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CONFIRM, 'claim_confirmation' => 'yes'])) }}"
+                            class="btn @if( ($billing->status == BillingStatus::CHECKING) || ($billing->status == BillingStatus::CONFIRMED) ) btn-primary @else btn-default @endif"
+                            @if( ($billing->status == BillingStatus::CHECKING) || ($billing->status == BillingStatus::CONFIRMED) )  style="pointer-events: unset;" @else style="pointer-events: none;" @endif
                         >請求確定</a>
                     </td>
 
                     <td>
-                        <a href="{{ route('billing.status.update', array_merge(request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => 2, 'undo_commit' => 'yes'])) }}" class="btn @if( $billing->status == 4) btn-primary @else btn-default @endif"
+                        <a href="{{ route('billing.status.update', array_merge(request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CHECKING, 'undo_commit' => 'yes'])) }}"
+                            class="btn @if( $billing->status == 4) btn-primary @else btn-default @endif"
                             @if( $billing->status == 4) style="pointer-events: unset;" @else style="pointer-events: none;" @endif
                         >確定取消</a>
                     </td>
