@@ -33,11 +33,14 @@ class HospitalBasicResource extends Resource
             'pos_n' => $this->longitude,
             'pos_e' => $this->latitude,
             'streetview_url' => $this->streetview_url,
+            'tel' => $this->tel,
             'tel_ppc' => $this->paycall,
             'stations' => Station::getStations($rail_ids, $station_ids, $accesses),
             'open' => OpenResource::collection($this->medical_treatment_times),
             'non_consultation' => $this->consultation_note,
             'non_consultation_note' => $this->memo,
+            'public_status' => $this->status,
+            'update_at' => $this->updated_at,
         ];
     }
 }

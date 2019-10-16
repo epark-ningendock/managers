@@ -151,21 +151,21 @@ class Course extends SoftDeleteModel
             });
 
         // フリーワード（エリアなど）
-        if ($request->input('freewords_area') !== null)
+        if ($request->input('freewords') !== null)
             $query->whereHas('course_meta_informations', function ($query) use ($request) {
-                $query->where('area_station', 'like', '%' . $request->input('freewords_area') . '%');
+                $query->where('area_station', 'like', '%' . $request->input('freewords') . '%');
             });
 
         // フリーワード（施設特徴）
-        if ($request->input('freewords_hospital_point') !== null)
+        if ($request->input('freewords') !== null)
             $query->whereHas('course_meta_informations', function ($query) use ($request) {
-                $query->where('hospital_classification', 'like', '%' . $request->input('freewords_hospital_point') . '%');
+                $query->where('hospital_classification', 'like', '%' . $request->input('freewords') . '%');
             });
 
         // フリーワード（路線）
-        if ($request->input('freewords_rail') !== null)
+        if ($request->input('freewords') !== null)
             $query->whereHas('course_meta_informations', function ($query) use ($request) {
-                $query->where('rails', 'like', '%' . $request->input('freewords_rail') . '%');
+                $query->where('rails', 'like', '%' . $request->input('freewords') . '%');
             });
 
         // 都道府県コード

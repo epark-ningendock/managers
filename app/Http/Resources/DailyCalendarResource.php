@@ -15,7 +15,7 @@ class DailyCalendarResource extends Resource
     public function toArray($request)
     {
         return [
-            'yyyymmdd' => date('Ymd', strtotime($this->date)),
+            date('Ymd', strtotime($c->date)) => date('Ymd', strtotime($this->date)),
             'appoint_status' => $this->appoint_status,
             'reservation_frames' => $this->reservation_frames,
             'appoint_num' => $this->appoint_num,

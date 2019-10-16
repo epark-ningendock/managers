@@ -57,6 +57,7 @@ class SearchRequest extends ValidationRequest
             ],
             'hospital_category_code' => $this->input('hospital_category_code') ?? '',
             'course_category_code' => $this->input('course_category_code') ?? '',
+            'site_card' => $this->input('site_card') ?? '',
             'sort_price' => $this->input('course_price_sort') ?? '',
         ];
 
