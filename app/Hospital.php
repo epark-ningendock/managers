@@ -169,21 +169,21 @@ class Hospital extends Model
             });
 
         // フリーワード（エリアなど）
-        if ($request->input('freewords_area') !== null)
+        if ($request->input('freewords') !== null)
             $query->whereHas('courses.course_meta_informations', function ($query) use ($request) {
-                $query->where('area_station', 'like', '%' . $request->input('freewords_area') . '%');
+                $query->where('area_station', 'like', '%' . $request->input('freewords') . '%');
             });
 
         // フリーワード（施設特徴）
-        if ($request->input('freewords_hospital_point') !== null)
+        if ($request->input('freewords') !== null)
             $query->whereHas('courses.course_meta_informations', function ($query) use ($request) {
-                $query->where('hospital_classification', 'like', '%' . $request->input('freewords_hospital_point') . '%');
+                $query->where('hospital_classification', 'like', '%' . $request->input('freewords') . '%');
             });
 
         // フリーワード（路線）
-        if ($request->input('freewords_rail') !== null)
+        if ($request->input('freewords') !== null)
             $query->whereHas('courses.course_meta_informations', function ($query) use ($request) {
-                $query->where('rails', 'like', '%' . $request->input('freewords_rail') . '%');
+                $query->where('rails', 'like', '%' . $request->input('freewords') . '%');
             });
 
         // 都道府県コード
@@ -263,7 +263,16 @@ class Hospital extends Model
         if ($request->input('hospital_category_code') !== null) {
             $hospital_category_code = explode(",", $request->input('hospital_category_code'));
             $query->whereHas('hospital_details', function ($query) use ($hospital_category_code) {
-                $query->whereIn('hospital_category_sho_id', $hospital_category_code);
+                $query->whereIn('minor_classification_id', $hospital_category_code);
+                $query->where('select_status', 1);
+            });
+        }
+
+        // クレジットカード対応
+        if ($request->input('site_card') == 1) {
+            $query->whereHas('hospital_details', function ($query) {
+                $query->where('minor_classification_id', 5);
+                $query->whereNotNull('inputstrinng');
             });
         }
         // 検査コース分類コード
