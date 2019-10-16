@@ -18,7 +18,7 @@ class HospitalEmailSettingController extends Controller
         self::is_staff();
 
         return view('hospital_email_setting.index', [
-            'hospital_email_setting' => HospitalEmailSetting::where('hospital_id', session()->get('hospital_id'))->first()
+            'hospital_email_setting' => HospitalEmailSetting::firstOrCreate(['hospital_id' => session()->get('hospital_id')])
         ]);
     }
 
