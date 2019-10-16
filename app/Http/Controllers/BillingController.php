@@ -246,7 +246,7 @@ class BillingController extends Controller {
 
 		$hospital_id = session('hospital_id');
 		
-		$billings = Billing::where('hospital_id', '=', $hospital_id)->orderBy('billing_month')->paginate(12);
+		$billings = Billing::where('hospital_id', '=', $hospital_id)->orderBy('billing_month', 'desc')->paginate(12);
 
 		return view( 'billing.hospital-billing-listing', [
 			'billings'        => $billings,
