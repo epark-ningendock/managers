@@ -34,6 +34,7 @@ class BillingController extends Controller {
 		$selectedMonth = $this->getSelectedMonth();
 
 		$dateFilter = billingDateFilter();
+		session()->put('hospital_id', null);
 
 		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', str_replace('-', '', $selectedMonth))->paginate(100);
 
