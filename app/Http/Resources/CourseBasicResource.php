@@ -47,10 +47,13 @@ class CourseBasicResource extends CourseBaseResource
             ->put('district_name', $this[0]->hospital->district_code->name)
             ->put('address1', $this[0]->hospital->address1)
             ->put('address2', $this[0]->hospital->address2)
+            ->put('tel',  $this[0]->hospital->tel)
             ->put('tel_ppc',  $this[0]->hospital->paycall)
             ->put('stations', Station::getStations($rails, $stations, $accesses))
             ->put('non_consiltation', $this[0]->hospital->consultation_note)
             ->put('non_consultation_note', $this[0]->hospital->memo)
+            ->put('public_status', $this[0]->hospital->status)
+            ->put('update_at', $this[0]->hospital->updated_at)
             ->put('hospital_category', HospitalCategoryResource::collection($this[0]->hospital->hospital_details))
             ->merge(parent::baseCollections())
             ->toArray();

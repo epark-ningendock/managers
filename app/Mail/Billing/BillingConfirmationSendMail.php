@@ -26,11 +26,6 @@ class BillingConfirmationSendMail extends Mailable
         $this->attributes = $attributes;
     }
 
-
-	public function emailFrom() {
-		return ( env('EPARK_UNEI_MAIL_FROM') ) ? env('EPARK_UNEI_MAIL_FROM') : env('MAIL_FROM_ADDRESS');
-    }
-
     /**
      * Build the message.
      *
@@ -39,27 +34,19 @@ class BillingConfirmationSendMail extends Mailable
     public function build()
     {
         if ( session('hospital_id') ) {
-
             $view = 'billing.mail.billing-claim-hospital-confirmation';
-
         } elseif ( $this->attributes['email_type'] === 'claim_confirmation') {
-
             $view = 'billing.mail.billing-claim-confirmation';
-        
-
         } else {
-
             $view = 'billing.mail.billing-confirmation';
-
         }
 
         return $this
-                ->from($this->emailFrom())
+                ->from(env('EPARK_EMAIL_ADDRESS'))
                 ->subject($this->data['subject'])
                 ->attachData($this->attchment->output(), $this->data['attachment_file_name'] . 'pdf',[
                     'mime' => 'application/pdf',
                 ])
                 ->view($view, ['billing' => $this->data['billing'], 'attributes' => $this->attributes]);
-
     }
 }

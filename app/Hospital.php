@@ -169,21 +169,21 @@ class Hospital extends Model
             });
 
         // フリーワード（エリアなど）
-        if ($request->input('freewords_area') !== null)
+        if ($request->input('freewords') !== null)
             $query->whereHas('courses.course_meta_informations', function ($query) use ($request) {
-                $query->where('area_station', 'like', '%' . $request->input('freewords_area') . '%');
+                $query->where('area_station', 'like', '%' . $request->input('freewords') . '%');
             });
 
         // フリーワード（施設特徴）
-        if ($request->input('freewords_hospital_point') !== null)
+        if ($request->input('freewords') !== null)
             $query->whereHas('courses.course_meta_informations', function ($query) use ($request) {
-                $query->where('hospital_classification', 'like', '%' . $request->input('freewords_hospital_point') . '%');
+                $query->where('hospital_classification', 'like', '%' . $request->input('freewords') . '%');
             });
 
         // フリーワード（路線）
-        if ($request->input('freewords_rail') !== null)
+        if ($request->input('freewords') !== null)
             $query->whereHas('courses.course_meta_informations', function ($query) use ($request) {
-                $query->where('rails', 'like', '%' . $request->input('freewords_rail') . '%');
+                $query->where('rails', 'like', '%' . $request->input('freewords') . '%');
             });
 
         // 都道府県コード
@@ -198,28 +198,28 @@ class Hospital extends Model
         $district_no = $request->input('district_no');
         if (isset($district_no)) {
             $query->whereHas('district_code', function ($query) use ($district_no) {
-                $query->where('district_code', $district_no);
+                $query->whereIn('district_code', $district_no);
             });
         };
 
         // 路線コード
         $rail_no = $request->input('rail_no');
         if (isset($rail_no)) {
-            $query->orWhere('rail1', $rail_no)
-                ->orWhere('rail2', $rail_no)
-                ->orWhere('rail3', $rail_no)
-                ->orWhere('rail4', $rail_no)
-                ->orWhere('rail5', $rail_no);
+            $query->orWhereIn('rail1', $rail_no)
+                ->orWhereIn('rail2', $rail_no)
+                ->orWhereIn('rail3', $rail_no)
+                ->orWhereIn('rail4', $rail_no)
+                ->orWhereIn('rail5', $rail_no);
         };
 
         // 駅コード
         $station_no = $request->input('station_no');
         if (isset($station_no)) {
-            $query->orWhere('station1', $station_no)
-                ->orWhere('station2', $station_no)
-                ->orWhere('station3', $station_no)
-                ->orWhere('station4', $station_no)
-                ->orWhere('station5', $station_no);
+            $query->orWhereIn('station1', $station_no)
+                ->orWhereIn('station2', $station_no)
+                ->orWhereIn('station3', $station_no)
+                ->orWhereIn('station4', $station_no)
+                ->orWhereIn('station5', $station_no);
         };
 
         $from = $request->input('reservation_dt_from');
@@ -263,7 +263,16 @@ class Hospital extends Model
         if ($request->input('hospital_category_code') !== null) {
             $hospital_category_code = explode(",", $request->input('hospital_category_code'));
             $query->whereHas('hospital_details', function ($query) use ($hospital_category_code) {
-                $query->whereIn('hospital_category_sho_id', $hospital_category_code);
+                $query->whereIn('minor_classification_id', $hospital_category_code);
+                $query->where('select_status', 1);
+            });
+        }
+
+        // クレジットカード対応
+        if ($request->input('site_card') == 1) {
+            $query->whereHas('hospital_details', function ($query) {
+                $query->where('minor_classification_id', 5);
+                $query->whereNotNull('inputstrinng');
             });
         }
         // 検査コース分類コード

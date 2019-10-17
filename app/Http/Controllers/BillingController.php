@@ -34,6 +34,7 @@ class BillingController extends Controller {
 		$selectedMonth = $this->getSelectedMonth();
 
 		$dateFilter = billingDateFilter();
+		session()->put('hospital_id', null);
 
 		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', str_replace('-', '', $selectedMonth))->paginate(100);
 
@@ -128,8 +129,7 @@ class BillingController extends Controller {
 
         $billing->update( [ 'status' => $request->status ] );
 
-
-        if ( $email_send  ){
+        if ( $email_send ){
 
         	if ( session('hospital_id') ) {
         		$this->claimEmailCheckForHospital($request, $billing, []);
@@ -154,9 +154,7 @@ class BillingController extends Controller {
     public function claimEmailCheck($request, $billing, $attributes = [])
     {
 	    $selectedMonth = $this->getSelectedMonth();
-
         $dateFilter = billingDateFilter($billing->billing_month);
-
         $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
 
         if ( $hospitalEmailSetting ) {
@@ -166,8 +164,6 @@ class BillingController extends Controller {
                 'startedDate'     => $dateFilter['startedDate'],
                 'endedDate'      => $dateFilter['endedDate'],
             ] )->setPaper('legal', 'landscape');
-
-
 
             $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
 
@@ -182,12 +178,11 @@ class BillingController extends Controller {
 	            'selectedMonth' => $selectedMonth
             ];
 
-
             Mail::to( [
                 $hospitalEmailSetting->billing_email1,
                 $hospitalEmailSetting->billing_email2,
                 $hospitalEmailSetting->billing_email3,
-                $hospitalEmailSetting->billing_fax_number,
+                $hospitalEmailSetting->billing_fax_number . '@faxmail.com',
             ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
 
             $billingMailHistory = new BillingMailHistory();
@@ -198,19 +193,16 @@ class BillingController extends Controller {
                 'to_address2' => $hospitalEmailSetting->billing_email2,
                 'to_address3' => $hospitalEmailSetting->billing_email3,
                 'cc_name'     => $hospitalEmailSetting->hospital->name,
-                'fax'         => $hospitalEmailSetting->billing_fax_number,
+                'fax'         => $hospitalEmailSetting->billing_fax_number . '@faxmail.com',
                 'mail_type'   => ( $hospitalEmailSetting->mail_type == 1 ) ? 1 : 2,
             ] );
-
         }
 	}
 
 	public function claimEmailCheckForHospital($request, $billing, $attributes = [])
 	    {
 		    $selectedMonth = $this->getSelectedMonth();
-
 	        $dateFilter = billingDateFilter($billing->billing_month);
-
 	        $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', session('hospital_id') )->first();
 
 	        if ( $hospitalEmailSetting ) {
@@ -234,23 +226,19 @@ class BillingController extends Controller {
 		            'selectedMonth' => $billing->billing_month
 	            ];
 
-
 	            Mail::to( [
-	                ( env('EPARK_UNEI_MAIL_TO') ) ? env('EPARK_UNEI_MAIL_TO') : env('MAIL_FROM_ADDRESS'),
+	                env('DOCK_EMAIL_ADDRESS'),
 	            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
-
 	        }
 		}	
 
 	public function hospitalBilling() {
 
 		$hospital_id = session('hospital_id');
-		
-		$billings = Billing::where('hospital_id', '=', $hospital_id)->orderBy('billing_month')->paginate(12);
+		$billings = Billing::where('hospital_id', '=', $hospital_id)->orderBy('billing_month', 'desc')->paginate(12);
 
 		return view( 'billing.hospital-billing-listing', [
 			'billings'        => $billings,
 		] );		
-
 	}
 }

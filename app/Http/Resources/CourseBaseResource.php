@@ -53,6 +53,11 @@ class CourseBaseResource extends Resource
                 'pre_account_price' => $this[0]->pre_account_price,
                 'flg_local_payment' => $this[0]->is_local_payment,
                 'flg_pre_account' => $this[0]->is_pre_account,
+                'sho_names' => $this->createNames()[0],
+                'exams' => $this->createNames()[1],
+                'feature' => $this->createNames()[2],
+                'require_time' => $this->createNames()[3],
+                'result' => $this->createNames()[4],
                 'auto_calc_application' => $this[0]->auto_calc_application,
             ]
         );
@@ -91,6 +96,46 @@ class CourseBaseResource extends Resource
         }
 
         return '0';
+    }
+
+    private function createNames() {
+        $sho_names = '';
+        $exams = '';
+        $feature = '';
+        $require_time = '';
+        $result = '';
+        foreach ($this[0]->course_details as $detail) {
+            if ($detail->major_classification_id == 13
+                && $detail->middle_classification_id == 30
+            && $detail->select_status == 1) {
+                $sho_names += $detail->minor_classification->name . ',';
+            }
+
+            if ($detail->major_classification_id == 11
+                && $detail->middle_classification_id == 59
+                && $detail->select_status == 1) {
+                $exams += $detail->minor_classification->name . ',';
+            }
+
+            if ($detail->major_classification_id == 11
+                && $detail->select_status == 1) {
+                $feature += $detail->minor_classification->name . ',';
+            }
+
+            if ($detail->major_classification_id == 15
+                && $detail->middle_classification_id == 33
+                && $detail->select_status == 1) {
+                $require_time += $detail->minor_classification->name . ',' . $detail->inputstring;
+            }
+
+            if ($detail->major_classification_id == 19
+                && $detail->middle_classification_id == 37
+                && $detail->select_status == 1) {
+                $result += $detail->minor_classification->name . ',' . $detail->inputstring;
+            }
+        }
+
+        return [$sho_names, $exams, $feature, $require_time, $result];
     }
 
     private function createURL() {
