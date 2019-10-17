@@ -6,6 +6,7 @@ use Illuminate\Http\Resources\Json\Resource;
 
 class CalendarDailyResource extends Resource
 {
+
     /**
      * 検査コース空満情報（日別）resource into an array.
      *
@@ -22,7 +23,7 @@ class CalendarDailyResource extends Resource
             'course_code' => $this->code,
             'all_calender' => $this->calendar_days->map(function ($c) {
                 return (object)[
-                    date('Ymd', strtotime($c->date)) => date('Ymd', strtotime($c->date)),
+                    date('Ymd', strtotime($c->date)),
                     'appoint_status' => $c->appoint_status,
                     'appoint_num' => $c->appoint_num,
                     'reservation_frames' => $c->reservation_frames,

@@ -198,28 +198,28 @@ class Hospital extends Model
         $district_no = $request->input('district_no');
         if (isset($district_no)) {
             $query->whereHas('district_code', function ($query) use ($district_no) {
-                $query->where('district_code', $district_no);
+                $query->whereIn('district_code', $district_no);
             });
         };
 
         // 路線コード
         $rail_no = $request->input('rail_no');
         if (isset($rail_no)) {
-            $query->orWhere('rail1', $rail_no)
-                ->orWhere('rail2', $rail_no)
-                ->orWhere('rail3', $rail_no)
-                ->orWhere('rail4', $rail_no)
-                ->orWhere('rail5', $rail_no);
+            $query->orWhereIn('rail1', $rail_no)
+                ->orWhereIn('rail2', $rail_no)
+                ->orWhereIn('rail3', $rail_no)
+                ->orWhereIn('rail4', $rail_no)
+                ->orWhereIn('rail5', $rail_no);
         };
 
         // 駅コード
         $station_no = $request->input('station_no');
         if (isset($station_no)) {
-            $query->orWhere('station1', $station_no)
-                ->orWhere('station2', $station_no)
-                ->orWhere('station3', $station_no)
-                ->orWhere('station4', $station_no)
-                ->orWhere('station5', $station_no);
+            $query->orWhereIn('station1', $station_no)
+                ->orWhereIn('station2', $station_no)
+                ->orWhereIn('station3', $station_no)
+                ->orWhereIn('station4', $station_no)
+                ->orWhereIn('station5', $station_no);
         };
 
         $from = $request->input('reservation_dt_from');
