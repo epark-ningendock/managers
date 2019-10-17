@@ -77,6 +77,14 @@ class HospitalEmailSettingImport extends ImportBAbstract implements WithEvents
                 } else if (!isset(static::$arr['reception_email4'])) {
                     static::$arr['reception_email4'] = $value;
                 }
+
+                if (!isset(static::$arr['billing_email1'])) {
+                    static::$arr['billing_email1'] = $value;
+                } else if (!isset(static::$arr['billing_email2'])) {
+                    static::$arr['billing_email2'] = $value;
+                } else if (!isset(static::$arr['billing_email3'])) {
+                    static::$arr['billing_email3'] = $value;
+                }
                 break;
             case '21':
                 static::$arr['epark_in_hospital_reception_mail_flg'] = $value;
