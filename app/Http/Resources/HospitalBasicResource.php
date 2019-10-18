@@ -27,7 +27,7 @@ class HospitalBasicResource extends Resource
             'name' => $this->name,
             'zip_code' => $this->postcode,
             'pref_name' => $this->prefecture->name,
-            'district_name' => (isset($this->contract_information))? $this->contract_information->code : '',
+            'district_name' => (isset($this->district_code))? $this->district_code->name : '',
             'address1' => $this->address1,
             'address2' => $this->address2,
             'pos_n' => $this->longitude,
