@@ -27,8 +27,7 @@ class RouteResource extends Resource
                     ->orWhere('rail3', $this->id)
                     ->orWhere('rail4', $this->id)
                     ->orWhere('rail5', $this->id)
-                    ->count(),
-                    'stations'=> StationResource::collection($this->rail_station)                     
+                    ->count()
                 ]
             ]           
         ];     
