@@ -17,13 +17,18 @@ class PlaceController extends Controller
      */
     public function index(PlaceRequest $request)
     {
+
+        $query = Prefecture::with([
+            'district_codes.hospitals',
+            'hospitals',
+        ]);
+
+        if (! empty($request->input('place_code'))) {
+            $query ->where('code', $request->input('place_code'));
+
+        }
         return PlaceResource::collection(
-            Prefecture::with([
-                'district_codes.hospitals',
-                'hospitals',
-            ])
-                ->where('id', $request->input('place_code'))
-                ->get()
+            $query->get()
         );
     }
 }
