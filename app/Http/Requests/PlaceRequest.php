@@ -14,7 +14,7 @@ class PlaceRequest extends ValidationRequest
     public function rules()
     {
         return [
-           'place_code' => 'required|numeric|min:1|max:47',
+           'place_code' => 'nullable|numeric|min:0|max:47',
         ];
 
     }
