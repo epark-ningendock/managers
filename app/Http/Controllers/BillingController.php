@@ -24,9 +24,8 @@ class BillingController extends Controller {
 	}
 
 	public function getSelectedMonth() {
-
-		return ( request('billing_month') ) ? request('billing_month') : now()->format('Y-m');
-
+        $default_month = (now()->day < 21 ? now()->subMonth(1)->format('Y-m') : now()->format('Y-m'));
+        return ( request('billing_month') ) ? request('billing_month') : $default_month;
 	}
 
 	public function billingDateFilter($yearMonth = 0) {
