@@ -1135,3 +1135,12 @@ input[type=checkbox]:checked:disabled + label:before { content: "\f046"; opacity
     }
   }
 }
+
+#billing-info {
+  .box-body {
+    font-size: 1.1em;
+  }
+  .label-text {
+    margin-right: 10px;
+  }
+}

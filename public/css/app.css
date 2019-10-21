@@ -3435,3 +3435,11 @@ input[type=checkbox]:checked:disabled + label:before {
   display: block;
 }
 
+#billing-info .box-body {
+  font-size: 1.1em;
+}
+
+#billing-info .label-text {
+  margin-right: 10px;
+}
+
