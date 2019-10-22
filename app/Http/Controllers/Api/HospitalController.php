@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
 use App\Hospital;
-
+use Illuminate\Http\Request;
 use App\Http\Requests\HospitalRequest;
+use App\Http\Requests\HospitalReserveCntRequest;
 
 use App\Http\Resources\HospitalIndexResource;
 use App\Http\Resources\HospitalBasicResource;
 use App\Http\Resources\HospitalCoursesResource;
 use App\Http\Resources\HospitalContentsResource;
+use App\Http\Resources\HospitalReleaseResource;
+use App\Http\Resources\HospitalReleaseCourseResource;
+use App\Http\Resources\HospitalReserveCntBaseResource;
 
 use Log;
 
@@ -58,6 +63,41 @@ class HospitalController extends Controller
     public function contents(HospitalRequest $request)
     {
         return new HospitalContentsResource($this->getContent($request->input('hospital_code')));
+    }
+
+    /**
+     * 公開中医療機関コード取得API
+     *
+     * @param  App\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function release(Request $request)
+    {
+        return new HospitalReleaseResource($this->getReleaseHospital());
+    }
+
+    /**
+     * 公開中医療機関コース取得API
+     *
+     * @param  App\Http\Requests\HospitalRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function release_course(HospitalRequest $request)
+    {
+        $data = ['hospital_code' => $request->input('hospital_code')];
+        return new HospitalReleaseCourseResource($data);
+    }
+
+    /**
+     * 医療機関予約数取得API
+     *
+     * @param  App\Http\Requests\HospitalReserveCntRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function reserve_cnt(HospitalReserveCntRequest $request)
+    {
+        $data = ['hospital_code' => $request->input('hospital_code')];
+        return new HospitalReserveCntBaseResource($data);
     }
 
     /**
@@ -116,5 +156,15 @@ class HospitalController extends Controller
             ->first();
 
         return $entity;
+    }
+
+    /**
+     * 公開中医療機関情報取得
+     */
+    private function getReleaseHospital() {
+
+        return Hospital::join('contract_informations', 'contract_informations.hospital_id', 'hospitals.id')
+            ->where('status', Status::VALID)
+            ->pluck('contract_informations.code');
     }
 }

@@ -15,9 +15,9 @@ class Prefecture extends BaseModel
         'updated_at'
     ];
 
-    public function rails(): BelongsToMany
+    public function prefecture_rail()
     {
-        return $this->belongsToMany(Rail::class);
+        return $this->belongsToMany('App\PrefectureRail', 'prefecture_id');
     }
 
     public function hospitals()

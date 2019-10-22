@@ -27,17 +27,17 @@ class Rail extends Model
         return $this->belongsToMany(Station::class);
     }
 
-    /**
-     * @return BelongsToMany
-     */
-    public function prefectures(): BelongsToMany
-    {
-        return $this->belongsToMany(Prefecture::class);
-    }
+//    /**
+//     * @return BelongsToMany
+//     */
+//    public function prefectures(): BelongsToMany
+//    {
+//        return $this->belongsTo('App\Prefecture');
+//    }
 
-    public function prefecture_rails()
+    public function prefecture_rail()
     {
-        return $this->hasMany('App\PrefectureRail', 'rail_id');
+        return $this->hasOne('App\PrefectureRail', 'rail_id');
     }
     public function rail_station()
     {

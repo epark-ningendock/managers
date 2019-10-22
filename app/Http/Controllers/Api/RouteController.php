@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Status;
 use App\Http\Controllers\Controller;
+use App\Prefecture;
 use App\Rail;
 use App\Http\Requests\RouteRequest;
 use  App\Http\Resources\RouteResource;
@@ -20,21 +22,24 @@ class RouteController extends Controller
         $place_code = $request->input('place_code');
         $rail_no = $request->input('rail_no');
 
-        $query = Rail::with(
-            'prefecture_rails.prefecture.hospitals',
-            'rail_station.station'
-        );
+        $pref = Prefecture::where('code', $place_code)->first();
+
+        $query = Rail::
+            join('prefecture_rail', function ($join) use ($place_code) {
+                $join->on('rails.id', '=', 'prefecture_rail.rail_id')
+                    ->where('prefecture_rail.prefecture_id', $place_code)
+                    ->where('prefecture_rail.status', Status::VALID);
+            });
+        $query->where('rails.status', Status::VALID);
 
         if (! empty($rail_no)) {
             $query->where('id', $rail_no);
         }
 
-        $query->wherehas('rail_station.station', function ($q) use ($place_code) {
-            $q->where('prefecture_id', $place_code);
-        });
+        $routes = $query->get();
 
-        $data = $query->get();
+        $data = ['pref' => $pref, 'routes' => $routes];
 
-        return RouteResource::collection($data);
+        return new RouteResource($data);
     }
 }

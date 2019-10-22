@@ -12,52 +12,51 @@
 <!-- ページの見出しを入力 -->
 @section('content_header')
     <h1>
-        <i class="fa fa-hospital-o"> </i> {{ trans('messages.billing') }}
+        <i class="fa fa-hospital-o"> </i> {{ trans('messages.billing') }}-
+        <span> {{ $billing->hospital->name }}</span>
     </h1>
 @stop
 
+@section('billing_info')
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <div class="box-tools" data-widget="collapse">
+                <button type="button" class="btn btn-sm">
+                    <i class="fa fa-minus"></i></button>
+            </div>
+            <h1 class="box-title">医療機関 {{ $billing->hospital->name }}</h1>
+        </div>
+        <div id="billing-info" class="form-entry">
+            <div class="box-body">
+                <div class="form-group ">
+                    <p><span class="text-bold label-text">プラン名</span> {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}</p>
+                </div>
+
+                <div class="form-group">
+                    <p><span class="text-bold label-text">月額契約料</span>{{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee) }}円</p>
+                </div>
+
+                <div class="form-group">
+                    <p><span class="text-bold label-text">成果コース</span>{{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate }}%</p>
+                </div>
+
+                <div class="form-group ">
+                    <p><span class="text-bold label-text">手数料合計金額</span>{{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円</p>
+                </div>
+
+                <div class="form-group ">
+                    <p><span class="text-bold label-text">請求金額合計（税抜金額）</span>{{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee +
+                    $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
+                        ( {{ number_format(floor(($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee +
+                    $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) / TaxClass::TEN_PERCENT)) }}円 )</p>
+                </div>
+            </div>
+        </div>
+    </div>
+@stop
 
 
 @section('table')
-
-
-    <ul class="billing-detail-list">
-        <li>
-            <small class="text-bold label-text">医療機関</small>
-            <span class="value-text">{{ $billing->hospital->name }}</span>
-        </li>
-        <li>
-            <small class="text-bold label-text">プラン名</small>
-            <span class="value-text">{{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}</span>
-        </li>
-        <li>
-            <small class="text-bold label-text">月額契約料</small>
-            <span class="value-text">
-                {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee) }}円
-            </span>
-        </li>
-        <li>
-            <small class="text-bold label-text">成果コース</small>
-            <span class="value-text">
-                {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate }}%
-            </span>
-        </li>
-        <li>
-            <small class="text-bold label-text">手数料合計金額</small>
-            <span class="value-text">
-                {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
-            </span>
-        </li>
-        <li>
-            <small class="text-bold label-text">請求金額合計（税抜金額）</small>
-            <span class="value-text">
-                {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
-                    $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
-                ( {{ number_format(floor(($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
-                    $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) / TaxClass::TEN_PERCENT)) }}円 )
-            </span>
-        </li>
-    </ul>
 
     <p class="action-button-list text-center m-3 mb-5">
 
@@ -92,7 +91,7 @@
 
     <div class="table-responsive">
 
-        <table id="example2" class="table table-bordered table-hover table-striped mb-5">
+        <table id="example2" class="table no-border table-hover table-striped mb-5">
 
             <thead>
             <tr>

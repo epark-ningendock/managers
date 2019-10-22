@@ -19,7 +19,8 @@ class PlaceResource extends Resource
             'place' => [
                 'pref_no' => $this->id,
                 'pref_name' => $this->name,
-                'count' => $this->hospitals->count()
+                'count' => $this->hospitals->count(),
+                'districts' => DistrictResource::collection($this->district_codes)
             ]
         ];
     }
