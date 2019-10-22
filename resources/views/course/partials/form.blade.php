@@ -238,23 +238,23 @@
       <div class="form-horizontal">
           本日から
           <div class="d-inline-block @if ($errors->has('reception_start_day')) has-error @endif" >
-              <input type="number" id="reception_start_day" name="reception_start_day" class="form-control d-inline-block ml-2" style="width:60px;"
-                     value="{{ old('reception_start_day', (isset($course) ? $course->reception_start_date%1000 : 6)) }}" />
+              <input type="number" id="reception_start_month" name="reception_start_month" class="form-control d-inline-block ml-2" style="width:60px;"
+                     value="{{ old('reception_start_month', (isset($course) ? intdiv($course->reception_start_date, 1000) : 6)) }}" />
           </div>
           ヶ月
           <div class="d-inline-block @if ($errors->has('reception_start_month')) has-error @endif" >
-              <input type="number" id="reception_start_month" name="reception_start_month" class="form-control d-inline-block ml-2 mr-2" style="width:60px;"
-                     value="{{ old('reception_start_month', (isset($course) ? intdiv($course->reception_start_date, 1000) : 0)) }}" />
+              <input type="number" id="reception_start_day" name="reception_start_day" class="form-control d-inline-block ml-2 mr-2" style="width:60px;"
+                     value="{{ old('reception_start_day', (isset($course) ? $course->reception_start_date%1000 : 0)) }}" />
           </div>
           日間、受付可能。 うち
           <div class="d-inline-block @if ($errors->has('reception_end_day')) has-error @endif" >
-              <input type="number" id="reception_end_day" name="reception_end_day" class="form-control d-inline-block ml-2 mr-2" style="width:60px;"
-                     value="{{ old('reception_end_day', (isset($course) ? $course->reception_end_date % 1000 : 0)) }}" />
+              <input type="number" id="reception_end_month" name="reception_end_month" class="form-control d-inline-block ml-2 mr-2" style="width:60px;"
+                     value="{{ old('reception_end_month', (isset($course) ? intdiv($course->reception_end_date, 1000) : 0)) }}" />
           </div>
           ヶ月
           <div class="d-inline-block @if ($errors->has('reception_end_month')) has-error @endif" >
-              <input type="number" id="reception_end_month" name="reception_end_month" class="form-control d-inline-block ml-2" style="width:60px;"
-                     value="{{ old('reception_end_month', (isset($course) ? intdiv($course->reception_end_date, 1000) : 7)) }}" />
+              <input type="number" id="reception_end_day" name="reception_end_day" class="form-control d-inline-block ml-2" style="width:60px;"
+                     value="{{ old('reception_end_day', (isset($course) ? $course->reception_end_date%1000 : 7)) }}" />
           </div>
           日間から受付開始。
       </div>
