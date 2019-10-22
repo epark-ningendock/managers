@@ -38,6 +38,15 @@ Route::prefix('v1')->group(function () {
     // 医療機関情報取得API
     Route::match(['get', 'post'], 'hospital/', 'HospitalController@index')->middleware('jsonp');
 
+    // 公開中医療機関情報取得API
+    Route::match(['get', 'post'], 'hospital/release', 'HospitalController@release')->middleware('jsonp');
+
+    // 公開中医療機関コース情報取得API
+    Route::match(['get', 'post'], 'hospital/release_course', 'HospitalController@release_course')->middleware('jsonp');
+
+    // 医療機関予約数取得API
+    Route::match(['get', 'post'], 'hospital/reserve_cnt', 'HospitalController@reserve_cnt')->middleware('jsonp');
+
     // 検査コース基本情報取得API
     Route::match(['get', 'post'], 'course/basic/', 'CourseController@basic')->middleware('jsonp');
 

@@ -137,6 +137,11 @@ class Course extends SoftDeleteModel
         return $this->belongsTo('App\TaxClass');
     }
 
+    public function reservations()
+    {
+        return $this->hasMany('App\Reservation');
+    }
+
     /**
      * 検査コース一覧検索
      *
