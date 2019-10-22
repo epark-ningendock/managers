@@ -97,7 +97,7 @@
 
 
     <div class="table-responsive">
-    <table id="example2" class="table table-bordered table-hover table-striped mb-5">
+    <table id="example2" class="table no-border table-hover table-striped mb-5">
         <thead>
         <tr>
             <th>物件番号</th>

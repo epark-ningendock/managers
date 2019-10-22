@@ -2,9 +2,10 @@
 
 <!-- ページの内容を入力 -->
 @section('main-content')
-  
+
   <div class="row">
     <div class="col-xs-12">
+      @yield('billing_info')
       <div class="box">
         <!-- Message -->
         @include('layouts.partials.message')
