@@ -21,11 +21,12 @@ class HospitalReserveCntBaseResource extends Resource
      */
     public function toArray($request)
     {
-        $data = ['hospital_code' => $this['hospital_code']];
-        return [
-            'status' => 0,
-            'data' => $this->createResult()
-        ];
+
+        return collect([])
+            ->put('status', 0)
+            ->merge($this->createResult())
+            ->toArray();
+
     }
 
     private function createResult() {
