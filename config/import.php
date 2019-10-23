@@ -218,4 +218,9 @@ return [
         'import' => MemberLoginInfoImport::class,
         'seed' => false,
     ],
+    't_reserve_claim.csv' => [
+        'model' => \App\ReservationOption::class,
+        'import' => \App\Imports\ReservationOptionImport::class,
+        'seed' => true,
+    ],
 ];

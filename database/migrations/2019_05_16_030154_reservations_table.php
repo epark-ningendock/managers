@@ -18,7 +18,7 @@ class ReservationsTable extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('hospital_id')->unsigned();
-            $table->integer('course_id')->unsigned();
+            $table->integer('course_id')->nullable()->unsigned();
             $table->date('reservation_date');
             $table->string('start_time_hour', 2)->nullable();
             $table->string('start_time_min', 2)->nullable();
