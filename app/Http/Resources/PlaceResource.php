@@ -17,9 +17,9 @@ class PlaceResource extends Resource
         return [
             'status' => 0,
             'place' => [
-                'pref_no' => $this->id,
-                'pref_name' => $this->name,
-                'count' => $this->hospitals->count(),
+                'pref_no' => $this[0]->id,
+                'pref_name' => $this[0]->name,
+                'count' => $this[0]->hospitals->count(),
                 'districts' => DistrictResource::collection($this->district_codes)
             ]
         ];

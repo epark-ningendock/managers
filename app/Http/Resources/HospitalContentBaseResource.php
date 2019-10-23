@@ -32,8 +32,8 @@ class HospitalContentBaseResource extends Resource
         $hospital_movie = collect(['access_movie_url' => '',]);
 
         return collect([])
-            ->merge($this->_main_image($this->hospital_categories, 1) ?? $main_image_pc)
-            ->merge($this->_main_image($this->hospital_categories, 2) ?? $main_image_sp)
+            ->merge($this->_main_image($this->hospital_categories, 4) ?? $main_image_pc)
+            ->merge($this->_main_image($this->hospital_categories, 5) ?? $main_image_sp)
             ->put('img_sub', $this->_sub_images($this->hospital_categories))
             ->merge($this->_top_title($this->hospital_categories) ?? $top_title)
             ->put('point', $this->_recommend($this->hospital_categories))
@@ -57,7 +57,8 @@ class HospitalContentBaseResource extends Resource
     private function _main_image($hospital_categories, $image_location_number)
     {
         $categories = $hospital_categories->filter(function ($c) use ($image_location_number) {
-            return isset($c->image_order) && $c->image_order->image_location_number === $image_location_number;
+            return (isset($c->image_order))
+                && ($c->image_order === $image_location_number);
         });
 
         $images = $categories->map(function ($i) use ($image_location_number) {
@@ -74,12 +75,13 @@ class HospitalContentBaseResource extends Resource
      * 医療施設メイン画像取得
      * 
      * @param  医療機関カテゴリ
-     * @return 医療施設メイン
+     * @return 医療施設サブ
      */
     private function _sub_images($hospital_categories)
     {
         $categories = $hospital_categories->filter(function ($c) {
-            return isset($c->image_order) && $c->image_order->image_location_number === 2;
+            return isset($c->image_order)
+                && in_array($c->image_order, [6,7,8,9]);
         });
 
         $images = $categories->map(function ($i) {
@@ -99,8 +101,7 @@ class HospitalContentBaseResource extends Resource
     {
         $categories = $hospital_categories->filter(function ($c) {
             return isset($c->image_order)
-                && $c->image_order->image_group_number === 3
-                && $c->image_order->image_location_number === 1;
+                && $c->image_order === 10;
         });
 
         $texts = $categories->map(function ($t) {
@@ -120,7 +121,8 @@ class HospitalContentBaseResource extends Resource
     private function _recommend($hospital_categories)
     {
         $categories = $hospital_categories->filter(function ($c) {
-            return isset($c->image_order) && $c->image_order->image_group_number === 5;
+            return isset($c->image_order)
+                && in_array($c->image_order, [12,13,14,15]);
         });
 
         $images = $categories->map(function ($i) {
@@ -149,7 +151,8 @@ class HospitalContentBaseResource extends Resource
     private function _hospital_photo($hospital_categories)
     {
         $categories = $hospital_categories->filter(function ($c) {
-            return isset($c->image_order) && $c->image_order->image_group_number === 8;
+            return isset($c->image_order)
+                && in_array($c->image_order, [27, 28, 29, 30, 31]);
         });
 
         $images = $categories->map(function ($i) {
@@ -176,7 +179,8 @@ class HospitalContentBaseResource extends Resource
     private function _photo($hospital_categories)
     {
         $categories = $hospital_categories->filter(function ($c) {
-            return isset($c->image_order) && $c->image_order->image_group_number === 8;
+            return isset($c->order)
+                && in_array($c->order, [1, 2, 3, 4]);
         });
 
         $images = $categories->map(function ($t) {
@@ -203,8 +207,7 @@ class HospitalContentBaseResource extends Resource
     {
         $categories = $hospital_categories->filter(function ($c) {
             return isset($c->image_order)
-                && $c->image_order->image_group_number === 4
-                && $c->image_order->image_location_number === 1;
+                && $c->image_order === 11;
         });
 
         $texts = $categories->map(function ($t) {
@@ -223,7 +226,8 @@ class HospitalContentBaseResource extends Resource
     private function _interview($hospital_categories)
     {
         $categories = $hospital_categories->filter(function ($c) {
-            return isset($c->image_order) && $c->image_order->image_group_number === 6;
+            return isset($c->image_order)
+                && $c->image_order === 16;
         });
 
         $texts = $categories->map(function ($i) {
@@ -254,7 +258,8 @@ class HospitalContentBaseResource extends Resource
     private function _staff($hospital_categories)
     {
         $categories = $hospital_categories->filter(function ($c) {
-            return isset($c->image_order) && $c->image_order->image_group_number === 7;
+            return isset($c->image_order)
+                && in_array($c->image_order, [17, 18, 19, 20, 21, 22, 23, 24, 25, 26]);
         });
         $texts = $categories->map(function ($i) {
             $url = $this->_filepath($i->hospital_image);
@@ -277,8 +282,6 @@ class HospitalContentBaseResource extends Resource
     {
         if (!isset($hospital_image)) return '';
         $path = $hospital_image->path ?? '';
-        $name = $hospital_image->name ?? '';
-        $extension = $hospital_image->extension ?? '';
-        return $path === '' || $extension === '' || $name === '' ? '' : WWW_SITE . $path . $name . $extension;
+        return $path ;
     }
 }

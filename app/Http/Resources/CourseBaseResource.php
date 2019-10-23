@@ -53,11 +53,11 @@ class CourseBaseResource extends Resource
                 'pre_account_price' => $this[0]->pre_account_price,
                 'flg_local_payment' => $this[0]->is_local_payment,
                 'flg_pre_account' => $this[0]->is_pre_account,
-                'sho_names' => $this->createNames()[0],
-                'exams' => $this->createNames()[1],
-                'feature' => $this->createNames()[2],
-                'require_time' => $this->createNames()[3],
-                'result' => $this->createNames()[4],
+//                'sho_names' => $this->createNames()[0],
+//                'exams' => $this->createNames()[1],
+//                'feature' => $this->createNames()[2],
+//                'require_time' => $this->createNames()[3],
+//                'result' => $this->createNames()[4],
                 'auto_calc_application' => $this[0]->auto_calc_application,
             ]
         );
@@ -72,11 +72,11 @@ class CourseBaseResource extends Resource
     private function getFlowImagepath($hospital_categories, $image_location_number) : string
     {
         $categories = $hospital_categories->filter(function ($c) use ($image_location_number) {
-            return isset($c->image_order) && intval($c->image_order->image_location_number) == $image_location_number;
+            return isset($c->image_order) && intval($c->image_order) == $image_location_number;
         });
         $files = $categories->map(function ($c) {
-            if(isset($c->hospital_image->path) && isset($c->hospital_image->name) && isset($c->hospital_image->extension)) {
-                return $this->createURL() . $c->hospital_image->path . $c->hospital_image->name . $c->hospital_image->extension;
+            if(isset($c->hospital_image->path)) {
+                return  $c->hospital_image->path ;
             }
         })->toArray();
         return $files[0] ?? '';

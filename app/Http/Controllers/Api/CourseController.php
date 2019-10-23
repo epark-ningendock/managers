@@ -82,9 +82,8 @@ class CourseController extends Controller
             'hospital',
             'hospital.contract_information',
             'hospital.district_code',
-            'hospital.district_code.prefecture',
             'hospital.hospital_details',
-            'hospital.hospital_details.hospital_minor_classification',
+            'hospital.hospital_details.minor_classification',
             'hospital.hospital_categories',
             'hospital.hospital_categories.image_order',
             'hospital.hospital_categories.hospital_image'
@@ -92,7 +91,7 @@ class CourseController extends Controller
 //            ->whereHas('hospital.contract_information', function ($query) use ($hospital_code) {
 //                $query->where('code', $hospital_code);
 //            })
-            ->where('code', $course_code)
+//            ->where('code', $course_code)
             ->where('id', $course_no)
             ->get();
     }
