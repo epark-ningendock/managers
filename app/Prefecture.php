@@ -29,4 +29,9 @@ class Prefecture extends BaseModel
     {
         return $this->hasMany('App\DistrictCode');
     }
+
+    public function rails(): BelongsToMany
+    {
+        return $this->belongsToMany(Rail::class);
+    }
 }
