@@ -24,11 +24,15 @@ class PlaceController extends Controller
         ]);
 
         if (! empty($request->input('place_code'))) {
-            $query ->where('code', $request->input('place_code'));
+            $query ->where('prefectures.id', $request->input('place_code'));
 
         }
-        return PlaceResource::collection(
-            $query->get()
-        );
+
+        $place_code = $request->input('place_code');
+        $place_data = $query->get();
+        $data = ['place_data' => $place_data, 'place_code' => $place_code];
+
+
+        return new PlaceResource($data);
     }
 }

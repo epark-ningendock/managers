@@ -14,14 +14,32 @@ class PlaceResource extends Resource
      */
     public function toArray($request)
     {
+
         return [
             'status' => 0,
-            'place' => [
-                'pref_no' => $this[0]->id,
-                'pref_name' => $this[0]->name,
-                'count' => $this[0]->hospitals->count(),
-                'districts' => DistrictResource::collection($this->district_codes)
-            ]
+            'place' => $this->createPref()
         ];
+
+    }
+
+    private function createPref() {
+        $data = $this['place_data'];
+        $place_code = $this['place_code'];
+
+        $results = [];
+        foreach ($data as $pref) {
+            $result = [
+                'pref_no' => $pref->id,
+                'pref_name' => $pref->name
+            ];
+            if (!empty($place_code)) {
+                array_push($result, ['districts' => DistrictResource::collection($pref->district_codes)]);
+            }
+
+            $results[] = $result;
+
+        }
+
+        return $results;
     }
 }
