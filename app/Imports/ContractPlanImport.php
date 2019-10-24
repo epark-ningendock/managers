@@ -37,7 +37,7 @@ class ContractPlanImport extends ImportAbstract
         $row = $row->toArray();
 
         $model = new ContractPlan([
-            'plan_code' => $row['plan_cd'],
+            'plan_code' => sprintf('Y0%02d', $row['plan_cd']),
             'plan_name' => $row['plan_name'],
             'fee_rate' => $row['fee_rate'],
             'monthly_contract_fee' => $row['monthly_contract_fee'],

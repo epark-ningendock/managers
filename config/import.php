@@ -98,6 +98,11 @@ return [
         'import' => MinorClassificationImport::class,
         'seed' => true,
     ],
+    'm_contract_plan.csv' => [
+        'model' => ContractPlan::class,
+        'import' => ContractPlanImport::class,
+        'seed' => false,
+    ],
     'm_hospital.csv' => [
         'model' => Hospital::class,
         'import' => HospitalImport::class,
@@ -161,11 +166,6 @@ return [
     'm_course_file.csv' => [
         'model' => CourseImage::class,
         'import' => CourseImageImport::class,
-        'seed' => false,
-    ],
-    'm_contract_plan.csv' => [
-        'model' => ContractPlan::class,
-        'import' => ContractPlanImport::class,
         'seed' => false,
     ],
     'm_hospital_category.csv' => [
