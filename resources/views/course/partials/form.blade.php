@@ -213,10 +213,10 @@
          <label>コース表示期間</label>
          <div class="form-horizontal display-period">
              <span>表示開始</span>
-                {{ Form::text('publish_start_date', old('publish_start_date', (isset($course) ? $course->publish_start_date : (isset($disp_date_start) ? $disp_date_start : null))),
+                {{ Form::text('publish_start_date', old('publish_start_date', (isset($course) ? $course->publish_start_date->format('Y-m-d') : (isset($disp_date_start) ? $disp_date_start : null))),
                     ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-start', 'placeholder' => $disp_date_start]) }}
              <span>表示終了</span>
-                {{ Form::text('publish_end_date', old('publish_end_date', (isset($course) ? $course->publish_end_date : (isset($disp_date_end) ? $disp_date_end : null))),
+                {{ Form::text('publish_end_date', old('publish_end_date', (isset($course) ? $course->publish_end_date->format('Y-m-d') : (isset($disp_date_end) ? $disp_date_end : null))),
                     ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-end', 'placeholder' => $disp_date_end]) }}
         </div>
         @if ($errors->has('publish_start_date'))

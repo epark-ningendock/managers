@@ -149,7 +149,6 @@ class CourseController extends Controller
         $is_presettlement = $hospital->is_pre_account == '1' &&
             (Auth::user()->staff_auth->is_pre_account == Permission::EDIT
                 || Auth::user()->staff_auth->is_pre_account == Permission::UPLOAD);
-
         return view('course.edit')
             ->with('calendars', $calendars)
             ->with('tax_class', $tax_class)
