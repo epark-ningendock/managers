@@ -28,13 +28,13 @@ class HospitalCategory extends SoftDeleteModel
 
     public function image_order()
     {
-        return $this->belongsTo('App\ImageOrder');
+        return $this->belongsTo('App\ImageOrder', 'image_order', 'id');
     }
 
-    public function minor_classification()
-    {
-        return $this->belongsTo('App\HospitalMinorClassification', 'minor_classification_id')->withTrashed();
-    }
+//    public function minor_classification()
+//    {
+//        return $this->belongsTo('App\HospitalMinorClassification', 'minor_classification_id')->withTrashed();
+//    }
 
     public function scopeByImageOrder($query, $hospital_id, $image_order, $order)
     {

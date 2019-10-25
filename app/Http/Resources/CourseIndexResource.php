@@ -46,7 +46,7 @@ class CourseIndexResource extends CourseIndexBaseResource
             ->put('url_basic', $this->hospital->url)
             ->put('hospital_code', $this->hospital->contract_information->code)
             ->put('name', $this->hospital->name)
-            ->put('pref_name', $this->hospital->district_code->prefecture->name)
+            ->put('pref_name', $this->hospital->prefecture->name)
             ->put('district_name', $this->hospital->district_code->name)
             ->put('address1', $this->hospital->address1)
             ->put('address2', $this->hospital->address2)

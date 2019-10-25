@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\Status;
+use App\Enums\ReservationStatus;
 use App\Http\Controllers\Controller;
 use App\Hospital;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ use App\Http\Resources\HospitalReleaseResource;
 use App\Http\Resources\HospitalReleaseCourseResource;
 use App\Http\Resources\HospitalReserveCntBaseResource;
 
+use Carbon\Carbon;
 use Log;
 
 class HospitalController extends Controller
@@ -82,7 +84,7 @@ class HospitalController extends Controller
      * @param  App\Http\Requests\HospitalRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function release_course(HospitalRequest $request)
+    public function release_course(Request $request)
     {
         $data = ['hospital_code' => $request->input('hospital_code')];
         return new HospitalReleaseCourseResource($data);
@@ -94,9 +96,9 @@ class HospitalController extends Controller
      * @param  App\Http\Requests\HospitalReserveCntRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function reserve_cnt(HospitalReserveCntRequest $request)
+    public function reserve_cnt(Request $request)
     {
-        $data = ['hospital_code' => $request->input('hospital_code')];
+        $data = ['data' => $this->getReserveCnt()];
         return new HospitalReserveCntBaseResource($data);
     }
 
@@ -166,5 +168,53 @@ class HospitalController extends Controller
         return Hospital::join('contract_informations', 'contract_informations.hospital_id', 'hospitals.id')
             ->where('status', Status::VALID)
             ->pluck('contract_informations.code');
+    }
+
+    private function getReserveCnt() {
+
+        $from = Carbon::today()->subDay(30);
+        $to = Carbon::today();
+
+        $hospitals = Hospital::with([
+            'contract_information',
+            'courses' => function($q) {
+                $q->where('publish_start_date', '<=', Carbon::today())
+                    ->orWhereNull('publish_start_date');
+                $q->where('publish_end_date', '>=', Carbon::today())
+                    ->orWhereNull('publish_end_date');
+            }
+//            'courses.reservations' => function ($q) use ($from, $to) {
+//                $q->where('reservation_status', '<>', ReservationStatus::CANCELLED);
+//                $q->whereBetween('reservation_date', [$from, $to]);
+//            }
+        ])
+            ->where('hospitals.status', Status::VALID)
+            ->get();
+        $results = [];
+
+        foreach ($hospitals as $hospital) {
+
+            if (empty($hospital->contract_information)) {
+                continue;
+            }
+
+            if (empty($hospital->courses)) {
+                continue;
+            }
+
+            $result = [];
+            foreach ($hospital->courses as $course) {
+                if (empty($course->reservations)) {
+                    $result[] = ['course_no' => $course->id, 'r_vol' => 0];
+                    continue;
+                } else {
+                    $result[] = ['course_no' => $course->id, 'r_vol' => $course->reservations->count()];
+                }
+            }
+
+            $results[] = [$hospital->contract_information->code => $result];
+        }
+
+        return $results;
     }
 }

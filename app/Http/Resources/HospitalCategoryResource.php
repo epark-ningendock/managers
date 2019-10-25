@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\Status;
 use Illuminate\Http\Resources\Json\Resource;
 
 class HospitalCategoryResource extends Resource
@@ -14,24 +15,24 @@ class HospitalCategoryResource extends Resource
      */
     public function toArray($request)
     {
-        return !isset($this->hospital_minor_classification) ? [] :
-        [
-            [
-                'id' => $this->hospital_minor_classification->hospital_major_classification->id,
-                'title' => $this->hospital_minor_classification->hospital_major_classification->icon_name,
-                'text' => $this->hospital_minor_classification->hospital_major_classification->name,
-            ],
-            [
-                'id' => $this->hospital_minor_classification->hospital_middle_classification->id,
-                'title' => $this->hospital_minor_classification->hospital_middle_classification->icon_name,
-                'text' => $this->hospital_minor_classification->hospital_middle_classification->name,
-             ],
-            [
-                'id' => $this->hospital_minor_classification->id,
-                'title' => $this->hospital_minor_classification->icon_name,
-                'text' => $this->hospital_minor_classification->name,
-            ],
-        ];
+        $results = [];
+        if (empty($this)) {
+            return $results;
+        }
 
+        foreach ($this as $detail) {
+            if(empty($detail->select_status) || $detail->select_status != Status::VALID) {
+                continue;
+            }
+            $result =
+                [
+                    'id' => $detail->minor_classification->id,
+                    'title' => $this->minor_classification->icon_name,
+                    'text' => $this->minor_classification->name,
+                ];
+            array_merge($results, $result);
+        }
+
+        return $results;
     }
 }

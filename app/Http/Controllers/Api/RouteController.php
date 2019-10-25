@@ -30,6 +30,8 @@ class RouteController extends Controller
                     ->where('prefecture_rail.prefecture_id', $place_code)
                     ->where('prefecture_rail.status', Status::VALID);
             });
+//        $query->join('rail_station', 'rail_station.rail_id', 'rails.id');
+//        $query->join('stations', 'stations.id', 'rail_station.station_id');
         $query->where('rails.status', Status::VALID);
 
         if (! empty($rail_no)) {

@@ -21,36 +21,54 @@ class HospitalReserveCntBaseResource extends Resource
      */
     public function toArray($request)
     {
+        $data = $this['data'];
 
         return collect([])
             ->put('status', 0)
-            ->merge($this->createResult())
+            ->merge($data)
             ->toArray();
 
     }
 
     private function createResult() {
-        $hospital_code = explode(',', $this['hospital_code']);
+
+        $from = Carbon::today()->subDay(30);
+        $to = Carbon::today();
+
+        $hospitals = Hospital::with([
+            'courses' => function($q) {
+                $q->where('publish_start_date', '<=', Carbon::today())
+                    ->orWhereNull('publish_start_date');
+                $q->where('publish_end_date', '>=', Carbon::today())
+                    ->orWhereNull('publish_end_date');
+            },
+            'courses.reservations' => function ($q) use ($from, $to) {
+                $q->where('reservation_status', '<>', ReservationStatus::CANCELLED);
+                $q->whereBetween('reservation_date', [$from, $to]);
+            }
+            ])
+            ->where('status', Status::VALID)
+            ->get();
         $results = [];
 
         $i = 0;
-        foreach ($hospital_code as $code) {
-            $courses = $this->getCourseReserveCnt($code);
+        foreach ($hospitals as $hospital) {
 
-            if (! $courses) {
+            if (empty($hospital->courses)) {
                 continue;
             }
 
             $result = [];
-            $j = 0;
-            foreach ($courses as $course) {
-                $data = ['course_no' => $course->id, 'r_vol' => $this->getReserveCnt($course->id)];
-                $result[$j] = $data;
-                $j += 1;
+            foreach ($hospital->courses as $course) {
+                if (empty($course->reservations)) {
+                    $result[] = ['course_no' => $hospital->courses->id, 'r_vol' => 0];
+                    continue;
+                } else {
+                    $result[] = ['course_no' => $hospital->courses->id, 'r_vol' => $course->reservations->count()];
+                }
             }
-            $d = [$code, [$result]];
-            $results[$i] = $d;
-            $i += 1;
+
+            $results[$hospital->code] = $result;
         }
 
         return $results;
