@@ -66,8 +66,8 @@ class CourseFormRequest extends FormRequest
                 'answer08s' => 'array',
                 'answer09s' => 'array',
                 'answer10s' => 'array',
-                'course_display_start' => 'date|nullable',
-                'course_display_end' => 'date|nullable',
+                'publish_start_date' => 'date|nullable',
+                'publish_end_date' => 'date|nullable',
                 'reception_acceptance_day_end' => 'date|nullable',
             ];
         }

@@ -52,8 +52,8 @@ class Course extends SoftDeleteModel
         'created_at',
         'updated_at',
         'lock_version',
-        'course_display_start',
-        'course_display_end',
+        'publish_start_date',
+        'publish_end_date',
         'reception_acceptance_day_end'
     ];
 
