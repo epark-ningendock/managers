@@ -15,9 +15,9 @@ class RequestMiddleware
      */
     public function handle($request, Closure $next)
     {
-        //if (in_array(app()->environment(), ["staging", "production", "development"])) {
+        if (in_array(app()->environment(), ["staging", "production", "development"])) {
             $this->writeLog($request);
-        //}
+        }
         return $next($request);
     }
 
