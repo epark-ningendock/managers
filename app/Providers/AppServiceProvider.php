@@ -17,6 +17,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Resource::withoutWrapping();
+        if (request()->isSecure()) {
+            \URL::forceScheme('https');
+        }
     }
 
     /**
