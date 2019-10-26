@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Resources\Json\Resource;
+use URL;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -17,8 +18,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Resource::withoutWrapping();
-        if (request()->isSecure()) {
-            \URL::forceScheme('https');
+        if(config('app.env') === 'production' or config('app.env') === 'staging'){
+            URL::forceScheme('https');
         }
     }
 
