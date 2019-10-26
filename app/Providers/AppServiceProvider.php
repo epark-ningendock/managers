@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Resources\Json\Resource;
 use URL;
+use Log;
+use DB;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -20,6 +22,9 @@ class AppServiceProvider extends ServiceProvider
         Resource::withoutWrapping();
         if(config('app.env') === 'production' or config('app.env') === 'staging'){
             URL::forceScheme('https');
+            DB::listen(function ($query) {
+                Log::info("Query Time:{$query->time}s] $query->sql");
+            });
         }
     }
 
