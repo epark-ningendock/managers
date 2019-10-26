@@ -314,10 +314,11 @@ class Hospital extends Model
 
     public function hospitalPlanByDate($date)
     {
-        return $this->hospitalPlans()->where([
-            ['from', '<', $date],
-            ['to', '>', $date]
-        ])->first();
+        return $this->hospitalPlans()->whereDate('from', '<=', $date)
+        ->where(function($q) use ($date) {
+            $q->whereDate('to', '>=', $date)
+                ->orWhere('to', '=', null);
+        })->get()->first();
     }
 
     public function billings()

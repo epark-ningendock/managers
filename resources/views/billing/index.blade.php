@@ -114,51 +114,52 @@
         <tbody>
         @if ( isset($billings) && count($billings) > 0 )
             @foreach ($billings as $billing)
-                <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
-                    <td>{{ $billing->hospital->contract_information->property_no ?? '' }}</td>
-                    <td>{{ $billing->hospital->name }}</td>
-                    <td>{{ BillingStatus::getDescription($billing->status) }}</td>
-                    <td>
-                        {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name }}
-                    </td>
-                    <td>
-                        {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
-                            $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
-                        ( {{ number_format(floor(($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + 
-                            $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) / TaxClass::TEN_PERCENT)) }}円 )
-                    </td>
-                    <td>
-                        {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee )}}円
-                    </td>
-                    <td>
-                        {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
-                    </td>
-                    <td>
-                        {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate }}%
-                    </td>
-                    <td>
-                        <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
-                    </td>
-                    <td>
-                        <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CHECKING, 'claim_check' => 'yes'] )) }}"
-                            class="btn @if( $billing->status != BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
-                            @if( $billing->status != BillingStatus::UNCONFIRMED ) style="pointer-events: none;" @endif
-                        >請求確認</a>
-                    </td>
-                    <td>
-                        <a href="{{ route('billing.status.update', array_merge(request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CONFIRM, 'claim_confirmation' => 'yes'])) }}"
-                            class="btn @if( ($billing->status == BillingStatus::CHECKING) || ($billing->status == BillingStatus::CONFIRMED) ) btn-primary @else btn-default @endif"
-                            @if( ($billing->status == BillingStatus::CHECKING) || ($billing->status == BillingStatus::CONFIRMED) )  style="pointer-events: unset;" @else style="pointer-events: none;" @endif
-                        >請求確定</a>
-                    </td>
+                @if ( !empty($billing->hospital) )
+                    <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
+                        <td>{{ $billing->hospital->contract_information->property_no ?? '' }}</td>
+                        <td>{{ $billing->hospital->name }}</td>
+                        <td>{{ BillingStatus::getDescription($billing->status) }}</td>
+                        <td>
+                            {{ empty($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan) ? '' : $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name }}
+                        </td>
+                        <td>
+                            {{ empty($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan) ? '' : number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee +
+                                $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) . '円 ( ' . number_format(floor(($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee +
+                                $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) / TaxClass::TEN_PERCENT)) . '円 )' }}
+                        </td>
+                        <td>
+                            {{ empty($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan) ? '' : number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee ) . '円' }}
+                        </td>
+                        <td>
+                            {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) . '円' }}
+                        </td>
+                        <td>
+                            {{ empty($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan) ? '' : $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate . '%' }}
+                        </td>
+                        <td>
+                            <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
+                        </td>
+                        <td>
+                            <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CHECKING, 'claim_check' => 'yes'] )) }}"
+                                class="btn @if( $billing->status != BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
+                                @if( $billing->status != BillingStatus::UNCONFIRMED ) style="pointer-events: none;" @endif
+                            >請求確認</a>
+                        </td>
+                        <td>
+                            <a href="{{ route('billing.status.update', array_merge(request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CONFIRM, 'claim_confirmation' => 'yes'])) }}"
+                                class="btn @if( ($billing->status == BillingStatus::CHECKING) || ($billing->status == BillingStatus::CONFIRMED) ) btn-primary @else btn-default @endif"
+                                @if( ($billing->status == BillingStatus::CHECKING) || ($billing->status == BillingStatus::CONFIRMED) )  style="pointer-events: unset;" @else style="pointer-events: none;" @endif
+                            >請求確定</a>
+                        </td>
 
-                    <td>
-                        <a href="{{ route('billing.status.update', array_merge(request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CHECKING, 'undo_commit' => 'yes'])) }}"
-                            class="btn @if( $billing->status == BillingStatus::CONFIRM) btn-primary @else btn-default @endif"
-                            @if( $billing->status == BillingStatus::CONFIRM) style="pointer-events: unset;" @else style="pointer-events: none;" @endif
-                        >確定取消</a>
-                    </td>
-                </tr>
+                        <td>
+                            <a href="{{ route('billing.status.update', array_merge(request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CHECKING, 'undo_commit' => 'yes'])) }}"
+                                class="btn @if( $billing->status == BillingStatus::CONFIRM) btn-primary @else btn-default @endif"
+                                @if( $billing->status == BillingStatus::CONFIRM) style="pointer-events: unset;" @else style="pointer-events: none;" @endif
+                            >確定取消</a>
+                        </td>
+                    </tr>
+                @endif
             @endforeach
         @else
             <tr>
