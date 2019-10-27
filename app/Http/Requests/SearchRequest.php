@@ -13,23 +13,6 @@ use App\MinorClassification;
 
 class SearchRequest extends ValidationRequest
 {
-    /**
-     * 検索API Vlidation rule
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        $flg = $this->input('return_flag');
-
-        return [
-            'return_flag' => 'required|numeric',
-            'return_from' => $flg == 1 ? 'required_if:return_to,' : '',
-            'return_to' => $flg == 1 ? 'required_if:return_from,' : '',
-            'course_price_sort' => 'required|numeric',
-            'search_condition_return_flag' => 'required|numeric',
-        ];
-    }
 
     /**
      * 検索API request to JSON

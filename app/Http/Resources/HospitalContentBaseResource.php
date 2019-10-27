@@ -32,8 +32,8 @@ class HospitalContentBaseResource extends Resource
         $hospital_movie = collect(['access_movie_url' => '',]);
 
         return collect([])
-            ->merge($this->_main_image($this->hospital_categories, 4) ?? $main_image_pc)
-            ->merge($this->_main_image($this->hospital_categories, 5) ?? $main_image_sp)
+            ->merge($this->_main_image($this->hospital_categories, 1, 1) ?? $main_image_pc)
+            ->merge($this->_main_image($this->hospital_categories, 1, 2) ?? $main_image_sp)
             ->put('img_sub', $this->_sub_images($this->hospital_categories))
             ->merge($this->_top_title($this->hospital_categories) ?? $top_title)
             ->put('point', $this->_recommend($this->hospital_categories))
@@ -54,17 +54,17 @@ class HospitalContentBaseResource extends Resource
      * @param  医療機関カテゴリ
      * @return 医療施設メイン
      */
-    private function _main_image($hospital_categories, $image_location_number)
+    private function _main_image($hospital_categories, $image_group_number, $image_location_number)
     {
-        $categories = $hospital_categories->filter(function ($c) use ($image_location_number) {
-            return (isset($c->image_order))
-                && ($c->image_order === $image_location_number);
+        $categories = $hospital_categories->filter(function ($c) use ($image_group_number, $image_location_number) {
+            return (isset($c->image_order) && $c->image_order == $image_group_number)
+                && (isset($c->file_location_no) &&  $c->file_location_no == $image_location_number);
         });
 
-        $images = $categories->map(function ($i) use ($image_location_number) {
+        $images = $categories->map(function ($i) use ($image_group_number, $image_location_number) {
             $url = $this->_filepath($i->hospital_image);
             $alt = $i->hospital_image->memo1 ?? '';
-            return $image_location_number === 1 ?
+            return ($i->image_order === $image_group_number && $i->file_location_no == $image_location_number) ?
                 collect(['img_main_url' => $url, 'img_main_alt' => $alt,])
                 : collect(['img_main_sp_url' => $url, 'img_main_sp_alt' => $alt,]);
         });
@@ -81,7 +81,7 @@ class HospitalContentBaseResource extends Resource
     {
         $categories = $hospital_categories->filter(function ($c) {
             return isset($c->image_order)
-                && in_array($c->image_order, [6,7,8,9]);
+                && $c->image_order == 2;
         });
 
         $images = $categories->map(function ($i) {
@@ -122,7 +122,7 @@ class HospitalContentBaseResource extends Resource
     {
         $categories = $hospital_categories->filter(function ($c) {
             return isset($c->image_order)
-                && in_array($c->image_order, [12,13,14,15]);
+                && $c->image_order == 5;
         });
 
         $images = $categories->map(function ($i) {
@@ -152,7 +152,7 @@ class HospitalContentBaseResource extends Resource
     {
         $categories = $hospital_categories->filter(function ($c) {
             return isset($c->image_order)
-                && in_array($c->image_order, [27, 28, 29, 30, 31]);
+                && $c->image_order == 8;
         });
 
         $images = $categories->map(function ($i) {
@@ -179,8 +179,8 @@ class HospitalContentBaseResource extends Resource
     private function _photo($hospital_categories)
     {
         $categories = $hospital_categories->filter(function ($c) {
-            return isset($c->order)
-                && in_array($c->order, [1, 2, 3, 4]);
+            return isset($c->image_order)
+                && $c->image_order == 9;
         });
 
         $images = $categories->map(function ($t) {
@@ -188,9 +188,7 @@ class HospitalContentBaseResource extends Resource
             $img_alt = '';
             if ($t->hospital_image->is_display === 1) { // 写真
                 $img_url = $this->_filepath($t->hospital_image);
-                if ($t->order === 1) { // 写真説明
-                    $img_alt = $t->caption ?? '';
-                }
+                $img_alt = $t->caption ?? '';
             }
             return collect(['photo' => $img_url, 'photo_desc' => $img_alt,]);
         });
@@ -207,7 +205,7 @@ class HospitalContentBaseResource extends Resource
     {
         $categories = $hospital_categories->filter(function ($c) {
             return isset($c->image_order)
-                && $c->image_order === 11;
+                && $c->image_order === 4;
         });
 
         $texts = $categories->map(function ($t) {
@@ -227,7 +225,7 @@ class HospitalContentBaseResource extends Resource
     {
         $categories = $hospital_categories->filter(function ($c) {
             return isset($c->image_order)
-                && $c->image_order === 16;
+                && $c->image_order === 6;
         });
 
         $texts = $categories->map(function ($i) {
@@ -259,7 +257,7 @@ class HospitalContentBaseResource extends Resource
     {
         $categories = $hospital_categories->filter(function ($c) {
             return isset($c->image_order)
-                && in_array($c->image_order, [17, 18, 19, 20, 21, 22, 23, 24, 25, 26]);
+                && $c->image_order == 7;
         });
         $texts = $categories->map(function ($i) {
             $url = $this->_filepath($i->hospital_image);

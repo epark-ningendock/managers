@@ -31,7 +31,7 @@ class CoursesBaseResource extends Resource
             'course_no' => $this->id,
             'course_code' => $this->code,
             'course_name' => $this->name,
-            'course_url' => $this->createURL() . "/detail_hospital/" . $this->hospital->contract_information->code . "/detail/" . $this->code . ".html",
+            'course_url' => $this->createURL() . "/detail_hospital/" . $this->contract_information->code . "/detail/" . $this->code . ".html",
             'web_reception' => $this->web_reception,
             'flg_price' => $this->is_price,
             'price' => $this->price,

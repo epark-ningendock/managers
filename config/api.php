@@ -71,6 +71,86 @@ return [
             ],
         ],
     ],
+    // 検索API
+    'search_api' => [
+        'message' => [
+            'success' => [
+                'status' => 0,
+                'http_status' => '200',
+                'description' => '正常に受け付けました'
+            ],
+            'system_error_db' => [
+                'status' => 1,
+                'http_status' => 400,
+                'error_no' => '01',
+                'detail_no' => '01',
+                'description' => 'データベースエラー: '
+            ],
+            'system_error_api' => [
+                'status' => 1,
+                'http_status' => 400,
+                'error_no' => '01',
+                'detail_no' => '02',
+                'description' => 'APIエラー: '
+            ],
+            'required_error' => [
+                'status' => 1,
+                'http_status' => 400,
+                'error_no' => '03',
+                'detail_no' => '01',
+                'description' => '必須項目未設定: '
+            ],
+            'required_with_cond_error' => [
+                'status' => 1,
+                'http_status' => 400,
+                'error_no' => '04',
+                'detail_no' => '01',
+                'description' => '条件付き必須項目未設定: '
+            ],
+            'data_format_error' => [
+                'status' => 1,
+                'http_status' => 400,
+                'error_no' => '05',
+                'detail_no' => '01',
+                'description' => 'データ型エラー: '
+            ],
+            'data_type_error' => [
+                'status' => 1,
+                'http_status' => 400,
+                'error_no' => '06',
+                'detail_no' => '01',
+                'description' => 'データ種別エラー: '
+            ],
+            'data_range_error' => [
+                'status' => 1,
+                'http_status' => 400,
+                'error_no' => '07',
+                'detail_no' => '01',
+                'description' => 'データ範囲エラー: '
+            ],
+            'data_empty_error' => [
+                'status' => 1,
+                'http_status' => 400,
+                'error_no' => '09',
+                'detail_no' => '01',
+                'description' => 'データ取得エラー: '
+            ],
+            'data_length_error' => [
+                'status' => 1,
+                'http_status' => 400,
+                'error_no' => '10',
+                'detail_no' => '01',
+                'description' => '指定外長さデータエラー: '
+            ],
+            'date_range_error' => [
+                'status' => 1,
+                'http_status' => 400,
+                'error_no' => '11',
+                'detail_no' => '01',
+                'description' => '日付範囲エラー: '
+            ]
+        ]
+    ],
     // システムエラー
     'sys_error' => [
         'message' => [
