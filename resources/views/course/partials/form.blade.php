@@ -209,26 +209,26 @@
       <span class="pull-right">0/1000文字</span>
     </div>
 
-     <div class="form-group @if ($errors->has('course_display_start') or $errors->has('course_display_end')) has-error @endif">
+     <div class="form-group @if ($errors->has('publish_start_date') or $errors->has('publish_end_date')) has-error @endif">
          <label>コース表示期間</label>
          <div class="form-horizontal display-period">
              <span>表示開始</span>
-                {{ Form::text('course_display_start', old('course_display_start', (isset($course) ? $course->course_display_start : (isset($disp_date_start) ? $disp_date_start : null))),
+                {{ Form::text('publish_start_date', old('publish_start_date', (isset($course) ? $course->publish_start_date->format('Y-m-d') : (isset($disp_date_start) ? $disp_date_start : null))),
                     ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-start', 'placeholder' => $disp_date_start]) }}
              <span>表示終了</span>
-                {{ Form::text('course_display_end', old('course_display_end', (isset($course) ? $course->course_display_end : (isset($disp_date_end) ? $disp_date_end : null))),
+                {{ Form::text('publish_end_date', old('publish_end_date', (isset($course) ? $course->publish_end_date->format('Y-m-d') : (isset($disp_date_end) ? $disp_date_end : null))),
                     ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-end', 'placeholder' => $disp_date_end]) }}
         </div>
-        @if ($errors->has('course_display_start'))
+        @if ($errors->has('publish_start_date'))
           <p class="help-block">
             <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-            {{ $errors->first('course_display_start') }}
+            {{ $errors->first('publish_start_date') }}
           </p>
         @endif
-        @if ($errors->has('course_display_end'))
+        @if ($errors->has('publish_end_date'))
           <p class="help-block">
             <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-            {{ $errors->first('course_display_end') }}
+            {{ $errors->first('publish_end_date') }}
           </p>
         @endif
      </div>

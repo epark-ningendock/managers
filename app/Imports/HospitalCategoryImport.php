@@ -48,7 +48,9 @@ class HospitalCategoryImport extends ImportAbstract
             'hospital_id' => $hospital_id,
             'hospital_image_id' => $this->getId('hospital_images', $row['file_no']),
             'image_order' => ImageOrder::where('image_group_number', $row['file_group_no'])
-                ->where('image_location_number', $row['file_location_no'])->first()->id,
+                ->where('image_location_number', $row['file_location_no'])
+                ->first()
+                ->id,
             'file_location_no' => $row['file_location_no'],
             'title' => $row['title'],
             'caption' => $row['caption'],
@@ -64,6 +66,13 @@ class HospitalCategoryImport extends ImportAbstract
         ]);
         $model->save();
         $this->deleteIf($model, $row, 'status', ['X']);
+
+        if ((in_array($row['order'], [1, 2, 3, 4]))) {
+            $model = $model->clone();
+            $model->id = null;
+            $model->image_order = 9;
+            $model->save();
+        }
 
         $interview = $row['interview'];
         if (is_null($interview)) {

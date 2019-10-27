@@ -18,11 +18,10 @@ class HospitalReleaseCourseResource extends Resource
      */
     public function toArray($request)
     {
-        return [
-            'status' => 0,
-            'hospital_code' => $this['hospital_code'],
-            'courses' => CoursesReleaseResource::collection($this->getReleaseCourses())
-        ];
+        return collect([])
+            ->put('status', 0)
+            ->merge($this->getReleaseCourses())
+            ->toArray();
     }
 
     /**
@@ -30,19 +29,32 @@ class HospitalReleaseCourseResource extends Resource
      */
     private function getReleaseCourses() {
 
-        $hospital = Hospital::join('contract_informations', 'contract_informations.hospital_id', 'hospitals.id')
-            ->where('contract_informations.code', $this['hospital_code'])
-            ->first();
-
-        return Course::where('hospital_id', $hospital->id)
-            ->where(function ($query) {
-                $query->where('publish_start_date', '<=', Carbon::today())
+        $hospitals = Hospital::with([
+            'contract_information',
+            'courses'
+        ])
+            ->whereHas('courses', function ($q) {
+                $q->where('publish_start_date', '<=', Carbon::today())
                     ->orWhereNull('publish_start_date');
-            })
-            ->where(function ($query) {
-                $query->where('publish_end_date', '>=', Carbon::today())
+                $q->where('publish_end_date', '>=', Carbon::today())
                     ->orWhereNull('publish_end_date');
             })
+            ->where('status', Status::VALID)
             ->get();
+
+        $results = [];
+        foreach ($hospitals as $hospital) {
+            if (!isset($hospital->contract_information)) {
+                continue;
+            }
+            $course_data = [];
+            foreach ($hospital->courses as $course) {
+                $c = ['course_code' => $course->code, 'course_no' => $course->id];
+                $course_data[] = $c;
+            }
+            $results[] = ['hospital_code' => $hospital->contract_information->code, 'courses' => $course_data];
+        }
+
+        return $results;
     }
 }

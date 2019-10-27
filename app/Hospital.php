@@ -2,10 +2,10 @@
 
 namespace App;
 
+use App\Enums\HplinkContractType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Reshadman\OptimisticLocking\OptimisticLocking;
-use App\Enums\HplinkContractType;
 
 class Hospital extends Model
 {
@@ -152,7 +152,8 @@ class Hospital extends Model
     public function hospital_plan()
     {
         // DB の構成的には hasMany だが、仕様的に hasOne となったため
-        return $this->hasOne('App\HospitalPlan');
+        return $this->hasOne('App\HospitalPlan')
+            ->withDefault();
     }
 
     /**
@@ -163,28 +164,32 @@ class Hospital extends Model
     public function scopeWhereForSearchAPI($query, $request)
     {
         // フリーワード（施設名など）
-        if ($request->input('freewords') !== null)
+        if ($request->input('freewords') !== null) {
             $query->whereHas('courses.course_meta_informations', function ($query) use ($request) {
                 $query->where('freewords', 'like', '%' . $request->input('freewords') . '%');
             });
+        }
 
         // フリーワード（エリアなど）
-        if ($request->input('freewords') !== null)
+        if ($request->input('freewords') !== null) {
             $query->whereHas('courses.course_meta_informations', function ($query) use ($request) {
                 $query->where('area_station', 'like', '%' . $request->input('freewords') . '%');
             });
+        }
 
         // フリーワード（施設特徴）
-        if ($request->input('freewords') !== null)
+        if ($request->input('freewords') !== null) {
             $query->whereHas('courses.course_meta_informations', function ($query) use ($request) {
                 $query->where('hospital_classification', 'like', '%' . $request->input('freewords') . '%');
             });
+        }
 
         // フリーワード（路線）
-        if ($request->input('freewords') !== null)
+        if ($request->input('freewords') !== null) {
             $query->whereHas('courses.course_meta_informations', function ($query) use ($request) {
                 $query->where('rails', 'like', '%' . $request->input('freewords') . '%');
             });
+        }
 
         // 都道府県コード
         $pref_cd = $request->input('pref_cd');
@@ -232,17 +237,21 @@ class Hospital extends Model
                     ->where('is_reservation_acceptance', 1);
             });
         } // 受診希望日FROM
-        else if (isset($from) and empty($to)) {
-            $query->whereHas('courses.calendar_days', function ($query) use ($from) {
-                $query->where('date', '>=', $from)
-                    ->where('is_reservation_acceptance', 1);
-            });
-        } // 受診希望日TO
-        else if (empty($from) and isset($to)) {
-            $query->whereHas('courses.calendar_days', function ($query) use ($to) {
-                $query->where('date', '<=', $to)
-                    ->where('is_reservation_acceptance', 1);
-            });
+        else {
+            if (isset($from) and empty($to)) {
+                $query->whereHas('courses.calendar_days', function ($query) use ($from) {
+                    $query->where('date', '>=', $from)
+                        ->where('is_reservation_acceptance', 1);
+                });
+            } // 受診希望日TO
+            else {
+                if (empty($from) and isset($to)) {
+                    $query->whereHas('courses.calendar_days', function ($query) use ($to) {
+                        $query->where('date', '<=', $to)
+                            ->where('is_reservation_acceptance', 1);
+                    });
+                }
+            }
         }
 
         // 検査コース金額検索
@@ -305,10 +314,11 @@ class Hospital extends Model
 
     public function hospitalPlanByDate($date)
     {
-        return $this->hospitalPlans()->where([
-            ['from', '<', $date],
-            ['to', '>', $date]
-        ])->first();
+        return $this->hospitalPlans()->whereDate('from', '<=', $date)
+        ->where(function($q) use ($date) {
+            $q->whereDate('to', '>=', $date)
+                ->orWhere('to', '=', null);
+        })->get()->first();
     }
 
     public function billings()

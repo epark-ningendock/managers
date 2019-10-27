@@ -72,6 +72,7 @@ class CourseImport extends ImportAbstract
             'status' => $row['status'],
             'created_at' => $row['rgst'],
             'updated_at' => $row['updt'],
+            'publish_start_date' => '2019-01-01',
         ]);
 
         $model->save();

@@ -13,9 +13,8 @@ use App\Http\Resources\ReservationStoreResource;
 
 use App\Exceptions\ReservationUpdateException;
 
-use App\Http\Controllers\Controller;
 
-class ReservationController extends Controller
+class ReservationController extends ApiBaseController
 {
     private $_reservation_service;
 

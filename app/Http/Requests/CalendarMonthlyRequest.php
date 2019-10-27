@@ -6,22 +6,22 @@ use Carbon\Carbon;
 use Log;
 class CalendarMonthlyRequest extends ValidationRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return [
-            'hospital_code' => 'required|alpha_num',
-            'course_no' => 'required|numeric',
-            // 検査コース空満情報（月別）
-            'get_yyyymm_from' => 'nullable|date_format:Ym',
-            'get_yyyymm_to' => 'nullable|date_format:Ym',
-
-        ];
-    }
+//    /**
+//     * Get the validation rules that apply to the request.
+//     *
+//     * @return array
+//     */
+//    public function rules()
+//    {
+//        return [
+//            'hospital_code' => 'required|alpha_num',
+//            'course_no' => 'required|numeric',
+//            // 検査コース空満情報（月別）
+//            'get_yyyymm_from' => 'nullable|date_format:Ym',
+//            'get_yyyymm_to' => 'nullable|date_format:Ym',
+//
+//        ];
+//    }
 
     /**
      * 検査コース空満情報取得API request to array

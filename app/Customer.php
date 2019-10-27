@@ -62,7 +62,7 @@ class Customer extends SoftDeleteModel
 
     public function getNameKanaAttribute()
     {
-        return  $this->family_name_kana . ' ' . $this->first_name_kana;
+        return $this->family_name_kana . ' ' . $this->first_name_kana;
     }
 
     public function hospitals()
@@ -79,4 +79,27 @@ class Customer extends SoftDeleteModel
     {
         return $this->hasMany(Reservation::class);
     }
+<<<<<<< Updated upstream
+=======
+
+    private function getMostParent(Customer $customer)
+    {
+        if (is_null($customer->parent_customer_id)) {
+            return $customer;
+
+        }
+        return $this->getMostParent($customer->parent);
+    }
+
+    public function getParentCustomerAttribute()
+    {
+        return $this->getMostParent($this);
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Customer::class, 'parent_customer_id')
+            ->withTrashed();
+    }
+>>>>>>> Stashed changes
 }

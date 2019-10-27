@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Hospital;
 use App\PvRecord;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
-class PvRegistController extends Controller
+class PvRegistController extends ApiBaseController
 {
     /**
      * PV登録を実行する

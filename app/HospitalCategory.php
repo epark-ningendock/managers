@@ -28,7 +28,7 @@ class HospitalCategory extends SoftDeleteModel
 
     public function image_order()
     {
-        return $this->belongsTo('App\ImageOrder', 'image_order', 'id');
+        return $this->belongsTo('App\ImageOrder');
     }
 
 //    public function minor_classification()

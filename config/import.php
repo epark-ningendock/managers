@@ -98,6 +98,11 @@ return [
         'import' => MinorClassificationImport::class,
         'seed' => true,
     ],
+    'm_contract_plan.csv' => [
+        'model' => ContractPlan::class,
+        'import' => ContractPlanImport::class,
+        'seed' => false,
+    ],
     'm_hospital.csv' => [
         'model' => Hospital::class,
         'import' => HospitalImport::class,
@@ -163,11 +168,6 @@ return [
         'import' => CourseImageImport::class,
         'seed' => false,
     ],
-    'm_contract_plan.csv' => [
-        'model' => ContractPlan::class,
-        'import' => ContractPlanImport::class,
-        'seed' => false,
-    ],
     'm_hospital_category.csv' => [
         'model' => HospitalCategory::class,
         'import' => HospitalCategoryImport::class,
@@ -217,5 +217,10 @@ return [
         'model' => MemberLoginInfo::class,
         'import' => MemberLoginInfoImport::class,
         'seed' => false,
+    ],
+    't_reserve_claim.csv' => [
+        'model' => \App\ReservationOption::class,
+        'import' => \App\Imports\ReservationOptionImport::class,
+        'seed' => true,
     ],
 ];
