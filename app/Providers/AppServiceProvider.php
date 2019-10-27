@@ -26,6 +26,11 @@ class AppServiceProvider extends ServiceProvider
                 Log::info("Query Time:{$query->time}s] $query->sql");
             });
         }
+
+        // assetのhttpsの設定を追記
+        if (request()->isSecure()) {
+            \URL::forceScheme('https');
+        }
     }
 
     /**
