@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\SearchRequest;
 use App\Http\Requests\HospitalSearchRequest;
-use App\Http\Controllers\Controller;
 
 use App\Hospital;
 use App\Course;
 
 use App\Http\Resources\SearchHospitalsResource;
 use App\Http\Resources\SearchCoursesResource;
+use Log;
 
-class SearchController extends Controller
+class SearchController extends ApiBaseController
 {
     /**
      * 医療機関・検査コース一覧検索API
@@ -22,44 +22,55 @@ class SearchController extends Controller
      */
     public function index(SearchRequest $request)
     {
-        // フラグセット
-        $return_flag = $request->input('return_flag');
-        $search_condition_return_flag = $request->input('search_condition_return_flag');
+        try {
+            $search_cond_chk_result = $this->checkSearchCond($request, false);
+            if (!$search_cond_chk_result[0]) {
+                return $this->createResponse($search_cond_chk_result[1]);
+            }
+            // フラグセット
+            $return_flag = $request->input('return_flag');
+            $search_condition_return_flag = $request->input('search_condition_return_flag');
 
-        // 対象データ取得
-        $hospitals = $this->getHospitals($request);
-        $courses = $this->getCourses($request);
+            // 対象データ取得
+            $hospitals = $this->getHospitals($request);
+            $courses = $this->getCourses($request);
 
-        // 結果生成
-        $status = 0;
+            // 結果生成
+            $status = 0;
 
-        // 件数要素セット
-        $count = $hospitals->count() + $courses->count();
+            // 件数要素セット
+            $count = $hospitals->count() + $courses->count();
 
-        //医療施設検索ヒット数セット
-        $hospitals_return_count = $hospitals->count();
+            //医療施設検索ヒット数セット
+            $hospitals_return_count = $hospitals->count();
 
-        //検査コース検索ヒット数セット
-        $courses_return_count = $courses->count();
+            //検査コース検索ヒット数セット
+            $courses_return_count = $courses->count();
 
-        // page取得の場合、全件件数取得
-        $hospitals_search_count = $return_flag == 0 ? $hospitals->count() : $this->getHospitals($request, true);
-        $courses_search_count = $return_flag == 0 ? $courses->count() : $this->getCourses($request, true);
+            // page取得の場合、全件件数取得
+            $hospitals_search_count = $return_flag == 0 ? $hospitals->count() : $this->getHospitals($request, true);
+            $courses_search_count = $return_flag == 0 ? $courses->count() : $this->getCourses($request, true);
 
-        $return_count = $count;
-        $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
-        $return_to = $return_flag == 0 ? $count : $request->input('return_to');
+            $return_count = $count;
+            $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
+            $return_to = $return_flag == 0 ? $count : $request->input('return_to');
 
-        // 対象データ取得
-        $hospitals = SearchHospitalsResource::collection($hospitals);
-        $courses = SearchCoursesResource::collection($courses);
+            // 対象データ取得
+            $hospitals = SearchHospitalsResource::collection($hospitals);
+            $courses = SearchCoursesResource::collection($courses);
 
-        // response
-        return $search_condition_return_flag == 0 ?
-            compact('status', 'hospitals_return_count', 'courses_return_count', 'hospitals_search_count', 'courses_search_count', 'return_from', 'return_to', 'hospitals', 'courses')
-            : compact('status', 'hospitals_return_count', 'courses_return_count', 'hospitals_search_count', 'courses_search_count', 'return_from', 'return_to')
-            + $request->toJson()
-            + compact('hospitals', 'courses');
+            // response
+            return $search_condition_return_flag == 0 ?
+                compact('status', 'hospitals_return_count', 'courses_return_count', 'hospitals_search_count', 'courses_search_count', 'return_from', 'return_to', 'hospitals', 'courses')
+                : compact('status', 'hospitals_return_count', 'courses_return_count', 'hospitals_search_count', 'courses_search_count', 'return_from', 'return_to')
+                + $request->toJson()
+                + compact('hospitals', 'courses');
+
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_api']);
+        }
+
     }
 
     /**
@@ -70,41 +81,51 @@ class SearchController extends Controller
      */
     public function hospitals(HospitalSearchRequest $request)
     {
-        // フラグセット
-        $return_flag = $request->input('return_flag');
-        $search_count_only_flag = $request->input('search_count_only_flag');
-        $search_condition_return_flag = $request->input('search_condition_return_flag');
+        try {
+            $search_cond_chk_result = $this->checkSearchCond($request, true);
+            if (!$search_cond_chk_result[0]) {
+                return $this->createResponse($search_cond_chk_result[1]);
+            }
+            // フラグセット
+            $return_flag = $request->input('return_flag');
+            $search_count_only_flag = $request->input('search_count_only_flag');
+            $search_condition_return_flag = $request->input('search_condition_return_flag');
 
-        // 対象データ取得
-        $entities = $this->getHospitals($request);
+            // 対象データ取得
+            $entities = $this->getHospitals($request);
 
-        // 結果生成
-        $status = 0;
+            // 結果生成
+            $status = 0;
 
-        // 件数要素セット
-        // page取得の場合、全件件数取得
-        $search_count = $return_flag == 0 ? $entities->count() : $this->getHospitals($request, true);
-        $return_count = $entities->count();
-        $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
-        $return_to = $return_flag == 0 ? $search_count : $request->input('return_to');
+            // 件数要素セット
+            // page取得の場合、全件件数取得
+            $search_count = $return_flag == 0 ? $entities->count() : $this->getHospitals($request, true);
+            $return_count = $entities->count();
+            $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
+            $return_to = $return_flag == 0 ? $search_count : $request->input('return_to');
 
-        // 件数のみ返却
-        if ($search_count_only_flag == 1) {
+            // 件数のみ返却
+            if ($search_count_only_flag == 1) {
+                return $search_condition_return_flag == 0 ?
+                    compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
+                    :
+                    compact('status', 'search_count', 'return_count', 'return_from', 'return_to') + $request->toJson();
+            }
+
+            // レスポンス生成
+            $hospitals = SearchHospitalsResource::collection($entities);
+
+            // response
             return $search_condition_return_flag == 0 ?
-                compact('status', 'search_count', 'return_count', 'return_from', 'return_to') 
-                : 
-                compact('status', 'search_count', 'return_count', 'return_from', 'return_to') + $request->toJson();
+                compact('status', 'search_count', 'return_count', 'return_from', 'return_to', 'hospitals')
+                : compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
+                + $request->toJson()
+                + compact('hospitals');
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_api']);
         }
 
-        // レスポンス生成
-        $hospitals = SearchHospitalsResource::collection($entities);
-
-        // response
-        return $search_condition_return_flag == 0 ?
-            compact('status', 'search_count', 'return_count', 'return_from', 'return_to', 'hospitals')
-            : compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
-            + $request->toJson()
-            + compact('hospitals');
     }
 
     /**
@@ -115,32 +136,42 @@ class SearchController extends Controller
      */
     public function courses(SearchRequest $request)
     {
-        // フラグセット
-        $return_flag = $request->input('return_flag');
-        $search_condition_return_flag = $request->input('search_condition_return_flag');
+        try {
+            $search_cond_chk_result = $this->checkSearchCond($request, false);
+            if (!$search_cond_chk_result[0]) {
+                return $this->createResponse($search_cond_chk_result[1]);
+            }
+            // フラグセット
+            $return_flag = $request->input('return_flag');
+            $search_condition_return_flag = $request->input('search_condition_return_flag');
 
-        // 対象データ取得
-        $entities = $this->getCourses($request);
+            // 対象データ取得
+            $entities = $this->getCourses($request);
 
-        // 結果生成
-        $status = 0;
+            // 結果生成
+            $status = 0;
 
-        // 件数要素セット
-        // page取得の場合、全件件数取得
-        $search_count = $return_flag == 0 ? $entities->count() : $this->getCourses($request, true);
-        $return_count = $entities->count();
-        $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
-        $return_to = $return_flag == 0 ? $search_count : $request->input('return_to');
+            // 件数要素セット
+            // page取得の場合、全件件数取得
+            $search_count = $return_flag == 0 ? $entities->count() : $this->getCourses($request, true);
+            $return_count = $entities->count();
+            $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
+            $return_to = $return_flag == 0 ? $search_count : $request->input('return_to');
 
-        // レスポンス生成
-        $courses = SearchCoursesResource::collection($entities);
+            // レスポンス生成
+            $courses = SearchCoursesResource::collection($entities);
 
-        // response
-        return $search_condition_return_flag == 0 ?
-            compact('status', 'search_count', 'return_count', 'return_from', 'return_to', 'courses')
-            : compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
-            + $request->toJson()
-            + compact('courses');
+            // response
+            return $search_condition_return_flag == 0 ?
+                compact('status', 'search_count', 'return_count', 'return_from', 'return_to', 'courses')
+                : compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
+                + $request->toJson()
+                + compact('courses');
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_api']);
+        }
+
     }
 
     /**
@@ -164,11 +195,14 @@ class SearchController extends Controller
                 'hospital_details.minor_classification.major_classification',
                 'hospital_details.minor_classification.middle_classification',
                 'hospital_categories',
-                'hospital_categories.image_order',
                 'hospital_categories.hospital_image',
                 'district_code',
                 'prefecture',
             ])
+            ->whereHas('contract_information' , function($q) {
+                $q->whereNotNull('contract_informations.code');
+            })
+
             ->whereForSearchAPI($request);
 
         // 件数のみ
@@ -210,9 +244,12 @@ class SearchController extends Controller
                 'course_images.image_order',
                 'course_images.hospital_image',
                 'hospital',
-                'hospital.contract_information',
+                'contract_information',
                 'hospital.hospital_categories',
             ])
+            ->whereHas('contract_information' , function($q) {
+                $q->whereNotNull('contract_informations.code');
+            })
             ->whereForSearchAPI($request);
 
         // 件数のみ

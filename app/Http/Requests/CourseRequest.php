@@ -15,7 +15,7 @@ class CourseRequest extends ValidationRequest
     {
         return [
             'hospital_code' => 'required|alpha_num|exists:contract_informations,code',
-            'course_no' => 'nullable|numeric|exists:courses,id',
+            'course_no' => 'required|numeric|exists:courses,id',
             'course_code' => 'nullable|exists:courses,code',
         ];
 

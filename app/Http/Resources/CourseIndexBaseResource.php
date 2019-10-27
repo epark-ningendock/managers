@@ -67,11 +67,11 @@ class CourseIndexBaseResource extends Resource
     private function getFlowImagepath($hospital_categories, $image_location_number) : string
     {
         $categories = $hospital_categories->filter(function ($c) use ($image_location_number) {
-            return isset($c->image_order) && intval($c->image_order->image_location_number) == $image_location_number;
+            return isset($c->image_order) && intval($c->image_order) == $image_location_number;
         });
         $files = $categories->map(function ($c) {
-            if(isset($c->hospital_image->path) && isset($c->hospital_image->name) && isset($c->hospital_image->extension)) {
-                return $this->createURL() . $c->hospital_image->path . $c->hospital_image->name . $c->hospital_image->extension;
+            if(isset($c->hospital_image->path)) {
+                return $c->hospital_image->path ;
             }
         })->toArray();
         return $files[0] ?? '';

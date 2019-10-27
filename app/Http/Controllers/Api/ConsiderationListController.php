@@ -11,10 +11,9 @@ use App\Enums\DispKbn;
 use App\Enums\NickUse;
 use App\Enums\Status;
 use App\MemberLoginInfo;
-use App\Http\Controllers\Controller;
 
 
-class ConsiderationListController extends Controller
+class ConsiderationListController extends ApiBaseController
 {
     /**
      * 検討中リスト登録を実行する

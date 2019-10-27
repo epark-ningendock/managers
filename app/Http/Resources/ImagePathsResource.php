@@ -17,13 +17,13 @@ class ImagePathsResource extends Resource
         if(!isset($this)) return;
 
         $path = $this->path ?? '';
-        $name = $this->name ?? '';
-        $extension = $this->extension ?? '';
+//        $name = $this->name ?? '';
+//        $extension = $this->extension ?? '';
         $alt = $this->memo1 ?? '';
 
         return
         [
-            'url' => $path === '' || $extension === '' || $name === '' ? '' : WWW_SITE . $path . $name . $extension,
+            'url' => $path ,
             'alt' => $alt,
         ];
     }

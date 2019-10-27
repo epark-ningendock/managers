@@ -10,10 +10,9 @@ use App\Enums\MailInfoDelivery;
 use App\Enums\NickUse;
 use App\Enums\Status;
 use App\MemberLoginInfo;
-use App\Http\Controllers\Controller;
 
 
-class MemberLoginInfoController extends Controller
+class MemberLoginInfoController extends ApiBaseController
 {
     /**
      * ログイン情報登録を実行する

@@ -14,24 +14,21 @@ class CalendarMonthlyResource extends Resource
      */
     public function toArray($request)
     {
-        // dateと予約可否のみ抽出
-        $d = $this->calendar_days->pluck('appoint_status', 'date');
+        $search_cond = $this['search_cond'];
+        $course = $this['course'];
+        $month_data = $this['month_data'];
 
-        // yyyymmでgroup化
-        $e = $d->groupBy(function ($item, $key) {
-            return date('Ym', strtotime($key));
-        });
         return [
             'status' => 0,
-            'no' => $this->hospital->id,
-            'hospital_code' => $this->hospital->contract_information->code,
-            'course_no' => $this->id,
-            'course_code' => $this->code,
-            'month_calender' => $e->map(function ($c, $key) {
+            'no' => $course->hospital_id,
+            'hospital_code' => $search_cond->hospital_code,
+            'course_no' => $course->id,
+            'course_code' => $course->code,
+            'month_calender' => collect($month_data)->map(function ($c) {
                 return (object)[
-                    'yyyymm' => $key,
+                    'yyyymm' => $c[0],
                     // 予約可否配列の積をとり、0になればどこかに「受付可能(0)」あり
-                    'apoint_ok' => array_product($c->toArray()) === 0 ? 1 : 0,
+                    'apoint_ok' => $c[1],
                 ];
             })->toArray(),
         ];
