@@ -141,7 +141,8 @@ class Reservation extends SoftDeleteModel
         }
 
         if (isset($request->reservation_date_start) && isset($request->reservation_date_end)) {
-            $query->whereBetween('reservation_date', [$request->reservation_date_start, $request->reservation_date_end]);
+            $query->whereBetween('reservation_date',
+                [$request->reservation_date_start, $request->reservation_date_end]);
         }
 
         if (isset($request->completed_date_start) && isset($request->completed_date_end)) {
@@ -154,7 +155,8 @@ class Reservation extends SoftDeleteModel
 
         if (isset($request->customer_name)) {
             $query->whereHas('Customer', function ($q) use ($request) {
-                $q->where('first_name', 'LIKE', "%$request->customer_name%")->orWhere('family_name', 'LIKE', "%$request->customer_name%");
+                $q->where('first_name', 'LIKE', "%$request->customer_name%")->orWhere('family_name', 'LIKE',
+                    "%$request->customer_name%");
             });
         }
 
@@ -171,8 +173,10 @@ class Reservation extends SoftDeleteModel
     {
         if ($this->is_repeat == '0') {
             return 'はじめて受診する';
-        } else if ($this->is_repeat == '1') {
-            return '過去に受診あり';
+        } else {
+            if ($this->is_repeat == '1') {
+                return '過去に受診あり';
+            }
         }
         return '-';
     }
@@ -181,8 +185,10 @@ class Reservation extends SoftDeleteModel
     {
         if ($this->is_representative == '0') {
             return '本人以外';
-        } else if ($this->is_representative == '1') {
-            return '本人';
+        } else {
+            if ($this->is_representative == '1') {
+                return '本人';
+            }
         }
         return '-';
     }
@@ -240,4 +246,9 @@ class Reservation extends SoftDeleteModel
         return (!$this->fee) ? 0 : $this->fee / ($this->tax_rate / 100 + 1);
     }
 
+    public function customerWithTrashed()
+    {
+        return $this->belongsTo(Customer::class)
+            ->withTrashed();
+    }
 }
