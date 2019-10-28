@@ -20,7 +20,7 @@ class PlaceController extends ApiBaseController
     {
 
         try {
-            $place_code_chk_result = $this->checkPlaceCode($request->input('place_code'));
+            $place_code_chk_result = $this->checkPlaceCode($request->input('place_code'), false);
 
             if (!$place_code_chk_result[0]) {
                 return $this->createResponse($place_code_chk_result[1]);
@@ -31,7 +31,7 @@ class PlaceController extends ApiBaseController
                 'hospitals',
             ]);
 
-            if (! empty($request->input('place_code'))) {
+            if ($request->input('place_code') != 0) {
                 $query ->where('prefectures.id', $request->input('place_code'));
 
             }

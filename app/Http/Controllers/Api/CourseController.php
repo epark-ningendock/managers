@@ -31,7 +31,7 @@ class CourseController extends ApiBaseController
     public function index(Request $request)
     {
         try {
-            $course_no = $request->input('course_no');
+            $course_code = $request->input('course_code');
             $hospital_code = $request->input('hospital_code');
 
             $hospital_code_chk_result = $this->checkHospitalCode($hospital_code);
@@ -43,13 +43,13 @@ class CourseController extends ApiBaseController
                 $hospital_id = $hospital_code_chk_result[1];
             }
 
-            $course_no_chk_result = $this->checkCourseNo($course_no, $hospital_id);
+            $course_no_chk_result = $this->checkCourseCode($course_code, $hospital_id);
 
             if (!$course_no_chk_result[0]) {
                 return $this->createResponse($course_no_chk_result[1]);
             }
             //検査コースコンテンツ情報取得
-            $contents = $this->getCourseContents($hospital_id, $course_no);
+            $contents = $this->getCourseContents($hospital_id, $course_code);
 
             if (!$contents) {
                 return $this->createResponse($this->messages['data_empty_error']);
@@ -71,7 +71,7 @@ class CourseController extends ApiBaseController
     public function basic(Request $request)
     {
         try {
-            $course_no = $request->input('course_no');
+            $course_code = $request->input('course_code');
             $hospital_code = $request->input('hospital_code');
 
             $hospital_code_chk_result = $this->checkHospitalCode($hospital_code);
@@ -83,12 +83,12 @@ class CourseController extends ApiBaseController
                 $hospital_id = $hospital_code_chk_result[1];
             }
 
-            $course_no_chk_result = $this->checkCourseNo($course_no, $hospital_id);
+            $course_no_chk_result = $this->checkCourseCode($course_code, $hospital_id);
 
             if (!$course_no_chk_result[0]) {
                 return $this->createResponse($course_no_chk_result[1]);
             }
-            $basics = $this->basicCourse($hospital_id, $course_no);
+            $basics = $this->basicCourse($hospital_id, $course_code);
 
             if (!$basics) {
                 return $this->createResponse($this->messages['data_empty_error']);
@@ -113,7 +113,7 @@ class CourseController extends ApiBaseController
     {
         try {
             $hospital_code = $request->input('hospital_code');
-            $course_no = $request->input('course_no');
+            $course_code = $request->input('course_code');
 
             $hospital_code_chk_result = $this->checkHospitalCode($hospital_code);
             $hospital_id = null;
@@ -124,13 +124,13 @@ class CourseController extends ApiBaseController
                 $hospital_id = $hospital_code_chk_result[1];
             }
 
-            $course_no_chk_result = $this->checkCourseNo($course_no, $hospital_id);
+            $course_no_chk_result = $this->checkCourseCode($course_code, $hospital_id);
 
             if (!$course_no_chk_result[0]) {
                 return $this->createResponse($course_no_chk_result[1]);
             }
 
-            $contents = $this->getCourseContents($hospital_id, $course_no);
+            $contents = $this->getCourseContents($hospital_id, $course_code);
             if (!$contents) {
                 return $this->createResponse($this->messages['data_empty_error']);
             }
@@ -149,7 +149,7 @@ class CourseController extends ApiBaseController
      * @param  $course_no
      * @return array
      */
-    private function basicCourse($hospital_id, $course_no)
+    private function basicCourse($hospital_id, $course_code)
     {
         return Course::with([
             'hospital',
@@ -161,7 +161,7 @@ class CourseController extends ApiBaseController
             'hospital.hospital_categories.image_order',
             'hospital.hospital_categories.hospital_image'
         ])
-            ->where('id', $course_no)
+            ->where('code', $course_code)
             ->where('hospital_id', $hospital_id)
             ->get();
     }
@@ -173,7 +173,7 @@ class CourseController extends ApiBaseController
      * @param  $course_no
      * @return array
      */
-    private function getCourseContents($hospital_id, $course_no)
+    private function getCourseContents($hospital_id, $course_code)
     {
         $data = Course::with([
             'course_details',
@@ -190,7 +190,8 @@ class CourseController extends ApiBaseController
             'hospital.hospital_categories.hospital_image'
         ])
             ->where('hospital_id', $hospital_id)
-            ->find($course_no);
+            ->where('code', $course_code)
+            ->first();
 
         return $data;
     }
@@ -203,7 +204,7 @@ class CourseController extends ApiBaseController
      */
     public function calendar_monthly(CalendarMonthlyRequest $request)
     {
-//        try {
+        try {
             // 検索条件取得
             $serach_condition = $request->toObject();
 
@@ -216,7 +217,7 @@ class CourseController extends ApiBaseController
                 $hospital_id = $hospital_code_chk_result[1];
             }
 
-            $course_no_chk_result = $this->checkCourseNo($serach_condition->course_no, $hospital_id);
+            $course_no_chk_result = $this->checkCourseCode($serach_condition->course_code, $hospital_id);
 
             if (!$course_no_chk_result[0]) {
                 return $this->createResponse($course_no_chk_result[1]);
@@ -236,7 +237,9 @@ class CourseController extends ApiBaseController
                 }
             }
 
-            $course = Course::find($serach_condition->course_no);
+            $course = Course::where($serach_condition->course_code)
+            ->where('hospital_id', $hospital_id)
+            ->first();
 
             // 医療機関の検査コースのカレンダー取得
             $month_data = $this->getMonthReservationEnableInfo($serach_condition, $course);
@@ -249,10 +252,10 @@ class CourseController extends ApiBaseController
 
             // response
             return new CalendarMonthlyResource($data);
-//        } catch (\Throwable $e) {
-//            Log::error($e);
-//            return $this->createResponse($this->messages['system_error_db']);
-//        }
+        } catch (\Throwable $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_db']);
+        }
     }
 
     /**
@@ -276,7 +279,7 @@ class CourseController extends ApiBaseController
                 $hospital_id = $hospital_code_chk_result[1];
             }
 
-            $course_no_chk_result = $this->checkCourseNo($serach_condition->course_no, $hospital_id);
+            $course_no_chk_result = $this->checkCourseCode($serach_condition->course_code, $hospital_id);
 
             if (!$course_no_chk_result[0]) {
                 return $this->createResponse($course_no_chk_result[1]);
@@ -296,7 +299,9 @@ class CourseController extends ApiBaseController
                 }
             }
 
-            $course = Course::find($serach_condition->course_no);
+            $course = Course::where($serach_condition->course_code)
+                ->where('hospital_id', $hospital_id)
+                ->first();
 
             // 医療機関の検査コースのカレンダー取得
             $calendar_dailys = $this->getDayReservationEnableInfo($serach_condition, $course);
