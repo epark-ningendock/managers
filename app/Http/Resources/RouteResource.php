@@ -3,8 +3,10 @@ namespace App\Http\Resources;
 use App\Enums\Status;
 use App\Hospital;
 use App\Rail;
+use App\RailStation;
 use App\Station;
 use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Support\Facades\DB;
 
 class RouteResource extends Resource
 {
@@ -21,8 +23,7 @@ class RouteResource extends Resource
             'place'=>[
                 'pref_no'=>$this['pref']->code,
                 'pref_name'=>$this['pref']->name,
-                'count'=>Hospital::where('prefecture_id', $this['pref']->code)
-                    ->count(),
+                'count'=>$this['pref']->hospital_count,
                 'rails'=> [$this->createRailData()]
             ]
         ];
@@ -34,12 +35,7 @@ class RouteResource extends Resource
             $result = [
                 'rail_no'=>$rail->id,
                 'rail_name'=>$rail->name,
-                'count'=>Hospital::where('rail1',$rail->id)
-                    ->orWhere('rail2', $rail->id)
-                    ->orWhere('rail3', $rail->id)
-                    ->orWhere('rail4', $rail->id)
-                    ->orWhere('rail5', $rail->id)
-                    ->count(),
+                'count'=>$rail->hospital_count,
                 'stations' => $this->createStation($rail)
             ];
 
@@ -52,13 +48,29 @@ class RouteResource extends Resource
 
     private function createStation(Rail $rail) {
 
-        $stations = Station::join('rail_station', 'rail_station.station_id', 'stations.id')
-            ->join('rails', function ($join) {
-                $join->on('rails.id', '=', 'rail_station.rail_id')
-                    ->where('rails.status', Status::VALID);
-            })
-            ->where('stations.status', Status::VALID)
-            ->get();
+        $select = [
+            DB::raw("stations.id AS id "),
+            DB::raw("stations.name AS name "),
+            DB::raw("COUNT(hospitals.id) AS hospital_count ")
+        ];
+
+        $query = RailStation::query();
+        $query->select($select);
+        $query->join('stations', 'rail_station.station_id', 'stations.id');
+        $query->leftJoin('hospitals' , function ($join) {
+            $join->on('hospitals.prefecture_id', '=', 'stations.prefecture_id')
+                ->where(function ($q) {
+                    $q->orWhere('hospitals.station1', '=', 'stations.id');
+                    $q->orWhere('hospitals.station2', '=', 'stations.id');
+                    $q->orWhere('hospitals.station3', '=', 'stations.id');
+                    $q->orWhere('hospitals.station4', '=', 'stations.id');
+                    $q->orWhere('hospitals.station5', '=', 'stations.id');
+                });
+
+        });
+        $query->where('rail_station.rail_id', $rail->id);
+        $query->groupBy('stations.id', 'stations.name');
+        $stations = $query->get();
 
         if (!$stations) {
             return [];
@@ -68,9 +80,9 @@ class RouteResource extends Resource
         foreach ($stations as $station) {
             $result = ['station_no' => $station->id,
             'station_name' => $station->name,
-            'count' => Hospital::where('prefecture_id', $station->prefecture_id)->count()];
+            'count' => $station->hospital_count];
 
-            array_merge($results, $result);
+            $results[] = $result;
         }
 
         return $results;
