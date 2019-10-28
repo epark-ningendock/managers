@@ -55,9 +55,9 @@ class ApiBaseController extends Controller
      *
      * @return
      */
-    protected function isExistCouse($hopital_id, $course_no) {
+    protected function isExistCouse($hopital_id, $course_code) {
 
-        $course = Course::where('id', $course_no)
+        $course = Course::where('code', $course_code)
             ->where('hospital_id', $hopital_id)->first();
         if ($course) {
             return true;
@@ -94,17 +94,13 @@ class ApiBaseController extends Controller
      * @param $hospital_id
      * @return array
      */
-    protected function checkCourseNo($course_no, $hospital_id) {
+    protected function checkCourseCode($course_code, $hospital_id) {
 
-        if (!isset($course_no)) {
+        if (!isset($course_code)) {
             return [false, $this->messages['required_error']];
         }
 
-        if (!is_numeric($course_no)) {
-            return [false, $this->messages['data_type_error']];
-        }
-
-        if (!$this->isExistCouse($hospital_id, $course_no)) {
+        if (!$this->isExistCouse($hospital_id, $course_code)) {
             return [false, $this->messages['data_empty_error']];
         }
 
@@ -211,19 +207,26 @@ class ApiBaseController extends Controller
      * @param $place_code
      * @return array
      */
-    protected function checkPlaceCode($place_code) {
+    protected function checkPlaceCode($place_code, $route_flg) {
 
         if (empty($place_code)) {
-            return [true];
+            return [false, $this->messages['required_error']];
         }
 
         if (!is_numeric($place_code)) {
             return [false, $this->messages['data_type_error']];
         }
 
-        if ($place_code < 0 || $place_code > 47) {
-            return [false, $this->messages['data_range_error']];
+        if ($route_flg) {
+            if ($place_code < 1 || $place_code > 47) {
+                return [false, $this->messages['data_range_error']];
+            }
+        } else {
+            if ($place_code < 0 || $place_code > 47) {
+                return [false, $this->messages['data_range_error']];
+            }
         }
+
         return [true];
     }
 
