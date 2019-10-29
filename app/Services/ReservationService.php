@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\ContractInformation;
 use App\CourseQuestion;
 use App\Hospital;
+use App\HospitalCategory;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
@@ -27,6 +29,7 @@ use App\Exceptions\ReservationUpdateException;
 use App\Exceptions\ReservationDateException;
 use App\Exceptions\ReservationFrameException;
 
+use GuzzleHttp\Client;
 use Carbon\Carbon;
 use Log;
 
@@ -99,10 +102,109 @@ class ReservationService
      * @param  Illuminate\Http\Request  $request
      * @return response json
      */
-    public function request($request)
+    public function request($request, $entity)
     {
-        // TODO: 共通API call request param/response 不明
+        $uri = env('reserve_history_api_url');
+
+        $headers = $this->getRequestHeaders();
+
+        $params = $this->getApiParams($request, $entity);
+
+        $client = app()->make(Client::class);
+        try {
+            Log::info('予約履歴 APIリクエスト処理', ['予約ID' => $entity->id ]);
+            $response = $client->request('POST', $uri, [
+                'headers' => $headers,
+                'json' => $params,
+            ]);
+        } catch (Exception $e) {
+            Log::error('予約履歴 APIリクエスト処理 システムエラー', ['message' => $e->getMessage()]);
+        }
+
+        $status = $response->getStatusCode();
+        $contents = json_decode($response->getBody()->getContents(), true);
+
+        if ($status !== 200) {
+            Log::error('[セブン銀行API連携] レスポンスエラー', ['status' => $status, 'contents' => $contents]);
+            if ($status === 503) {
+                $this->updateError('503');
+            } else {
+                $this->updateError();
+            }
+            return;
+        }
+
+
         return $request;
+    }
+
+    /**
+     * APIのリクエストヘッダーを作成する
+     *
+     * @return array
+     */
+    public function getRequestHeaders()
+    {
+        $headers = [
+            // コンテンツタイプ 固定値「application/json; charset=utf-8」
+            'Content-Type' => 'application/json; charset=utf-8',
+        ];
+
+        return $headers;
+    }
+
+    public function getApiParams($request, $entity) {
+        $course = Course::find($request->input('course_id'));
+        $course_name = '';
+        if ($course) {
+            $course_name = $course->name;
+        }
+        $contract_information = ContractInformation::where('hospital_id', $entity->hospital_id)->first();
+        $hospital_category = HospitalCategory::where('image_order', 1)
+            ->where('file_location_no', 1)
+            ->where('hospital_id', $entity->hospital_id)
+            ->first();
+
+        $params = [
+            // EPARK会員ID
+            'member_id' => $request->input('epark_member_id'),
+            // サービスID
+            'service_id' => \config('constant.service_id'),
+            // 予約ID
+            'appoint_id' => $entity->id,
+            // 予約名（コース名）
+            'appoint_name' => $course_name,
+            // 店舗ID
+            'shop_id' => $entity->hospital_id,
+            // 店舗URL
+            'shop_url' => $this->createURL().'/'.$contract_information->code . '/basic.html',
+            // 店舗画像URL
+            'shop_image_url' => $hospital_category->hospital_image->path,
+            // 予約キャンセルURL
+            'appoint_cancel_url' => $this->createURL().'/'.'reservation/confirm.html?code=&id=' . $entity->id . '&sid=' . $entity->hospital_id,
+            // 予約変更URL
+            'appoint_edit_url' => $this->createURL().'/'.'reservation/confirm.html?code=&id=' . $entity->id . '&sid=' . $entity->hospital_id,
+            // 予約確認URL
+            'appoint_confirm_url' => $this->createURL().'/'.'reservation/confirm.html?code=&id=' . $entity->id . '&sid=' . $entity->hospital_id,
+            // 予約開始日時
+            'appoint_start_date' => $entity->reservation_date,
+            // 予約終了日時
+            'appoint_end_date' => $entity->reservation_date,
+            // 予約ステータス
+            'appoint_status' => $this->changeReservationStatus($entity),
+        ];
+
+        return $params;
+    }
+
+    private function createURL() {
+        return (empty($_SERVER['HTTPS']) ? 'http://' : 'https://').$_SERVER['HTTP_HOST'];
+    }
+
+    private function changeReservationStatus($entity) {
+        if ($entity->reservation_status == ReservationStatus::CANCELLED) {
+            return 9;
+        }
     }
 
     /**
@@ -208,7 +310,7 @@ class ReservationService
      * @param  array $epark
      * @return App\Reservation
      */
-    public function store($request, $epark)
+    public function store($request)
     {
         // 更新
         DB::beginTransaction();

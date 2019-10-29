@@ -33,7 +33,8 @@ class PlaceResource extends Resource
                 'pref_name' => $pref->name
             ];
             if (!empty($place_code) && $place_code != 0) {
-                array_push($result, ['districts' => DistrictResource::collection($pref->district_codes)]);
+                $result['districts'] = DistrictResource::collection($pref->district_codes);
+//                array_push($result, ['districts' => DistrictResource::collection($pref->district_codes)]);
             }
 
             $results[] = $result;

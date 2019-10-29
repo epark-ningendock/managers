@@ -7,6 +7,6 @@ use BenSampo\Enum\Enum;
 
 final class WebReception extends Enum implements LocalizedEnum
 {
-    const NOT_ACCEPT = 0;
-    const ACCEPT = 1;
+    const ACCEPT = 0;
+    const NOT_ACCEPT = 1;
 }

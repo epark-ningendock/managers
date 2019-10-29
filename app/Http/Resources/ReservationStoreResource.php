@@ -19,7 +19,8 @@ class ReservationStoreResource extends Resource
             ->put('result_code', $this->result_code)
             ->put('appoint_code', $this->id)
             ->put('gapid', $this->epark_member_id)
-            ->put('endpoint_uri', '') // 新規会員登録時に発行される自動ログインURI。更新API上は基本空
+            ->put('course_price', $this->fee)
+            ->put('endpoint_uri', '')
 //            ->put('list', $this->_list($this))
             ->toArray();
     }
