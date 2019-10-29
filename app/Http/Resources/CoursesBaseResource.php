@@ -6,6 +6,7 @@ use Illuminate\Http\Resources\Json\Resource;
 
 use App\Reservation;
 use App\Holiday;
+use App\Enums\WebReception;
 
 class CoursesBaseResource extends Resource
 {
@@ -32,7 +33,7 @@ class CoursesBaseResource extends Resource
             'course_code' => $this->code,
             'course_name' => $this->name,
             'course_url' => $this->createURL() . "/detail_hospital/" . $this->contract_information->code . "/detail/" . $this->code . ".html",
-            'web_reception' => $this->web_reception,
+            'web_reception' => $this->createReception(),
             'flg_price' => $this->is_price,
             'price' => $this->price,
             'flg_price_memo' => $this->is_price_memo,
@@ -45,6 +46,22 @@ class CoursesBaseResource extends Resource
             'flg_pre_account' => $this->is_pre_account,
             'auto_calc_application' => $this->auto_calc_application,
         ]);
+    }
+
+    private function createReception()
+    {
+
+        if ($this[0]->web_reception == WebReception::NOT_ACCEPT) {
+            return WebReception::NOT_ACCEPT;
+        }
+
+        $target = Carbon::today();
+        if (($this[0]->publish_start_date > $target)
+            || ($this[0]->publish_end_date < $target)) {
+            return WebReception::NOT_ACCEPT;
+        }
+
+        return WebReception::ACCEPT;
     }
 
     /**

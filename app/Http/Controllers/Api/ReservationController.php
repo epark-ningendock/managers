@@ -99,12 +99,12 @@ class ReservationController extends ApiBaseController
     {
         // 予約可能かチェック
         $this->_reservation_service->isReservation($request);
-
-        // 予約履歴apiより予約履歴登録を実行する。
-        $epark = $this->_reservation_service->request($request);
         
         // 予約登録／更新
-        $entity = $this->_reservation_service->store($request, $epark);
+        $entity = $this->_reservation_service->store($request);
+
+        // 予約履歴apiより予約履歴登録を実行する。
+        $this->_reservation_service->request($request, $entity);
 
         // 処理区分をentityに追加
         $entity->process_kbn = intval($request->input('process_kbn'));
@@ -112,8 +112,6 @@ class ReservationController extends ApiBaseController
         // 完了メール送信
         $entity->result_code = $this->_reservation_service->mail($entity);
 
-        // response set
-        $entity->epark = $epark;
         return new ReservationStoreResource($entity);
     }
 }

@@ -17,7 +17,7 @@ class HospitalReleaseResource extends Resource
     {
         return [
             'status' => 0,
-            'hospital_code' => $this->createCodes()
+            'hospital_code' => $this->all(),
         ];
     }
 
@@ -27,12 +27,12 @@ class HospitalReleaseResource extends Resource
             return [];
         }
 
-        $codes = [];
+        $codes = array();
         foreach ($this as $code) {
             if (empty($code)) {
                 continue;
             }
-            array_push($codes, $code);
+            $codes[] = $code;
         }
 
         return $codes;

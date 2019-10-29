@@ -24,7 +24,15 @@ class RouteResource extends Resource
                 'pref_no'=>$this['pref']->code,
                 'pref_name'=>$this['pref']->name,
                 'count'=>$this['pref']->hospital_count,
-                'rails'=> [$this->createRailData()]
+                'rails'=> collect($this->createRailData())->map(function ($c) {
+                    return (object)[
+                        'rail_no' => $c['rail_no'],
+                        // 予約可否配列の積をとり、0になればどこかに「受付可能(0)」あり
+                        'rail_name' => $c['rail_name'],
+                        'count' => $c['count'],
+                        'stations' => $c['stations']
+                    ];
+                })->toArray(),
             ]
         ];
     }

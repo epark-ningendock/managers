@@ -85,17 +85,17 @@ class CourseBaseResource extends Resource
     private function createReception()
     {
 
-        if ($this[0]->web_reception == '0') {
-            return '0';
+        if ($this[0]->web_reception == WebReception::NOT_ACCEPT) {
+            return WebReception::NOT_ACCEPT;
         }
 
         $target = Carbon::today();
-        if (($this[0]->publish_start_date <= $target)
-            && ($this[0]->publish_end_date >= $target)) {
-            return '1';
+        if (($this[0]->publish_start_date > $target)
+            || ($this[0]->publish_end_date < $target)) {
+            return WebReception::NOT_ACCEPT;
         }
 
-        return '0';
+        return WebReception::ACCEPT;
     }
 
     private function createNames() {

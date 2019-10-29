@@ -129,6 +129,7 @@ class MemberLoginInfoController extends ApiBaseController
             'statusCode' => strval(200),
             'message' => $message['description'],
             'messageId' => $message['code'],
+            'no' => $memberLoginInfo->id,
             'epark_member_id' => $memberLoginInfo->epark_member_id,
             'mail_info_delivery' => $memberLoginInfo->mail_info_delivery,
             'nick_use' => $memberLoginInfo->nick_use,

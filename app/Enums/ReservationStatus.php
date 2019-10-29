@@ -8,7 +8,7 @@ use BenSampo\Enum\Enum;
 final class ReservationStatus extends Enum implements LocalizedEnum
 {
     const PENDING = '1';
-    const RECEPTION_COMPLETED = '2';
-    const COMPLETED = '3';
-    const CANCELLED = '4';
+    const RECEPTION_COMPLETED = '3';
+    const COMPLETED = '4';
+    const CANCELLED = '5';
 }
