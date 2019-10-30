@@ -9,4 +9,5 @@ final class WebReception extends Enum implements LocalizedEnum
 {
     const ACCEPT = 0;
     const NOT_ACCEPT = 1;
+    const ACCEPT_HIDE_CALENDAR = 2;
 }
