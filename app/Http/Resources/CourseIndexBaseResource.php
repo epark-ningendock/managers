@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\CalendarDisplay;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\Resource;
 
@@ -77,17 +78,25 @@ class CourseIndexBaseResource extends Resource
         return $files[0] ?? '';
     }
 
+    /**
+     * @return int
+     */
     private function createReception()
     {
-
-        if ($this->web_reception == WebReception::NOT_ACCEPT) {
+        if ($this->web_reception == strval(WebReception::NOT_ACCEPT)) {
             return WebReception::NOT_ACCEPT;
         }
 
         $target = Carbon::today();
-        if (($this->publish_start_date > $target)
-            || ($this->publish_end_date < $target)) {
+        if (($this->publish_start_date != null &&
+                $this->publish_start_date > $target)
+            || ($this->publish_end_date != null &&
+                $this->publish_end_date < $target)) {
             return WebReception::NOT_ACCEPT;
+        }
+
+        if (isset($this->calendar) && $this->calendar->is_calendar_display == CalendarDisplay::HIDE) {
+            return WebReception::ACCEPT_HIDE_CALENDAR;
         }
 
         return WebReception::ACCEPT;
