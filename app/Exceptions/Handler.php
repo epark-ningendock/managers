@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use App\Exceptions\ExclusiveLockException;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -50,6 +51,19 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if($exception->getCode() == 0) {
+            Mail::send('email.error_mail', [
+                'error_message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+            ], function($message) {
+                $message
+                    ->to(env('EPARK_EMAIL_ADDRESS'))
+                    ->subject("エラーメールを送信します");
+            });
+
+        }
+
         if ($exception instanceof TokenMismatchException) {
             return redirect('/login');
         }
