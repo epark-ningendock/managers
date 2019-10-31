@@ -38,6 +38,7 @@
       <tr>
         <th>検査コースID</th>
         <th>検査コース名</th>
+        <th>検査コース金額</th>
         <th>WEB受付</th>
         <th></th>
       </tr>
@@ -47,6 +48,7 @@
       <tr>
           <td>{{ $course->id }}</td>
           <td>{{ $course->name }}</td>
+          <td>{{ number_format($course->price) }}</td>
           <td>{{ $course->web_reception->description }}</td>
           <td>
             <a class="btn btn-primary"
