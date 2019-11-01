@@ -2,7 +2,10 @@
 
 namespace App\Imports;
 
+use App\CourseQuestion;
+use App\Hospital;
 use App\Reservation;
+use App\ReservationAnswer;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Row;
 
@@ -37,21 +40,28 @@ class ReservationDetailImport extends ImportBAbstract
     {
         $row = $row->toArray();
 
+        $hospital = Hospital::query()->where('old_karada_dog_id', $this->hospital_no)
+            ->get();
+
+        if (is_null($hospital)) {
+            Log::error(sprintf('Hospitals に %s が存在しません。', $this->hospital_no));
+            return;
+        }
+
         $old_id = sprintf('%s_%s',
             $this->hospital_no,
             $this->getValue($row, 'APPOINT_ID')
         );
-        $reservation = Reservation::find($this->getIdForA('reservations', $old_id));
 
-        if (is_null($reservation)) {
-            Log::error(sprintf('Reservation[APPOINT_ID: %d] is missing.', $this->getValue($row, 'APPOINT_ID')));
-            return;
-        }
-
-        $reservation->save([
+        $customer_id = $this->getId('customers', $this->getValue($row, 'CUSTOMER_ID'));
+        $reservation_id = $this->getIdForA('reservations', $old_id);
+        $reservation = Reservation::firstOrCreate([
+            'id' => $reservation_id
+        ], [
+            'hospital_id' => $hospital->id,
             'channel' => $this->getValue($row, 'TERMINAL_TP'),
             'reservation_status' => $this->getValue($row, 'APPOINT_KBN'),
-            'customer_id' => $this->getId('customers', $this->getValue($row, 'CUSTOMER_ID')),
+            'customer_id' => $customer_id,
             'epark_member_id' => $this->getValue($row, 'EPARK_MEMBER_ID'),
             'member_number' => $this->getValue($row, 'MEMBER_NO'),
             'terminal_type' => $this->getValue($row, 'TERMINAL_TP'),
@@ -74,45 +84,38 @@ class ReservationDetailImport extends ImportBAbstract
         $answer_json = str_replace('#comma#', ',', $answer_json);
         $questions = json_decode($answer_json, false, 512, JSON_OBJECT_AS_ARRAY);
 
-        if (count($questions)) {
-            dump($questions);
-        }
-
-
         foreach ((array)$questions as $question) {
             $question_title = $question->question ?? $question->question_title ?? null;
-//            $course_questions = $reservation
-//                ->course
-//                ->course_questions
-//                ->where('is_question', 1)
-//            ->where('question_title')
-//            ->where('question_number');
 
-//            if ($course_questions->count()) {
-//                dump($course_questions->count());
-//            }
+            $course_questions = $reservation
+                ->course
+                ->course_questions
+                ->where('is_question', 1)
+                ->where('question_title', $question->question_title);
 
-//            if ($course_questions->count() === 1) {
-//
-//                $reservation->reservation_answers()->save(
-//                    new ReservationAnswer([
-//                        'question_title' => $question->question_title,
-//                        'course_id' => $reservation->course->id,
-//                        'course_question_id' => 1,
-//                        'question_answer01' => $question->answer[0],
-//                        'question_answer02' => $question->answer[1],
-//                        'question_answer03' => $question->answer[2],
-//                        'question_answer04' => $question->answer[3],
-//                        'question_answer05' => $question->answer[4],
-//                        'question_answer06' => $question->answer[5],
-//                        'question_answer07' => $question->answer[6],
-//                        'question_answer08' => $question->answer[7],
-//                        'question_answer09' => $question->answer[8],
-//                        'question_answer10' => $question->answer[9],
-//                    ])
-//                );
-//
-//            }
+            $course_questions->each(function (CourseQuestion $course_question) use (
+                $reservation,
+                $question,
+                $question_title
+            ) {
+                $reservation->reservation_answers()->save(
+                    new ReservationAnswer([
+                        'question_title' => $question_title,
+                        'course_id' => $reservation->course->id,
+                        'course_question_id' => $course_question->id,
+                        'question_answer01' => $question->answer[0],
+                        'question_answer02' => $question->answer[1],
+                        'question_answer03' => $question->answer[2],
+                        'question_answer04' => $question->answer[3],
+                        'question_answer05' => $question->answer[4],
+                        'question_answer06' => $question->answer[5],
+                        'question_answer07' => $question->answer[6],
+                        'question_answer08' => $question->answer[7],
+                        'question_answer09' => $question->answer[8],
+                        'question_answer10' => $question->answer[9],
+                    ])
+                );
+            });
         }
 
 //        $reservation->save();
