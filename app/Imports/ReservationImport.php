@@ -2,7 +2,6 @@
 
 namespace App\Imports;
 
-use App\Course;
 use App\Hospital;
 use App\Reservation;
 use Illuminate\Support\Facades\Log;
@@ -42,31 +41,34 @@ class ReservationImport extends ImportBAbstract implements WithEvents
     {
         $row = $row->toArray();
 
-        $course = Course::where('calendar_id', $this->getValue($row, 'LINE_ID'))->first();
-
-        $arr = [
-            'hospital_id' => Hospital::withTrashed()->where('old_karada_dog_id', $this->hospital_no)->get()->first()->id,
-            'course_id' => is_null($course) ? 0 : $course->id,
-            'reservation_date' => $this->getValue($row, 'APPOINT_DATE'),
-            'start_time_hour' => floor($this->getValue($row, 'START_TIME') / 100),
-            'start_time_min' => fmod($this->getValue($row, 'START_TIME'), 100),
-            'end_time_hour' => floor($this->getValue($row, 'END_TIME') / 100),
-            'end_time_min' => fmod($this->getValue($row, 'END_TIME'), 100),
-            'reservation_status' => 0,
-            'time_selected' => $this->getValue($row, 'RESERVATION_METHOD'),
-            'is_repeat' => $this->getValue($row, 'VISIT_HISTORY_FG') ?: 0,
-            'is_representative' => $this->getValue($row, 'REPRESENTATIVE_FG') ?: 1,
-        ];
-
         try {
-            $model = Reservation::updateOrCreate([
-                'id' => $this->getId('reservations', $this->getValue($row, 'APPOINT_ID'))],
-                $arr
+            $old_id = sprintf('%s_%s',
+                $this->hospital_no,
+                $this->getValue($row, 'APPOINT_ID')
             );
-//            $model = new Reservation($arr);
-//            $model->save();
 
-            $this->setId($model, $row);
+            $reservation_id = $this->getIdForA('reservations', $old_id);
+
+            $model = Reservation::find($reservation_id);
+
+            if (is_null($model)) {
+                return;
+            }
+
+            $model->save([
+                'hospital_id' => Hospital::withTrashed()->where('old_karada_dog_id',
+                    $this->hospital_no)->get()->first()->id,
+                'reservation_date' => $this->getValue($row, 'APPOINT_DATE'),
+                'start_time_hour' => floor($this->getValue($row, 'START_TIME') / 100),
+                'start_time_min' => fmod($this->getValue($row, 'START_TIME'), 100),
+                'end_time_hour' => floor($this->getValue($row, 'END_TIME') / 100),
+                'end_time_min' => fmod($this->getValue($row, 'END_TIME'), 100),
+                'reservation_status' => 0,
+                'time_selected' => $this->getValue($row, 'RESERVATION_METHOD'),
+                'is_repeat' => $this->getValue($row, 'VISIT_HISTORY_FG') ?: 0,
+                'is_representative' => $this->getValue($row, 'REPRESENTATIVE_FG') ?: 1,
+            ]);
+
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }

@@ -79,8 +79,6 @@ class Customer extends SoftDeleteModel
     {
         return $this->hasMany(Reservation::class);
     }
-<<<<<<< Updated upstream
-=======
 
     private function getMostParent(Customer $customer)
     {
@@ -101,5 +99,5 @@ class Customer extends SoftDeleteModel
         return $this->belongsTo(Customer::class, 'parent_customer_id')
             ->withTrashed();
     }
->>>>>>> Stashed changes
+
 }

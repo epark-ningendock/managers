@@ -133,11 +133,11 @@ return [
         'import' => CourseImport::class,
         'seed' => false,
     ],
-    'm_course_detail.csv' => [
-        'model' => CourseDetail::class,
-        'import' => CourseDetailImport::class,
-        'seed' => false,
-    ],
+//    'm_course_detail.csv' => [
+//        'model' => CourseDetail::class,
+//        'import' => CourseDetailImport::class,
+//        'seed' => false,
+//    ],
     'm_course_question.csv' => [
         'model' => CourseQuestion::class,
         'import' => CourseQuestionImport::class,
