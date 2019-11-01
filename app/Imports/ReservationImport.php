@@ -69,8 +69,8 @@ class ReservationImport extends ImportBAbstract implements WithEvents
                 'is_representative' => $this->getValue($row, 'REPRESENTATIVE_FG') ?: 1,
             ]);
 
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
+        } catch (\Throwable $e) {
+            Log::error($e->getTraceAsString());
         }
 
     }
