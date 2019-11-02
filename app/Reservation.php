@@ -201,11 +201,11 @@ class Reservation extends SoftDeleteModel
      *
      * @return 取得結果
      */
-    public static function getReservationCount($request, $reservation_date)
+    public static function getReservationCount($request, $reservation_date, $course_ids)
     {
         return self::where('hospital_id', $request->input('hospital_id'))
-            ->where('course_id', $request->input('course_id'))
-            ->whereIn('reservation_status', [1, 2, 3])
+            ->whereIn('course_id', $course_ids)
+            ->whereIn('reservation_status', [1, 3, 5])
             ->whereDate('reservation_date', $reservation_date)->count();
     }
 

@@ -28,6 +28,8 @@ class ReservationMail extends Mailable
     /* mail entity */
     public $entity;
 
+    public $customer_flg;
+
     /**
      * Build the message.
      *
@@ -70,7 +72,7 @@ class ReservationMail extends Mailable
         // キャンセル変更受付期限日
         $reservation_date = $this->entity->reservation_date;
         $cancellation_deadline = intval($this->entity->course->cancellation_deadline);
-        $cancellation_date = Carbon::create($reservation_date)->addDay($cancellation_deadline);
+        $cancellation_date = Carbon::create($reservation_date)->subDays($cancellation_deadline);
         $cancellation_date = date('Y/m/d', strtotime($cancellation_date));
 
         return $this
@@ -126,6 +128,10 @@ class ReservationMail extends Mailable
                 '電話が繋がりやすい時間帯' => $timezone,
                 '所属する健康保険組合名' => $this->entity->insurance_assoc ?? '',
                 'キャンセル変更受付期限日' => $cancellation_date,
+                'customer_flg' => $this->customer_flg,
+                'status' => $this->entity->reservation_status,
+                'process_kbn' => $this->entity->process_kbn,
+                '管理画面URL' => $this->createURL(),
             ]);
     }
 
@@ -197,4 +203,10 @@ class ReservationMail extends Mailable
         return $results->isEmpty() ? [] : $results->toArray()[0];
     }
 
+    /**
+     * @return string
+     */
+    private function createURL() {
+        return (empty($_SERVER['HTTPS']) ? 'http://' : 'https://').$_SERVER['HTTP_HOST'];
+    }
 }
