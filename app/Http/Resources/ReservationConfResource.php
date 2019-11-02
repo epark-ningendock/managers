@@ -15,21 +15,21 @@ class ReservationConfResource extends Resource
      */
     public function toArray($request)
     {
-        // 予約日
-        $reservation_date = $this->reservation_date;
+        // 受診日
+        $completed_date = $this->completed_date;
 
         // キャンセル受付変更期限（日）
         $cancellation_deadline = intval($this->course->cancellation_deadline);
 
         // キャンセル可能日
-        $cancellation_date = Carbon::create($reservation_date)->addDay($cancellation_deadline);
+        $cancellation_date = Carbon::create($completed_date)->subDay($cancellation_deadline);
         $cancellation_date = date('Y/m/d', strtotime($cancellation_date));
 
         // 町村字番地/建物名分割
         $pieces = explode(' ', $this->customer->address2);
 
         return collect([])
-            ->put('state', 0)
+            ->put('status', 0)
             ->put('result_code', $this->result_code)
             ->put('reservation_status', $this->reservation_status)
             ->put('course_id', $this->course_id)
