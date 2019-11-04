@@ -190,6 +190,10 @@ return [
                 'code' => 'D_50008',
                 'description' => '予約ステータス区分エラー。',
             ],
+            'errorDataNotFound' => [
+                'code' => 'D_50009',
+                'description' => '該当データなしエラー。',
+            ],
         ],
     ],
     // システムエラー

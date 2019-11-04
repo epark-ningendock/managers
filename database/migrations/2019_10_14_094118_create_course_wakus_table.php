@@ -19,7 +19,7 @@ class CreateCourseWakusTable extends Migration
             $table->increments('id');
             $table->integer('course_id')->unsigned();
             $table->foreign('course_id')->references('id')->on('courses');
-            $table->integer('kenshin_sys_course_id');
+            $table->integer('kenshin_sys_course_no');
             $table->integer('year_month');
             $table->integer('waku_kbn');
             $this->addCommonColumns($table);

@@ -14,7 +14,7 @@ class KenshinSysCourseWaku extends SoftDeleteModel
 
     protected $fillable = [
         'course_id',
-        'kenshin_sys_course_id',
+        'kenshin_sys_course_no',
         'year_month',
         'waku_kbn',
         'created_at',

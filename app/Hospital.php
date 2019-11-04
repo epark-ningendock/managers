@@ -72,6 +72,7 @@ class Hospital extends Model
         'lock_version',
         'biography',
         'representative',
+        'kenshin_sys_hospital_id'
 
     ];
 
