@@ -151,6 +151,51 @@ return [
             ]
         ]
     ],
+    // コース情報通知API
+    'course_info_notification_api' => [
+        'message' => [
+            'success' => [
+                'code' => '00000',
+                'description' => '正常に受け付けました',
+            ],
+            'errorValidationId' => [
+                'code' => 'D_50001',
+                'description' => '入力値バリデーションエラー。',
+            ],
+            'errorSubscriptionKeyId' => [
+                'code' => 'D_50002',
+                'description' => 'サブスクリプションキーエラー。',
+            ],
+            'errorPartnerCdId' => [
+                'code' => 'D_50003',
+                'description' => '提携先コードエラー。',
+            ],
+            'errorAgeKisanKbn' => [
+                'code' => 'D_50004',
+                'description' => '年齢起算区分エラー。',
+            ],
+            'errorSex' => [
+                'code' => 'D_50005',
+                'description' => '性別エラー。',
+            ],
+            'errorHonninKbn' => [
+                'code' => 'D_50006',
+                'description' => '本人区分エラー。',
+            ],
+            'errorYuusenKbn' => [
+                'code' => 'D_50007',
+                'description' => '優先区分エラー。',
+            ],
+            'errorYoyakuStatusKbn' => [
+                'code' => 'D_50008',
+                'description' => '予約ステータス区分エラー。',
+            ],
+            'errorDataNotFound' => [
+                'code' => 'D_50009',
+                'description' => '該当データなしエラー。',
+            ],
+        ],
+    ],
     // システムエラー
     'sys_error' => [
         'message' => [
@@ -158,6 +203,13 @@ return [
                 'code' => '90001',
                 'description' => 'データベースシステムエラー',
             ],
-         ],
+        ],
+    ],
+    // 予期せぬエラー
+    'unexpected_error' => [
+        'message' => [
+            'code' => 'D_99999',
+            'description' => 'その他エラー',
+        ],
     ],
 ];

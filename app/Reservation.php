@@ -75,7 +75,9 @@ class Reservation extends SoftDeleteModel
         'lock_version',
         'is_health_insurance',
         'internal_memo',
-        'cancellation_reason'
+        'cancellation_reason',
+        'medical_examination_system_id',
+        'kenshin_sys_yoyaku_no'
     ];
 
     protected $appends = ['tax_excluded_price'];
@@ -130,6 +132,11 @@ class Reservation extends SoftDeleteModel
     public function reservation_answers()
     {
         return $this->hasMany(ReservationAnswer::class);
+    }
+
+    public function medical_examination_system()
+    {
+        return $this->belongsTo('App\MedicalExaminationSystem');
     }
 
     public function scopeByRequest($query, $request)

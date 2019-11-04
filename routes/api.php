@@ -84,5 +84,10 @@ Route::prefix('v1')->group(function () {
     Route::post('considerationList', 'ConsiderationListController@store')->name('consideration-list.store');
     Route::get('considerationList', 'ConsiderationListController@show')->name('consideration-list.show');
     Route::delete('considerationList', 'ConsiderationListController@destroy')->name('consideration-list.destroy');
+
+    // コース通知API
+    Route::post('registcourse', 'CourseInfoNotificationController@registcourse')->name('course-info-notification.registcourse');
+    // コース通知API
+    Route::post('registcoursewaku', 'CourseInfoWakuNotificationController@registcourse')->name('course-info-waku-notification.registcoursewaku');
 });
 
