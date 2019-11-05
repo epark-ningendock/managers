@@ -16,7 +16,7 @@ class AddKenshinsysColumnToCourses extends Migration
         Schema::table('courses', function (Blueprint $table) {
             $table->integer('kenshin_sys_dantai_info_id')->nullable()->after('auto_calc_application');
             $table->foreign('kenshin_sys_dantai_info_id')->references('id')->on('kenshin_sys_dantai_infos');
-            $table->integer('kenshin_sys_course_no')->nullable()->after('dantai_info_id');
+            $table->integer('kenshin_sys_course_no')->nullable()->after('kenshin_sys_dantai_info_id');
             $table->integer('kenshin_sys_course_kingaku')->nullable()->after('kenshin_sys_course_no');
             $table->date('kenshin_sys_riyou_bgn_date')->nullable()->after('kenshin_sys_course_kingaku');
             $table->date('kenshin_sys_riyou_end_date')->nullable()->after('kenshin_sys_riyou_bgn_date');
@@ -35,7 +35,7 @@ class AddKenshinsysColumnToCourses extends Migration
     {
         Schema::table('courses', function (Blueprint $table) {
             $table->dropForeign('courses_dantai_info_id_foreign');
-            $table->dropColumn('dantai_info_id');
+            $table->dropColumn('kenshin_sys_dantai_info_id');
             $table->dropColumn('kenshin_sys_course_no');
             $table->dropColumn('kenshin_sys_course_kingaku');
             $table->dropColumn('kenshin_sys_riyou_bgn_date');
