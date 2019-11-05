@@ -9,7 +9,7 @@ class ReservationCompleteMail extends ReservationMail
      *
      * @return void
      */
-    public function __construct($entity)
+    public function __construct($entity, $customer_flg)
     {
         // entity set
         $this->entity = json_decode(json_encode($entity));
@@ -19,6 +19,8 @@ class ReservationCompleteMail extends ReservationMail
    
         // template view
         $this->view = 'reservation.email.completed';
+
+        $this->customer_flg = $customer_flg;
     }
 
 }

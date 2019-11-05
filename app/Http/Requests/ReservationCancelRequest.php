@@ -12,7 +12,7 @@ class ReservationCancelRequest extends ReservationRequest
     public function rules()
     {
         return parent::rules() + [
-            'reservation_id' => 'required|numeric|exists:reservations,id',
+            'reservation_id' => 'required',
             'mail_fg' => 'required|numeric',
         ];
     }

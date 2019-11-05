@@ -17,7 +17,7 @@ class ReservationOptionImport extends ImportAbstract
      */
     public function getOldPrimaryKeyName(): string
     {
-        return '';
+        return 'reservation_id';
     }
 
     /**
@@ -48,9 +48,23 @@ class ReservationOptionImport extends ImportAbstract
         $hospital_plan = $hospital->hospital_plan;
         $hospital_plan->contractPlan->fee_rate;
 
+        $reservation_id = $this->getIdForA('reservations',
+            sprintf('%s_%s',
+                $this->hospital_no,
+                $this->getValue($row, 'APPOINT_ID')
+            )
+        );
+        $reservation = Reservation::find($reservation_id);
+
+        if (is_null($reservation)) {
+            return;
+        }
+
+        $course_id = $reservation->course_id;
+
         $reservation = new Reservation([
             'hospital_id' => $hospital_id,
-            'course_id' => $this->getId('courses', $row['linegroup_id']),
+            'course_id' => $course_id,
             'channel' => $row['channel'],
             'reservation_status' => $row['reservation_tp'],
             'completed_date' => $row['appoint_date'],
@@ -72,6 +86,7 @@ class ReservationOptionImport extends ImportAbstract
             'is_health_insurance' => 0,
         ]);
         $reservation->save();
+        $this->setId($reservation, $row);
 
         for ($i = 1; $i < 9; $i++) {
             if (is_null($row[sprintf('option_name_%d', $i)])) {

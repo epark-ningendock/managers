@@ -16,7 +16,7 @@ class ReservationStoreRequest extends ReservationRequest
         return parent::rules() + [
             'process_kbn' => 'required|numeric|in:0,1', // charで0か1か
             'course_id' => 'required|numeric|exists:courses,id',
-
+            'reservation_id' => 'required_if:process_kbn,1',
             'reservation_date' => 'required|date_format:"Y-m-d"',
 
             'last_name' => 'required|string|max:32',

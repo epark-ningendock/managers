@@ -54,7 +54,16 @@ class Course extends SoftDeleteModel
         'lock_version',
         'publish_start_date',
         'publish_end_date',
-        'reception_acceptance_day_end'
+        'reception_acceptance_day_end',
+        'kenshin_sys_dantai_info_id',
+        'kenshin_sys_course_no',
+        'kenshin_sys_course_nm',
+        'kenshin_sys_course_kingaku',
+        'kenshin_sys_riyou_bgn_date',
+        'kenshin_sys_riyou_end_date',
+        'kenshin_sys_course_age_kisan_kbn',
+        'kenshin_sys_course_age_kisan_date',
+        'kenshin_sys_flg'
     ];
 
     protected $attributes = [
@@ -62,8 +71,11 @@ class Course extends SoftDeleteModel
     ];
 
     protected $dates = [
-      'publish_start_date',
-      'publish_end_date'
+        'publish_start_date',
+        'publish_end_date',
+        'kenshin_sys_riyou_bgn_date',
+        'kenshin_sys_riyou_end_date',
+        'kenshin_sys_course_age_kisan_date'
     ];
 
     protected $enums = ['web_reception' => WebReception::class];
@@ -135,6 +147,21 @@ class Course extends SoftDeleteModel
     public function tax_class()
     {
         return $this->belongsTo('App\TaxClass');
+    }
+
+    public function kenshin_sys_dantai_infos()
+    {
+        return $this->belongsTo('App\KenshinSysDantaiInfo');
+    }
+
+    public function course_futan_conditions()
+    {
+        return $this->hasMany('App\CourseFutanCondition');
+    }
+
+    public function kenshin_sys_course_wakus()
+    {
+        return $this->hasMany('App\KenshinSysCourseWaku');
     }
 
     public function reservations()

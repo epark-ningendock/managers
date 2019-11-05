@@ -91,10 +91,10 @@ class ImportCsv extends Command
         $this->import('a');
         $this->info('End import: A');
 
-        if (!$this->confirm('このまま続けてよろしいですか？')) {
-            $this->info('インポートを完了しました。');
-            return;
-        }
+//        if (!$this->confirm('このまま続けてよろしいですか？')) {
+//            $this->info('インポートを完了しました。');
+//            return;
+//        }
         $this->info('Start import: B');
         $this->import('b');
         $this->info('End import: B');
@@ -228,9 +228,9 @@ class ImportCsv extends Command
             return true;
         }
 
-        if (!$this->confirm('このまま続けてよろしいですか？')) {
-            return false;
-        }
+//        if (!$this->confirm('このまま続けてよろしいですか？')) {
+//            return false;
+//        }
 
         return true;
     }

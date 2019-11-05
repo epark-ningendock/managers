@@ -83,7 +83,7 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
         if (!is_null($model)) {
             return $model->new_id;
         }
-        Log::error(sprintf('%s に %d が存在しません。', $table, $old_id));
+        Log::error(sprintf('%s に %s が存在しません。', $table, $old_id));
         return null;
     }
 
@@ -95,7 +95,7 @@ abstract class ImportBAbstract implements WithProgressBar, OnEachRow, SkipsOnErr
         if (!is_null($model)) {
             return $model->new_id;
         }
-        Log::error(sprintf('%s に %d が存在しません。', $table, $old_id));
+        Log::error(sprintf('%s に old_id: %s が存在しません。', $table, $old_id));
         return null;
     }
 

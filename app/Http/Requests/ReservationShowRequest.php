@@ -12,7 +12,7 @@ class ReservationShowRequest extends ReservationRequest
     public function rules()
     {
         return parent::rules() + [
-            'appoint_id' => 'required|numeric|exists:reservations,id',
+            'reservation_id' => 'required',
         ];
     }
 }

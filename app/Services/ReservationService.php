@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Calendar;
 use App\ContractInformation;
 use App\CourseQuestion;
 use App\Hospital;
 use App\HospitalCategory;
+use App\HospitalEmailSetting;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
@@ -34,7 +36,7 @@ use Carbon\Carbon;
 use Log;
 
 // epark本部宛てアドレス
-define('EPARK_MAIL_TO', Config::get('app.epark_mail_to'));
+define('EPARK_MAIL_TO', env('MAIL_TO_RESERVATION_ADMIN_ADDRESS'));
 class ReservationService
 {
     // 処理区分[登録]
@@ -76,21 +78,20 @@ class ReservationService
             return 1;
         }
 
-        // 予約日
-        $reservation_date = $entity->reservation_date;
+        // 受診日
+        $completed_date = $entity->reservation_date;
 
         // キャンセル受付変更期限（日）
         $cancellation_deadline = intval($entity->course->cancellation_deadline);
 
         // キャンセル可能日
-        $cancellation_date = Carbon::create($reservation_date)->addDay($cancellation_deadline);
+        $cancellation_date = Carbon::create($completed_date)->subDay($cancellation_deadline);
 
         // キャンセル要求日
         $today = Carbon::now();
 
         if ($cancellation_date < $today) {
             Log::error('変更不可 予約ID:' . $entity->id);
-            Log::error('変更可能期間:' . $reservation_date . '->' . date('Y-m-d', strtotime($cancellation_date)));
             return 1;
         }
         return 0; // 変更可
@@ -120,22 +121,6 @@ class ReservationService
         } catch (Exception $e) {
             Log::error('予約履歴 APIリクエスト処理 システムエラー', ['message' => $e->getMessage()]);
         }
-
-        $status = $response->getStatusCode();
-        $contents = json_decode($response->getBody()->getContents(), true);
-
-        if ($status !== 200) {
-            Log::error('[セブン銀行API連携] レスポンスエラー', ['status' => $status, 'contents' => $contents]);
-            if ($status === 503) {
-                $this->updateError('503');
-            } else {
-                $this->updateError();
-            }
-            return;
-        }
-
-
-        return $request;
     }
 
     /**
@@ -197,10 +182,17 @@ class ReservationService
         return $params;
     }
 
+    /**
+     * @return string
+     */
     private function createURL() {
         return (empty($_SERVER['HTTPS']) ? 'http://' : 'https://').$_SERVER['HTTP_HOST'];
     }
 
+    /**
+     * @param $entity
+     * @return int
+     */
     private function changeReservationStatus($entity) {
         if ($entity->reservation_status == ReservationStatus::CANCELLED) {
             return 9;
@@ -232,33 +224,27 @@ class ReservationService
      * @param  Illuminate\Http\Request  $request
      * @return App\Reservation
      */
-    public function isReservation($request)
+    public function isReservation($request, $reservation_id)
     {
         // パラメータ取得
         $process = intval($request->input('process_kbn'));
         $hospital_id = $request->input('hospital_id');
         $course_id = $request->input('course_id');
-        $reservation_date = intval(date('Ymd', strtotime($request->input('reservation_date'))));
+        $reservation_date = date('Y-m-d', strtotime($request->input('reservation_date')));
 
         // 新規の場合、休診日かどうか確認
         if ($process === self::REGISTRATION) {
             $Holidays = Holiday::where('hospital_id', $hospital_id)->where('date', $reservation_date)->get();
             if (!$Holidays->isEmpty()) {
-                Log::error('休診日:' . $request->input('reservation_date'));
-                Log::error('医療機関ID:' . $request->input('hospital_id'));
-                throw new ReservationUpdateException();
+                return 1;
             }
         }
 
         // 更新の場合、予約情報があるかどうか確認
         if ($process !== self::REGISTRATION) {
-            $reservation = Reservation::getUpdateTarget($request, $reservation_date);
-            if ($reservation === null) {
-                Log::error('変更不可:' . $request->input('reservation_date'));
-                Log::error('医療機関ID:' . $request->input('hospital_id'));
-                Log::error('コースID:' . $request->input('course_id'));
-                Log::error('顧客email:' . $request->input('email'));
-                throw new ReservationUpdateException();
+            $reservation = Reservation::find($reservation_id);
+            if (!$reservation) {
+                return 2;
             }
         }
 
@@ -271,36 +257,42 @@ class ReservationService
 
         // 予約情報チェック
         // 受付許可日／受付終了日確認
-        if (
-            $entity->reception_start_date > $reservation_date
-            && $entity->reception_end_date < $reservation_date
+        $start_month = $entity->reception_start_date / 1000;
+        $start_day = $entity->reception_start_date % 1000;
+        $reception_start_date = Carbon::today();
+        $reception_start_date->addMonthsNoOverflow($start_month);
+        $reception_start_date->addDays($start_day);
+        $end_month = $entity->reception_end_date / 1000;
+        $end_day = $entity->reception_end_date % 1000;
+        $reception_end_date = Carbon::today();
+        $reception_end_date->addMonthsNoOverflow($end_month);
+        $reception_end_date->addDays($end_day);
+        if ($reception_start_date > $reservation_date
+            || $reception_end_date < $reservation_date
         ) {
-            Log::error('予約不可:' . $reservation_date);
-            Log::error('受付許可日:' . $entity->reception_acceptance_date);
-            Log::error('受付終了日:' . $entity->reception_end_date);
-            throw new ReservationDateException();
+            return 3;
         }
 
         if ($process === self::REGISTRATION) { // 新規の場合、予約枠数の確認
             // 既予約数取得
-            $reservation_count = Reservation::getReservationCount($request, $reservation_date);
+            $courses = Course::where('calendar_id', $entity->calendar_id)->get();
+            foreach ($courses as $course) {
+                $course_ids[] = $course->id;
+            }
+            $reservation_count = Reservation::getReservationCount($request, $reservation_date, $course_ids);
             // 予約受付、枠数確認
-            $dummy = $entity->calendar_days->map(function ($c) use ($reservation_count) {
+            $entity->calendar_days->map(function ($c) use ($reservation_count) {
                 $reservation_frames = intval($c->reservation_frames);
                 $is_reservation_acceptance = intval($c->is_reservation_acceptance);
                 if ($is_reservation_acceptance === 0 || $reservation_frames === 0) { // 枠なし
-                    Log::error('予約枠数なし:' . $c->reservation_frames);
-                    throw new ReservationFrameException();
+                   return 4;
                 }
                 if ($reservation_frames <= $reservation_count) { // 空きなし
-                    Log::error('予約枠数:' . $reservation_frames);
-                    Log::error('既予約数:' . $reservation_count);
-                    throw new ReservationFrameException();
+                   return 5;
                 }
-                return $c;
             });
         }
-        return true;
+        return 0;
     }
 
     /**
@@ -362,50 +354,60 @@ class ReservationService
     {
         // メールで使用する情報の取得
         $entity = $this->find($reservation->id);
-
-        // 処理区分追加
-        $entity->process_kbn = $reservation->process_kbn ?? -1;
+        $hospital_email_setting = HospitalEmailSetting::fing($entity->hospital_id);
 
         // キャンセル処理(処理区分がある)かどうか
-        $is_cancel = $entity->process_kbn === -1 ? true : false;
+        $is_cancel = $entity->reservation_status === ReservationStatus::CANCELLED ? true : false;
 
         // メール送信フラグ追加
         $entity->mail_fg = $reservation->mail_fg ?? 1;
-
-        // 受付メール設定取得
-        $to = EPARK_MAIL_TO;
-        $mails = [
-            $entity->hospital->reception_email_setting->reception_email1,
-            $entity->hospital->reception_email_setting->reception_email2,
-            $entity->hospital->reception_email_setting->reception_email3,
-            $entity->hospital->reception_email_setting->reception_email4,
-            $entity->hospital->reception_email_setting->reception_email5,
-        ];
-        if ($entity->hospital->reception_email_setting->web_reception_email_flg === 0) {
-            foreach ($mails as $m) {
-                if (isset($m)) {
-                    $to .= ',' . $m;
+        // 顧客へメール送信
+        if ($reservation->mail_fg == 1) {
+            $to = $entity->customer->email;
+            try {
+                if (!$is_cancel) { // 登録/変更完了メール
+                    Mail::to($to)->send(new ReservationCompleteMail($entity, true));
+                } else { // 予約キャンセルメール
+                    Mail::to($to)->send(new ReservationCancelMail($entity, true));
                 }
+            } catch (\Exception $e) { // mail送信失敗
+                Log::error($e);
+                return -1; // メール送信失敗
             }
-        }
-        // メール送信フラグ
-        $mail_fg = $is_cancel ? $reservation->mail_fg : 1;
-        if ($mail_fg === 1) {
-            $to .= ',' . $entity->customer->email;
         }
 
-        // email address 配列へ
-        $tos = explode(',', $to);
-        try {
-            if (!$is_cancel) { // 登録/変更完了メール
-                Mail::to($tos)->send(new ReservationCompleteMail($entity));
-            } else { // 予約キャンセルメール
-                Mail::to($tos)->send(new ReservationCancelMail($entity));
+        $hospital_mails = [
+            $hospital_email_setting->reception_email1,
+            $hospital_email_setting->reception_email2,
+            $hospital_email_setting->reception_email3,
+            $hospital_email_setting->reception_email4,
+            $hospital_email_setting->reception_email5,
+        ];
+        foreach ($hospital_mails as $m) {
+            if (!empty($m)) {
+                $tos[] = $m;
             }
-        } catch (Exception $e) { // mail送信失敗
-            Log::error($e);
-            return -1; // メール送信失敗
         }
+
+        try {
+            // 医療機関へメール送信
+            if ($is_cancel && $hospital_email_setting->in_hospital_cancellation_email_reception_flg == 1) {
+                Mail::to($tos)->send(new ReservationCancelMail($entity, false));
+            } elseif ($hospital_email_setting->web_reception_email_flg == 1) {
+                Mail::to($to)->send(new ReservationCompleteMail($entity, false));
+            }
+
+            // 事業部へメール
+            if ($is_cancel && $hospital_email_setting->in_hospital_cancellation_email_reception_flg == 1) {
+                Mail::to(EPARK_MAIL_TO)->send(new ReservationCancelMail($entity, false));
+            } elseif ($hospital_email_setting->web_reception_email_flg == 1) {
+                Mail::to(EPARK_MAIL_TO)->send(new ReservationCompleteMail($entity, false));
+            }
+        } catch (\Exception $e) { // mail送信失敗
+            Log::error($e);
+        }
+
+
         return 1; // 予約/変更/キャンセル成功
     }
 
