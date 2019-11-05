@@ -128,7 +128,7 @@ class HospitalImagesController extends Controller
         foreach($file['select_photo'] as $key => $select_photo) {
             if(is_null($select_photo)) continue;
             $this->hospital_category->updateOrCreate(
-                ['is_display' => SelectPhotoFlag::SELECTED,'order' => $key,'hospital_id' => $hospital_id,'image_order' => ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB],
+                ['is_display' => SelectPhotoFlag::SELECTED,'order' => $key,'hospital_id' => $hospital_id,'image_order' => ImageGroupNumber::IMAGE_GROUP_SELECT],
                 [
                     'hospital_image_id' => intval($select_photo),
                     'is_display' => SelectPhotoFlag::SELECTED,

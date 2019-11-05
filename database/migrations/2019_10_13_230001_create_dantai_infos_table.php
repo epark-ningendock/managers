@@ -32,6 +32,6 @@ class CreateDantaiInfosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dantai_infos');
+        Schema::dropIfExists('kenshin_sys_dantai_infos');
     }
 }
