@@ -14,7 +14,7 @@ class AddKenshinsysColumnToHospitals extends Migration
     public function up()
     {
         Schema::table('hospitals', function (Blueprint $table) {
-            $table->integer('kenshin_sys_hospital_id')->nullable()->after('contract_information_id');
+            $table->integer('kenshin_sys_hospital_id')->nullable()->after('medical_examination_system_id');
         });
     }
 
