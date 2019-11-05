@@ -58,7 +58,7 @@ class Handler extends ExceptionHandler
                 'line' => $exception->getLine(),
             ], function($message) {
                 $message
-                    ->to(env('EPARK_EMAIL_ADDRESS'))
+                    ->to(env('MAIL_TO_RESERVATION_ADMIN_ADDRESS'))
                     ->subject("エラーメールを送信します");
             });
 
