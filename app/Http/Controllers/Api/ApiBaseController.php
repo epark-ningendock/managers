@@ -209,7 +209,7 @@ class ApiBaseController extends Controller
      */
     protected function checkPlaceCode($place_code, $route_flg) {
 
-        if (empty($place_code)) {
+        if ($place_code != 0 && empty($place_code)) {
             return [false, $this->messages['required_error']];
         }
 
