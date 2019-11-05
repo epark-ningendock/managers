@@ -34,7 +34,7 @@ class AddKenshinsysColumnToCourses extends Migration
     public function down()
     {
         Schema::table('courses', function (Blueprint $table) {
-            $table->dropForeign('courses_dantai_info_id_foreign');
+            $table->dropForeign('courses_kenshin_sys_dantai_info_id_foreign');
             $table->dropColumn('kenshin_sys_dantai_info_id');
             $table->dropColumn('kenshin_sys_course_no');
             $table->dropColumn('kenshin_sys_course_kingaku');
