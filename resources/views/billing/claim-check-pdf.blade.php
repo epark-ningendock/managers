@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="en">
+@php
+use App\Enums\ReservationStatus;
+@endphp
 <head>
 
     <meta name="viewport"
@@ -232,24 +235,22 @@
                 <tr>
                     <td>{{ $reservation->id }}</td>
                     <td>{{ $reservation->completed_date->format('Y-m-d') }}</td>
-                    <td>{{ $reservation->customer->family_name .' ' . $reservation->customer->first_name }}</td>
+                    <td>{{ $reservation->customer->family_name . ' ' . $reservation->customer->first_name }}</td>
                     <td>{{ ( isset($reservation->channel) && ( $reservation->channel == 1)) ? 'WEB' : 'TEL' }}</td>
                     <td>
-                        @if ( $reservation->status == 1 )
+                        @if ( $reservation->reservation_status->is(ReservationStatus::PENDING) )
                             仮受付
-                        @elseif ( $reservation->status == 2 )
+                        @elseif ( $reservation->reservation_status->is(ReservationStatus::RECEPTION_COMPLETED) )
                             受付確定
-                        @elseif ( $reservation->status == 3 )
+                        @elseif ( $reservation->reservation_status->is(ReservationStatus::COMPLETED) )
                             受診完了
-                        @elseif ( $reservation->status == 4 )
+                        @elseif ( $reservation->reservation_status->is(ReservationStatus::CANCELLED) )
                             キャンセル
-
                         @endif
-
-                        }}</td>
+                    </td>
                     <td>@if ( isset($reservation->is_payment) && ( $reservation->is_payment == 1 ) ) 事前決済 @else 現地決済 @endif</td>
                     <td>{{ $reservation->course->name }}</td>
-                    <td>{{ $reservation->tax_included_price ?? '' }}</td>
+                    <td>{{ number_format($reservation->tax_included_price) . '円' ?? '' }}</td>
                     <td>{{ ( $reservation->reservation_options->pluck('option_price')->sum() ) ? number_format($reservation->reservation_options->pluck('option_price')->sum()) . '円' : '' }}</td>
                     <td>{{ (isset($reservation->adjustment_price) ) ? number_format($reservation->adjustment_price) . '円' : '' }}</td>
                     <td>{{ $reservation->fee_rate }}%</td>

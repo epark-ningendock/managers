@@ -170,7 +170,7 @@ class BillingController extends Controller {
             $confirmMailComposition = [
                 'subject' => $request->has('claim_check') ? '【EPARK人間ドック】請求内容確認のお願い' : '【EPARK人間ドック】請求金額確定のお知らせ',
                 'billing' => $billing,
-                'attachment_file_name' => $request->has('claim_check') ? '請求確認PDF' : '請求確定PDF',
+                'attachment_file_name' => $request->has('claim_check') ? '請求確認' : '請求確定',
             ];
 
             $attributes = [

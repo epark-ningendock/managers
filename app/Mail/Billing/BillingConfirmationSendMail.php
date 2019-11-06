@@ -44,9 +44,11 @@ class BillingConfirmationSendMail extends Mailable
         return $this
                 ->from(env('EPARK_EMAIL_ADDRESS'))
                 ->subject($this->data['subject'])
-                ->attachData($this->attchment->output(), $this->data['attachment_file_name'] . 'pdf',[
-                    'mime' => 'application/pdf',
-                ])
+                ->attachData(
+                    $this->attchment->output(),
+                    $this->data['attachment_file_name'] . '.pdf',
+                    ['mime' => 'application/pdf',]
+                )
                 ->view($view, ['billing' => $this->data['billing'], 'attributes' => $this->attributes]);
     }
 }
