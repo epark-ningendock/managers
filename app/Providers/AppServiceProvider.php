@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Resource::withoutWrapping();
-        if(config('app.env') === 'production' or config('app.env') === 'staging'){
+        if(config('app.env') === 'heroku' or config('app.env') === 'staging'){
             URL::forceScheme('https');
             DB::listen(function ($query) {
                 Log::info("Query Time:{$query->time}s] $query->sql");

@@ -7,7 +7,7 @@ class HttpsProtocol {
 
     public function handle($request, Closure $next)
     {
-        if (config('app.env') === 'production' or config('app.env') === 'staging') {
+        if (config('app.env') === 'heroku' or config('app.env') === 'staging') {
             $request->server->set('HTTPS', 'on');
             if ($request->header('x-forwarded-proto') <> 'https') {
                 return redirect()->secure($request->getRequestUri());
