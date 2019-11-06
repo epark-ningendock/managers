@@ -68,7 +68,7 @@ class SearchRequest extends ValidationRequest
             $result = '';
             $distoricts = DistrictCode::whereIn('district_code', $params)->get();
             foreach ($distoricts as $district) {
-                $result += $district->name . ',';
+                $result = $result . ',' . $district->name;
             }
             return $result;
         }
@@ -81,10 +81,10 @@ class SearchRequest extends ValidationRequest
             $result = '';
             $rails = Rail::whereIn('id', $params)->get();
             foreach ($rails as $rail) {
-                $result += $rail->name . ',';
+                $result = $result . ',' . $rail->name;
             }
 
-            return result;
+            return $result;
         }
         return '';
     }
@@ -95,7 +95,7 @@ class SearchRequest extends ValidationRequest
             $result = '';
             $stations = Station::whereIn('id', $params)->get();
             foreach ($stations as $station) {
-                $result += $station->name . ',';
+                $result = $result . ',' .$station->name ;
             }
             return $result;
         }
