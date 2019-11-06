@@ -70,7 +70,7 @@ class SearchRequest extends ValidationRequest
             foreach ($distoricts as $district) {
                 $result = $result . ',' . $district->name;
             }
-            return $result;
+            return ltrim($result, ',');
         }
         return '';
     }
@@ -84,7 +84,7 @@ class SearchRequest extends ValidationRequest
                 $result = $result . ',' . $rail->name;
             }
 
-            return $result;
+            return ltrim($result, ',');
         }
         return '';
     }
@@ -97,7 +97,7 @@ class SearchRequest extends ValidationRequest
             foreach ($stations as $station) {
                 $result = $result . ',' .$station->name ;
             }
-            return $result;
+            return ltrim($result, ',');
         }
         return '';
     }

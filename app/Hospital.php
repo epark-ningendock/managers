@@ -285,7 +285,7 @@ class Hospital extends Model
         if ($request->input('site_card') == 1) {
             $query->whereHas('hospital_details', function ($query) {
                 $query->where('minor_classification_id', 5);
-                $query->whereNotNull('inputstrinng');
+                $query->whereNotNull('inputstring');
             });
         }
         // 検査コース分類コード
