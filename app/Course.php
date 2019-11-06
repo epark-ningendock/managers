@@ -211,24 +211,27 @@ class Course extends SoftDeleteModel
         // 市区町村コード
         $district_no = $request->input('district_no');
         if (isset($district_no)) {
-            $query->whereHas('hospital.district_code', function ($query) use ($district_no) {
-                $query->where('district_code', $district_no);
+            $districts = explode(',', $district_no);
+            $query->whereHas('hospital.district_code', function ($query) use ($districts) {
+                $query->whereIn('district_code', $districts);
             });
         }
 
         // 路線コード
         $rail_no = $request->input('rail_no');
         if (isset($rail_no)) {
-            $query->whereHas('hospital', function ($query) use ($rail_no) {
-                $query->where('rail1', $rail_no)->orWhere('rail2', $rail_no)->orWhere('rail3', $rail_no)->orWhere('rail4', $rail_no)->orWhere('rail5', $rail_no);
+            $rails = explode(',', $rail_no);
+            $query->whereHas('hospital', function ($query) use ($rails) {
+                $query->whereIn('rail1', $rails)->orWhereIn('rail2', $rails)->orWhereIn('rail3', $rails)->orWhereIn('rail4', $rails)->orWhereIn('rail5', $rails);
             });
         }
 
         // 駅コード
         $station_no = $request->input('station_no');
         if (isset($station_no)) {
-            $query->whereHas('hospital', function ($query) use ($station_no) {
-                $query->where('station1', $station_no)->orWhere('station2', $station_no)->orWhere('station3', $station_no)->orWhere('station4', $station_no)->orWhere('station5', $station_no);
+            $stations = explode(',', $station_no);
+            $query->whereHas('hospital', function ($query) use ($stations) {
+                $query->whereIn('station1', $stations)->orWhereIn('station2', $stations)->orWhereIn('station3', $stations)->orWhereIn('station4', $stations)->orWhereIn('station5', $stations);
             });
         }
 

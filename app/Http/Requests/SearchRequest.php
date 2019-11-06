@@ -63,15 +63,43 @@ class SearchRequest extends ValidationRequest
     }
     protected function get_district_name($district_no)
     {
-        return isset($district_no) ? DistrictCode::select('name')->where('district_code', $district_no)->first()->name : '';
+        if (isset($district_no)) {
+            $params = explode(',', $district_no);
+            $result = '';
+            $distoricts = DistrictCode::select('name')->whereIn('district_code', $params)->get();
+            foreach ($distoricts as $district) {
+                $result += $district->name . ',';
+            }
+            return $result;
+        }
+        return '';
     }
     protected function get_rail_name($rail_no)
     {
-        return isset($rail_no) ? Rail::select('name')->find($rail_no)->name : '';
+        if (isset($rail_no)) {
+            $params = explode(',', $rail_no);
+            $result = '';
+            $rails = Rail::select('name')->whereIn('id', $params)->get();
+            foreach ($rails as $rail) {
+                $result += $rail->name . ',';
+            }
+
+            return result;
+        }
+        return '';
     }
     protected function get_station_name($station_no)
     {
-        return isset($station_no) ? Station::select('name')->find($station_no)->name : '';
+        if (isset($station_no)) {
+            $params = explode(',', $station_no);
+            $result = '';
+            $stations = Station::whereIn('id', $params)->get();
+            foreach ($stations as $station) {
+                $result += $station->name . ',';
+            }
+            return $result;
+        }
+        return '';
     }
     protected function get_hospital_category_text($hospital_category_code)
     {
