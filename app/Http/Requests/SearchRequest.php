@@ -66,7 +66,7 @@ class SearchRequest extends ValidationRequest
         if (isset($district_no)) {
             $params = explode(',', $district_no);
             $result = '';
-            $distoricts = DistrictCode::select('name')->whereIn('district_code', $params)->get();
+            $distoricts = DistrictCode::whereIn('district_code', $params)->get();
             foreach ($distoricts as $district) {
                 $result += $district->name . ',';
             }
@@ -79,7 +79,7 @@ class SearchRequest extends ValidationRequest
         if (isset($rail_no)) {
             $params = explode(',', $rail_no);
             $result = '';
-            $rails = Rail::select('name')->whereIn('id', $params)->get();
+            $rails = Rail::whereIn('id', $params)->get();
             foreach ($rails as $rail) {
                 $result += $rail->name . ',';
             }
