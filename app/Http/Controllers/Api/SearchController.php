@@ -22,7 +22,7 @@ class SearchController extends ApiBaseController
      */
     public function index(SearchRequest $request)
     {
-        try {
+//        try {
             $search_cond_chk_result = $this->checkSearchCond($request, false);
             if (!$search_cond_chk_result[0]) {
                 return $this->createResponse($search_cond_chk_result[1]);
@@ -66,10 +66,10 @@ class SearchController extends ApiBaseController
                 + $request->toJson()
                 + compact('hospitals', 'courses');
 
-        } catch (\Exception $e) {
-            Log::error($e);
-            return $this->createResponse($this->messages['system_error_api']);
-        }
+//        } catch (\Exception $e) {
+//            Log::error($e);
+//            return $this->createResponse($this->messages['system_error_api']);
+//        }
 
     }
 
