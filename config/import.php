@@ -6,6 +6,7 @@ use App\ContractPlan;
 use App\Course;
 use App\CourseDetail;
 use App\CourseImage;
+use App\CourseOption;
 use App\CourseQuestion;
 use App\DistrictCode;
 use App\Hospital;
@@ -22,6 +23,7 @@ use App\Imports\ContractPlanImport;
 use App\Imports\CourseDetailImport;
 use App\Imports\CourseImageImport;
 use App\Imports\CourseImport;
+use App\Imports\CourseOptionImport;
 use App\Imports\CourseQuestionImport;
 use App\Imports\DistrictCodeImport;
 use App\Imports\HospitalCategoryImport;
@@ -83,21 +85,21 @@ return [
         'import' => ClassificationTypeImport::class,
         'seed' => true,
     ],
-    'm_item_category_dai.csv' => [
-        'model' => MajorClassification::class,
-        'import' => MajorClassificationImport::class,
-        'seed' => true,
-    ],
-    'm_item_category_chu.csv' => [
-        'model' => MiddleClassification::class,
-        'import' => MiddleClassificationImport::class,
-        'seed' => true,
-    ],
-    'm_item_category_sho.csv' => [
-        'model' => MinorClassification::class,
-        'import' => MinorClassificationImport::class,
-        'seed' => true,
-    ],
+//    'm_item_category_dai.csv' => [
+//        'model' => MajorClassification::class,
+//        'import' => MajorClassificationImport::class,
+//        'seed' => true,
+//    ],
+//    'm_item_category_chu.csv' => [
+//        'model' => MiddleClassification::class,
+//        'import' => MiddleClassificationImport::class,
+//        'seed' => true,
+//    ],
+//    'm_item_category_sho.csv' => [
+//        'model' => MinorClassification::class,
+//        'import' => MinorClassificationImport::class,
+//        'seed' => true,
+//    ],
     'm_contract_plan.csv' => [
         'model' => ContractPlan::class,
         'import' => ContractPlanImport::class,
@@ -173,35 +175,40 @@ return [
         'import' => HospitalCategoryImport::class,
         'seed' => false,
     ],
-    'm_rail_corp.csv' => [
-        'model' => RailwayCompany::class,
-        'import' => RailwayCompanyImport::class,
-        'seed' => true,
-    ],
-    'm_rail.csv' => [
-        'model' => Rail::class,
-        'import' => RailImport::class,
-        'seed' => true,
-    ],
-    'm_station.csv' => [
-        'model' => Station::class,
-        'import' => StationImport::class,
-        'seed' => true,
-    ],
-    'm_rail_station.csv' => [
-        'model' => null, // 中間テーブルのため null
-        'import' => RailStationImport::class,
-        'seed' => true,
-    ],
-    'm_rail_pref.csv' => [
-        'model' => null, // 中間テーブルのため null
-        'import' => PrefectureRailImport::class,
-        'seed' => true,
-    ],
+//    'm_rail_corp.csv' => [
+//        'model' => RailwayCompany::class,
+//        'import' => RailwayCompanyImport::class,
+//        'seed' => true,
+//    ],
+//    'm_rail.csv' => [
+//        'model' => Rail::class,
+//        'import' => RailImport::class,
+//        'seed' => true,
+//    ],
+//    'm_station.csv' => [
+//        'model' => Station::class,
+//        'import' => StationImport::class,
+//        'seed' => true,
+//    ],
+//    'm_rail_station.csv' => [
+//        'model' => null, // 中間テーブルのため null
+//        'import' => RailStationImport::class,
+//        'seed' => true,
+//    ],
+//    'm_rail_pref.csv' => [
+//        'model' => null, // 中間テーブルのため null
+//        'import' => PrefectureRailImport::class,
+//        'seed' => true,
+//    ],
     'm_option.csv' => [
         'model' => Option::class,
         'import' => OptionImport::class,
         'seed' => true,
+    ],
+    'm_course_option_group.csv' => [
+        'model' => CourseOption::class,
+        'import' => CourseOptionImport::class,
+        'seed' => false,
     ],
     't_pv.csv' => [
         'model' => PvRecord::class,
@@ -218,9 +225,9 @@ return [
         'import' => MemberLoginInfoImport::class,
         'seed' => false,
     ],
-    't_reserve_claim.csv' => [
-        'model' => \App\ReservationOption::class,
-        'import' => \App\Imports\ReservationOptionImport::class,
-        'seed' => true,
-    ],
+//    't_reserve_claim.csv' => [
+//        'model' => \App\ReservationOption::class,
+//        'import' => \App\Imports\ReservationOptionImport::class,
+//        'seed' => true,
+//    ],
 ];

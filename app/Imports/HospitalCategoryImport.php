@@ -46,10 +46,7 @@ class HospitalCategoryImport extends ImportAbstract
         $arr = [
             'hospital_id' => $hospital_id,
             'hospital_image_id' => $this->getId('hospital_images', $row['file_no']),
-            'image_order' => ImageOrder::where('image_group_number', $row['file_group_no'])
-                ->where('image_location_number', $row['file_location_no'])
-                ->first()
-                ->id,
+            'image_order' => $row['file_group_no'],
             'file_location_no' => $row['file_location_no'],
             'title' => $row['title'],
             'caption' => $row['caption'],

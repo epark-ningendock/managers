@@ -42,20 +42,20 @@ class ReservationImport extends ImportBAbstract implements WithEvents
         $row = $row->toArray();
 
         try {
-            $old_id = sprintf('%s_%s',
-                $this->hospital_no,
-                $this->getValue($row, 'APPOINT_ID')
-            );
+//            $old_id = sprintf('%s_%s',
+//                $this->hospital_no,
+//                $this->getValue($row, 'APPOINT_ID')
+//            );
 
-            $reservation_id = $this->getIdForA('reservations', $old_id);
+//            $reservation_id = $this->getIdForA('reservations', $old_id);
 
-            $model = Reservation::find($reservation_id);
+//            $model = Reservation::find($reservation_id);
 
-            if (is_null($model)) {
-                return;
-            }
+//            if (is_null($model)) {
+//                return;
+//            }
 
-            $model->save([
+            $model = new Reservation([
                 'hospital_id' => Hospital::withTrashed()->where('old_karada_dog_id',
                     $this->hospital_no)->get()->first()->id,
                 'reservation_date' => $this->getValue($row, 'APPOINT_DATE'),
@@ -68,6 +68,8 @@ class ReservationImport extends ImportBAbstract implements WithEvents
                 'is_repeat' => $this->getValue($row, 'VISIT_HISTORY_FG') ?: 0,
                 'is_representative' => $this->getValue($row, 'REPRESENTATIVE_FG') ?: 1,
             ]);
+            $model->save();
+            $this->setId($model, $row);
 
         } catch (\Throwable $e) {
             Log::error($e->getTraceAsString());

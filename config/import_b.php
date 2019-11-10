@@ -17,7 +17,7 @@ return [
         'model' => \App\Calendar::class,
         'import' => \App\Imports\CalendarImport::class,
     ],
-    'T_OP_M_HYB_APPOINT_TIMEZONE.csv' => [
+    'calendar_days.csv' => [
         'model' => \App\CalendarDay::class,
         'import' => \App\Imports\CalendarDayImport::class,
     ],

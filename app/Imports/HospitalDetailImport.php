@@ -44,7 +44,7 @@ class HospitalDetailImport extends ImportAbstract
 
         $model = new HospitalDetail([
             'hospital_id' => $hospital_id,
-            'minor_classification_id' => $this->getId('minor_classifications', $row['item_category_sho_no']),
+            'minor_classification_id' => $row['item_category_sho_no'],
             'select_status' => $row['select_status'],
             'inputstring' => $row['inputstring'],
             'created_at' => $row['rgst'],

@@ -1,4 +1,0 @@
-"SIMULTANEOUS_TRANSMIT_MAIL_TMPL_ID","RECEIVER_CONDITION_ID","SENDER_TP","SENDER_NAME","SENDER_EMAIL","USING_FG","PC_TITLE","PC_BODY","MOBILE_TITLE","MOBILE_BODY","COMMON_MAIL_TMPL_ID","COMMON_MAIL_TMPL_VERSION","CREATE_USER_NO","CREATE_DATE","MODIFY_USER_NO","MODIFY_DATE","DATA_VERSION"
-"1","1","1","","選択可能なメールアドレスはありません","1","test","aaa","","",\N,\N,"A691","2017-08-03 12:23:50","A691","2017-08-03 12:23:50","1"
-"2",\N,"1","","選択可能なメールアドレスはありません","1","テスト２","テスト","","",\N,\N,"B37396","2018-11-05 13:34:38","B37396","2018-11-05 13:34:38","1"
-"3",\N,"1","","選択可能なメールアドレスはありません","1","テンプレート１","テンプレート１","","",\N,\N,"A2728","2018-11-05 15:32:57","A2728","2018-11-05 15:32:57","1"

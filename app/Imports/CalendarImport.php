@@ -3,6 +3,9 @@
 namespace App\Imports;
 
 use App\Calendar;
+use App\ConvertedIdString;
+use App\Hospital;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Row;
 
 class CalendarImport extends ImportBAbstract
@@ -33,17 +36,28 @@ class CalendarImport extends ImportBAbstract
      */
     public function onRow(Row $row)
     {
-        $row = $row->toArray();
+        try {
+            $row = $row->toArray();
 
-        $model = new Calendar([
-            'name' => $this->getValue($row, 'LINE_NAME'),
-            'is_calendar_display' => $this->getValue($row, 'TEMP_RECEPTION_FG'),
-            'hospital_id' => $this->getId('hospitals', $this->hospital_no),
-            'created_at' => $this->getValue($row, 'CREATE_DATE'),
-            'updated_at' => $this->getValue($row, 'MODIFY_DATE'),
-        ]);
+            $con = ConvertedIdString::where('table_name', 'hospitals')
+                ->where('old_id', $this->hospital_no)
+                ->first();
 
-        $model->save();
-        $this->setId($model, $row);
+//            $hospital = Hospital::where('old_karada_dog_id', $this->hospital_no)->first();
+
+            $model = new Calendar([
+                'name' => $this->getValue($row, 'LINE_NAME'),
+                'is_calendar_display' => $this->getValue($row, 'TEMP_RECEPTION_FG'),
+                'hospital_id' => $con->new_id,
+                'created_at' => $this->getValue($row, 'CREATE_DATE'),
+                'updated_at' => $this->getValue($row, 'MODIFY_DATE'),
+            ]);
+
+            $model->save();
+            $this->setId($model, $row);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+
     }
 }

@@ -423,22 +423,22 @@
           <legend>代表者</legend>
         </div>
         <div class="col-md-6">
-          <div class="form-group margin-none py-sm-1 @if ($errors->has('representative')) has-error @endif">
+          <div class="form-group margin-none py-sm-1 @if ($errors->has('principal')) has-error @endif">
             <label for="name">名前</label>
-            <input type="text" class="form-control" id="representative" name="representative"
-                   value="{{ old('name', (isset($hospital->representative) ) ? $hospital->representative : null) }}"
+            <input type="text" class="form-control" id="principal" name="principal"
+                   value="{{ old('name', (isset($hospital->principal) ) ? $hospital->principal : null) }}"
                    placeholder="代表者名">
-            @if ($errors->has('representative')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('representative') }}</p> @endif
+            @if ($errors->has('principal')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('principal') }}</p> @endif
           </div>
         </div>
 
         <div class="col-md-12">
-          <div class="form-group margin-none py-sm-1 @if( $errors->has('biography'))  has-error @endif">
+          <div class="form-group margin-none py-sm-1 @if( $errors->has('principal_history'))  has-error @endif">
             <label for="history">略歴</label>
             <textarea name="biography" id="biography" rows="5"
-                      class="form-control">{{ old('biography',(isset($hospital->biography)) ? $hospital->biography : null) }}</textarea>
+                      class="form-control">{{ old('principal_history',(isset($hospital->principal_history)) ? $hospital->principal_history : null) }}</textarea>
 
-            @if ($errors->has('biography')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('biography') }}</p> @endif
+            @if ($errors->has('principal_history')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('principal_history') }}</p> @endif
           </div>
         </div>
 

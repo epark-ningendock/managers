@@ -54,30 +54,56 @@ class Reservation extends SoftDeleteModel
         'start_time_min',
         'end_time_hour',
         'end_time_min',
+        'channel',
+        'reservation_status',
+        'completed_date',
+        'cancel_date',
+        'user_message',
+        'site_code',
+        'customer_id',
+        'epark_member_id',
+        'member_number',
+        'terminal_type', //need to confirm initial value
+        'time_selected',
+        'is_repeat', // need to confirm
         'tax_included_price',
         'adjustment_price',
-        'customer_id',
-        'reservation_status',
-        'reservation_memo',
-        'terminal_type', //need to confirm initial value
-        'is_repeat', // need to confirm 
-        'is_representative', // need to confirm
+        'tax_rate',
+        'second_date',
+        'is_choose',
+        'campaign_code',
+        'tel_timezone',
+        'insurance_assoc_id',
+        'insurance_assoc',
         'mail_type', //not sure what field need to add
-        'payment_status', //not sure what field need to add
-        'trade_id', //not sure what field need to add
-        'payment_method', //not sure what field need to add
+        'cancelled_appoint_code',
+        'is_billable',
+        'claim_month',
+        'is_payment',
+        'payment_status',
+        'trade_id',
+        'order_id',
+        'settlement_price',
+        'payment_method',
+        'cashpo_used_price',
+        'amount_unsettled',
+        'reservation_memo',
+        'todays_memo',
+        'internal_memo',
+        'acceptance_number',
+        'y_uid',
         'applicant_name',
         'applicant_name_kana',
         'applicant_tel',
-        'fee',
         'fee_rate',
+        'fee',
         'is_free_hp_link',
-        'lock_version',
         'is_health_insurance',
-        'internal_memo',
+        'payment_date',
+        'kenshin_sys_yoyaku_no',
         'cancellation_reason',
-        'medical_examination_system_id',
-        'kenshin_sys_yoyaku_no'
+        'status'
+
     ];
 
     protected $appends = ['tax_excluded_price'];

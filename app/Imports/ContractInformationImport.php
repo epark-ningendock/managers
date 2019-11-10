@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\ContractInformation;
 use App\Hospital;
 use App\HospitalStaff;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Row;
 
 class ContractInformationImport extends ImportBAbstract
@@ -39,12 +40,37 @@ class ContractInformationImport extends ImportBAbstract
 
         $hospital = Hospital::withTrashed()->where('old_karada_dog_id', $this->hospital_no)->get()->first();
 
+        $application_date = Carbon::create('20170101');
+        if (!empty($this->getValue($row, 'NEW_APPLY_DATE'))) {
+            $application_date = $this->getValue($row, 'NEW_APPLY_DATE');
+        }
+
+        $billing_start_date = Carbon::create('20170101');
+        if (!empty($this->getValue($row, 'SPECIFICFEE_START_DATE'))) {
+            $billing_start_date = $this->getValue($row, 'SPECIFICFEE_START_DATE');
+        }
+       $cancel_date = null;
+        if (!empty($this->getValue($row, 'TERM_EXPECTED_DATE'))) {
+            $cancel_date = $this->getValue($row, 'TERM_EXPECTED_DATE');
+        }
+
+        $service_start_date = Carbon::create('20170101');
+        if (!empty($this->getValue($row, 'SPECIFICFEE_START_DATE'))) {
+            $cancel_date = $this->getValue($row, 'SPECIFICFEE_START_DATE');
+        }
+
+        $service_end_date = Carbon::create('20221231');
+        if (!empty($this->getValue($row, 'TERM_EXPECTED_DATE'))) {
+            $service_end_date = $this->getValue($row, 'TERM_EXPECTED_DATE');
+        }
+
+
         $model = new ContractInformation([
             'contractor_name_kana' => $this->getValue($row, 'SHOPOWNER_NAME_KANA'),
             'contractor_name' => $this->getValue($row, 'SHOPOWNER_NAME'),
-            'application_date' => $this->getValue($row, 'NEW_APPLY_DATE'),
-            'billing_start_date' => $this->getValue($row, 'SPECIFICFEE_START_DATE'),
-            'cancellation_date' => $this->getValue($row, 'TERM_DATE'),
+            'application_date' =>$application_date,
+            'billing_start_date' => $billing_start_date,
+            'cancellation_date' => $cancel_date,
             'representative_name_kana' => $this->getValue($row, 'DELEGATE_NAME_KANA'),
             'representative_name' => $this->getValue($row, 'DELEGATE_NAME'),
             'postcode' => $this->getValue($row, 'POSTCODE'),
@@ -60,8 +86,8 @@ class ContractInformationImport extends ImportBAbstract
             'property_no' => $this->getValue($row, 'CONTRACT_NO'),
             'contract_plan_id' => sprintf('Y0%02d', $hospital->plan_code),
             'hospital_id' => $hospital->id,
-            'service_start_date' => $this->getValue($row, 'SPECIFICFEE_START_DATE'),
-            'service_end_date' => $this->getValue($row, 'TERM_EXPECTED_DATE')
+            'service_start_date' => $service_start_date,
+            'service_end_date' => $service_end_date
         ]);
 
         $model->save();
