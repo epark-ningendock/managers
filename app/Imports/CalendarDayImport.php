@@ -3,6 +3,9 @@
 namespace App\Imports;
 
 use App\CalendarDay;
+use App\ConvertedIdString;
+use App\Enums\Status;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Row;
 
@@ -36,15 +39,20 @@ class CalendarDayImport extends ImportBAbstract
     {
         try {
             $row = $row->toArray();
+            $c = ConvertedIdString::where('table_name', 'calendars')
+                ->where('old_id', $row['line_id'])
+                ->where('hospital_no', $this->hospital_no)
+                ->first();
 
             $model = new CalendarDay([
-                'date' => \now()->format('Y-m-d'), //@todo
-                'is_holiday' => 0,  // @todo
-                'is_reservation_acceptance' => $this->getValue($row, 'OUTSIDE_RESERVATION'),
-                'reservation_frames' => $this->getValue($row, 'RESERVATION_FRAMES'),
-                'calendar_id' => $this->getId('calendars', $this->getValue($row, 'LINE_ID')),
-                'created_at' => $this->getValue($row, 'CREATE_DATE'),
-                'updated_at' => $this->getValue($row, 'MODIFY_DATE'),
+                'date' => Carbon::create($row['date']),
+                'is_holiday' => 0,  //
+                'is_reservation_acceptance' => 1,
+                'reservation_frames' => $row['frame'],
+                'calendar_id' => $c->new_id,
+                'status' => Status::VALID,
+                'created_at' => Carbon::today(),
+                'updated_at' => Carbon::today(),
             ]);
             $model->save();
         } catch (\Exception $e) {

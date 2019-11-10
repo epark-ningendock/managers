@@ -2,6 +2,9 @@
 
 namespace App\Imports;
 
+use App\ConvertedId;
+use App\ConvertedIdString;
+use App\Course;
 use App\CourseDetail;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
@@ -37,10 +40,23 @@ class CourseDetailImport extends ImportAbstract implements WithChunkReading
      */
     public function onRow(Row $row)
     {
+
         try {
             $row = $row->toArray();
+            $old_id = $row['course_no'];
+            $hospital_no = $row['hospital_no'];
+            $converted_idstring = ConvertedIdString::where('table_name', 'courses')
+                ->where('old_id', $old_id)
+                ->where('hospital_no', $hospital_no)
+                ->first();
+
+            if ($converted_idstring) {
+                $course_id = $converted_idstring->new_id;
+            } else {
+                return;
+            }
             $model = new CourseDetail([
-                'course_id' => $this->getId('courses', $row['course_no']),
+                'course_id' => $course_id,
                 'major_classification_id' => $this->getId('major_classifications', $row['item_category_dai_no']),
                 'middle_classification_id' => $this->getId('middle_classifications', $row['item_category_chu_no']),
                 'minor_classification_id' => $this->getId('minor_classifications', $row['item_category_sho_no']),

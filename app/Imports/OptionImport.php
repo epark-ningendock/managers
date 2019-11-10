@@ -2,6 +2,8 @@
 
 namespace App\Imports;
 
+use App\Hospital;
+use App\OldOption;
 use App\Option;
 use Maatwebsite\Excel\Row;
 
@@ -57,5 +59,14 @@ class OptionImport extends ImportAbstract
         $model->save();
         $this->deleteIf($model, $row, 'status', ['X']);
         $this->setId($model, null, $row['option_cd'], $row['option_group_cd']);
+
+        $hospital = Hospital::find($hospital_id);
+        $old_model = new OldOption([
+            'hospital_no' => $hospital->old_karada_dog_id,
+            'option_group_cd' => $row['option_group_cd'],
+            'option_cd' => $row['option_cd'],
+            'option_id' => $model->id,
+        ]);
+        $old_model->save();
     }
 }

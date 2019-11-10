@@ -42,7 +42,7 @@ class MemberLoginInfoImport extends ImportAbstract
             'nick_use' => $row['nick_use'],
             'contact' => $row['contact'],
             'contact_name' => $row['contact_name'],
-            'status' => (is_null($row['status'])) ? 1 : $row['status'],
+            'status' => (is_null($row['status'])) ? '' : $row['status'],
         ]);
 
         $model->save();

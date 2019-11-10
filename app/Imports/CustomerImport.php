@@ -58,6 +58,7 @@ class CustomerImport extends ImportBAbstract
             'recall_count' => $this->getValue($row, 'RECALL_COUNT'),
             'hospital_id' => Hospital::query()->where('old_karada_dog_id', $this->hospital_no)->first()->id,
             'epark_member_id' => $this->getValue($row, 'EPARK_MEMBER_ID'),
+            'status' => $this->getValue($row, 'STATUS'),
         ]);
         $model->save();
         $this->setId($model, $row);

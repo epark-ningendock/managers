@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Calendar;
 use App\Holiday;
 use App\Hospital;
 use Illuminate\Support\Facades\Log;
@@ -39,10 +40,22 @@ class HolidayImport extends ImportBAbstract
         try {
             $row = $row->toArray();
             $model = new Holiday([
-                'hospital_id' => Hospital::withTrashed()->where('old_karada_dog_id', $this->hospital_no)->get()->first()->id,
+                'hospital_id' => Hospital::withTrashed()->where('old_karada_dog_id', $this->hospital_no)->first()->id,
                 'date' => $this->getValue($row, 'HOLIDAY'),
             ]);
             $model->save();
+
+            $targets = Calendar::where('hospital_id', $model->hospital_id)->get();
+            foreach ($targets as $calendar) {
+                foreach ($calendar->calendar_days as $calendar_days) {
+                    if ($calendar_days->date->eq($model->date)) {
+                        $calendar_days->is_holiday = 1;
+                        $calendar_days->is_reservation_acceptance = 0;
+                        $calendar_days->save();
+                    }
+                }
+            }
+
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }

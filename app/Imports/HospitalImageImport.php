@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\ConvertedIdString;
 use App\HospitalImage;
 use Maatwebsite\Excel\Row;
 
@@ -48,7 +49,7 @@ class HospitalImageImport extends ImportAbstract
             'hospital_id' => $hospital_id,
             'name' => $row['name'],
             'extension' => $row['extension'],
-            'path' => $path,
+            'path' => $path. '/' . $row['name'] . '.' . $row['extension'],
             'memo1' => $row['memo1'],
             'memo2' => $row['memo2'],
             'is_display' => $row['flg_display'],
@@ -58,5 +59,16 @@ class HospitalImageImport extends ImportAbstract
 
         $model->save();
         $this->setId($model, $row);
+
+        ConvertedIdString::firstOrCreate([
+            'table_name' => 'hospital_images',
+            'old_id' => $row['file_no'],
+            'hospital_no' => $row['hospital_no'],
+        ], [
+            'table_name' => 'hospital_images',
+            'old_id' => $row['file_no'],
+            'new_id' => $model->id,
+            'hospital_no' => $row['hospital_no'],
+        ]);
     }
 }

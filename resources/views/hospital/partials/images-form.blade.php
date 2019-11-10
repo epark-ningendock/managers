@@ -194,7 +194,7 @@
     <div class="row" style="position: relative">
         <div class="col-sm-6">
             {{Form::label('interview_1', 'インタビューメイン画像',['class' => 'form_label'])}}
-            @if(!is_null($interview_top) && !is_null($interview_top->hospital_image->path))
+            @if(!is_null($interview_top) && !is_null($interview_top->hospital_image) && !is_null($interview_top->hospital_image->path))
                 <div class="interview_image_area">
                     <img src="{{$interview_top->hospital_image->path}}" width="150">
                     <p class="file_delete_text">

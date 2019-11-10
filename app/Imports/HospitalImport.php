@@ -3,7 +3,10 @@
 namespace App\Imports;
 
 use App\ContractPlan;
+use App\ConvertedIdString;
+use App\DistrictCode;
 use App\Hospital;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Row;
 
 class HospitalImport extends ImportAbstract
@@ -34,16 +37,28 @@ class HospitalImport extends ImportAbstract
     {
         $row = $row->toArray();
 
-        if (is_null($row['pref'])) {
-            return;
+//        if (is_null($row['pref'])) {
+//            return;
+//        }
+
+        $district_id = 0;
+        if (!empty($row['district_no']) && $row['district_no'] != '') {
+            $district = DistrictCode::where('district_code', $row['district_no'])->first();
+            $district_id = $district->id;
         }
+
+        $deleted_at = null;
+        if ($row['status'] == 'X') {
+            $deleted_at = $row['updt'];
+        }
+
 
         $model = new Hospital([
             'old_karada_dog_id' => $row['id'],
             'name' => $row['name'],
             'kana' => $row['kana'],
             'postcode' => $row['zip'],
-            'district_code_id' => $row['district_no'],
+            'district_code_id' => $district_id,
             'course_meta_information_id' => null,
             'address1' => $row['address1'],
             'address2' => $row['address2'],
@@ -94,6 +109,7 @@ class HospitalImport extends ImportAbstract
             'created_at' => $row['rgst'],
             'updated_at' => $row['updt'],
             'prefecture_id' => $row['pref'],
+            'deleted_at' => $deleted_at,
         ]);
 
         $model->save();
@@ -115,7 +131,17 @@ class HospitalImport extends ImportAbstract
             'status' => 1
         ]);
 
-        $this->deleteIf($model, $row, 'status', ['X']);
+//        $this->deleteIf($model, $row, 'status', ['X']);
         $this->setId($model, $row);
+        ConvertedIdString::firstOrCreate([
+            'table_name' => 'hospitals',
+            'old_id' => $row['id'],
+            'hospital_no' => $row['id'],
+        ], [
+            'table_name' => 'hospitals',
+            'old_id' => $row['id'],
+            'new_id' => $model->id,
+            'hospital_no' => $row['id'],
+        ]);
     }
 }
