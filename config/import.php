@@ -210,11 +210,11 @@ return [
 //        'import' => CourseOptionImport::class,
 //        'seed' => false,
 //    ],
-    't_pv.csv' => [
-        'model' => PvRecord::class,
-        'import' => PvRecordImport::class,
-        'seed' => false,
-    ],
+//    't_pv.csv' => [
+//        'model' => PvRecord::class,
+//        'import' => PvRecordImport::class,
+//        'seed' => false,
+//    ],
     't_consideration_list.csv' => [
         'model' => ConsiderationList::class,
         'import' => ConsiderationListImport::class,
