@@ -215,11 +215,11 @@ return [
 //        'import' => PvRecordImport::class,
 //        'seed' => false,
 //    ],
-    't_consideration_list.csv' => [
-        'model' => ConsiderationList::class,
-        'import' => ConsiderationListImport::class,
-        'seed' => false,
-    ],
+//    't_consideration_list.csv' => [
+//        'model' => ConsiderationList::class,
+//        'import' => ConsiderationListImport::class,
+//        'seed' => false,
+//    ],
     'm_user.csv' => [
         'model' => MemberLoginInfo::class,
         'import' => MemberLoginInfoImport::class,
