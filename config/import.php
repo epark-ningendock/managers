@@ -220,11 +220,11 @@ return [
 //        'import' => ConsiderationListImport::class,
 //        'seed' => false,
 //    ],
-    'm_user.csv' => [
-        'model' => MemberLoginInfo::class,
-        'import' => MemberLoginInfoImport::class,
-        'seed' => false,
-    ],
+//    'm_user.csv' => [
+//        'model' => MemberLoginInfo::class,
+//        'import' => MemberLoginInfoImport::class,
+//        'seed' => false,
+//    ],
 //    't_reserve_claim.csv' => [
 //        'model' => \App\ReservationOption::class,
 //        'import' => \App\Imports\ReservationOptionImport::class,
