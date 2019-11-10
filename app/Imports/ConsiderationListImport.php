@@ -43,12 +43,21 @@ class ConsiderationListImport extends ImportAbstract
             return;
         }
 
-        $course_id = $this->getId('courses', $row['course_no']);
-        $old_karada_dog_id = Hospital::find($hospital_id)->old_karada_dog_id;
-        $course_id = ConvertedIdString::query()->where('table_name', 'courses')
+//        $course_id = $this->getId('courses', $row['course_no']);
+        $hospital = Hospital::find($hospital_id);
+        if (!$hospital) {
+            return;
+        }
+        $old_karada_dog_id = $hospital->old_karada_dog_id;
+        $c = ConvertedIdString::query()->where('table_name', 'courses')
             ->where('old_id', $row['course_no'])
             ->where('hospital_no', $old_karada_dog_id)
-            ->first()->new_id;
+            ->first();
+
+        $course_id = null;
+        if ($c) {
+            $course_id = $c->new_id;
+        }
 
 
         $model = new ConsiderationList([
