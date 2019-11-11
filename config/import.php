@@ -200,6 +200,7 @@ return [
 //        'import' => PrefectureRailImport::class,
 //        'seed' => true,
 //    ],
+
     'm_option.csv' => [
         'model' => Option::class,
         'import' => OptionImport::class,
