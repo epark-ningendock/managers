@@ -76,7 +76,7 @@ Route::prefix('v1')->group(function () {
 // 予約キャンセルAPI
     Route::post('reservation-cancel', 'ReservationController@cancel');
 // PV登録
-    Route::post('pvRegist', 'PvRegistController@store')->name('pv-regist.store');
+    Route::post('pv_regist', 'PvRegistController@store')->name('pv-regist.store');
 // EPARK会員ログイン情報
     Route::post('memberLoginInfo', 'MemberLoginInfoController@store')->name('member-login-info.store');
     Route::get('memberLoginInfo', 'MemberLoginInfoController@show')->name('member-login-info.show');

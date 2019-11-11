@@ -44,7 +44,9 @@ class HospitalImport extends ImportAbstract
         $district_id = 0;
         if (!empty($row['district_no']) && $row['district_no'] != '') {
             $district = DistrictCode::where('district_code', $row['district_no'])->first();
-            $district_id = $district->id;
+            if ($district) {
+                $district_id = $district->id;
+            }
         }
 
         $deleted_at = null;

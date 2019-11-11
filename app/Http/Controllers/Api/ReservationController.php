@@ -44,15 +44,6 @@ class ReservationController extends ApiBaseController
             $reservation_id = $request->input('reservation_id');
             $reservation_id = $this->convertReservationId($reservation_id);
 
-            // 旧予約IDの場合、新予約IDへ変換
-            if(strpos($reservation_id,'_') !== false){
-                $old_ids = explode('_', $reservation_id);
-                $converted = ConvertedId::where('table_name', 'reservations')
-                    ->where('old_id', $old_ids[1])
-                    ->first();
-                $reservation_id = $converted->new_id;
-            }
-
             // 対象取得
             $entity = $this->_reservation_service->find($reservation_id);
 
@@ -133,6 +124,7 @@ class ReservationController extends ApiBaseController
             $old_ids = explode('_', $reservation_id);
             $converted = ConvertedId::where('table_name', 'reservations')
                 ->where('old_id', $old_ids[1])
+                ->where('hospital_no', $old_ids[0])
                 ->first();
             $reservation_id = $converted->new_id;
         }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Status;
 use App\Http\Requests\SearchRequest;
 use App\Http\Requests\HospitalSearchRequest;
 
@@ -202,6 +203,10 @@ class SearchController extends ApiBaseController
             ->whereHas('contract_information' , function($q) {
                 $q->whereNotNull('contract_informations.code');
             })
+            ->whereHas('courses' , function($q) {
+                $q->where('courses.status', Status::VALID);
+            })
+            ->where('hospitals.status', Status::VALID)
 
             ->whereForSearchAPI($request);
 
@@ -250,6 +255,10 @@ class SearchController extends ApiBaseController
             ->whereHas('contract_information' , function($q) {
                 $q->whereNotNull('contract_informations.code');
             })
+            ->whereHas('hospital' , function($q) {
+                $q->where('hospitals.status', Status::VALID);
+            })
+            ->where('courses.status', Status::VALID)
             ->whereForSearchAPI($request);
 
         // 件数のみ

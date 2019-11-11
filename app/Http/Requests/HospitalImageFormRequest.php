@@ -179,7 +179,7 @@ class HospitalImageFormRequest extends FormRequest
             'speciality_4_caption' => 'nullable|max:5000',
 
             'title' => 'nullable|max:100',
-            'caption' => 'nullable|max:200',
+            'caption' => 'nullable|max:1000',
             'map_url' => 'nullable|url',
 
             'tab_1' => 'file|image|max:4000',
