@@ -2,8 +2,10 @@
 
 namespace App\Imports;
 
+use App\ConvertedId;
 use App\ConvertedIdString;
 use App\CourseImage;
+use App\Hospital;
 use App\HospitalImage;
 use App\ImageOrder;
 use Maatwebsite\Excel\Row;
@@ -58,9 +60,20 @@ class CourseImageImport extends ImportAbstract
             $path = $hospital_image->path;
         }
 
+        $c = ConvertedId::where('table_name', 'hospitals')
+            ->where('old_id', $row['hospital_no'])
+            ->first();
+
+        if (!$c) {
+            return;
+        }
+
+        $new_hospital_id = $c->new_id;
+        $hospital = Hospital::find($new_hospital_id);
+
         $converted_idstring = ConvertedIdString::where('table_name', 'courses')
             ->where('old_id', $row['course_no'])
-            ->where('hospital_no', $row['hospital_no'])
+            ->where('hospital_no', $hospital->old_karada_dog_id)
             ->first();
 
         if ($converted_idstring) {

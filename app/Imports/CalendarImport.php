@@ -49,8 +49,8 @@ class CalendarImport extends ImportBAbstract
                 'name' => $this->getValue($row, 'LINE_NAME'),
                 'is_calendar_display' => $this->getValue($row, 'TEMP_RECEPTION_FG'),
                 'hospital_id' => $con->new_id,
-                'created_at' => $this->getValue($row, 'CREATE_DATE'),
-                'updated_at' => $this->getValue($row, 'MODIFY_DATE'),
+//                'created_at' => $this->getValue($row, 'CREATE_DATE'),
+//                'updated_at' => $this->getValue($row, 'MODIFY_DATE'),
             ]);
 
             $model->save();

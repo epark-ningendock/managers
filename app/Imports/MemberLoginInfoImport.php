@@ -36,12 +36,17 @@ class MemberLoginInfoImport extends ImportAbstract
     {
         $row = $row->toArray();
 
+        $contact_name = null;
+        if (!empty($row['contact_name'])) {
+            $contact_name =  $row['contact_name'];
+        }
+
         $model = new MemberLoginInfo([
             'epark_member_id' => $row['epark_member_id'],
             'mail_info_delivery' => (is_null($row['optin'])) ? 1 : $row['optin'],
             'nick_use' => $row['nick_use'],
             'contact' => $row['contact'],
-            'contact_name' => $row['contact_name'],
+            'contact_name' => $contact_name,
             'status' => (is_null($row['status'])) ? '' : $row['status'],
         ]);
 

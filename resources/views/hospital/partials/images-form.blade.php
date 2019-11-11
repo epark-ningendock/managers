@@ -14,8 +14,9 @@
         @include('layouts.partials.message')
     @endif
     @includeIf('hospital.partials.nav-bar')
+        <!--
     <div class="form-entry">
-    <input type="hidden" name="lock_version" value="{{ $hospital->lock->lock_version or ''}}" />
+
     <h2>施設メイン登録</h2>
     <div class="form-group ">
         {{Form::label('main', '施設メイン',['class' => 'form_label'])}}
@@ -44,11 +45,12 @@
     </div>
     </div>
 </div>
-
+-->
 
 
 <div class="box box-primary form-box">
     <div class="form-entry box-body">
+        <input type="hidden" name="lock_version" value="{{ $hospital->lock->lock_version or ''}}" />
    <h2>サブメイン</h2>
     <div class="row">
         @for ($i = 1; $i <= 4; $i++)
@@ -97,7 +99,7 @@
         </div>
 
         <div class="form-group @if($errors->has('caption')) has-error @endif">
-            {{Form::label('caption', '本文 200字以内',['class' => 'form_label'])}}
+            {{Form::label('caption', '本文 1000字以内',['class' => 'form_label'])}}
             {{Form::textarea('caption', is_null($title) ? '' : $title->caption, ['class' => 'form-control', 'rows' => 4])}}
             @if ($errors->has('caption'))
                 <div class="error_message">

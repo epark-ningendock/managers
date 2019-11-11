@@ -21,7 +21,7 @@ class Reservation extends SoftDeleteModel
     ];
 
     public static $channel = [
-        '0' => 'Tel',
+        '2' => 'Tel',
         '1' => 'Web',
     ];
 
@@ -108,8 +108,6 @@ class Reservation extends SoftDeleteModel
 
     protected $appends = ['tax_excluded_price'];
 
-
-    //todo channelがどういうケースが発生するのか未定なので、とりあえず仮で
     public static function getChannel($channel)
     {
         if (array_key_exists($channel, self::$channel)) {

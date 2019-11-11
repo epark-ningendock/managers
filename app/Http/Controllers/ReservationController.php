@@ -520,22 +520,24 @@ class ReservationController extends Controller
             $reservation->acceptance_number = $acceptance_number;
 
             $reservation->tax_included_price = $course->is_price == '1' ? $course->price : 0;
+            $reservation->fee = 0;
+            $reservation->channel = '2';
 
-            $fee_rate = HospitalPlan::where('hospital_id', session()->get('hospital_id'))
-                ->whereDate('from', '<=', Carbon::today())
-                ->where(function($q) {
-                    $q->whereDate('to', '>=', Carbon::today())
-                        ->orWhere('to', '=', null);
-                })->get()->first()->contractPlan;
-            
-            if (isset($fee_rate)) {
-                $reservation->fee_rate = $fee_rate->fee_rate;
-                $reservation->fee = (
-                        $reservation->tax_included_price +
-                        $this->calculateCourseOptionTotalPrice($request) +
-                        $request->input('adjustment_price', 0)
-                    ) * ($fee_rate->fee_rate / 100);
-            }
+//            $fee_rate = HospitalPlan::where('hospital_id', session()->get('hospital_id'))
+//                ->whereDate('from', '<=', Carbon::today())
+//                ->where(function($q) {
+//                    $q->whereDate('to', '>=', Carbon::today())
+//                        ->orWhere('to', '=', null);
+//                })->get()->first()->contractPlan;
+//
+//            if (isset($fee_rate)) {
+//                $reservation->fee_rate = $fee_rate->fee_rate;
+//                $reservation->fee = (
+//                        $reservation->tax_included_price +
+//                        $this->calculateCourseOptionTotalPrice($request) +
+//                        $request->input('adjustment_price', 0)
+//                    ) * ($fee_rate->fee_rate / 100);
+//            }
 
             if ($request->customer_id) {
                 $customer = Customer::findOrFail($request->customer_id);
@@ -754,19 +756,16 @@ class ReservationController extends Controller
 
             $params['tax_included_price'] = $course->is_price == '1' ? $course->price : 0;
 
-            $fee_rate = HospitalPlan::where('hospital_id', session()->get('hospital_id'))
-                ->whereDate('from', '<=', Carbon::today())
-                ->where(function($q) {
-                    $q->whereDate('to', '>=', Carbon::today())
-                        ->orWhere('to', '=', null);
-                })->get()->first()->contractPlan;
+            if ($reservation->channel == '1') {
 
-            if (isset($fee_rate)) {
-                $params['fee'] = (
-                        $params['tax_included_price'] +
-                        $this->calculateCourseOptionTotalPrice($request) +
-                        $request->input('adjustment_price', 0)
-                    ) * ($fee_rate->fee_rate / 100);
+                if (isset($reservation->fee_rate)) {
+                    $params['fee'] = floor((
+                            $params['tax_included_price'] +
+                            $this->calculateCourseOptionTotalPrice($request) +
+                            $request->input('adjustment_price', 0)
+                        ) * ($reservation->fee_rate / 100));
+                }
+
             }
 
             $reservation->update($params);
