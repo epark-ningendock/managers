@@ -206,11 +206,11 @@ return [
         'import' => OptionImport::class,
         'seed' => true,
     ],
-    'm_course_option_group.csv' => [
-        'model' => CourseOption::class,
-        'import' => CourseOptionImport::class,
-        'seed' => false,
-    ],
+//    'm_course_option_group.csv' => [
+//        'model' => CourseOption::class,
+//        'import' => CourseOptionImport::class,
+//        'seed' => false,
+//    ],
     't_pv.csv' => [
         'model' => PvRecord::class,
         'import' => PvRecordImport::class,
