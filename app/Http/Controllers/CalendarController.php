@@ -209,6 +209,7 @@ class CalendarController extends Controller
             ->whereDate('date', '<=', $end->toDateString())->get();
 
         $holidays = Holiday::whereDate('date', '>=', $start->toDateString())
+            ->where('hospital_id', session()->get('hospital_id'))
             ->whereDate('date', '<=', $end->toDateString())->get();
 
         $public_holidays = collect(Yasumi::create('Japan', $start->year, 'ja_JP')->getHolidays())->flatten(1);
