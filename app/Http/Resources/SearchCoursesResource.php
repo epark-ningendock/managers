@@ -18,7 +18,7 @@ class SearchCoursesResource extends CoursesBaseResource
         });
 
         // calendar_days追加要素セット
-//        $_courses = parent::modifyCalendarDays($this);
+        $_courses = parent::modifyCalendarDays($this);
 
         return $this->baseCollections()
             ->put('hospital_code', $this->hospital->contract_information->code ?? '')
