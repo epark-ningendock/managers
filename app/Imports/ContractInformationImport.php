@@ -78,7 +78,7 @@ class ContractInformationImport extends ImportBAbstract
             'tel' => $this->getValue($row, 'TEL'),
             'fax' => $this->getValue($row, 'FAX'),
             'karada_dog_id' => $this->hospital_no, // @todo 確認
-            'code' => $hospital->code,
+            'code' => 'D'.$hospital->id,
             'old_karada_dog_id' => $this->hospital_no, // @todo 確認
             'hospital_staff_id' => $this->getStaffIdByName($this->getValue($row, 'DELEGATE_NAME')), // @todo 確認
             'created_at' => $this->getValue($row, 'CREATE_DATE'),

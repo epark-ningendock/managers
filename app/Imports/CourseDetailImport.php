@@ -6,6 +6,7 @@ use App\ConvertedId;
 use App\ConvertedIdString;
 use App\Course;
 use App\CourseDetail;
+use App\Hospital;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
@@ -45,9 +46,11 @@ class CourseDetailImport extends ImportAbstract implements WithChunkReading
             $row = $row->toArray();
             $old_id = $row['course_no'];
             $hospital_no = $row['hospital_no'];
+            $hospital_id = $this->getId('hospitals', $row['hospital_no']);
+            $hospital = Hospital::find($hospital_id);
             $converted_idstring = ConvertedIdString::where('table_name', 'courses')
                 ->where('old_id', $old_id)
-                ->where('hospital_no', $hospital_no)
+                ->where('hospital_no', $hospital->old_karada_dog_id)
                 ->first();
 
             if ($converted_idstring) {

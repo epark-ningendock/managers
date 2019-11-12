@@ -34,11 +34,42 @@ class SearchHospitalsResource extends Resource
             'non_consultation' => $this->consultation_note,
             'non_consultation_note' => $this->memo,
             'img_sub' => ImagePathsResource::collection($this->getImgSub($this->hospital_categories)),
+//            'movie' => $this->getMovieInfo(),
             'caption' => $this->getCaption($this->hospital_categories),
             'category' => HospitalCategoryResource::collection($this->hospital_details),
             'pickup' => $this->is_pickup,
             'courses' => CoursesBaseResource::collection($this->courses),
         ];
+    }
+
+    private function getMovieInfo() {
+
+        $access_movie = $this->_hospital_movie();
+        $caption = $this->getCaption($this->hospital_categories);
+        if (strpos(strpos, 'src')) {
+
+        }
+
+    }
+
+    /**
+     * アクセス動画URL
+     *
+     * @param  医療機関カテゴリ
+     * @return 医療施設メイン
+     */
+    private function _hospital_movie()
+    {
+        $categories = $this->hospital_categories->filter(function ($c) {
+            return isset($c->image_order)
+                && $c->image_order === 4;
+        });
+
+        $texts = $categories->map(function ($t) {
+            $url = $t->hospital_image->memo1 ?? '';
+            return collect(['access_movie_url' => $url,]);
+        });
+        return $texts->first();
     }
 
     /**

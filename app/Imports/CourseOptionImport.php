@@ -41,7 +41,9 @@ class CourseOptionImport extends ImportAbstract
     {
         try {
             $row = $row->toArray();
-            $old_options = OldOption::where('hospital_no', $row['hospital_no'])
+            $hospital_id = $this->getId('hospitals', $row['hospital_no']);
+            $hospital = Hospital::find($hospital_id);
+            $old_options = OldOption::where('hospital_no', $hospital->old_karada_dog_id)
                 ->where('option_group_cd', $row['option_group_cd'])
                 ->get();
             $converted_idstring = ConvertedIdString::where('table_name', 'courses')
@@ -57,7 +59,7 @@ class CourseOptionImport extends ImportAbstract
             foreach ($old_options as $option) {
                 $model = new CourseOption([
                     'course_id' => $course_id,
-                    'option_id' => $option->id,
+                    'option_id' => $option->option_id,
                     'status' => Status::VALID,
                     'created_at' => $row['rgst'],
                     'updated_at' => $row['updt'],
