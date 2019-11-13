@@ -83,7 +83,7 @@ class ContractInformationImport extends ImportBAbstract
             'tel' => $this->getValue($row, 'TEL'),
             'fax' => $this->getValue($row, 'FAX'),
             'karada_dog_id' => $this->hospital_no, // @todo 確認
-            'customer_no' => $this->getValue($row, 'AGENT_CODE'),
+            'customer_no' => $this->getValue($row, 'CUST_NO'),
             'code' => 'D'.sprintf('%05d',  $c->old_id),
             'old_karada_dog_id' => $this->hospital_no, // @todo 確認
             'hospital_staff_id' => $this->getStaffIdByName($this->getValue($row, 'DELEGATE_NAME')), // @todo 確認
