@@ -12,6 +12,7 @@ class ContractInformation extends Model
     use OptimisticLocking, Filterable;
 
     protected $fillable = [
+                            'customer_no',
                             'contractor_name_kana',
                             'contractor_name',
                             'application_date',

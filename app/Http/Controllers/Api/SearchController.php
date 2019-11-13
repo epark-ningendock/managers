@@ -11,6 +11,7 @@ use App\Course;
 
 use App\Http\Resources\SearchHospitalsResource;
 use App\Http\Resources\SearchCoursesResource;
+use Carbon\Carbon;
 use Log;
 
 class SearchController extends ApiBaseController
@@ -236,6 +237,8 @@ class SearchController extends ApiBaseController
      */
     private function getCourses($request, $isCount = false)
     {
+        $from = Carbon::today()->format("Y-m-s");
+        $to = Carbon::today()->addMonthsNoOverflow(2)->endOfMonth();
         $query = Course::query()
             ->with([
                 'course_meta_informations',
@@ -244,7 +247,11 @@ class SearchController extends ApiBaseController
                 'course_details.middle_classification',
                 'course_details.minor_classification',
                 'course_options',
-                'calendar_days',
+                'calendar_days'
+                    => function($q) use ($from, $to) {
+                    $q->where('date', '>=', $from)
+                        ->where('date', '<=', $to);
+                },
                 'course_images',
                 'course_images.image_order',
                 'course_images.hospital_image',

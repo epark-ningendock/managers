@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\ContractInformation;
+use App\ConvertedId;
 use App\Hospital;
 use App\HospitalStaff;
 use Carbon\Carbon;
@@ -39,6 +40,10 @@ class ContractInformationImport extends ImportBAbstract
         $row = $row->toArray();
 
         $hospital = Hospital::withTrashed()->where('old_karada_dog_id', $this->hospital_no)->get()->first();
+
+        $c = ConvertedId::where('table_name', 'hospitals')
+            ->where('new_id', $hospital->id)
+            ->first();
 
         $application_date = Carbon::create('20170101');
         if (!empty($this->getValue($row, 'NEW_APPLY_DATE'))) {
@@ -78,7 +83,8 @@ class ContractInformationImport extends ImportBAbstract
             'tel' => $this->getValue($row, 'TEL'),
             'fax' => $this->getValue($row, 'FAX'),
             'karada_dog_id' => $this->hospital_no, // @todo 確認
-            'code' => 'D'.$hospital->id,
+            'customer_no' => $this->getValue($row, 'AGENT_CODE'),
+            'code' => 'D'.sprintf('%05d',  $c->old_id),
             'old_karada_dog_id' => $this->hospital_no, // @todo 確認
             'hospital_staff_id' => $this->getStaffIdByName($this->getValue($row, 'DELEGATE_NAME')), // @todo 確認
             'created_at' => $this->getValue($row, 'CREATE_DATE'),

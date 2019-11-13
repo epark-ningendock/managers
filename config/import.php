@@ -206,26 +206,12 @@ return [
         'import' => OptionImport::class,
         'seed' => true,
     ],
-//    'm_course_option_group.csv' => [
-//        'model' => CourseOption::class,
-//        'import' => CourseOptionImport::class,
-//        'seed' => false,
-//    ],
-    't_pv.csv' => [
-        'model' => PvRecord::class,
-        'import' => PvRecordImport::class,
+    'm_course_option_group.csv' => [
+        'model' => CourseOption::class,
+        'import' => CourseOptionImport::class,
         'seed' => false,
     ],
-    't_consideration_list.csv' => [
-        'model' => ConsiderationList::class,
-        'import' => ConsiderationListImport::class,
-        'seed' => false,
-    ],
-    'm_user.csv' => [
-        'model' => MemberLoginInfo::class,
-        'import' => MemberLoginInfoImport::class,
-        'seed' => false,
-    ],
+
 //    't_reserve_claim.csv' => [
 //        'model' => \App\ReservationOption::class,
 //        'import' => \App\Imports\ReservationOptionImport::class,

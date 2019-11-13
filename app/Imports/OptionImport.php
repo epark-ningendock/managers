@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Hospital;
 use App\OldOption;
 use App\Option;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Row;
 
 class OptionImport extends ImportAbstract
@@ -44,6 +45,11 @@ class OptionImport extends ImportAbstract
             return;
         }
 
+        $deleted_at = null;
+        if ($row['status'] == 'X') {
+            $deleted_at = Carbon::today();
+        }
+
         $model = new Option([
             'hospital_id' => $hospital_id,
             'name' => $row['option_name'] ?? '----',
@@ -54,6 +60,7 @@ class OptionImport extends ImportAbstract
             'status' => $row['status'],
             'created_at' => $row['rgst'],
             'updated_at' => $row['updt'],
+            'deleted_at' => $deleted_at,
             'lock_version' => 1, //default
         ]);
         $model->save();
@@ -66,6 +73,7 @@ class OptionImport extends ImportAbstract
             'option_group_cd' => $row['option_group_cd'],
             'option_cd' => $row['option_cd'],
             'option_id' => $model->id,
+            'deleted_at' => $deleted_at,
         ]);
         $old_model->save();
     }

@@ -175,6 +175,8 @@ class CourseController extends ApiBaseController
      */
     private function getCourseContents($hospital_id, $course_code)
     {
+        $from = Carbon::today()->format("Y-m-s");
+        $to = Carbon::today()->addMonthsNoOverflow(2)->endOfMonth();
         $data = Course::with([
             'course_details',
             'course_details.major_classification',
@@ -183,7 +185,11 @@ class CourseController extends ApiBaseController
             'course_options',
             'course_options.option',
             'course_questions',
-            'calendar_days',
+//            'calendar_days',
+            'calendar_days' => function($q) use ($from, $to) {
+                $q->where('date', '>=', $from);
+                $q->where('date', '<=', $to);
+            },
             'hospital',
             'hospital.contract_information',
             'hospital.hospital_categories.image_order',

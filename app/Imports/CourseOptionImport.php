@@ -6,6 +6,7 @@ use App\ConvertedIdString;
 use App\CourseOption;
 use App\CourseQuestion;
 use App\Enums\Status;
+use App\Hospital;
 use App\OldOption;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Row;
@@ -48,7 +49,7 @@ class CourseOptionImport extends ImportAbstract
                 ->get();
             $converted_idstring = ConvertedIdString::where('table_name', 'courses')
                 ->where('old_id', $row['course_no'])
-                ->where('hospital_no', $row['hospital_no'])
+                ->where('hospital_no', $hospital->old_karada_dog_id)
                 ->first();
 
             if ($converted_idstring) {

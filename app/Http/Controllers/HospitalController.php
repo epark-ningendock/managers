@@ -23,7 +23,6 @@ class HospitalController extends Controller
     public function __construct(Request $request)
     {
         request()->session()->forget('hospital_id');
-        // TODO: middlewareでindexだけにかけるものを作る
         $this->middleware('permission.hospital.edit')->except('index');
     }
 
@@ -47,10 +46,15 @@ class HospitalController extends Controller
         }
 
         $query = Hospital::query()
-            ->with(['prefecture', 'districtCode']);
+            ->with(['contract_information', 'prefecture', 'districtCode']);
 
         if ($request->get('s_text')) {
-            $query->where('name', 'LIKE', "%" . $request->get('s_text') . "%");
+            $query->where(function ($query) use ($request) {
+                $query->whereHas('contract_information', function ($query) use ($request) {
+                    $query->where('customer_no', 'like', '%' . $request->get('s_text') . '%');
+                });
+                $query->orWhere('name', 'LIKE', "%" . $request->get('s_text') . "%");
+            });
         }
 
         if ($request->get('status') || ($request->get('status') === '0')) {

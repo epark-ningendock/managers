@@ -16,7 +16,7 @@ class MonthlyCalendarResource extends Resource
     {
         // $this => $courses
         // 対象データは６か月まで
-        $to = date('Y-m-d 00:00:00', strtotime('+5 month'));
+        $to = date('Y-m-d 00:00:00', strtotime('+2 month'));
         if (!isset($this->calendar_days)) return;
         $days = $this->calendar_days->filter(function ($d) use ($to) {
             return strtotime($d->date) <= strtotime($to);

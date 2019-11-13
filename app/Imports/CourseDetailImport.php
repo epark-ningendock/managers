@@ -45,24 +45,21 @@ class CourseDetailImport extends ImportAbstract implements WithChunkReading
         try {
             $row = $row->toArray();
             $old_id = $row['course_no'];
-            $hospital_no = $row['hospital_no'];
             $hospital_id = $this->getId('hospitals', $row['hospital_no']);
-            $hospital = Hospital::find($hospital_id);
+            $hospital = Hospital::find($hospital_id)->old_karada_dog_id;
             $converted_idstring = ConvertedIdString::where('table_name', 'courses')
-                ->where('old_id', $old_id)
-                ->where('hospital_no', $hospital->old_karada_dog_id)
+                ->where('old_id', intval($old_id))
+                ->where('hospital_no', $hospital)
                 ->first();
 
-            if ($converted_idstring) {
-                $course_id = $converted_idstring->new_id;
-            } else {
+            if (!$converted_idstring) {
                 return;
-            }
+            } 
             $model = new CourseDetail([
-                'course_id' => $course_id,
-                'major_classification_id' => $this->getId('major_classifications', $row['item_category_dai_no']),
-                'middle_classification_id' => $this->getId('middle_classifications', $row['item_category_chu_no']),
-                'minor_classification_id' => $this->getId('minor_classifications', $row['item_category_sho_no']),
+                'course_id' => $converted_idstring->new_id,
+                'major_classification_id' => $row['item_category_dai_no'],
+                'middle_classification_id' => $row['item_category_chu_no'],
+                'minor_classification_id' => $row['item_category_sho_no'],
                 'select_status' => $row['select_status'],
                 'inputstring' => $row['inputstring'],
                 'created_at' => $row['rgst'],

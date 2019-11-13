@@ -186,21 +186,27 @@ class HospitalController extends ApiBaseController
      **/
     public static function getHospitalData($hospital_id)
     {
-        return Hospital::with(
+        $from = Carbon::today()->format("Y-m-s");
+        $to = Carbon::today()->addMonthsNoOverflow(2)->endOfMonth();
+        return Hospital::with([
             'contract_information',
             'courses.course_details',
             'courses.course_details.major_classification',
             'courses.course_details.middle_classification',
             'courses.course_details.minor_classification',
             'courses.course_images.hospital_image',
-            'courses.calendar_days',
+//            'courses.calendar_days',
+            'courses.calendar_days' => function($q) use ($from, $to) {
+            $q->where('date', '>=', $from);
+            $q->where('date', '<=', $to);
+    },
             'options',
             'prefecture',
             'district_code',
             'medical_treatment_times',
             'hospital_categories.image_order',
             'hospital_categories.hospital_image'
-        )
+        ])
             ->find($hospital_id);
     }
 

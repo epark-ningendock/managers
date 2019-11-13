@@ -50,7 +50,7 @@ class CourseController extends Controller
         $hospital_id = session()->get('hospital_id');
         $hospital = Hospital::find($hospital_id);
         $images = HospitalImage::where('hospital_id', $hospital_id)->get();
-        $majors = MajorClassification::orderBy('order')->get();
+        $majors = MajorClassification::orderBy('classification_type_id', 'asc')->orderBy('order', 'asc')->get();
         $options = Option::where('hospital_id', $hospital_id)->orderBy('order')->get();
         $image_orders = ImageOrder::orderBy('order')->get();
         $calendars = Calendar::where('hospital_id', $hospital_id)->get();
@@ -226,6 +226,8 @@ class CourseController extends Controller
             }
             //force to update updated_at. otherwise version will not be updated
             $course->touch();
+            $course->save();
+            $course->code = 'C' . $course->id . 'H' . $course->hospital_id;
             $course->save();
 
             //Course Images

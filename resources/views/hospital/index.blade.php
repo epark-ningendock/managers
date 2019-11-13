@@ -25,7 +25,7 @@
       <div class="row">
         <div class="col-sm-9">
           <div class="form-group">
-            <label for="s_text">医療機関名・ID</label>
+            <label for="s_text">医療機関名・顧客番号</label>
             <input type="text" class="form-control" autocomplete="off" name="s_text" id="s_text"
                  value="{{ request('s_text') }}"/>
           </div>
@@ -69,6 +69,7 @@
       <thead>
       <tr>
         <th>ID</th>
+        <th>顧客番号</th>
         <th>医療機関名</th>
         <th>所在地</th>
         <th>連絡先</th>
@@ -87,6 +88,7 @@
           {{ ($hospital->status === HospitalEnums::DELETE) ? 'dark-gray' : '' }}
               ">
             <td>{{ $hospital->id }}</td>
+            <td>{{ $hospital->contract_information->customer_no }}</td>
             <td>{{ $hospital->name }}</td>
             @if (!$hospital->prefecture_id && !$hospital->district_code_id)
               <td></td>

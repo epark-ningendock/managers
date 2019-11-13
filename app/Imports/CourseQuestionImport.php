@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\ConvertedIdString;
 use App\CourseQuestion;
+use App\Hospital;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Row;
 
@@ -38,18 +39,19 @@ class CourseQuestionImport extends ImportAbstract
     {
         try {
             $row = $row->toArray();
+            $old_id = $row['course_no'];
+            $hospital_id = $this->getId('hospitals', $row['hospital_no']);
+            $hospital = Hospital::find($hospital_id)->old_karada_dog_id;
             $converted_idstring = ConvertedIdString::where('table_name', 'courses')
-                ->where('old_id', $row['course_no'])
-                ->where('hospital_no', $row['hospital_no'])
+                ->where('old_id', intval($old_id))
+                ->where('hospital_no', $hospital)
                 ->first();
 
-            if ($converted_idstring) {
-                $course_id = $converted_idstring->new_id;
-            } else {
+            if (!$converted_idstring) {
                 return;
             }
             $model = new CourseQuestion([
-                'course_id' => $course_id,
+                'course_id' => $converted_idstring->new_id,
                 'question_number' => $row['flg_qa_no'],
                 'is_question' => $row['flg_qa'],
                 'question_title' => $row['flg_qa_title'],
