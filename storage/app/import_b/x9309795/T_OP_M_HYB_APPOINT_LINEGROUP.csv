@@ -1,0 +1,5 @@
+"LINEGROUP_ID","SEQ_NO","LINEGROUP_NAME","LINEGROUP_NAME_SHORT","OUTSIDE_RESERVATION","DO_NOT_SPECIFY_LINE_FG","LINEGROUP_TYPE","VACCINE_FG","RABIES_FG","SAME_TIME_LIMIT","LINEGROUP_CANCELLATION_DAYS","LINEGROUP_START_DAYS","LINEGROUP_END_DAYS","CREATE_USER_NO","CREATE_DATE","MODIFY_USER_NO","MODIFY_DATE","DELETE_FG","DATA_VERSION"
+"20830","3","LOX-index(採血で行う脳梗塞・心筋梗塞リスク検査)","LOX-index(採血で行う脳梗塞・心筋梗塞リスク検査)","1","0","0","0","0",\N,"7","3000","1000","system","2017-08-18 12:13:22","A1589","2017-10-31 11:19:46","0","7"
+"20831","2","遅延型アレルギー検査(IgG)≪カウンセリング付≫","遅延型アレルギー検査(IgG)≪カウンセリング付≫","1","0","0","0","0",\N,"7","3000","1000","system","2017-08-18 12:13:22","A1589","2017-10-31 11:19:25","0","7"
+"21658","1","【1時間以内で受診】人間ドック","【1時間以内で受診】人間ドック","1","0","0","0","0",\N,"7","3000","1000","system","2017-08-18 12:13:22","A1589","2017-11-07 14:57:35","0","7"
+"21659","4","健保コース","健保コース","0","0","0","0","0",\N,"0",\N,\N,"A2064","2017-11-07 17:20:47","A2064","2017-11-07 17:20:47","0","1"
