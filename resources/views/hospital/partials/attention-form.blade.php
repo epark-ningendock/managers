@@ -4,7 +4,30 @@ use App\Enums\HplinkContractType;
 
 if(isset($hospital)) {
   $hospital_details = $hospital->hospital_details;
-}
+  $hospital_option_plans = $hospital->hospital_option_plans;
+
+  $dr_movie = 0;
+  $access_movie = 0;
+  $one_min_movie = 0;
+  $tour_movie = 0;
+  $exam_movie = 0;
+  $special_page = 0;
+  foreach ($hospital_option_plans as $hospital_option_plan) {
+      if ($hospital_option_plan->option_plan_id == 1) {
+        $dr_movie = 1;
+      } elseif ($hospital_option_plan->option_plan_id == 2) {
+        $access_movie = 2;
+      } elseif ($hospital_option_plan->option_plan_id == 3) {
+        $one_min_movie = 3;
+      } elseif ($hospital_option_plan->option_plan_id == 4) {
+        $tour_movie = 4;
+      } elseif ($hospital_option_plan->option_plan_id == 5) {
+        $exam_movie = 5;
+      } elseif ($hospital_option_plan->option_plan_id == 6) {
+        $special_page = 6;
+      }
+  }
+ }
 
 $o_minor_ids = collect(old('minor_ids'));
 $o_minor_values = collect(old('minor_values'));
@@ -117,6 +140,43 @@ $o_minor_values = collect(old('minor_values'));
                 @if ($errors->has('contract_plan_id')) <p class="help-block">{{ $errors->first('contract_plan_id') }}</p> @endif
               </div>
             </div>
+          </div>
+          <div class="col-md-12 mt-4">
+
+                  <legend>オプションプラン</legend>
+
+              <div class="form-group margin-none py-sm-1">
+                      <input type="hidden" name="dr_movie" value="0"/>
+                      <input type="checkbox" id="dr_movie" name="dr_movie" value="1"  @if( $dr_movie == 1) checked @endif />
+                      <label for="dr_movie">Dr.動画　（5,500円）</label>
+              </div>
+
+                  <div class="form-group margin-none py-sm-1">
+                      <input type="hidden" name="access_movie" value="0"/>
+                      <input type="checkbox" id="access_movie" class="option-plan-checkbox"  name="access_movie" value="2" @if($access_movie == 2) checked @endif />
+                      <label for="access_movie">アクセス動画　（3,300円）</label>
+                  </div>
+                  <div class="form-group margin-none py-sm-1">
+                      <input type="hidden" name="one_min_movie" value="0"/>
+                      <input type="checkbox" id="one_min_movie" class="option-plan-checkbox"  name="one_min_movie" value="3" @if( $one_min_movie == 3) checked @endif/>
+                      <label for="one_min_movie">院内1分動画　（4,400円）</label>
+                  </div>
+                  <div class="form-group margin-none py-sm-1">
+                      <input type="hidden" name="tour_movie" value="0"/>
+                      <input type="checkbox" id="tour_movie" class="option-plan-checkbox"  name="tour_movie" value="4" @if($tour_movie == 4) checked @endif/>
+                      <label for="tour_movie">院内ツアー　（2,200円）</label>
+                  </div>
+                  <div class="form-group margin-none py-sm-1">
+                      <input type="hidden" name="exam_movie" value="0"/>
+                      <input type="checkbox" id="exam_movie" class="option-plan-checkbox" name="exam_movie" value="5" @if($exam_movie == 5) checked @endif/>
+                      <label for="exam_movie">検査動画　（2,750円）</label>
+                  </div>
+                  <div class="form-group margin-none py-sm-1">
+                      <input type="hidden" name="special_page" value="0"/>
+                      <input type="checkbox" id="special_page" class="option-plan-checkbox"　name="special_page" value="6" @if($special_page == 6) checked @endif/>
+                      <label for="special_page">特集ページ　（1,100円）</label>
+                  </div>
+
           </div>
           <div class="col-md-12 mt-4">
             <div class="form-group py-sm-1 " style="margin-left: 0;">

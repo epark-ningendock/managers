@@ -6,11 +6,13 @@ use App\ContractInformation;
 use App\ContractPlan;
 use App\Hospital;
 use App\HospitalStaff;
+use App\Mail\Course\HospitalNewRegistMail;
 use Illuminate\Http\Request;
 use App\Http\Requests\ContractInformationFormRequest;
 use Illuminate\Support\Facades\DB;
 use App\Filters\ContractInformation\ContractInformationFilters;
 use \Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -71,7 +73,8 @@ class HospitalContractInformationController extends Controller
         while(($row = fgetcsv($file, 0, "\t")) !== false) {
             $uploaded_contracts->push([
                 'property_no' => trimToNull($row[1]),
-                'code' => "$row[2]",
+                'customer_no' => "$row[2]",
+                'code' => null,
                 'contractor_name_kana' => $row[3],
                 'contractor_name' => $row[4],
                 'representative_name_kana' => $row[5],
@@ -114,11 +117,11 @@ class HospitalContractInformationController extends Controller
             return redirect()->route('contract.index');
         }
 
-        $property_numbers = $uploaded_contracts->map(function($contract){
-            return $contract['property_no'];
+        $customer_nos = $uploaded_contracts->map(function($contract){
+            return $contract['customer_no'];
         });
 
-        $existing_contracts = ContractInformation::whereIn('property_no', $property_numbers)->get()->groupBy('property_no');
+        $existing_contracts = ContractInformation::whereIn('customer_no', $customer_nos)->get()->groupBy('customer_no');
 
         $plan_codes = $uploaded_contracts->map(function($contract){
             return $contract['plan_code'];
@@ -141,7 +144,7 @@ class HospitalContractInformationController extends Controller
                 $contract_arr['service_end_date'] = Carbon::parse($contract_arr['service_end_date']);
             }
 
-            $contract = $existing_contracts->has($contract_arr['property_no']) ? $existing_contracts->get($contract_arr['property_no'])->first() : null;
+            $contract = $existing_contracts->has($contract_arr['customer_no']) ? $existing_contracts->get($contract_arr['customer_no'])->first() : null;
             if(isset($contract)) {
                 $contract->fill($contract_arr);
             } else {
@@ -179,10 +182,10 @@ class HospitalContractInformationController extends Controller
             }
 
             $property_numbers = collect($uploaded_contracts)->map(function($contract){
-                return $contract['property_no'];
+                return $contract['customer_no'];
             });
 
-            $existing_contracts = ContractInformation::whereIn('property_no', $property_numbers)->get()->groupBy('property_no');
+            $existing_contracts = ContractInformation::whereIn('customer_no', $property_numbers)->get()->groupBy('customer_no');
 
             $plan_codes = collect($uploaded_contracts)->map(function($contract){
                 return $contract['plan_code'];
@@ -204,7 +207,7 @@ class HospitalContractInformationController extends Controller
                     $contract_arr['service_end_date'] = Carbon::parse($contract_arr['service_end_date']);
                 }
 
-                $contract = $existing_contracts->has($contract_arr['property_no']) ? $existing_contracts->get($contract_arr['property_no'])->first() : null;
+                $contract = $existing_contracts->has($contract_arr['customer_no']) ? $existing_contracts->get($contract_arr['customer_no'])->first() : null;
                 $hospital = new Hospital();
                 if(isset($contract)) {
                     $contract->fill($contract_arr);
@@ -219,10 +222,21 @@ class HospitalContractInformationController extends Controller
 
                 $contract->contract_plan_id = $contract_plans->get($contract_arr['plan_code'])->first()->id;
                 $contract->hospital_id = $hospital->id;
+                $max_code = ContractInformation::max('code');
+                $max_code = substr($max_code, 1);
+                $contract->code = 'D' . (intval($max_code) + 1);
                 $contract->save();
             }
 
             DB::commit();
+
+            // 完了メール送信
+            $data = [
+                'hospital' => $hospital,
+                'contract_information' => $contract,
+                'subject' => '【EPARK人間ドック】医療機関契約情報登録・更新のお知らせ'
+            ];
+            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new HospitalNewRegistMail($data));
 
             return redirect()->route('contract.index')->with('success', trans('messages.contract_saved') );
         } catch(ValidationException $e) {

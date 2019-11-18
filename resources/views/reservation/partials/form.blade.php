@@ -200,9 +200,9 @@
             <p class="color-gray" style="font-size: 1.2rem;">受診者名、受診者名かな、電話番号、診察券番号から検索が行えます。</p>
             <p class="color-gray" style="font-size: 1.2rem;">全ての顧客を表示する場合は何も入力せず検索ボタンを押下してください</p>
         </div>
-    </div>     
+    </div>
     <input type="hidden" name="customer_id" id="customer_id" value="{{ old('customer_id') }}">
-    
+
     <div class="row mt-5">
         <div class="col-md-3">
             <label for="">お名前 <span class="form_required">必須</span></label>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\ReservationStatus;
 use App\Enums\Status;
 use App\Hospital;
 use Illuminate\Http\Request;
@@ -168,13 +169,13 @@ class HospitalController extends ApiBaseController
      */
     public function reserve_cnt(Request $request)
     {
-        try {
-            $data = ['data' => $this->getReserveCnt()];
+//        try {
+            $data = ['data' => $this->getReserveCnt($request->input('hospital_no'))];
             return new HospitalReserveCntBaseResource($data);
-        } catch (\Exception $e) {
-            Log::error($e);
-            return $this->createResponse($this->messages['system_error_db']);
-        }
+//        } catch (\Exception $e) {
+//            Log::error($e);
+//            return $this->createResponse($this->messages['system_error_db']);
+//        }
     }
 
     /**
@@ -186,21 +187,28 @@ class HospitalController extends ApiBaseController
      **/
     public static function getHospitalData($hospital_id)
     {
-        return Hospital::with(
+        $from_date = Carbon::today();
+        $from = $from_date->year . sprintf('%02d', $from_date->month);
+
+        $to_date = Carbon::today()->addMonthsNoOverflow(2)->endOfMonth();
+        $to = $to_date->year . sprintf('%02d', $to_date->month);
+        return Hospital::with([
             'contract_information',
             'courses.course_details',
             'courses.course_details.major_classification',
             'courses.course_details.middle_classification',
             'courses.course_details.minor_classification',
             'courses.course_images.hospital_image',
-            'courses.calendar_days',
             'options',
             'prefecture',
             'district_code',
             'medical_treatment_times',
             'hospital_categories.image_order',
             'hospital_categories.hospital_image'
-        )
+        ])
+            ->whereHas('courses' , function($q) {
+                $q->where('courses.is_category', 0);
+            })
             ->find($hospital_id);
     }
 
@@ -239,8 +247,9 @@ class HospitalController extends ApiBaseController
             ->pluck('contract_informations.code');
     }
 
-    private function getReserveCnt() {
+    private function getReserveCnt($hospital_codes) {
 
+        $hospital_code_array = explode(',', $hospital_codes);
         $from = Carbon::today()->subDay(30);
         $to = Carbon::today();
 
@@ -251,6 +260,8 @@ class HospitalController extends ApiBaseController
                     ->orWhereNull('publish_start_date');
                 $q->where('publish_end_date', '>=', Carbon::today())
                     ->orWhereNull('publish_end_date');
+                $q->where('is_category', 0);
+                $q->where('web_reception', 0);
             },
             'courses.reservations' => function ($q) use ($from, $to) {
                 $q->where('reservation_status', '<>', ReservationStatus::CANCELLED);
@@ -258,6 +269,9 @@ class HospitalController extends ApiBaseController
             }
         ])
             ->where('hospitals.status', Status::VALID)
+            ->whereHas('contract_information' , function($q) use($hospital_code_array) {
+                $q->whereIn('contract_informations.code', $hospital_code_array);
+            })
             ->get();
         $results = [];
 

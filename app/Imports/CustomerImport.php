@@ -63,4 +63,13 @@ class CustomerImport extends ImportBAbstract
         $model->save();
         $this->setId($model, $row);
     }
+
+    public function batchSize(): int
+    {
+        return 10000;
+    }
+    public function chunkSize(): int
+    {
+        return 10000;
+    }
 }

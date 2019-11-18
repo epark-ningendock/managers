@@ -24,6 +24,8 @@ class PvRegistController extends ApiBaseController
             if (!empty($hospitalId) && $this->isExistHospital($hospitalId)) {
                 // PVデータ更新
                 $this->registPv($hospitalId);
+            } else {
+                $this->createResponse($messages['errorHospitalId']);
             }
             return $this->createResponse($messages['success']);
         } catch (\Exception $e) {

@@ -14,51 +14,67 @@ class CourseIndexResource extends CourseIndexBaseResource
      */
     public function toArray($request)
     {
+        $course = $this['course'];
+        $month_data = $this['monthly_data'];
+        $day_data = $this['daily_data'];
+        $course_base_resource = new CourseIndexBaseResource($course);
         $rails = [
-            $this->hospital->rail1,
-            $this->hospital->rail2,
-            $this->hospital->rail3,
-            $this->hospital->rail4,
-            $this->hospital->rail5
+            $course->hospital->rail1,
+            $course->hospital->rail2,
+            $course->hospital->rail3,
+            $course->hospital->rail4,
+            $course->hospital->rail5
         ];
 
         $stations = [
-            $this->hospital->station1,
-            $this->hospital->station2,
-            $this->hospital->station3,
-            $this->hospital->station4,
-            $this->hospital->station5
+            $course->hospital->station1,
+            $course->hospital->station2,
+            $course->hospital->station3,
+            $course->hospital->station4,
+            $course->hospital->station5
         ];
         $accesses = [
-            $this->hospital->access1,
-            $this->hospital->access2,
-            $this->hospital->access3,
-            $this->hospital->access4,
-            $this->hospital->access5
+            $course->hospital->access1,
+            $course->hospital->access2,
+            $course->hospital->access3,
+            $course->hospital->access4,
+            $course->hospital->access5
         ];
-
-        // calendar_days追加要素セット
-        $_courses = CoursesResource::modifyCalendarDays($this);
 
         return collect([])
             ->put('status', 0)        
-            ->put('no', $this->id)
-            ->put('url_basic', $this->hospital->url)
-            ->put('hospital_code', $this->hospital->contract_information->code)
-            ->put('name', $this->hospital->name)
-            ->put('pref_name', $this->hospital->prefecture->name)
-            ->put('district_name', $this->hospital->district_code->name)
-            ->put('address1', $this->hospital->address1)
-            ->put('address2', $this->hospital->address2)
-            ->put('tel_ppc',  $this->hospital->paycall)
+            ->put('no', $course->id)
+            ->put('url_basic', $course->hospital->url)
+            ->put('hospital_code', $course->hospital->contract_information->code)
+            ->put('name', $course->hospital->name)
+            ->put('pref_name', $course->hospital->prefecture->name)
+            ->put('district_name', $course->hospital->district_code->name)
+            ->put('address1', $course->hospital->address1)
+            ->put('address2', $course->hospital->address2)
+            ->put('tel_ppc',  $course->hospital->paycall)
             ->put('stations', Station::getStations($rails, $stations, $accesses))
-            ->put('non_consiltation', $this->hospital->consultation_note)
-            ->put('non_consultation_note', $this->hospital->memo)
-            ->put('hospital_category', HospitalCategoryResource::collection($this->hospital->hospital_details))
-            ->merge(parent::baseCollections())
-            ->merge(new CourseContentBaseResource($this))
-            ->put('month_calender', new MonthlyCalendarResource($_courses))
-            ->put('all_calender', DailyCalendarResource::collection($_courses->calendar_days))
+            ->put('non_consiltation', $course->hospital->consultation_note)
+            ->put('non_consultation_note', $course->hospital->memo)
+            ->put('hospital_category', HospitalCategoryResource::collection($course->hospital->hospital_details))
+            ->merge($course_base_resource->baseCollections())
+            ->merge(new CourseContentBaseResource($course))
+            ->put('month_calender', collect($month_data)->map(function ($c) {
+                return (object)[
+                    'yyyymm' => $c[0],
+                    // 予約可否配列の積をとり、0になればどこかに「受付可能(0)」あり
+                    'apoint_ok' => $c[1],
+                     ];
+                })->toArray(),)
+            ->put('all_calender', collect($day_data)->map(function ($c) {
+                    return (object)[
+                        $c[0] => [
+                            'appoint_status' => $c[1],
+                            'appoint_num' => $c[2],
+                            'reservation_frames' => $c[3],
+                            'closed_day' => $c[4]
+                        ]
+                    ];
+                }))
             ->toArray();
     }
 

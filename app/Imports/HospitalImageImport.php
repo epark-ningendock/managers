@@ -71,4 +71,14 @@ class HospitalImageImport extends ImportAbstract
             'hospital_no' => $row['hospital_no'],
         ]);
     }
+
+
+    public function batchSize(): int
+    {
+        return 10000;
+    }
+    public function chunkSize(): int
+    {
+        return 10000;
+    }
 }

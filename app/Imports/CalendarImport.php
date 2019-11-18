@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Calendar;
 use App\ConvertedIdString;
+use App\Course;
 use App\Hospital;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Row;
@@ -54,10 +55,28 @@ class CalendarImport extends ImportBAbstract
             ]);
 
             $model->save();
+
+            $courses = Course::where('hospital_id', $con->new_id)
+                ->where('calendar_id', $this->getValue($row, 'LINE_ID'))
+                ->get();
+
+            foreach ($courses as $course) {
+                $course->calendar_id = $model->id;
+                $course->save();
+            }
+
             $this->setId($model, $row);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
+    }
 
+    public function batchSize(): int
+    {
+        return 10000;
+    }
+    public function chunkSize(): int
+    {
+        return 10000;
     }
 }

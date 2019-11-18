@@ -100,7 +100,7 @@
     <table id="example2" class="table no-border table-hover table-striped mb-5">
         <thead>
         <tr>
-            <th>物件番号</th>
+            <th>顧客番号</th>
             <th>医療機関名</th>
             <th>請求ステータス</th>
             <th>プラン</th>
@@ -116,7 +116,7 @@
             @foreach ($billings as $billing)
                 @if ( !empty($billing->hospital) )
                     <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
-                        <td>{{ $billing->hospital->contract_information->property_no ?? '' }}</td>
+                        <td>{{ $billing->hospital->contract_information->customer_no ?? '' }}</td>
                         <td>{{ $billing->hospital->name }}</td>
                         <td>{{ BillingStatus::getDescription($billing->status) }}</td>
                         <td>

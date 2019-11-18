@@ -30,7 +30,8 @@ class PlaceResource extends Resource
         foreach ($data as $pref) {
             $result = [
                 'pref_no' => $pref->id,
-                'pref_name' => $pref->name
+                'pref_name' => $pref->name,
+                'count' => $pref->hospitals->count()
             ];
             if (!empty($place_code) && $place_code != 0) {
                 $result['districts'] = DistrictResource::collection($pref->district_codes);

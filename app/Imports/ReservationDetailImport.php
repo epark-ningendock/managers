@@ -2,7 +2,6 @@
 
 namespace App\Imports;
 
-use App\ConvertedIdString;
 use App\CourseQuestion;
 use App\Enums\Status;
 use App\Hospital;
@@ -43,7 +42,7 @@ class ReservationDetailImport extends ImportBAbstract
      */
     public function onRow(Row $row)
     {
-//        try {
+        try {
 
             $row = $row->toArray();
 
@@ -213,8 +212,17 @@ class ReservationDetailImport extends ImportBAbstract
 
             }
 
-//        } catch (\Throwable $e) {
-//            Log::error($e->getMessage());
-//        }
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+        }
+    }
+
+    public function batchSize(): int
+    {
+        return 10000;
+    }
+    public function chunkSize(): int
+    {
+        return 10000;
     }
 }

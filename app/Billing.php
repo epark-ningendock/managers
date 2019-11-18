@@ -19,11 +19,12 @@ class Billing extends SoftDeleteModel
 
 	protected $casts = [
 		'id' => 'integer',
+        'adjustment_price' => 'integer',
 		'status' => 'integer'
 	];
 
     protected $fillable = [
-        'hospital_id', 'billing_month', 'status'
+        'hospital_id', 'billing_month', 'adjustment_price', 'status'
     ];
 
     protected $appends = ['startedDate', 'endedDate'];

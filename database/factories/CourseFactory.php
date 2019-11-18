@@ -12,7 +12,7 @@ $factory->define(Course::class, function (Faker $faker) {
         'is_price' => $faker->randomElement([0, 1]),
         'is_price_memo' => $faker->randomElement([0, 1]),
         'order' => $faker->randomElement(range(1, 100)),
-        'is_category' => $faker->randomElement([1, 2]),
+        'is_category' => $faker->randomElement([0, 1]),
         'course_point' => $faker->text,
         'course_notice' => $faker->text,
         'reception_start_date' => $faker->randomElement(range(0, 12)) * 1000 + $faker->randomElement(range(0, 31)),

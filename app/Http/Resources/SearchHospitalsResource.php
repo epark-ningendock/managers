@@ -34,6 +34,7 @@ class SearchHospitalsResource extends Resource
             'non_consultation' => $this->consultation_note,
             'non_consultation_note' => $this->memo,
             'img_sub' => ImagePathsResource::collection($this->getImgSub($this->hospital_categories)),
+            'movie' => $this->getMovieInfo(),
             'caption' => $this->getCaption($this->hospital_categories),
             'category' => HospitalCategoryResource::collection($this->hospital_details),
             'pickup' => $this->is_pickup,
@@ -41,25 +42,95 @@ class SearchHospitalsResource extends Resource
         ];
     }
 
+    private function getCategory() {
+        $categories = HospitalCategoryResource::collection($this->hospital_details);
+
+        $results = [];
+        foreach ($categories as $category) {
+            if (empty($category)) {
+                continue;
+            }
+            $results[] = $category;
+        }
+        return $results;
+    }
+
+    private function getMovieInfo() {
+
+        $access_movie = $this->_hospital_movie();
+        $caption = $this->getCaption($this->hospital_categories);
+        $tour = $this->getTourInterview()[0];
+        $interview = $this->getTourInterview()[1];
+//        $tour = strpos($this->free_area, '<div class=¥"movieArea¥">') == false ? 0 : 1;
+//        $interview = strpos($this->free_area, '<div class=¥"<div class=¥"movieArea grooon¥">') == false ? 0 : 1;
+
+        return ['access'=>$access_movie, 'oneMinute'=>$caption, 'tour'=>$tour, 'interview'=>$interview];
+
+    }
+
+    /**
+     * アクセス動画URL
+     *
+     * @param  医療機関カテゴリ
+     * @return 医療施設メイン
+     */
+    private function _hospital_movie()
+    {
+        $categories = $this->hospital_categories->filter(function ($c) {
+            return isset($c->image_order)
+                && $c->image_order === 4;
+        });
+
+        foreach ($categories as $category) {
+            if (!empty($category->hospital_image->memo1)) {
+                return 1;
+            }
+        }
+
+        return 0;
+    }
+
     /**
      * キャプション取得
      *
      * @param  医療機関カテゴリ
-     * @return キャプション
+     * @return
      */
     private function getCaption($hospital_categories) {
 
-        if(!isset($hospital_categories)) return '';
+        if(!isset($hospital_categories)) {
+            return 0;
+        }
 
         $el = $hospital_categories->first(function ($v) {
-            return isset($v->image_order) 
-                && isset($v->image_order->image_group_number)
-                && $v->image_order->image_group_number === 3
-                && isset($v->image_order->image_location_number)
-                && $v->image_order->image_location_number === 1;
+            return isset($v->image_order)
+                && $v->image_order === 3
+                && isset($v->file_location_no)
+                && $v->file_location_no === 1;
         });
 
-        return $el->caption ?? '';
+        return preg_match('/src/',$el->caption);
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    private function getTourInterview() {
+
+        $free_area_strs = explode(' ', $this->free_area);
+        $tour = 0;
+        $interview = 0;
+
+        foreach ($free_area_strs as $str) {
+            if (preg_match('/src/', $str) && preg_match('/grooon/', $str)) {
+                $tour = 1;
+            }
+            if (preg_match('/src/', $str) && !preg_match('/grooon/', $str)) {
+                $interview = 1;
+            }
+        }
+
+        return collect([$tour, $interview]);
     }
 
     /**

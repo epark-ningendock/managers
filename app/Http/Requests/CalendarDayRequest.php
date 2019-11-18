@@ -67,7 +67,7 @@ class CalendarDayRequest extends ValidationRequest
 
         return (object) [
             'hospital_code' => $this->input('hospital_code'),
-            'course_no' => $this->input('course_no'),
+            'course_code' => $this->input('course_code'),
             'get_yyyymmdd_from' => $days->from,
             'get_yyyymmdd_to' => $days->to,
         ];

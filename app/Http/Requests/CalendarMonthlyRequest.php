@@ -32,7 +32,7 @@ class CalendarMonthlyRequest extends ValidationRequest
     {
         $from = Carbon::today()->firstOfMonth();
         $to = Carbon::today();
-        $to->addMonthNoOverflow(5);
+        $to->addMonthNoOverflow(2);
         $to = $to->endOfMonth();
         if (!empty($this->input('get_yyyymm_from'))) {
             $from = Carbon::createMidnightDate(
@@ -46,7 +46,7 @@ class CalendarMonthlyRequest extends ValidationRequest
                 substr($this->input('get_yyyymm_to'), 0, 4),
                 substr($this->input('get_yyyymm_to'), -2, 2),
                 25);
-            $to->addMonthNoOverflow();
+            $to->endOfMonth();
         }
 
         return (object) ['from' => $from, 'to' => $to];
@@ -65,7 +65,7 @@ class CalendarMonthlyRequest extends ValidationRequest
 
         return (object) [
             'hospital_code' => $this->input('hospital_code'),
-            'course_no' => $this->input('course_no'),
+            'course_code' => $this->input('course_code'),
             'get_yyyymmdd_from' => $days->from,
             'get_yyyymmdd_to' => $days->to,
         ];

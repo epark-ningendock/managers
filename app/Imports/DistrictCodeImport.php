@@ -49,4 +49,13 @@ class DistrictCodeImport extends ImportAbstract
         $model->save();
         $this->deleteIf($model, $row, 'status', ['X']);
     }
+
+    public function batchSize(): int
+    {
+        return 10000;
+    }
+    public function chunkSize(): int
+    {
+        return 10000;
+    }
 }

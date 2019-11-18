@@ -76,4 +76,14 @@ class ReservationImport extends ImportBAbstract implements WithEvents
         }
 
     }
+
+
+    public function batchSize(): int
+    {
+        return 10000;
+    }
+    public function chunkSize(): int
+    {
+        return 10000;
+    }
 }

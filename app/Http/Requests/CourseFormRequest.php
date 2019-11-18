@@ -35,7 +35,7 @@ class CourseFormRequest extends FormRequest
                 'name' => 'required|max:64',
                 'web_reception' => 'required|enum_value:' . WebReception::class . ',false',
                 'calendar_id' => 'nullable|exists:calendars,id',
-                'is_category' => [ 'required', Rule::in([1, 2]) ],
+                'is_category' => [ 'required', Rule::in([0, 1]) ],
                 'reception_start_day' => 'required|integer|min:0',
                 'reception_start_month' => 'required|integer|min:0',
                 'reception_end_day' => 'required|integer|min:0',

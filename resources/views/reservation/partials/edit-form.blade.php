@@ -19,7 +19,7 @@
 
     <div class="form-group @if ($errors->has('course_id')) has-error @endif">
         <label for="course_id">検査コース<span class="form_required">必須</span></label>
-        <select class="w20em form-control" name="course_id" id="course_id">
+        <select class="w25em form-control" name="course_id" id="course_id">
             <option></option>
             @foreach($courses as $course)
                 <option value="{{ $course->id }}" data-price="{{ $course->price }}"
@@ -185,6 +185,7 @@
 
         <div class="col-md-12">
             <div class="calendar-box" data-old="{{ old('reservation_date', $reservation->reservation_date->format('Y-m-d')) }}">
+                <input type="hidden" name="old_reservation_date" value="{{$reservation->reservation_date}}" />
 
             </div>
             @if ($errors->has('reservation_date')) <p class="help-block text-danger" style="color: #ed5565;">{{ $errors->first('reservation_date') }}</p> @endif

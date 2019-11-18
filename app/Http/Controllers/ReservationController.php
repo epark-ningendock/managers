@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Course;
 use App\Customer;
+use App\Enums\IsFreeHpLink;
 use App\Enums\Permission;
 use App\Enums\ReservationStatus;
 use App\Holiday;
@@ -18,6 +19,7 @@ use App\Http\Requests\ReservationUpdateFormRequest;
 use App\Reservation;
 use App\ReservationOption;
 use App\Services\ReservationExportService;
+use App\Services\ReservationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,17 +36,18 @@ class ReservationController extends Controller
     protected $customer;
     protected $course;
     protected $export_file;
+    private $_reservation_service;
 
     public function __construct(
-        Request $request,
         Reservation $reservation,
         Hospital $hospital,
         Customer $customer,
         Course $course,
-        ReservationExportService $export_file
+        ReservationExportService $export_file,
+        ReservationService $reservation_service
     )
     {
-        $this->middleware('permission.invoice.edit')->except([
+        $this->middleware('permission.hospital.edit')->except([
             'index',
             'reception',
             'reception_csv',
@@ -55,6 +58,7 @@ class ReservationController extends Controller
         $this->customer = $customer;
         $this->course = $course;
         $this->export_file = $export_file;
+        $this->_reservation_service = $reservation_service;
     }
 
     /**
@@ -128,14 +132,14 @@ class ReservationController extends Controller
 
         if ($request->input('reservation_start_date', '') != '') {
             $query->whereDate('reservation_date', '>=', $request->input('reservation_start_date'));
-        // 初期表示は月初を指定する
+            // 初期表示は月初を指定する
         } else {
             $query->whereDate('reservation_date', '>=', Carbon::now()->startOfMonth()->format('Y/m/d'));
         }
 
         if ($request->input('reservation_end_date', '') != '') {
             $query->whereDate('reservation_date', '<=', $request->input('reservation_end_date'));
-        // 初期表示は月末を指定する
+            // 初期表示は月末を指定する
         } else {
             $query->whereDate('reservation_date', '<=', Carbon::now()->endOfMonth()->format('Y/m/d'));
         }
@@ -371,9 +375,11 @@ class ReservationController extends Controller
             $reservation->cancel_date = Carbon::now();
             $reservation->cancellation_reason = request()->input('cancellation_reason');
             $reservation->save();
+            // カレンダーの予約数を1つ減らす
+            $this->_reservation_service->registReservationToCalendar($reservation, -1);
 
             $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
-            
+
             Session::flash('success', trans('messages.reservation.cancel_success'));
             DB::commit();
 
@@ -479,7 +485,7 @@ class ReservationController extends Controller
 
             //TODO to check pessimistic locking is require or not
             $last_acceptance_number = Reservation::whereDate('reservation_date', $reservation_date)
-                                        ->max('acceptance_number');
+                ->max('acceptance_number');
             $acceptance_number = isset($last_acceptance_number) ? ($last_acceptance_number + 1) : 1;
 
             $calendar_day = $course->calendar->calendar_days()
@@ -489,7 +495,6 @@ class ReservationController extends Controller
                 ->where('is_holiday', 1)
                 ->whereDate('date', $reservation_date)->get()->first();
 
-            // TODO to confirm reservation frame value zero is unlimited or not
             if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '1') && $calendar_day->reservation_frames == 0) {
                 DB::rollback();
                 return redirect()->back()->with('error', trans('messages.reservation.not_reservable'))->withInput();
@@ -523,21 +528,21 @@ class ReservationController extends Controller
             $reservation->fee = 0;
             $reservation->channel = '2';
 
-//            $fee_rate = HospitalPlan::where('hospital_id', session()->get('hospital_id'))
-//                ->whereDate('from', '<=', Carbon::today())
-//                ->where(function($q) {
-//                    $q->whereDate('to', '>=', Carbon::today())
-//                        ->orWhere('to', '=', null);
-//                })->get()->first()->contractPlan;
-//
-//            if (isset($fee_rate)) {
-//                $reservation->fee_rate = $fee_rate->fee_rate;
-//                $reservation->fee = (
-//                        $reservation->tax_included_price +
-//                        $this->calculateCourseOptionTotalPrice($request) +
-//                        $request->input('adjustment_price', 0)
-//                    ) * ($fee_rate->fee_rate / 100);
-//            }
+            $fee_rate = HospitalPlan::where('hospital_id', session()->get('hospital_id'))
+                ->whereDate('from', '<=', Carbon::today())
+                ->where(function($q) {
+                    $q->whereDate('to', '>=', Carbon::today())
+                        ->orWhere('to', '=', null);
+                })->get()->first()->contractPlan;
+
+            if (isset($fee_rate)) {
+                $reservation->fee_rate = $fee_rate->fee_rate;
+                $reservation->fee = (
+                        $reservation->tax_included_price +
+                        $this->calculateCourseOptionTotalPrice($request) +
+                        $request->input('adjustment_price', 0)
+                    ) * ($fee_rate->fee_rate / 100);
+            }
 
             if ($request->customer_id) {
                 $customer = Customer::findOrFail($request->customer_id);
@@ -559,6 +564,8 @@ class ReservationController extends Controller
 
             $reservation->customer_id = $customer->id;
             $reservation->save();
+            // カレンダーの予約数を1つ増やす
+            $this->_reservation_service->registReservationToCalendar($reservation, 1);
 
             $this->reservationCourseOptionSaveOrUpdate($request, $reservation);
             $this->reservationAnswerCreate($request, $reservation);
@@ -725,6 +732,7 @@ class ReservationController extends Controller
 
             $course = Course::find($request->course_id);
             $reservation_date = Carbon::parse($request->reservation_date);
+            $old_reservation_date = Carbon::parse($request->old_reservation_date);
 
             $calendar_day = $course->calendar->calendar_days()
                 ->whereDate('date', [$reservation_date])->get()->first();
@@ -733,7 +741,6 @@ class ReservationController extends Controller
                 ->where('is_holiday', 1)
                 ->whereDate('date', $reservation_date)->get()->first();
 
-            // TODO to confirm reservation frame value zero is unlimited or not
             if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '1') && $calendar_day->reservation_frames == 0) {
                 DB::rollback();
                 return redirect()->back()->with('error', trans('messages.reservation.not_reservable'))->withInput();
@@ -755,20 +762,34 @@ class ReservationController extends Controller
             $params = $request->all();
 
             $params['tax_included_price'] = $course->is_price == '1' ? $course->price : 0;
+            $hospital = Hospital::find(session()->get('hospital_id'));
 
-            if ($reservation->channel == '1') {
-
-                if (isset($reservation->fee_rate)) {
-                    $params['fee'] = floor((
-                            $params['tax_included_price'] +
-                            $this->calculateCourseOptionTotalPrice($request) +
-                            $request->input('adjustment_price', 0)
-                        ) * ($reservation->fee_rate / 100));
+            if ($reservation->site_code == 'HP') {
+                $params['fee'] = $this->_reservation_service->getHpfee($hospital);
+                if ($reservation->fee > 0) {
+                    $params['is_free_hp_link'] = IsFreeHpLink::FREE;
+                } else {
+                    $params['is_free_hp_link'] = IsFreeHpLink::FEE;
                 }
-
+            } else {
+                $params['fee'] = floor((
+                        $params['tax_included_price'] +
+                        $this->calculateCourseOptionTotalPrice($request) +
+                        $request->input('adjustment_price', 0)
+                    ) * ($reservation->fee_rate / 100));
+                $params['is_free_hp_link'] = IsFreeHpLink::FEE;
             }
 
             $reservation->update($params);
+
+            if (!$reservation_date->eq($old_reservation_date)) {
+                // カレンダーの予約数を1つ減らす
+                $reservation->reservation_date = $old_reservation_date;
+                $this->_reservation_service->registReservationToCalendar($reservation, -1);
+                // カレンダーの予約数を1つ増やす
+                $reservation->reservation_date = $reservation_date;
+                $this->_reservation_service->registReservationToCalendar($reservation, 1);
+            }
 
             $reservation->reservation_options()->forceDelete();
             $this->reservationCourseOptionSaveOrUpdate($request, $reservation);
@@ -776,11 +797,11 @@ class ReservationController extends Controller
             $reservation->reservation_answers()->forceDelete();
 
             $this->reservationAnswerCreate($request, $reservation);
-            
+
             $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '変更');
 
             DB::commit();
-            
+
             return redirect('reservation')->with('success', trans('messages.reservation.update_success'));
 
         } catch (\Exception $i) {

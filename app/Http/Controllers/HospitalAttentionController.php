@@ -6,8 +6,10 @@ use App\Hospital;
 use App\HospitalDetail;
 use App\HospitalMiddleClassification;
 use App\HospitalMinorClassification;
+use App\HospitalOptionPlan;
 use App\HospitalPlan;
 use App\ContractPlan;
+use App\OptionPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -96,6 +98,55 @@ class HospitalAttentionController extends Controller
                     'from' => new Carbon('2019-01-01'),
                     'to' => new Carbon('2999-12-31'),
                 ]);
+
+                $dr_movie = $request->get('dr_movie');
+                $access_movie = $request->get('access_movie');
+                $one_min_movie = $request->get('one_min_movie');
+                $tour_movie = $request->get('tour_movie');
+                $exam_movie = $request->get('exam_movie');
+                $special_page = $request->get('special_page');
+
+                $hospital->hospital_option_plans()->forceDelete();
+                if ($dr_movie == 1) {
+                    $hospital_option_plan = new HospitalOptionPlan();
+                    $hospital_option_plan->hospital_id = $hospital_id;
+                    $hospital_option_plan->option_plan_id = $dr_movie;
+                    $hospital_option_plan->save();
+                }
+                if ($access_movie == 2) {
+                    $hospital_option_plan = new HospitalOptionPlan();
+                    $hospital_option_plan->hospital_id = $hospital_id;
+                    $hospital_option_plan->option_plan_id = $access_movie;
+                    $hospital_option_plan->save();
+                }
+
+                if ($one_min_movie == 3) {
+                    $hospital_option_plan = new HospitalOptionPlan();
+                    $hospital_option_plan->hospital_id = $hospital_id;
+                    $hospital_option_plan->option_plan_id = $one_min_movie;
+                    $hospital_option_plan->save();
+                }
+
+                if ($tour_movie == 4) {
+                    $hospital_option_plan = new HospitalOptionPlan();
+                    $hospital_option_plan->hospital_id = $hospital_id;
+                    $hospital_option_plan->option_plan_id = $tour_movie;
+                    $hospital_option_plan->save();
+                }
+
+                if ($exam_movie == 5) {
+                    $hospital_option_plan = new HospitalOptionPlan();
+                    $hospital_option_plan->hospital_id = $hospital_id;
+                    $hospital_option_plan->option_plan_id = $exam_movie;
+                    $hospital_option_plan->save();
+                }
+
+                if ($exam_movie == 6) {
+                    $hospital_option_plan = new HospitalOptionPlan();
+                    $hospital_option_plan->hospital_id = $hospital_id;
+                    $hospital_option_plan->option_plan_id = $special_page;
+                    $hospital_option_plan->save();
+                }
     
                 $minor_ids = collect($request->input('minor_ids'), []);
                 $minor_values = collect($request->input('minor_values'), []);

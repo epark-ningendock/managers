@@ -85,25 +85,21 @@ class CoursesBaseResource extends Resource
     {
         foreach ($courses->calendar_days as $c) {
 
-            // 既予約数取得
-            $appoint_count = Reservation::where('hospital_id', $courses->hospital_id)
-                ->where('course_id', $courses->id)
-                ->whereIn('reservation_status', [1, 2, 3])
-                ->whereDate('reservation_date', $c->date)->count();
-
             // 日毎受付可否情報
             $day = intval(date('Ymd', strtotime($c->date)));
             if ($day < $courses->reception_start_date)
                 $c['appoint_status'] = 1; // 受付開始前
-            else if ($day > $courses->reception_end_date || $c->reservation_frames <= $appoint_count)
+            else if ($day > $courses->reception_end_date || $c->reservation_frames <= $c->reservation_count)
                 $c['appoint_status'] = 2; // 受付終了
             else if ($c->is_reservation_acceptance === 0)
+                $c['appoint_status'] = 3; // 受付不可
+            else if ($c->is_holiday === 1)
                 $c['appoint_status'] = 3; // 受付不可
             else
                 $c['appoint_status'] = 0; // 受付可能
 
             // 既予約数取得
-            $c['appoint_num'] = $appoint_count;
+            $c['appoint_num'] = $c->reservation_count;
 
             // 休診日
             $c['closed_day'] = Holiday::where('hospital_id', $courses->hospital_id)

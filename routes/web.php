@@ -127,12 +127,14 @@ Route::middleware('auth:staffs')->group(function () {
         | Reservation Routes
         |--------------------------------------------------------------------------
         */
-        Route::patch('/reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
-        Route::delete('/reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');
-        Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
-        Route::resource('/reservation', 'ReservationController', ['only' => ['index']]);
-        Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
-        Route::get('/reservation', 'ReservationController@index')->name('reservation.index');
+//        Route::patch('reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
+//        Route::delete('reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');
+//        Route::patch('reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
+//        Route::get('reservation/create', 'ReservationController@create')->name('reservation.create');
+//        Route::resource('reservation', 'ReservationController')->except(['show', 'delete']);
+//        Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
+//        Route::get('reservation', 'ReservationController@index')->name('reservation.index');
+
     });
 
 
@@ -246,12 +248,13 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     Route::get('/reception/csv', 'ReservationController@reception_csv')->name('reception.csv');
     Route::patch('/reception/reservation_status', 'ReservationController@reservation_status')->name('reservation.bulk_status');
 
-    Route::patch('/reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
-    Route::delete('/reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');
-    Route::patch('/reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
+    Route::patch('reservation/{id}/edit', 'ReservationController@edit')->name('reservation.edit');
+    Route::patch('reservation/{id}/accept', 'ReservationController@accept')->name('reservation.accept');
+    Route::delete('reservation/{id}/cancel', 'ReservationController@cancel')->name('reservation.cancel');
+    Route::patch('reservation/{id}/complete', 'ReservationController@complete')->name('reservation.complete');
     Route::resource('reservation', 'ReservationController')->except(['show', 'delete']);
     Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
-	Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
+
 
 
 });

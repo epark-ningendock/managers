@@ -135,6 +135,11 @@ class Hospital extends Model
         return $this->hasMany('App\Option');
     }
 
+    public function hospital_option_plans()
+    {
+        return $this->hasMany('App\HospitalOptionPlan');
+    }
+
     public function district_code()
     {
         return $this->belongsTo('App\DistrictCode');

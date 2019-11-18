@@ -163,11 +163,6 @@ return [
 //    ],
 
 
-    'm_course_option_group.csv' => [
-        'model' => CourseOption::class,
-        'import' => CourseOptionImport::class,
-        'seed' => false,
-    ],
     'm_availability.csv' => [
         'model' => \App\Availabil::class,
         'import' => \App\Imports\AvailabilityImport::class,

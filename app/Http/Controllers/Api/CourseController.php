@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\CalendarDay;
-use App\Enums\Status;
+use App\Enums\ReservationStatus;
 use App\Http\Requests\CalendarMonthlyRequest;
+use App\Reservation;
 use Illuminate\Http\Request;
 use App\Http\Requests\CalendarDayRequest;
-
 use App\Course;
-use App\Reservation;
-use App\Holiday;
 
 use App\Http\Resources\CourseIndexResource;
 use App\Http\Resources\CourseBasicResource;
@@ -54,8 +52,19 @@ class CourseController extends ApiBaseController
             if (!$contents) {
                 return $this->createResponse($this->messages['data_empty_error']);
             }
+            // 月空満情報取得
+            $from = Carbon::today()->format("Y-m-s");
+            $to = Carbon::today()->addMonthsNoOverflow(2)->endOfMonth();
+            $search_condition = (object) [
+                'get_yyyymmdd_from' => $from,
+                'get_yyyymmdd_to' => $to,
+            ];
+            $monthly_data = $this->getMonthReservationEnableInfo($search_condition, $contents);
+            $daily_data = $this->getDayReservationEnableInfo($search_condition, $contents);
 
-            return new CourseIndexResource($contents);
+            $data = ['course' => $contents, 'monthly_data' => $monthly_data, 'daily_data' => $daily_data];
+
+            return new CourseIndexResource($data);
         } catch (\Exception $e) {
             Log::error($e);
             return $this->createResponse($this->messages['system_error_db']);
@@ -163,6 +172,7 @@ class CourseController extends ApiBaseController
         ])
             ->where('code', $course_code)
             ->where('hospital_id', $hospital_id)
+            ->where('is_category', 0)
             ->get();
     }
 
@@ -183,7 +193,6 @@ class CourseController extends ApiBaseController
             'course_options',
             'course_options.option',
             'course_questions',
-            'calendar_days',
             'hospital',
             'hospital.contract_information',
             'hospital.hospital_categories.image_order',
@@ -191,6 +200,7 @@ class CourseController extends ApiBaseController
         ])
             ->where('hospital_id', $hospital_id)
             ->where('code', $course_code)
+            ->where('is_category', 0)
             ->first();
 
         return $data;
@@ -224,22 +234,27 @@ class CourseController extends ApiBaseController
             }
 
             if (!empty($request->input('get_yyyymm_from'))) {
-                $from_chk_result = $this->checkMonthDate($serach_condition->get_yyyymm_from);
+                $from_chk_result = $this->checkMonthDate($request->input('get_yyyymm_from'));
                 if (!$from_chk_result[0]) {
                     return $this->createResponse($from_chk_result[1]);
                 }
             }
 
             if (!empty($request->input('get_yyyymm_to'))) {
-                $to_chk_result = $this->checkMonthDate($serach_condition->get_yyyymm_to);
+                $to_chk_result = $this->checkMonthDate($request->input('get_yyyymm_to'));
                 if (!$to_chk_result[0]) {
                     return $this->createResponse($to_chk_result[1]);
                 }
             }
 
-            $course = Course::where($serach_condition->course_code)
-            ->where('hospital_id', $hospital_id)
-            ->first();
+            $course = Course::where('code', $serach_condition->course_code)
+                ->where('hospital_id', $hospital_id)
+                ->where('is_category', 0)
+                ->first();
+
+            if (!$course) {
+                return $this->createResponse($this->messages['data_empty_error']);
+            }
 
             // 医療機関の検査コースのカレンダー取得
             $month_data = $this->getMonthReservationEnableInfo($serach_condition, $course);
@@ -299,12 +314,21 @@ class CourseController extends ApiBaseController
                 }
             }
 
-            $course = Course::where($serach_condition->course_code)
+            $course = Course::where('code', $serach_condition->course_code)
                 ->where('hospital_id', $hospital_id)
+                ->where('is_category', 0)
                 ->first();
+
+            if (!$course) {
+                return $this->createResponse($this->messages['data_empty_error']);
+            }
 
             // 医療機関の検査コースのカレンダー取得
             $calendar_dailys = $this->getDayReservationEnableInfo($serach_condition, $course);
+
+            if (!$calendar_dailys) {
+                return $this->createResponse($this->messages['data_empty_error']);
+            }
 
             $data = ['search_cond' => $serach_condition,  'course' => $course, 'day_data' => $calendar_dailys];
 
@@ -322,37 +346,27 @@ class CourseController extends ApiBaseController
      */
     private function getMonthReservationEnableInfo($serach_condition, $course) {
 
-        $from = new Carbon($serach_condition->get_yyyymmdd_from->firstOfMonth());
-        $to = new Carbon($serach_condition->get_yyyymmdd_from->endOfMonth());
-        $cnt = $serach_condition->get_yyyymmdd_to->diffInMonths($serach_condition->get_yyyymmdd_from);
+        $monthly_wakus = CalendarDay::where('calendar_id', $course->calendar_id)
+            ->where('date', '>=', $serach_condition->get_yyyymmdd_from)
+            ->where('date', '<=', $serach_condition->get_yyyymmdd_to)
+            ->where('is_holiday', 0)
+            ->where('is_reservation_acceptance', 1)
+            ->get()
+            ->groupBy(function ($row) {
+                return $row->date->format('m');
+            })
+            ->map(function ($day) {
+                return collect([$day->sum('reservation_frames'), $day->sum('reservation_count'), $day[0]->date->format('Ym')]);
+            });
 
         $results = [];
-        for ($i = 0; $i <= $cnt; $i++ ) {
-
-            $reserv_cnt = Reservation::with([
-                'courses' => function ($query) use ($course) {
-                    $query->where('calendar_id', $course->calendar_id);
-                },
-            ])
-                ->whereIn('reservation_status', [1, 2, 3])
-                ->whereBetween('completed_date', [$from, $to])
-                ->count();
-
-            $frames = CalendarDay::where('calendar_id', $course->calendar_id)
-                ->where('is_holiday', 0)
-                ->where('is_reservation_acceptance', 1)
-                ->whereBetween('date', [$from, $to])
-                ->sum('reservation_frames');
-
-            $reserv_flg = 0;
-            if ($frames > $reserv_cnt) {
-                $reserv_flg = 1;
+        foreach ($monthly_wakus as $monthly_waku) {
+            $appoint_ok = 0;
+            if ($monthly_waku[0] > $monthly_waku[1]) {
+                $appoint_ok = 1;
             }
+            $results[] = [$monthly_waku[2], $appoint_ok];
 
-            $results[] = [$from->format('Ym'), $reserv_flg];
-
-            $from->addMonthsNoOverflow(1);
-            $to->addMonthsNoOverflow(1);
         }
 
         return $results;
@@ -364,65 +378,40 @@ class CourseController extends ApiBaseController
      */
     private function getDayReservationEnableInfo($serach_condition, $course) {
 
-        $from = new Carbon($serach_condition->get_yyyymmdd_from);
-        $to = new Carbon($serach_condition->get_yyyymmdd_from);
-        $to = $to->endOfDay();
-        $cnt = $serach_condition->get_yyyymmdd_to->diffInDays($serach_condition->get_yyyymmdd_from);
+        $from = $serach_condition->get_yyyymmdd_from;
+        $to = $serach_condition->get_yyyymmdd_to;
 
-        $reserv_enable_date = Carbon::today()->subMonth(floor($course->reception_end_date / 1000))->subDay($course->reception_end_date % 1000);
-        $reserv_enableto_date = Carbon::today()->addMonth(floor($course->reception_start_date / 1000))->addDay($course->reception_start_date % 1000);
+        $reserv_enable_date = Carbon::today()->subMonth(floor($course->reception_start_date / 1000))->subDay($course->reception_start_date % 1000);
+        $reserv_enableto_date = Carbon::today()->addMonth(floor($course->reception_end_date / 1000))->addDay($course->reception_end_date % 1000);
+
+        $calendar_days = CalendarDay::where('calendar_id', $course->calendar_id)
+            ->where('date', '>=', $from)
+            ->where('date', '<=', $to)
+            ->get();
 
         $results = [];
-        for ($i = 0; $i <= $cnt; $i++ ) {
 
-            $reserv_cnt = Reservation::with([
-                'courses' => function ($query) use ($course) {
-                    $query->where('calendar_id', $course->calendar_id);
-                },
-            ])
-                ->whereIn('reservation_status', [1, 2, 3])
-                ->whereBetween('completed_date', [$from, $to])
-                ->count();
-
-            $frames = CalendarDay::where('calendar_id', $course->calendar_id)
-                ->whereBetween('date', [$from, $to])
-                ->first();
-
-            $holiday = Holiday::where('hospital_id', $course->hospital_id)
-                ->whereBetween('date', [$from, $to])
-                ->where('status', Status::VALID)
-                ->first();
-
+        foreach ($calendar_days as $calendar_day) {
             $holiday_flg = 0;
-            if ($holiday) {
+            if ($calendar_day->is_holiday == 1) {
                 $holiday_flg = 1;
             }
 
-            if (! $frames) {
-                $results[] = [$from->format('Ymd'), 3, 0, $reserv_cnt, $holiday_flg];
-                $from->addDay();
-                $to->addDay();
-                continue;
-            }
-
             $appoint_status = 0;
-            if ($frames->date->lt($reserv_enable_date)) {
+            if ($calendar_day->date->lt($reserv_enable_date)) {
                 $appoint_status = 1;
             }
 
-            if ($frames->date->gt($reserv_enableto_date)) {
+            if ($calendar_day->date->gt($reserv_enableto_date)) {
                 $appoint_status = 2;
             }
 
-            $reserv_flg = 0;
-            if ($frames->reservation_frames > $reserv_cnt) {
-                $reserv_flg = 1;
+            if ($calendar_day->reservation_frames <= $calendar_day->reservation_count) {
+                $appoint_status = 2;
             }
 
-            $results[] = [$from->format('Ymd'), $appoint_status,  $reserv_cnt, $frames->reservation_frames, $holiday_flg];
+            $results[] = [$calendar_day->date->format('Ymd'), $appoint_status,  $calendar_day->reservation_count, $calendar_day->reservation_frames, $holiday_flg];
 
-            $from->addDay();
-            $to->addDay();
         }
 
         return $results;

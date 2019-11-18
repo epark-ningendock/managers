@@ -101,7 +101,7 @@ class HospitalContentBaseResource extends Resource
     {
         $categories = $hospital_categories->filter(function ($c) {
             return isset($c->image_order)
-                && $c->image_order === 10;
+                && $c->image_order === 3;
         });
 
         $texts = $categories->map(function ($t) {
@@ -159,10 +159,10 @@ class HospitalContentBaseResource extends Resource
             $url = $this->_filepath($i->hospital_image);
             $alt = $i->hospital_image->memo1 ?? '';
             $desc = $i->caption ?? '';
-            $img_pos = $i->image_order->image_location_number ?? '';
+            $img_pos = $i->image_order ?? '';
             return [
                 'img_url' => $url,
-                'img_alt' => $alt,
+                'img_alt' => $desc,
                 'desc' => $desc,
                 'type' => $img_pos,
             ];
@@ -230,9 +230,14 @@ class HospitalContentBaseResource extends Resource
 
         $texts = $categories->map(function ($i) {
             $url = $this->_filepath($i->hospital_image);
-            $alt = $i->hospital_image->memo1 ?? '';
+            $alt = $i->title ?? '';
             $title = $i->title ?? '';
             $desc = $i->caption ?? '';
+            $interview_q = [];
+            foreach ($i->interview_details as $detail) {
+                array_push($interview_q, ['question' => $detail->question, 'answer' => $detail->answer]);
+            }
+
             $contents = $i->interview_details->map(function ($i) {
                 return $i->answer ?? '';
             });
@@ -241,7 +246,7 @@ class HospitalContentBaseResource extends Resource
                 'img_alt' => $alt,
                 'title' => $title ?? '',
                 'desc' => $desc ?? '',
-                'contents' => $contents,
+                'interview_q' => $interview_q,
             ];
         });
         return $texts;

@@ -19,7 +19,11 @@ class ImagePathsResource extends Resource
         $path = $this->path ?? '';
 //        $name = $this->name ?? '';
 //        $extension = $this->extension ?? '';
-        $alt = $this->memo1 ?? '';
+        if (isset($this->memo1)) {
+            $alt = $this->memo1 ?? '';
+        } else {
+            $alt = '';
+        }
 
         return
         [

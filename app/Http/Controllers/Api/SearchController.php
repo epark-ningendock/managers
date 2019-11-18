@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Status;
 use App\Http\Requests\SearchRequest;
 use App\Http\Requests\HospitalSearchRequest;
 
@@ -10,6 +11,7 @@ use App\Course;
 
 use App\Http\Resources\SearchHospitalsResource;
 use App\Http\Resources\SearchCoursesResource;
+use Carbon\Carbon;
 use Log;
 
 class SearchController extends ApiBaseController
@@ -136,7 +138,7 @@ class SearchController extends ApiBaseController
      */
     public function courses(SearchRequest $request)
     {
-        try {
+//        try {
             $search_cond_chk_result = $this->checkSearchCond($request, false);
             if (!$search_cond_chk_result[0]) {
                 return $this->createResponse($search_cond_chk_result[1]);
@@ -167,10 +169,10 @@ class SearchController extends ApiBaseController
                 : compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
                 + $request->toJson()
                 + compact('courses');
-        } catch (\Exception $e) {
-            Log::error($e);
-            return $this->createResponse($this->messages['system_error_api']);
-        }
+//        } catch (\Exception $e) {
+//            Log::error($e);
+//            return $this->createResponse($this->messages['system_error_api']);
+//        }
 
     }
 
@@ -202,6 +204,11 @@ class SearchController extends ApiBaseController
             ->whereHas('contract_information' , function($q) {
                 $q->whereNotNull('contract_informations.code');
             })
+            ->whereHas('courses' , function($q) {
+                $q->where('courses.status', Status::VALID);
+                $q->where('courses.is_category', 0);
+            })
+            ->where('hospitals.status', Status::VALID)
 
             ->whereForSearchAPI($request);
 
@@ -231,6 +238,11 @@ class SearchController extends ApiBaseController
      */
     private function getCourses($request, $isCount = false)
     {
+        $from_date = Carbon::today();
+        $from = $from_date->year . sprintf('%02d', $from_date->month);
+
+        $to_date = Carbon::today()->addMonthsNoOverflow(2)->endOfMonth();
+        $to = $to_date->year . sprintf('%02d', $to_date->month);
         $query = Course::query()
             ->with([
                 'course_meta_informations',
@@ -239,17 +251,19 @@ class SearchController extends ApiBaseController
                 'course_details.middle_classification',
                 'course_details.minor_classification',
                 'course_options',
-                'calendar_days',
                 'course_images',
-                'course_images.image_order',
-                'course_images.hospital_image',
                 'hospital',
                 'contract_information',
                 'hospital.hospital_categories',
             ])
+            ->where('is_category', 0)
             ->whereHas('contract_information' , function($q) {
                 $q->whereNotNull('contract_informations.code');
             })
+            ->whereHas('hospital' , function($q) {
+                $q->where('hospitals.status', Status::VALID);
+            })
+            ->where('courses.status', Status::VALID)
             ->whereForSearchAPI($request);
 
         // 件数のみ

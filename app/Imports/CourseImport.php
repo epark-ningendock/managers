@@ -103,4 +103,13 @@ class CourseImport extends ImportAbstract
         }
 
     }
+
+    public function batchSize(): int
+    {
+        return 10000;
+    }
+    public function chunkSize(): int
+    {
+        return 10000;
+    }
 }

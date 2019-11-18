@@ -95,7 +95,7 @@ class CourseIndexBaseResource extends Resource
             return WebReception::NOT_ACCEPT;
         }
 
-        if (isset($this->calendar) && $this->calendar->is_calendar_display == CalendarDisplay::HIDE) {
+        if (isset($this->calendar) && $this->calendar->is_calendar_display == strval(CalendarDisplay::HIDE)) {
             return WebReception::ACCEPT_HIDE_CALENDAR;
         }
 

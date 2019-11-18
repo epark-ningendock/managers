@@ -38,6 +38,8 @@ class HospitalReleaseCourseResource extends Resource
                     ->orWhereNull('publish_start_date');
                 $q->where('publish_end_date', '>=', Carbon::today())
                     ->orWhereNull('publish_end_date');
+                $q->where('status', Status::VALID);
+                $q->where('is_category', 0);
             })
             ->where('status', Status::VALID)
             ->get();
