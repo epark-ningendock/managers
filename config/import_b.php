@@ -37,14 +37,6 @@ return [
         'model' => \App\HospitalEmailSetting::class,
         'import' => \App\Imports\HospitalEmailSettingImport::class,
     ],
-    'T_OP_T_HYB_APPOINT.csv' => [
-        'model' => \App\Reservation::class,
-        'import' => \App\Imports\ReservationImport::class,
-    ],
-    'T_OP_T_HYB_APPOINT_DETAIL.csv' => [
-        'model' => \App\Reservation::class,
-        'import' => \App\Imports\ReservationDetailImport::class,
-    ],
     'T_OP_T_DOCK_PAYMENTS.csv' => [
         'model' => \App\Reservation::class,
         'import' => \App\Imports\ReservationPaymentImport::class,
@@ -52,6 +44,14 @@ return [
     'T_OP_M_HYB_APPOINT_LINEGROUP.csv'=>[
         'model' => \App\Course::class,
         'import' => \App\Imports\CourseExtraImport::class,
+    ],
+    'T_OP_T_HYB_APPOINT.csv' => [
+        'model' => \App\Reservation::class,
+        'import' => \App\Imports\ReservationImport::class,
+    ],
+    'T_OP_T_HYB_APPOINT_DETAIL.csv' => [
+        'model' => \App\Reservation::class,
+        'import' => \App\Imports\ReservationDetailImport::class,
     ],
     'T_CR_M_EMAIL_HISTORY.csv' => [
         'model' => \App\MailHistory::class,

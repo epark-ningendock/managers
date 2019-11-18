@@ -3,11 +3,13 @@
 namespace App\Services;
 
 use App\Calendar;
+use App\CalendarDay;
 use App\ContractInformation;
 use App\CourseQuestion;
 use App\Hospital;
 use App\HospitalCategory;
 use App\HospitalEmailSetting;
+use App\MonthlyWaku;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
@@ -216,6 +218,21 @@ class ReservationService
             Log::error($e);
             throw new ReservationUpdateException();
         }
+    }
+
+    /**
+     * @param $entity
+     * @param $count
+     */
+    public function registReservationToCalendar($entity, $count) {
+
+        $calendar_day = CalendarDay::where('calendar_id', $entity->calendar_id)
+            ->where('date', $entity->reservation_date)
+            ->first();
+
+        $calendar_day->reservation_count = $calendar_day->reservation_count + $count;
+        $calendar_day->save();
+
     }
 
     /**
@@ -669,7 +686,7 @@ class ReservationService
             ->first();
     }
 
-    private function getHpfee(Hospital $hospital) {
+    public function getHpfee(Hospital $hospital) {
 
         $fromDate = Carbon::today();
         $toDate =Carbon::today();

@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\CalendarDay;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\Resource;
 
 class MonthlyCalendarResource extends Resource
@@ -14,27 +16,49 @@ class MonthlyCalendarResource extends Resource
      */
     public function toArray($request)
     {
-        // $this => $courses
-        // 対象データは６か月まで
-        $to = date('Y-m-d 00:00:00', strtotime('+2 month'));
-        if (!isset($this->calendar_days)) return;
-        $days = $this->calendar_days->filter(function ($d) use ($to) {
-            return strtotime($d->date) <= strtotime($to);
-        });
 
-        // dateと予約可否のみ抽出
-        $d = $days->pluck('appoint_status', 'date');
+        $from = Carbon::today();
+        $to = Carbon::today()->addMonthsNoOverflow(2)->endOfMonth()->toDateString();
+        $start_month = $this->reception_start_date / 1000;
+        $start_day = $this->reception_start_date % 1000;
+        $from = $from->addMonthsNoOverflow($start_month)->addDays($start_day);
 
-        // yyyymmでgroup化
-        $e = $d->groupBy(function ($item, $key) {
-            return date('Ym', strtotime($key));
-        });
-        return $e->map(function ($c, $key) {
-            return [
-                'yyyymm' => $key,
-                // 予約可否配列の積をとり、0になればどこかに「受付可能(0)」あり
-                'apoint_ok' => array_product($c->toArray()) === 0 ? 1 : 0,
-            ];
-        })->sortBy('yyyymm')->toArray();
+        $monthly_wakus = CalendarDay::where('calendar_id', $this->calendar_id)
+            ->where('date', '>=', $from)
+            ->where('date', '<=', $to)
+            ->where('is_holiday', 0)
+            ->where('is_reservation_acceptance', 1)
+            ->get()
+            ->groupBy(function ($row) {
+                return $row->date->format('m');
+            })
+            ->map(function ($day) {
+                return collect([$day->sum('reservation_frames'), $day->sum('reservation_count'), $day[0]->date->format('Ym')]);
+            });
+
+        $today = Carbon::today();
+        $results = [];
+        if ($from->year > $today->year) {
+            $month_num = (12 + $from->month) - $today->month;
+        } else {
+            $month_num = $from->month - $today->month;
+        }
+
+        for ($i = 0; $i < $month_num; $i++) {
+            $ym = $today->format('Ym');
+            $results[] = [$ym, 0];
+            $today->addMonthsNoOverflow(1);
+        }
+
+        foreach ($monthly_wakus as $monthly_waku) {
+            $appoint_ok = 0;
+            if ($monthly_waku[0] > $monthly_waku[1]) {
+                $appoint_ok = 1;
+            }
+            $results[] = ['yyyymm' => $monthly_waku[2], 'apoint_ok' =>  $appoint_ok];
+
+        }
+
+        return $results;
     }
 }

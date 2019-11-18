@@ -2,7 +2,6 @@
 
 namespace App\Imports;
 
-use App\ConvertedIdString;
 use App\CourseQuestion;
 use App\Enums\Status;
 use App\Hospital;
@@ -216,5 +215,14 @@ class ReservationDetailImport extends ImportBAbstract
 //        } catch (\Throwable $e) {
 //            Log::error($e->getMessage());
 //        }
+    }
+
+    public function batchSize(): int
+    {
+        return 100;
+    }
+    public function chunkSize(): int
+    {
+        return 100;
     }
 }

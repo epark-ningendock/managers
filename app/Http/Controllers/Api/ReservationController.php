@@ -94,6 +94,9 @@ class ReservationController extends ApiBaseController
 
             $this->_reservation_service->update($entity);
 
+            // カレンダーの予約数を1つ減らす
+            $this->_reservation_service->registReservationToCalendar($entity, -1);
+
             // メール送信フラグをentityに追加
             $entity->mail_fg = intval($request->input('mail_fg'));
 
@@ -158,6 +161,8 @@ class ReservationController extends ApiBaseController
 
             // 予約登録／更新
             $entity = $this->_reservation_service->store($request);
+            // カレンダーの予約数を1つ増やす
+            $this->_reservation_service->registReservationToCalendar($entity, 1);
 
             try {
                 // 予約履歴apiより予約履歴登録を実行する。

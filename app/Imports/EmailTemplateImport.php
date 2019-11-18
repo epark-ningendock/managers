@@ -43,4 +43,13 @@ class EmailTemplateImport extends ImportBAbstract
         $model->save();
         $this->setId($model, $row);
     }
+
+    public function batchSize(): int
+    {
+        return 100;
+    }
+    public function chunkSize(): int
+    {
+        return 100;
+    }
 }

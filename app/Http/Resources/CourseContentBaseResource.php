@@ -43,24 +43,26 @@ class CourseContentBaseResource extends Resource
     {
         if (!isset($course_details)) return;
         $categories = $course_details->map(function ($c) {
-            return [
-                'id' => $c->major_classification->id,
-                'title' => $c->major_classification->name,
-                'type_no' => $c->major_classification->classification_type_id,
-                'category_middle' => $c->major_classification->middle_classifications->map(function ($md) {
-                    return [
-                        'id' => $md->id,
-                        'title' => $md->name,
-                        'category_small' => $md->minor_classifications->map(function ($mn) {
-                            return [
-                                'id' => $mn->id,
-                                'title' => $mn->name,
-                                'icon' => $mn->icon_name,
-                            ];
-                        }),
-                    ];
-                }),
-            ];
+            if (in_array($c->major_classification->classification_type_id, [2,3,4,5])) {
+                return [
+                    'id' => $c->major_classification->id,
+                    'title' => $c->major_classification->name,
+                    'type_no' => $c->major_classification->classification_type_id,
+                    'category_middle' => $c->major_classification->middle_classifications->map(function ($md) {
+                        return [
+                            'id' => $md->id,
+                            'title' => $md->name,
+                            'category_small' => $md->minor_classifications->map(function ($mn) {
+                                return [
+                                    'id' => $mn->id,
+                                    'title' => $mn->name,
+                                    'icon' => $mn->icon_name,
+                                ];
+                            }),
+                        ];
+                    }),
+                ];
+            }
         });
         return $categories;
     }

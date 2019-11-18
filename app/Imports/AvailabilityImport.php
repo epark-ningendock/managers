@@ -2,10 +2,12 @@
 
 namespace App\Imports;
 
-use App\HospitalDetail;
+use App\Availabil;
+use App\Hospital;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Row;
 
-class HospitalDetailImport extends ImportAbstract
+class OptionImport extends ImportAbstract
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -14,7 +16,7 @@ class HospitalDetailImport extends ImportAbstract
      */
     public function getOldPrimaryKeyName(): string
     {
-        return '';
+        return 'hospital_no';
     }
 
     /**
@@ -24,7 +26,7 @@ class HospitalDetailImport extends ImportAbstract
      */
     public function getNewClassName(): string
     {
-        return HospitalDetail::class;
+        return Availabil::class;
     }
 
     /**
@@ -42,23 +44,24 @@ class HospitalDetailImport extends ImportAbstract
             return;
         }
 
-        $model = new HospitalDetail([
-            'hospital_id' => $hospital_id,
-            'minor_classification_id' => $row['item_category_sho_no'],
-            'select_status' => $row['select_status'],
-            'inputstring' => $row['inputstring'],
+        $old_id = Hospital::find($hospital_id)->old_karada_dog_id;
+
+        $deleted_at = null;
+        if ($row['status'] == 'X') {
+            $deleted_at = Carbon::today();
+        }
+
+        $model = new Availabil([
+            'hospital_no' => $old_id,
+            'course_no' => $row['course_no'],
+            'reservation_dt' => $row['reservation_dt'],
+            'line_id' => $row['line_id'],
+            'appoint_number' => $row['appoint_number'],
+            'reservation_frames' => $row['reservation_frames'],
             'created_at' => $row['rgst'],
             'updated_at' => $row['updt'],
+            'deleted_at' => $deleted_at,
         ]);
-
         $model->save();
-    }
-    public function batchSize(): int
-    {
-        return 100;
-    }
-    public function chunkSize(): int
-    {
-        return 100;
     }
 }

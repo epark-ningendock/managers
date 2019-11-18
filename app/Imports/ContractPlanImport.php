@@ -47,4 +47,13 @@ class ContractPlanImport extends ImportAbstract
 
         $model->save();
     }
+
+    public function batchSize(): int
+    {
+        return 100;
+    }
+    public function chunkSize(): int
+    {
+        return 100;
+    }
 }

@@ -16,23 +16,21 @@ class HospitalCategoryResource extends Resource
     public function toArray($request)
     {
         $results = [];
-        if (empty($this)) {
+        if (!empty($this)) {
+            foreach ($this as $detail) {
+
+                if (isset($detail->inputstring) || (isset($detail->select_status) && ($detail->select_status === '1'))) {
+                    $result =
+                        [
+                            'id' => $detail->minor_classification_id,
+                            'title' => $detail->minor_classification->icon_name != null ? $detail->minor_classification->icon_name : '',
+                            'text' => $detail->inputstring,
+                        ];
+                    $results[] = $result;
+                }
+            }
+
             return $results;
         }
-
-        foreach ($this as $detail) {
-            if(empty($detail->select_status) || $detail->select_status != Status::VALID) {
-                continue;
-            }
-            $result =
-                [
-                    'id' => $detail->minor_classification->id,
-                    'title' => $this->minor_classification->icon_name,
-                    'text' => $this->minor_classification->name,
-                ];
-            array_merge($results, $result);
-        }
-
-        return $results;
     }
 }

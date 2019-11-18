@@ -107,4 +107,13 @@ class ContractInformationImport extends ImportBAbstract
         }
         return null;
     }
+
+    public function batchSize(): int
+    {
+        return 100;
+    }
+    public function chunkSize(): int
+    {
+        return 100;
+    }
 }

@@ -44,8 +44,17 @@ class CourseExtraImport extends ImportBAbstract
         }
         $course->update([
             'cancellation_deadline' => $this->getValue($row, 'LINEGROUP_CANCELLATION_DAYS'),
-            'reception_start_date' => $this->getValue($row, 'LINEGROUP_START_DAYS'),
-            'reception_end_date' => $this->getValue($row, 'LINEGROUP_END_DAYS'),
+            'reception_start_date' => $this->getValue($row, 'LINEGROUP_END_DAYS'),
+            'reception_end_date' => $this->getValue($row, 'LINEGROUP_START_DAYS'),
         ]);
+    }
+
+    public function batchSize(): int
+    {
+        return 100;
+    }
+    public function chunkSize(): int
+    {
+        return 100;
     }
 }

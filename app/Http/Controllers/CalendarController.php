@@ -481,13 +481,46 @@ class CalendarController extends Controller
                         'created_at' => Carbon::now(),
                         'updated_at'=> Carbon::now()
                     ]);
+                    $calendars = Calendar::where('hospital_id', $hospital_id)
+                        ->get();
+                    foreach ($calendars as $calendar) {
+                        $calendar_day = CalendarDay::where('calendar_id', $calendar->id)
+                            ->where('date', $start->copy())
+                            ->first();
+                        if ($calendar_day) {
+                            $calendar_day->is_holiday = $is_holiday;
+                            $calendar_day->save();
+                        }
+                    }
                 } elseif (isset($holiday)) {
                     if (!isset($p_holiday) && $is_holiday == 0) {
                         $holiday->forceDelete();
+                        $calendars = Calendar::where('hospital_id', $hospital_id)
+                            ->get();
+                        foreach ($calendars as $calendar) {
+                            $calendar_day = CalendarDay::where('calendar_id', $calendar->id)
+                                ->where('date', $start->copy())
+                                ->first();
+                            if ($calendar_day) {
+                                $calendar_day->is_holiday = $is_holiday;
+                                $calendar_day->save();
+                            }
+                        }
                     } else {
                         $holiday->lock_version = $lock_version;
                         $holiday->is_holiday = $is_holiday;
                         $holiday->save();
+                        $calendars = Calendar::where('hospital_id', $hospital_id)
+                            ->get();
+                        foreach ($calendars as $calendar) {
+                            $calendar_day = CalendarDay::where('calendar_id', $calendar->id)
+                                ->where('date', $start->copy())
+                                ->first();
+                            if ($calendar_day) {
+                                $calendar_day->is_holiday = $is_holiday;
+                                $calendar_day->save();
+                            }
+                        }
                     }
                 }
                 $start->addDay(1);

@@ -54,4 +54,13 @@ class MemberLoginInfoImport extends ImportAbstract
         $this->deleteIf($model, $row, 'status', ['X']);
         $this->setId($model, $row);
     }
+
+    public function batchSize(): int
+    {
+        return 100;
+    }
+    public function chunkSize(): int
+    {
+        return 100;
+    }
 }

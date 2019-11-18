@@ -5,6 +5,8 @@ namespace App\Imports;
 use App\Calendar;
 use App\Holiday;
 use App\Hospital;
+use App\MonthlyWaku;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Row;
 
@@ -59,5 +61,14 @@ class HolidayImport extends ImportBAbstract
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
+    }
+
+    public function batchSize(): int
+    {
+        return 100;
+    }
+    public function chunkSize(): int
+    {
+        return 100;
     }
 }
