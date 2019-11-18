@@ -64,4 +64,13 @@ class AvailabilityImport extends ImportAbstract
         ]);
         $model->save();
     }
+
+    public function batchSize(): int
+   {
+       return 10000;
+   }
+   public function chunkSize(): int
+   {
+       return 10000;
+   }
 }
