@@ -7,7 +7,7 @@ use App\Hospital;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Row;
 
-class OptionImport extends ImportAbstract
+class AvailabilityImport extends ImportAbstract
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
