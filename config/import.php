@@ -68,11 +68,11 @@ return [
 
 
 
-    'm_course_basic.csv' => [
-        'model' => Course::class,
-        'import' => CourseImport::class,
-        'seed' => false,
-    ],
+    'm_course_detail.csv' => [
+           'model' => CourseDetail::class,
+           'import' => CourseDetailImport::class,
+           'seed' => false,
+       ],
 
 //    't_reserve_claim.csv' => [
 //        'model' => \App\ReservationOption::class,
