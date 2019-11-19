@@ -39,6 +39,11 @@ class Billing extends SoftDeleteModel
         return $this->belongsTo(Hospital::class);
     }
 
+    public function billing_option_plans()
+    {
+        return $this->hasMany(BillingOptionPlan::class);
+    }
+
     public function startedDate()
     {
         return billingDateFilter($this->billing_month)['startedDate'];

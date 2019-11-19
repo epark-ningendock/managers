@@ -118,8 +118,24 @@ class BillingController extends Controller {
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update( Request $request, Billing $billing ) {
-		//
+	public function update( Request $request) {
+
+	    $billing_id = $request->input('billing_id');
+	    $billing = Billing::find($billing_id);
+	    $adjustment_price = $request->input('adjustment_price');
+	    $dr_movie_adjustment_price = $request->input('optionplanadjustmentprice_1');
+        $access_movie_adjustment_price = $request->input('optionplanadjustmentprice_2');
+        $onemin_movie_adjustment_price = $request->input('optionplanadjustmentprice_3');
+        $tour_movie_adjustment_price = $request->input('optionplanadjustmentprice_4');
+        $exam_movie_adjustment_price = $request->input('optionplanadjustmentprice_5');
+        $special_movie_adjustment_price = $request->input('optionplanadjustmentprice_6');
+
+        if (isset($adjustment_price) && is_numeric($adjustment_price)) {
+            $billing->adjustment_price = $adjustment_price;
+            $billing->save();
+        }
+
+        return redirect()->route('billing.index');
 	}
 
 

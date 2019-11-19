@@ -111,12 +111,14 @@ class HospitalAttentionController extends Controller
                     $hospital_option_plan = new HospitalOptionPlan();
                     $hospital_option_plan->hospital_id = $hospital_id;
                     $hospital_option_plan->option_plan_id = $dr_movie;
+                    $hospital_option_plan->from = Carbon::today();
                     $hospital_option_plan->save();
                 }
                 if ($access_movie == 2) {
                     $hospital_option_plan = new HospitalOptionPlan();
                     $hospital_option_plan->hospital_id = $hospital_id;
                     $hospital_option_plan->option_plan_id = $access_movie;
+                    $hospital_option_plan->from = Carbon::today();
                     $hospital_option_plan->save();
                 }
 
@@ -124,6 +126,7 @@ class HospitalAttentionController extends Controller
                     $hospital_option_plan = new HospitalOptionPlan();
                     $hospital_option_plan->hospital_id = $hospital_id;
                     $hospital_option_plan->option_plan_id = $one_min_movie;
+                    $hospital_option_plan->from = Carbon::today();
                     $hospital_option_plan->save();
                 }
 
@@ -131,6 +134,7 @@ class HospitalAttentionController extends Controller
                     $hospital_option_plan = new HospitalOptionPlan();
                     $hospital_option_plan->hospital_id = $hospital_id;
                     $hospital_option_plan->option_plan_id = $tour_movie;
+                    $hospital_option_plan->from = Carbon::today();
                     $hospital_option_plan->save();
                 }
 
@@ -138,6 +142,7 @@ class HospitalAttentionController extends Controller
                     $hospital_option_plan = new HospitalOptionPlan();
                     $hospital_option_plan->hospital_id = $hospital_id;
                     $hospital_option_plan->option_plan_id = $exam_movie;
+                    $hospital_option_plan->from = Carbon::today();
                     $hospital_option_plan->save();
                 }
 
@@ -145,6 +150,7 @@ class HospitalAttentionController extends Controller
                     $hospital_option_plan = new HospitalOptionPlan();
                     $hospital_option_plan->hospital_id = $hospital_id;
                     $hospital_option_plan->option_plan_id = $special_page;
+                    $hospital_option_plan->from = Carbon::today();
                     $hospital_option_plan->save();
                 }
     

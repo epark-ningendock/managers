@@ -121,7 +121,7 @@ class ReservationDetailImport extends ImportBAbstract
             $reservation->applicant_tel = substr(str_replace('-', '', $this->getValue($row, 'TEL_NO')), 0, 11);
             $reservation->fee_rate = $fee_rate;
             $reservation->fee = $fee;
-            $reservation->is_free_hp_link = 1;
+            $reservation->is_free_hp_link = 0;
             $reservation->is_health_insurance = 0;
             $reservation->save();
 

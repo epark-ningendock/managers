@@ -18,7 +18,8 @@
 @stop
 
 @section('billing_info')
-    <div class="box box-primary">
+    <form class="box box-primary" method="post" role="form" action="{{ route('billing.update') }}">
+        <input type="hidden" name="billing_id" value="{{$billing->id}}">
         <div class="box-header with-border">
             <div class="box-tools" data-widget="collapse">
                 <button type="button" class="btn btn-sm">
@@ -26,33 +27,74 @@
             </div>
             <h1 class="box-title">医療機関 {{ $billing->hospital->name }}</h1>
         </div>
+
         <div id="billing-info" class="form-entry">
             <div class="box-body">
                 <div class="form-group ">
-                    <p><span class="text-bold label-text">プラン名</span> {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}</p>
+                    <p>
+                        <span class="text-bold label-text">プラン名</span>
+                        {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}　
+                    </p>
                 </div>
+                <div class="form-group ">
+                    <span class="text-bold label-text">プラン金額</span>
+                    {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee ) }}円　
+                    <span class="text-bold label-text">調整金額</span>
+                    <input type="text" id="billing_adjustment_price" name="adjustment_price" value="{{$billing->adjustment_price}}">
+                    <span class="text-bold label-text">プラン請求金額</span>　
+                    {{number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + $billing->adjustment_price)}}円
+                <div class="form-group ">
+                    <p>
+                        <span class="text-bold label-text">成果コース</span>
+                        {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate }}%
+                    </p>
+                </div>
+                @if (!empty($billing->hospital->hospitalOptionPlan($billing->id, $endedDate)))
+                    <div class="form-group ">
+                        <span class="text-bold label-text">オプションプラン</span>
+                        @foreach($billing->hospital->hospitalOptionPlan($billing->id, $endedDate) as $hospital_plan)
+                            <p>
+                               　{{ $hospital_plan->option_plan->option_plan_name ?? '' }}　
+                               {{ number_format($hospital_plan->option_plan->option_plan_price) }}円　
+                                オプションプラン調整金額
+                                <input type="text" id="optionplanadjustmentprice_{{$hospital_plan->option_plan_id}}" name="optionplanadjustmentprice_{{$hospital_plan->option_plan_id}}" value="{{$hospital_plan->billing_option_plans->adjustoment_price}}">　
+                                オプションプラン請求金額
+                                {{number_format($hospital_plan->option_plan->option_plan_price + $hospital_plan->billing_option_plans->adjustoment_price)}}円
+                            </p>
 
-                <div class="form-group">
-                    <p><span class="text-bold label-text">月額契約料</span>{{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee) }}円</p>
-                </div>
-
-                <div class="form-group">
-                    <p><span class="text-bold label-text">成果コース</span>{{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate }}%</p>
-                </div>
+                        @endforeach
+                    </div>
+                @endif
+                @if ($billing->hospital->hplink_contract_type == \App\Enums\HplinkContractType::MONTHLY_SUBSCRIPTION)
+                    <div class="form-group ">
+                        <span class="text-bold label-text">HPリンク月額</span>
+                        {{ number_format($billing->hospital->hplink_price) }}円
+                    </div>
+                @endif
 
                 <div class="form-group ">
                     <p><span class="text-bold label-text">手数料合計金額</span>{{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円</p>
                 </div>
 
                 <div class="form-group ">
-                    <p><span class="text-bold label-text">請求金額合計（税抜金額）</span>{{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee +
-                    $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
-                        ( {{ number_format(floor(($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee +
-                    $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) / TaxClass::TEN_PERCENT)) }}円 )</p>
+                    <p><span class="text-bold label-text">請求金額合計（税抜金額）</span>{{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee
+                    + $billing->adjustment_price
+                    + $billing->hospital->hpLinkMonthPrice()
+                                + $billing->hospital->hospitalOptionPlanPrice($billing->id, $endedDate)
+                    + $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
+                        ( {{ number_format(floor($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee
+                    + $billing->adjustment_price
+                    + $billing->hospital->hpLinkMonthPrice()
+                                + $billing->hospital->hospitalOptionPlanPrice($billing->id, $endedDate)
+                    + $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) * 0.9) }}円 )</p>
                 </div>
+                    <div class="form-group ">
+                        <input type="submit" class="btn btn-primary" value="更新">
+                    </div>
             </div>
         </div>
     </div>
+    </form>
 @stop
 
 

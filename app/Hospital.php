@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Enums\HplinkContractType;
+use App\Enums\ReservationStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Reshadman\OptimisticLocking\OptimisticLocking;
@@ -313,7 +314,10 @@ class Hospital extends Model
 
     public function reservationByCompletedDate($start, $end)
     {
-        return $this->reservations()->whereBetween('completed_date', [$start, $end])->get();
+        return $this->reservations()
+            ->whereBetween('reservation_date', [$start, $end])
+            ->where('reservation_status', '<>', ReservationStatus::CANCELLED )
+            ->get();
     }
 
     public function hospitalPlans()
@@ -335,4 +339,64 @@ class Hospital extends Model
         return $this->hasMany(Billing::class);
     }
 
+    public function hpLinkMonthPrice() {
+        if ($this->hplink_contract_type == HplinkContractType::MONTHLY_SUBSCRIPTION) {
+            return $this->hplink_price;
+        } else {
+            return 0;
+        }
+    }
+
+    public function hospitalOptionPlanPrice($billing_id, $date) {
+
+        $hospital_option_plans = HospitalOptionPlan::with(['option_plan',
+            'billing_option_plans' => function ($query) use ($billing_id) {
+                $query->where('billing_id', $billing_id);
+            }
+        ])
+        ->whereDate('from', '<=', $date)
+            ->where(function($q) use ($date) {
+                $q->whereDate('to', '>=', $date)
+                    ->orWhere('to', '=', null);
+            })
+            ->where('hospital_id', $this->id)
+            ->get();
+
+        $optionPlanPrice = 0;
+
+        if (!$hospital_option_plans) {
+            return $optionPlanPrice;
+        }
+
+        foreach ($hospital_option_plans as $hospital_option_plan) {
+            $billing_adjustment_price = 0;
+
+            if (isset($hospital_option_plan->billing_option_plans)
+                && isset($hospital_option_plan->billing_option_plans->adjustment_price)) {
+                $billing_adjustment_price = $hospital_option_plan->billing_option_plans->adjustment_price;
+            }
+
+            $optionPlanPrice = $optionPlanPrice
+                + $hospital_option_plan->option_plan->option_plan_price
+                + $billing_adjustment_price;
+        }
+
+        return $optionPlanPrice;
+    }
+
+    public function hospitalOptionPlan($billing_id, $date) {
+
+        return HospitalOptionPlan::with(['option_plan',
+            'billing_option_plans' => function ($query) use ($billing_id) {
+                $query->where('billing_id', $billing_id);
+            }
+        ])
+            ->whereDate('from', '<=', $date)
+            ->where(function($q) use ($date) {
+                $q->whereDate('to', '>=', $date)
+                    ->orWhere('to', '=', null);
+            })
+            ->where('hospital_id', $this->id)
+            ->get();
+    }
 }

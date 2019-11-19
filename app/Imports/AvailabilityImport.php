@@ -66,11 +66,11 @@ class AvailabilityImport extends ImportAbstract
     }
 
     public function batchSize(): int
-   {
-       return 10000;
-   }
-   public function chunkSize(): int
-   {
-       return 10000;
-   }
+    {
+        return 10000;
+    }
+    public function chunkSize(): int
+    {
+        return 10000;
+    }
 }
