@@ -17,7 +17,7 @@ class CreateAvailabilsTable extends Migration
     {
         Schema::create('availabils', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('hospital_no');
+            $table->string('hospital_no');
             $table->integer('course_no');
             $table->integer('reservation_dt');
             $table->integer('line_id');
