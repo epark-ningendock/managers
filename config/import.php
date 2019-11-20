@@ -137,11 +137,11 @@ return [
 //        'import' => CourseImport::class,
 //        'seed' => false,
 //    ],
-//    'm_course_detail.csv' => [
-//        'model' => CourseDetail::class,
-//        'import' => CourseDetailImport::class,
-//        'seed' => false,
-//    ],
+    'm_course_detail.csv' => [
+        'model' => CourseDetail::class,
+        'import' => CourseDetailImport::class,
+        'seed' => false,
+    ],
 
 //    'm_course_question.csv' => [
 //        'model' => CourseQuestion::class,
@@ -163,11 +163,11 @@ return [
 //        'import' => MedicalTreatmentTimeImport::class,
 //        'seed' => false,
 //    ],
-    'm_hospital_detail.csv' => [
-        'model' => HospitalDetail::class,
-        'import' => HospitalDetailImport::class,
-        'seed' => false,
-    ],
+//    'm_hospital_detail.csv' => [
+//        'model' => HospitalDetail::class,
+//        'import' => HospitalDetailImport::class,
+//        'seed' => false,
+//    ],
 //    'm_course_file.csv' => [
 //        'model' => CourseImage::class,
 //        'import' => CourseImageImport::class,
