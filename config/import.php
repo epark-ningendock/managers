@@ -153,11 +153,11 @@ return [
 //        'import' => ImageOrderImport::class,
 //        'seed' => false,
 //    ],
-//    'm_hospital_file.csv' => [
-//        'model' => HospitalImage::class,
-//        'import' => HospitalImageImport::class,
-//        'seed' => false,
-//    ],
+    'm_hospital_file.csv' => [
+        'model' => HospitalImage::class,
+        'import' => HospitalImageImport::class,
+        'seed' => false,
+    ],
 //    'm_hospital_time.csv' => [
 //        'model' => MedicalTreatmentTime::class,
 //        'import' => MedicalTreatmentTimeImport::class,
@@ -214,10 +214,10 @@ return [
 //        'import' => CourseOptionImport::class,
 //        'seed' => false,
 //    ],
-    'm_availability.csv' => [
-        'model' => Availabil::class,
-        'import' => AvailabilityImport::class,
-    ],
+//    'm_availability.csv' => [
+//        'model' => Availabil::class,
+//        'import' => AvailabilityImport::class,
+//    ],
 //    't_reserve_claim.csv' => [
 //        'model' => \App\ReservationOption::class,
 //        'import' => \App\Imports\ReservationOptionImport::class,
