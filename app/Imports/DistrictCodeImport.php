@@ -3,9 +3,10 @@
 namespace App\Imports;
 
 use App\DistrictCode;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class DistrictCodeImport extends ImportAbstract
+class DistrictCodeImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -52,10 +53,10 @@ class DistrictCodeImport extends ImportAbstract
 
     public function batchSize(): int
     {
-        return 100;
+        return 10000;
     }
     public function chunkSize(): int
     {
-        return 100;
+        return 10000;
     }
 }

@@ -19,11 +19,12 @@ class Billing extends SoftDeleteModel
 
 	protected $casts = [
 		'id' => 'integer',
+        'adjustment_price' => 'integer',
 		'status' => 'integer'
 	];
 
     protected $fillable = [
-        'hospital_id', 'billing_month', 'status'
+        'hospital_id', 'billing_month', 'adjustment_price', 'status'
     ];
 
     protected $appends = ['startedDate', 'endedDate'];
@@ -36,6 +37,11 @@ class Billing extends SoftDeleteModel
     public function hospital()
     {
         return $this->belongsTo(Hospital::class);
+    }
+
+    public function billing_option_plans()
+    {
+        return $this->hasMany(BillingOptionPlan::class);
     }
 
     public function startedDate()

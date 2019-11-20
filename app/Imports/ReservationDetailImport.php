@@ -11,9 +11,10 @@ use App\ReservationAnswer;
 use App\ReservationOption;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class ReservationDetailImport extends ImportBAbstract
+class ReservationDetailImport extends ImportBAbstract implements WithChunkReading
 {
 
     /**
@@ -42,7 +43,7 @@ class ReservationDetailImport extends ImportBAbstract
      */
     public function onRow(Row $row)
     {
-//        try {
+        try {
 
             $row = $row->toArray();
 
@@ -121,7 +122,7 @@ class ReservationDetailImport extends ImportBAbstract
             $reservation->applicant_tel = substr(str_replace('-', '', $this->getValue($row, 'TEL_NO')), 0, 11);
             $reservation->fee_rate = $fee_rate;
             $reservation->fee = $fee;
-            $reservation->is_free_hp_link = 1;
+            $reservation->is_free_hp_link = 0;
             $reservation->is_health_insurance = 0;
             $reservation->save();
 
@@ -212,17 +213,17 @@ class ReservationDetailImport extends ImportBAbstract
 
             }
 
-//        } catch (\Throwable $e) {
-//            Log::error($e->getMessage());
-//        }
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+        }
     }
 
     public function batchSize(): int
     {
-        return 100;
+        return 10000;
     }
     public function chunkSize(): int
     {
-        return 100;
+        return 10000;
     }
 }

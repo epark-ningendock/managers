@@ -4,16 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Billing;
 use App\BillingMailHistory;
-use App\Enums\ReservationStatus;
 use App\Exports\BillingExport;
 use App\Filters\Billing\BillingFilters;
-use App\Hospital;
 use App\HospitalEmailSetting;
 use App\Mail\Billing\BillingConfirmationSendMail;
 use Barryvdh\DomPDF\Facade as PDF;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Excel;
 
@@ -25,7 +21,7 @@ class BillingController extends Controller {
 	}
 
 	public function getSelectedMonth() {
-        $default_month = (now()->day < 21 ? now()->subMonth(1)->format('Y-m') : now()->format('Y-m'));
+        $default_month = (now()->day < 21 ? now()->subMonthNoOverflow(1)->format('Y-m') : now()->format('Y-m'));
         return ( request('billing_month') ) ? request('billing_month') : $default_month;
 	}
 
@@ -33,10 +29,10 @@ class BillingController extends Controller {
 
 		$selectedMonth = $this->getSelectedMonth();
 
-		$dateFilter = billingDateFilter();
+		$dateFilter = billingDateFilter(str_replace('-', '', $selectedMonth));
 		session()->put('hospital_id', null);
 
-		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', str_replace('-', '', $selectedMonth))->paginate(100);
+		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', str_replace('-', '', $selectedMonth))->paginate(20);
 
 		return view( 'billing.index', [
 			'billings'        => $billings,
@@ -51,9 +47,9 @@ class BillingController extends Controller {
 
     $selectedMonth = $this->getSelectedMonth();
 
-		$dateFilter = billingDateFilter();
+		$dateFilter = billingDateFilter(str_replace('-', '', $selectedMonth));
 
-    $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(100);
+    $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(20);
 
 		$yyyymm = str_replace('-', '', $selectedMonth);
 
@@ -78,7 +74,22 @@ class BillingController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store( Request $request ) {
-		//
+        $billing_id = $request->input('billing_id');
+        $billing = Billing::find($billing_id);
+        $adjustment_price = $request->input('adjustment_price');
+        $dr_movie_adjustment_price = $request->input('optionplanadjustmentprice_1');
+        $access_movie_adjustment_price = $request->input('optionplanadjustmentprice_2');
+        $onemin_movie_adjustment_price = $request->input('optionplanadjustmentprice_3');
+        $tour_movie_adjustment_price = $request->input('optionplanadjustmentprice_4');
+        $exam_movie_adjustment_price = $request->input('optionplanadjustmentprice_5');
+        $special_movie_adjustment_price = $request->input('optionplanadjustmentprice_6');
+
+        if (isset($adjustment_price) && is_numeric($adjustment_price)) {
+            $billing->adjustment_price = $adjustment_price;
+            $billing->save();
+        }
+
+        return route('billing.show', ['billing' => $billing]);
 	}
 
 	/**
@@ -118,8 +129,24 @@ class BillingController extends Controller {
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update( Request $request, Billing $billing ) {
-		//
+	public function update( Request $request) {
+
+	    $billing_id = $request->input('billing_id');
+	    $billing = Billing::find($billing_id);
+	    $adjustment_price = $request->input('adjustment_price');
+	    $dr_movie_adjustment_price = $request->input('optionplanadjustmentprice_1');
+        $access_movie_adjustment_price = $request->input('optionplanadjustmentprice_2');
+        $onemin_movie_adjustment_price = $request->input('optionplanadjustmentprice_3');
+        $tour_movie_adjustment_price = $request->input('optionplanadjustmentprice_4');
+        $exam_movie_adjustment_price = $request->input('optionplanadjustmentprice_5');
+        $special_movie_adjustment_price = $request->input('optionplanadjustmentprice_6');
+
+        if (isset($adjustment_price) && is_numeric($adjustment_price)) {
+            $billing->adjustment_price = $adjustment_price;
+            $billing->save();
+        }
+
+        return redirect()->route('billing.index');
 	}
 
 

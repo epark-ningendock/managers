@@ -4,9 +4,10 @@ namespace App\Imports;
 
 use App\ConvertedIdString;
 use App\HospitalImage;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class HospitalImageImport extends ImportAbstract
+class HospitalImageImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -75,10 +76,10 @@ class HospitalImageImport extends ImportAbstract
 
     public function batchSize(): int
     {
-        return 100;
+        return 10000;
     }
     public function chunkSize(): int
     {
-        return 100;
+        return 10000;
     }
 }

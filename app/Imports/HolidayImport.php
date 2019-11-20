@@ -8,9 +8,10 @@ use App\Hospital;
 use App\MonthlyWaku;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class HolidayImport extends ImportBAbstract
+class HolidayImport extends ImportBAbstract implements WithChunkReading
 {
 
     /**
@@ -65,10 +66,10 @@ class HolidayImport extends ImportBAbstract
 
     public function batchSize(): int
     {
-        return 100;
+        return 10000;
     }
     public function chunkSize(): int
     {
-        return 100;
+        return 10000;
     }
 }

@@ -18,17 +18,17 @@
     </div>
 
 
-    {{--<div class="form-group @if ($errors->has('course_id')) has-error @endif">--}}
-        {{--<label for="course_id">検査コース<span class="form_required">必須</span></label>--}}
-        {{--<select class="form-control w20em" name="course_id" id="course_id">--}}
-            {{--<option></option>--}}
-            {{--@foreach($courses as $course)--}}
-                {{--<option value="{{ $course->id }}" data-price="{{ $course->price }}"--}}
-                        {{--@if(old('course_id') == $course->id) selected @endif>{{ $course->name }}</option>--}}
-            {{--@endforeach--}}
-        {{--</select>--}}
-        {{--@if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif--}}
-    {{--</div>--}}
+    <div class="form-group @if ($errors->has('course_id')) has-error @endif">
+        <label for="course_id">検査コース<span class="form_required">必須</span></label>
+        <select class="form-control w20em" name="course_id" id="course_id">
+            <option></option>
+            @foreach($courses as $course)
+                <option value="{{ $course->id }}" data-price="{{ $course->price }}"
+                        @if(old('course_id') == $course->id) selected @endif>{{ $course->name }}</option>
+            @endforeach
+        </select>
+        @if ($errors->has('course_id')) <p class="help-block">{{ $errors->first('course_id') }}</p> @endif
+    </div>
 
     <div class="row">
 
@@ -45,22 +45,22 @@
     </div>
 
 
-    {{--<div class="row form-group option-row option-container">--}}
-        {{--<div class="box box-default option-container">--}}
-            {{--<label id="checkbox">オプション</label>--}}
-            {{--<table class="table table-bordered table-hover table-striped no-border">--}}
-                {{--<thead>--}}
-                {{--<tr>--}}
-                    {{--<th style="text-align: left;">選択</th>--}}
-                    {{--<th>オプション</th>--}}
-                    {{--<th>価格</th>--}}
-                {{--</tr>--}}
-                {{--</thead>--}}
-                {{--<tbody>--}}
-                {{--</tbody>--}}
-            {{--</table>--}}
-        {{--</div>--}}
-    {{--</div>--}}
+    <div class="row form-group option-row option-container">
+        <div class="box box-default option-container">
+            <label id="checkbox">オプション</label>
+            <table class="table table-bordered table-hover table-striped no-border">
+                <thead>
+                <tr>
+                    <th style="text-align: left;">選択</th>
+                    <th>オプション</th>
+                    <th>価格</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 
     <div class="row form-group">
@@ -110,12 +110,12 @@
             <label for="reservation_date">受診日</label>
         </div>-->
 
-        {{--<div class="col-md-12">--}}
-            {{--<div class="calendar-box" data-old="{{ old('reservation_date') }}">--}}
+        <div class="col-md-12">
+            <div class="calendar-box" data-old="{{ old('reservation_date') }}">
 
-            {{--</div>--}}
-            {{--@if ($errors->has('reservation_date')) <p class="help-block text-danger" style="color: #ed5565;">{{ $errors->first('reservation_date') }}</p> @endif--}}
-        {{--</div>--}}
+            </div>
+            @if ($errors->has('reservation_date')) <p class="help-block text-danger" style="color: #ed5565;">{{ $errors->first('reservation_date') }}</p> @endif
+        </div>
 
     </div>
 

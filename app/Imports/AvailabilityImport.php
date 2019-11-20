@@ -5,9 +5,10 @@ namespace App\Imports;
 use App\Availabil;
 use App\Hospital;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class OptionImport extends ImportAbstract
+class AvailabilityImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -63,5 +64,14 @@ class OptionImport extends ImportAbstract
             'deleted_at' => $deleted_at,
         ]);
         $model->save();
+    }
+
+    public function batchSize(): int
+    {
+        return 10000;
+    }
+    public function chunkSize(): int
+    {
+        return 10000;
     }
 }

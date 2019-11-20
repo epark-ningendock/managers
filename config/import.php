@@ -1,5 +1,6 @@
 <?php
 
+use App\Availabil;
 use App\ClassificationType;
 use App\ConsiderationList;
 use App\ContractPlan;
@@ -17,6 +18,7 @@ use App\HospitalMajorClassification;
 use App\HospitalMiddleClassification;
 use App\HospitalMinorClassification;
 use App\ImageOrder;
+use App\Imports\AvailabilityImport;
 use App\Imports\ClassificationTypeImport;
 use App\Imports\ConsiderationListImport;
 use App\Imports\ContractPlanImport;
@@ -65,110 +67,112 @@ use App\TaxClass;
 
 return [
     // ステージングでのインポートの為、一部コメントアウトしています
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    'm_course_basic.csv' => [
-        'model' => Course::class,
-        'import' => CourseImport::class,
-        'seed' => false,
-    ],
-    'm_course_detail.csv' => [
-        'model' => CourseDetail::class,
-        'import' => CourseDetailImport::class,
-        'seed' => false,
-    ],
-    'm_course_question.csv' => [
-        'model' => CourseQuestion::class,
-        'import' => CourseQuestionImport::class,
-        'seed' => false,
-    ],
-    'm_file_location.csv' => [
-        'model' => ImageOrder::class,
-        'import' => ImageOrderImport::class,
-        'seed' => false,
-    ],
+//    'm_pref.csv' => [
+//        'model' => Prefecture::class,
+//        'import' => PrefectureImport::class,
+//        'seed' => true,
+//    ],
+//    'm_tax_class.csv' => [
+//        'model' => TaxClass::class,
+//        'import' => TaxImport::class,
+//        'seed' => true,
+//    ],
+//    'm_district.csv' => [
+//        'model' => DistrictCode::class,
+//        'import' => DistrictCodeImport::class,
+//        'seed' => true,
+//    ],
+//    'm_item_type.csv' => [
+//        'model' => ClassificationType::class,
+//        'import' => ClassificationTypeImport::class,
+//        'seed' => true,
+//    ],
+//    'm_item_category_dai.csv' => [
+//        'model' => MajorClassification::class,
+//        'import' => MajorClassificationImport::class,
+//        'seed' => true,
+//    ],
+//    'm_item_category_chu.csv' => [
+//        'model' => MiddleClassification::class,
+//        'import' => MiddleClassificationImport::class,
+//        'seed' => true,
+//    ],
+//    'm_item_category_sho.csv' => [
+//        'model' => MinorClassification::class,
+//        'import' => MinorClassificationImport::class,
+//        'seed' => true,
+//    ],
+//    'm_contract_plan.csv' => [
+//        'model' => ContractPlan::class,
+//        'import' => ContractPlanImport::class,
+//        'seed' => false,
+//    ],
+//    'm_hospital.csv' => [
+//        'model' => Hospital::class,
+//        'import' => HospitalImport::class,
+//        'seed' => true,
+//    ],
+//    'm_hospital_category_dai.csv' => [
+//        'model' => HospitalMajorClassification::class,
+//        'import' => HospitalMajorClassificationImport::class,
+//        'seed' => true,
+//    ],
+//    'm_hospital_category_chu.csv' => [
+//        'model' => HospitalMiddleClassification::class,
+//        'import' => HospitalMiddleClassificationImport::class,
+//        'seed' => true,
+//    ],
+//    'm_hospital_category_sho.csv' => [
+//        'model' => HospitalMinorClassification::class,
+//        'import' => HospitalMinorClassificationImport::class,
+//        'seed' => true,
+//    ],
+//    'm_staff.csv' => [
+//        'model' => Staff::class,
+//        'import' => StaffImport::class,
+//        'seed' => false,
+//    ],
+//    'm_course_basic.csv' => [
+//        'model' => Course::class,
+//        'import' => CourseImport::class,
+//        'seed' => false,
+//    ],
+//    'm_course_detail.csv' => [
+//        'model' => CourseDetail::class,
+//        'import' => CourseDetailImport::class,
+//        'seed' => false,
+//    ],
+//
+//    'm_course_question.csv' => [
+//        'model' => CourseQuestion::class,
+//        'import' => CourseQuestionImport::class,
+//        'seed' => false,
+//    ],
+//    'm_file_location.csv' => [
+//        'model' => ImageOrder::class,
+//        'import' => ImageOrderImport::class,
+//        'seed' => false,
+//    ],
     'm_hospital_file.csv' => [
         'model' => HospitalImage::class,
         'import' => HospitalImageImport::class,
         'seed' => false,
     ],
-    'm_hospital_time.csv' => [
-        'model' => MedicalTreatmentTime::class,
-        'import' => MedicalTreatmentTimeImport::class,
-        'seed' => false,
-    ],
-    'm_hospital_detail.csv' => [
-        'model' => HospitalDetail::class,
-        'import' => HospitalDetailImport::class,
-        'seed' => false,
-    ],
-    'm_course_file.csv' => [
-        'model' => CourseImage::class,
-        'import' => CourseImageImport::class,
-        'seed' => false,
-    ],
+//    'm_hospital_time.csv' => [
+//        'model' => MedicalTreatmentTime::class,
+//        'import' => MedicalTreatmentTimeImport::class,
+//        'seed' => false,
+//    ],
+//    'm_hospital_detail.csv' => [
+//        'model' => HospitalDetail::class,
+//        'import' => HospitalDetailImport::class,
+//        'seed' => false,
+//    ],
+//    'm_course_file.csv' => [
+//        'model' => CourseImage::class,
+//        'import' => CourseImageImport::class,
+//        'seed' => false,
+//    ],
     'm_hospital_category.csv' => [
         'model' => HospitalCategory::class,
         'import' => HospitalCategoryImport::class,
@@ -199,30 +203,20 @@ return [
 //        'import' => PrefectureRailImport::class,
 //        'seed' => true,
 //    ],
-    'm_option.csv' => [
-        'model' => Option::class,
-        'import' => OptionImport::class,
-        'seed' => true,
-    ],
-    'm_course_option_group.csv' => [
-        'model' => CourseOption::class,
-        'import' => CourseOptionImport::class,
-        'seed' => false,
-    ],
-    't_pv.csv' => [
-        'model' => PvRecord::class,
-        'import' => PvRecordImport::class,
-        'seed' => false,
-    ],
-    't_consideration_list.csv' => [
-        'model' => ConsiderationList::class,
-        'import' => ConsiderationListImport::class,
-        'seed' => false,
-    ],
-    'm_user.csv' => [
-        'model' => MemberLoginInfo::class,
-        'import' => MemberLoginInfoImport::class,
-        'seed' => false,
+
+//    'm_option.csv' => [
+//        'model' => Option::class,
+//        'import' => OptionImport::class,
+//        'seed' => true,
+//    ],
+//    'm_course_option_group.csv' => [
+//        'model' => CourseOption::class,
+//        'import' => CourseOptionImport::class,
+//        'seed' => false,
+//    ],
+    'm_availability.csv' => [
+        'model' => Availabil::class,
+        'import' => AvailabilityImport::class,
     ],
 //    't_reserve_claim.csv' => [
 //        'model' => \App\ReservationOption::class,

@@ -39,7 +39,6 @@ class ReservationController extends Controller
     private $_reservation_service;
 
     public function __construct(
-        Request $request,
         Reservation $reservation,
         Hospital $hospital,
         Customer $customer,
@@ -48,7 +47,7 @@ class ReservationController extends Controller
         ReservationService $reservation_service
     )
     {
-        $this->middleware('permission.invoice.edit')->except([
+        $this->middleware('permission.hospital.edit')->except([
             'index',
             'reception',
             'reception_csv',
@@ -469,8 +468,6 @@ class ReservationController extends Controller
     public function create()
     {
         $courses = Course::where('hospital_id', session()->get('hospital_id'))->get();
-
-        KenshinSysCooperation::find();
 
         return view('reservation.create')->with(['courses' => $courses]);
     }

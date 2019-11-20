@@ -9,9 +9,10 @@ use App\Enums\Status;
 use App\Hospital;
 use App\OldOption;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class CourseOptionImport extends ImportAbstract
+class CourseOptionImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -75,10 +76,10 @@ class CourseOptionImport extends ImportAbstract
 
     public function batchSize(): int
     {
-        return 100;
+        return 10000;
     }
     public function chunkSize(): int
     {
-        return 100;
+        return 10000;
     }
 }

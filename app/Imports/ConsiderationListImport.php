@@ -5,9 +5,10 @@ namespace App\Imports;
 use App\ConsiderationList;
 use App\ConvertedIdString;
 use App\Hospital;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class ConsiderationListImport extends ImportAbstract
+class ConsiderationListImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -73,10 +74,10 @@ class ConsiderationListImport extends ImportAbstract
 
     public function batchSize(): int
     {
-        return 100;
+        return 10000;
     }
     public function chunkSize(): int
     {
-        return 100;
+        return 10000;
     }
 }

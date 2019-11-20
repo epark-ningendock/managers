@@ -4,9 +4,10 @@ namespace App\Imports;
 
 use App\EmailTemplate;
 use App\Hospital;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class EmailTemplateImport extends ImportBAbstract
+class EmailTemplateImport extends ImportBAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -46,10 +47,10 @@ class EmailTemplateImport extends ImportBAbstract
 
     public function batchSize(): int
     {
-        return 100;
+        return 10000;
     }
     public function chunkSize(): int
     {
-        return 100;
+        return 10000;
     }
 }

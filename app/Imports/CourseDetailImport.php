@@ -73,10 +73,10 @@ class CourseDetailImport extends ImportAbstract implements WithChunkReading
 
     public function batchSize(): int
     {
-        return 100;
+        return 10000;
     }
     public function chunkSize(): int
     {
-        return 100;
+        return 10000;
     }
 }

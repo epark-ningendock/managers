@@ -7,9 +7,10 @@ use App\ConvertedIdString;
 use App\Course;
 use App\Hospital;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class CalendarImport extends ImportBAbstract
+class CalendarImport extends ImportBAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -73,10 +74,10 @@ class CalendarImport extends ImportBAbstract
 
     public function batchSize(): int
     {
-        return 100;
+        return 10000;
     }
     public function chunkSize(): int
     {
-        return 100;
+        return 10000;
     }
 }

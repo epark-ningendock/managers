@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Helpers\DBCommonColumns;
 
-class CreateAvailabilsTable extends Migration
+class CreateOptionPlansTable extends Migration
 {
     use DBCommonColumns;
     /**
@@ -15,14 +15,10 @@ class CreateAvailabilsTable extends Migration
      */
     public function up()
     {
-        Schema::create('availabils', function (Blueprint $table) {
+        Schema::create('option_plans', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('hospital_no');
-            $table->integer('course_no');
-            $table->integer('reservation_dt');
-            $table->integer('line_id');
-            $table->integer('appoint_number');
-            $table->integer('reservation_frames');
+            $table->string('option_plan_name');
+            $table->integer('option_plan_price')->default(0);
 
             $this->addCommonColumns($table);
         });
@@ -35,6 +31,6 @@ class CreateAvailabilsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('availabils');
+        Schema::dropIfExists('option_plans');
     }
 }

@@ -3,9 +3,10 @@
 namespace App\Imports;
 
 use App\MemberLoginInfo;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class MemberLoginInfoImport extends ImportAbstract
+class MemberLoginInfoImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -57,10 +58,10 @@ class MemberLoginInfoImport extends ImportAbstract
 
     public function batchSize(): int
     {
-        return 100;
+        return 10000;
     }
     public function chunkSize(): int
     {
-        return 100;
+        return 10000;
     }
 }

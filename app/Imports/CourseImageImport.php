@@ -8,9 +8,10 @@ use App\CourseImage;
 use App\Hospital;
 use App\HospitalImage;
 use App\ImageOrder;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class CourseImageImport extends ImportAbstract
+class CourseImageImport extends ImportAbstract implements WithChunkReading
 {
 
     /**
@@ -94,10 +95,10 @@ class CourseImageImport extends ImportAbstract
 
     public function batchSize(): int
     {
-        return 100;
+        return 10000;
     }
     public function chunkSize(): int
     {
-        return 100;
+        return 10000;
     }
 }

@@ -90,7 +90,7 @@ class StaffController extends Controller
         }
 
         $this->staffLoginIdValidation($request->login_id);
-        $this->staffEmailValidation($request->email);
+//        $this->staffEmailValidation($request->email);
 
         try {
             DB::beginTransaction();
@@ -167,7 +167,7 @@ class StaffController extends Controller
         }
 
         $this->staffLoginIdValidation($request->login_id);
-        $this->staffEmailValidation($request->email);
+//        $this->staffEmailValidation($request->email);
         
         $staff = Staff::findOrFail($id);
         
@@ -293,17 +293,17 @@ class StaffController extends Controller
         }
     }
 
-    public function staffEmailValidation($email)
-    {
-        $hospital_staff = HospitalStaff::where('email', $email)->first();
-
-        if ($hospital_staff) {
-            $validator = Validator::make([], []);
-            $validator->errors()->add('email', '指定のメールアドレスは既に使用されています。');
-            throw new ValidationException($validator);
-            return redirect()->back();
-        }
-    }
+//    public function staffEmailValidation($email)
+//    {
+//        $hospital_staff = HospitalStaff::where('email', $email)->first();
+//
+//        if ($hospital_staff) {
+//            $validator = Validator::make([], []);
+//            $validator->errors()->add('email', '指定のメールアドレスは既に使用されています。');
+//            throw new ValidationException($validator);
+//            return redirect()->back();
+//        }
+//    }
 
     public function staffLoginIdValidation($login_id)
     {

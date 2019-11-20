@@ -6,9 +6,10 @@ use App\Course;
 use App\ConvertedIdString;
 use App\Hospital;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class CourseImport extends ImportAbstract
+class CourseImport extends ImportAbstract implements WithChunkReading
 {
     use SoftDeletes;
 
@@ -106,10 +107,10 @@ class CourseImport extends ImportAbstract
 
     public function batchSize(): int
     {
-        return 100;
+        return 10000;
     }
     public function chunkSize(): int
     {
-        return 100;
+        return 10000;
     }
 }

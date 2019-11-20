@@ -3,9 +3,10 @@
 namespace App\Imports;
 
 use App\ContractPlan;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class ContractPlanImport extends ImportAbstract
+class ContractPlanImport extends ImportAbstract implements WithChunkReading
 {
 
     /**
@@ -50,10 +51,10 @@ class ContractPlanImport extends ImportAbstract
 
     public function batchSize(): int
     {
-        return 100;
+        return 10000;
     }
     public function chunkSize(): int
     {
-        return 100;
+        return 10000;
     }
 }

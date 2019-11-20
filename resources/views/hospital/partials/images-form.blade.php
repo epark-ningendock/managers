@@ -56,7 +56,7 @@
         @for ($i = 1; $i <= 4; $i++)
         <div class="col-sm-6">
             {{Form::label('sub_'.$i, 'サブメイン'.$i,['class' => 'form_label'])}}
-            <?php $sub_image_category = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB)->where('order', $i)->first(); ?>
+            <?php $sub_image_category = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB)->where('file_location_no', $i)->first(); ?>
             @if (!is_null($sub_image_category))
                 <div class="sub_image_area">
                     <img class="object-fit" src="{{$sub_image_category->hospital_image->path}}">

@@ -19,7 +19,7 @@
 
     <div class="form-group @if ($errors->has('course_id')) has-error @endif">
         <label for="course_id">検査コース<span class="form_required">必須</span></label>
-        <select class="w20em form-control" name="course_id" id="course_id">
+        <select class="w25em form-control" name="course_id" id="course_id">
             <option></option>
             @foreach($courses as $course)
                 <option value="{{ $course->id }}" data-price="{{ $course->price }}"

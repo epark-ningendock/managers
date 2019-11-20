@@ -100,15 +100,21 @@
     <table id="example2" class="table no-border table-hover table-striped mb-5">
         <thead>
         <tr>
-            <th>物件番号</th>
+            <th>顧客番号</th>
             <th>医療機関名</th>
+            <!--
             <th>請求ステータス</th>
+            -->
             <th>プラン</th>
-            <th>請求金額（税抜価格）</th>
+            <th>請求金額</th>
             <th>プラン金額</th>
+            <th>オプションプラン金額</th>
+            <th>HPリンク月額金額</th>
             <th>手数料合計金額</th>
             <th>成果コース</th>
+            <!--
             <th colspan="4"></th>
+            -->
         </tr>
         </thead>
         <tbody>
@@ -116,19 +122,30 @@
             @foreach ($billings as $billing)
                 @if ( !empty($billing->hospital) )
                     <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
-                        <td>{{ $billing->hospital->contract_information->property_no ?? '' }}</td>
+                        <td>{{ $billing->hospital->contract_information->customer_no ?? '' }}</td>
                         <td>{{ $billing->hospital->name }}</td>
+                        <!--
                         <td>{{ BillingStatus::getDescription($billing->status) }}</td>
+                        -->
                         <td>
                             {{ empty($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan) ? '' : $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name }}
                         </td>
                         <td>
                             {{ empty($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan) ? '' : number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee +
-                                $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) . '円 ( ' . number_format(floor(($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee +
-                                $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) / TaxClass::TEN_PERCENT)) . '円 )' }}
+                                $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()
+                                + $billing->adjustment_price
+                                + $billing->hospital->hpLinkMonthPrice()
+                                + $billing->hospital->hospitalOptionPlanPrice($billing->id, $endedDate)
+                                ) . '円  ' }}
                         </td>
                         <td>
-                            {{ empty($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan) ? '' : number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee ) . '円' }}
+                            {{ empty($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan) ? '' : number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + $billing->adjustment_price )  . '円' }}
+                        </td>
+                        <td>
+                            {{ number_format($billing->hospital->hospitalOptionPlanPrice($billing->id, $endedDate)) . '円'}}
+                        </td>
+                        <td>
+                            {{ number_format($billing->hospital->hpLinkMonthPrice()). '円'}}
                         </td>
                         <td>
                             {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) . '円' }}
@@ -139,6 +156,7 @@
                         <td>
                             <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
                         </td>
+                        <!--
                         <td>
                             <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CHECKING, 'claim_check' => 'yes'] )) }}"
                                 class="btn @if( $billing->status != BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
@@ -158,6 +176,7 @@
                                 @if( $billing->status == BillingStatus::CONFIRM) style="pointer-events: unset;" @else style="pointer-events: none;" @endif
                             >確定取消</a>
                         </td>
+                        -->
                     </tr>
                 @endif
             @endforeach
