@@ -153,11 +153,11 @@ return [
 //        'import' => ImageOrderImport::class,
 //        'seed' => false,
 //    ],
-    'm_hospital_file.csv' => [
-        'model' => HospitalImage::class,
-        'import' => HospitalImageImport::class,
-        'seed' => false,
-    ],
+//    'm_hospital_file.csv' => [
+//        'model' => HospitalImage::class,
+//        'import' => HospitalImageImport::class,
+//        'seed' => false,
+//    ],
 //    'm_hospital_time.csv' => [
 //        'model' => MedicalTreatmentTime::class,
 //        'import' => MedicalTreatmentTimeImport::class,
@@ -173,11 +173,11 @@ return [
 //        'import' => CourseImageImport::class,
 //        'seed' => false,
 //    ],
-//    'm_hospital_category.csv' => [
-//        'model' => HospitalCategory::class,
-//        'import' => HospitalCategoryImport::class,
-//        'seed' => false,
-//    ],
+    'm_hospital_category.csv' => [
+        'model' => HospitalCategory::class,
+        'import' => HospitalCategoryImport::class,
+        'seed' => false,
+    ],
 //    'm_rail_corp.csv' => [
 //        'model' => RailwayCompany::class,
 //        'import' => RailwayCompanyImport::class,
