@@ -8,9 +8,10 @@ use App\Hospital;
 use App\MonthlyWaku;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class HolidayImport extends ImportBAbstract
+class HolidayImport extends ImportBAbstract implements WithChunkReading
 {
 
     /**

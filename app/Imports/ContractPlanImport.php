@@ -3,9 +3,10 @@
 namespace App\Imports;
 
 use App\ContractPlan;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class ContractPlanImport extends ImportAbstract
+class ContractPlanImport extends ImportAbstract implements WithChunkReading
 {
 
     /**

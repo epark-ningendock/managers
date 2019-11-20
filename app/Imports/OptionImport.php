@@ -6,9 +6,10 @@ use App\Hospital;
 use App\OldOption;
 use App\Option;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class OptionImport extends ImportAbstract
+class OptionImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -76,5 +77,14 @@ class OptionImport extends ImportAbstract
             'deleted_at' => $deleted_at,
         ]);
         $old_model->save();
+    }
+
+    public function batchSize(): int
+    {
+        return 10000;
+    }
+    public function chunkSize(): int
+    {
+        return 10000;
     }
 }

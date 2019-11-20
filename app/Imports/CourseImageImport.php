@@ -8,9 +8,10 @@ use App\CourseImage;
 use App\Hospital;
 use App\HospitalImage;
 use App\ImageOrder;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class CourseImageImport extends ImportAbstract
+class CourseImageImport extends ImportAbstract implements WithChunkReading
 {
 
     /**

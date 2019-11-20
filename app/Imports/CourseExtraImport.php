@@ -3,9 +3,10 @@
 namespace App\Imports;
 
 use App\Course;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class CourseExtraImport extends ImportBAbstract
+class CourseExtraImport extends ImportBAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す

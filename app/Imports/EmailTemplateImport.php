@@ -4,9 +4,10 @@ namespace App\Imports;
 
 use App\EmailTemplate;
 use App\Hospital;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class EmailTemplateImport extends ImportBAbstract
+class EmailTemplateImport extends ImportBAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す

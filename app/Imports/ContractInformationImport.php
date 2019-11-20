@@ -7,9 +7,10 @@ use App\ConvertedId;
 use App\Hospital;
 use App\HospitalStaff;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class ContractInformationImport extends ImportBAbstract
+class ContractInformationImport extends ImportBAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す

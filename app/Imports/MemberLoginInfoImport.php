@@ -3,9 +3,10 @@
 namespace App\Imports;
 
 use App\MemberLoginInfo;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class MemberLoginInfoImport extends ImportAbstract
+class MemberLoginInfoImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す

@@ -3,9 +3,10 @@
 namespace App\Imports;
 
 use App\DistrictCode;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class DistrictCodeImport extends ImportAbstract
+class DistrictCodeImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す

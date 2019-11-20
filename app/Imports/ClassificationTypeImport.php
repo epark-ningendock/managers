@@ -3,9 +3,10 @@
 namespace App\Imports;
 
 use App\ClassificationType;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class ClassificationTypeImport extends ImportAbstract
+class ClassificationTypeImport extends ImportAbstract implements WithChunkReading
 {
 
     /**

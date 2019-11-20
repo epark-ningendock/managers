@@ -6,10 +6,11 @@ use App\Hospital;
 use App\Reservation;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\RegistersEventListeners;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Row;
 
-class ReservationImport extends ImportBAbstract implements WithEvents
+class ReservationImport extends ImportBAbstract implements WithEvents,  WithChunkReading
 {
     use RegistersEventListeners;
 

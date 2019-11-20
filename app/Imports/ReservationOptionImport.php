@@ -6,9 +6,10 @@ use App\Hospital;
 use App\Option;
 use App\Reservation;
 use App\ReservationOption;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class ReservationOptionImport extends ImportAbstract
+class ReservationOptionImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す

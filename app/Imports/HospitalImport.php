@@ -7,9 +7,10 @@ use App\ConvertedIdString;
 use App\DistrictCode;
 use App\Hospital;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class HospitalImport extends ImportAbstract
+class HospitalImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す

@@ -5,9 +5,10 @@ namespace App\Imports;
 use App\HospitalCategory;
 use App\ImageOrder;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class HospitalCategoryImport extends ImportAbstract
+class HospitalCategoryImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す

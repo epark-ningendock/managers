@@ -11,9 +11,10 @@ use App\ReservationAnswer;
 use App\ReservationOption;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class ReservationDetailImport extends ImportBAbstract
+class ReservationDetailImport extends ImportBAbstract implements WithChunkReading
 {
 
     /**

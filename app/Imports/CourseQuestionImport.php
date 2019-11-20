@@ -6,9 +6,10 @@ use App\ConvertedIdString;
 use App\CourseQuestion;
 use App\Hospital;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class CourseQuestionImport extends ImportAbstract
+class CourseQuestionImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す

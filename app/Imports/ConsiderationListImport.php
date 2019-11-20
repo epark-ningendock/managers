@@ -5,9 +5,10 @@ namespace App\Imports;
 use App\ConsiderationList;
 use App\ConvertedIdString;
 use App\Hospital;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class ConsiderationListImport extends ImportAbstract
+class ConsiderationListImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
