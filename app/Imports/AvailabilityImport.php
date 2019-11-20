@@ -5,9 +5,10 @@ namespace App\Imports;
 use App\Availabil;
 use App\Hospital;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class AvailabilityImport extends ImportAbstract
+class AvailabilityImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す

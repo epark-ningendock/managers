@@ -153,31 +153,31 @@ return [
 //        'import' => ImageOrderImport::class,
 //        'seed' => false,
 //    ],
-    'm_hospital_file.csv' => [
-        'model' => HospitalImage::class,
-        'import' => HospitalImageImport::class,
-        'seed' => false,
-    ],
+//    'm_hospital_file.csv' => [
+//        'model' => HospitalImage::class,
+//        'import' => HospitalImageImport::class,
+//        'seed' => false,
+//    ],
 //    'm_hospital_time.csv' => [
 //        'model' => MedicalTreatmentTime::class,
 //        'import' => MedicalTreatmentTimeImport::class,
 //        'seed' => false,
 //    ],
-    'm_hospital_detail.csv' => [
-        'model' => HospitalDetail::class,
-        'import' => HospitalDetailImport::class,
-        'seed' => false,
-    ],
+//    'm_hospital_detail.csv' => [
+//        'model' => HospitalDetail::class,
+//        'import' => HospitalDetailImport::class,
+//        'seed' => false,
+//    ],
 //    'm_course_file.csv' => [
 //        'model' => CourseImage::class,
 //        'import' => CourseImageImport::class,
 //        'seed' => false,
 //    ],
-    'm_hospital_category.csv' => [
-        'model' => HospitalCategory::class,
-        'import' => HospitalCategoryImport::class,
-        'seed' => false,
-    ],
+//    'm_hospital_category.csv' => [
+//        'model' => HospitalCategory::class,
+//        'import' => HospitalCategoryImport::class,
+//        'seed' => false,
+//    ],
 //    'm_rail_corp.csv' => [
 //        'model' => RailwayCompany::class,
 //        'import' => RailwayCompanyImport::class,
