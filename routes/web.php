@@ -167,25 +167,12 @@ Route::middleware('auth:staffs')->group(function () {
 | Staff, Hospital staff authentication required
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:staffs,hospital_staffs', 'permission.invoice.edit'])->group(function () {
+Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->group(function () {
+
     Route::get('billing/excel-export', 'BillingController@excelExport')->name('billing.excel.export');
     Route::resource('billing', 'BillingController');
     Route::get('billing/{billing}/{hospital_id}/status/update', 'BillingController@statusUpdate')->name('billing.status.update');
     Route::get('hospital/billing', 'BillingController@hospitalBilling')->name('hospital.billing');
-
-});
-
-/*
-|--------------------------------------------------------------------------
-| Staff, Hospital staff authentication required
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->group(function () {
-
-//    Route::get('billing/excel-export', 'BillingController@excelExport')->name('billing.excel.export');
-//    Route::resource('billing', 'BillingController');
-//    Route::get('billing/{billing}/{hospital_id}/status/update', 'BillingController@statusUpdate')->name('billing.status.update');
-//    Route::get('hospital/billing', 'BillingController@hospitalBilling')->name('hospital.billing');
 
     /*
     |--------------------------------------------------------------------------
