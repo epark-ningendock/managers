@@ -18,7 +18,8 @@
 @stop
 
 @section('billing_info')
-    <form class="box box-primary" method="POST" role="form" action="{{ route('billing.store') }}">
+
+    <form class="box box-primary" method="POST"  action="{{ route('billing.store') }}">
         <input type="hidden" name="billing_id" value="{{$billing->id}}">
         <div class="box-header with-border">
             <div class="box-tools" data-widget="collapse">

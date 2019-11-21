@@ -51,6 +51,7 @@ class HospitalEmailSettingImport extends ImportBAbstract implements WithEvents
 
         $key_code = $this->getValue($row, 'KEY_CODE');
         $value = $this->getValue($row, 'KEY_VALUE');
+        $mail_value = $this->getValue($row, 'KEY_TEXTAREA_VALUE');
 
         switch ($key_code) {
             case '02':
@@ -69,21 +70,21 @@ class HospitalEmailSettingImport extends ImportBAbstract implements WithEvents
             case '06':
             case '07':
                 if (!isset(static::$arr['reception_email1'])) {
-                    static::$arr['reception_email1'] = $value;
+                    static::$arr['reception_email1'] = $mail_value;
                 } else if (!isset(static::$arr['reception_email2'])) {
-                    static::$arr['reception_email2'] = $value;
+                    static::$arr['reception_email2'] = $mail_value;
                 } else if (!isset(static::$arr['reception_email3'])) {
-                    static::$arr['reception_email3'] = $value;
+                    static::$arr['reception_email3'] = $mail_value;
                 } else if (!isset(static::$arr['reception_email4'])) {
-                    static::$arr['reception_email4'] = $value;
+                    static::$arr['reception_email4'] = $mail_value;
                 }
 
                 if (!isset(static::$arr['billing_email1'])) {
-                    static::$arr['billing_email1'] = $value;
+                    static::$arr['billing_email1'] = $mail_value;
                 } else if (!isset(static::$arr['billing_email2'])) {
-                    static::$arr['billing_email2'] = $value;
+                    static::$arr['billing_email2'] = $mail_value;
                 } else if (!isset(static::$arr['billing_email3'])) {
-                    static::$arr['billing_email3'] = $value;
+                    static::$arr['billing_email3'] = $mail_value;
                 }
                 break;
             case '21':

@@ -89,7 +89,7 @@ class BillingController extends Controller {
             $billing->save();
         }
 
-        return route('billing.show', ['billing' => $billing]);
+        return redirect()->route('billing.show', ['billing' => $billing]);
 	}
 
 	/**

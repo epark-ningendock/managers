@@ -19,7 +19,7 @@ class HospitalCategoryResource extends Resource
         if (!empty($this)) {
             foreach ($this as $detail) {
 
-                if (isset($detail->inputstring) || (isset($detail->select_status) && ($detail->select_status === '1'))) {
+                if (!empty($detail->inputstring) || (isset($detail->select_status) && ($detail->select_status === '1'))) {
                     $result =
                         [
                             'id' => $detail->minor_classification_id,

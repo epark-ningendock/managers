@@ -226,11 +226,12 @@ class ReservationService
      */
     public function registReservationToCalendar($entity, $count) {
 
-        $calendar_day = CalendarDay::where('calendar_id', $entity->calendar_id)
-            ->where('date', $entity->reservation_date)
+        $target = Carbon::parse($entity->reservation_date);
+        $calendar_day = CalendarDay::where('calendar_id', $entity->course->calendar_id)
+            ->whereDate('date', $target->toDateString())
             ->first();
 
-        $calendar_day->reservation_count = $calendar_day->reservation_count + $count;
+        $calendar_day->reservation_count = intval($calendar_day->reservation_count) + $count;
         $calendar_day->save();
 
     }

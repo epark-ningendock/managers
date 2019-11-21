@@ -75,8 +75,8 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
             $fee_rate = 0;
             $member_id = $this->getValue($row, 'EPARK_MEMBER_ID');
             if (isset($member_id)) {
-                if (isset($hospital->contract_information) && isset($hospital->contract_information->contract_plan)) {
-                    $fee_rate = $hospital->contract_information->contract_plan->fee_rate;
+                if (isset($hospital->hospital_plan) && isset($hospital->hospital_plan->contract_plan)) {
+                    $fee_rate = $hospital->hospital_plan->contract_plan->fee_rate;
                 } else {
                     $fee_rate = 10;
                 }
@@ -137,8 +137,8 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                 $course_questions = $reservation
                     ->course
                     ->course_questions
-                    ->where('is_question', 1)
-                    ->where('question_title', $question->question_title);
+                    ->where('is_question', 0);
+//                    ->where('question_title', $question->question_title);
                 if (is_null($course_questions)) {
                     Log::error('reservation に course_questionsレコードが存在しません。');
                 }
