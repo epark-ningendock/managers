@@ -168,11 +168,11 @@ return [
 //        'import' => HospitalDetailImport::class,
 //        'seed' => false,
 //    ],
-//    'm_course_file.csv' => [
-//        'model' => CourseImage::class,
-//        'import' => CourseImageImport::class,
-//        'seed' => false,
-//    ],
+    'm_course_file.csv' => [
+        'model' => CourseImage::class,
+        'import' => CourseImageImport::class,
+        'seed' => false,
+    ],
 //    'm_hospital_category.csv' => [
 //        'model' => HospitalCategory::class,
 //        'import' => HospitalCategoryImport::class,
@@ -209,11 +209,11 @@ return [
 //        'import' => OptionImport::class,
 //        'seed' => true,
 //    ],
-    'm_course_option_group.csv' => [
-        'model' => CourseOption::class,
-        'import' => CourseOptionImport::class,
-        'seed' => false,
-    ],
+//    'm_course_option_group.csv' => [
+//        'model' => CourseOption::class,
+//        'import' => CourseOptionImport::class,
+//        'seed' => false,
+//    ],
 //    'm_availability.csv' => [
 //        'model' => Availabil::class,
 //        'import' => AvailabilityImport::class,
