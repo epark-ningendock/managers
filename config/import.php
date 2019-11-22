@@ -153,11 +153,11 @@ return [
 //        'import' => ImageOrderImport::class,
 //        'seed' => false,
 //    ],
-    'm_hospital_file.csv' => [
-        'model' => HospitalImage::class,
-        'import' => HospitalImageImport::class,
-        'seed' => false,
-    ],
+//    'm_hospital_file.csv' => [
+//        'model' => HospitalImage::class,
+//        'import' => HospitalImageImport::class,
+//        'seed' => false,
+//    ],
 //    'm_hospital_time.csv' => [
 //        'model' => MedicalTreatmentTime::class,
 //        'import' => MedicalTreatmentTimeImport::class,
@@ -173,11 +173,11 @@ return [
 //        'import' => CourseImageImport::class,
 //        'seed' => false,
 //    ],
-    'm_hospital_category.csv' => [
-        'model' => HospitalCategory::class,
-        'import' => HospitalCategoryImport::class,
-        'seed' => false,
-    ],
+//    'm_hospital_category.csv' => [
+//        'model' => HospitalCategory::class,
+//        'import' => HospitalCategoryImport::class,
+//        'seed' => false,
+//    ],
 //    'm_rail_corp.csv' => [
 //        'model' => RailwayCompany::class,
 //        'import' => RailwayCompanyImport::class,
@@ -204,20 +204,20 @@ return [
 //        'seed' => true,
 //    ],
 
-//    'm_option.csv' => [
-//        'model' => Option::class,
-//        'import' => OptionImport::class,
-//        'seed' => true,
-//    ],
+    'm_option.csv' => [
+        'model' => Option::class,
+        'import' => OptionImport::class,
+        'seed' => true,
+    ],
 //    'm_course_option_group.csv' => [
 //        'model' => CourseOption::class,
 //        'import' => CourseOptionImport::class,
 //        'seed' => false,
 //    ],
-    'm_availability.csv' => [
-        'model' => Availabil::class,
-        'import' => AvailabilityImport::class,
-    ],
+//    'm_availability.csv' => [
+//        'model' => Availabil::class,
+//        'import' => AvailabilityImport::class,
+//    ],
 //    't_reserve_claim.csv' => [
 //        'model' => \App\ReservationOption::class,
 //        'import' => \App\Imports\ReservationOptionImport::class,
