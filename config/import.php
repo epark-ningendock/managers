@@ -204,16 +204,16 @@ return [
 //        'seed' => true,
 //    ],
 
-    'm_option.csv' => [
-        'model' => Option::class,
-        'import' => OptionImport::class,
-        'seed' => true,
-    ],
-//    'm_course_option_group.csv' => [
-//        'model' => CourseOption::class,
-//        'import' => CourseOptionImport::class,
-//        'seed' => false,
+//    'm_option.csv' => [
+//        'model' => Option::class,
+//        'import' => OptionImport::class,
+//        'seed' => true,
 //    ],
+    'm_course_option_group.csv' => [
+        'model' => CourseOption::class,
+        'import' => CourseOptionImport::class,
+        'seed' => false,
+    ],
 //    'm_availability.csv' => [
 //        'model' => Availabil::class,
 //        'import' => AvailabilityImport::class,
