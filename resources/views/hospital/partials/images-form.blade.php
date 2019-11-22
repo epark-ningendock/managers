@@ -976,7 +976,7 @@
         <h2>医師・スタッフ</h2>
     <div class="row" style="margin-top: 50px">
     @for ($i = 1; $i <= 10; $i++)
-        <?php $staff = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_STAFF)->where('file_locationn_no', $i)->first();?>
+        <?php $staff = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_STAFF)->where('file_location_no', $i)->first();?>
         <div class="col-sm-6 staff_box" data-order="{{$i}}" @if(is_null($staff) && $i != 1) style="display: none" @endif>
             <p class="box_staff_title">医師・スタッフ{{$i}}</p>
             @if(!is_null($staff) && !is_null($staff->hospital_image->path))
