@@ -17,10 +17,10 @@ return [
 //        'model' => \App\Calendar::class,
 //        'import' => \App\Imports\CalendarImport::class,
 //    ],
-    'calendar_days.csv' => [
-        'model' => \App\CalendarDay::class,
-        'import' => \App\Imports\CalendarDayImport::class,
-    ],
+//    'calendar_days.csv' => [
+//        'model' => \App\CalendarDay::class,
+//        'import' => \App\Imports\CalendarDayImport::class,
+//    ],
 //    'T_OP_M_HYB_APPOINT_HOLIDAY.csv' => [
 //        'model' => \App\Holiday::class,
 //        'import' => \App\Imports\HolidayImport::class,
@@ -41,10 +41,10 @@ return [
 //        'model' => \App\Reservation::class,
 //        'import' => \App\Imports\ReservationPaymentImport::class,
 //    ],
-//    'T_OP_M_HYB_APPOINT_LINEGROUP.csv'=>[
-//        'model' => \App\Course::class,
-//        'import' => \App\Imports\CourseExtraImport::class,
-//    ],
+    'T_OP_M_HYB_APPOINT_LINEGROUP.csv'=>[
+        'model' => \App\Course::class,
+        'import' => \App\Imports\CourseExtraImport::class,
+    ],
 //    'T_OP_T_HYB_APPOINT.csv' => [
 //        'model' => \App\Reservation::class,
 //        'import' => \App\Imports\ReservationImport::class,

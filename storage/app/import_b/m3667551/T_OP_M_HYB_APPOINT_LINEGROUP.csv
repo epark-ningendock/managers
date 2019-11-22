@@ -1,0 +1,5 @@
+"LINEGROUP_ID","SEQ_NO","LINEGROUP_NAME","LINEGROUP_NAME_SHORT","OUTSIDE_RESERVATION","DO_NOT_SPECIFY_LINE_FG","LINEGROUP_TYPE","VACCINE_FG","RABIES_FG","SAME_TIME_LIMIT","LINEGROUP_CANCELLATION_DAYS","LINEGROUP_START_DAYS","LINEGROUP_END_DAYS","CREATE_USER_NO","CREATE_DATE","MODIFY_USER_NO","MODIFY_DATE","DELETE_FG","DATA_VERSION"
+"1","1","脳ドックAコース（頭部MRI/MRA＋頸部MRA検査）当日結果説明あり","脳ドックAコース（頭部MRI/MRA＋頸部MRA検査）当日結果説","1","0","0","0","0",\N,"20","6000","3","A2867","2019-01-09 10:21:48","A2636","2019-01-11 12:55:34","0","3"
+"2","2","脳ドックBコース（頭部MRI/MRA検査＋頸部MRA検査＋頸動脈エコー）当日結果説明あり","脳ドックBコース（頭部MRI/MRA検査＋頸部MRA検査＋頸動脈","1","0","0","0","0",\N,"20","6000","3","A2867","2019-01-09 10:34:34","A2636","2019-01-11 13:00:33","0","3"
+"3","3","脳ドック＋認知機能検査（頭部MRI/MRA検査+頸部MRA検査+VSRAD）当日結果説明あり","脳ドック＋認知機能検査（頭部MRI/MRA検査+頸部MRA検査+","1","0","0","0","0",\N,"20","6000","3","A2867","2019-01-09 10:50:14","A2636","2019-01-11 13:01:55","0","3"
+"4","4","健保コース","健保コース","0","0","0","0","0",\N,"20","6000","6","A2636","2019-01-11 13:02:29","A2636","2019-01-11 13:02:29","0","1"
