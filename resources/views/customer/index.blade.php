@@ -15,7 +15,7 @@
     <h1>
         <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
         -
-        <i class="fa fa-users"> 顧客管理</i>
+        <i class="fa fa-users"> 受診者情報管理</i>
     </h1>
 @stop
 

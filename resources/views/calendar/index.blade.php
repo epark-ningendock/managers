@@ -46,7 +46,7 @@
         <div class="box-header">
           <h3 class="box-title">
               <span><a href="{{ route('calendar.edit', $calendar->id) }}">{{ $calendar->name }}</a></span>
-            「カレンダー表示 : {{ $calendar->is_calendar_display->description }}」</h3>
+            （ {{ $calendar->is_calendar_display->description }}）</h3>
 
           <div class="box-tools">
             <div class="input-group input-group-sm hidden-xs">
@@ -70,7 +70,7 @@
               @foreach($calendar->courses as $course)
               <tr>
                 <td>{{ $course->id }}</td>
-                <td>{{ $course->name }}</td>
+                <td style="text-align: left">{{ $course->name }}</td>
                 <td><span class="label label-danger">{{ $course->web_reception->description }}</span></td>
               </tr>
               @endforeach

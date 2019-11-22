@@ -89,13 +89,13 @@
               ">
             <td>{{ $hospital->id }}</td>
             <td>{{ $hospital->contract_information->customer_no }}</td>
-            <td>{{ $hospital->name }}</td>
+            <td style="text-align: left">{{ $hospital->name }}</td>
             @if (!$hospital->prefecture_id && !$hospital->district_code_id)
               <td></td>
             @elseif (DistrictCode::find($hospital->district_code_id))
-              <td>{{ Prefecture::find($hospital->prefecture_id)->name . DistrictCode::find($hospital->district_code_id)->name . $hospital->address1 }}</td>
+              <td style="text-align: left">{{ Prefecture::find($hospital->prefecture_id)->name . DistrictCode::find($hospital->district_code_id)->name . $hospital->address1 }}</td>
             @else
-              <td>{{ Prefecture::find($hospital->prefecture_id)->name ?? '' . $hospital->address1 ?? '' }}</td>
+              <td style="text-align: left">{{ Prefecture::find($hospital->prefecture_id)->name ?? '' . $hospital->address1 ?? '' }}</td>
             @endif
             <td>{{ $hospital->tel }}</td>
             <td>{{ HospitalEnums::getDescription($hospital->status) }}</td>

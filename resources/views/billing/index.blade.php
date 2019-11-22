@@ -123,11 +123,11 @@
                 @if ( !empty($billing->hospital) )
                     <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
                         <td>{{ $billing->hospital->contract_information->customer_no ?? '' }}</td>
-                        <td>{{ $billing->hospital->name }}</td>
+                        <td style="text-align: left">{{ $billing->hospital->name }}</td>
                         <!--
                         <td>{{ BillingStatus::getDescription($billing->status) }}</td>
                         -->
-                        <td>
+                        <td style="text-align: left">
                             {{ empty($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan) ? '' : $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name }}
                         </td>
                         <td>
