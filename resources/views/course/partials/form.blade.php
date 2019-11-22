@@ -44,7 +44,7 @@
       <label for="name">検査コース名
         <span class="form_required">必須</span>
       </label>
-      <input type="text" class="form-control w16em" id="name" name="name"
+      <input type="text" class="form-control w32em" id="name" name="name"
              value="{{ old('name', (isset($course) ? $course->name : null)) }}"
              placeholder="検査コース名">
       @if ($errors->has('name')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('name') }}</p> @endif
@@ -216,8 +216,8 @@
                 {{ Form::text('publish_start_date', old('publish_start_date', (isset($course) ? $course->publish_start_date->format('Y-m-d') : (isset($disp_date_start) ? $disp_date_start : null))),
                     ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-start', 'placeholder' => $disp_date_start]) }}
              <span>表示終了</span>
-                {{ Form::text('publish_end_date', old('publish_end_date', (isset($course) ? $course->publish_end_date->format('Y-m-d') : (isset($disp_date_end) ? $disp_date_end : null))),
-                    ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-end', 'placeholder' => $disp_date_end]) }}
+                {{ Form::text('publish_end_date', old('publish_end_date', ((isset($course) && isset($course->publish_end_date)) ? $course->publish_end_date->format('Y-m-d') :  null)),
+                    ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-end']) }}
         </div>
         @if ($errors->has('publish_start_date'))
           <p class="help-block">

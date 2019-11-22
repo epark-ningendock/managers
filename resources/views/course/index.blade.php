@@ -47,7 +47,7 @@
       @foreach ($courses as $course)
       <tr>
           <td>{{ $course->id }}</td>
-          <td>{{ $course->name }}</td>
+          <td style="text-align: left">{{ $course->name }}</td>
           <td>{{ number_format($course->price) }}</td>
           <td>{{ $course->web_reception->description }}</td>
           <td>

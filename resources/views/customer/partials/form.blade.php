@@ -3,7 +3,7 @@
 @endphp
 <div class="form-entry">
     <div class="box-body staff-form">
-        <h2>顧客管理</h2>
+        <h2>受診者情報管理</h2>
         <div class="row">
             @if (isset($customer_detail->id))
             <div class="col-md-6">

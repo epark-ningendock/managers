@@ -109,7 +109,12 @@ class SearchHospitalsResource extends Resource
                 && $v->file_location_no === 1;
         });
 
-        return preg_match('/src/',$el->caption);
+        if (isset($el) && isset($el->caption)) {
+            return preg_match('/src/',$el->caption);
+        } else {
+            return 0;
+        }
+
     }
 
     /**

@@ -132,7 +132,7 @@
                 </a>
                 <ul class="treeview-menu">
                   <li class="{{ request()->path()  !== 'hospital-staff/edit-password' && Request::segment(1) === 'hospital-staff' ? 'active' : null }}"><a href="/hospital-staff"><i class="fa fa-users"></i>&nbsp;&nbsp;&nbsp;&nbsp;医療機関スタッフ管理</a></li>
-                  <li class="{{ Request::segment(1) === 'customer' ? 'active' : null }}"><a href="/customer"><i class="fa fa-users"></i>&nbsp;&nbsp;&nbsp;&nbsp;顧客管理</a></li>
+                  <li class="{{ Request::segment(1) === 'customer' ? 'active' : null }}"><a href="/customer"><i class="fa fa-users"></i>&nbsp;&nbsp;&nbsp;&nbsp;受診者情報管理</a></li>
                   <li class="{{ ( request()->is(['hospital/billing']) ) ? 'active' : '' }}"><a href="{{  route('hospital.billing') }}"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
                   <li class="{{ Request::segment(1) === 'course' ? 'active' : null }}"><a href="/course"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コース管理</a></li>
                   <li class="{{ Request::segment(1) === 'option' ? 'active' : null }}"><a href="/option"><i class="fa fa-book"></i>&nbsp;&nbsp;&nbsp;&nbsp;検査コースオプション管理</a></li>

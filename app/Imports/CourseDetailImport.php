@@ -46,10 +46,10 @@ class CourseDetailImport extends ImportAbstract implements WithChunkReading
             $row = $row->toArray();
             $old_id = $row['course_no'];
             $hospital_id = $this->getId('hospitals', $row['hospital_no']);
-            $hospital = Hospital::find($hospital_id)->old_karada_dog_id;
+            $old_hospital_id = Hospital::find($hospital_id)->old_karada_dog_id;
             $converted_idstring = ConvertedIdString::where('table_name', 'courses')
                 ->where('old_id', intval($old_id))
-                ->where('hospital_no', $hospital)
+                ->where('hospital_no', $old_hospital_id)
                 ->first();
 
             if (!$converted_idstring) {

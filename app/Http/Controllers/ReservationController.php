@@ -732,7 +732,7 @@ class ReservationController extends Controller
 
             $course = Course::find($request->course_id);
             $reservation_date = Carbon::parse($request->reservation_date);
-            $old_reservation_date = Carbon::parse($request->old_reservation_date);
+            $old_reservation_date = $reservation->reservation_date;
 
             $calendar_day = $course->calendar->calendar_days()
                 ->whereDate('date', [$reservation_date])->get()->first();
@@ -818,7 +818,7 @@ class ReservationController extends Controller
      */
     public function sendReservationCheckMail($hospital, $reservation, $customer, $processing)
     {
-        $contract_information = ContractInformation::where('hospital_id', $hospital->id)->first();
+//        $contract_information = ContractInformation::where('hospital_id', $hospital->id)->first();
 
         $mailContext = [
             'staff_name' => Auth::user()->name,
@@ -833,9 +833,9 @@ class ReservationController extends Controller
             Mail::to($customer->email)->send(new ReservationCheckMail($mailContext));
         }
 
-        if (isset($contract_information)) {
-            Mail::to($contract_information->email)->send(new ReservationCheckMail($mailContext));
-        }
+//        if (isset($contract_information)) {
+//            Mail::to($contract_information->email)->send(new ReservationCheckMail($mailContext));
+//        }
     }
 
 }

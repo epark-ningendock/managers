@@ -4,7 +4,7 @@
   <h1>
       <i class="fa fa-hospital-o"> {{ request()->session()->get('hospital_name') }}</i>
       -
-      <span> 顧客管理</span>
+      <span> 受診者情報管理</span>
   </h1>
 @stop
 

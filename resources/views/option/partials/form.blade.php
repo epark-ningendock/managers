@@ -6,7 +6,7 @@
         <h2>オプション登録</h2>
         <div class="form-group py-sm-1 @if ($errors->has('name')) has-error @endif">
             <label for="option_name">{{ trans('messages.option_name') }}<span class="form_required">必須</span></label>
-            <input type="text" class="form-control w16em" id="option_name" name="name"
+            <input type="text" class="form-control w24em" id="option_name" name="name"
                    value="{{ old('name', (isset($option) ? $option->name : null)) }}"
                    placeholder="オプション名">
             @if ($errors->has('name')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('name') }}</p> @endif
@@ -15,7 +15,7 @@
             <label for="confirm">{{ trans('messages.option_description') }}</label>
             <textarea name="confirm" id="confirm" rows="6"
                       placeholder="{{ trans('messages.option_description') }}"
-                      class="form-control w20em">{{ old('confirm', (isset($option) ? $option->confirm : '')) }}</textarea>
+                      class="form-control w24em">{{ old('confirm', (isset($option) ? $option->confirm : '')) }}</textarea>
             <span class="text-muted d-block text-right" style="text-align: right; display: block; width: 20em">0/128文字</span>
             @if ($errors->has('confirm')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('confirm') }}</p> @endif
         </div>

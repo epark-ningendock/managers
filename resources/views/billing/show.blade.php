@@ -18,7 +18,8 @@
 @stop
 
 @section('billing_info')
-    <form class="box box-primary" method="post" role="form" action="{{ route('billing.update') }}">
+
+    <form class="box box-primary" method="POST"  action="{{ route('billing.store') }}">
         <input type="hidden" name="billing_id" value="{{$billing->id}}">
         <div class="box-header with-border">
             <div class="box-tools" data-widget="collapse">
@@ -26,7 +27,7 @@
                     <i class="fa fa-minus"></i></button>
             </div>
             <h1 class="box-title">医療機関 {{ $billing->hospital->name }}</h1>
-        </div>
+
 
         <div id="billing-info" class="form-entry">
             <div class="box-body">
@@ -36,35 +37,29 @@
                         {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}　
                     </p>
                 </div>
-                <div class="form-group ">
-                    <span class="text-bold label-text">プラン金額</span>
-                    {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee ) }}円　
-                    <span class="text-bold label-text">調整金額</span>
-                    <input type="text" id="billing_adjustment_price" name="adjustment_price" value="{{$billing->adjustment_price}}">
-                    <span class="text-bold label-text">プラン請求金額</span>　
-                    {{number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + $billing->adjustment_price)}}円
+                @if ( session('hospital_id') )
+                    <div class="form-group ">
+                        <span class="text-bold label-text">プラン金額</span>
+                        {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee  + $billing->adjustment_price) }}円　
+                    </div>
+                @else
+                    <div class="form-group ">
+                        <span class="text-bold label-text">プラン金額</span>
+                        {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee ) }}円　
+                        <span class="text-bold label-text">調整金額</span>
+                        <input type="text" id="billing_adjustment_price" name="adjustment_price" value="{{$billing->adjustment_price}}">
+                        <span class="text-bold label-text">プラン請求金額</span>　
+                        {{number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee + $billing->adjustment_price)}}円
+                    </div>
+
+                @endif
                 <div class="form-group ">
                     <p>
                         <span class="text-bold label-text">成果コース</span>
                         {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate }}%
                     </p>
                 </div>
-                @if (!empty($billing->hospital->hospitalOptionPlan($billing->id, $endedDate)))
-                    <div class="form-group ">
-                        <span class="text-bold label-text">オプションプラン</span>
-                        @foreach($billing->hospital->hospitalOptionPlan($billing->id, $endedDate) as $hospital_plan)
-                            <p>
-                               　{{ $hospital_plan->option_plan->option_plan_name ?? '' }}　
-                               {{ number_format($hospital_plan->option_plan->option_plan_price) }}円　
-                                オプションプラン調整金額
-                                <input type="text" id="optionplanadjustmentprice_{{$hospital_plan->option_plan_id}}" name="optionplanadjustmentprice_{{$hospital_plan->option_plan_id}}" value="{{$hospital_plan->billing_option_plans->adjustoment_price}}">　
-                                オプションプラン請求金額
-                                {{number_format($hospital_plan->option_plan->option_plan_price + $hospital_plan->billing_option_plans->adjustoment_price)}}円
-                            </p>
 
-                        @endforeach
-                    </div>
-                @endif
                 @if ($billing->hospital->hplink_contract_type == \App\Enums\HplinkContractType::MONTHLY_SUBSCRIPTION)
                     <div class="form-group ">
                         <span class="text-bold label-text">HPリンク月額</span>
@@ -89,7 +84,7 @@
                     + $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) * 0.9) }}円 )</p>
                 </div>
                     <div class="form-group ">
-                        <input type="submit" class="btn btn-primary" value="更新">
+                        <button type="submit" class="btn btn-primary">更新</button>
                     </div>
             </div>
         </div>
@@ -100,6 +95,7 @@
 
 @section('table')
 
+    <!--
     <p class="action-button-list text-center m-3 mb-5">
 
         @if ( session('hospital_id') )
@@ -129,7 +125,7 @@
         @endif
 
     </p>
-
+-->
 
     <div class="table-responsive">
 
@@ -157,7 +153,7 @@
             @foreach( $billing->hospital->reservationByCompletedDate($startedDate, $endedDate) as $reservation)
                 <tr>
                     <td>{{ $reservation->id }}</td>
-                    <td>{{ $reservation->completed_date->format('Y-m-d') }}</td>
+                    <td>{{ $reservation->reservation_date->format('Y-m-d') }}</td>
                     <td>{{ $reservation->customer->family_name .' ' . $reservation->customer->first_name }}</td>
                     <td>{{ ( isset($reservation->channel) && ( $reservation->channel == 1)) ? 'WEB' : 'TEL' }}</td>
                     <td>

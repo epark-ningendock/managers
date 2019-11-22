@@ -36,13 +36,19 @@
         <thead>
         <tr>
             <th>請求月</th>
+            <!--
             <th>請求ステータス</th>
+            -->
             <th>プラン</th>
-            <th>請求金額（税抜価格）</th>
+            <th>請求金額</th>
             <th>プラン金額</th>
+            <th>オプションプラン金額</th>
+            <th>HPリンク月額金額</th>
             <th>手数料合計金額</th>
             <th>成果コース</th>
+            <!--
             <th colspan="2"></th>
+            -->
         </tr>
         </thead>
         <tbody>
@@ -50,19 +56,29 @@
             @foreach ($billings as $billing)
                 <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
                     <td style="width: 80px;">{{  $billing->billing_month }}</td>
+                    <!--
                     <td>{{ BillingStatus::getDescription($billing->status) }}</td>
+                    -->
                     @if (isset($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan))
                         <td>
                             {{ $billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->plan_name }}
                         </td>
                         <td>
-                            {{ number_format($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee + 
-                                $billing->hospital->reservationByCompletedDate($billing->startedDate, $billing->endedDate)->pluck('fee')->sum()) }}円
-                            ( {{ number_format(floor(($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee + 
-                                $billing->hospital->reservationByCompletedDate($billing->startedDate, $billing->endedDate)->pluck('fee')->sum()) / TaxClass::TEN_PERCENT)) }}円 )
+                            {{ number_format($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee +
+                                $billing->hospital->reservationByCompletedDate($billing->startedDate, $billing->endedDate)->pluck('fee')->sum()
+                                + $billing->adjustment_price
+                                + $billing->hospital->hpLinkMonthPrice()
+                                + $billing->hospital->hospitalOptionPlanPrice($billing->id, $billing->endedDate)
+                                ) . '円  ' }}
                         </td>
                         <td>
-                            {{ number_format($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee )}}円
+                            {{ number_format($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee  + $billing->adjustment_price )}}円
+                        </td>
+                        <td>
+                            {{ number_format($billing->hospital->hospitalOptionPlanPrice($billing->id, $billing->endedDate)) . '円'}}
+                        </td>
+                        <td>
+                            {{ number_format($billing->hospital->hpLinkMonthPrice()). '円'}}
                         </td>
                         <td>
                             {{ number_format($billing->hospital->reservationByCompletedDate($billing->startedDate, $billing->endedDate)->pluck('fee')->sum()) }}円
@@ -73,12 +89,14 @@
                         <td>
                             <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
                         </td>
+                    <!--
                         <td>
                             <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CONFIRMED, 'claim_check' => 'yes'] )) }}"
                                 class="btn @if( $billing->status != BillingStatus::CHECKING ) btn-default @else btn-primary @endif"
                                 @if( $billing->status != BillingStatus::CHECKING ) style="pointer-events: none;" @endif
                             >請求確認</a>
                         </td>
+                        -->
                     @else
                         <td></td>
                         <td></td>

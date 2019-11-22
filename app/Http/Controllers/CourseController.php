@@ -206,12 +206,13 @@ class CourseController extends Controller
             $course_data['reception_start_date'] = $reception_start_month * 1000 + $reception_start_day;
             $course_data['reception_end_date'] = $reception_end_month * 1000 + $reception_end_day;
             $course_data['reception_acceptance_date'] = $reception_acceptance_month * 1000 + $reception_acceptance_day;
-            $course_data['order'] = 0;
 
             if (isset($course_param)) {
                 $course = $course_param;
             } else {
                 $course = new Course();
+                $max_order = Course::where('hospital_id', session()->get('hospital_id'))->max('order');
+                $course_data['order'] = $max_order + 1;
             }
             $course->fill($course_data);
             $course->hospital_id = session()->get('hospital_id');

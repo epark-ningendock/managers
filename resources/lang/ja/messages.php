@@ -61,7 +61,7 @@ return [
     'invalid_course_id'                    => 'コースIDが存在しません',
     'course_sort_updated'                  => '並べ替えが完了しました。',
     'names' => [
-        'customers'                        => '顧客管理',
+        'customers'                        => '受診者情報管理',
         'customer'                         => '顧客',
         'staff'                            => 'スタッフ情報',
         'hospital_staff'                   => '医療機関スタッフ',

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Enums\CalendarDisplay;
+use App\Enums\Status;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\Resource;
 
@@ -35,6 +36,7 @@ class CoursesBaseResource extends Resource
             'course_code' => $this->code,
             'course_name' => $this->name,
             'course_url' => $this->createURL() . "/detail_hospital/" . $this->contract_information->code . "/detail/" . $this->code . ".html",
+            'sho_name' => $this->createShoname(),
             'web_reception' => $this->createReception(),
             'flg_price' => $this->is_price,
             'price' => $this->price,
@@ -48,6 +50,28 @@ class CoursesBaseResource extends Resource
             'flg_pre_account' => $this->is_pre_account,
             'auto_calc_application' => $this->auto_calc_application,
         ]);
+    }
+
+    /**
+     * @return string
+     *
+     */
+    private function createShoname() {
+        $result = '';
+        foreach ($this->course_details as $detail) {
+            if ($detail->major_classification_id == 13
+                && $detail->middle_classification_id == 30
+            && $detail->select_status == 1
+            && $detail->status == Status::VALID) {
+                $result = $result . $detail->minor_classification->name . ',';
+            }
+        }
+
+        if (!empty($result)) {
+            return rtrim($result, ',');
+        }
+
+        return $result;
     }
 
     /**

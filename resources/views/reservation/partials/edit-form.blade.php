@@ -185,7 +185,6 @@
 
         <div class="col-md-12">
             <div class="calendar-box" data-old="{{ old('reservation_date', $reservation->reservation_date->format('Y-m-d')) }}">
-                <input type="hidden" name="old_reservation_date" value="{{$reservation->reservation_date}}" />
 
             </div>
             @if ($errors->has('reservation_date')) <p class="help-block text-danger" style="color: #ed5565;">{{ $errors->first('reservation_date') }}</p> @endif

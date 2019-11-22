@@ -212,7 +212,7 @@
         <a href="{{ route('calendar.index') }}" class="btn btn-default">戻る</a>
         <button class="btn btn-primary" id="clear-data">期間設定・予約枠の数全てクリア</button>
         <button class="btn btn-primary" id="reset-data">設定のクリア</button>
-        <button class="btn btn-primary" >登録する</button>
+        <button class="btn btn-success" >登録する</button>
       </div>
   </form>
 </div>

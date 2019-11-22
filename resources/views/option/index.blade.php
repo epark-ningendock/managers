@@ -40,7 +40,7 @@
             <thead>
             <tr>
                 <th>オプションID</th>
-                <th>オプション名</th>
+                <th style="text-align: left">オプション名</th>
                 <th>オプション内容</th>
                 <th>価格</th>
                 <th></th>

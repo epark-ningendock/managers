@@ -56,7 +56,7 @@
         @for ($i = 1; $i <= 4; $i++)
         <div class="col-sm-6">
             {{Form::label('sub_'.$i, 'サブメイン'.$i,['class' => 'form_label'])}}
-            <?php $sub_image_category = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB)->where('order', $i)->first(); ?>
+            <?php $sub_image_category = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB)->where('file_location_no', $i)->first(); ?>
             @if (!is_null($sub_image_category))
                 <div class="sub_image_area">
                     <img class="object-fit" src="{{$sub_image_category->hospital_image->path}}">
@@ -976,7 +976,7 @@
         <h2>医師・スタッフ</h2>
     <div class="row" style="margin-top: 50px">
     @for ($i = 1; $i <= 10; $i++)
-        <?php $staff = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_STAFF)->where('order', $i)->first();?>
+        <?php $staff = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_STAFF)->where('filelocationn_nno', $i)->first();?>
         <div class="col-sm-6 staff_box" data-order="{{$i}}" @if(is_null($staff) && $i != 1) style="display: none" @endif>
             <p class="box_staff_title">医師・スタッフ{{$i}}</p>
             @if(!is_null($staff) && !is_null($staff->hospital_image->path))
