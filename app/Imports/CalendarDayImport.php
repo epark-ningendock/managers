@@ -49,7 +49,7 @@ class CalendarDayImport extends ImportBAbstract implements WithChunkReading
 
             $appoint_num = Availabil::where('hospital_no', $this->hospital_no)
                 ->where('line_id',  $row['line_id'])
-                ->where('reservation_dt')
+                ->where('reservation_dt', $row['date'])
                 ->sum('appoint_number');
 
             if (empty($appoint_num)) {
