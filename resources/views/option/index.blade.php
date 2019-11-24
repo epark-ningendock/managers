@@ -40,7 +40,7 @@
             <thead>
             <tr>
                 <th>オプションID</th>
-                <th style="text-align: left">オプション名</th>
+                <th>オプション名</th>
                 <th>オプション内容</th>
                 <th>価格</th>
                 <th></th>
@@ -51,7 +51,7 @@
                 @foreach($options as $option)
                     <tr>
                         <td>{{ $option->id }}</td>
-                        <td>{{ $option->name }}</td>
+                        <td style="text-align: left">{{ $option->name }}</td>
                         <td>{{ $option->confirm }}</td>
                         <td>{{ number_format($option->price) }}</td>
                         <td>

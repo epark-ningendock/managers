@@ -55,7 +55,7 @@ class CourseIndexResource extends CourseIndexBaseResource
             ->put('stations', Station::getStations($rails, $stations, $accesses))
             ->put('non_consiltation', $course->hospital->consultation_note)
             ->put('non_consultation_note', $course->hospital->memo)
-            ->put('hospital_category', HospitalCategoryResource::collection($course->hospital->hospital_details))
+            ->put('hospital_category', new HospitalCategoryResource($course->hospital))
             ->merge($course_base_resource->baseCollections())
             ->merge(new CourseContentBaseResource($course))
             ->put('month_calender', collect($month_data)->map(function ($c) {

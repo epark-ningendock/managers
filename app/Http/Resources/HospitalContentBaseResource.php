@@ -45,7 +45,7 @@ class HospitalContentBaseResource extends Resource
             ->put('free_area', $this->free_area ?? '')
             ->put('principal', $this->principal ?? '')
             ->put('principal_bio', $this->principal_history ?? '')
-            ->put('category', HospitalCategoryResource::collection($this->hospital_details));
+            ->put('category', new HospitalCategoryResource($this));
     }
 
     /**

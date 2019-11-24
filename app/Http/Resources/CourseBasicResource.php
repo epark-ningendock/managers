@@ -54,7 +54,7 @@ class CourseBasicResource extends CourseBaseResource
             ->put('non_consultation_note', $this[0]->hospital->memo)
             ->put('public_status', $this[0]->hospital->status)
             ->put('update_at', $this[0]->hospital->updated_at)
-            ->put('hospital_category', HospitalCategoryResource::collection($this[0]->hospital->hospital_details))
+            ->put('hospital_category', new HospitalCategoryResource($this[0]->hospital))
             ->merge(parent::baseCollections())
             ->toArray();
     }

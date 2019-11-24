@@ -55,6 +55,44 @@
                 @endif
                 <div class="form-group ">
                     <p>
+                        <span class="text-bold label-text">プラン名</span>
+                        {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}　
+                    </p>
+                </div>
+                @if ( session('hospital_id') )
+                    @if (!empty($billing->hospital->hospitalOptionPlan($billing->id, $endedDate)))
+                        <div class="form-group ">
+                            <span class="text-bold label-text">オプションプラン</span>
+                            @foreach($billing->hospital->hospitalOptionPlan($billing->id, $endedDate) as $hospital_plan)
+                                <p>
+                                    　{{ $hospital_plan->option_plan->option_plan_name ?? '' }}　
+                                    {{number_format($hospital_plan->option_plan->option_plan_price + $hospital_plan->billing_option_plans->adjustment_price)}}円　
+                                </p>
+
+                            @endforeach
+                        </div>
+                    @endif
+
+                @else
+                    @if (!empty($billing->hospital->hospitalOptionPlan($billing->id, $endedDate)))
+                        <div class="form-group ">
+                            <span class="text-bold label-text">オプションプラン</span>
+                            @foreach($billing->hospital->hospitalOptionPlan($billing->id, $endedDate) as $hospital_plan)
+                                <p>
+                                    　{{ $hospital_plan->option_plan->option_plan_name ?? '' }}　
+                                    {{ number_format($hospital_plan->option_plan->option_plan_price) }}円　
+                                    オプションプラン調整金額
+                                    <input type="text" id="optionplanadjustmentprice_{{$hospital_plan->option_plan_id}}" name="optionplanadjustmentprice_{{$hospital_plan->option_plan_id}}" value="{{$hospital_plan->optionPlanAdjustmentPrice($billing->id)}}">　
+                                    オプションプラン請求金額
+                                    {{number_format($hospital_plan->option_plan->option_plan_price + $hospital_plan->optionPlanAdjustmentPrice($billing->id))}}円
+                                </p>
+
+                            @endforeach
+                        </div>
+                    @endif
+                @endif
+                <div class="form-group ">
+                    <p>
                         <span class="text-bold label-text">成果コース</span>
                         {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate }}%
                     </p>

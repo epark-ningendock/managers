@@ -36,23 +36,10 @@ class SearchHospitalsResource extends Resource
             'img_sub' => ImagePathsResource::collection($this->getImgSub($this->hospital_categories)),
             'movie' => $this->getMovieInfo(),
             'caption' => $this->getCaption($this->hospital_categories),
-            'category' => HospitalCategoryResource::collection($this->hospital_details),
+            'category' => new HospitalCategoryResource($this),
             'pickup' => $this->is_pickup,
             'courses' => CoursesBaseResource::collection($this->courses),
         ];
-    }
-
-    private function getCategory() {
-        $categories = HospitalCategoryResource::collection($this->hospital_details);
-
-        $results = [];
-        foreach ($categories as $category) {
-            if (empty($category)) {
-                continue;
-            }
-            $results[] = $category;
-        }
-        return $results;
     }
 
     private function getMovieInfo() {
