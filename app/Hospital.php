@@ -386,7 +386,7 @@ class Hospital extends Model
 
     public function hospitalOptionPlan($billing_id, $date) {
 
-        return HospitalOptionPlan::with(['option_plan',
+        $result = HospitalOptionPlan::with(['option_plan',
             'billing_option_plans' => function ($query) use ($billing_id) {
                 $query->where('billing_id', $billing_id);
             }
@@ -398,5 +398,11 @@ class Hospital extends Model
             })
             ->where('hospital_id', $this->id)
             ->get();
+
+        if (count($result) > 0) {
+            return $result;
+        } else {
+            return null;
+        }
     }
 }
