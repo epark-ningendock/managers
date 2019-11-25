@@ -42,7 +42,7 @@ class CourseImport extends ImportAbstract implements WithChunkReading
     {
         $row = $row->toArray();
 
-        $web_reception = 0;
+        $web_reception = $row['web_reception'];
         if ($row['web_reception'] == 2) {
             $web_reception = 0;
         }
