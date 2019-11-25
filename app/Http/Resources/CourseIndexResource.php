@@ -15,8 +15,8 @@ class CourseIndexResource extends CourseIndexBaseResource
     public function toArray($request)
     {
         $course = $this['course'];
-        $month_data = $this['monthly_data'];
-        $day_data = $this['daily_data'];
+//        $month_data = $this['monthly_data'];
+//        $day_data = $this['daily_data'];
         $course_base_resource = new CourseIndexBaseResource($course);
         $rails = [
             $course->hospital->rail1,
@@ -58,23 +58,23 @@ class CourseIndexResource extends CourseIndexBaseResource
             ->put('hospital_category', new HospitalCategoryResource($course->hospital))
             ->merge($course_base_resource->baseCollections())
             ->merge(new CourseContentBaseResource($course))
-            ->put('month_calender', collect($month_data)->map(function ($c) {
-                return (object)[
-                    'yyyymm' => $c[0],
-                    // 予約可否配列の積をとり、0になればどこかに「受付可能(0)」あり
-                    'apoint_ok' => $c[1],
-                     ];
-                })->toArray(),)
-            ->put('all_calender', collect($day_data)->map(function ($c) {
-                    return (object)[
-                        $c[0] => [
-                            'appoint_status' => $c[1],
-                            'appoint_num' => $c[2],
-                            'reservation_frames' => $c[3],
-                            'closed_day' => $c[4]
-                        ]
-                    ];
-                }))
+//            ->put('month_calender', collect($month_data)->map(function ($c) {
+//                return (object)[
+//                    'yyyymm' => $c[0],
+//                    // 予約可否配列の積をとり、0になればどこかに「受付可能(0)」あり
+//                    'apoint_ok' => $c[1],
+//                     ];
+//                })->toArray(),)
+//            ->put('all_calender', collect($day_data)->map(function ($c) {
+//                    return (object)[
+//                        $c[0] => [
+//                            'appoint_status' => $c[1],
+//                            'appoint_num' => $c[2],
+//                            'reservation_frames' => $c[3],
+//                            'closed_day' => $c[4]
+//                        ]
+//                    ];
+//                }))
             ->toArray();
     }
 

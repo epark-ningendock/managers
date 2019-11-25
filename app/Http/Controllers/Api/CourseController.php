@@ -59,10 +59,10 @@ class CourseController extends ApiBaseController
                 'get_yyyymmdd_from' => $from,
                 'get_yyyymmdd_to' => $to,
             ];
-            $monthly_data = $this->getMonthReservationEnableInfo($search_condition, $contents);
-            $daily_data = $this->getDayReservationEnableInfo($search_condition, $contents);
+//            $monthly_data = $this->getMonthReservationEnableInfo($search_condition, $contents);
+//            $daily_data = $this->getDayReservationEnableInfo($search_condition, $contents);
 
-            $data = ['course' => $contents, 'monthly_data' => $monthly_data, 'daily_data' => $daily_data];
+            $data = ['course' => $contents];
 
             return new CourseIndexResource($data);
         } catch (\Exception $e) {
