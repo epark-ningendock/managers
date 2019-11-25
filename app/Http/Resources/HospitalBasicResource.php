@@ -15,9 +15,74 @@ class HospitalBasicResource extends Resource
      */
     public function toArray($request)
     {
-        $rail_ids = [$this->rail1, $this->rail2, $this->rail3, $this->rail4, $this->rail5];
-        $station_ids = [$this->station1, $this->station2, $this->station3, $this->station4, $this->station5];
-        $accesses = [$this->access1, $this->access2, $this->access3, $this->access4, $this->access5];
+        $rail_ids = [];
+        if (isset($this->rail1)) {
+            $rail1 = $this->rail1;
+            $rail_ids[] = $rail1;
+        }
+        if (isset($this->rail2)) {
+            $rail2 = $this->rail2;
+            $rail_ids[] = $rail2;
+        }
+        if (isset($this->rail3)) {
+            $rail3 = $this->rail3;
+            $rail_ids[] = $rail3;
+        }
+        if (isset($this->rail4)) {
+            $rail4 = $this->rail4;
+            $rail_ids[] = $rail4;
+        }
+        if (isset($this->rail5)) {
+            $rail5 = $this->rail5;
+            $rail_ids[] = $rail5;
+        }
+
+        $station_ids = [];
+        if (isset($this->station1)) {
+            $station1 = $this->station1;
+            $station_ids[] = $station1;
+        }
+        if (isset($this->station2)) {
+            $station2 = $this->station2;
+            $station_ids[] = $station2;
+        }
+        if (isset($this->station3)) {
+            $station3 = $this->station3;
+            $station_ids[] = $station3;
+        }
+        if (isset($this->station4)) {
+            $station4 = $this->station4;
+            $station_ids[] = $station4;
+        }
+        if (isset($this->station5)) {
+            $station5 = $this->station5;
+            $station_ids[] = $station5;
+        }
+        $accesses = [];
+        if (isset($this->access1)) {
+            $access1 = $this->access1;
+            $accesses[] = $access1;
+        }
+        if (isset($this->access2)) {
+            $access2 = $this->access2;
+            $accesses[] = $access2;
+        }
+        if (isset($this->access3)) {
+            $access3 = $this->access3;
+            $accesses[] = $access3;
+        }
+        if (isset($this->access4)) {
+            $access4 = $this->access4;
+            $accesses[] = $access4;
+        }
+        if (isset($this->access5)) {
+            $access5 = $this->access5;
+            $accesses[] = $access5;
+        }
+
+//        $rail_ids = [$this->rail1, $this->rail2, $this->rail3, $this->rail4, $this->rail5];
+//        $station_ids = [$this->station1, $this->station2, $this->station3, $this->station4, $this->station5];
+//        $accesses = [$this->access1, $this->access2, $this->access3, $this->access4, $this->access5];
 
         return [
             'status' => 0,
