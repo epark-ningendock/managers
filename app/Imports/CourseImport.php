@@ -85,8 +85,8 @@ class CourseImport extends ImportAbstract implements WithChunkReading
         ]);
 
         $model->save();
-        $model->code = 'C' . $model->id . 'H' . $model->hospital_id;
-        $model->save();
+//        $model->code = 'C' . $model->id . 'H' . $model->hospital_id;
+//        $model->save();
         $this->deleteIf($model, $row, 'status', ['X']);
         $this->setId($model, $row);
         if (isset($model->hospital_id)) {

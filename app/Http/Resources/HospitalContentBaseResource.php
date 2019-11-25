@@ -158,8 +158,8 @@ class HospitalContentBaseResource extends Resource
         $images = $categories->map(function ($i) {
             $url = $this->_filepath($i->hospital_image);
             $alt = $i->hospital_image->memo1 ?? '';
-            $desc = $i->caption ?? '';
-            $img_pos = $i->image_order ?? '';
+            $desc = $i->hospital_image->memo1 ?? '';
+            $img_pos = $i->file_location_no ?? '';
             return [
                 'img_url' => $url,
                 'img_alt' => $desc,
