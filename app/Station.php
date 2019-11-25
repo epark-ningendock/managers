@@ -40,11 +40,18 @@ class Station extends Model
     {
         $returnData = array();
         for ($i = 0; $i < count($rails); $i++) {
-            $r =  Rail::select(['name'])->find($rails[$i]);
-            $s =  Station::select(['name'])->find($stations[$i]);
-            $returnData[$i]['rail_line'] = $r['name'];
-            $returnData[$i]['station'] = $s['name'];
-            $returnData[$i]['access'] =  $accesses[$i];
+            if (isset($rails[$i])) {
+                $r =  Rail::select(['name'])->find($rails[$i]);
+                $returnData[$i]['rail_line'] = $r['name'];
+            }
+            if (isset($stations[$i])) {
+                $s =  Station::select(['name'])->find($stations[$i]);
+                $returnData[$i]['station'] = $s['name'];
+            }
+            if (isset($accesses[$i])) {
+                $returnData[$i]['access'] =  $accesses[$i];
+            }
+
         }
         return $returnData;
     }
