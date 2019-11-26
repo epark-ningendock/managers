@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\Resource;
 use App\Station;
 
@@ -105,7 +106,7 @@ class HospitalBasicResource extends Resource
             'non_consultation' => $this->consultation_note,
             'non_consultation_note' => $this->memo,
             'public_status' => $this->status,
-            'update_at' => $this->updated_at,
+            'update_at' => Carbon::parse($this->updated_at)->format('Y-m-d'),
         ];
     }
 }

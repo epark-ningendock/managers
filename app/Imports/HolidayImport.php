@@ -51,7 +51,7 @@ class HolidayImport extends ImportBAbstract implements WithChunkReading
             $targets = Calendar::where('hospital_id', $model->hospital_id)->get();
             foreach ($targets as $calendar) {
                 foreach ($calendar->calendar_days as $calendar_days) {
-                    if ($calendar_days->date->eq($model->date)) {
+                    if ($calendar_days->date->eq(Carbon::create($model->date))) {
                         $calendar_days->is_holiday = 1;
                         $calendar_days->is_reservation_acceptance = 0;
                         $calendar_days->save();

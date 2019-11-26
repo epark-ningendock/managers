@@ -186,10 +186,14 @@ class CourseController extends ApiBaseController
     private function getCourseContents($hospital_id, $course_code)
     {
         $data = Course::with([
-            'course_details',
+            'course_details' => function ($query) {
+            $query->orderBy('major_classification_id')
+                ->orderBy('middle_classification_id')
+                ->orderBy('minor_classification_id')
+                ;},
             'course_details.major_classification',
-            'course_details.major_classification.middle_classifications',
-            'course_details.major_classification.middle_classifications.minor_classifications',
+            'course_details.middle_classification',
+            'course_details.minor_classification',
             'course_options',
             'course_options.option',
             'course_questions',

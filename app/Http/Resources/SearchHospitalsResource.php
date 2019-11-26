@@ -137,7 +137,8 @@ class SearchHospitalsResource extends Resource
 
         $elemens = $hospital_categories->map(function ($v) {
             if (isset($v->image_order)
-                && $v->image_order === 2) {
+                && $v->image_order === 2
+            && !empty($v->hospital_image->path)) {
                     return $v->hospital_image;
                 }
         });
