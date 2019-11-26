@@ -36,7 +36,7 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::where('hospital_id', session()->get('hospital_id'))
-            ->orderBy('order')->paginate(10);
+            ->orderBy('order')->paginate(50);
         return view('course.index', ['courses' => $courses]);
     }
 
