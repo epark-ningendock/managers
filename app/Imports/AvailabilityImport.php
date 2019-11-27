@@ -39,6 +39,10 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
     {
         $row = $row->toArray();
 
+        if (empty( $row['line_id'])) {
+            return;
+        }
+
         $hospital_id = $this->getId('hospitals', $row['hospital_no']);
 
         if (is_null($hospital_id)) {
