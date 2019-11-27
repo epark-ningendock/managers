@@ -298,7 +298,7 @@
       <div>
         受診日
         <select name="cancellation_deadline" id="cancellation_deadline" class="form-control mr-2 d-inline-block" style="width: 60px;">
-          @for ($i = 1; $i <= 31; $i++)
+          @for ($i = 0; $i <= 31; $i++)
             <option {{ old('cancellation_deadline', isset($course) ? $course->cancellation_deadline : 20) == $i ? 'selected' : '' }}
                     value="{{ $i }}"> {{ $i }}</option>
           @endfor
@@ -416,8 +416,11 @@
     <div class="box-body" id="option-setting">
     <table class="table no-border table-hover table-striped ">
       <tr>
-        <td class="option-name"><span>オプション名</span></td>
-        <td class="option-price">価格</td>
+          <td class="option-name"><span>オプション名</span></td>
+          <td class="option-price">価格</td>
+          <!--
+          <td class="option-confirm">説明</td>
+          -->
       </tr>
       @foreach($options as $option)
         <tr>
@@ -433,6 +436,9 @@
               <input type="checkbox" id="option_set_price{{ $option->id }}" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
               <label class="mr-2" for="option_set_price{{ $option->id }}">{{ $option->name }}</label></td>
           <td class="option-price">{{ number_format($option->price) }} 円</td>
+            <!--
+            <td class="option-confirm">{{ $option->confirm }}</td>
+            -->
         </tr>
       @endforeach
     </table>
