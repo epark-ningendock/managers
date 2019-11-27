@@ -48,7 +48,7 @@ class MemberLoginInfoController extends ApiBaseController
             'nick_use' => $request->nick_use,
             'contact' => $request->contact,
             'contact_name' => $request->contact_name,
-            'status' => $request->status,
+            'status' => Status::VALID,
         ];
 
         DB::beginTransaction();
@@ -85,8 +85,8 @@ class MemberLoginInfoController extends ApiBaseController
         try {
             //
             $memberLoginInfo = MemberLoginInfo::where('epark_member_id', $request->epark_member_id)
-                ->where('status', Status::Valid)
-                ->get();
+                ->where('status', Status::VALID)
+                ->first();
             if (! $memberLoginInfo) {
                 return $this->createResponse($messages['errorNotExistInfo']);
             }
