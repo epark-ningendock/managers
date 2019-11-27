@@ -41,30 +41,65 @@ class CourseContentBaseResource extends Resource
      */
     private function _categories($course_details)
     {
-        if (!isset($course_details)) return;
-        $categories = $course_details->map(function ($c) {
-            if (in_array($c->major_classification->classification_type_id, [2,3,4,5])) {
-                return [
-                    'id' => $c->major_classification->id,
-                    'title' => $c->major_classification->name,
-                    'type_no' => $c->major_classification->classification_type_id,
-                    'category_middle' => $c->major_classification->middle_classifications->map(function ($md) {
-                        return [
-                            'id' => $md->id,
-                            'title' => $md->name,
-                            'category_small' => $md->minor_classifications->map(function ($mn) {
-                                return [
-                                    'id' => $mn->id,
-                                    'title' => $mn->name,
-                                    'icon' => $mn->icon_name,
-                                ];
-                            }),
-                        ];
-                    }),
-                ];
+        $results = [];
+        $major_ids = [];
+        $middle_ids = [];
+        $minor_ids = [];
+        $major_id = 0;
+        $middle_id = 0;
+        $i = 0;
+        $d = null;
+        foreach ($course_details as $detail) {
+
+            if ($detail->select_status != 1 || $detail->status != '1') {
+                continue;
             }
-        });
-        return $categories;
+
+            if ($major_id != $detail->major_classification_id) {
+                if ($i != 0) {
+                    $middle_ids[] = ['id' => $middle_id,
+                        'title' => $detail->middle_classification->name,
+                        'category_small' => $minor_ids];
+                    $major_ids[] = ['id' => $major_id,
+                        'title' => $detail->major_classification->icon_name,
+                        'type_no' => $detail->major_classification->classification_type_id,
+                        'category_middle' => $middle_ids];
+                }
+                $middle_ids = [];
+                $minor_ids = [];
+                $minor_ids[] = ['id' => $detail->minor_classification_id,
+                    'title' => $detail->minor_classification->name,
+                    'icon' => $detail->minor_classification->icon_name];
+                $major_id = $detail->major_classification_id;
+                $middle_id = $detail->middle_classification_id;
+            } elseif ($middle_id != $detail->middle_classification_id) {
+                $middle_ids[] = ['id' => $middle_id,
+                    'title' => $detail->middle_classification->name,
+                    'category_small' => $minor_ids];
+                $minor_ids = [];
+                $minor_ids[] = ['id' => $detail->minor_classification_id,
+                    'title' => $detail->minor_classification->name,
+                    'icon' => $detail->minor_classification->icon_name];
+                $middle_id = $detail->middle_classification_id;
+            } else {
+                $minor_ids[] = ['id' => $detail->minor_classification_id,
+                    'title' => $detail->minor_classification->name,
+                    'icon' => $detail->minor_classification->icon_name];
+            }
+
+            $i++;
+            $d = $detail;
+        }
+
+        $middle_ids[] = ['id' => $middle_id,
+            'title' => $d->middle_classification->name,
+            'category_small' => $minor_ids];
+        $major_ids[] = ['id' => $major_id,
+            'title' => $d->major_classification->icon_name,
+            'type_no' => $d->major_classification->classification_type_id,
+            'category_middle' => $middle_ids];
+
+        return $major_ids;
     }
 
     /**
@@ -77,15 +112,17 @@ class CourseContentBaseResource extends Resource
     {
         if (!isset($course_options)) return;
         $options = $course_options->map(function ($o) {
-            return [
-                'option' => [
-                    'cd' => $o->option->id,
-                    'title' => $o->option->name,
-                    'confirm' => $o->option->confirm,
-                    'price' => $o->option->price,
-                    'tax_class' => $o->option->tax_class_id,
-                ],
-            ];
+            if (isset($o->option)) {
+                return [
+                    'option' => [
+                        'cd' => $o->option->id,
+                        'title' => $o->option->name,
+                        'confirm' => $o->option->confirm,
+                        'price' => $o->option->price,
+                        'tax_class' => $o->option->tax_class_id,
+                    ],
+                ];
+            }
         });
         return $options;
     }

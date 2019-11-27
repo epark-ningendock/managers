@@ -3,6 +3,9 @@
 namespace App\Imports;
 
 use App\Availabil;
+use App\Calendar;
+use App\CalendarDay;
+use App\ConvertedIdString;
 use App\Hospital;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
@@ -46,23 +49,45 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
         }
 
         $old_id = Hospital::find($hospital_id)->old_karada_dog_id;
+        $new_calendar_id = ConvertedIdString::where('table_name', 'calendars')
+            ->where('hospital_no', $old_id)
+            ->first()->new_id;
+
+        $status = 0;
+        if ($row['appoint_status'] == '0') {
+            $status = 1;
+        }
 
         $deleted_at = null;
         if ($row['status'] == 'X') {
             $deleted_at = Carbon::today();
         }
 
-        $model = new Availabil([
-            'hospital_no' => $old_id,
-            'course_no' => $row['course_no'],
-            'reservation_dt' => $row['reservation_dt'],
-            'line_id' => $row['line_id'],
-            'appoint_number' => $row['appoint_number'],
+        $model = new CalendarDay([
+            'date' => Carbon::create($row['reservation_dt']),
+            'is_holiday' => $row['holidays'],
+            'is_reservation_acceptance' => $status,
             'reservation_frames' => $row['reservation_frames'],
+            'reservation_count' => $row['appoint_number'],
+            'calendar_id' => $new_calendar_id,
+            'status' => $row['status'],
             'created_at' => $row['rgst'],
             'updated_at' => $row['updt'],
             'deleted_at' => $deleted_at,
+
         ]);
+
+//        $model = new Availabil([
+//            'hospital_no' => $old_id,
+//            'course_no' => $row['course_no'],
+//            'reservation_dt' => $row['reservation_dt'],
+//            'line_id' => $row['line_id'],
+//            'appoint_number' => $row['appoint_number'],
+//            'reservation_frames' => $row['reservation_frames'],
+//            'created_at' => $row['rgst'],
+//            'updated_at' => $row['updt'],
+//            'deleted_at' => $deleted_at,
+//        ]);
         $model->save();
     }
 

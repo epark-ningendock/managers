@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Billing;
 use App\BillingMailHistory;
+use App\BillingOptionPlan;
 use App\Exports\BillingExport;
 use App\Filters\Billing\BillingFilters;
 use App\HospitalEmailSetting;
 use App\Mail\Billing\BillingConfirmationSendMail;
 use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Excel;
@@ -76,6 +78,7 @@ class BillingController extends Controller {
 	public function store( Request $request ) {
         $billing_id = $request->input('billing_id');
         $billing = Billing::find($billing_id);
+        $billing_option_plans = BillingOptionPlan::where('billing_id', $billing->id)->get();
         $adjustment_price = $request->input('adjustment_price');
         $dr_movie_adjustment_price = $request->input('optionplanadjustmentprice_1');
         $access_movie_adjustment_price = $request->input('optionplanadjustmentprice_2');
@@ -89,8 +92,40 @@ class BillingController extends Controller {
             $billing->save();
         }
 
+        if ($billing_option_plans) {
+            foreach ($billing_option_plans as $billing_option_plan) {
+                $billing_option_plan->forceDelete();
+            }
+        }
+
+        $this->registBillingOptionPlan($billing->id, 1, $dr_movie_adjustment_price);
+        $this->registBillingOptionPlan($billing->id, 2, $access_movie_adjustment_price);
+        $this->registBillingOptionPlan($billing->id, 3, $onemin_movie_adjustment_price);
+        $this->registBillingOptionPlan($billing->id, 4, $tour_movie_adjustment_price);
+        $this->registBillingOptionPlan($billing->id, 5, $exam_movie_adjustment_price);
+        $this->registBillingOptionPlan($billing->id, 6, $special_movie_adjustment_price);
+
         return redirect()->route('billing.show', ['billing' => $billing]);
 	}
+
+    /**
+     * @param $billing_id
+     * @param $option_plan_id
+     * @param $adjustment_price
+     */
+	private function registBillingOptionPlan($billing_id, $option_plan_id, $adjustment_price) {
+
+        if (isset($adjustment_price) && is_numeric($adjustment_price)) {
+            $billing_option_plan = new BillingOptionPlan([
+                'billing_id' => $billing_id,
+                'option_plan_id' => $option_plan_id,
+                'adjustment_price' => $adjustment_price,
+                'created_at' => Carbon::today(),
+                'updated_at' => Carbon::today(),
+            ]);
+            $billing_option_plan->save();
+        }
+    }
 
 	/**
 	 * Display the specified resource.

@@ -971,7 +971,11 @@ input[type=checkbox] + label:before {
     }
   }
   .option-price {
-    width: 70%;
+    width: 20%;
+    text-align: left;
+  }
+  .option-confirm {
+    width: 50%;
     text-align: left;
   }
   .mr-2 {

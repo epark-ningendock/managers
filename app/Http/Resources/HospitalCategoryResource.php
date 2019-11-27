@@ -16,8 +16,8 @@ class HospitalCategoryResource extends Resource
     public function toArray($request)
     {
         $results = [];
-        if (!empty($this)) {
-            foreach ($this as $detail) {
+        if (!empty($this->hospital_details)) {
+            foreach ($this->hospital_details as $detail) {
 
                 if (!empty($detail->inputstring) || (isset($detail->select_status) && ($detail->select_status === '1'))) {
                     $result =
@@ -26,7 +26,10 @@ class HospitalCategoryResource extends Resource
                             'title' => $detail->minor_classification->icon_name != null ? $detail->minor_classification->icon_name : '',
                             'text' => $detail->inputstring,
                         ];
-                    $results[] = $result;
+                    if (!empty($result)) {
+                        $results[] = $result;
+                    }
+
                 }
             }
 

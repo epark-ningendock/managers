@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\ConvertedIdString;
 use App\Course;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
@@ -37,7 +38,11 @@ class CourseExtraImport extends ImportBAbstract implements WithChunkReading
         $row = $row->toArray();
 
         // LINEGROUP_ID == old_course_id とみなす
-        $course_id = $this->getValue($row, 'LINEGROUP_ID');
+        $old_course_id = $this->getValue($row, 'LINEGROUP_ID');
+        $course_id = ConvertedIdString::where('table_name', 'courses')
+            ->where('old_id', $old_course_id)
+            ->where('hospital_no', $this->hospital_no)
+            ->first()->new_id;
 
         $course = Course::find($course_id);
         if (is_null($course)) {

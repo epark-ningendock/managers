@@ -36,7 +36,7 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::where('hospital_id', session()->get('hospital_id'))
-            ->orderBy('order')->paginate(10);
+            ->orderBy('order')->paginate(50);
         return view('course.index', ['courses' => $courses]);
     }
 
@@ -213,6 +213,7 @@ class CourseController extends Controller
                 $course = new Course();
                 $max_order = Course::where('hospital_id', session()->get('hospital_id'))->max('order');
                 $course_data['order'] = $max_order + 1;
+                $course->code = 'C' . $course->id . 'H' . $course->hospital_id;
             }
             $course->fill($course_data);
             $course->hospital_id = session()->get('hospital_id');
@@ -227,8 +228,6 @@ class CourseController extends Controller
             }
             //force to update updated_at. otherwise version will not be updated
             $course->touch();
-            $course->save();
-            $course->code = 'C' . $course->id . 'H' . $course->hospital_id;
             $course->save();
 
             //Course Images

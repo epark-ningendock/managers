@@ -24,7 +24,7 @@ class MiddleClassification extends SoftDeleteModel
 
     public function minors_with_fregist_order()
     {
-        return $this->hasMany('App\MinorClassification')->orderBy('is_fregist', 'DESC');
+        return $this->hasMany('App\MinorClassification')->orderBy('order')->orderBy('is_fregist', 'DESC');
     }
 
     /**

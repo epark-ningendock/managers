@@ -42,7 +42,7 @@ class CourseImport extends ImportAbstract implements WithChunkReading
     {
         $row = $row->toArray();
 
-        $web_reception = 0;
+        $web_reception = $row['web_reception'];
         if ($row['web_reception'] == 2) {
             $web_reception = 0;
         }
@@ -85,8 +85,8 @@ class CourseImport extends ImportAbstract implements WithChunkReading
         ]);
 
         $model->save();
-        $model->code = 'C' . $model->id . 'H' . $model->hospital_id;
-        $model->save();
+//        $model->code = 'C' . $model->id . 'H' . $model->hospital_id;
+//        $model->save();
         $this->deleteIf($model, $row, 'status', ['X']);
         $this->setId($model, $row);
         if (isset($model->hospital_id)) {

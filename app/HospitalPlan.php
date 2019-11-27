@@ -15,5 +15,4 @@ class HospitalPlan extends Model
         return $this->belongsTo(ContractPlan::class)
             ->withDefault();
     }
-
 }

@@ -30,11 +30,24 @@ class SearchCoursesResource extends CoursesBaseResource
             ->put('hospital_code', $this->hospital->contract_information->code ?? '')
             ->put('course_img', ImagePathsResource::collection($this->getCourseImg($this->course_images)))
             ->put('course_point', parent::wrapWord($this->course_point))
-            ->put('category', CourseDetailCategoriesResource::collection($this->course_details))
+            ->put('category', $this->getCategory())
             ->put('recommended', $recommended)
             ->put('course_option_flag', isset($this->course_option) ? 1 : 0)
             ->put('month_calender', new MonthlyCalendarResource($this))
             ->put('paycall', $this->hospital->paycall ?? '')
             ->toArray();
+    }
+
+    private function getCategory() {
+
+        $results = [];
+        foreach ($this->course_details as $detail) {
+            if ($detail->select_status == 1 && $detail->status == '1') {
+                $result = ['id' => $detail->minor_classification_id, 'title' => $detail->minor_classification->icon_name];
+                $results[] = $result;
+            }
+        }
+
+        return $results;
     }
 }

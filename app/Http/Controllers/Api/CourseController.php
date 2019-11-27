@@ -59,10 +59,10 @@ class CourseController extends ApiBaseController
                 'get_yyyymmdd_from' => $from,
                 'get_yyyymmdd_to' => $to,
             ];
-            $monthly_data = $this->getMonthReservationEnableInfo($search_condition, $contents);
-            $daily_data = $this->getDayReservationEnableInfo($search_condition, $contents);
+//            $monthly_data = $this->getMonthReservationEnableInfo($search_condition, $contents);
+//            $daily_data = $this->getDayReservationEnableInfo($search_condition, $contents);
 
-            $data = ['course' => $contents, 'monthly_data' => $monthly_data, 'daily_data' => $daily_data];
+            $data = ['course' => $contents];
 
             return new CourseIndexResource($data);
         } catch (\Exception $e) {
@@ -186,10 +186,14 @@ class CourseController extends ApiBaseController
     private function getCourseContents($hospital_id, $course_code)
     {
         $data = Course::with([
-            'course_details',
+            'course_details' => function ($query) {
+            $query->orderBy('major_classification_id')
+                ->orderBy('middle_classification_id')
+                ->orderBy('minor_classification_id')
+                ;},
             'course_details.major_classification',
-            'course_details.major_classification.middle_classifications',
-            'course_details.major_classification.middle_classifications.minor_classifications',
+            'course_details.middle_classification',
+            'course_details.minor_classification',
             'course_options',
             'course_options.option',
             'course_questions',

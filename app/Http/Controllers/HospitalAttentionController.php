@@ -106,52 +106,40 @@ class HospitalAttentionController extends Controller
                 $exam_movie = $request->get('exam_movie');
                 $special_page = $request->get('special_page');
 
-                $hospital->hospital_option_plans()->forceDelete();
                 if ($dr_movie == 1) {
-                    $hospital_option_plan = new HospitalOptionPlan();
-                    $hospital_option_plan->hospital_id = $hospital_id;
-                    $hospital_option_plan->option_plan_id = $dr_movie;
-                    $hospital_option_plan->from = Carbon::today();
-                    $hospital_option_plan->save();
+                    $this->registOptionPlan($hospital_id, $dr_movie);
+                } else {
+                    $this->deleteOptionPlan($hospital_id, 1);
                 }
+
                 if ($access_movie == 2) {
-                    $hospital_option_plan = new HospitalOptionPlan();
-                    $hospital_option_plan->hospital_id = $hospital_id;
-                    $hospital_option_plan->option_plan_id = $access_movie;
-                    $hospital_option_plan->from = Carbon::today();
-                    $hospital_option_plan->save();
+                    $this->registOptionPlan($hospital_id, $access_movie);
+                } else {
+                    $this->deleteOptionPlan($hospital_id, 2);
                 }
 
                 if ($one_min_movie == 3) {
-                    $hospital_option_plan = new HospitalOptionPlan();
-                    $hospital_option_plan->hospital_id = $hospital_id;
-                    $hospital_option_plan->option_plan_id = $one_min_movie;
-                    $hospital_option_plan->from = Carbon::today();
-                    $hospital_option_plan->save();
+                    $this->registOptionPlan($hospital_id, $one_min_movie);
+                } else {
+                    $this->deleteOptionPlan($hospital_id, 3);
                 }
 
                 if ($tour_movie == 4) {
-                    $hospital_option_plan = new HospitalOptionPlan();
-                    $hospital_option_plan->hospital_id = $hospital_id;
-                    $hospital_option_plan->option_plan_id = $tour_movie;
-                    $hospital_option_plan->from = Carbon::today();
-                    $hospital_option_plan->save();
+                    $this->registOptionPlan($hospital_id, $tour_movie);
+                } else {
+                    $this->deleteOptionPlan($hospital_id, 4);
                 }
 
                 if ($exam_movie == 5) {
-                    $hospital_option_plan = new HospitalOptionPlan();
-                    $hospital_option_plan->hospital_id = $hospital_id;
-                    $hospital_option_plan->option_plan_id = $exam_movie;
-                    $hospital_option_plan->from = Carbon::today();
-                    $hospital_option_plan->save();
+                    $this->registOptionPlan($hospital_id, $exam_movie);
+                } else {
+                    $this->deleteOptionPlan($hospital_id, 5);
                 }
 
-                if ($exam_movie == 6) {
-                    $hospital_option_plan = new HospitalOptionPlan();
-                    $hospital_option_plan->hospital_id = $hospital_id;
-                    $hospital_option_plan->option_plan_id = $special_page;
-                    $hospital_option_plan->from = Carbon::today();
-                    $hospital_option_plan->save();
+                if ($special_page == 6) {
+                    $this->registOptionPlan($hospital_id, $special_page);
+                } else {
+                    $this->deleteOptionPlan($hospital_id, 6);
                 }
     
                 $minor_ids = collect($request->input('minor_ids'), []);
@@ -232,6 +220,38 @@ class HospitalAttentionController extends Controller
 
         } catch (Exception $e) {
             return redirect()->back()->withErrors(trans('messages.create_error'))->withInput();
+        }
+    }
+
+    /**
+     * @param $hospital_id
+     * @param $option_plan_id
+     */
+    private function registOptionPlan($hospital_id, $option_plan_id) {
+        $hospital_option_plan = HospitalOptionPlan::where('hospital_id', $hospital_id)
+            ->where('option_plan_id', $option_plan_id)
+            ->first();
+
+        if (!$hospital_option_plan) {
+            $hospital_option_plan = new HospitalOptionPlan();
+            $hospital_option_plan->hospital_id = $hospital_id;
+            $hospital_option_plan->option_plan_id = $option_plan_id;
+            $hospital_option_plan->from = Carbon::today();
+            $hospital_option_plan->save();
+        }
+    }
+
+    /**
+     * @param $hospital_id
+     * @param $option_plan_id
+     */
+    private function deleteOptionPlan($hospital_id, $option_plan_id) {
+        $hospital_option_plan = HospitalOptionPlan::where('hospital_id', $hospital_id)
+            ->where('option_plan_id', $option_plan_id)
+            ->first();
+
+        if ($hospital_option_plan) {
+            $hospital_option_plan->forceDelete();
         }
     }
 }
