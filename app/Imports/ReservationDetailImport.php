@@ -130,6 +130,8 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
             $answer_json = str_replace('#comma#', ',', $answer_json);
             $questions = json_decode($answer_json, false, 512, JSON_OBJECT_AS_ARRAY);
 
+            Log::error('中身'.$questions);
+
 //            $tmp_strs = explode('#comma#', $this->getValue($row, 'Q_ANSWER'));
 
             foreach ((array)$questions as $question) {
