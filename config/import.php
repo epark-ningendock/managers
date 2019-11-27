@@ -77,16 +77,16 @@ return [
 //        'import' => TaxImport::class,
 //        'seed' => true,
 //    ],
-    'm_district.csv' => [
-        'model' => DistrictCode::class,
-        'import' => DistrictCodeImport::class,
-        'seed' => true,
-    ],
-    'm_item_type.csv' => [
-        'model' => ClassificationType::class,
-        'import' => ClassificationTypeImport::class,
-        'seed' => true,
-    ],
+//    'm_district.csv' => [
+//        'model' => DistrictCode::class,
+//        'import' => DistrictCodeImport::class,
+//        'seed' => true,
+//    ],
+//    'm_item_type.csv' => [
+//        'model' => ClassificationType::class,
+//        'import' => ClassificationTypeImport::class,
+//        'seed' => true,
+//    ],
 //    'm_item_category_dai.csv' => [
 //        'model' => MajorClassification::class,
 //        'import' => MajorClassificationImport::class,
@@ -102,16 +102,16 @@ return [
 //        'import' => MinorClassificationImport::class,
 //        'seed' => true,
 //    ],
-    'm_contract_plan.csv' => [
-        'model' => ContractPlan::class,
-        'import' => ContractPlanImport::class,
-        'seed' => false,
-    ],
-    'm_hospital.csv' => [
-        'model' => Hospital::class,
-        'import' => HospitalImport::class,
-        'seed' => true,
-    ],
+//    'm_contract_plan.csv' => [
+//        'model' => ContractPlan::class,
+//        'import' => ContractPlanImport::class,
+//        'seed' => false,
+//    ],
+//    'm_hospital.csv' => [
+//        'model' => Hospital::class,
+//        'import' => HospitalImport::class,
+//        'seed' => true,
+//    ],
     'm_hospital_category_dai.csv' => [
         'model' => HospitalMajorClassification::class,
         'import' => HospitalMajorClassificationImport::class,
