@@ -67,16 +67,16 @@ use App\TaxClass;
 
 return [
     // ステージングでのインポートの為、一部コメントアウトしています
-    'm_pref.csv' => [
-        'model' => Prefecture::class,
-        'import' => PrefectureImport::class,
-        'seed' => true,
-    ],
-    'm_tax_class.csv' => [
-        'model' => TaxClass::class,
-        'import' => TaxImport::class,
-        'seed' => true,
-    ],
+//    'm_pref.csv' => [
+//        'model' => Prefecture::class,
+//        'import' => PrefectureImport::class,
+//        'seed' => true,
+//    ],
+//    'm_tax_class.csv' => [
+//        'model' => TaxClass::class,
+//        'import' => TaxImport::class,
+//        'seed' => true,
+//    ],
     'm_district.csv' => [
         'model' => DistrictCode::class,
         'import' => DistrictCodeImport::class,
