@@ -51,7 +51,8 @@ class HospitalEmailSettingImport extends ImportBAbstract implements WithEvents
 
         $key_code = $this->getValue($row, 'KEY_CODE');
         $value = $this->getValue($row, 'KEY_VALUE');
-        $mail_value = $this->getValue($row, 'KEY_TEXTAREA_VALUE');
+        $mail_values = explode('|', $this->getValue($row, 'KEY_TEXTAREA_VALUE'));
+        $count = count($mail_values);
 
         switch ($key_code) {
             case '02':
@@ -69,22 +70,22 @@ class HospitalEmailSettingImport extends ImportBAbstract implements WithEvents
             case '01':
             case '06':
             case '07':
-                if (!isset(static::$arr['reception_email1'])) {
-                    static::$arr['reception_email1'] = $mail_value;
-                } else if (!isset(static::$arr['reception_email2'])) {
-                    static::$arr['reception_email2'] = $mail_value;
-                } else if (!isset(static::$arr['reception_email3'])) {
-                    static::$arr['reception_email3'] = $mail_value;
-                } else if (!isset(static::$arr['reception_email4'])) {
-                    static::$arr['reception_email4'] = $mail_value;
+                if (count($mail_values) > 0) {
+                    static::$arr['reception_email1'] = $mail_values[0];
+                } else if (count($mail_values) > 1) {
+                    static::$arr['reception_email2'] = $mail_values[1];
+                } else if (count($mail_values) > 2) {
+                    static::$arr['reception_email3'] = $mail_values[2];
+                } else if (count($mail_values) > 3) {
+                    static::$arr['reception_email4'] = $mail_values[3];
                 }
 
-                if (!isset(static::$arr['billing_email1'])) {
-                    static::$arr['billing_email1'] = $mail_value;
-                } else if (!isset(static::$arr['billing_email2'])) {
-                    static::$arr['billing_email2'] = $mail_value;
-                } else if (!isset(static::$arr['billing_email3'])) {
-                    static::$arr['billing_email3'] = $mail_value;
+                if (count($mail_values) > 0) {
+                    static::$arr['billing_email1'] =$mail_values[0];
+                } else if (count($mail_values) > 1) {
+                    static::$arr['billing_email2'] = $mail_values[1];
+                } else if (count($mail_values) > 2) {
+                    static::$arr['billing_email3'] = mail_values[2];
                 }
                 break;
             case '21':
@@ -101,5 +102,6 @@ class HospitalEmailSettingImport extends ImportBAbstract implements WithEvents
     {
         $model = new HospitalEmailSetting(static::$arr);
         $model->save();
+        static::$arr = [];
     }
 }

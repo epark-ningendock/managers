@@ -133,11 +133,14 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
             foreach ((array)$questions as $question) {
 
                 $question_title = $question->question ?? $question->question_title ?? null;
+                $course_questions = CourseQuestion::where('is_question', 0)
+                    ->where('course_id', $reservation->course_id)
+                    ->get();
 
-                $course_questions = $reservation
-                    ->course
-                    ->course_questions
-                    ->where('is_question', 0);
+//                $course_questions = $reservation
+//                    ->course
+//                    ->course_questions
+//                    ->where('is_question', 0);
 //                    ->where('question_title', $question->question_title);
                 if (is_null($course_questions)) {
                     Log::error('reservation に course_questionsレコードが存在しません。');
