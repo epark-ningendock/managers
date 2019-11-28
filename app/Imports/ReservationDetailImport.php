@@ -139,6 +139,7 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
             $title = '';
             $answers = [];
             foreach ($tmp_strs as $tmp_str) {
+                AAAAA
                 if (strpos($tmp_str, 'question_title')) {
                     $questions[] = [$title, $answers];
                     $title = $tmp_str;
