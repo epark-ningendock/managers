@@ -152,7 +152,6 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
             $questions[] = [$title, $answers];
 
             foreach ($questions as $question) {
-                VVV
 
                 if (empty($question[0])) {
                     continue;
@@ -161,8 +160,9 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                 $course_questions = $reservation
                     ->course
                     ->course_questions
-                    ->where('question_title', 'LIKE', "%{$target}%");
-                if (is_null($course_questions)) {
+                    ->where('question_title', 'LIKE', "%{$target}%")->get();
+                if (is_null($course_questions) || count($course_questions) == 0) {
+                    vvv
                     Log::error('reservation に course_questionsレコードが存在しません。');
                 }
 
@@ -171,6 +171,7 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                     $question,
                     $course_id
                 ) {
+                    AAA
                     $answers = $question[1];
                     $i = count($answers);
                     $reservation_answers = new ReservationAnswer();
