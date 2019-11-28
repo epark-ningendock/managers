@@ -18,55 +18,55 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::prefix('v1')->group(function () {
     // 医療機関一覧検索API
-    Route::match(['get', 'post'], 'search/hospitals/', 'SearchController@hospitals')->middleware('jsonp');
+    Route::match(['get', 'post'], 'search/hospitals/', 'SearchController@hospitals');
 
     // 検査コース一覧検索API
-    Route::match(['get', 'post'], 'search/courses/', 'SearchController@courses')->middleware('jsonp');
+    Route::match(['get', 'post'], 'search/courses/', 'SearchController@courses');
 
     // 医療機関・検査コース一覧検索API
-    Route::match(['get', 'post'], 'search/', 'SearchController@index')->middleware('jsonp');
+    Route::match(['get', 'post'], 'search/', 'SearchController@index');
 
     // 医療機関基本情報検索API
-    Route::match(['get', 'post'], 'hospital/basic/', 'HospitalController@basic')->middleware('jsonp');
+    Route::match(['get', 'post'], 'hospital/basic/', 'HospitalController@basic');
 
     // 医療機関コンテンツ情報取得API
-    Route::match(['get', 'post'], 'hospital/contents/', 'HospitalController@contents')->middleware('jsonp');
+    Route::match(['get', 'post'], 'hospital/contents/', 'HospitalController@contents');
 
     // 医療機関検査コース一覧情報取得API
-    Route::match(['get', 'post'], 'hospital/courses/', 'HospitalController@courses')->middleware('jsonp');
+    Route::match(['get', 'post'], 'hospital/courses/', 'HospitalController@courses');
 
     // 医療機関情報取得API
-    Route::match(['get', 'post'], 'hospital/', 'HospitalController@index')->middleware('jsonp');
+    Route::match(['get', 'post'], 'hospital/', 'HospitalController@index');
 
     // 公開中医療機関情報取得API
-    Route::match(['get', 'post'], 'hospital/release', 'HospitalController@release')->middleware('jsonp');
+    Route::match(['get', 'post'], 'hospital/release', 'HospitalController@release');
 
     // 公開中医療機関コース情報取得API
-    Route::match(['get', 'post'], 'hospital/release_course', 'HospitalController@release_course')->middleware('jsonp');
+    Route::match(['get', 'post'], 'hospital/release_course', 'HospitalController@release_course');
 
     // 医療機関予約数取得API
-    Route::match(['get', 'post'], 'hospital/reserve_cnt', 'HospitalController@reserve_cnt')->middleware('jsonp');
+    Route::match(['get', 'post'], 'hospital/reserve_cnt', 'HospitalController@reserve_cnt');
 
     // 検査コース基本情報取得API
-    Route::match(['get', 'post'], 'course/basic/', 'CourseController@basic')->middleware('jsonp');
+    Route::match(['get', 'post'], 'course/basic/', 'CourseController@basic');
 
     // 検査コースコンテンツ情報取得API
-    Route::match(['get', 'post'], 'course/contents/', 'CourseController@contents')->middleware('jsonp');
+    Route::match(['get', 'post'], 'course/contents/', 'CourseController@contents');
 
     // 検査コース情報取得API
-    Route::match(['get', 'post'], 'course/', 'CourseController@index')->middleware('jsonp');
+    Route::match(['get', 'post'], 'course/', 'CourseController@index');
 
     // 検査コース空満情報（月別）取得API
-    Route::match(['get', 'post'], 'course/calendar_monthly/', 'CourseController@calendar_monthly')->middleware('jsonp');
+    Route::match(['get', 'post'], 'course/calendar_monthly/', 'CourseController@calendar_monthly');
 
     // 検査コース空満情報（日別）取得API
-    Route::match(['get', 'post'], 'course/calendar_daily/', 'CourseController@calendar_daily')->middleware('jsonp');
+    Route::match(['get', 'post'], 'course/calendar_daily/', 'CourseController@calendar_daily');
 
     // 対象一覧取得（住所）API
-    Route::match(['get', 'post'], 'place/', 'PlaceController@index')->middleware('jsonp');
+    Route::match(['get', 'post'], 'place/', 'PlaceController@index');
 
     // 対象一覧取得（路線）API
-    Route::match(['get', 'post'], 'route/', 'RouteController@index')->middleware('jsonp');
+    Route::match(['get', 'post'], 'route/', 'RouteController@index');
 
 // 以下予約API
 // 予約登録/更新API
