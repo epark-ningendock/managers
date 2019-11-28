@@ -286,7 +286,6 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                         $reservation_answers->answer10 = $ans;
                     }
                     $reservation_answers->save();
-                        kkk
 
                 });
                 }
