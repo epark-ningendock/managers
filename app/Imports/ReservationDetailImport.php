@@ -163,11 +163,10 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
 //                    ->course_questions
 //                    ->where('question_title', 'LIKE', "%{$target}%")->get();
 
-                    $course_questions = CourseQuestion::where('course_id', $reservation->course_id)
+                    $course_questions = CourseQuestion::where('course_id', $course_id)
                         ->get();
 
                     if (is_null($course_questions) || count($course_questions) == 0) {
-                        vvv
                     Log::error('reservation に course_questionsレコードが存在しません。');
                 }
 
@@ -180,7 +179,6 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                         if (!strpos($course_question->question_title, $target)) {
                             return;
                         }
-                        AAA
                     $answers = $question[1];
                     $i = count($answers);
                     $reservation_answers = new ReservationAnswer();
@@ -288,6 +286,7 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                         $reservation_answers->answer10 = $ans;
                     }
                     $reservation_answers->save();
+                        kkk
 
                 });
                 }
