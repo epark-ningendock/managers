@@ -88,7 +88,7 @@
           {{ ($hospital->status === HospitalEnums::DELETE) ? 'dark-gray' : '' }}
               ">
             <td>{{ $hospital->id }}</td>
-            <td>{{ isset($hospital->contract_information) ?? $hospital->contract_information->customer_no }}</td>
+            <td>{{ isset($hospital->contract_information) ? $hospital->contract_information->customer_no : '' }}</td>
             <td style="text-align: left">{{ $hospital->name }}</td>
             @if (!$hospital->prefecture_id && !$hospital->district_code_id)
               <td></td>
