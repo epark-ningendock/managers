@@ -130,53 +130,54 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
 //            $answer_json = str_replace('#comma#', ',', $answer_json);
 //            $questions = json_decode($answer_json, false, 512, JSON_OBJECT_AS_ARRAY);
 
-            $target = $this->getValue($row, 'Q_ANSWER');
-            $target = str_replace('[', '', $target);
-            $target = str_replace('{', '', $target);
-            $target = str_replace('\"', '', $target);
-            $tmp_strs = explode('#comma#', $target);
-            $questions = [];
-            $title = '';
-            $answers = [];
-            foreach ($tmp_strs as $tmp_str) {
-                if (strpos($tmp_str, 'question_title')) {
-                    $questions[] = [$title, $answers];
-                    $title = $tmp_str;
-                    $answers = [];
+            if (!empty($reservation->course_id)) {
+                $target = $this->getValue($row, 'Q_ANSWER');
+                $target = str_replace('[', '', $target);
+                $target = str_replace('{', '', $target);
+                $target = str_replace('\"', '', $target);
+                $tmp_strs = explode('#comma#', $target);
+                $questions = [];
+                $title = '';
+                $answers = [];
+                foreach ($tmp_strs as $tmp_str) {
+                    if (strpos($tmp_str, 'question_title')) {
+                        $questions[] = [$title, $answers];
+                        $title = $tmp_str;
+                        $answers = [];
+                    }
+                    if (strpos($tmp_str, 'answer')) {
+                        $ans = explode(':', $tmp_str);
+                        $answers[] = $ans[1];
+                    }
                 }
-                if (strpos($tmp_str, 'answer')) {
-                    $ans = explode(':', $tmp_str);
-                    $answers[] = $ans[1];
-                }
-            }
-            $questions[] = [$title, $answers];
+                $questions[] = [$title, $answers];
 
-            foreach ($questions as $question) {
+                foreach ($questions as $question) {
 
-                if (empty($question[0])) {
-                    continue;
-                }
-                $target = mb_substr($question[0], 0, 4);
+                    if (empty($question[0])) {
+                        continue;
+                    }
+                    $target = mb_substr($question[0], 0, 4);
 //                $course_questions = $reservation
 //                    ->course
 //                    ->course_questions
 //                    ->where('question_title', 'LIKE', "%{$target}%")->get();
 
-                $course_questions = CourseQuestion::where('course_id', $reservation->course_id)
-                    ->where('question_title', 'LIKE', "%{$target}%")
-                    ->get();
+                    $course_questions = CourseQuestion::where('course_id', $reservation->course_id)
+                        ->where('question_title', 'LIKE', "%{$target}%")
+                        ->get();
 
-                if (is_null($course_questions) || count($course_questions) == 0) {
-                    vvv
+                    if (is_null($course_questions) || count($course_questions) == 0) {
+                        vvv
                     Log::error('reservation に course_questionsレコードが存在しません。');
                 }
 
-                $course_questions->each(function (CourseQuestion $course_question) use (
-                    $reservation,
-                    $question,
-                    $course_id
-                ) {
-                    AAA
+                    $course_questions->each(function (CourseQuestion $course_question) use (
+                        $reservation,
+                        $question,
+                        $course_id
+                    ) {
+                        AAA
                     $answers = $question[1];
                     $i = count($answers);
                     $reservation_answers = new ReservationAnswer();
@@ -286,8 +287,8 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                     $reservation_answers->save();
 
                 });
+                }
             }
-
 
 //            $options = explode('|', $this->getValue($row, 'OPTION_CD'));
 //            $option_prices = explode('|', $this->getValue($row, 'OPTION_PRICE_TAX'));
