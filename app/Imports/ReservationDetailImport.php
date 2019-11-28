@@ -164,7 +164,7 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
 //                    ->where('question_title', 'LIKE', "%{$target}%")->get();
 
                     $course_questions = CourseQuestion::where('course_id', $reservation->course_id)
-                        ->where('question_title', 'LIKE', "%{$target}%")
+                        ->where('question_title', 'LIKE', "%$target%")
                         ->get();
 
                     if (is_null($course_questions) || count($course_questions) == 0) {
