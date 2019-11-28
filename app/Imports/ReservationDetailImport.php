@@ -157,14 +157,13 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                     if (empty($question[0])) {
                         continue;
                     }
-                    $target = mb_substr($question[0], 0, 4);
+//                    $target = mb_substr($question[0], 0, 4);
 //                $course_questions = $reservation
 //                    ->course
 //                    ->course_questions
 //                    ->where('question_title', 'LIKE', "%{$target}%")->get();
 
                     $course_questions = CourseQuestion::where('course_id', $reservation->course_id)
-                        ->where('question_title', 'LIKE', "%$target%")
                         ->get();
 
                     if (is_null($course_questions) || count($course_questions) == 0) {
@@ -177,6 +176,10 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                         $question,
                         $course_id
                     ) {
+                        $target = mb_substr($question[0], 0, 4);
+                        if (!strpos($course_question->question_title, $target)) {
+                            return;
+                        }
                         AAA
                     $answers = $question[1];
                     $i = count($answers);
