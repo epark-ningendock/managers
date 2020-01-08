@@ -69,26 +69,26 @@ use App\TaxClass;
 
 return [
     // ステージングでのインポートの為、一部コメントアウトしています
-//    'm_pref.csv' => [
-//        'model' => Prefecture::class,
-//        'import' => PrefectureImport::class,
-//        'seed' => true,
-//    ],
-//    'm_tax_class.csv' => [
-//        'model' => TaxClass::class,
-//        'import' => TaxImport::class,
-//        'seed' => true,
-//    ],
-//    'm_district.csv' => [
-//        'model' => DistrictCode::class,
-//        'import' => DistrictCodeImport::class,
-//        'seed' => true,
-//    ],
-//    'm_item_type.csv' => [
-//        'model' => ClassificationType::class,
-//        'import' => ClassificationTypeImport::class,
-//        'seed' => true,
-//    ],
+   'm_pref.csv' => [
+       'model' => Prefecture::class,
+       'import' => PrefectureImport::class,
+       'seed' => false,
+   ],
+   'm_tax_class.csv' => [
+       'model' => TaxClass::class,
+       'import' => TaxImport::class,
+       'seed' => false,
+   ],
+   'm_district.csv' => [
+       'model' => DistrictCode::class,
+       'import' => DistrictCodeImport::class,
+       'seed' => false,
+   ],
+   'm_item_type.csv' => [
+       'model' => ClassificationType::class,
+       'import' => ClassificationTypeImport::class,
+       'seed' => true,
+   ],
 //    'm_item_category_dai.csv' => [
 //        'model' => MajorClassification::class,
 //        'import' => MajorClassificationImport::class,
@@ -104,30 +104,30 @@ return [
 //        'import' => MinorClassificationImport::class,
 //        'seed' => true,
 //    ],
-    'm_contract_plan.csv' => [
-        'model' => ContractPlan::class,
-        'import' => ContractPlanImport::class,
-        'seed' => false,
-    ],
+    // 'm_contract_plan.csv' => [
+    //     'model' => ContractPlan::class,
+    //     'import' => ContractPlanImport::class,
+    //     'seed' => false,
+    // ],
     'm_hospital.csv' => [
         'model' => Hospital::class,
         'import' => HospitalImport::class,
-        'seed' => true,
+        'seed' => false,
     ],
    'm_hospital_category_dai.csv' => [
        'model' => HospitalMajorClassification::class,
        'import' => HospitalMajorClassificationImport::class,
-       'seed' => true,
+       'seed' => false,
    ],
    'm_hospital_category_chu.csv' => [
        'model' => HospitalMiddleClassification::class,
        'import' => HospitalMiddleClassificationImport::class,
-       'seed' => true,
+       'seed' => false,
    ],
    'm_hospital_category_sho.csv' => [
        'model' => HospitalMinorClassification::class,
        'import' => HospitalMinorClassificationImport::class,
-       'seed' => true,
+       'seed' => false,
    ],
    'm_staff.csv' => [
        'model' => Staff::class,
@@ -209,7 +209,7 @@ return [
     'm_option.csv' => [
         'model' => Option::class,
         'import' => OptionImport::class,
-        'seed' => true,
+        'seed' => false,
     ],
     'm_course_option_group.csv' => [
         'model' => CourseOption::class,
