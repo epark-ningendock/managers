@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Enums\ReservationStatus;
 use App\Enums\Status;
 use App\Hospital;
+use App\Http\Resources\HospitalAccessResource;
+use App\Http\Resources\HospitalReservationFramesResource;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\HospitalIndexResource;
@@ -47,32 +49,32 @@ class HospitalController extends ApiBaseController
         }
     }
 
-    /**
-     * 医療機関基本情報取得API
-     *
-     * @param  Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function basic(Request $request)
-    {
-        try {
-            $hospital_code = $request->input('hospital_code');
-
-            $hospital_code_chk_result = $this->checkHospitalCode($hospital_code);
-            $hospital_id = null;
-
-            if (!$hospital_code_chk_result[0]) {
-                return $this->createResponse($hospital_code_chk_result[1]);
-            } else {
-                $hospital_id = $hospital_code_chk_result[1];
-            }
-            return new HospitalBasicResource($this->getHospitalData($hospital_id));
-
-        } catch (\Exception $e) {
-            Log::error($e);
-            return $this->createResponse($this->messages['system_error_db']);
-        }
-    }
+//    /**
+//     * 医療機関基本情報取得API
+//     *
+//     * @param  Illuminate\Http\Request  $request
+//     * @return \Illuminate\Http\Response
+//     */
+//    public function basic(Request $request)
+//    {
+//        try {
+//            $hospital_code = $request->input('hospital_code');
+//
+//            $hospital_code_chk_result = $this->checkHospitalCode($hospital_code);
+//            $hospital_id = null;
+//
+//            if (!$hospital_code_chk_result[0]) {
+//                return $this->createResponse($hospital_code_chk_result[1]);
+//            } else {
+//                $hospital_id = $hospital_code_chk_result[1];
+//            }
+//            return new HospitalBasicResource($this->getHospitalData($hospital_id));
+//
+//        } catch (\Exception $e) {
+//            Log::error($e);
+//            return $this->createResponse($this->messages['system_error_db']);
+//        }
+//    }
 
     /**
      * 医療機関検査コース一覧情報取得API
@@ -94,6 +96,44 @@ class HospitalController extends ApiBaseController
                 $hospital_id = $hospital_code_chk_result[1];
             }
             return new HospitalCoursesResource($this->getHospitalData($hospital_id));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_db']);
+        }
+    }
+
+    /**
+     * 医療機関空き枠一覧情報取得API
+     *
+     * @param  Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function frame(Request $request)
+    {
+        try {
+            $hospital_code = $request->input('hospital_code');
+            $get_from_yyyymmdd = $request->input('get_from_yyyymmdd');
+            $get_to_yyyymmdd = $request->input('get_to_yyyymmdd');
+
+            $hospital_code_chk_result = $this->checkHospitalCode($hospital_code);
+            $hospital_id = null;
+
+            $from_yyyymmdd_chk_result = $this->checkDate($get_from_yyyymmdd);
+            if (!$from_yyyymmdd_chk_result[0]) {
+                return $this->createResponse($from_yyyymmdd_chk_result[1]);
+            }
+
+            $to_yyyymmdd_chk_result = $this->checkDate($get_to_yyyymmdd);
+            if (!$to_yyyymmdd_chk_result[0]) {
+                return $this->createResponse($to_yyyymmdd_chk_result[1]);
+            }
+
+            if (!$hospital_code_chk_result[0]) {
+                return $this->createResponse($hospital_code_chk_result[1]);
+            } else {
+                $hospital_id = $hospital_code_chk_result[1];
+            }
+            return new HospitalReservationFramesResource($this->getHospitalFrames($hospital_id, $get_from_yyyymmdd, $get_to_yyyymmdd));
         } catch (\Exception $e) {
             Log::error($e);
             return $this->createResponse($this->messages['system_error_db']);
@@ -127,108 +167,128 @@ class HospitalController extends ApiBaseController
     }
 
     /**
-     * 公開中医療機関コード取得API
-     *
-     * @param  App\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function release(Request $request)
-    {
-        try {
-            return new HospitalReleaseResource($this->getReleaseHospital());
-        } catch (\Exception $e) {
-            Log::error($e);
-            return $this->createResponse($this->messages['system_error_db']);
-        }
-
-    }
-
-    /**
-     * 公開中医療機関コース取得API
+     * 医療機関アクセス情報取得API
      *
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function release_course(Request $request)
+    public function access(Request $request)
     {
         try {
-            $data = ['hospital_code' => $request->input('hospital_code')];
-            return new HospitalReleaseCourseResource($data);
+            $hospital_code = $request->input('hospital_code');
+
+            $hospital_code_chk_result = $this->checkHospitalCode($hospital_code);
+            $hospital_id = null;
+
+            if (!$hospital_code_chk_result[0]) {
+                return $this->createResponse($hospital_code_chk_result[1]);
+            } else {
+                $hospital_id = $hospital_code_chk_result[1];
+            }
+            return new HospitalAccessResource($this->getAccessData($hospital_id));
         } catch (\Exception $e) {
             Log::error($e);
             return $this->createResponse($this->messages['system_error_db']);
         }
-
-    }
-
-    /**
-     * 医療機関予約数取得API
-     *
-     * @param  Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function reserve_cnt(Request $request)
-    {
-//        try {
-            $data = ['data' => $this->getReserveCnt($request->input('hospital_no'))];
-            return new HospitalReserveCntBaseResource($data);
-//        } catch (\Exception $e) {
-//            Log::error($e);
-//            return $this->createResponse($this->messages['system_error_db']);
-//        }
     }
 
     /**
      * 医療機関情報取得
      *
-     * @param	object	$objDb			データベースオブジェクト
-     * @param	string	$sHospitalNo	医療施設番号
-     * @return	object					TOPページ情報
+     * @param	string	$hospital_id	医療施設ID
+     * @return	object					医療期間情報
      **/
-    public static function getHospitalData($hospital_id)
+    private function getHospitalData($hospital_id)
     {
-        $from_date = Carbon::today();
-        $from = $from_date->year . sprintf('%02d', $from_date->month);
-
-        $to_date = Carbon::today()->addMonthsNoOverflow(2)->endOfMonth();
-        $to = $to_date->year . sprintf('%02d', $to_date->month);
+        $today = Carbon::today()->toDateString();
         return Hospital::with([
             'contract_information',
-            'courses.course_details',
-            'courses.course_details.major_classification',
-            'courses.course_details.middle_classification',
-            'courses.course_details.minor_classification',
-            'courses.course_images.hospital_image',
-            'options',
-            'prefecture',
-            'district_code',
+            'hospital_details',
+            'hospital_details.minor_classification',
             'medical_treatment_times',
+            'hospital_categories'  => function ($query) {
+                $query->orderBy('image_order')
+                    ->orderBy('file_location_no');
+            },
             'hospital_categories.image_order',
-            'hospital_categories.hospital_image'
+            'hospital_categories.hospital_image',
+            'courses',
+            'courses.course_details' => function ($query) {
+                $query->whereIn('major_classification_id', [2, 3, 4, 5, 6, 11, 13, 15, 19, 24]);
+            },
+            'courses.course_details.minor_classification' => function ($query) {
+                $query->orderBy('order');
+            },
+            'courses.course_images.hospital_image'
         ])
-            ->whereHas('courses' , function($q) {
-                $q->where('courses.is_category', 0);
+            ->whereHas('courses' , function($q) use ($today) {
+                $q->where('courses.is_category', 0)
+                ->where('web_reception', 0)
+                ->where('publish_start_date', '<=', $today)
+                ->where('publish_end_date', '>=', $today)
+                ;
             })
             ->find($hospital_id);
     }
 
     /**
-     * 検査コースコンテンツ取得
+     * @param $hospital_id
+     * @param $get_from_date
+     * @param $get_to_date
+     */
+    private function getHospitalFrames($hospital_id, $get_from_date, $get_to_date) {
+
+        $today = Carbon::today()->toDateString();
+        $from_date = Carbon::createMidnightDate(
+            substr($get_from_date, 0, 4),
+            substr($get_from_date, 4, 2),
+            substr($get_from_date, 6, 2))->toDateString();
+
+        $to_date = Carbon::createMidnightDate(
+            substr($get_to_date, 0, 4),
+            substr($get_to_date, 4, 2),
+            substr($get_to_date, 6, 2))->toDateString();
+
+        return Hospital::with([
+            'hospital_categories' => function ($query) {
+                $query->whereIn('image_order', [3, 4]);
+            },
+            'contract_information',
+            'courses',
+            'courses.course_details' => function ($query) {
+                $query->whereIn('major_classification_id', [11, 13]);
+            },
+            'courses.course_details.minor_classification',
+            'courses.calendar_days' => function ($query) use ($from_date, $to_date) {
+                $query->where('date', '>=', $from_date)
+                ->where('date', '<=', $to_date);
+            },
+        ])
+            ->whereHas('courses' , function($q) use ($today) {
+                $q->where('courses.is_category', 0)
+                    ->where('web_reception', 0)
+                    ->where('publish_start_date', '<=', $today)
+                    ->where('publish_end_date', '>=', $today)
+                ;
+            })
+            ->find($hospital_id);
+
+    }
+
+    /**
+     * 医療機関コースコンテンツ取得
      *
-     * @param  Collection $courses
-     * @param  string $hospital_code ドクネットID
+     * @param  string $hospital_id 医療機関ID
      * @return Illuminate\Support\Collection 整形結果
      */
     private function getContent($hospital_id)
     {
         $entity = Hospital::with([
             'contract_information',
-            'hospital_details',
-            'hospital_details.minor_classification',
-            'hospital_details.minor_classification.major_classification',
-            'hospital_details.minor_classification.middle_classification',
-            'hospital_categories',
-            'hospital_categories.image_order',
+            'hospital_categories' => function ($query) {
+                $query->whereIn('image_order', [3, 4, 6, 7, 8]);
+                $query->orderBy('order2');
+            },
             'hospital_categories.hospital_image',
             'hospital_categories.interview_details',
         ])
@@ -238,66 +298,23 @@ class HospitalController extends ApiBaseController
     }
 
     /**
-     * 公開中医療機関情報取得
+     * 医療機関アクセス取得
+     *
+     * @param  string $hospital_id 医療機関ID
+     * @return Hospital
      */
-    private function getReleaseHospital() {
-
-        return Hospital::join('contract_informations', 'contract_informations.hospital_id', 'hospitals.id')
-            ->where('status', Status::VALID)
-            ->pluck('contract_informations.code');
-    }
-
-    private function getReserveCnt($hospital_codes) {
-
-        $hospital_code_array = explode(',', $hospital_codes);
-        $from = Carbon::today()->subDay(30);
-        $to = Carbon::today();
-
-        $hospitals = Hospital::with([
+    private function getAccessData($hospital_id)
+    {
+        $entity = Hospital::with([
             'contract_information',
-            'courses' => function($q) {
-                $q->where('publish_start_date', '<=', Carbon::today())
-                    ->orWhereNull('publish_start_date');
-                $q->where('publish_end_date', '>=', Carbon::today())
-                    ->orWhereNull('publish_end_date');
-                $q->where('is_category', 0);
-                $q->where('web_reception', 0);
+            'hospital_categories' => function ($query) {
+                $query->whereIn('image_order', [3, 4]);
+                $query->orderBy('order2');
             },
-            'courses.reservations' => function ($q) use ($from, $to) {
-                $q->where('reservation_status', '<>', ReservationStatus::CANCELLED);
-                $q->whereBetween('reservation_date', [$from, $to]);
-            }
+            'medical_treatment_times',
         ])
-            ->where('hospitals.status', Status::VALID)
-            ->whereHas('contract_information' , function($q) use($hospital_code_array) {
-                $q->whereIn('contract_informations.code', $hospital_code_array);
-            })
-            ->get();
-        $results = [];
+            ->find($hospital_id);
 
-        foreach ($hospitals as $hospital) {
-
-            if (empty($hospital->contract_information)) {
-                continue;
-            }
-
-            if (empty($hospital->courses)) {
-                continue;
-            }
-
-            $result = [];
-            foreach ($hospital->courses as $course) {
-                if (empty($course->reservations)) {
-                    $result[] = ['course_no' => $course->id, 'r_vol' => 0];
-                    continue;
-                } else {
-                    $result[] = ['course_no' => $course->id, 'r_vol' => $course->reservations->count()];
-                }
-            }
-
-            $results[] = [$hospital->contract_information->code => $result];
-        }
-
-        return $results;
+        return $entity;
     }
 }

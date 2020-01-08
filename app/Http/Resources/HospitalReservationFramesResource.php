@@ -2,13 +2,12 @@
 
 namespace App\Http\Resources;
 
-use App\Station;
 use Illuminate\Http\Resources\Json\Resource;
 
-class HospitalCoursesResource extends Resource
+class HospitalReservationFramesResource extends Resource
 {
     /**
-     * 医療機関検査コース一覧 リソースクラス
+     * 医療機関空き枠情報雨一覧 リソースクラス
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
@@ -19,7 +18,7 @@ class HospitalCoursesResource extends Resource
             collect([])
                 ->merge(new HospitalBasicResource($this))
                 ->put('exam_type', $this->getCategoryType())
-                ->put('courses', CoursesBaseResource::collection($this->courses))
+                ->put('courses', CoursesFramesResource::collection($this->courses))
                 ->toArray();
     }
 

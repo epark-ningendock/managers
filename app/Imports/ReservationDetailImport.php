@@ -291,30 +291,30 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                 }
             }
 
-//            $options = explode('|', $this->getValue($row, 'OPTION_CD'));
-//            $option_prices = explode('|', $this->getValue($row, 'OPTION_PRICE_TAX'));
-//
-//            for ($i = 0; $i < count($options); $i++) {
-//
-//                $hospital_no = trim($this->hospital_no);
-//                $option_cd = $options[$i];
-//                $option_group_cd = $this->getValue($row, 'OPTION_GROUP_CD');
-//
-//                $old_option = OldOption::query()->where('hospital_no', $hospital_no)
-//                    ->where('option_cd', $option_cd)
-//                    ->where('option_group_cd', $option_group_cd)
-//                    ->first();
-//                if (!$old_option) {
-//                    continue;
-//                }
-//                $reservation_option = new ReservationOption();
-//                $reservation_option->reservation_id = $reservation->id;
-//                $reservation_option->option_id = $old_option->option_id;
-//                $reservation_option->option_price = $option_prices[$i];
-//                $reservation_option->status = Status::VALID;
-//                $reservation_option->save();
-//
-//            }
+            $options = explode('|', $this->getValue($row, 'OPTION_CD'));
+            $option_prices = explode('|', $this->getValue($row, 'OPTION_PRICE_TAX'));
+
+            for ($i = 0; $i < count($options); $i++) {
+
+                $hospital_no = trim($this->hospital_no);
+                $option_cd = $options[$i];
+                $option_group_cd = $this->getValue($row, 'OPTION_GROUP_CD');
+
+                $old_option = OldOption::query()->where('hospital_no', $hospital_no)
+                    ->where('option_cd', $option_cd)
+                    ->where('option_group_cd', $option_group_cd)
+                    ->first();
+                if (!$old_option) {
+                    continue;
+                }
+                $reservation_option = new ReservationOption();
+                $reservation_option->reservation_id = $reservation->id;
+                $reservation_option->option_id = $old_option->option_id;
+                $reservation_option->option_price = $option_prices[$i];
+                $reservation_option->status = Status::VALID;
+                $reservation_option->save();
+
+            }
 
         } catch (\Throwable $e) {
             Log::error($e->getMessage());

@@ -28,7 +28,7 @@ class PvAggregateCommand extends Command
         }
 
         $date = Carbon::today();
-        $date->subDay($aggregateDay);
+        $date = $date->subDay($aggregateDay);
 
         // PV集計ジョブをキューに登録
         $this->queue($date, $deleteFlg);

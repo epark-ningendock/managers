@@ -14,16 +14,10 @@ class ImagePathsResource extends Resource
      */
     public function toArray($request)
     {
-        if(!isset($this)) return;
+        if(!isset($this)) return [];
 
         $path = $this->path ?? '';
-//        $name = $this->name ?? '';
-//        $extension = $this->extension ?? '';
-        if (isset($this->memo1)) {
-            $alt = $this->memo1 ?? '';
-        } else {
-            $alt = '';
-        }
+        $alt = '';
 
         return
         [

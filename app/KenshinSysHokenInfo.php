@@ -22,6 +22,6 @@ class KenshinSysHokenInfo extends SoftDeleteModel
 
     public function kenshin_sys_dantai_infos()
     {
-        return $this->belongsTo('App\KenshinSysDantaiInfo');
+        return $this->belongsTo(KenshinSysDantaiInfo::class);
     }
 }

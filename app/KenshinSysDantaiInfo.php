@@ -13,7 +13,7 @@ class KenshinSysDantaiInfo extends SoftDeleteModel
         'deleted_at'];
 
     protected $fillable = [
-        'hospital_id',
+        'kenshin_sys_hospital_id',
         'kenshin_sys_dantai_no',
         'kenshin_sys_dantai_nm',
         'created_at',
@@ -22,11 +22,11 @@ class KenshinSysDantaiInfo extends SoftDeleteModel
 
     public function courses()
     {
-        return $this->hasMany('App\Course');
+        return $this->hasMany(KenshinSysCourse::class);
     }
 
     public function kenshin_sys_hoken_infos()
     {
-        return $this->hasMany('App\KenshinSysHokenInfo');
+        return $this->hasMany(KenshinSysHokenInfo::class);
     }
 }

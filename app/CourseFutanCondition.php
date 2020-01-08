@@ -14,7 +14,7 @@ class CourseFutanCondition extends SoftDeleteModel
 
     protected $fillable = [
         'course_id',
-        'kenshin_sys_course_no',
+        'kenshin_sys_course_id',
         'jouken_no',
         'sex',
         'honnin_kbn',
@@ -25,7 +25,7 @@ class CourseFutanCondition extends SoftDeleteModel
 
     public function courses()
     {
-        return $this->belongsTo('App\Course');
+        return $this->belongsTo(KenshinSysCourse::class);
     }
 
     public function course_target_ages()

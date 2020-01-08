@@ -17,9 +17,7 @@ class CreateOptionFutanConditionsTable extends Migration
     {
         Schema::create('option_futan_conditions', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('option_id')->unsigned();
-            $table->foreign('option_id')->references('id')->on('options');
-            $table->integer('kenshin_sys_option_no');
+            $table->integer('kenshin_sys_option_id')->unsigned();
             $table->integer('jouken_no');
             $table->integer('sex');
             $table->integer('honnin_kbn');

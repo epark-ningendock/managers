@@ -14,6 +14,7 @@ use App\Hospital;
 use App\HospitalCategory;
 use App\HospitalDetail;
 use App\HospitalImage;
+use App\HospitalMeta;
 use App\HospitalMajorClassification;
 use App\HospitalMiddleClassification;
 use App\HospitalMinorClassification;
@@ -32,6 +33,7 @@ use App\Imports\HospitalCategoryImport;
 use App\Imports\HospitalDetailImport;
 use App\Imports\HospitalImageImport;
 use App\Imports\HospitalImport;
+use App\Imports\HospitalMetaImport;
 use App\Imports\HospitalMajorClassificationImport;
 use App\Imports\HospitalMiddleClassificationImport;
 use App\Imports\HospitalMinorClassificationImport;
@@ -102,16 +104,16 @@ return [
 //        'import' => MinorClassificationImport::class,
 //        'seed' => true,
 //    ],
-//    'm_contract_plan.csv' => [
-//        'model' => ContractPlan::class,
-//        'import' => ContractPlanImport::class,
-//        'seed' => false,
-//    ],
-//    'm_hospital.csv' => [
-//        'model' => Hospital::class,
-//        'import' => HospitalImport::class,
-//        'seed' => true,
-//    ],
+    'm_contract_plan.csv' => [
+        'model' => ContractPlan::class,
+        'import' => ContractPlanImport::class,
+        'seed' => false,
+    ],
+    'm_hospital.csv' => [
+        'model' => Hospital::class,
+        'import' => HospitalImport::class,
+        'seed' => true,
+    ],
 //    'm_hospital_category_dai.csv' => [
 //        'model' => HospitalMajorClassification::class,
 //        'import' => HospitalMajorClassificationImport::class,
@@ -132,52 +134,52 @@ return [
 //        'import' => StaffImport::class,
 //        'seed' => false,
 //    ],
-//    'm_course_basic.csv' => [
-//        'model' => Course::class,
-//        'import' => CourseImport::class,
-//        'seed' => false,
-//    ],
-//    'm_course_detail.csv' => [
-//        'model' => CourseDetail::class,
-//        'import' => CourseDetailImport::class,
-//        'seed' => false,
-//    ],
-//
-//    'm_course_question.csv' => [
-//        'model' => CourseQuestion::class,
-//        'import' => CourseQuestionImport::class,
-//        'seed' => false,
-//    ],
-//    'm_file_location.csv' => [
-//        'model' => ImageOrder::class,
-//        'import' => ImageOrderImport::class,
-//        'seed' => false,
-//    ],
-//    'm_hospital_file.csv' => [
-//        'model' => HospitalImage::class,
-//        'import' => HospitalImageImport::class,
-//        'seed' => false,
-//    ],
-//    'm_hospital_time.csv' => [
-//        'model' => MedicalTreatmentTime::class,
-//        'import' => MedicalTreatmentTimeImport::class,
-//        'seed' => false,
-//    ],
-//    'm_hospital_detail.csv' => [
-//        'model' => HospitalDetail::class,
-//        'import' => HospitalDetailImport::class,
-//        'seed' => false,
-//    ],
-//    'm_course_file.csv' => [
-//        'model' => CourseImage::class,
-//        'import' => CourseImageImport::class,
-//        'seed' => false,
-//    ],
-//    'm_hospital_category.csv' => [
-//        'model' => HospitalCategory::class,
-//        'import' => HospitalCategoryImport::class,
-//        'seed' => false,
-//    ],
+    'm_course_basic.csv' => [
+        'model' => Course::class,
+        'import' => CourseImport::class,
+        'seed' => false,
+    ],
+    'm_course_detail.csv' => [
+        'model' => CourseDetail::class,
+        'import' => CourseDetailImport::class,
+        'seed' => false,
+    ],
+
+    'm_course_question.csv' => [
+        'model' => CourseQuestion::class,
+        'import' => CourseQuestionImport::class,
+        'seed' => false,
+    ],
+    'm_file_location.csv' => [
+        'model' => ImageOrder::class,
+        'import' => ImageOrderImport::class,
+        'seed' => false,
+    ],
+    'm_hospital_file.csv' => [
+        'model' => HospitalImage::class,
+        'import' => HospitalImageImport::class,
+        'seed' => false,
+    ],
+    'm_hospital_time.csv' => [
+        'model' => MedicalTreatmentTime::class,
+        'import' => MedicalTreatmentTimeImport::class,
+        'seed' => false,
+    ],
+    'm_hospital_detail.csv' => [
+        'model' => HospitalDetail::class,
+        'import' => HospitalDetailImport::class,
+        'seed' => false,
+    ],
+    'm_course_file.csv' => [
+        'model' => CourseImage::class,
+        'import' => CourseImageImport::class,
+        'seed' => false,
+    ],
+    'm_hospital_category.csv' => [
+        'model' => HospitalCategory::class,
+        'import' => HospitalCategoryImport::class,
+        'seed' => false,
+    ],
 //    'm_rail_corp.csv' => [
 //        'model' => RailwayCompany::class,
 //        'import' => RailwayCompanyImport::class,
@@ -204,16 +206,16 @@ return [
 //        'seed' => true,
 //    ],
 
-//    'm_option.csv' => [
-//        'model' => Option::class,
-//        'import' => OptionImport::class,
-//        'seed' => true,
-//    ],
-//    'm_course_option_group.csv' => [
-//        'model' => CourseOption::class,
-//        'import' => CourseOptionImport::class,
-//        'seed' => false,
-//    ],
+    'm_option.csv' => [
+        'model' => Option::class,
+        'import' => OptionImport::class,
+        'seed' => true,
+    ],
+    'm_course_option_group.csv' => [
+        'model' => CourseOption::class,
+        'import' => CourseOptionImport::class,
+        'seed' => false,
+    ],
     'm_availability.csv' => [
         'model' => Availabil::class,
         'import' => AvailabilityImport::class,
@@ -223,4 +225,9 @@ return [
 //        'import' => \App\Imports\ReservationOptionImport::class,
 //        'seed' => true,
 //    ],
+    'm_hospital_meta.csv' => [
+        'model' => HospitalMeta::class,
+        'import' => HospitalMetaImport::class,
+        'seed' => false,
+    ],
 ];

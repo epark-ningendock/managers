@@ -116,6 +116,11 @@ class Hospital extends Model
         return $this->hasMany('App\HospitalDetail');
     }
 
+    public function hospital_metas()
+    {
+        return $this->hasOne('App\HospitalMeta');
+    }
+
     public function contract_information()
     {
         return $this->hasOne('App\ContractInformation', 'hospital_id', 'id');
@@ -149,11 +154,6 @@ class Hospital extends Model
     public function medical_treatment_times()
     {
         return $this->hasMany('App\MedicalTreatmentTime');
-    }
-
-    public function reception_email_setting()
-    {
-        return $this->hasOne('App\ReceptionEmailSetting');
     }
 
     public function hospital_plan()

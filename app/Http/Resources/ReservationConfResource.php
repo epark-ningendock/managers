@@ -16,14 +16,13 @@ class ReservationConfResource extends Resource
     public function toArray($request)
     {
         // 受診日
-        $completed_date = $this->completed_date;
+        $completed_date = $this->reservation_date;
 
         // キャンセル受付変更期限（日）
         $cancellation_deadline = intval($this->course->cancellation_deadline);
 
         // キャンセル可能日
-        $cancellation_date = Carbon::create($completed_date)->subDay($cancellation_deadline);
-        $cancellation_date = date('Y/m/d', strtotime($cancellation_date));
+        $cancellation_date = Carbon::parse($completed_date)->subDay($cancellation_deadline)->toDateString();
 
         // 町村字番地/建物名分割
         $pieces = explode(' ', $this->customer->address2);
@@ -31,10 +30,10 @@ class ReservationConfResource extends Resource
         return collect([])
             ->put('status', 0)
             ->put('result_code', $this->result_code)
-            ->put('reservation_status', $this->reservation_status)
+            ->put('reservation_status', (string) $this->reservation_status)
             ->put('course_id', $this->course_id)
             ->put('course_name', $this->course->name)
-            ->put('reservation_date', $this->reservation_date)
+            ->put('reservation_date', Carbon::parse($this->reservation_date)->toDateString())
             ->put('start_time_hour', $this->start_time_hour)
             ->put('start_time_min', $this->start_time_min)
             ->put('end_time_hour', $this->end_time_hour)
@@ -45,14 +44,14 @@ class ReservationConfResource extends Resource
             ->put('last_name_kana', $this->customer->family_name_kana)
             ->put('first_name_kana', $this->customer->first_name_kana)
             ->put('birthday', $this->customer->birthday)
-            ->put('sex', $this->customer->sex)
+            ->put('sex', (string) $this->customer->sex)
             ->put('email', $this->customer->email)
             ->put('tel_no', $this->customer->tel)
             ->put('post_code', $this->customer->postcode)
             ->put('prov_code', $this->customer->prefecture_id)
-            ->put('city', $this->customer->address1)
-            ->put('district', $pieces[0])
-            ->put('building_name', $pieces[1])
+            ->put('city', $this->customer->prefecture->name)
+            ->put('district', $this->customer->address1 ?? '')
+            ->put('building_name', $this->customer->address2 ?? '')
             ->put('registration_card_num', $this->customer->registration_card_number)
 
             ->put('user_message', $this->user_message)
@@ -71,7 +70,7 @@ class ReservationConfResource extends Resource
             ->put('facility_name', $this->hospital->name)
             ->put(
                 'facility_addr',
-                $this->hospital->district_code->prefecture->name . ' ' .
+                $this->hospital->prefecture->name . ' ' .
                 $this->hospital->district_code->name . ' ' .
                 $this->hospital->address1 . ' ' . $this->hospital->address2
             )
@@ -110,7 +109,7 @@ class ReservationConfResource extends Resource
             'last_name_kana' => $reservation->customer->family_name_kana ?? '',
             'first_name_kana' => $reservation->customer->first_name_kana ?? '',
             'birthday' => $birthday,
-            'sex' => $reservation->customer->sex,
+            'sex' => (string) $reservation->customer->sex,
             'repeat_fg' => $reservation->is_repeat,
             'representative_fg' => $reservation->is_representative,
             'email' => $reservation->customer->email,

@@ -5,10 +5,13 @@ namespace App\Services;
 use App\Calendar;
 use App\CalendarDay;
 use App\ContractInformation;
+use App\ContractPlan;
 use App\CourseQuestion;
+use App\Enums\Status;
 use App\Hospital;
 use App\HospitalCategory;
 use App\HospitalEmailSetting;
+use App\HospitalPlan;
 use App\MonthlyWaku;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
@@ -56,7 +59,7 @@ class ReservationService
             'hospital',
             'hospital.district_code',
             'hospital.district_code.prefecture',
-            'hospital.reception_email_setting',
+            'hospital.hospital_email_setting',
             'course',
             'reservation_answers',
             'reservation_options',
@@ -87,10 +90,10 @@ class ReservationService
         $cancellation_deadline = intval($entity->course->cancellation_deadline);
 
         // キャンセル可能日
-        $cancellation_date = Carbon::create($completed_date)->subDay($cancellation_deadline);
+        $cancellation_date = Carbon::parse($completed_date)->subDay($cancellation_deadline);
 
         // キャンセル要求日
-        $today = Carbon::now();
+        $today = Carbon::today();
 
         if ($cancellation_date < $today) {
             Log::error('変更不可 予約ID:' . $entity->id);
@@ -231,7 +234,11 @@ class ReservationService
             ->whereDate('date', $target->toDateString())
             ->first();
 
-        $calendar_day->reservation_count = intval($calendar_day->reservation_count) + $count;
+        $reservation_count = intval($calendar_day->reservation_count) + $count;
+        if ($reservation_count < 0) {
+            $reservation_count = 0;
+        }
+        $calendar_day->reservation_count = $reservation_count;
         $calendar_day->save();
 
     }
@@ -246,16 +253,24 @@ class ReservationService
     {
         // パラメータ取得
         $process = intval($request->input('process_kbn'));
-        $hospital_id = $request->input('hospital_id');
         $course_id = $request->input('course_id');
         $reservation_date = date('Y-m-d', strtotime($request->input('reservation_date')));
 
+        $course = Course::find($course_id);
+        if (!$course) {
+            return 3;
+        }
+        $calendar_day = CalendarDay::where('date', $reservation_date)
+            ->where('calendar_id', $course->calendar_id)
+            ->first();
+
+        if (!$calendar_day) {
+            return 3;
+        }
+
         // 新規の場合、休診日かどうか確認
-        if ($process === self::REGISTRATION) {
-            $Holidays = Holiday::where('hospital_id', $hospital_id)->where('date', $reservation_date)->get();
-            if (!$Holidays->isEmpty()) {
-                return 1;
-            }
+        if ($process === self::REGISTRATION && $calendar_day->is_holiday == 1) {
+            return 1;
         }
 
         // 更新の場合、予約情報があるかどうか確認
@@ -266,22 +281,15 @@ class ReservationService
             }
         }
 
-        // 対象取得
-        $entity = Course::with([
-            'calendar_days' => function ($query) use ($reservation_date) {
-                $query->where('date', $reservation_date);
-            }
-        ])->find($course_id);
-
         // 予約情報チェック
         // 受付許可日／受付終了日確認
-        $start_month = $entity->reception_start_date / 1000;
-        $start_day = $entity->reception_start_date % 1000;
+        $start_month = $course->reception_start_date / 1000;
+        $start_day = $course->reception_start_date % 1000;
         $reception_start_date = Carbon::today();
-        $reception_start_date->addMonthsNoOverflow($start_month);
-        $reception_start_date->addDays($start_day);
-        $end_month = $entity->reception_end_date / 1000;
-        $end_day = $entity->reception_end_date % 1000;
+        $reception_start_date->subMonthsNoOverflow($start_month);
+        $reception_start_date->subDays($start_day);
+        $end_month = $course->reception_end_date / 1000;
+        $end_day = $course->reception_end_date % 1000;
         $reception_end_date = Carbon::today();
         $reception_end_date->addMonthsNoOverflow($end_month);
         $reception_end_date->addDays($end_day);
@@ -292,23 +300,13 @@ class ReservationService
         }
 
         if ($process === self::REGISTRATION) { // 新規の場合、予約枠数の確認
-            // 既予約数取得
-            $courses = Course::where('calendar_id', $entity->calendar_id)->get();
-            foreach ($courses as $course) {
-                $course_ids[] = $course->id;
+            if ($calendar_day->reservation_frames == 0 || $calendar_day->is_reservation_acceptance == 0) {
+                return 4;
             }
-            $reservation_count = Reservation::getReservationCount($request, $reservation_date, $course_ids);
-            // 予約受付、枠数確認
-            $entity->calendar_days->map(function ($c) use ($reservation_count) {
-                $reservation_frames = intval($c->reservation_frames);
-                $is_reservation_acceptance = intval($c->is_reservation_acceptance);
-                if ($is_reservation_acceptance === 0 || $reservation_frames === 0) { // 枠なし
-                   return 4;
-                }
-                if ($reservation_frames <= $reservation_count) { // 空きなし
-                   return 5;
-                }
-            });
+
+            if ($calendar_day->reservation_frames <= $calendar_day->reservation_count) {
+                return 5;
+            }
         }
         return 0;
     }
@@ -333,10 +331,10 @@ class ReservationService
 
             // 顧客登録/更新
             // $customer = $customer->saveOrFail();
-            $customer->saveOrFail();
+            $customer->save();
             // 予約登録/更新
             $reservation->customer_id = $customer->id;
-            $reservation->saveOrFail();
+            $reservation->save();
 
             // 予約オプション洗い替え
             ReservationOption::where('reservation_id', $reservation->id)->delete();
@@ -372,7 +370,7 @@ class ReservationService
     {
         // メールで使用する情報の取得
         $entity = $this->find($reservation->id);
-        $hospital_email_setting = HospitalEmailSetting::fing($entity->hospital_id);
+        $hospital_email_setting = HospitalEmailSetting::find($entity->hospital_id);
 
         // キャンセル処理(処理区分がある)かどうか
         $is_cancel = $entity->reservation_status === ReservationStatus::CANCELLED ? true : false;
@@ -435,37 +433,33 @@ class ReservationService
      * @param  \Illuminate\Http\Request  $request
      * @return App\Customer entity
      */
-    private function _customer_from_request($request): Customer
+    private function _customer_from_request($request)
     {
-        // 受診者配列先頭取得
-        $members = $request->input('regist_member');
-        $member = collect(json_decode(json_encode($members)))->filter(function ($m) {
-            return isset($m);
-        })->toArray()[0];
 
         $entity = Customer::where('epark_member_id', $request->input('epark_member_id'))
-                            ->where('hospital_id', $request->input('hospital_id'));
+                            ->where('hospital_id', $request->input('hospital_id'))
+                            ->first();
 
         // 処理区分セット
         $process = intval($request->input('process_kbn'));
         if (! $entity) { // 新規
             $entity = new Customer();
-
+            $entity->hospital_id = $request->input('hospital_id');
         }
-        $entity->parent_customer_id = null;
+        $entity->parent_customer_id = 0;
         // 設定不要 ※テーブルからunique制約外す
         $entity->member_number = 0;
 
         // 新規登録時は顧客テーブルへ受診者情報を新規顧客として登録する。
-        $entity->registration_card_number = $request->input('registration_card_num') ?? $entity->registration_card_number;
-        $entity->family_name = $member->last_name;
-        $entity->first_name = $member->first_name;
-        $entity->family_name_kana = $member->last_name_kana ?? $entity->family_name_kana;
-        $entity->first_name_kana = $member->first_name_kana ?? $entity->first_name_kana;
-        $entity->tel = $request->input('tel_no') ?? $entity->tel;
+        $entity->registration_card_number = $request->input('registration_card_num') ?? $entity->registration_card_number ?? '';
+        $entity->family_name = $request->input('last_name');
+        $entity->first_name = $request->input('first_name');
+        $entity->family_name_kana = $request->input('last_name_kana') ?? $entity->family_name_kana ?? '';
+        $entity->first_name_kana = $request->input('first_name_kana') ?? $entity->first_name_kana ?? '';
+        $entity->tel = $request->input('tel_no') ?? $entity->tel ?? '';
         $entity->email = $request->input('email');
-        $entity->sex = $member->sex ?? $entity->sex;
-        $entity->birthday = date('Ymd', strtotime($member->birthday)) ?? $entity->birthday;
+        $entity->sex = $request->input('sex') ?? $entity->sex ?? '';
+        $entity->birthday = date('Ymd', strtotime($request->input('birthday'))) ?? $entity->birthday ?? '';
 
         // 以下補完（epark人間ドックの場合、予約者=受診者になる)
         $district =  $request->input('district') ?? '';
@@ -478,6 +472,7 @@ class ReservationService
         $entity->claim_count = $process === self::REGISTRATION ? 0 : $entity->claim_count;
         $entity->recall_count = $process === self::REGISTRATION ? 0 : $entity->recall_count;
         $entity->epark_member_id = $request->input('epark_member_id') ?? $entity->epark_member_id;
+        $entity->status = Status::VALID;
 
 
         return $entity;
@@ -501,16 +496,14 @@ class ReservationService
 
         $hospital = Hospital::find($request->input('hospital_id'));
 
-        // 受診者配列先頭取得
-        $members = $request->input('regist_member');
-        $member = $members[0];
         // 処理区分セット
         $process = intval($request->input('process_kbn'));
         if ($process === self::REGISTRATION) { // 新規
             $entity = new Reservation();
             // 医療機関プラン取得
             $hospitalPlan = $this->getApplyPlan($request->input('hospital_id'));
-            $entity->fee_rate = $hospitalPlan->contract_plan->fee_rate;
+            $contract_plan = ContractPlan::find($hospitalPlan->contract_plan_id);
+            $entity->fee_rate = $contract_plan->fee_rate;
         } else { // 更新
             $entity = Reservation::find($request->input('reservation_id'));
         }
@@ -531,12 +524,9 @@ class ReservationService
         $entity->terminal_type = $request->input('terminal_tp');
         $entity->time_selected = $request->input('time_selected') ?? $entity->time_selected;
 
-        $entity->is_repeat = $member['repeat_fg'] ?? $entity->is_repeat;
-        $entity->is_representative = $member['representative_fg'];
+        $entity->is_repeat = $request->input('repeat_fg') ?? $entity->is_repeat;
+        $entity->is_representative = $request->input('representative_fg');
 
-        $entity->timezone_pattern_id = 0;
-        $entity->timezone_id = 0;
-        $entity->order = $entity->timezone_pattern_id . '_' . $entity->timezone_id . '_' . '0';
         $entity->tax_included_price = $request->input('course_price_tax') ?? $entity->tax_included_price;
         $entity->tax_rate = $course->tax_class->rate ?? 0;
 
@@ -568,7 +558,7 @@ class ReservationService
         $entity->applicant_tel = $request->input('tel_no') ?? $entity->applicant_tel;
 
         $options = $request->input('option_array');
-        if ($hospital->hplink_contract_type == HplinkContractType::NON) {
+        if ($hospital->hplink_contract_type == HplinkContractType::NONE) {
             $option_price = 0;
             foreach ($options as $option) {
                 $option_price += $option['option_price_tax'];
@@ -681,9 +671,12 @@ class ReservationService
     private function getApplyPlan(int $hospitalId) {
 
         $targetDay = Carbon::today();
-        return HospitalPlans::where('id', $hospitalId)
+        return HospitalPlan::where('id', $hospitalId)
             ->where('from', '<=', $targetDay)
-            ->where('to', '>=', $targetDay)
+            ->where(function ($query) use ($targetDay) {
+                $query->where('to', '>=', $targetDay)
+                    ->orWhereNull('to');
+            })
             ->first();
     }
 

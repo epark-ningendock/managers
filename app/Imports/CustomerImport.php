@@ -40,7 +40,7 @@ class CustomerImport extends ImportBAbstract implements WithChunkReading
 
         $model = new Customer([
             'parent_customer_id' => $this->getValue($row, 'PARENT_CUSTOMER_ID'),
-            'member_number' => $this->getValue($row, 'MEMBER_NO'),
+            'member_number' => $this->getValue($row, 'EPARK_MEMBER_ID'),
             'registration_card_number' => $this->getValue($row, 'EXAMINATION_NO'),
             'family_name' => $this->getValue($row, 'LAST_NAME'), //@todo ハッシュ方法不明
             'first_name' => $this->getValue($row, 'FIRST_NAME'), //@todo ハッシュ方法不明

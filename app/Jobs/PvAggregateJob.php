@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Hospital;
 use App\PvRecord;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -33,18 +34,10 @@ class PvAggregateJob implements ShouldQueue
         $this->resetPvCount();
 
         // 医療機関ごとの指定日付分のpv数を取得する。
-        $query = PvRecord::getPvData($this->aggregateDate);
-        $pvRecords = collect($query->get()->toArray());
-
-        // 医療機関のpv数を更新する
-        if (count($pvRecords)) {
-            $this->updatePvCount($pvRecords);
-        }
+        $this->updatePvCount();
 
         // 過のpvデータを削除する
-        if ($this->deleteFlg) {
-            $this->deletePvData();
-        }
+        $this->deletePvData();
 
     }
 
@@ -52,23 +45,21 @@ class PvAggregateJob implements ShouldQueue
      * PV数をリセットする
      */
     protected function resetPvCount() {
-        $pvRecords = PvRecord::all();
-        foreach ($pvRecords as $pvRecord) {
-            $pvRecord->update(['pv_count' => 0]);
+        $hospitals = Hospital::all();
+        foreach ($hospitals as $hospital) {
+            $hospital->update(['pv_count' => 0]);
         }
     }
 
     /**
      * 医療機関のPV数を更新する
-     * @param array $pvRecords
+     * @param
      */
-    protected function updatePvCount(array $pvRecords) {
-
-        foreach ($pvRecords as $pvRecord) {
-            $hospital = new Hospital();
-            $hospital->id = $pvRecord->hospital_id;
-            $hospital->pv_count = $pvRecord->pv;
-            $hospital->save();
+    protected function updatePvCount() {
+        $hospitals = Hospital::all();
+        foreach ($hospitals as $hospital) {
+            $pv_count = PvRecord::where('hospital_id', $hospital->id)->sum('pv');
+            $hospital->update(['pv_count' => $pv_count]);
         }
     }
 
@@ -77,7 +68,7 @@ class PvAggregateJob implements ShouldQueue
      */
     protected function deletePvData() {
         $date = Carbon::today();
-        $date->subDay((config('constant.pv_aggregate_day') + 3));
+        $date->subDay(config('constant.pv_aggregate_day'));
         PvRecord::where('created_at', '<=', $date)->delete();
 
     }

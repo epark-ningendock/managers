@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Course;
 use App\CourseDetail;
 use App\CourseImage;
+use App\CourseMeta;
 use App\CourseOption;
 use App\CourseQuestion;
 use App\Enums\CourseImageType;
@@ -272,6 +273,22 @@ class CourseController extends Controller
             //Course Detail
             $minor_ids = collect($request->input('minor_ids'), []);
             $minor_values = collect($request->input('minor_values'), []);
+            $course_meta = CourseMeta::where('course_id', $course->id)->first();
+            if (!$course_meta) {
+                $course_meta = new CourseMeta();
+                $course_meta->hospital_id = $hospital->id;
+                $course_meta->course_id = $course->id;
+            }
+
+            $category_exam_name = '';
+            $category_disease_name = '';
+            $category_part_name = '';
+            $category_exam = '';
+            $category_disease = '';
+            $category_part = '';
+            $meal_flg = 0;
+            $pear_flg = 0;
+            $female_doctor_flg = 0;
 
             if ($minor_ids->isNotEmpty()) {
                 $minors = MinorClassification::whereIn('id', $minor_ids)->orderBy('order')->get();
@@ -305,8 +322,48 @@ class CourseController extends Controller
                         $course_detail->inputstring = $minor_values[$input_index];
                     }
                     $course_detail->save();
+
+                    if ($minor->major_classification_id == 13 && $minor->is_fregist == '1') {
+                        $category_exam_name = $category_exam_name . ' '. $minor->name;
+                        $category_exam = $category_exam . ' '. $minor->id;
+                    }
+
+                    if ($minor->major_classification_id == 25 && $minor->is_fregist == '1') {
+                        $category_disease_name = $category_disease_name . ' '. $minor->name;
+                        $category_disease = $category_disease . ' '. $minor->id;
+                    }
+
+                    if (($minor->major_classification_id == 2 || $minor->major_classification_id == 3 || $minor->major_classification_id == 4)
+                        && $minor->is_fregist == '1') {
+                        $category_part_name = $category_part_name . ' '. $minor->name;
+                        $category_part = $category_part . ' '. $minor->id;
+                    }
+
+                    if ($minor->id == 256 && $minor->is_fregist == '1') {
+                        $meal_flg = 1;
+                    }
+
+                    if ($minor->id == 132 && $minor->is_fregist == '1') {
+                        $pear_flg = 1;
+                    }
+
+                    if ($minor->id == 126 && $minor->is_fregist == '1') {
+                        $female_doctor_flg = 1;
+                    }
+
                 }
             }
+
+            $course_meta->category_exam_name = $category_exam_name;
+            $course_meta->category_exam = $category_exam;
+            $course_meta->category_disease_name = $category_disease_name;
+            $course_meta->category_disease = $category_disease;
+            $course_meta->category_part_name = $category_part_name;
+            $course_meta->category_part = $category_part;
+            $course_meta->meal_flg = $meal_flg;
+            $course_meta->pear_flg = $pear_flg;
+            $course_meta->female_doctor_flg = $female_doctor_flg;
+            $course_meta->save();
 
             //Course Question
             $is_questions = $request->input('is_questions');

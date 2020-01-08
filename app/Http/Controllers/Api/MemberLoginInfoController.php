@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -32,13 +33,13 @@ class MemberLoginInfoController extends ApiBaseController
         if (!isset($request->nick_use) || !NickUse::hasValue($request->nick_use)) {
             return $this->createResponse($messages['errorNickUse']);
         }
-        if (!isset($request->contact) || !NickUse::hasValue($request->contact)) {
+        if (!isset($request->contact) || !Contact::hasValue($request->contact)) {
             return $this->createResponse($messages['errorContact']);
         }
         if (mb_strlen($request->contact_name) > 32) {
             return $this->createResponse($messages['errorContactName']);
         }
-        if (!isset($request->status) || !NickUse::hasValue($request->status)) {
+        if (!isset($request->status) || !Status::hasValue($request->status)) {
             return $this->createResponse($messages['errorStatus']);
         }
 
@@ -101,20 +102,6 @@ class MemberLoginInfoController extends ApiBaseController
 
         return $this->createLoginInfoResponse($messages['success'], $memberLoginInfo);
 
-    }
-
-    /**
-     * レスポンスを生成する
-     *
-     * @param array $message
-     * @return response
-     */
-    protected function createResponse(array $message, $statusCode = 200) {
-        return response([
-            'status_code' => strval($statusCode),
-            'message' => $message['description'],
-            'message_id' => $message['code'],
-        ], $statusCode)->header('Content-Type', 'application/json; charset=utf-8');
     }
 
     /**

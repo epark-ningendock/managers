@@ -38,11 +38,11 @@ Route::prefix('v1')->group(function () {
     // 医療機関情報取得API
     Route::match(['get', 'post'], 'hospital/', 'HospitalController@index');
 
-    // 公開中医療機関情報取得API
-    Route::match(['get', 'post'], 'hospital/release', 'HospitalController@release');
+    // 医療機関空き枠情報取得API
+    Route::match(['get', 'post'], 'hospital/frame', 'HospitalController@frame');
 
-    // 公開中医療機関コース情報取得API
-    Route::match(['get', 'post'], 'hospital/release_course', 'HospitalController@release_course');
+    // 医療機関アクセス情報取得API
+    Route::match(['get', 'post'], 'hospital/access', 'HospitalController@access');
 
     // 医療機関予約数取得API
     Route::match(['get', 'post'], 'hospital/reserve_cnt', 'HospitalController@reserve_cnt');
@@ -70,13 +70,13 @@ Route::prefix('v1')->group(function () {
 
 // 以下予約API
 // 予約登録/更新API
-    Route::post('reservation-store', 'ReservationController@store');
+    Route::post('reservation-store', 'ReservationApiController@store');
 // 予約確認API
-    Route::get('reservation-conf', 'ReservationController@conf');
+    Route::get('reservation-conf', 'ReservationApiController@conf');
 // 予約キャンセルAPI
-    Route::post('reservation-cancel', 'ReservationController@cancel');
+    Route::post('reservation-cancel', 'ReservationApiController@cancel');
 // PV登録
-    Route::post('pv_regist', 'PvRegistController@store')->name('pv-regist.store');
+    Route::match(['post'], 'pv/', 'PvRegistController@store');
 // EPARK会員ログイン情報
     Route::post('memberLoginInfo', 'MemberLoginInfoController@store')->name('member-login-info.store');
     Route::get('memberLoginInfo', 'MemberLoginInfoController@show')->name('member-login-info.show');

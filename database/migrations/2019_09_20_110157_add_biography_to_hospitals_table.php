@@ -14,7 +14,7 @@ class AddBiographyToHospitalsTable extends Migration
     public function up()
     {
         Schema::table('hospitals', function (Blueprint $table) {
-            $table->string('biography', 255)->nullable();
+            $table->text('biography')->nullable();
             $table->text('representative')->nullable();
         });
     }

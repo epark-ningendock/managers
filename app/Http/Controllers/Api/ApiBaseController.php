@@ -23,11 +23,9 @@ class ApiBaseController extends Controller
      */
     protected function createResponse(array $message) {
         return response([
-            'status' => strval($message['status']),
-            'code_number' => $message['error_no'],
-            'code_detail' => $message['detail_no'],
+            'code' => strval($message['code']),
             'message' => $message['description']
-        ], $message['http_status'])->header('Content-Type', 'application/json; charset=utf-8');
+        ], 200)->header('Content-Type', 'application/json; charset=utf-8');
     }
 
     /**
@@ -117,7 +115,24 @@ class ApiBaseController extends Controller
             return [false, $this->messages['data_type_error']];
         }
 
-        if (!preg_match('/^[0-9]{6}$/u', $yyyyMM)) {
+        if (!preg_match('/^2[0-9]{5}$/u', $yyyyMM)) {
+            return [false, $this->messages['data_type_error']];
+        }
+
+        return [true];
+    }
+
+    /**
+     * @param $yyyyMM
+     * @return array
+     */
+    protected function checkDate($yyyyMMdd) {
+
+        if (!is_numeric($yyyyMMdd)) {
+            return [false, $this->messages['data_type_error']];
+        }
+
+        if (!preg_match('/^2[0-9]{7}$/u', $yyyyMMdd)) {
             return [false, $this->messages['data_type_error']];
         }
 

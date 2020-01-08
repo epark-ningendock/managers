@@ -15,25 +15,19 @@ class CalendarDailyResource extends Resource
      */
     public function toArray($request)
     {
-        $search_cond = $this['search_cond'];
-        $course = $this['course'];
-        $day_data = $this['day_data'];
-        return [
-            'status' => 0,
-            'no' => $course->hospital_id,
-            'hospital_code' => $search_cond->hospital_code,
-            'course_no' => $course->id,
-            'course_code' => $course->code,
-            'all_calender' => collect($day_data)->map(function ($c) {
-                return (object)[
-                    $c[0] => [
-                    'appoint_status' => $c[1],
-                    'appoint_num' => $c[2],
-                    'reservation_frames' => $c[3],
-                    'closed_day' => $c[4]
-                    ]
-                ];
-            }),
-        ];
+        $all_calendars = $this->calendar_days;
+        $calendars = [];
+
+        foreach ($all_calendars as $calendar) {
+            $frames = $calendar->reservation_frames = $calendar->reservation_count;
+
+            $cal = ['date' => $calendar->date,
+                'frames' => $frames,
+                'is_reservation_acceptance' => $calendar->is_reservation_acceptance,
+                'is_holiday' => $calendar->is_holiday];
+            $calendars[] = $cal;
+        }
+
+        return $calendars;
     }
 }
