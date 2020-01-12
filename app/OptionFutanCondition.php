@@ -15,7 +15,9 @@ class OptionFutanCondition extends SoftDeleteModel
         'deleted_at'];
 
     protected $fillable = [
-        'option_id',
+        'kenshin_sys_hospital_id',
+        'kenshin_sys_dantai_no',
+        'kenshin_sys_course_no',
         'kenshin_sys_option_no',
         'jouken_no',
         'sex',
@@ -30,11 +32,11 @@ class OptionFutanCondition extends SoftDeleteModel
 
     public function options()
     {
-        return $this->belongsTo('App\Option');
+        return $this->belongsTo(KenshinSysOption::class);
     }
 
     public function option_target_ages()
     {
-        return $this->hasMany('App\OptionTargetAge');
+        return $this->hasMany(OptionTargetAge::class);
     }
 }

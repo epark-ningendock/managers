@@ -36,43 +36,132 @@ class CoursesBaseResource extends Resource
             'course_code' => $this->code,
             'course_name' => $this->name,
             'course_url' => $this->createURL() . "/detail_hospital/" . $this->contract_information->code . "/detail/" . $this->code . ".html",
-            'sho_name' => $this->createShoname(),
             'web_reception' => $this->createReception(),
+            'course_img' => $this->getCourseImg($this->course_images),
+            'course_point' => $this->course_point,
             'flg_price' => $this->is_price,
             'price' => $this->price,
             'flg_price_memo' => $this->is_price_memo,
-            'price_memo' => $this->price_memo,
-            'price_2' => $this->regular_price,
-            'price_3' => $this->discounted_price,
-            'tax_class' => $this->tax_class_id,
-            'pre_account_price' => $this->pre_account_price,
+            'price_memo' => $this->price_memo ?? '',
+            'pre_account_price' => $this->pre_account_price ?? '',
             'flg_local_payment' => $this->is_local_payment,
             'flg_pre_account' => $this->is_pre_account,
             'auto_calc_application' => $this->auto_calc_application,
+            'category_chara' => $this->getCategoryChara(),
+            'category_content' => $this->getCategoryContent(),
+            'category_type' => $this->getCategoryType(),
+            'category_recommended' => $this->getCategoryRecommend(),
+            'course_option_flag' => isset($this->course_options) ? 1 : 0,
+            'month_calender' => new MonthlyCalendarResource($this),
+            'time_required' => $this->getTimeRequired(),
+            'result_examination' => $this->getResultExamination(),
         ]);
     }
 
     /**
      * @return string
-     *
      */
-    private function createShoname() {
-        $result = '';
+    private function getResultExamination() {
+
         foreach ($this->course_details as $detail) {
-            if ($detail->major_classification_id == 13
-                && $detail->middle_classification_id == 30
-            && $detail->select_status == 1
-            && $detail->status == Status::VALID) {
-                $result = $result . $detail->minor_classification->name . ',';
+            if ($detail->major_classification_id == 19) {
+                return !empty($detail->inputstring) ? $detail->inputstring : '';
             }
         }
 
-        if (!empty($result)) {
-            return rtrim($result, ',');
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    private function getTimeRequired() {
+
+        foreach ($this->course_details as $detail) {
+            if ($detail->major_classification_id == 15) {
+                return !empty($detail->inputstring) ? $detail->inputstring : '';
+            }
         }
 
-        return $result;
+        return '';
     }
+
+    /**
+     * @return array
+     */
+    private function getCategoryChara() {
+
+        $results = [];
+        foreach ($this->course_details as $detail) {
+            if ($detail->major_classification_id == 11
+                && $detail->select_status == 1
+                && $detail->status == '1'
+                && $detail->minor_classification->is_icon == '1') {
+                $result = ['id' => $detail->minor_classification_id, 'title' => $detail->minor_classification->icon_name];
+                $results[] = $result;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * @return array
+     */
+    private function getCategoryContent() {
+
+        $results = [];
+        foreach ($this->course_details as $detail) {
+            if (($detail->major_classification_id == 2
+                    || $detail->major_classification_id == 3
+                    || $detail->major_classification_id == 4
+                    || $detail->major_classification_id == 5
+                    || $detail->major_classification_id == 6)
+                && $detail->select_status == 1
+                && $detail->status == '1'
+                && $detail->minor_classification->is_icon == '1') {
+                $result = ['id' => $detail->major_classification_id, 'title' => $detail->minor_classification->icon_name];
+                $results[] = $result;
+            }
+        }
+        return array_unique($results, SORT_REGULAR);
+    }
+
+    /**
+     * @return array
+     */
+    private function getCategoryType() {
+
+        $results = [];
+        foreach ($this->course_details as $detail) {
+            if ($detail->major_classification_id == 13
+                && $detail->select_status == 1
+                && $detail->status == '1') {
+                $result = ['id' => $detail->minor_classification_id, 'title' => $detail->minor_classification->name];
+                $results[] = $result;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * @return array
+     */
+    private function getCategoryRecommend() {
+
+        $results = [];
+        foreach ($this->course_details as $detail) {
+            if ($detail->major_classification_id == 24
+                && !empty($detail->inputstring))
+                 {
+                $results[] = $detail->inputstring;
+            }
+        }
+
+        return $results;
+    }
+
 
     /**
      * @return int
@@ -141,14 +230,18 @@ class CoursesBaseResource extends Resource
      */
     protected function getCourseImg($course_images)
     {
-        if (!isset($course_images)) return '';
+        if (!isset($course_images)) return [];
 
-        $elemens = $course_images->map(function ($v) {
-            if (isset($v->image_order)) {
-                return $v->hospital_image;
+        foreach ($course_images as $course_image) {
+            if ($course_image->type == '0') {
+                return [
+                    'url' => $course_image->path ,
+                    'alt' => '',
+                ];
             }
-        });
-        return $elemens ?? null;
+        }
+
+        return [];
     }
 
     /**

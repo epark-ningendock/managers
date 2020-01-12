@@ -30,4 +30,8 @@ class KenshinSysCooperation extends SoftDeleteModel
     {
         return $this->belongsTo('App\MedicalExaminationSystem');
     }
+
+    public function hospitals() {
+        return $this->hasMany(Hospital::class, 'medical_examination_system_id', 'medical_examination_system_id');
+    }
 }

@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Course;
 use App\CourseFutanCondition;
+use App\CourseMatch;
 use App\Hospital;
 use App\KenshinSysCooperation;
+use App\KenshinSysCourse;
 use App\KenshinSysDantaiInfo;
+use App\KenshinSysOption;
 use App\Option;
 use App\OptionFutanCondition;
 use App\OptionTargetAge;
@@ -29,7 +32,7 @@ class CourseInfoNotificationController extends Controller
     {
         $messages = config('api.course_info_notification_api.message');
         $sysErrorMessages = config('api.unexpected_error.message');
-        $app_name = env('APP_NAME');
+        $app_name = env('APP_ENV');
         $ip = Request::ip();
         if ($app_name == 'production') {
             $app_kbn = '1';
@@ -127,6 +130,9 @@ class CourseInfoNotificationController extends Controller
         try {
             // 登録
             $this->registCourseInfo($params);
+
+            // 削除
+
             DB::commit();
         } catch (\Throwable $e) {
             $message = '[健診システム連携コース通知API] DBの登録に失敗しました。';
@@ -163,17 +169,14 @@ class CourseInfoNotificationController extends Controller
      */
     protected function registCourseInfo(array $params) {
 
-        // 団体情報登録
-        $hospital = Hospital::where('kenshin_sys_hospital_id', $params['hospital_id'])->first();
-
-        $kenshinSysDantaiInfo = KenshinSysDantaiInfo::where('hospital_id', $hospital->id)
+        $kenshinSysDantaiInfo = KenshinSysDantaiInfo::where('kenshin_sys_hospital_id', $params['hospital_id'])
             ->where('kenshin_sys_dantai_no', $params['dantai_no'])
             ->first();
 
         if (! $kenshinSysDantaiInfo) {
             $kenshinSysDantaiInfo = new KenshinSysDantaiInfo();
         }
-        $kenshinSysDantaiInfo->hospital_id = $hospital->id;
+        $kenshinSysDantaiInfo->kenshin_sys_hospital_id = $params['hospital_id'];
         $kenshinSysDantaiInfo->kenshin_sys_dantai_no = $params['dantai_no'];
         $kenshinSysDantaiInfo->kenshin_sys_dantai_nm = $params['dantai_nm'];
         $kenshinSysDantaiInfo->save();
@@ -184,37 +187,34 @@ class CourseInfoNotificationController extends Controller
             return;
         }
 
+        $course_ids = [];
         foreach ($course_list as $kenshin_course) {
-            $course = Course::where('kenshin_sys_course_no', $kenshin_course['courseNo'])
-                ->where('hospital_id', $hospital->id)
+            $course_ids[] = $kenshin_course['courseNo'];
+            $course = KenshinSysCourse::where('kenshin_sys_course_no', $kenshin_course['courseNo'])
+                ->where('kenshin_sys_hospital_id', $params['hospital_id'])
                 ->first();
             if (!$course) {
                 $course = new Course();
-                $course->name = $kenshin_course['courseNm'];
             }
-            $course->hospital_id = $hospital->id;
+            $course->kenshin_sys_hospital_id = $params['hospital_id'];
+            $course->kenshin_sys_dantai_no = $params['dantai_no'];
             $course->kenshin_sys_course_no = $kenshin_course['courseNo'];
-            $course->price = $kenshin_course['courseKin'];
+            $course->kenshin_sys_course_name = $kenshin_course['courseNm'];
             $course->kenshin_sys_course_kingaku = $kenshin_course['courseKin'];
             $course->kenshin_sys_riyou_bgn_date = $kenshin_course['riyouBgnDate'];
             $course->kenshin_sys_riyou_end_date = $kenshin_course['riyouEndDate'];
             $course->kenshin_sys_course_age_kisan_kbn = $kenshin_course['courseAgeKisanKbn'];
             $course->kenshin_sys_course_age_kisan_date = $kenshin_course['courseAgeKisanDate'];
-            $course->kenshin_sys_flg = 1;
             $course->save();
 
             // コース負担条件登録
+            CourseFutanCondition::where('kenshin_sys_course_no', $kenshin_course['courseNo'])->delete();
             $kenshin_course_futan_jouken_list = $kenshin_course['courseFutanJoukenList'];
             if (!empty($kenshin_course_futan_jouken_list)) {
                 foreach ($kenshin_course_futan_jouken_list as $kenshin_course_futan_jouken) {
-                    $course_futan_condition = CourseFutanCondition::where('kenshin_sys_course_no', $kenshin_course['courseNo'])
-                        ->where('jouken_no', $kenshin_course_futan_jouken['joukenNo'])
-                        ->where('course_id', $course->id)
-                        ->first();
-                    if (!$course_futan_condition) {
-                        $course_futan_condition = new CourseFutanCondition();
-                    }
-                    $course_futan_condition->course_id = $course->id;
+                    $course_futan_condition = new CourseFutanCondition();
+                    $course_futan_condition->kenshin_sys_hospital_id = $params['hospital_id'];
+                    $course_futan_condition->kenshin_sys_dantai_no = $params['dantai_no'];
                     $course_futan_condition->kenshin_sys_course_no = $kenshin_course['courseNo'];
                     $course_futan_condition->jouken_no = $kenshin_course_futan_jouken['joukenNo'];
                     $course_futan_condition->sex = $kenshin_course_futan_jouken['sex'];
@@ -235,19 +235,19 @@ class CourseInfoNotificationController extends Controller
                 }
             }
 
+            // オプション削除
+            KenshinSysOption::where('kenshin_sys_hospital_id', $params['hospital_id'])
+                ->where('kenshin_sys_dantai_no', $params['dantai_no'])
+                ->where('kenshin_sys_course_no', $kenshin_course['courseNo'])
+                ->delete();
             //オプション登録
             $kenshin_option_list = $kenshin_course['optionList'];
             if (!empty($kenshin_option_list)) {
                 foreach ($kenshin_option_list as $kenshin_option) {
-                    $option = Option::where('hospital_id', $hospital->id)
-                        ->where('kenshin_sys_course_no', $kenshin_course['courseNo'])
-                        ->where('kenshin_sys_option_no', $kenshin_option['optionNo'])
-                        ->first();
-
-                    if (!$option) {
-                        $option = new Option();
-                        $option->name = $kenshin_option['optionNm'];
-                    }
+                    $option = new KenshinSysOption();
+                    $option->name = $kenshin_option['optionNm'];
+                    $option->kenshin_sys_hospital_id = $params['hospital_id'];
+                    $option->kenshin_sys_dantai_no = $params['dantai_no'];
                     $option->kenshin_sys_course_no = $kenshin_course['courseNo'];
                     $option->kenshin_sys_option_no = $kenshin_option['optionNo'];
                     $option->kenshin_sys_option_nm = $kenshin_option['optionNm'];
@@ -256,19 +256,16 @@ class CourseInfoNotificationController extends Controller
                     $option->kenshin_sys_flg = 1;
                     $option->save();
 
+                    OptionFutanCondition::where('kenshin_sys_option_no', $kenshin_option['optionNo'])->delete();
                     $option_futan_jouken_list = $kenshin_option['optionFutanJoukenList'];
                     if (!empty($option_futan_jouken_list)) {
                         foreach ($option_futan_jouken_list as $kenshin_option_futan_jouken) {
-                            $option_futan_condition = OptionFutanCondition::where('option_id', $option->id)
-                                ->where('kenshin_sys_option_no', $kenshin_option['optionNo'])
-                                ->where('jouken_no', $kenshin_option_futan_jouken['joukenNo'])
-                                ->first();
-                            if (!$option_futan_condition) {
-                                $option_futan_condition = new OptionFutanCondition();
-                                $option_futan_condition->option_id = $option->id;
-                                $option_futan_condition->kenshin_sys_option_no = $kenshin_option['optionNo'];
-                                $option_futan_condition->jouken_no = $kenshin_option_futan_jouken['joukenNo'];
-                            }
+                            $option_futan_condition = new OptionFutanCondition();
+                            $option_futan_condition->kenshin_sys_hospital_id = $params['hospital_id'];
+                            $option_futan_condition->kenshin_sys_dantai_no = $params['dantai_no'];
+                            $option_futan_condition->kenshin_sys_course_no = $kenshin_course['courseNo'];
+                            $option_futan_condition->kenshin_sys_option_no = $kenshin_option['optionNo'];
+                            $option_futan_condition->jouken_no = $kenshin_option_futan_jouken['joukenNo'];
                             $option_futan_condition->sex = $kenshin_option_futan_jouken['sex'];
                             $option_futan_condition->honnin_kbn = $kenshin_option_futan_jouken['honninKbn'];
                             $option_futan_condition->futan_kingaku = $kenshin_option_futan_jouken['futanKin'];
@@ -291,6 +288,33 @@ class CourseInfoNotificationController extends Controller
                     }
                 }
             }
+        }
+
+        // コース情報削除
+        $this->deleteCourse($params['hospital_id'], $params['dantai_no'], $course_ids);
+    }
+
+    /**
+     * @param $hospital_id
+     * @param $dantai_no
+     * @param $course_ids
+     */
+    private function deleteCourse($hospital_id, $dantai_no, $course_ids) {
+
+        $del_kenshin_sys_courses =  KenshinSysCourse::where('kenshin_sys_hospital_id', $hospital_id)
+            ->where('kenshin_sys_dantai_no', $dantai_no)
+            ->whereNotIn('kenshin_sys_course_no', $course_ids)
+            ->select('id')
+            ->get();
+
+        if ($del_kenshin_sys_courses) {
+            KenshinSysCourse::where('kenshin_sys_hospital_id', $hospital_id)
+                ->where('kenshin_sys_dantai_no', $dantai_no)
+                ->whereNotIn('kenshin_sys_course_no', $course_ids)
+                ->delete();
+
+            // コースと健診システムコースマッチング情報削除
+            CourseMatch::whereIn('kenshin_sys_course_id', $del_kenshin_sys_courses->toArray())->delete();
         }
     }
 }

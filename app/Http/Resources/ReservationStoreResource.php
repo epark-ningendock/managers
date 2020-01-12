@@ -19,7 +19,7 @@ class ReservationStoreResource extends Resource
             ->put('result_code', $this->result_code)
             ->put('appoint_code', $this->id)
             ->put('gapid', $this->epark_member_id)
-            ->put('course_price', $this->fee)
+            ->put('course_price', $this->tax_included_tax)
             ->put('endpoint_uri', '')
 //            ->put('list', $this->_list($this))
             ->toArray();

@@ -217,6 +217,7 @@ return [
         'fax' => 'FAX番号',
         'docknet_id' => 'ドックネットID',
         'docknet_medical_institution_id' => '医療機関ID',
+        'kenshin_sys_hospital_id' => '健診システム医療機関ID',
         'medical_institution_name' => '医療機関ID *医療機関名*ポリシー所有者名',
         'contractor_name' => '契約者名',
         'old_karada_dog_id' => 'からだドックID',

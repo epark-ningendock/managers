@@ -117,7 +117,7 @@
             <h2>こだわり</h2>
             <div class="row" style="position: relative;padding: 0 0 44px 0;">
                 @for ($i = 1; $i <= 4; $i++)
-                    <?php $image_speciality = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_SPECIALITY)->where('order', $i)->first(); ?>
+                    <?php $image_speciality = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_SPECIALITY)->where('file_location_no', $i)->first(); ?>
                     <div class="col-sm-6" @if(is_null($image_speciality) && $i != 1) style="display: none" @endif>
                         {{Form::label('speciality_1_caption', 'こだわり'.$i,['class' => 'form_label'])}}
                         @if (!is_null($image_speciality) && !is_null($image_speciality->hospital_image->path))

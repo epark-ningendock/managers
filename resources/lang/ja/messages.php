@@ -148,6 +148,7 @@ return [
     'memo'                                 => '顧客メモ',
     'remarks'                              => '備考',
     'examination_system_name'              => '検診システム名',
+    'kenshin_sys_hospital_id'              => '健診システム医療機関ID',
     'reservation_memo'                     => '次回受付メモ',
     'claim_count'                          => 'クレーム数',
     'recall_count'                         => 'リコール数',

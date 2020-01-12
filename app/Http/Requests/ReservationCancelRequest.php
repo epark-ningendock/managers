@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-class ReservationCancelRequest extends ReservationRequest
+class ReservationCancelRequest extends ValidationRequest
 {
     /**
      * Get the validation rules that apply to the request.

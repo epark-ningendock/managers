@@ -463,6 +463,12 @@
         </select>
         @if ($errors->has('medical_examination_system_id')) <p
                 class="help-block">{{ $errors->first('medical_examination_system_id') }}</p> @endif
+
+        <legend>{{ trans('messages.kenshin_sys_hospital_id') }}</legend>
+        <div class="col-md-4">
+          <input type="text" name="kenshin_sys_hospital_id" id="kenshin_sys_hospital_id" class="form-control" value="{{ old('kenshin_sys_hospital_id',(isset($hospital->kenshin_sys_hospital_id)) ? $hospital->kenshin_sys_hospital_id : null) }}">
+          @if ($errors->has('kenshin_sys_hospital_id')) <p class="help-block">{{ $errors->first('kenshin_sys_hospital_id') }}</p> @endif
+        </div>
       </div>
 
     </div>

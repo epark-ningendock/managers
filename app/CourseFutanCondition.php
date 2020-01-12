@@ -13,7 +13,8 @@ class CourseFutanCondition extends SoftDeleteModel
         'deleted_at'];
 
     protected $fillable = [
-        'course_id',
+        'kenshin_sys_hospital_id',
+        'kenshin_sys_dantai_no',
         'kenshin_sys_course_no',
         'jouken_no',
         'sex',
@@ -23,13 +24,23 @@ class CourseFutanCondition extends SoftDeleteModel
         'updated_at'
         ];
 
+    // tak性別
+    public static function tak_gendars()
+    {
+        return new Choice([
+            '1' => ['label' => '男', 'value' => '1'],
+            '2' => ['label' => '女', 'value' => '2'],
+            '3' => ['label' => 'すべて', 'value' => '3'],
+        ]);
+    }
+
     public function courses()
     {
-        return $this->belongsTo('App\Course');
+        return $this->belongsTo(KenshinSysCourse::class);
     }
 
     public function course_target_ages()
     {
-        return $this->hasMany('App\CourseTargetAge');
+        return $this->hasMany(TargetAge::class);
     }
 }

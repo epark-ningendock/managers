@@ -17,8 +17,7 @@ class CreateDantaiInfosTable extends Migration
     {
         Schema::create('kenshin_sys_dantai_infos', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('hospital_id')->unsigned();
-            $table->foreign('hospital_id')->references('id')->on('hospitals');
+            $table->integer('kenshin_sys_hospital_id')->unsigned();
             $table->integer('kenshin_sys_dantai_no');
             $table->string('kenshin_sys_dantai_nm', 100);
             $this->addCommonColumns($table);

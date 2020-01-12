@@ -22,17 +22,21 @@ class CourseCloseCheckCommand extends Command
     public function handle()
     {
         // 対象データ取得
-        $receptionCloseCourses = $this->getReceptionCloseCourseData();
+//        $receptionCloseCourses = $this->getReceptionCloseCourseData();
         $publishCloseCourses = $this->getCloseCourseData();
 
-        if (!$receptionCloseCourses && !$publishCloseCourses) {
+//        if (!$receptionCloseCourses && !$publishCloseCourses) {
+//            return 1;
+//        }
+
+        if (!$publishCloseCourses) {
             return 1;
         }
 
         // 予約情報をジョブにてメール送信
-        $receptionCloseCourses = $this->createOutputCourseInfo($receptionCloseCourses);
+//        $receptionCloseCourses = $this->createOutputCourseInfo($receptionCloseCourses);
         $publishCloseCourses = $this->createOutputCourseInfo($publishCloseCourses);
-        $this->sendCourseCloseCheckMail($receptionCloseCourses, $publishCloseCourses);
+        $this->sendCourseCloseCheckMail($publishCloseCourses);
     }
 
     /**
@@ -59,8 +63,8 @@ class CourseCloseCheckCommand extends Command
 
         $fromDate = Carbon::today();
         $toDate = Carbon::today();
-        $toDate = $toDate->addMonth(2)->startOfMonth();
-        $courseDates = Course::where('web_reception', '=', WebReception::Accept)
+        $toDate = $toDate->addMonthsNoOverflow(2)->startOfMonth();
+        $courseDates = Course::where('web_reception', '=', WebReception::ACCEPT)
             ->where('reception_end_date', '>=', $fromDate)
             ->where('reception_end_date', '<', $toDate)
             ->orderBy('hospital_id', 'asc')
@@ -72,20 +76,18 @@ class CourseCloseCheckCommand extends Command
 
     /**
      * メール出力内容を生成して返す
-     * @param array $reservationDates
+     * @param $courses
      */
-    protected function createOutputCourseInfo(array $values) {
+    protected function createOutputCourseInfo($courses) {
 
         $results = [];
-        foreach ($values as $value) {
+        foreach ($courses as $course) {
             $result = [
-                'id' => $value->id,
-                'hospital_name' => $value->hospital()->hospital_name,
-                'course_name' => $value->name,
-                'reception_start_date' => $value->reception_start_date,
-                'reception_end_date' => $value->reception_end_date,
-                'publish_start_date' => $value->publish_start_date,
-                'publish_end_date' => $value->publish_end_date,
+                'id' => $course->id,
+                'hospital_name' => $course->hospital->name,
+                'course_name' => $course->name,
+                'publish_start_date' => Carbon::parse($course->publish_start_date)->format('Y/m/d'),
+                'publish_end_date' => Carbon::parse($course->publish_end_date)->format('Y/m/d'),
             ];
 
             $results = $result;
@@ -96,12 +98,12 @@ class CourseCloseCheckCommand extends Command
 
     /**
      * WEB受付、掲載終了確認メール送信
-     * @param array $reservationDates
+     * @param $publishCloseCourses
      */
-    public function sendCourseCloseCheckMail(array $receptionCloseCourses, array $publishCloseCourses)
+    public function sendCourseCloseCheckMail($publishCloseCourses)
     {
         $mailContext = [
-            'receptionCloseCourses' => $receptionCloseCourses,
+//            'receptionCloseCourses' => $receptionCloseCourses,
             'publishCloseCourses' => $publishCloseCourses
         ];
         $to = config('mail.to.admin_all');

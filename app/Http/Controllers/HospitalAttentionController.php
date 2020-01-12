@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Status;
 use App\Hospital;
 use App\HospitalDetail;
+use App\HospitalMeta;
 use App\HospitalMiddleClassification;
 use App\HospitalMinorClassification;
 use App\HospitalOptionPlan;
@@ -209,6 +211,8 @@ class HospitalAttentionController extends Controller
                 }
     
                 DB::commit();
+
+                $this->registHospitalMeta($hospital);
             } catch (\Exception $e) {
                 DB::rollback();
                 throw $e;
@@ -220,6 +224,45 @@ class HospitalAttentionController extends Controller
 
         } catch (Exception $e) {
             return redirect()->back()->withErrors(trans('messages.create_error'))->withInput();
+        }
+    }
+
+    /**
+     * @param $hospital
+     */
+    private function registHospitalMeta($hospital) {
+
+        $hospital_meta = HospitalMeta::where('hospital_id', $hospital->id)->first();
+        if (!$hospital_meta) {
+            $hospital_meta = new HospitalMeta();
+            $hospital_meta->hospital_id = $hospital->id;
+        }
+        $hospital_details = HospitalDetail::where('hospital_id', $hospital->id)
+                                ->get();
+
+        if ($hospital_details) {
+            foreach ($hospital_details as $detail) {
+                if ($detail->minor_classification_id == 5 and !empty($detail->inputstring)) {
+                    $hospital_meta->credit_card_flg = 1;
+                }
+
+                if ($detail->minor_classification_id == 1 and $detail->select_status = 1) {
+                    $hospital_meta->parking_flg = 1;
+                }
+
+                if ($detail->minor_classification_id == 3 and $detail->select_status = 1) {
+                    $hospital_meta->pick_up_flg = 1;
+                }
+
+                if ($detail->minor_classification_id == 16 and $detail->select_status = 1) {
+                    $hospital_meta->children_flg = 1;
+                }
+
+                if ($detail->minor_classification_id == 19 and $detail->select_status = 1) {
+                    $hospital_meta->dedicate_floor_flg = 1;
+                }
+            }
+            $hospital_meta->save();
         }
     }
 

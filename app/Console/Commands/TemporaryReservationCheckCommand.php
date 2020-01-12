@@ -22,13 +22,13 @@ class TemporaryReservationCheckCommand extends Command
     public function handle()
     {
         // 対象データ取得
-        $reservationDates = $this->getReservationData();
-        if (!$reservationDates) {
+        $reservations = $this->getReservationData();
+        if (!$reservations) {
             return 1;
         }
 
         // 予約情報をジョブにてメール送信
-        $reservations = $this->createTemporaryReservationData($reservationDates);
+        $reservations = $this->createTemporaryReservationData($reservations);
         $this->sendReceptionCheckMail($reservations);
     }
 
@@ -38,33 +38,33 @@ class TemporaryReservationCheckCommand extends Command
     protected function getReservationData() {
 
         $date = Carbon::today();
-        $date->subDay(config('constant.pv_aggregate_day'));
-        $reservationDates = Reservation::where('status', '=', ReservationStatus::PENDING)
+        $date->subDay(config('constant.pending_passed_day'));
+        $reservations = Reservation::where('status', '=', ReservationStatus::PENDING)
             ->where('created_at', '<=', $date)
             ->orderBy('hospital_id', 'asc')
             ->orderBy('reservation_date', 'asc')
             ->get();
 
-        return $reservationDates;
+        return $reservations;
     }
 
     /**
      * 仮受付予約データを生成して返す
-     * @param array $reservationDates
+     * @param $reservations
      */
-    protected function createTemporaryReservationData(array $reservationDates) {
+    protected function createTemporaryReservationData($reservations) {
 
         $results = [];
-        foreach ($reservationDates as $reservationData) {
+        foreach ($reservations as $reservation) {
             $result = [
-                'id' => $reservationData->id,
-                'hospital_name' => $reservationData->hospital()->hospital_name,
-                'reservation_date' => $reservationData->reservation_date,
-                'completed_date' => $reservationData->completed_date,
-                'customer_name' => $reservationData->customer()->family_name . $reservationData->customer()->first_name,
+                'id' => $reservation->id,
+                'hospital_name' => $reservation->hospital->name,
+                'created_at' => Carbon::parse($reservation->created_at)->format('Y/m/d'),
+                'reservation_date' => Carbon::parse($reservation->reservation_date)->format('Y/m/d'),
+                'customer_name' => $reservation->customer->family_name . $reservation->customer->first_name,
             ];
 
-            $results = $result;
+            $results[] = $result;
         }
 
         return $results;

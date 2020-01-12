@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\Resource;
 use App\Station;
 
@@ -16,97 +15,123 @@ class HospitalBasicResource extends Resource
      */
     public function toArray($request)
     {
-        $rail_ids = [];
-        if (isset($this->rail1)) {
-            $rail1 = $this->rail1;
-            $rail_ids[] = $rail1;
-        }
-        if (isset($this->rail2)) {
-            $rail2 = $this->rail2;
-            $rail_ids[] = $rail2;
-        }
-        if (isset($this->rail3)) {
-            $rail3 = $this->rail3;
-            $rail_ids[] = $rail3;
-        }
-        if (isset($this->rail4)) {
-            $rail4 = $this->rail4;
-            $rail_ids[] = $rail4;
-        }
-        if (isset($this->rail5)) {
-            $rail5 = $this->rail5;
-            $rail_ids[] = $rail5;
-        }
+        $rails = [$this->rail1, $this->rail2, $this->rail3, $this->rail4, $this->rail5];
+        $stations = [$this->station1, $this->station2, $this->station3, $this->station4, $this->station5];
+        $accesses = [$this->access1, $this->access2, $this->access3, $this->access4, $this->access5];
 
-        $station_ids = [];
-        if (isset($this->station1)) {
-            $station1 = $this->station1;
-            $station_ids[] = $station1;
+        $hospital_code = '';
+        if (isset($this->contract_information) && isset($this->contract_information->code)) {
+            $hospital_code = $this->contract_information->code;
         }
-        if (isset($this->station2)) {
-            $station2 = $this->station2;
-            $station_ids[] = $station2;
-        }
-        if (isset($this->station3)) {
-            $station3 = $this->station3;
-            $station_ids[] = $station3;
-        }
-        if (isset($this->station4)) {
-            $station4 = $this->station4;
-            $station_ids[] = $station4;
-        }
-        if (isset($this->station5)) {
-            $station5 = $this->station5;
-            $station_ids[] = $station5;
-        }
-        $accesses = [];
-        if (isset($this->access1)) {
-            $access1 = $this->access1;
-            $accesses[] = $access1;
-        }
-        if (isset($this->access2)) {
-            $access2 = $this->access2;
-            $accesses[] = $access2;
-        }
-        if (isset($this->access3)) {
-            $access3 = $this->access3;
-            $accesses[] = $access3;
-        }
-        if (isset($this->access4)) {
-            $access4 = $this->access4;
-            $accesses[] = $access4;
-        }
-        if (isset($this->access5)) {
-            $access5 = $this->access5;
-            $accesses[] = $access5;
-        }
-
-//        $rail_ids = [$this->rail1, $this->rail2, $this->rail3, $this->rail4, $this->rail5];
-//        $station_ids = [$this->station1, $this->station2, $this->station3, $this->station4, $this->station5];
-//        $accesses = [$this->access1, $this->access2, $this->access3, $this->access4, $this->access5];
-
         return [
             'status' => 0,
             'no' => $this->id,
             'url_basic' => $this->url,
-            'hospital_code' => $this->contract_information->code,
+            'hospital_code' => $hospital_code,
             'name' => $this->name,
             'zip_code' => $this->postcode,
             'pref_name' => $this->prefecture->name,
             'district_name' => (isset($this->district_code))? $this->district_code->name : '',
             'address1' => $this->address1,
-            'address2' => $this->address2,
-            'pos_n' => $this->latitude,
-            'pos_e' => $this->longitude,
-            'streetview_url' => $this->streetview_url,
-            'tel' => $this->tel,
-            'tel_ppc' => $this->paycall,
-            'stations' => Station::getStations($rail_ids, $station_ids, $accesses),
-            'open' => OpenResource::collection($this->medical_treatment_times),
-            'non_consultation' => $this->consultation_note,
-            'non_consultation_note' => $this->memo,
-            'public_status' => $this->status,
-            'update_at' => Carbon::parse($this->updated_at)->format('Y-m-d'),
+            'address2' => $this->address2 ?? '',
+            'stations' => Station::getStations($rails, $stations, $accesses),
+            'movie' => $this->getMovieInfo(),
         ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getMovieInfo() {
+
+        $access_movie = $this->_hospital_movie();
+        $one_minutes = $this->getOneMinutes($this->hospital_categories);
+        $tour = $this->getTourInterview()[0];
+        $interview = $this->getTourInterview()[1];
+
+        return ['access'=>$access_movie, 'oneMinute'=>$one_minutes, 'tour'=>$tour, 'interview'=>$interview];
+    }
+
+    /**
+     * アクセス動画URL
+     *
+     * @param  医療機関カテゴリ
+     * @return 医療施設メイン
+     */
+    private function _hospital_movie()
+    {
+        $categories = $this->hospital_categories->filter(function ($c) {
+            return isset($c->image_order)
+                && $c->image_order === 4;
+        });
+
+        foreach ($categories as $category) {
+            if (!empty($category->hospital_image->memo1)) {
+                return $category->hospital_image->memo1;
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * 1分動画
+     *
+     * @param  医療機関カテゴリ
+     * @return
+     */
+    private function getOneMinutes($hospital_categories) {
+
+        if(!isset($hospital_categories)) {
+            return '';
+        }
+
+        $el = $hospital_categories->first(function ($v) {
+            return isset($v->image_order)
+                && $v->image_order === 3
+                && isset($v->file_location_no)
+                && $v->file_location_no === 1;
+        });
+
+        if (isset($el) && isset($el->caption)) {
+            $strs = explode(' ', $el->caption);
+            foreach ($strs as $str) {
+                if (strstr($str, 'src=') === false) {
+                    continue;
+                }
+                $str = mb_ereg_replace('\"', '\'', $str);
+
+                $one_minute_url = ltrim($str, 'src=\'');
+
+                return rtrim($one_minute_url,'\'');
+            }
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    private function getTourInterview() {
+
+        $free_area_strs = explode(' ', $this->free_area);
+        $tour = '';
+        $interview = '';
+
+        foreach ($free_area_strs as $str) {
+            if (preg_match('/src/', $str) && preg_match('/grooon/', $str)) {
+                $str = ltrim($str, 'src=');
+                $str = mb_ereg_replace('\'', '', $str);
+                $tour = mb_ereg_replace('\"', '', $str);
+            }
+            if (preg_match('/src/', $str) && !preg_match('/grooon/', $str)) {
+                $str = ltrim($str, 'src=');
+                $str = mb_ereg_replace('\'', '', $str);
+                $interview = mb_ereg_replace('\"', '', $str);
+            }
+        }
+
+        return collect([$tour, $interview]);
     }
 }

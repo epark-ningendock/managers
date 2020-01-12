@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\CalendarDay;
+use App\Station;
 use Carbon\Carbon;
 
 class SearchCoursesResource extends CoursesBaseResource
@@ -23,31 +24,23 @@ class SearchCoursesResource extends CoursesBaseResource
             }
         }
 
+        $rails = [$this->hospital->rail1, $this->hospital->rail2, $this->hospital->rail3, $this->hospital->rail4, $this->hospital->rail5];
+        $stations = [$this->hospital->station1, $this->hospital->station2, $this->hospital->station3, $this->hospital->station4, $this->hospital->station5];
+        $accesses = [$this->hospital->access1, $this->hospital->access2, $this->hospital->access3, $this->hospital->access4, $this->hospital->access5];
+
         // calendar_days追加要素セット
 //        $_courses = parent::modifyCalendarDays($this);
 
         return $this->baseCollections()
+            ->put('no', $this->hospital->id)
             ->put('hospital_code', $this->hospital->contract_information->code ?? '')
-            ->put('course_img', ImagePathsResource::collection($this->getCourseImg($this->course_images)))
-            ->put('course_point', parent::wrapWord($this->course_point))
-            ->put('category', $this->getCategory())
-            ->put('recommended', $recommended)
-            ->put('course_option_flag', isset($this->course_option) ? 1 : 0)
-            ->put('month_calender', new MonthlyCalendarResource($this))
+            ->put('name', $this->hospital->name)
+            ->put('pref_name', $this->hospital->prefecture->name)
+            ->put('district_name', $this->hospital->districtCode->name)
+            ->put('address1', $this->hospital->address1)
+            ->put('address2', $this->hospital->address2)
+            ->put('stations', Station::getStations($rails, $stations, $accesses))
             ->put('paycall', $this->hospital->paycall ?? '')
             ->toArray();
-    }
-
-    private function getCategory() {
-
-        $results = [];
-        foreach ($this->course_details as $detail) {
-            if ($detail->select_status == 1 && $detail->status == '1') {
-                $result = ['id' => $detail->minor_classification_id, 'title' => $detail->minor_classification->icon_name];
-                $results[] = $result;
-            }
-        }
-
-        return $results;
     }
 }

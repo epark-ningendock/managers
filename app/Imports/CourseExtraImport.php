@@ -48,9 +48,14 @@ class CourseExtraImport extends ImportBAbstract implements WithChunkReading
         if (is_null($course)) {
             return;
         }
+        $start_date = $this->getValue($row, 'LINEGROUP_END_DAYS');
+        if (isset($start_date) && strlen($start_date) == 1) {
+            $start_date = $start_date + 1;
+        }
+
         $course->update([
             'cancellation_deadline' => $this->getValue($row, 'LINEGROUP_CANCELLATION_DAYS'),
-            'reception_start_date' => $this->getValue($row, 'LINEGROUP_END_DAYS'),
+            'reception_start_date' => $start_date,
             'reception_end_date' => $this->getValue($row, 'LINEGROUP_START_DAYS'),
         ]);
     }

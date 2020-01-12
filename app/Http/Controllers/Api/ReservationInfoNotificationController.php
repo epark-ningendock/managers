@@ -37,7 +37,7 @@ class ReservationInfoNotificationController extends Controller
     {
         $messages = config('api.course_info_notification_api.message');
         $sysErrorMessages = config('api.unexpected_error.message');
-        $app_name = env('APP_NAME');
+        $app_name = env('APP_ENV');
         $ip = Request::ip();
         if ($app_name == 'production') {
             $app_kbn = AppKbn::PRODUCTION;
@@ -72,7 +72,7 @@ class ReservationInfoNotificationController extends Controller
             return $this->createResponse($messages['errorSubscriptionKeyId']);
         }
 
-        $hospital = Hospital::where('kenshin_sys_hospital_id')->fist();
+        $hospital = Hospital::where('kenshin_sys_hospital_id', $request->input('hospitalId'))->fist();
         if (!$hospital) {
             return $this->createResponse($messages['errorValidationId']);
         }

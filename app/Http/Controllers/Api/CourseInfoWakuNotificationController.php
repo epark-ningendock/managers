@@ -7,6 +7,7 @@ use App\CourseFutanCondition;
 use App\Enums\AppKbn;
 use App\Hospital;
 use App\KenshinSysCooperation;
+use App\KenshinSysCourse;
 use App\KenshinSysCourseWaku;
 use App\KenshinSysDantaiInfo;
 use App\Option;
@@ -31,7 +32,7 @@ class CourseInfoWakuNotificationController extends Controller
     {
         $messages = config('api.course_info_notification_api.message');
         $sysErrorMessages = config('api.unexpected_error.message');
-        $app_name = env('APP_NAME');
+        $app_name = env('APP_ENV');
         $ip = Request::ip();
         if ($app_name == 'production') {
             $app_kbn = AppKbn::PRODUCTION;
@@ -134,28 +135,26 @@ class CourseInfoWakuNotificationController extends Controller
      */
     protected function registCourseWakuInfo(array $params) {
 
-        // 医療機関情報取得
-        $hospital = Hospital::where('kenshin_sys_hospital_id', $params['hospital_id'])->first();
-        $kenshin_sys_dantai_info = KenshinSysDantaiInfo::where('hospita_id', $params['hospital_id'])
-            ->where('kenshin_sys_dantai_no', $params['dantai_no'])->first();
-
         foreach ($params['course_list'] as $c) {
             // コース情報取得
-            $course = Course::where('kenshin_sys_dantai_info_id', $kenshin_sys_dantai_info->id)
+            $course = KenshinSysCourse::where('kenshin_sys_hospital_id', $params['hospital_id'])
+                ->where('kenshin_sys_dantai_no', $params['dantai_no'])
                 ->where('kenshin_sys_course_no', $c['courseNo'])
-                ->where('hospital_id', $hospital->id)
                 ->first();
 
+            if (!$course) {
+                continue;
+            }
+
             foreach ($c['monthWakuList'] as $month_waku) {
-                $kenshin_sys_course_waku = KenshinSysCourseWaku::where('course_id', $course->id)
-                    ->where('kenshin_sys_course_no', $c['courseNo'])
+                $kenshin_sys_course_waku = KenshinSysCourseWaku::where('kenshin_sys_course_id', $course->id)
                     ->where('year_month', $month_waku['month'])
                     ->first();
 
                 if (!$kenshin_sys_course_waku) {
                     $kenshin_sys_course_waku = new KenshinSysCourseWaku();
                 }
-                $kenshin_sys_course_waku->course_id = $course->id;
+                $kenshin_sys_course_waku->kenshin_sys_course_id = $course->id;
                 $kenshin_sys_course_waku->kenshin_sys_course_no = $c['courseNo'];
                 $kenshin_sys_course_waku->year_month = $month_waku['month'];
                 $kenshin_sys_course_waku->waku_kbn = $month_waku['wakuInfo'];

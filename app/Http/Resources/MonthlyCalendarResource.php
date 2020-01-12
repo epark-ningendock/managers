@@ -2,7 +2,9 @@
 
 namespace App\Http\Resources;
 
+use App\Calendar;
 use App\CalendarDay;
+use App\Enums\CalendarDisplay;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\Resource;
 
@@ -23,6 +25,9 @@ class MonthlyCalendarResource extends Resource
         $start_day = $this->reception_start_date % 1000;
         $from = $from->addMonthsNoOverflow($start_month)->addDays($start_day);
 
+        $calendar = Calendar::find($this->calendar_id);
+        $disp_flg = $calendar->is_calendar_display;
+
         $monthly_wakus = CalendarDay::where('calendar_id', $this->calendar_id)
             ->where('date', '>=', $from)
             ->where('date', '<=', $to)
@@ -30,33 +35,24 @@ class MonthlyCalendarResource extends Resource
             ->where('is_reservation_acceptance', 1)
             ->get()
             ->groupBy(function ($row) {
-                return $row->date->format('m');
+                return $row->date->format('Ym');
             })
             ->map(function ($day) {
                 return collect([$day->sum('reservation_frames'), $day->sum('reservation_count'), $day[0]->date->format('Ym')]);
             });
 
-        $today = Carbon::today();
         $results = [];
-        if ($from->year > $today->year) {
-            $month_num = (12 + $from->month) - $today->month;
-        } else {
-            $month_num = $from->month - $today->month;
-        }
-
-        for ($i = 0; $i < $month_num; $i++) {
-            $ym = $today->format('Ym');
-            $results[] = [$ym, 0];
-            $today->addMonthsNoOverflow(1);
-        }
-
         foreach ($monthly_wakus as $monthly_waku) {
             $appoint_ok = 0;
-            if ($monthly_waku[0] > $monthly_waku[1]) {
+            if ($disp_flg == strval(CalendarDisplay::SHOW) && ($monthly_waku[0] > $monthly_waku[1])) {
                 $appoint_ok = 1;
             }
             $results[] = ['yyyymm' => $monthly_waku[2], 'apoint_ok' =>  $appoint_ok];
+        }
 
+        for($i = count($results); $i < 3; $i++) {
+            $ym = Carbon::today()->addMonthsNoOverflow($i)->format('Ym');
+            $results[] = ['yyyymm' => $ym, 'apoint_ok' =>  0];
         }
 
         return $results;

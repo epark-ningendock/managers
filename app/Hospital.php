@@ -116,6 +116,11 @@ class Hospital extends Model
         return $this->hasMany('App\HospitalDetail');
     }
 
+    public function hospital_metas()
+    {
+        return $this->hasOne('App\HospitalMeta');
+    }
+
     public function contract_information()
     {
         return $this->hasOne('App\ContractInformation', 'hospital_id', 'id');
@@ -151,16 +156,15 @@ class Hospital extends Model
         return $this->hasMany('App\MedicalTreatmentTime');
     }
 
-    public function reception_email_setting()
-    {
-        return $this->hasOne('App\ReceptionEmailSetting');
-    }
-
     public function hospital_plan()
     {
         // DB の構成的には hasMany だが、仕様的に hasOne となったため
         return $this->hasOne('App\HospitalPlan')
             ->withDefault();
+    }
+
+    public function kenshin_sys_courses() {
+        return $this->hasMany(KenshinSysCourse::class, 'kenshin_sys_hospital_id', 'kenshin_sys_hospital_id');
     }
 
     /**

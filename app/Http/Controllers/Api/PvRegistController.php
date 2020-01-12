@@ -60,7 +60,7 @@ class PvRegistController extends ApiBaseController
      */
     protected function registPv(int $hospitalId) {
 
-        $dateCode = $this->createDateCode();
+        $dateCode = Carbon::today()->format('Ymd');
         $pvRecord = PvRecord::where('hospital_id', '=', $hospitalId)
             ->where('date_code', '=', $dateCode)
             ->first();
@@ -75,15 +75,5 @@ class PvRegistController extends ApiBaseController
             $pvRecord->pv = 1;
             $pvRecord->save();
         }
-    }
-
-    /**
-     * 日付コードを生成する
-     */
-    protected function createDateCode() {
-
-        $date = Carbon::now();
-
-        return $date->year . sprintf('%02d', $date->month) . sprintf('%02d', $date->day);
     }
 }

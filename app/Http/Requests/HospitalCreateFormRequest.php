@@ -101,6 +101,7 @@ class HospitalCreateFormRequest extends FormRequest
             'consultation_note' => 'max:256',
             'medical_treatment_time.*.start' => 'nullable|date_format:H:i',
             'medical_treatment_time.*.end' => 'nullable|date_format:H:i|after:medical_treatment_time.*.start',
+            'kenshin_sys_hospital_id' => 'nullable|numeric|digits_between:5,15'
         ];
     }
 
@@ -112,7 +113,7 @@ class HospitalCreateFormRequest extends FormRequest
             'medical_treatment_time.*.end.date_format' => '時間はHH：MMにしてください',
 	        'medical_treatment_time.*.end.after' => trans('messages.time_invalid'),
             'latitude.latitude' => 'フォーマットが正しくありません。',
-            'latitude.longitude' => 'フォーマットが正しくありません。',
+            'latitude.longitude' => 'フォーマットが正しくありません。'
         ];
     }
     /**

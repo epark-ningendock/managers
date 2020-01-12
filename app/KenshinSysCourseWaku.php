@@ -13,7 +13,7 @@ class KenshinSysCourseWaku extends SoftDeleteModel
         'deleted_at'];
 
     protected $fillable = [
-        'course_id',
+        'kenshin_sys_course_id',
         'kenshin_sys_course_no',
         'year_month',
         'waku_kbn',
@@ -23,6 +23,6 @@ class KenshinSysCourseWaku extends SoftDeleteModel
 
     public function courses()
     {
-        return $this->belongsTo('App\Course');
+        return $this->belongsTo(KenshinSysCourse::class);
     }
 }

@@ -6,6 +6,10 @@ use App\ContractPlan;
 use App\ConvertedIdString;
 use App\DistrictCode;
 use App\Hospital;
+use App\HospitalMeta;
+use App\Prefecture;
+use App\Rail;
+use App\Station;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
@@ -117,6 +121,8 @@ class HospitalImport extends ImportAbstract implements WithChunkReading
 
         $model->save();
 
+        $this->createHospitalMeta($model);
+
         // 医療機関プラン
         $contract_plan = ContractPlan::query()->where('plan_code', sprintf('Y0%02d', $row['plan_cd']))->first();
 
@@ -146,6 +152,85 @@ class HospitalImport extends ImportAbstract implements WithChunkReading
             'new_id' => $model->id,
             'hospital_no' => $row['id'],
         ]);
+    }
+
+    /**
+     * @param $hospital
+     */
+    private function createHospitalMeta($hospital) {
+        $area_station = '';
+        if (!empty($hospital->prefecture_id)) {
+            $prefecture = Prefecture::find($hospital->prefecture_id);
+            if ($prefecture) {
+                $area_station = $prefecture->name . ' ';
+            }
+        }
+        if (!empty($hospital->district_code_id)) {
+            $district = DistrictCode::find($hospital->district_code_id);
+            if ($district) {
+                $area_station = $area_station . $district->name . ' ';
+            }
+        }
+        if (!empty($hospital->address1)) {
+            $area_station = $area_station . $hospital->address1 . ' ';
+        }
+
+        if (!empty($hospital->rail1)) {
+            $rail1 = Rail::find($hospital->rail1)->name;
+            $area_station = $area_station . $rail1 . ' ';
+        }
+
+        if (!empty($hospital->station1)) {
+            $station1 = Station::find($hospital->station1)->name;
+            $area_station = $area_station . $station1 . ' ';
+        }
+
+        if (!empty($hospital->rail2)) {
+            $rail2 = Rail::find($hospital->rail2)->name;
+            $area_station = $area_station . $rail2 . ' ';
+        }
+
+        if (!empty($hospital->station2)) {
+            $station2 = Station::find($hospital->station2)->name;
+            $area_station = $area_station . $station2 . ' ';
+        }
+
+        if (!empty($hospital->rail3)) {
+            $rail3 = Rail::find($hospital->rail3)->name;
+            $area_station = $area_station . $rail3 . ' ';
+        }
+
+        if (!empty($hospital->station3)) {
+            $station3 = Station::find($hospital->station3)->name;
+            $area_station = $area_station . $station3 . ' ';
+        }
+
+        if (!empty($hospital->rail4)) {
+            $rail4 = Rail::find($hospital->rail4)->name;
+            $area_station = $area_station . $rail4 . ' ';
+        }
+
+        if (!empty($hospital->station4)) {
+            $station4 = Station::find($hospital->station4)->name;
+            $area_station = $area_station . $station4 . ' ';
+        }
+
+        if (!empty($hospital->rail5)) {
+            $rail5 = Rail::find($hospital->rail5)->name;
+            $area_station = $area_station . $rail5 . ' ';
+        }
+
+        if (!empty($hospital->station5)) {
+            $station5 = Station::find($hospital->station5)->name;
+            $area_station = $area_station . $station5 . ' ';
+        }
+
+        $hospital_meta = new HospitalMeta();
+        $hospital_meta->hospital_id = $hospital->id;
+        $hospital_meta->hospital_name = $hospital->name . ' ' . $hospital->kana;
+        $hospital_meta->area_station = $area_station;
+
+        $hospital_meta->save();
     }
 
     public function batchSize(): int

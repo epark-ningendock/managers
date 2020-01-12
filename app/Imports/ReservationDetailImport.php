@@ -126,71 +126,170 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
             $reservation->is_health_insurance = 0;
             $reservation->save();
 
-            $answer_json = str_replace(['\"', '\\\\'], ['"', '\\'], $this->getValue($row, 'Q_ANSWER'));
-            $answer_json = str_replace('#comma#', ',', $answer_json);
-            $questions = json_decode($answer_json, false, 512, JSON_OBJECT_AS_ARRAY);
+//            $answer_json = str_replace(['\"', '\\\\'], ['"', '\\'], $this->getValue($row, 'Q_ANSWER'));
+//            $answer_json = str_replace('#comma#', ',', $answer_json);
+//            $questions = json_decode($answer_json, false, 512, JSON_OBJECT_AS_ARRAY);
 
-//            $tmp_strs = explode('#comma#', $this->getValue($row, 'Q_ANSWER'));
+            if (!empty($reservation->course_id)) {
+                $target = $this->getValue($row, 'Q_ANSWER');
+                $target = str_replace('[', '', $target);
+                $target = str_replace('{', '', $target);
+                $target = str_replace('\"', '', $target);
+                $tmp_strs = explode('#comma#', $target);
+                $questions = [];
+                $title = '';
+                $answers = [];
+                foreach ($tmp_strs as $tmp_str) {
+                    if (strpos($tmp_str, 'question_title')) {
+                        $questions[] = [$title, $answers];
+                        $title = $tmp_str;
+                        $answers = [];
+                    }
+                    if (strpos($tmp_str, 'answer')) {
+                        $ans = explode(':', $tmp_str);
+                        $answers[] = $ans[1];
+                    }
+                }
+                $questions[] = [$title, $answers];
 
-            foreach ((array)$questions as $question) {
+                foreach ($questions as $question) {
 
-                $question_title = $question->question_title ?? null;
-//                $course_questions = CourseQuestion::where('course_id', $reservation->course_id)
-//                    ->get();
+                    if (empty($question[0])) {
+                        continue;
+                    }
+//                    $target = mb_substr($question[0], 0, 4);
+//                $course_questions = $reservation
+//                    ->course
+//                    ->course_questions
+//                    ->where('question_title', 'LIKE', "%{$target}%")->get();
 
-                $target = mb_substr($question->question_title, 0, 4);
-                $course_questions = $reservation
-                    ->course
-                    ->course_questions
-                    ->where('question_title', 'LIKE', "%{$target}%");
-                if (is_null($course_questions)) {
+                    $course_questions = CourseQuestion::where('course_id', $course_id)
+                        ->get();
+
+                    if (is_null($course_questions) || count($course_questions) == 0) {
                     Log::error('reservation に course_questionsレコードが存在しません。');
                 }
 
-                $course_questions->each(function (CourseQuestion $course_question) use (
-                    $reservation,
-                    $question,
-                    $question_title,
-                    $course_id
-                ) {
-
+                    $course_questions->each(function (CourseQuestion $course_question) use (
+                        $reservation,
+                        $question,
+                        $course_id
+                    ) {
+                        $target = mb_substr($question[0], 0, 4);
+                        if (!strpos($course_question->question_title, $target)) {
+                            return;
+                        }
+                    $answers = $question[1];
+                    $i = count($answers);
                     $reservation_answers = new ReservationAnswer();
-                    $reservation_answers->question_title = $question_title;
+                    $reservation_answers->question_title = $question[0];
                     $reservation_answers->course_id = $course_id;
                     $reservation_answers->course_question_id = $course_question->id;
-                    $reservation_answers->question_answer01 = $question->answer[0];
-                    $reservation_answers->question_answer02 = $question->answer[1];
-                    $reservation_answers->question_answer03 = $question->answer[2];
-                    $reservation_answers->question_answer04 = $question->answer[3];
-                    $reservation_answers->question_answer05 = $question->answer[4];
-                    $reservation_answers->question_answer06 = $question->answer[5];
-                    $reservation_answers->question_answer07 = $question->answer[6];
-                    $reservation_answers->question_answer08 = $question->answer[7];
-                    $reservation_answers->question_answer09 = $question->answer[8];
-                    $reservation_answers->question_answer10 = $question->answer[9];
+                    if ($i > 0) {
+                        $ans = 1;
+                        if (strpos($answers[0], '0|')) {
+                            $ans = 0;
+                        }
+                        $answer = str_replace('0|', '', $answers[0]);
+                        $answer = str_replace('1|', '', $answer);
+                        $reservation_answers->question_answer01 = $answer;
+                        $reservation_answers->answer01 = $ans;
+                    }
+                    if ($i > 1) {
+                        $ans = 1;
+                        if (strpos($answers[1], '0|')) {
+                            $ans = 0;
+                        }
+                        $answer = str_replace('0|', '', $answers[1]);
+                        $answer = str_replace('1|', '', $answer);
+                        $reservation_answers->question_answer02 = $answer;
+                        $reservation_answers->answer02 = $ans;
+                    }
+                    if ($i > 2) {
+                        $ans = 1;
+                        if (strpos($answers[2], '0|')) {
+                            $ans = 0;
+                        }
+                        $answer = str_replace('0|', '', $answers[2]);
+                        $answer = str_replace('1|', '', $answer);
+                        $reservation_answers->question_answer03 = $answer;
+                        $reservation_answers->answer03 = $ans;
+                    }
+                    if ($i > 3) {
+                        $ans = 1;
+                        if (strpos($answers[3], '0|')) {
+                            $ans = 0;
+                        }
+                        $answer = str_replace('0|', '', $answers[3]);
+                        $answer = str_replace('1|', '', $answer);
+                        $reservation_answers->question_answer04 = $answer;
+                        $reservation_answers->answer04 = $ans;
+                    }
+                    if ($i > 4) {
+                        $ans = 1;
+                        if (strpos($answers[4], '0|')) {
+                            $ans = 0;
+                        }
+                        $answer = str_replace('0|', '', $answers[4]);
+                        $answer = str_replace('1|', '', $answer);
+                        $reservation_answers->question_answer05 = $answer;
+                        $reservation_answers->answer05 = $ans;
+                    }
+                    if ($i > 5) {
+                        $ans = 1;
+                        if (strpos($answers[5], '0|')) {
+                            $ans = 0;
+                        }
+                        $answer = str_replace('0|', '', $answers[5]);
+                        $answer = str_replace('1|', '', $answer);
+                        $reservation_answers->question_answer06 = $answer;
+                        $reservation_answers->answer06 = $ans;
+                    }
+                    if ($i > 6) {
+                        $ans = 1;
+                        if (strpos($answers[6], '0|')) {
+                            $ans = 0;
+                        }
+                        $answer = str_replace('0|', '', $answers[6]);
+                        $answer = str_replace('1|', '', $answer);
+                        $reservation_answers->question_answer07 = $answer;
+                        $reservation_answers->answer07 = $ans;
+                    }
+                    if ($i > 7) {
+                        $ans = 1;
+                        if (strpos($answers[7], '0|')) {
+                            $ans = 0;
+                        }
+                        $answer = str_replace('0|', '', $answers[7]);
+                        $answer = str_replace('1|', '', $answer);
+                        $reservation_answers->question_answer08 = $answer;
+                        $reservation_answers->answer08 = $ans;
+                    }
+                    if ($i > 8) {
+                        $ans = 1;
+                        if (strpos($answers[8], '0|')) {
+                            $ans = 0;
+                        }
+                        $answer = str_replace('0|', '', $answers[8]);
+                        $answer = str_replace('1|', '', $answer);
+                        $reservation_answers->question_answer09 = $answer;
+                        $reservation_answers->answer09 = $ans;
+                    }
+                    if ($i > 9) {
+                        $ans = 1;
+                        if (strpos($answers[9], '0|')) {
+                            $ans = 0;
+                        }
+                        $answer = str_replace('0|', '', $answers[9]);
+                        $answer = str_replace('1|', '', $answer);
+                        $reservation_answers->question_answer10 = $answer;
+                        $reservation_answers->answer10 = $ans;
+                    }
                     $reservation_answers->save();
 
-
-//                    $reservation->reservation_answers()->save(
-//                        new ReservationAnswer([
-//                            'question_title' => $question_title,
-//                            'course_id' => $reservation->course->id,
-//                            'course_question_id' => $course_question->id,
-//                            'question_answer01' => $question->answer[0],
-//                            'question_answer02' => $question->answer[1],
-//                            'question_answer03' => $question->answer[2],
-//                            'question_answer04' => $question->answer[3],
-//                            'question_answer05' => $question->answer[4],
-//                            'question_answer06' => $question->answer[5],
-//                            'question_answer07' => $question->answer[6],
-//                            'question_answer08' => $question->answer[7],
-//                            'question_answer09' => $question->answer[8],
-//                            'question_answer10' => $question->answer[9],
-//                        ])
-//                    );
                 });
+                }
             }
-
 
             $options = explode('|', $this->getValue($row, 'OPTION_CD'));
             $option_prices = explode('|', $this->getValue($row, 'OPTION_PRICE_TAX'));
