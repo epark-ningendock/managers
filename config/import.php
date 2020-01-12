@@ -109,31 +109,31 @@ return [
     //     'import' => ContractPlanImport::class,
     //     'seed' => false,
     // ],
-    'm_hospital.csv' => [
-        'model' => Hospital::class,
-        'import' => HospitalImport::class,
-        'seed' => true,
-    ],
-    'm_hospital_category_dai.csv' => [
-        'model' => HospitalMajorClassification::class,
-        'import' => HospitalMajorClassificationImport::class,
-        'seed' => true,
-    ],
-    'm_hospital_category_chu.csv' => [
-        'model' => HospitalMiddleClassification::class,
-        'import' => HospitalMiddleClassificationImport::class,
-        'seed' => true,
-    ],
-    'm_hospital_category_sho.csv' => [
-        'model' => HospitalMinorClassification::class,
-        'import' => HospitalMinorClassificationImport::class,
-        'seed' => true,
-    ],
-    'm_staff.csv' => [
-        'model' => Staff::class,
-        'import' => StaffImport::class,
-        'seed' => false,
-    ],
+    // 'm_hospital.csv' => [
+    //     'model' => Hospital::class,
+    //     'import' => HospitalImport::class,
+    //     'seed' => true,
+    // ],
+    // 'm_hospital_category_dai.csv' => [
+    //     'model' => HospitalMajorClassification::class,
+    //     'import' => HospitalMajorClassificationImport::class,
+    //     'seed' => true,
+    // ],
+    // 'm_hospital_category_chu.csv' => [
+    //     'model' => HospitalMiddleClassification::class,
+    //     'import' => HospitalMiddleClassificationImport::class,
+    //     'seed' => true,
+    // ],
+    // 'm_hospital_category_sho.csv' => [
+    //     'model' => HospitalMinorClassification::class,
+    //     'import' => HospitalMinorClassificationImport::class,
+    //     'seed' => true,
+    // ],
+    // 'm_staff.csv' => [
+    //     'model' => Staff::class,
+    //     'import' => StaffImport::class,
+    //     'seed' => false,
+    // ],
     'm_course_basic.csv' => [
         'model' => Course::class,
         'import' => CourseImport::class,
