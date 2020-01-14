@@ -145,31 +145,31 @@ return [
     //     'seed' => false,
     // ],
     //
-    'm_course_question.csv' => [
-        'model' => CourseQuestion::class,
-        'import' => CourseQuestionImport::class,
-        'seed' => false,
-    ],
-    'm_file_location.csv' => [
-        'model' => ImageOrder::class,
-        'import' => ImageOrderImport::class,
-        'seed' => false,
-    ],
-    'm_hospital_file.csv' => [
-        'model' => HospitalImage::class,
-        'import' => HospitalImageImport::class,
-        'seed' => false,
-    ],
-    'm_hospital_time.csv' => [
-        'model' => MedicalTreatmentTime::class,
-        'import' => MedicalTreatmentTimeImport::class,
-        'seed' => false,
-    ],
-    'm_hospital_detail.csv' => [
-        'model' => HospitalDetail::class,
-        'import' => HospitalDetailImport::class,
-        'seed' => false,
-    ],
+    // 'm_course_question.csv' => [
+    //     'model' => CourseQuestion::class,
+    //     'import' => CourseQuestionImport::class,
+    //     'seed' => false,
+    // ],
+    // 'm_file_location.csv' => [
+    //     'model' => ImageOrder::class,
+    //     'import' => ImageOrderImport::class,
+    //     'seed' => false,
+    // ],
+    // 'm_hospital_file.csv' => [
+    //     'model' => HospitalImage::class,
+    //     'import' => HospitalImageImport::class,
+    //     'seed' => false,
+    // ],
+    // 'm_hospital_time.csv' => [
+    //     'model' => MedicalTreatmentTime::class,
+    //     'import' => MedicalTreatmentTimeImport::class,
+    //     'seed' => false,
+    // ],
+    // 'm_hospital_detail.csv' => [
+    //     'model' => HospitalDetail::class,
+    //     'import' => HospitalDetailImport::class,
+    //     'seed' => false,
+    // ],
     'm_course_file.csv' => [
         'model' => CourseImage::class,
         'import' => CourseImageImport::class,
