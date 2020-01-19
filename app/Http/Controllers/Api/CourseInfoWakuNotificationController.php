@@ -156,6 +156,7 @@ class CourseInfoWakuNotificationController extends Controller
                 }
                 $kenshin_sys_course_waku->kenshin_sys_course_id = $course->id;
                 $kenshin_sys_course_waku->kenshin_sys_course_no = $c['courseNo'];
+                $kenshin_sys_course_waku->jouken_no = $c['joukenNo'];
                 $kenshin_sys_course_waku->year_month = $month_waku['month'];
                 $kenshin_sys_course_waku->waku_kbn = $month_waku['wakuInfo'];
                 $kenshin_sys_course_waku->save();

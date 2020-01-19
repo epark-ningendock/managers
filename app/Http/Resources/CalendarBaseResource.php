@@ -11,10 +11,10 @@ use App\Enums\WebReception;
 
 use Log;
 
-class CourseIndexBaseResource extends Resource
+class CalendarBaseResource extends Resource
 {
     /**
-     * 検査コース基本情報 resource into an array.
+     * カレンダー基本情報 resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
@@ -31,53 +31,19 @@ class CourseIndexBaseResource extends Resource
      */
     protected function baseCollections()
     {
+        $hospital_id = $this['hospital_id'];
+        $hospital_code = $this['hospital_code'];
+        $course = $this['course'];
         return collect(
             [
-                'course_no' => $this->id,
-                'course_code' => $this->code,
-                'course_name' => $this->name,
-                'course_url' => $this->createURL() . "/detail_hospital/" . $this->contract_information->code . "/detail/" . $this->code . ".html",
-                'web_reception' => $this->createReception(),
-                'course_flg_category' => $this->is_category,
-                'course_img' => $this->getCourseImg($this->course_images),
-                'flg_price' => $this->is_price,
-                'price' => $this->price,
-                'flg_price_memo' => $this->is_price_memo,
-                'price_memo' => $this->price_memo ?? '',
-                'course_point' => $this->course_point,
-                'course_notice' => $this->course_notice,
-                'course_cancel' => $this->course_cancel,
-                'time_required' => $this->getContents()[0],
-                'stay' => $this->getContents()[1],
-                'meal' => $this->getContents()[2],
-                'week_end' => $this->getContents()[3],
-                'exam_start' => $this->getContents()[4],
-                'result_examination' => $this->getContents()[5],
-                'category_disease' => $this->getContents()[6],
-                'category_exam' => $this->_categories($this->course_details),
-                'category_recommended' => $this->getContents()[7],
-                'options' => $this->getOptions(),
-                'question' => $this->getQuestion(),
-                'pre_account_price' => $this->pre_account_price,
-                'flg_local_payment' => $this->is_local_payment,
-                'flg_pre_account' => $this->is_pre_account,
-                'auto_calc_application' => $this->auto_calc_application,
+                'status' => 0,
+                'no' => $hospital_id,
+                'hospital_code' => $hospital_code,
+                'course_no' => $course->id,
+                'course_code' => $course->code,
                 'all_calendar' => new DailyCalendarResource($this)
             ]
         );
-    }
-
-    /**
-     * @return array
-     */
-    private function getOptions() {
-        $results = [];
-        foreach ($this->course_options as $course_option) {
-            $option = $course_option->option;
-            $results[] = ['cd' => $option->id, 'title' => $option->name, 'confirm' => $option->confirm, 'price' => $option->price];
-        }
-
-        return $results;
     }
 
     /**

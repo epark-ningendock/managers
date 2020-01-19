@@ -34,6 +34,7 @@ class HospitalBasicResource extends Resource
             'district_name' => (isset($this->district_code))? $this->district_code->name : '',
             'address1' => $this->address1,
             'address2' => $this->address2 ?? '',
+            'tel' => $this->tel,
             'stations' => Station::getStations($rails, $stations, $accesses),
             'movie' => $this->getMovieInfo(),
         ];

@@ -131,8 +131,6 @@ class CourseInfoNotificationController extends Controller
             // 登録
             $this->registCourseInfo($params);
 
-            // 削除
-
             DB::commit();
         } catch (\Throwable $e) {
             $message = '[健診システム連携コース通知API] DBの登録に失敗しました。';
@@ -197,6 +195,7 @@ class CourseInfoNotificationController extends Controller
                 $course = new Course();
             }
             $course->kenshin_sys_hospital_id = $params['hospital_id'];
+            $course->kenshin_sys_dantai_info_id = $kenshinSysDantaiInfo->id;
             $course->kenshin_sys_dantai_no = $params['dantai_no'];
             $course->kenshin_sys_course_no = $kenshin_course['courseNo'];
             $course->kenshin_sys_course_name = $kenshin_course['courseNm'];
@@ -213,9 +212,7 @@ class CourseInfoNotificationController extends Controller
             if (!empty($kenshin_course_futan_jouken_list)) {
                 foreach ($kenshin_course_futan_jouken_list as $kenshin_course_futan_jouken) {
                     $course_futan_condition = new CourseFutanCondition();
-                    $course_futan_condition->kenshin_sys_hospital_id = $params['hospital_id'];
-                    $course_futan_condition->kenshin_sys_dantai_no = $params['dantai_no'];
-                    $course_futan_condition->kenshin_sys_course_no = $kenshin_course['courseNo'];
+                    $course_futan_condition->kenshin_sys_course_id = $course->id;
                     $course_futan_condition->jouken_no = $kenshin_course_futan_jouken['joukenNo'];
                     $course_futan_condition->sex = $kenshin_course_futan_jouken['sex'];
                     $course_futan_condition->honnin_kbn = $kenshin_course_futan_jouken['honninKbn'];
@@ -246,14 +243,11 @@ class CourseInfoNotificationController extends Controller
                 foreach ($kenshin_option_list as $kenshin_option) {
                     $option = new KenshinSysOption();
                     $option->name = $kenshin_option['optionNm'];
-                    $option->kenshin_sys_hospital_id = $params['hospital_id'];
-                    $option->kenshin_sys_dantai_no = $params['dantai_no'];
-                    $option->kenshin_sys_course_no = $kenshin_course['courseNo'];
+                    $option->kenshin_sys_course_id = $course->id;
                     $option->kenshin_sys_option_no = $kenshin_option['optionNo'];
-                    $option->kenshin_sys_option_nm = $kenshin_option['optionNm'];
+                    $option->kenshin_sys_option_name = $kenshin_option['optionNm'];
                     $option->kenshin_sys_option_age_kisan_kbn = $kenshin_option['optoinAgeKisanKbn'];
                     $option->kenshin_sys_option_age_kisan_date = $kenshin_option['optionAgeKisanDate'];
-                    $option->kenshin_sys_flg = 1;
                     $option->save();
 
                     OptionFutanCondition::where('kenshin_sys_option_no', $kenshin_option['optionNo'])->delete();
@@ -261,10 +255,7 @@ class CourseInfoNotificationController extends Controller
                     if (!empty($option_futan_jouken_list)) {
                         foreach ($option_futan_jouken_list as $kenshin_option_futan_jouken) {
                             $option_futan_condition = new OptionFutanCondition();
-                            $option_futan_condition->kenshin_sys_hospital_id = $params['hospital_id'];
-                            $option_futan_condition->kenshin_sys_dantai_no = $params['dantai_no'];
-                            $option_futan_condition->kenshin_sys_course_no = $kenshin_course['courseNo'];
-                            $option_futan_condition->kenshin_sys_option_no = $kenshin_option['optionNo'];
+                            $option_futan_condition->kenshin_sys_option_id = $option->id;
                             $option_futan_condition->jouken_no = $kenshin_option_futan_jouken['joukenNo'];
                             $option_futan_condition->sex = $kenshin_option_futan_jouken['sex'];
                             $option_futan_condition->honnin_kbn = $kenshin_option_futan_jouken['honninKbn'];

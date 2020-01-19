@@ -30,7 +30,7 @@ class CourseController extends ApiBaseController
      */
     public function index(Request $request)
     {
-//        try {
+        try {
             $course_code = $request->input('course_code');
             $hospital_code = $request->input('hospital_code');
 
@@ -60,10 +60,10 @@ class CourseController extends ApiBaseController
             $data = ['course' => $course, 'courses' => $courses, 'hospital' => $hospital];
 
             return new CourseIndexResource($data);
-//        } catch (\Exception $e) {
-//            Log::error($e);
-//            return $this->createResponse($this->messages['system_error_db']);
-//        }
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_db']);
+        }
     }
 
     /**
@@ -76,6 +76,7 @@ class CourseController extends ApiBaseController
     private function getCourseContents($hospital_id, $course_code)
     {
         $today = Carbon::today()->toDateString();
+        $end_day = Carbon::today()->addMonthsNoOverflow(5)->endOfMonth()->toDateString();
         return Course::with([
             'course_images',
             'course_details' => function ($query) {
@@ -89,6 +90,13 @@ class CourseController extends ApiBaseController
             'course_details.minor_classification' => function ($query) {
             $query->where('status', Status::VALID);
             },
+            'calendar_days' => function ($query) use ($today, $end_day) {
+                $query->where('date', '>=', $today)
+                    ->where('date', '<=', $end_day)
+                    ->orderBy('date');
+            },
+            'course_options',
+            'course_options.option',
             'course_questions',
             'contract_information'
         ])
@@ -259,7 +267,17 @@ class CourseController extends ApiBaseController
                 }
             }
 
-            $course = Course::where('code', $serach_condition->course_code)
+            $from = $serach_condition->get_yyyymmdd_from;
+            $to = $serach_condition->get_yyyymmdd_to;
+
+            $course = Course::with([
+                'calendar_days' => function ($query) use ($from, $to) {
+                    $query->where('date', '>=', $from)
+                        ->where('date', '<=', $to)
+                        ->orderBy('date');
+                },
+            ])
+                ->where('code', $serach_condition->course_code)
                 ->where('hospital_id', $hospital_id)
                 ->where('is_category', 0)
                 ->first();
@@ -268,14 +286,7 @@ class CourseController extends ApiBaseController
                 return $this->createResponse($this->messages['data_empty_error']);
             }
 
-            // 医療機関の検査コースのカレンダー取得
-            $calendar_dailys = $this->getDayReservationEnableInfo($serach_condition, $course);
-
-            if (!$calendar_dailys) {
-                return $this->createResponse($this->messages['data_empty_error']);
-            }
-
-            $data = ['search_cond' => $serach_condition,  'course' => $course, 'day_data' => $calendar_dailys];
+            $data = ['hospital_id' => $hospital_id, 'hospital_code' => $serach_condition->hospital_code,  'course' => $course];
 
             // response
             return new CalendarDailyResource($data);
@@ -326,13 +337,12 @@ class CourseController extends ApiBaseController
         $from = $serach_condition->get_yyyymmdd_from;
         $to = $serach_condition->get_yyyymmdd_to;
 
-        $reserv_enable_date = Carbon::today()->subMonth(floor($course->reception_start_date / 1000))->subDay($course->reception_start_date % 1000);
-        $reserv_enableto_date = Carbon::today()->addMonth(floor($course->reception_end_date / 1000))->addDay($course->reception_end_date % 1000);
-
         $calendar_days = CalendarDay::where('calendar_id', $course->calendar_id)
             ->where('date', '>=', $from)
             ->where('date', '<=', $to)
             ->get();
+
+        return $calendar_days;
 
         $results = [];
 
