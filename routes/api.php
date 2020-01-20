@@ -70,7 +70,7 @@ Route::prefix('v1')->group(function () {
 
 // 以下予約API
 // 予約登録/更新API
-    Route::post('reservation-store', 'ReservationApiController@store');
+    Route::match(['get', 'post'], 'reservation-store/', 'ReservationApiController@store');
 // 予約確認API
     Route::get('reservation-conf', 'ReservationApiController@conf');
 // 予約キャンセルAPI
@@ -78,8 +78,8 @@ Route::prefix('v1')->group(function () {
 // PV登録
     Route::match(['post'], 'pv/', 'PvRegistController@store');
 // EPARK会員ログイン情報
-    Route::post('memberLoginInfo', 'MemberLoginInfoController@store')->name('member-login-info.store');
-    Route::get('memberLoginInfo', 'MemberLoginInfoController@show')->name('member-login-info.show');
+    Route::post('member-login-info-store', 'MemberLoginInfoController@store');
+    Route::get('member-login-info-show', 'MemberLoginInfoController@show');
 // 検討中リスト
     Route::post('considerationList', 'ConsiderationListController@store')->name('consideration-list.store');
     Route::get('considerationList', 'ConsiderationListController@show')->name('consideration-list.show');
@@ -90,4 +90,3 @@ Route::prefix('v1')->group(function () {
     // コース通知API
     Route::post('registcoursewaku', 'CourseInfoWakuNotificationController@registcourse')->name('course-info-waku-notification.registcoursewaku');
 });
-
