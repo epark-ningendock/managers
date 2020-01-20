@@ -92,35 +92,35 @@ class CourseIndexBaseResource extends Resource
             }
 
             $answer = [];
-            if (isset($question->anwer01)) {
-                $answer[] = ['no' => 1, 'text' => $question->anwer01];
+            if (isset($question->answer01)) {
+                $answer[] = ['no' => 1, 'text' => $question->answer01];
             }
-            if (isset($question->anwer02)) {
-                $answer[] = ['no' => 2, 'text' => $question->anwer02];
+            if (isset($question->answer02)) {
+                $answer[] = ['no' => 2, 'text' => $question->answer02];
             }
-            if (isset($question->anwer03)) {
-                $answer[] = ['no' => 3, 'text' => $question->anwer03];
+            if (isset($question->answer03)) {
+                $answer[] = ['no' => 3, 'text' => $question->answer03];
             }
-            if (isset($question->anwer04)) {
-                $answer[] = ['no' => 4, 'text' => $question->anwer04];
+            if (isset($question->answer04)) {
+                $answer[] = ['no' => 4, 'text' => $question->answer04];
             }
-            if (isset($question->anwer05)) {
-                $answer[] = ['no' => 5, 'text' => $question->anwer05];
+            if (isset($question->answer05)) {
+                $answer[] = ['no' => 5, 'text' => $question->answer05];
             }
-            if (isset($question->anwer06)) {
-                $answer[] = ['no' => 6, 'text' => $question->anwer06];
+            if (isset($question->answer06)) {
+                $answer[] = ['no' => 6, 'text' => $question->answer06];
             }
-            if (isset($question->anwer07)) {
-                $answer[] = ['no' => 7, 'text' => $question->anwer07];
+            if (isset($question->answer07)) {
+                $answer[] = ['no' => 7, 'text' => $question->answer07];
             }
-            if (isset($question->anwer08)) {
-                $answer[] = ['no' => 8, 'text' => $question->anwer08];
+            if (isset($question->answer08)) {
+                $answer[] = ['no' => 8, 'text' => $question->answer08];
             }
-            if (isset($question->anwer09)) {
-                $answer[] = ['no' => 9, 'text' => $question->anwer09];
+            if (isset($question->answer09)) {
+                $answer[] = ['no' => 9, 'text' => $question->answer09];
             }
-            if (isset($question->anwer10)) {
-                $answer[] = ['no' => 10, 'text' => $question->anwer10];
+            if (isset($question->answer10)) {
+                $answer[] = ['no' => 10, 'text' => $question->answer10];
             }
 
             $results[] = ['no' => $question->question_number, 'text' => $question->question_title, 'answer' => $answer];

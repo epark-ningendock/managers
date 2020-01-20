@@ -74,19 +74,19 @@ Route::prefix('v1')->group(function () {
 // 予約確認API
     Route::get('reservation-conf', 'ReservationApiController@conf');
 // 予約キャンセルAPI
-    Route::post('reservation-cancel', 'ReservationApiController@cancel');
+    Route::match(['get', 'post'], 'reservation-cancel/', 'ReservationApiController@cancel');
 // PV登録
-    Route::match(['post'], 'pv/', 'PvRegistController@store');
+    Route::match(['get', 'post'], 'pv/', 'PvRegistController@store');
 // EPARK会員ログイン情報
-    Route::post('member-login-info-store', 'MemberLoginInfoController@store');
-    Route::get('member-login-info-show', 'MemberLoginInfoController@show');
+    Route::match(['get', 'post'], 'member-login-info-store/', 'MemberLoginInfoController@store');
+    Route::match(['get', 'post'], 'member-login-info-show', 'MemberLoginInfoController@show');
 // 検討中リスト
-    Route::post('considerationList', 'ConsiderationListController@store')->name('consideration-list.store');
-    Route::get('considerationList', 'ConsiderationListController@show')->name('consideration-list.show');
-    Route::delete('considerationList', 'ConsiderationListController@destroy')->name('consideration-list.destroy');
+    Route::match(['get', 'post'], 'consideration-list-store/', 'ConsiderationListController@store');
+    Route::match(['get', 'post'], 'consideration-list-show/', 'ConsiderationListController@show');
+    Route::match(['get', 'post', 'delete'],'consideration-list-destroy/', 'ConsiderationListController@destroy');
 
     // コース通知API
-    Route::post('registcourse', 'CourseInfoNotificationController@registcourse')->name('course-info-notification.registcourse');
+    Route::match(['get', 'post'], 'registcourse/', 'CourseInfoNotificationController@registcourse');
     // コース通知API
-    Route::post('registcoursewaku', 'CourseInfoWakuNotificationController@registcourse')->name('course-info-waku-notification.registcoursewaku');
+    Route::match(['get', 'post'], 'registcoursewaku/', 'CourseInfoWakuNotificationController@registcourse');
 });
