@@ -265,7 +265,7 @@ class ReservationService
             ->first();
 
         if (!$calendar_day) {
-            return 3;
+            return 1;
         }
 
         // 新規の場合、休診日かどうか確認
