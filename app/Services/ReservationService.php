@@ -265,7 +265,7 @@ class ReservationService
             ->first();
 
         if (!$calendar_day) {
-            return 1;
+            return 3;
         }
 
         // 新規の場合、休診日かどうか確認
@@ -296,7 +296,7 @@ class ReservationService
         if ($reception_start_date > $reservation_date
             || $reception_end_date < $reservation_date
         ) {
-            return 3;
+            return 1;
         }
 
         if ($process === self::REGISTRATION) { // 新規の場合、予約枠数の確認
