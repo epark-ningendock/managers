@@ -286,8 +286,8 @@ class ReservationService
         $start_month = $course->reception_start_date / 1000;
         $start_day = $course->reception_start_date % 1000;
         $reception_start_date = Carbon::today();
-        $reception_start_date->subMonthsNoOverflow($start_month);
-        $reception_start_date->subDays($start_day);
+        $reception_start_date->addMonthsNoOverflow($start_month);
+        $reception_start_date->addDays($start_day);
         $end_month = $course->reception_end_date / 1000;
         $end_day = $course->reception_end_date % 1000;
         $reception_end_date = Carbon::today();
@@ -296,7 +296,7 @@ class ReservationService
         if ($reception_start_date > $reservation_date
             || $reception_end_date < $reservation_date
         ) {
-            return 1;
+            return 3;
         }
 
         if ($process === self::REGISTRATION) { // 新規の場合、予約枠数の確認
@@ -557,7 +557,7 @@ class ReservationService
         $entity->applicant_name_kana = $request->input('last_name_kana') . $request->input('first_name_kana');
         $entity->applicant_tel = $request->input('tel_no') ?? $entity->applicant_tel;
 
-        $options = $request->input('option_array');
+        $options = json_decode(json_encode($request->input('option_array')));
         if ($hospital->hplink_contract_type == HplinkContractType::NONE) {
             $option_price = 0;
             foreach ($options as $option) {
@@ -611,7 +611,7 @@ class ReservationService
      */
     private function _reservation_answers_from_request($request, $reservation_id)
     {
-        $q_answers = $request->input('q_anser');
+        $q_answers = json_decode(json_encode($request->input('q_anser')));
         $courseQuestions = CourseQuestion::where('course_id', $request->input('course_id'));
         if (! $courseQuestions) {
             return;
