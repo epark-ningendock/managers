@@ -524,7 +524,7 @@ class ReservationService
         $entity->terminal_type = $request->input('terminal_tp');
         $entity->time_selected = $request->input('time_selected') ?? $entity->time_selected;
 
-        $entity->is_repeat = $request->input('repeat_fg') ?? $entity->is_repeat;
+        $entity->is_repeat = 0;
         $entity->is_representative = $request->input('representative_fg');
 
         $entity->tax_included_price = $request->input('course_price_tax') ?? $entity->tax_included_price;
