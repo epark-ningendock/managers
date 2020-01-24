@@ -557,7 +557,10 @@ class ReservationService
         $entity->applicant_name_kana = $request->input('last_name_kana') . $request->input('first_name_kana');
         $entity->applicant_tel = $request->input('tel_no') ?? $entity->applicant_tel;
 
-        $options = json_decode(json_encode($request->input('option_array')));
+        $options = [];
+        if (!empty($request->input('option_array'))) {
+            $options = json_decode(json_encode($request->input('option_array')));
+        }
         if ($hospital->hplink_contract_type == HplinkContractType::NONE) {
             $option_price = 0;
             foreach ($options as $option) {
