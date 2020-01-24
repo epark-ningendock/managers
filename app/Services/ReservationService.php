@@ -372,6 +372,9 @@ class ReservationService
         $entity = $this->find($reservation->id);
         $hospital_email_setting = HospitalEmailSetting::find($entity->hospital_id);
 
+        \Illuminate\Support\Facades\Log::info('予約ID:'. $reservation->id);
+        \Illuminate\Support\Facades\Log::info('医療機関ID:'. $reservation->hospital_id);
+
         // キャンセル処理(処理区分がある)かどうか
         $is_cancel = $entity->reservation_status === ReservationStatus::CANCELLED ? true : false;
 
@@ -392,13 +395,17 @@ class ReservationService
             }
         }
 
-        $hospital_mails = [
-            $hospital_email_setting->reception_email1,
-            $hospital_email_setting->reception_email2,
-            $hospital_email_setting->reception_email3,
-            $hospital_email_setting->reception_email4,
-            $hospital_email_setting->reception_email5,
-        ];
+        $hospital_mails = [];
+        if ($hospital_email_setting) {
+            $hospital_mails = [
+                $hospital_email_setting->reception_email1,
+                $hospital_email_setting->reception_email2,
+                $hospital_email_setting->reception_email3,
+                $hospital_email_setting->reception_email4,
+                $hospital_email_setting->reception_email5,
+            ];
+        }
+
         foreach ($hospital_mails as $m) {
             if (!empty($m)) {
                 $tos[] = $m;
@@ -561,8 +568,10 @@ class ReservationService
         if (!empty($request->input('option_array'))) {
             $options = json_decode(json_encode($request->input('option_array')));
         }
+
         if ($hospital->hplink_contract_type == HplinkContractType::NONE) {
             $option_price = 0;
+
             foreach ($options as $option) {
                 $option_price += $option['option_price_tax'];
             }
