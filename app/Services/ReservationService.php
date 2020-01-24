@@ -258,7 +258,7 @@ class ReservationService
 
         $course = Course::find($course_id);
         if (!$course) {
-            return 1;
+            return 3;
         }
         $calendar_day = CalendarDay::where('date', $reservation_date)
             ->where('calendar_id', $course->calendar_id)

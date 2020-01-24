@@ -154,7 +154,7 @@ class ReservationApiController extends ApiBaseController
             } elseif ($result == 2 || $result == 4) {
                 $this->failedResult(['00', '04', '登録失敗（予約枠なし(予約済みエラー、受付数オーバーエラー)）']);
             } elseif ($result == 3) {
-                $this->failedResult(['00', '05', '登録失敗（予約不可(必須項目エラー、引数エラー、顧客チェック失敗エラー、その他エラー、メール送信エラー）']);
+                $this->failedResult(['00', '05', 'コースID:'.$request->input('course_id').'登録失敗（予約不可(必須項目エラー、引数エラー、顧客チェック失敗エラー、その他エラー、メール送信エラー）']);
             } elseif ($result == 5) {
                 $this->failedResult(['00', '03', '登録失敗（予約枠埋まり)']);
             }
