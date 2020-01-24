@@ -144,7 +144,7 @@ class ReservationApiController extends ApiBaseController
     public function store(ReservationStoreRequest $request)
     {
        Log::error($request->query());
-//        try {
+       try {
             $reservation_id = $request->input('reservation_id');
             $reservation_id = $this->convertReservationId($reservation_id);
             // 予約可能かチェック
@@ -179,10 +179,10 @@ class ReservationApiController extends ApiBaseController
             $entity->result_code = $this->_reservation_service->mail($entity);
 
             return new ReservationStoreResource($entity);
-//        } catch (\Exception $e) {
-//            Log::error('予約登録処理に失敗しました。:'. $e);
-//            $this->failedResult(['00', '01', '内部エラー']);
-//        }
+       } catch (\Exception $e) {
+           Log::error('予約登録処理に失敗しました。:'. $e);
+           $this->failedResult(['00', '01', '内部エラー']);
+       }
 
     }
 
