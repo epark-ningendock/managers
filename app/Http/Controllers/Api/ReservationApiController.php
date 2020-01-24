@@ -143,6 +143,7 @@ class ReservationApiController extends ApiBaseController
      */
     public function store(ReservationStoreRequest $request)
     {
+       Log::error($request->json());
 //        try {
             $reservation_id = $request->input('reservation_id');
             $reservation_id = $this->convertReservationId($reservation_id);
