@@ -175,8 +175,10 @@ class ReservationApiController extends ApiBaseController
             // 処理区分をentityに追加
             $entity->process_kbn = intval($request->input('process_kbn'));
 
+            Log::info('メール送信処理開始');
             // 完了メール送信
             $entity->result_code = $this->_reservation_service->mail($entity);
+            Log::info('メール送信処理終了');
 
             return new ReservationStoreResource($entity);
        } catch (\Exception $e) {
