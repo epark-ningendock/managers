@@ -7,7 +7,7 @@ use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class KenshinSysOption extends SoftDeleteModel
 {
-    use SoftDeletes, OptimisticLocking;
+    use SoftDeletes;
 
     protected $dates = [
         'kenshin_sys_option_age_kisan_date',

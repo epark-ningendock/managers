@@ -7,10 +7,11 @@ use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class KenshinSysCourse extends SoftDeleteModel
 {
-    use EnumTrait, OptimisticLocking;
+    use EnumTrait;
 
     protected $fillable = [
         'kenshin_sys_hospital_id',
+        'kenshin_sys_dantai_info_id',
         'kenshin_sys_dantai_no',
         'kenshin_sys_course_no',
         'kenshin_sys_course_name',
@@ -29,7 +30,7 @@ class KenshinSysCourse extends SoftDeleteModel
 
     public function kenshin_sys_dantai_infos()
     {
-        return $this->belongsTo('App\KenshinSysDantaiInfo', ['kenshin_sys_hospital_id', 'kenshin_sys_dantai_no'], ['kenshin_sys_hospital_id', 'kenshin_sys_dantai_no']);
+        return $this->belongsTo('App\KenshinSysDantaiInfo');
     }
 
     public function course_futan_conditions()

@@ -16,14 +16,11 @@ class CreateCourseMatchTable extends Migration
     public function up()
     {
         Schema::create('course_match', function (Blueprint $table) {
-            $table->unsignedInteger('course_id');
-            $table->unsignedInteger('kenshin_sys_course_id');
-            $table->timestamps();
-
-            $table->primary(['course_id', 'kenshin_sys_course_id']);
-
-            $table->foreign('course_id')->references('id')->on('courses');
-            $table->foreign('kenshin_sys_course_id')->references('id')->on('kenshin_sys_courses');
+            $table->increments('id');
+            $table->integer('course_id');
+            $table->bigInteger('kenshin_sys_course_id');
+            $table->char('status', 1)->default('1');
+            $this->addCommonColumns($table);
 
         });
     }

@@ -13,6 +13,7 @@ use App\Hospital;
 use App\KenshinSysCooperation;
 use App\KenshinSysCourseWaku;
 use App\KenshinSysDantaiInfo;
+use App\KenshinSysOption;
 use App\Option;
 use App\OptionFutanCondition;
 use App\OptionTargetAge;
@@ -38,7 +39,7 @@ class ReservationInfoNotificationController extends Controller
         $messages = config('api.course_info_notification_api.message');
         $sysErrorMessages = config('api.unexpected_error.message');
         $app_name = env('APP_ENV');
-        $ip = Request::ip();
+        $ip = $request->ip();
         if ($app_name == 'production') {
             $app_kbn = AppKbn::PRODUCTION;
         } else {
@@ -46,8 +47,8 @@ class ReservationInfoNotificationController extends Controller
         }
 
         // パラメータチェック
-        $Ocp_Apim_Subscription_key = $request->input('Ocp-Apim-Subscription-key');
-        $partner_code = $request->input('X-Partner-Code');
+        $Ocp_Apim_Subscription_key = $request->header('Ocp-Apim-Subscription-key');
+        $partner_code = $request->header('X-Partner-Code');
         if (!isset($Ocp_Apim_Subscription_key)) {
             return $this->createResponse($messages['errorSubscriptionKeyId']);
         }
@@ -72,7 +73,7 @@ class ReservationInfoNotificationController extends Controller
             return $this->createResponse($messages['errorSubscriptionKeyId']);
         }
 
-        $hospital = Hospital::where('kenshin_sys_hospital_id', $request->input('hospitalId'))->fist();
+        $hospital = Hospital::where('kenshin_sys_hospital_id', $request->input('hospitalId'))->first();
         if (!$hospital) {
             return $this->createResponse($messages['errorValidationId']);
         }
@@ -98,7 +99,7 @@ class ReservationInfoNotificationController extends Controller
         }
 
         DB::beginTransaction();
-        try {
+//        try {
             try {
                 // 登録
                 $this->registReservation($hospital, $request);
@@ -107,15 +108,15 @@ class ReservationInfoNotificationController extends Controller
             }
 
             DB::commit();
-        } catch (\Throwable $e) {
-            $message = '[健診システム連携コース通知API] DBの登録に失敗しました。';
-            Log::error($message, [
-                '健診システム連携情報' => $kenshin_sys_cooperation->toArray(),
-                'exception' => $e,
-            ]);
-            DB::rollback();
-            return $this->createResponse($sysErrorMessages['errorDB']);
-        }
+//        } catch (\Throwable $e) {
+//            $message = '[健診システム連携コース通知API] DBの登録に失敗しました。';
+//            Log::error($message, [
+//                '健診システム連携情報' => $kenshin_sys_cooperation->toArray(),
+//                'exception' => $e,
+//            ]);
+//            DB::rollback();
+//            return $this->createResponse($sysErrorMessages['errorDB']);
+//        }
 
         return $this->createResponse($messages['success']);
     }
@@ -179,24 +180,24 @@ class ReservationInfoNotificationController extends Controller
         $reservation->todays_memo = $request->input('yoyakuComment');
         $reservation->save();
 
-        if (empty($request->input(['optionList']))) {
-            return;
-        }
-
-        ReservationOption::where('reservation_id', $reservation->id)->delete();
-
-        foreach ($request->input(['optionList']) as $o) {
-
-            $option = Option::where('hospital_id', $hospital->id)
-                ->where('kenshin_sys_course_no', $o['optionNo'])
-                ->first();
-
-            $reservation_option = new ReservationOption();
-            $reservation_option->reservation_id = $reservation->id;
-            $reservation_option->option_id = $option->id;
-            $reservation_option->option_price = $option->price;
-            $reservation_option->status = Status::VALID;
-            $reservation_option->save();
-        }
+//        if (empty($request->input(['optionList']))) {
+//            return;
+//        }
+//
+//        ReservationOption::where('reservation_id', $reservation->id)->delete();
+//
+//        foreach ($request->input(['optionList']) as $o) {
+//
+//            $option = KenshinSysOption::where('hospital_id', $hospital->id)
+//                ->where('kenshin_sys_course_no', $o['optionNo'])
+//                ->first();
+//
+//            $reservation_option = new ReservationOption();
+//            $reservation_option->reservation_id = $reservation->id;
+//            $reservation_option->option_id = $option->id;
+//            $reservation_option->option_price = $option->price;
+//            $reservation_option->status = Status::VALID;
+//            $reservation_option->save();
+//        }
     }
 }

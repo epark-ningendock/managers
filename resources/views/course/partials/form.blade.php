@@ -404,6 +404,49 @@
 </div>
 
 <div class="box box-primary">
+    <div class="box-header with-border">
+        <div class="box-tools" data-widget="collapse">
+            <button type="button" class="btn btn-sm">
+                <i class="fa fa-minus"></i></button>
+        </div>
+        <h1 class="box-title">健診システムコースの設定</h1>
+    </div>
+
+    <div class="form-entry">
+        <div class="box-body" id="kenshin-sys-course-setting">
+            <table class="table no-border table-hover table-striped ">
+                <tr>
+                    <td class="course-name"><span>健診システムコース名</span></td>
+                    <td class="dantai-name"><span>健診システム団体名</span></td>
+                    <td class="course-price">価格</td>
+                    <!--
+                    <td class="option-confirm">説明</td>
+                    -->
+                </tr>
+                @foreach($kenshin_sys_courses as $kenshin_course)
+                    <tr>
+                        @php
+                            $is_checked = false;
+                            if (!empty($course_match)) {
+                              $is_checked = $course_match->contains($kenshin_course->kenshin_sys_course_no);
+                            }
+                        @endphp
+                        <td class="course-name">
+                            <input type="checkbox" id="course_set_price{{ $kenshin_course->kenshin_sys_course_no }}" name="kenshin_sys_course_nos[]" value="{{ $kenshin_course->kenshin_sys_course_no }}" {{ $is_checked ? 'checked' : '' }}/>
+                            <label class="mr-2" for="course_set_price{{ $kenshin_course->kenshin_sys_course_no }}">{{ $kenshin_course->kenshin_sys_course_name }}</label></td>
+                        <td class="dantai-name">{{ $kenshin_course->kenshin_sys_dantai_info_id }}</td>
+                        <td class="course-price">{{ number_format($kenshin_course->kenshin_sys_course_kingaku) }} 円</td>
+                    <!--
+            <td class="option-confirm">{{ $kenshin_course->confirm }}</td>
+            -->
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="box box-primary">
   <div class="box-header with-border">
     <div class="box-tools" data-widget="collapse">
       <button type="button" class="btn btn-sm">
@@ -434,7 +477,7 @@
         @endphp
           <td class="option-name">
               <input type="checkbox" id="option_set_price{{ $option->id }}" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
-              <label class="mr-2" for="option_set_price{{ $option->id }}">{{ $option->name }}</label></td>
+              <label class="mr-2" for="option_set_price{{ $option->id }}">　{{ $option->name }}</label></td>
           <td class="option-price">{{ number_format($option->price) }} 円</td>
             <!--
             <td class="option-confirm">{{ $option->confirm }}</td>

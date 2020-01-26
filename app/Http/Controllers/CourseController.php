@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Course;
 use App\CourseDetail;
 use App\CourseImage;
+use App\CourseMatch;
 use App\CourseMeta;
 use App\CourseOption;
 use App\CourseQuestion;
@@ -12,6 +13,7 @@ use App\Enums\CourseImageType;
 use App\Hospital;
 use App\HospitalImage;
 use App\Http\Requests\CourseFormRequest;
+use App\KenshinSysCourse;
 use App\KenshinSysDantaiInfo;
 use App\MajorClassification;
 use App\MinorClassification;
@@ -61,7 +63,8 @@ class CourseController extends Controller
         $today = Carbon::today();
         $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
             ->whereDate('life_time_to', '>=', $today)->get()->first();
-        $kenshin_sys_dantai_infos = KenshinSysDantaiInfo::where('kenshin_sys_hospital_id', $hospital->kenshin_sys_hospital_id)->get();
+        $kenshin_sys_courses = KenshinSysCourse::with(['kenshin_sys_dantai_infos'])->where('kenshin_sys_hospital_id', $hospital->kenshin_sys_hospital_id)->get();
+        $course_match = [];
 
         $is_presettlement = $hospital->is_pre_account == '1' &&
             (Auth::user()->staff_auth->is_pre_account == Permission::EDIT
@@ -77,7 +80,8 @@ class CourseController extends Controller
             ->with('disp_date_end', $disp_date_end)
             ->with('hospital', $hospital)
             ->with('images', $images)
-            ->with('kenshin_sys_dantai_infos', $kenshin_sys_dantai_infos)
+            ->with('kenshin_sys_courses', $kenshin_sys_courses)
+            ->with('course_match', $course_match)
             ->with('is_presettlement', $is_presettlement);
     }
 

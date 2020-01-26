@@ -33,7 +33,7 @@ class CourseInfoNotificationController extends Controller
         $messages = config('api.course_info_notification_api.message');
         $sysErrorMessages = config('api.unexpected_error.message');
         $app_name = env('APP_ENV');
-        $ip = Request::ip();
+        $ip = $request->ip();
         if ($app_name == 'production') {
             $app_kbn = '1';
         } else {
@@ -41,8 +41,8 @@ class CourseInfoNotificationController extends Controller
         }
 
         // パラメータチェック
-        $Ocp_Apim_Subscription_key = $request->input('Ocp-Apim-Subscription-key');
-        $partner_code = $request->input('X-Partner-Code');
+        $Ocp_Apim_Subscription_key = $request->header('Ocp-Apim-Subscription-key');
+        $partner_code = $request->header('X-Partner-Code');
         if (!isset($Ocp_Apim_Subscription_key)) {
             return $this->createResponse($messages['errorSubscriptionKeyId']);
         }
@@ -69,7 +69,7 @@ class CourseInfoNotificationController extends Controller
 
         if (empty($request->input('dantaiNo'))
             || !is_numeric($request->input('dantaiNo'))
-        || strlen($request->input('dantaiNo')) > 10) {
+        || strlen($request->input('dantaiNo')) > 15) {
             return $this->createResponse($messages['errorValidationId']);
         }
 
@@ -79,7 +79,7 @@ class CourseInfoNotificationController extends Controller
 
         if (!empty($request->input('courseList'))) {
             foreach ($request->input('courseList') as $course) {
-                if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 10) {
+                if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 15) {
                     return $this->createResponse($messages['errorValidationId']);
                 }
                 if (empty($course['courseNm'])) {
@@ -108,10 +108,10 @@ class CourseInfoNotificationController extends Controller
                         if (empty($option['optoinAgeKisanKbn']) || !in_array($option['optoinAgeKisanKbn'], [1,2,3,4,5,6,7,8])) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
-                        if (empty($option['optionAgeKisanDate']) || !is_numeric($option['optionAgeKisanDate']) || strlen($option['optionAgeKisanDate']) != 8) {
+                        if (!empty($option['optionAgeKisanDate']) && (!is_numeric($option['optionAgeKisanDate']) || strlen($option['optionAgeKisanDate']) != 8)) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
-                        if (empty($course['optionFutanJoukenList'])) {
+                        if (empty($option['optionFutanJoukenList'])) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
                     }
@@ -127,20 +127,20 @@ class CourseInfoNotificationController extends Controller
         ];
 
         DB::beginTransaction();
-        try {
+//        try {
             // 登録
             $this->registCourseInfo($params);
 
             DB::commit();
-        } catch (\Throwable $e) {
-            $message = '[健診システム連携コース通知API] DBの登録に失敗しました。';
-            Log::error($message, [
-                '健診システム連携情報' => $kenshin_sys_cooperation->toArray(),
-                'exception' => $e,
-            ]);
-            DB::rollback();
-            return $this->createResponse($sysErrorMessages['errorDB']);
-        }
+//        } catch (\Throwable $e) {
+//            $message = '[健診システム連携コース通知API] DBの登録に失敗しました。';
+//            Log::error($message, [
+//                '健診システム連携情報' => $kenshin_sys_cooperation->toArray(),
+//                'exception' => $e,
+//            ]);
+//            DB::rollback();
+//            return $this->createResponse($sysErrorMessages['errorDB']);
+//        }
 
         return $this->createResponse($messages['success']);
     }
@@ -192,7 +192,7 @@ class CourseInfoNotificationController extends Controller
                 ->where('kenshin_sys_hospital_id', $params['hospital_id'])
                 ->first();
             if (!$course) {
-                $course = new Course();
+                $course = new KenshinSysCourse();
             }
             $course->kenshin_sys_hospital_id = $params['hospital_id'];
             $course->kenshin_sys_dantai_info_id = $kenshinSysDantaiInfo->id;
@@ -203,11 +203,11 @@ class CourseInfoNotificationController extends Controller
             $course->kenshin_sys_riyou_bgn_date = $kenshin_course['riyouBgnDate'];
             $course->kenshin_sys_riyou_end_date = $kenshin_course['riyouEndDate'];
             $course->kenshin_sys_course_age_kisan_kbn = $kenshin_course['courseAgeKisanKbn'];
-            $course->kenshin_sys_course_age_kisan_date = $kenshin_course['courseAgeKisanDate'];
+            $course->kenshin_sys_course_age_kisan_date = $kenshin_course['courseAgeKisanDate'] ?? Carbon::today();
             $course->save();
 
             // コース負担条件登録
-            CourseFutanCondition::where('kenshin_sys_course_no', $kenshin_course['courseNo'])->delete();
+            CourseFutanCondition::where('kenshin_sys_course_id', $course->id)->forceDelete();
             $kenshin_course_futan_jouken_list = $kenshin_course['courseFutanJoukenList'];
             if (!empty($kenshin_course_futan_jouken_list)) {
                 foreach ($kenshin_course_futan_jouken_list as $kenshin_course_futan_jouken) {
@@ -221,7 +221,7 @@ class CourseInfoNotificationController extends Controller
 
                     $kenshin_target_ages = $kenshin_course_futan_jouken['targetAgeList'];
                     if (!empty($kenshin_target_ages)) {
-                        TargetAge::where('course_futan_condition_id', $course_futan_condition->id)->delete();
+                        TargetAge::where('course_futan_condition_id', $course_futan_condition->id)->forceDelete();
                         foreach ($kenshin_target_ages as $kenshin_target_age) {
                             $target_age = new TargetAge();
                             $target_age->course_futan_condition_id = $course_futan_condition->id;
@@ -233,30 +233,27 @@ class CourseInfoNotificationController extends Controller
             }
 
             // オプション削除
-            KenshinSysOption::where('kenshin_sys_hospital_id', $params['hospital_id'])
-                ->where('kenshin_sys_dantai_no', $params['dantai_no'])
-                ->where('kenshin_sys_course_no', $kenshin_course['courseNo'])
+            KenshinSysOption::where('kenshin_sys_course_id', $course->id)
                 ->delete();
             //オプション登録
             $kenshin_option_list = $kenshin_course['optionList'];
             if (!empty($kenshin_option_list)) {
                 foreach ($kenshin_option_list as $kenshin_option) {
                     $option = new KenshinSysOption();
-                    $option->name = $kenshin_option['optionNm'];
                     $option->kenshin_sys_course_id = $course->id;
                     $option->kenshin_sys_option_no = $kenshin_option['optionNo'];
                     $option->kenshin_sys_option_name = $kenshin_option['optionNm'];
                     $option->kenshin_sys_option_age_kisan_kbn = $kenshin_option['optoinAgeKisanKbn'];
-                    $option->kenshin_sys_option_age_kisan_date = $kenshin_option['optionAgeKisanDate'];
+                    $option->kenshin_sys_option_age_kisan_date = $kenshin_option['optionAgeKisanDate'] ?? Carbon::today();
                     $option->save();
 
-                    OptionFutanCondition::where('kenshin_sys_option_no', $kenshin_option['optionNo'])->delete();
+                    OptionFutanCondition::where('kenshin_sys_option_id', $option->id)->forceDelete();
                     $option_futan_jouken_list = $kenshin_option['optionFutanJoukenList'];
                     if (!empty($option_futan_jouken_list)) {
                         foreach ($option_futan_jouken_list as $kenshin_option_futan_jouken) {
                             $option_futan_condition = new OptionFutanCondition();
                             $option_futan_condition->kenshin_sys_option_id = $option->id;
-                            $option_futan_condition->jouken_no = $kenshin_option_futan_jouken['joukenNo'];
+//                            $option_futan_condition->jouken_no = $kenshin_option_futan_jouken['joukenNo'];
                             $option_futan_condition->sex = $kenshin_option_futan_jouken['sex'];
                             $option_futan_condition->honnin_kbn = $kenshin_option_futan_jouken['honninKbn'];
                             $option_futan_condition->futan_kingaku = $kenshin_option_futan_jouken['futanKin'];
@@ -267,7 +264,7 @@ class CourseInfoNotificationController extends Controller
 
                             $kenshin_option_target_ages = $kenshin_option_futan_jouken['targetAgeList'];
                             if (!empty($kenshin_option_target_ages)) {
-                                OptionTargetAge::where('option_futan_condition_id', $option_futan_condition->id)->delete();
+                                OptionTargetAge::where('option_futan_condition_id', $option_futan_condition->id)->forceDelete();
                                 foreach ($kenshin_option_target_ages as $kenshin_option_target_age) {
                                     $optiopn_target_age = new OptionTargetAge();
                                     $optiopn_target_age->option_futan_condition_id = $option_futan_condition->id;

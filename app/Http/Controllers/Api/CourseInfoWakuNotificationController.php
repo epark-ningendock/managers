@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\Controller;
+use mysql_xdevapi\Exception;
+use Symfony\Component\Debug\Debug;
 
 
 class CourseInfoWakuNotificationController extends Controller
@@ -33,7 +35,7 @@ class CourseInfoWakuNotificationController extends Controller
         $messages = config('api.course_info_notification_api.message');
         $sysErrorMessages = config('api.unexpected_error.message');
         $app_name = env('APP_ENV');
-        $ip = Request::ip();
+        $ip = $request->ip();
         if ($app_name == 'production') {
             $app_kbn = AppKbn::PRODUCTION;
         } else {
@@ -41,8 +43,10 @@ class CourseInfoWakuNotificationController extends Controller
         }
 
         // パラメータチェック
-        $Ocp_Apim_Subscription_key = $request->input('Ocp-Apim-Subscription-key');
-        $partner_code = $request->input('X-Partner-Code');
+        $Ocp_Apim_Subscription_key = $request->header('Ocp-Apim-Subscription-key');
+//        $Ocp_Apim_Subscription_key = $request->input('Ocp-Apim-Subscription-key');
+        $partner_code = $request->header('X-Partner-Code');
+//        $partner_code = $request->input('X-Partner-Code');
         if (!isset($Ocp_Apim_Subscription_key)) {
             return $this->createResponse($messages['errorSubscriptionKeyId']);
         }
@@ -67,20 +71,20 @@ class CourseInfoWakuNotificationController extends Controller
             return $this->createResponse($messages['errorSubscriptionKeyId']);
         }
 
-        $hospital = Hospital::where('kenshin_sys_hospital_id')->fist();
+        $hospital = Hospital::where('kenshin_sys_hospital_id', $request->input('hospitalId'))->first();
         if (!$hospital) {
             return $this->createResponse($messages['errorValidationId']);
         }
 
         if (empty($request->input('dantaiNo'))
             || !is_numeric($request->input('dantaiNo'))
-        || strlen($request->input('dantaiNo')) > 10) {
+        || strlen($request->input('dantaiNo')) > 15) {
             return $this->createResponse($messages['errorValidationId']);
         }
 
         if (!empty($request->input('courseList'))) {
             foreach ($request->input('courseList') as $course) {
-                if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 10) {
+                if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 15) {
                     return $this->createResponse($messages['errorValidationId']);
                 }
                 if (empty($course['joukenNo']) || !is_numeric($course['joukenNo']) || strlen($course['joukenNo']) > 10) {

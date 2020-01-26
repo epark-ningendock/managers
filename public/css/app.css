@@ -3229,16 +3229,16 @@ input[type=checkbox] + label:before {
 }
 
 #option-setting .option-name {
-  width: 30%;
+  width: 70%;
   text-align: left;
 }
 
 #option-setting .option-name span {
-  text-indent: 30px;
+  text-indent: 70px;
 }
 
 #option-setting .option-price {
-  width: 70%;
+  width: 30%;
   text-align: left;
 }
 
@@ -3248,7 +3248,40 @@ input[type=checkbox] + label:before {
   text-align: left;
 }
 
-#option-setting input[type=checkbox] + label:before {
+#kenshin-sys-course-setting input[type=checkbox] + label:before {
+  margin: 0 9px 0 0;
+}
+
+#kenshin-sys-course-setting .course-name {
+  width: 50%;
+  text-align: left;
+}
+
+#kenshin-sys-course-setting .course-name span {
+  text-indent: 30px;
+}
+
+#kenshin-sys-course-setting .dantai-name {
+  width: 30%;
+  text-align: left;
+}
+
+#kenshin-sys-course-setting .danntai-name span {
+  text-indent: 20px;
+}
+
+#kenshin-sys-course-setting .course-price {
+  width: 20%;
+  text-align: left;
+}
+
+#kenshin-sys-course-setting .mr-2 {
+  cursor: pointer;
+  text-indent: 15px;
+  text-align: left;
+}
+
+#kenshin-sys-course-setting input[type=checkbox] + label:before {
   margin: 0 9px 0 0;
 }
 
