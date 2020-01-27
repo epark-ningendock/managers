@@ -1,6 +1,6 @@
 <?php
 
-//use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 //
 ///*
 //|--------------------------------------------------------------------------
@@ -13,9 +13,9 @@
 //|
 //*/
 //
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+   return $request->user();
+});
 Route::prefix('v1')->group(function () {
     // 医療機関一覧検索API
     Route::match(['get', 'post'], 'search/hospitals/', 'SearchController@hospitals');
