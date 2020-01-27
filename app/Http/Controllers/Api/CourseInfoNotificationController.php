@@ -28,7 +28,7 @@ class CourseInfoNotificationController extends Controller
      * コース情報を登録する
      * @param Request $request
      */
-    public function registcourse(Request $request)
+    public function store(Request $request)
     {
         $messages = config('api.course_info_notification_api.message');
         $sysErrorMessages = config('api.unexpected_error.message');
