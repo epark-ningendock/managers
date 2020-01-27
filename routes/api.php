@@ -86,10 +86,9 @@ Route::prefix('v1')->group(function () {
     Route::match(['get', 'post', 'delete'],'consideration-list-destroy/', 'ConsiderationListController@destroy');
 
     // コース通知API
-    Route::match(['get', 'post'], 'registcourse/', 'CourseInfoNotificationController@registcourse');
+    Route::match(['post'], 'registcourse/', 'CourseInfoNotificationController@registcourse');
     // コース通知API
     Route::match(['get', 'post'], 'registcoursewaku/', 'CourseInfoWakuNotificationController@registcoursewaku');
     // 予約情報通知API
     Route::match(['get', 'post'], 'yoyakustate/', 'ReservationInfoNotificationController@notice');
 });
-
