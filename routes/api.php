@@ -1,21 +1,21 @@
 <?php
 
-use Illuminate\Http\Request;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//use Illuminate\Http\Request;
+//
+///*
+//|--------------------------------------------------------------------------
+//| API Routes
+//|--------------------------------------------------------------------------
+//|
+//| Here is where you can register API routes for your application. These
+//| routes are loaded by the RouteServiceProvider within a group which
+//| is assigned the "api" middleware group. Enjoy building your API!
+//|
+//*/
+//
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 Route::prefix('v1')->group(function () {
     // 医療機関一覧検索API
     Route::match(['get', 'post'], 'search/hospitals/', 'SearchController@hospitals');
@@ -86,7 +86,7 @@ Route::prefix('v1')->group(function () {
     Route::match(['get', 'post', 'delete'],'consideration-list-destroy/', 'ConsiderationListController@destroy');
 
     // コース通知API
-    Route::post('registcourse', 'CourseInfoNotificationController@registcourse');
+    Route::post( 'registcourse', 'CourseInfoNotificationController@registcourse');
     // コース通知API
     Route::match(['get', 'post'], 'registcoursewaku/', 'CourseInfoWakuNotificationController@registcoursewaku');
     // 予約情報通知API
