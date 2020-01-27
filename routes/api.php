@@ -88,7 +88,7 @@ Route::prefix('v1')->group(function () {
     // コース通知API
     Route::post('registcourse', 'CourseInfoNotificationController@registcourse')->name('course-info-notification.registcourse');
     // コース通知API
-    Route::match(['get', 'post'], 'registcoursewaku/', 'CourseInfoWakuNotificationController@registcoursewaku');
+    Route::post('registcoursewaku', 'CourseInfoWakuNotificationController@registcourse')->name('course-info-waku-notification.registcoursewaku');
     // 予約情報通知API
-    Route::match(['get', 'post'], 'yoyakustate/', 'ReservationInfoNotificationController@notice');
+    Route::post('yoyakustate', 'ReservationInfoNotificationController@notice')->name('reservation-info-notification.notice');
 });
