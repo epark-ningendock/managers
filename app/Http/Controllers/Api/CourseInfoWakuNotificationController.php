@@ -125,8 +125,8 @@ class CourseInfoWakuNotificationController extends Controller
      */
     protected function createResponse( array $message, $statusCode = 200) {
         return response([
-            'status_code' => strval($statusCode),
-            'result_code' => $message['code'],
+            'statusCode' => strval($statusCode),
+            'resultCode' => $message['code'],
             'message' => $message['description'],
         ], $statusCode)
             ->header('Content-Type', 'application/json; charset=utf-8')

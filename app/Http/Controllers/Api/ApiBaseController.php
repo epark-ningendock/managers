@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 use App\ContractInformation;
 use App\Course;
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use App\Http\Requests\SearchRequest;
 
 class ApiBaseController extends Controller

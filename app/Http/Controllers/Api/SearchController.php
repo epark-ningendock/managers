@@ -735,7 +735,7 @@ class SearchController extends ApiBaseController
         }
 
         return Course::with([
-            'hospitals',
+            'hospital',
             'course_details' => function ($query) {
                 $query->whereIn('major_classification_id', [1, 2, 3, 4, 5, 6, 11, 13, 24]);
             },

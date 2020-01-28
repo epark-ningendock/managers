@@ -92,3 +92,4 @@ Route::prefix('v1')->group(function () {
     // 予約情報通知API
     Route::post('yoyakustate/', 'ReservationInfoNotificationController@notice');
 });
+
