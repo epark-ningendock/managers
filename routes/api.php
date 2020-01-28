@@ -70,7 +70,7 @@ Route::prefix('v1')->group(function () {
 
 // 以下予約API
 // 予約登録/更新API
-    Route::match(['get', 'post'], 'reservation-store/', 'ReservationApiController@store');
+    Route::post('reservation-store', 'ReservationApiController@store')->name('reservation-api.reservation-store');
 // 予約確認API
     Route::get('reservation-conf', 'ReservationApiController@conf');
 // 予約キャンセルAPI
