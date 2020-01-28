@@ -69,7 +69,7 @@ class CourseInfoNotificationController extends Controller
 
         if (empty($request->input('dantaiNo'))
             || !is_numeric($request->input('dantaiNo'))
-        || strlen($request->input('dantaiNo')) > 15) {
+        || strlen($request->input('dantaiNo')) > 10) {
             return $this->createResponse($messages['errorValidationId']);
         }
 
@@ -79,7 +79,7 @@ class CourseInfoNotificationController extends Controller
 
         if (!empty($request->input('courseList'))) {
             foreach ($request->input('courseList') as $course) {
-                if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 15) {
+                if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 10) {
                     return $this->createResponse($messages['errorValidationId']);
                 }
                 if (empty($course['courseNm'])) {
@@ -94,9 +94,31 @@ class CourseInfoNotificationController extends Controller
                 if (empty($course['riyouEndDate']) || !is_numeric($course['riyouEndDate']) || strlen($course['riyouEndDate']) != 8) {
                     return $this->createResponse($messages['errorValidationId']);
                 }
+                if (empty($course['courseAgeKisanKbn']) || !is_numeric($course['courseAgeKisanKbn']) || intval($course['courseAgeKisanKbn']) < 0 || intval($course['courseAgeKisanKbn']) > 13) {
+                    return $this->createResponse($messages['errorValidationId']);
+                }
+                if ((intval($course['courseAgeKisanKbn']) <= 13 && intval($course['courseAgeKisanKbn']) >= 8)
+                    && (empty($course['courseAgeKisanDate']) || !is_numeric($course['courseAgeKisanDate']) || strlen($course['courseAgeKisanDate']) != 4)) {
+                    return $this->createResponse($messages['errorValidationId']);
+                }
                 if (empty($course['courseFutanJoukenList'])) {
                     return $this->createResponse($messages['errorValidationId']);
                 }
+                foreach ($course['courseFutanJoukenList'] as $futanJouken) {
+                    if (empty($futanJouken['joukenNo']) || !is_numeric($futanJouken['joukenNo']) || strlen($futanJouken['joukenNo']) > 10) {
+                        return $this->createResponse($messages['errorValidationId']);
+                    }
+                    if (empty($futanJouken['sex']) || !is_numeric($futanJouken['sex']) || (intval($futanJouken['sex']) != 1 && intval($futanJouken['sex']) != 2 && intval($futanJouken['sex']) != 3)) {
+                        return $this->createResponse($messages['errorValidationId']);
+                    }
+                    if (empty($futanJouken['honninKbn']) || !is_numeric($futanJouken['honninKbn']) || (intval($futanJouken['honninKbn']) != 1 && intval($futanJouken['honninKbn']) != 2 && intval($futanJouken['honninKbn']) != 3)) {
+                        return $this->createResponse($messages['errorValidationId']);
+                    }
+                    if (empty($futanJouken['futanKin']) || !is_numeric($futanJouken['futanKin']) || strlen($futanJouken['futanKin']) > 9) {
+                        return $this->createResponse($messages['errorValidationId']);
+                    }
+                }
+
                 if (isset($course['optionList'])) {
                     foreach ($course['optionList'] as $option) {
                         if (empty($option['optionNo']) || !is_numeric($option['optionNo']) || strlen($option['optionNo']) > 10) {
@@ -105,14 +127,34 @@ class CourseInfoNotificationController extends Controller
                         if (empty($option['optionNm'])) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
-                        if (empty($option['optoinAgeKisanKbn']) || !in_array($option['optoinAgeKisanKbn'], [1,2,3,4,5,6,7,8])) {
+                        if (empty($option['optionAgeKisanKbn']) || !in_array($option['optionAgeKisanKbn'], [1,2,3,4,5,6,7,8,9,10,11,12,13])) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
-                        if (!empty($option['optionAgeKisanDate']) && (!is_numeric($option['optionAgeKisanDate']) || strlen($option['optionAgeKisanDate']) != 8)) {
+                        if (!empty($option['optionAgeKisanDate']) && (!is_numeric($option['optionAgeKisanDate']) || strlen($option['optionAgeKisanDate']) != 4)) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
                         if (empty($option['optionFutanJoukenList'])) {
                             return $this->createResponse($messages['errorValidationId']);
+                        }
+                        foreach ($option['optionFutanJoukenList'] as $optionFutanJouken) {
+                            if (empty($optionFutanJouken['sex']) || !is_numeric($optionFutanJouken['sex']) || (intval($optionFutanJouken['sex']) != 1 && intval($optionFutanJouken['sex']) != 2 && intval($optionFutanJouken['sex']) != 3)) {
+                                return $this->createResponse($messages['errorValidationId']);
+                            }
+                            if (empty($optionFutanJouken['honninKbn']) || !is_numeric($optionFutanJouken['honninKbn']) || (intval($optionFutanJouken['honninKbn']) != 1 && intval($optionFutanJouken['honninKbn']) != 2 && intval($optionFutanJouken['honninKbn']) != 3)) {
+                                return $this->createResponse($messages['errorValidationId']);
+                            }
+                            if (empty($optionFutanJouken['futanKin']) || !is_numeric($optionFutanJouken['futanKin']) || strlen($optionFutanJouken['futanKin']) > 9) {
+                                return $this->createResponse($messages['errorValidationId']);
+                            }
+                            if (empty($optionFutanJouken['yusenKbn']) || !is_numeric($optionFutanJouken['yusenKbn']) || strlen($optionFutanJouken['yusenKbn']) > 2) {
+                                return $this->createResponse($messages['errorValidationId']);
+                            }
+                            if (empty($optionFutanJouken['riyouBgnDate']) || !is_numeric($optionFutanJouken['riyouBgnDate']) || strlen($optionFutanJouken['riyouBgnDate'])!= 8) {
+                                return $this->createResponse($messages['errorValidationId']);
+                            }
+                            if (empty($optionFutanJouken['riyouEndDate']) || !is_numeric($optionFutanJouken['riyouEndDate']) || strlen($optionFutanJouken['riyouEndDate'])!= 8) {
+                                return $this->createResponse($messages['errorValidationId']);
+                            }
                         }
                     }
                 }
@@ -191,6 +233,27 @@ class CourseInfoNotificationController extends Controller
             $course = KenshinSysCourse::where('kenshin_sys_course_no', $kenshin_course['courseNo'])
                 ->where('kenshin_sys_hospital_id', $params['hospital_id'])
                 ->first();
+
+            if ($kenshin_course['courseDeleteFlg'] == 1 && $course) {
+//                $course_futan_conditions = CourseFutanCondition::where('kenshin_sys_course_id', $course->id)->get();
+                foreach ($course->course_futan_conditions as $course_futan_condition) {
+                    TargetAge::where('course_futan_condition_id', $course_futan_condition->id)->forceDelete();
+                    $course_futan_condition->forceDelete();
+                }
+//                $kenshin_options = KenshinSysOption::where('kenshin_sys_course_id', $course->id)->get();
+                foreach ($course->kenshin_options as $kenshin_option) {
+                    foreach ($kenshin_option->option_futan_conditions as $option_futan_condition) {
+                        OptionTargetAge::where('option_futan_condition_id', $option_futan_condition->id)->forceDelete();
+                        $option_futan_condition->forceDelete();
+                    }
+                    $kenshin_option>forceDelete();
+                }
+                $course->forceDelete();
+                continue;
+            } elseif ($kenshin_course['courseDeleteFlg'] == 1 && !$course) {
+                continue;
+            }
+
             if (!$course) {
                 $course = new KenshinSysCourse();
             }
@@ -232,22 +295,41 @@ class CourseInfoNotificationController extends Controller
                 }
             }
 
-            // オプション削除
-            KenshinSysOption::where('kenshin_sys_course_id', $course->id)
-                ->delete();
+
             //オプション登録
+            if (!isset($kenshin_course['optionList'])) {
+                continue;
+            }
             $kenshin_option_list = $kenshin_course['optionList'];
             if (!empty($kenshin_option_list)) {
                 foreach ($kenshin_option_list as $kenshin_option) {
-                    $option = new KenshinSysOption();
+                    $option = KenshinSysOption::where('kenshin_sys_course_id', $course->id)
+                        ->where('kenshin_sys_option_no', $kenshin_option['optionNo'])->first();
+                    if ($option) {
+                        $option_futan_conditions = OptionFutanCondition::where('kenshin_sys_option_id', $option->id)->get();
+                        foreach ($option_futan_conditions as $option_futan_condition) {
+                            OptionTargetAge::where('option_futan_condition_id', $option_futan_condition->id)->forceDelete();
+                            $option_futan_condition->forceDelete();
+                        }
+
+                    }
+                    if ($kenshin_option['optionDeleteFlg'] == 1) {
+                        // オプション削除
+                        $option->forceDelete();
+                        continue;
+                    }
+
+                    if (!$option) {
+                        $option = new KenshinSysOption();
+                    }
+
                     $option->kenshin_sys_course_id = $course->id;
                     $option->kenshin_sys_option_no = $kenshin_option['optionNo'];
                     $option->kenshin_sys_option_name = $kenshin_option['optionNm'];
-                    $option->kenshin_sys_option_age_kisan_kbn = $kenshin_option['optoinAgeKisanKbn'];
+                    $option->kenshin_sys_option_age_kisan_kbn = $kenshin_option['optionAgeKisanKbn'];
                     $option->kenshin_sys_option_age_kisan_date = $kenshin_option['optionAgeKisanDate'] ?? Carbon::today();
                     $option->save();
 
-                    OptionFutanCondition::where('kenshin_sys_option_id', $option->id)->forceDelete();
                     $option_futan_jouken_list = $kenshin_option['optionFutanJoukenList'];
                     if (!empty($option_futan_jouken_list)) {
                         foreach ($option_futan_jouken_list as $kenshin_option_futan_jouken) {
@@ -264,7 +346,6 @@ class CourseInfoNotificationController extends Controller
 
                             $kenshin_option_target_ages = $kenshin_option_futan_jouken['targetAgeList'];
                             if (!empty($kenshin_option_target_ages)) {
-                                OptionTargetAge::where('option_futan_condition_id', $option_futan_condition->id)->forceDelete();
                                 foreach ($kenshin_option_target_ages as $kenshin_option_target_age) {
                                     $optiopn_target_age = new OptionTargetAge();
                                     $optiopn_target_age->option_futan_condition_id = $option_futan_condition->id;
@@ -279,7 +360,7 @@ class CourseInfoNotificationController extends Controller
         }
 
         // コース情報削除
-        $this->deleteCourse($params['hospital_id'], $params['dantai_no'], $course_ids);
+//        $this->deleteCourse($params['hospital_id'], $params['dantai_no'], $course_ids);
     }
 
     /**

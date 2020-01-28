@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+//use Illuminate\Http\Request;
 //
 ///*
 //|--------------------------------------------------------------------------
@@ -13,9 +13,9 @@ use Illuminate\Http\Request;
 //|
 //*/
 //
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-   return $request->user();
-});
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 Route::prefix('v1')->group(function () {
     // 医療機関一覧検索API
     Route::match(['get', 'post'], 'search/hospitals/', 'SearchController@hospitals');
@@ -70,7 +70,7 @@ Route::prefix('v1')->group(function () {
 
 // 以下予約API
 // 予約登録/更新API
-    Route::post('reservation-store', 'ReservationApiController@store');
+    Route::post('reservation-store/', 'ReservationApiController@store');
 // 予約確認API
     Route::get('reservation-conf', 'ReservationApiController@conf');
 // 予約キャンセルAPI
@@ -86,9 +86,9 @@ Route::prefix('v1')->group(function () {
     Route::match(['get', 'post', 'delete'],'consideration-list-destroy/', 'ConsiderationListController@destroy');
 
     // コース通知API
-    Route::post('registcourse', 'CourseInfoNotificationController@registcourse')->name('course-info-notification.registcourse');
+    Route::post('registcourse/', 'CourseInfoNotificationController@registcourse');
     // コース通知API
-    Route::post('registcoursewaku', 'CourseInfoWakuNotificationController@registcourse')->name('course-info-waku-notification.registcoursewaku');
+    Route::post('registcoursewaku/', 'CourseInfoWakuNotificationController@registcoursewaku');
     // 予約情報通知API
-    Route::post('yoyakustate', 'ReservationInfoNotificationController@notice')->name('reservation-info-notification.notice');
+    Route::post('yoyakustate/', 'ReservationInfoNotificationController@notice');
 });
