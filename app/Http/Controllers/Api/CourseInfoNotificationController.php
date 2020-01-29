@@ -286,6 +286,9 @@ class CourseInfoNotificationController extends Controller
                     if (!empty($kenshin_target_ages)) {
                         TargetAge::where('course_futan_condition_id', $course_futan_condition->id)->forceDelete();
                         foreach ($kenshin_target_ages as $kenshin_target_age) {
+                            if (empty($kenshin_target_age) || !is_numeric($kenshin_target_age)) {
+                                continue;
+                            }
                             $target_age = new TargetAge();
                             $target_age->course_futan_condition_id = $course_futan_condition->id;
                             $target_age->target_age = $kenshin_target_age;
@@ -347,6 +350,9 @@ class CourseInfoNotificationController extends Controller
                             $kenshin_option_target_ages = $kenshin_option_futan_jouken['targetAgeList'];
                             if (!empty($kenshin_option_target_ages)) {
                                 foreach ($kenshin_option_target_ages as $kenshin_option_target_age) {
+                                    if (empty($kenshin_option_target_age) || !is_numeric($kenshin_option_target_age)) {
+                                        continue;
+                                    }
                                     $optiopn_target_age = new OptionTargetAge();
                                     $optiopn_target_age->option_futan_condition_id = $option_futan_condition->id;
                                     $optiopn_target_age->target_age = $kenshin_option_target_age;
