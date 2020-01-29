@@ -127,7 +127,7 @@ class CourseInfoNotificationController extends Controller
                         if (empty($option['optionNm'])) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
-                        if (empty($option['optionAgeKisanKbn']) || intval($course['optionAgeKisanKbn']) < 0 || intval($course['optionAgeKisanKbn']) > 13) {
+                        if (empty($option['optionAgeKisanKbn']) || intval($option['optionAgeKisanKbn']) < 0 || intval($option['optionAgeKisanKbn']) > 13) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
                         if (!empty($option['optionAgeKisanDate']) && (!is_numeric($option['optionAgeKisanDate']) || strlen($option['optionAgeKisanDate']) != 4)) {
