@@ -17,7 +17,7 @@ class CreateKenshinSysCoursesTable extends Migration
     {
         Schema::create('kenshin_sys_courses', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('kenshin_sys_hospital_id')->unsigned();
+            $table->bigInteger('kenshin_sys_hospital_id')->unsigned();
             $table->bigInteger('kenshin_sys_dantai_info_id');
             $table->bigInteger('kenshin_sys_dantai_no');
             $table->bigInteger('kenshin_sys_course_no');

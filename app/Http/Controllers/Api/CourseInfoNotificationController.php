@@ -50,22 +50,22 @@ class CourseInfoNotificationController extends Controller
             return $this->createResponse($messages['errorPartnerCdId']);
         }
 
-//        $kenshin_sys_cooperation = KenshinSysCooperation::where('ip', $ip)->first();
-//        if (!$kenshin_sys_cooperation) {
-//            return $this->createResponse($messages['errorAccessIp']);
-//        }
-//
-//        if ($kenshin_sys_cooperation->app_kbn != $app_kbn) {
-//            return $this->createResponse($messages['errorAccessIp']);
-//        }
-//
-//        if ($kenshin_sys_cooperation->partner_code != $partner_code) {
-//            return $this->createResponse($messages['errorPartnerCdId']);
-//        }
-//
-//        if ($kenshin_sys_cooperation->subscription_key != $Ocp_Apim_Subscription_key) {
-//            return $this->createResponse($messages['errorSubscriptionKeyId']);
-//        }
+        $kenshin_sys_cooperation = KenshinSysCooperation::where('ip', $ip)->first();
+        if (!$kenshin_sys_cooperation) {
+            return $this->createResponse($messages['errorAccessIp']);
+        }
+
+        if ($kenshin_sys_cooperation->app_kbn != $app_kbn) {
+            return $this->createResponse($messages['errorAccessIp']);
+        }
+
+        if ($kenshin_sys_cooperation->partner_code != $partner_code) {
+            return $this->createResponse($messages['errorPartnerCdId']);
+        }
+
+        if ($kenshin_sys_cooperation->subscription_key != $Ocp_Apim_Subscription_key) {
+            return $this->createResponse($messages['errorSubscriptionKeyId']);
+        }
 
         if (empty($request->input('dantaiNo'))
             || !is_numeric($request->input('dantaiNo'))

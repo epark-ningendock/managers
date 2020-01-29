@@ -289,7 +289,7 @@ class CourseController extends ApiBaseController
             $data = ['hospital_id' => $hospital_id, 'hospital_code' => $serach_condition->hospital_code,  'course' => $course];
 
             // response
-            return new CalendarDailyResource($data);
+            return new CalendarBaseResource($data);
         } catch (\Throwable $e) {
             Log::error($e);
             return $this->createResponse($this->messages['system_error_db']);

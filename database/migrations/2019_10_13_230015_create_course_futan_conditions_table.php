@@ -18,7 +18,7 @@ class CreateCourseFutanConditionsTable extends Migration
         Schema::create('course_futan_conditions', function (Blueprint $table) {
             $table->increments('id');
             $table->bigInteger('kenshin_sys_course_id')->unsigned();
-            $table->integer('jouken_no');
+            $table->bigInteger('jouken_no');
             $table->integer('sex');
             $table->integer('honnin_kbn');
             $table->integer('futan_kingaku');
