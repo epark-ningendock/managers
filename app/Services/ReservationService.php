@@ -166,7 +166,8 @@ class ReservationService
 
         $params = [
             // EPARK会員ID
-            'member_id' => $request->input('epark_member_id'),
+            // 'member_id' => $request->input('epark_member_id'),
+            'member_id' => '12336',
             // サービスID
             'service_id' => \config('constant.service_id'),
             // 予約ID
