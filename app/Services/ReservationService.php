@@ -127,10 +127,10 @@ class ReservationService
             Log::info('予約履歴 APIリクエスト処理', ['予約ID' => $entity->id ]);
             $response = $client->request('POST', $uri, [
                 'headers' => $headers,
-                'query' => $params,
+                'json' => $params,
                 'proxy' => $quotaguard_env,
-                // 'proxyauth' => 'CURLAUTH_BASIC',
-                // 'proxyuserpwd' => $proxyAuth,
+//                'proxyauth' => 'CURLAUTH_BASIC',
+//                'proxyuserpwd' => $proxyAuth,
             ]);
         } catch (Exception $e) {
             Log::error('予約履歴 APIリクエスト処理 システムエラー', ['message' => $e->getMessage()]);
@@ -166,8 +166,7 @@ class ReservationService
 
         $params = [
             // EPARK会員ID
-            // 'member_id' => $request->input('epark_member_id'),
-            'member_id' => '12336',
+            'member_id' => $request->input('epark_member_id'),
             // サービスID
             'service_id' => \config('constant.service_id'),
             // 予約ID
@@ -176,6 +175,8 @@ class ReservationService
             'appoint_name' => $course_name,
             // 店舗ID
             'shop_id' => $entity->hospital_id,
+            // 店舗名
+            'shop_name' => $course->hospital->name,
             // 店舗URL
             'shop_url' => $this->createURL().'/'.$contract_information->code . '/basic.html',
             // 店舗画像URL
@@ -187,9 +188,9 @@ class ReservationService
             // 予約確認URL
             'appoint_confirm_url' => $this->createURL().'/'.'reservation/confirm.html?code=&id=' . $entity->id . '&sid=' . $entity->hospital_id,
             // 予約開始日時
-            'appoint_start_date' => $entity->reservation_date,
+            'appoint_start_date' => Carbon::create($entity->reservation_date)->format('Y-m-d H:i'),
             // 予約終了日時
-            'appoint_end_date' => $entity->reservation_date,
+            'appoint_end_date' => Carbon::create($entity->reservation_date)->format('Y-m-d H:i'),
             // 予約ステータス
             'appoint_status' => $this->changeReservationStatus($entity),
         ];
