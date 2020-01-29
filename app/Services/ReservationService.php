@@ -127,7 +127,7 @@ class ReservationService
             Log::info('予約履歴 APIリクエスト処理', ['予約ID' => $entity->id ]);
             $response = $client->request('POST', $uri, [
                 'headers' => $headers,
-                'json' => $params,
+                'query' => $params,
                 'proxy' => $quotaguard_env,
 //                'proxyauth' => 'CURLAUTH_BASIC',
 //                'proxyuserpwd' => $proxyAuth,
