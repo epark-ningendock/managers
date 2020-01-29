@@ -214,6 +214,10 @@ class ReservationService
         if ($entity->reservation_status == ReservationStatus::CANCELLED) {
             return 9;
         }
+
+        if ($entity->reservation_status == ReservationStatus::PENDING) {
+            return 0;
+        }
     }
 
     /**
