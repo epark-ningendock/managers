@@ -50,22 +50,22 @@ class CourseInfoNotificationController extends Controller
             return $this->createResponse($messages['errorPartnerCdId']);
         }
 
-        $kenshin_sys_cooperation = KenshinSysCooperation::where('ip', $ip)->first();
-        if (!$kenshin_sys_cooperation) {
-            return $this->createResponse($messages['errorAccessIp']);
-        }
-
-        if ($kenshin_sys_cooperation->app_kbn != $app_kbn) {
-            return $this->createResponse($messages['errorAccessIp']);
-        }
-
-        if ($kenshin_sys_cooperation->partner_code != $partner_code) {
-            return $this->createResponse($messages['errorPartnerCdId']);
-        }
-
-        if ($kenshin_sys_cooperation->subscription_key != $Ocp_Apim_Subscription_key) {
-            return $this->createResponse($messages['errorSubscriptionKeyId']);
-        }
+//        $kenshin_sys_cooperation = KenshinSysCooperation::where('ip', $ip)->first();
+//        if (!$kenshin_sys_cooperation) {
+//            return $this->createResponse($messages['errorAccessIp']);
+//        }
+//
+//        if ($kenshin_sys_cooperation->app_kbn != $app_kbn) {
+//            return $this->createResponse($messages['errorAccessIp']);
+//        }
+//
+//        if ($kenshin_sys_cooperation->partner_code != $partner_code) {
+//            return $this->createResponse($messages['errorPartnerCdId']);
+//        }
+//
+//        if ($kenshin_sys_cooperation->subscription_key != $Ocp_Apim_Subscription_key) {
+//            return $this->createResponse($messages['errorSubscriptionKeyId']);
+//        }
 
         if (empty($request->input('dantaiNo'))
             || !is_numeric($request->input('dantaiNo'))
@@ -114,7 +114,7 @@ class CourseInfoNotificationController extends Controller
                     if (empty($futanJouken['honninKbn']) || !is_numeric($futanJouken['honninKbn']) || (intval($futanJouken['honninKbn']) != 1 && intval($futanJouken['honninKbn']) != 2 && intval($futanJouken['honninKbn']) != 3)) {
                         return $this->createResponse($messages['errorValidationId']);
                     }
-                    if (empty($futanJouken['futanKin']) || !is_numeric($futanJouken['futanKin']) || strlen($futanJouken['futanKin']) > 9) {
+                    if (!is_numeric($futanJouken['futanKin']) || strlen($futanJouken['futanKin']) > 9) {
                         return $this->createResponse($messages['errorValidationId']);
                     }
                 }
@@ -143,7 +143,7 @@ class CourseInfoNotificationController extends Controller
                             if (empty($optionFutanJouken['honninKbn']) || !is_numeric($optionFutanJouken['honninKbn']) || (intval($optionFutanJouken['honninKbn']) != 1 && intval($optionFutanJouken['honninKbn']) != 2 && intval($optionFutanJouken['honninKbn']) != 3)) {
                                 return $this->createResponse($messages['errorValidationId']);
                             }
-                            if (empty($optionFutanJouken['futanKin']) || !is_numeric($optionFutanJouken['futanKin']) || strlen($optionFutanJouken['futanKin']) > 9) {
+                            if (!is_numeric($optionFutanJouken['futanKin']) || strlen($optionFutanJouken['futanKin']) > 9) {
                                 return $this->createResponse($messages['errorValidationId']);
                             }
                             if (empty($optionFutanJouken['yusenKbn']) || !is_numeric($optionFutanJouken['yusenKbn']) || strlen($optionFutanJouken['yusenKbn']) > 2) {
