@@ -188,9 +188,9 @@ class ReservationService
             // 予約確認URL
             'appoint_confirm_url' => $this->createURL().'/'.'reservation/confirm.html?code=&id=' . $entity->id . '&sid=' . $entity->hospital_id,
             // 予約開始日時
-            'appoint_start_date' => Carbon::create($entity->reservation_date)->format('Y-m-d H:i'),
+            'appoint_start_date' => Carbon::parse($entity->reservation_date)->format('Y-m-d H:i'),
             // 予約終了日時
-            'appoint_end_date' => Carbon::create($entity->reservation_date)->format('Y-m-d H:i'),
+            'appoint_end_date' => Carbon::parse($entity->reservation_date)->format('Y-m-d H:i'),
             // 予約ステータス
             'appoint_status' => $this->changeReservationStatus($entity),
         ];
