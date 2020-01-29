@@ -116,12 +116,19 @@ class ReservationService
 
         $params = $this->getApiParams($request, $entity);
 
+        $quotaguard_env = getenv("QUOTAGUARDSTATIC_URL");
+        $quotaguard = parse_url($quotaguard_env);
+
+        $proxyUrl       = $quotaguard['host'].":".$quotaguard['port'];
+        $proxyAuth       = $quotaguard['user'].":".$quotaguard['pass'];
+
         $client = app()->make(Client::class);
         try {
             Log::info('予約履歴 APIリクエスト処理', ['予約ID' => $entity->id ]);
             $response = $client->request('POST', $uri, [
                 'headers' => $headers,
                 'json' => $params,
+                'proxy' => $proxyUrl
             ]);
         } catch (Exception $e) {
             Log::error('予約履歴 APIリクエスト処理 システムエラー', ['message' => $e->getMessage()]);
