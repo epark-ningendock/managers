@@ -128,7 +128,9 @@ class ReservationService
             $response = $client->request('POST', $uri, [
                 'headers' => $headers,
                 'json' => $params,
-                'proxy' => $proxyUrl
+                'proxy' => $proxyUrl,
+                'proxyauth' => 'CURLAUTH_BASIC',
+                'proxyuserpwd' => $proxyAuth,
             ]);
         } catch (Exception $e) {
             Log::error('予約履歴 APIリクエスト処理 システムエラー', ['message' => $e->getMessage()]);
