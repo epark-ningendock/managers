@@ -7,6 +7,7 @@ use App\Enums\ReservationStatus;
 use App\Enums\Status;
 use App\Hospital;
 use App\Http\Requests\CalendarMonthlyRequest;
+use App\Http\Resources\CalendarBaseResource;
 use App\Reservation;
 use Illuminate\Http\Request;
 use App\Http\Requests\CalendarDayRequest;
