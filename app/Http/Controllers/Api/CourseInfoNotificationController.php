@@ -309,6 +309,9 @@ class CourseInfoNotificationController extends Controller
             $kenshin_option_list = $kenshin_course['optionList'];
             if (!empty($kenshin_option_list)) {
                 foreach ($kenshin_option_list as $kenshin_option) {
+                    if (empty($kenshin_option['optionNo'])) {
+                        continue;
+                    }
                     $option = KenshinSysOption::where('kenshin_sys_course_id', $course->id)
                         ->where('kenshin_sys_option_no', $kenshin_option['optionNo'])->first();
                     if ($option) {
