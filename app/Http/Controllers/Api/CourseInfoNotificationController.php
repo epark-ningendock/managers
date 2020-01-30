@@ -121,6 +121,9 @@ class CourseInfoNotificationController extends Controller
 
                 if (isset($course['optionList'])) {
                     foreach ($course['optionList'] as $option) {
+                        if (empty($option['optionNo'])) {
+                            continue;
+                        }
                         if (empty($option['optionNo']) || !is_numeric($option['optionNo']) || strlen($option['optionNo']) > 10) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
