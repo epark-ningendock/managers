@@ -75,6 +75,8 @@ Route::prefix('v1')->group(function () {
     Route::get('reservation-conf', 'ReservationApiController@conf');
 // 予約キャンセルAPI
     Route::match(['get', 'post'], 'reservation-cancel/', 'ReservationApiController@cancel');
+    // 予約一覧取得
+    Route::get('reservation-get-all', 'ReservationApiController@get_all');
 // PV登録
     Route::match(['get', 'post'], 'pv/', 'PvRegistController@store');
 // EPARK会員ログイン情報

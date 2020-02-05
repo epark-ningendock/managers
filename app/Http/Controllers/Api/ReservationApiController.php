@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\ConvertedId;
 use App\Enums\ReservationStatus;
+use App\Http\Requests\ReservationGetAllRequest;
 use App\Http\Requests\ReservationShowRequest;
 use App\Http\Requests\ReservationStoreRequest;
 use App\Http\Requests\ReservationCancelRequest;
 
+use App\Http\Resources\ReservationAllResource;
 use App\Services\ReservationService;
 
 use App\Http\Resources\ReservationConfResource;
@@ -206,5 +208,31 @@ class ReservationApiController extends ApiBaseController
         throw new HttpResponseException(
             response()->json($response, 400)->setCallback($callback)
         );
+    }
+
+    /**
+     * 予約一覧取得API
+     *
+     * @param  App\Http\Requests\ReservationShowRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function get_all(ReservationGetAllRequest $request)
+    {
+        try {
+            // パラメータ取得
+            $epark_member_id = $request->input('epark_member_id');
+
+            // 対象取得
+            $reservations = $this->_reservation_service->find_all_id($epark_member_id);
+
+            $data = ['reservations' => $reservations];
+
+            // response set
+            return new ReservationAllResource($data);
+        } catch (\Exception $e) {
+            Log::error('予約情報取得に失敗しました。:'. $e);
+            $this->failedResult(['00', '01', '内部エラー']);
+        }
+
     }
 }

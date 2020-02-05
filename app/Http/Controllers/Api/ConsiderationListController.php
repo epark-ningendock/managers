@@ -79,22 +79,25 @@ class ConsiderationListController extends ApiBaseController
             return $this->createResponse($messages['errorEparkMemberId']);
         }
 
-        try {
+//        try {
             //
-            $results = MemberLoginInfo::where('epark_member_id', $request->epark_member_id)
-                ->where('status', Status::Valid)
+            $results = ConsiderationList::with([
+                'contract_informations',
+                'course'
+            ])
+            ->where('epark_member_id', $request->epark_member_id)
                 ->get();
             if (! $results) {
                 return $this->createResponse($messages['errorNotExistInfo']);
             }
-        } catch (\Throwable $e) {
-            $message = '[検討中リストAPI] DB処理に失敗しました。';
-            Log::error($message, [
-                'epark_member_id' => $request->epark_member_id,
-                'exception' => $e,
-            ]);
-            return $this->createResponse($sysErrorMessages['errorDB']);
-        }
+//        } catch (\Throwable $e) {
+//            $message = '[検討中リストAPI] DB処理に失敗しました。';
+//            Log::error($message, [
+//                'epark_member_id' => $request->epark_member_id,
+//                'exception' => $e,
+//            ]);
+//            return $this->createResponse($sysErrorMessages['errorDB']);
+//        }
 
         return $this->createConsiderationListResponse($messages['success'], $results);
 
@@ -170,21 +173,23 @@ class ConsiderationListController extends ApiBaseController
     /**
      * EPARK会員ログイン情報レスポンスを生成する
      *
-     * @param array $message
+     * @param  $message
      * @return response
      */
-    protected function createConsiderationListResponse(array $message, array $results) {
+    protected function createConsiderationListResponse($message, $results) {
 
         $params = [];
         foreach ($results as $result) {
             $param = [
               'epark_member_id' => $result->epark_member_id,
                 'hospital_id' => $result->hospital_id,
-                'course_id' => $result->course_id,
-                'display_kbn' => $result->display_kbn,
-                'status' => $result->status
+                'hospital_code' => $result->contract_informations->code,
+                'course_id' => $result->course_id ?? '',
+                'course_code' => $result->course->code ?? '',
+                'display_kbn' => $result->display_kbn
+//                'status' => $result->status
             ];
-            $params = $param;
+            $params[] = $param;
         }
         return response([
             'status_code' => strval(200),

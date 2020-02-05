@@ -225,6 +225,11 @@ return [
 //        'import' => \App\Imports\ReservationOptionImport::class,
 //        'seed' => true,
 //    ],
+//    't_consideration_list.csv' => [
+//        'model' => \App\ConsiderationList::class,
+//        'import' => \App\Imports\ConsiderationListImport::class,
+//        'seed' => true,
+//    ],
 //    'm_hospital_meta.csv' => [
 //        'model' => HospitalMeta::class,
 //        'import' => HospitalMetaImport::class,

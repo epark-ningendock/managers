@@ -19,7 +19,7 @@ class CreateCourseWakusTable extends Migration
             $table->increments('id');
             $table->integer('kenshin_sys_course_id')->unsigned();
             $table->Biginteger('kenshin_sys_course_no');
-            $table->integer('jouken_no');
+            $table->Biginteger('jouken_no');
             $table->integer('year_month');
             $table->integer('waku_kbn');
             $table->char('status', 1)->default('1');

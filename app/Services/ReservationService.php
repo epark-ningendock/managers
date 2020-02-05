@@ -57,6 +57,7 @@ class ReservationService
     {
         $entity = Reservation::with([
             'hospital',
+            'hospital.contract_information',
             'hospital.district_code',
             'hospital.district_code.prefecture',
             'hospital.hospital_email_setting',
@@ -68,6 +69,19 @@ class ReservationService
             'customer.prefecture',
         ])->find($reservation_id);
         return $entity;
+    }
+
+    /**
+     * @param $epark_member_id
+     */
+    public function find_all_id($epark_member_id) {
+
+        return Reservation::where('epark_member_id', $epark_member_id)
+            ->where('reservation_status', '<>', ReservationStatus::CANCELLED)
+            ->orderBy('reservation_date', 'DESC')
+            ->limit(20)
+            ->get();
+
     }
 
     /**
@@ -166,8 +180,7 @@ class ReservationService
 
         $params = [
             // EPARK会員ID
-            // 'member_id' => $request->input('epark_member_id'),
-            'member_id' => '12336',
+            'member_id' => $request->input('epark_member_id'),
             // サービスID
             'service_id' => \config('constant.service_id'),
             // 予約ID
@@ -561,7 +574,7 @@ class ReservationService
         $entity->campaign_code = $other_info['campaign_cd'] ?? $entity->campaign_code;
         $entity->tel_timezone = $other_info['tel_timezone'] ?? $entity->tel_timezone;
         $entity->insurance_assoc_id = $other_info['insurer_number'] ?? $entity->insurance_assoc_id;
-        $entity->insurance_assoc = $other_info['insurance_assoc'] ?? $entity->insurance_assoc;
+        $entity->insurance_assoc = $other_info['insurance_assoc'] ?? $entity->insurance_assoc;       
         $entity->mail_type = $process === self::REGISTRATION ? '1' : '2';
         $entity->cancelled_appoint_code = $request->input('cancelled_appoint_code') ?? $entity->cancelled_appoint_code;
 
