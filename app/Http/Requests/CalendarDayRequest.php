@@ -17,7 +17,7 @@ class CalendarDayRequest extends ValidationRequest
    {
        return [
            'hospital_code' => ['required','regex:/^D[0-9a-zA-Z]+$/u','exists:contract_informations,code'],
-           'course_no' => 'required|alpha_num|exists:courses,id',
+           'course_code' => 'required|alpha_num|exists:courses,code',
            // 検査コース空満情報（日別）
            'get_yyyymmdd_from' => ['nullable','numeric','regex:/^2[0-9]{7}$/u'],
            'get_yyyymmdd_to' => ['nullable','numeric','regex:/^2[0-9]{7}$/u'],
@@ -67,7 +67,7 @@ class CalendarDayRequest extends ValidationRequest
 
         return (object) [
             'hospital_code' => $this->input('hospital_code'),
-            'course_no' => $this->input('course_no'),
+            'course_code' => $this->input('course_code'),
             'get_yyyymmdd_from' => $days->from,
             'get_yyyymmdd_to' => $days->to,
         ];

@@ -307,7 +307,7 @@ class CourseController extends ApiBaseController
                         ->orderBy('date');
                 },
             ])
-                ->where('id', $serach_condition->course_no)
+                ->where('code', $serach_condition->course_code)
                 ->where('hospital_id', $hospital_id)
                 ->where('is_category', 0)
                 ->first();
