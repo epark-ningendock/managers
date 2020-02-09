@@ -102,12 +102,13 @@ class SearchRequest extends ValidationRequest
         if ($hospital_category_code) {
             $array = explode(",", $hospital_category_code);
             $data = HospitalMinorClassification::select('name')->whereIn('id', $array)->get();
-            $text = $data->map(function ($d) {
-                return $d->name ?? '';
-            });
-            return $text;
+            $results = [];
+            foreach ($data as $d) {
+                $results[] = $d->name ?? '';
+            }
+            return $results;
         } else {
-            return '';
+            return [];
         }
     }
     protected function get_course_category_text($course_category_code)
@@ -115,12 +116,13 @@ class SearchRequest extends ValidationRequest
         if ($course_category_code) {
             $array = explode(",", $course_category_code);
             $data = MinorClassification::select('name')->whereIn('id', $array)->get();
-            $text = $data->map(function ($d) {
-                return $d->name ?? '';
-            });
-            return $text;
+            $results = [];
+            foreach ($data as $d) {
+                $results[] = $d->name ?? '';
+            }
+            return $results;
         } else {
-            return '';
+            return [];
         }
     }
     protected function get_site_card_name($site_card)
