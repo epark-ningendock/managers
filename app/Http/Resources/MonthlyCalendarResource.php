@@ -29,7 +29,12 @@ class MonthlyCalendarResource extends Resource
         if (!$calendar) {
             $disp_flg = CalendarDisplay::HIDE;
         } else {
-            $disp_flg = $calendar->is_calendar_display;
+            if ($calendar->is_calendar_display == 0) {
+                $disp_flg = 1;
+            } else {
+                $disp_flg = 0;
+            }
+
         }
 
         $monthly_wakus = CalendarDay::where('calendar_id', $this->calendar_id)

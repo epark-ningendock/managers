@@ -424,8 +424,8 @@ class SearchController extends ApiBaseController
         }
 
         // 並び順
-        $query->orderBy('hospitals.pvad', 'asc');
-        $query->orderBy('hospitals.pv_count', 'asc');
+        $query->orderBy('hospitals.pvad', 'desc');
+        $query->orderBy('hospitals.pv_count', 'desc');
 
         $results = $query->get();
 
@@ -658,13 +658,13 @@ class SearchController extends ApiBaseController
         if($request->input('course_price_sort') == 0) {
             $query->orderBy('courses.price');
             $query->orderBy('courses.order');
-            $query->orderBy('hospitals.pvad', 'asc');
-            $query->orderBy('hospitals.pv_count', 'asc');
+            $query->orderBy('hospitals.pvad', 'desc');
+            $query->orderBy('hospitals.pv_count', 'desc');
         } else {
             $query->orderBy('courses.price', 'desc');
             $query->orderBy('courses.order');
-            $query->orderBy('hospitals.pvad', 'asc');
-            $query->orderBy('hospitals.pv_count', 'asc');
+            $query->orderBy('hospitals.pvad', 'desc');
+            $query->orderBy('hospitals.pv_count', 'desc');
         }
 
         $results = $query->get();

@@ -133,6 +133,8 @@ class HospitalController extends ApiBaseController
     private function getHospitalData($hospital_id)
     {
         $today = Carbon::today()->toDateString();
+        $from = Carbon::today()->toDateString();
+        $to = Carbon::today()->addMonthsNoOverflow(5)->endOfMonth()->toDateString();
         return Hospital::with([
             'contract_information',
             'hospital_details',
@@ -144,14 +146,25 @@ class HospitalController extends ApiBaseController
             },
             'hospital_categories.image_order',
             'hospital_categories.hospital_image',
-            'courses',
+            'courses' => function ($query) use ($today) {
+            $query->where('is_category', 0)
+                    ->where('web_reception', 0)
+                    ->where('publish_start_date', '<=', $today)
+                    ->where('publish_end_date', '>=', $today)
+                    ->orderBy('courses.order');
+            },
             'courses.course_details' => function ($query) {
                 $query->whereIn('major_classification_id', [2, 3, 4, 5, 6, 11, 13, 15, 19, 24]);
             },
             'courses.course_details.minor_classification' => function ($query) {
                 $query->orderBy('order');
             },
-            'courses.course_images.hospital_image'
+            'courses.course_images.hospital_image',
+            'courses.calendar_days' => function ($query) use ($from, $to) {
+                $query->where('date', '>=', $from)
+                    ->where('date', '<=', $to)
+                    ->orderBy('date');
+            },
         ])
             ->whereHas('courses' , function($q) use ($today) {
                 $q->where('courses.is_category', 0)
@@ -186,7 +199,13 @@ class HospitalController extends ApiBaseController
                 $query->whereIn('image_order', [3, 4]);
             },
             'contract_information',
-            'courses',
+            'courses'=> function ($query) use ($today) {
+            $query->where('is_category', 0)
+                ->where('web_reception', 0)
+                ->where('publish_start_date', '<=', $today)
+                ->where('publish_end_date', '>=', $today)
+                ->orderBy('courses.order');
+        },
             'courses.course_details' => function ($query) {
                 $query->whereIn('major_classification_id', [11, 13]);
             },
