@@ -29,8 +29,7 @@ class MonthlyCalendarResource extends Resource
         if (!$calendar) {
             $disp_flg = CalendarDisplay::HIDE;
         } else {
-            $calendar_display = new CalendarDisplay(CalendarDisplay::HIDE);
-            if ($calendar->is_calendar_display == $calendar_display->valueOf()) {
+            if ($calendar->is_calendar_display === 0) {
                 $disp_flg = 1;
             } else {
                 $disp_flg = 0;
