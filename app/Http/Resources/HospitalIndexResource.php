@@ -22,7 +22,7 @@ class HospitalIndexResource extends Resource
             ->put('non_consultation', $this->consultation_note ?? '')
             ->put('non_consultation_note', $this->memo ?? '')
             ->put('public_status', $this->status)
-            ->put('update_at', Carbon::parse($this->updated_at)->format('Y-m-d'))
+            ->put('update_at', Carbon::parse($this->updated_at)->format('Y年m月d日'))
             ->merge(new HospitalContentBaseResource($this))
             ->put('courses', CoursesBaseResource::collection($this->courses))
             ->toArray();
