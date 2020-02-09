@@ -47,9 +47,13 @@ class Station extends Model
             if (isset($stations[$i])) {
                 $s =  Station::select(['name'])->find($stations[$i]);
                 $returnData[$i]['station'] = $s['name'];
+            } else {
+                $returnData[$i]['station'] = '';
             }
             if (isset($accesses[$i])) {
                 $returnData[$i]['access'] =  $accesses[$i];
+            } else {
+                $returnData[$i]['access'] =  '';
             }
 
         }

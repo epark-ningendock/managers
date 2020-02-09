@@ -135,21 +135,25 @@ class HospitalContentBaseResource extends Resource
                 && $c->image_order == 5;
         });
 
-        $images = $categories->map(function ($i) {
+        $results = [];
+        foreach ($categories as $i) {
             $url = $this->_filepath($i->hospital_image);
             $alt = $i->hospital_image->memo1 ?? '';
             $title = $i->title ?? '';
             $desc = $i->caption ?? '';
             $img_pos = $i->image_order->image_location_number ?? '';
-            return [
+
+            $results[] = [
                 'img_url' => $url,
                 'img_alt' => $alt,
                 'title' => $title,
                 'desc' => $desc,
                 'img_pos' => $img_pos,
             ];
-        });
-        return $images;
+
+        }
+
+        return $results;
     }
 
     /**
@@ -165,19 +169,21 @@ class HospitalContentBaseResource extends Resource
                 && $c->image_order == 8;
         });
 
-        $images = $categories->map(function ($i) {
+        $results = [];
+        foreach ($categories as $i) {
             $url = $this->_filepath($i->hospital_image);
             $alt = $i->hospital_image->memo1 ?? '';
             $desc = $i->hospital_image->memo1 ?? '';
             $img_pos = $i->file_location_no ?? '';
-            return [
+            $results[] = [
                 'img_url' => $url,
-                'img_alt' => $desc,
+                'img_alt' => $alt,
                 'desc' => $desc,
                 'type' => $img_pos,
             ];
-        });
-        return $images;
+        }
+
+        return $results;
     }
 
     /**
