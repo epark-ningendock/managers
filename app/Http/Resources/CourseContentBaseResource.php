@@ -67,9 +67,16 @@ class CourseContentBaseResource extends Resource
                 }
                 $middle_ids = [];
                 $minor_ids = [];
-                $minor_ids[] = ['id' => $detail->minor_classification_id,
-                    'title' => $detail->minor_classification->name,
-                    'icon' => $detail->minor_classification->icon_name];
+                if ($detail->minor_classification->is_fregist == 1) {
+                    $minor_ids[] = ['id' => $detail->minor_classification_id,
+                        'title' => $detail->minor_classification->name,
+                        'icon' => $detail->minor_classification->icon_name];
+                } else {
+                    $minor_ids[] = ['id' => $detail->minor_classification_id,
+                        'title' => $detail->inputstring,
+                        'icon' => $detail->inputstring];
+                }
+
                 $major_id = $detail->major_classification_id;
                 $middle_id = $detail->middle_classification_id;
             } elseif ($middle_id != $detail->middle_classification_id) {
@@ -77,14 +84,27 @@ class CourseContentBaseResource extends Resource
                     'title' => $detail->middle_classification->name,
                     'category_small' => $minor_ids];
                 $minor_ids = [];
-                $minor_ids[] = ['id' => $detail->minor_classification_id,
-                    'title' => $detail->minor_classification->name,
-                    'icon' => $detail->minor_classification->icon_name];
+
+                if ($detail->minor_classification->is_fregist == 1) {
+                    $minor_ids[] = ['id' => $detail->minor_classification_id,
+                        'title' => $detail->minor_classification->name,
+                        'icon' => $detail->minor_classification->icon_name];
+                } else {
+                    $minor_ids[] = ['id' => $detail->minor_classification_id,
+                        'title' => $detail->inputstring,
+                        'icon' => $detail->inputstring];
+                }
                 $middle_id = $detail->middle_classification_id;
             } else {
-                $minor_ids[] = ['id' => $detail->minor_classification_id,
-                    'title' => $detail->minor_classification->name,
-                    'icon' => $detail->minor_classification->icon_name];
+                if ($detail->minor_classification->is_fregist == 1) {
+                    $minor_ids[] = ['id' => $detail->minor_classification_id,
+                        'title' => $detail->minor_classification->name,
+                        'icon' => $detail->minor_classification->icon_name];
+                } else {
+                    $minor_ids[] = ['id' => $detail->minor_classification_id,
+                        'title' => $detail->inputstring,
+                        'icon' => $detail->inputstring];
+                }
             }
 
             $i++;

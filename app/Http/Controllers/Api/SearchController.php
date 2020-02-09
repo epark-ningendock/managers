@@ -9,6 +9,7 @@ use App\Holiday;
 use App\HospitalMetaInformation;
 use App\Http\Requests\SearchRequest;
 use App\Http\Requests\HospitalSearchRequest;
+use App\Http\Requests\CourseSearchRequest;
 
 use App\Hospital;
 use App\Course;
@@ -21,64 +22,64 @@ use Log;
 
 class SearchController extends ApiBaseController
 {
-    /**
-     * 医療機関・検査コース一覧検索API
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function index(SearchRequest $request)
-    {
+//    /**
+//     * 医療機関・検査コース一覧検索API
+//     *
+//     * @param  \Illuminate\Http\Request  $request
+//     * @return \Illuminate\Http\Response
+//     */
+//    public function index(SearchRequest $request)
+//    {
 //        try {
-            $search_cond_chk_result = $this->checkSearchCond($request, false);
-            if (!$search_cond_chk_result[0]) {
-                return $this->createResponse($search_cond_chk_result[1]);
-            }
-            // フラグセット
-            $return_flag = $request->input('return_flag');
-            $search_condition_return_flag = $request->input('search_condition_return_flag');
-
-            // 対象データ取得
-            $hospitals = $this->getHospitals($request);
-            $courses = $this->getCourses($request);
-
-            // 結果生成
-            $status = 0;
-
-            // 件数要素セット
-            $count = $hospitals->count() + $courses->count();
-
-            //医療施設検索ヒット数セット
-            $hospitals_return_count = $hospitals->count();
-
-            //検査コース検索ヒット数セット
-            $courses_return_count = $courses->count();
-
-            // page取得の場合、全件件数取得
-            $hospitals_search_count = $return_flag == 0 ? $hospitals->count() : $this->getHospitals($request, true);
-            $courses_search_count = $return_flag == 0 ? $courses->count() : $this->getCourses($request, true);
-
-            $return_count = $count;
-            $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
-            $return_to = $return_flag == 0 ? $count : $request->input('return_to');
-
-            // 対象データ取得
-            $hospitals = SearchHospitalsResource::collection($hospitals);
-            $courses = SearchCoursesResource::collection($courses);
-
-            // response
-            return $search_condition_return_flag == 0 ?
-                compact('status', 'hospitals_return_count', 'courses_return_count', 'hospitals_search_count', 'courses_search_count', 'return_from', 'return_to', 'hospitals', 'courses')
-                : compact('status', 'hospitals_return_count', 'courses_return_count', 'hospitals_search_count', 'courses_search_count', 'return_from', 'return_to')
-                + $request->toJson()
-                + compact('hospitals', 'courses');
-
+//            $search_cond_chk_result = $this->checkSearchCond($request, false);
+//            if (!$search_cond_chk_result[0]) {
+//                return $this->createResponse($search_cond_chk_result[1]);
+//            }
+//            // フラグセット
+//            $return_flag = $request->input('return_flag');
+//            $search_condition_return_flag = $request->input('search_condition_return_flag');
+//
+//            // 対象データ取得
+//            $hospitals = $this->getHospitals($request);
+//            $courses = $this->getCourses($request,true);
+//
+//            // 結果生成
+//            $status = 0;
+//
+//            // 件数要素セット
+//            $count = $hospitals->count() + $courses->count();
+//
+//            //医療施設検索ヒット数セット
+//            $hospitals_return_count = $hospitals->count();
+//
+//            //検査コース検索ヒット数セット
+//            $courses_return_count = $courses->count();
+//
+//            // page取得の場合、全件件数取得
+//            $hospitals_search_count = $return_flag == 0 ? $hospitals->count() : $this->getHospitals($request, true);
+//            $courses_search_count = $return_flag == 0 ? $courses->count() : $this->getCourses($request, true);
+//
+//            $return_count = $count;
+//            $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
+//            $return_to = $return_flag == 0 ? $count : $request->input('return_to');
+//
+//            // 対象データ取得
+//            $hospitals = SearchHospitalsResource::collection($hospitals);
+//            $courses = SearchCoursesResource::collection($courses);
+//
+//            // response
+//            return $search_condition_return_flag == 0 ?
+//                compact('status', 'hospitals_return_count', 'courses_return_count', 'hospitals_search_count', 'courses_search_count', 'return_from', 'return_to', 'hospitals', 'courses')
+//                : compact('status', 'hospitals_return_count', 'courses_return_count', 'hospitals_search_count', 'courses_search_count', 'return_from', 'return_to')
+//                + $request->toJson()
+//                + compact('hospitals', 'courses');
+//
 //        } catch (\Exception $e) {
 //            Log::error($e);
 //            return $this->createResponse($this->messages['system_error_api']);
 //        }
-
-    }
+//
+//    }
 
     /**
      * 医療機関一覧検索API
@@ -88,7 +89,7 @@ class SearchController extends ApiBaseController
      */
     public function hospitals(HospitalSearchRequest $request)
     {
-//        try {
+       try {
             $search_cond_chk_result = $this->checkSearchCond($request, true);
             if (!$search_cond_chk_result[0]) {
                 return $this->createResponse($search_cond_chk_result[1]);
@@ -97,28 +98,20 @@ class SearchController extends ApiBaseController
             $return_flag = $request->input('return_flag');
             $search_count_only_flag = $request->input('search_count_only_flag');
             $search_condition_return_flag = $request->input('search_condition_return_flag');
-
+        
             // 件数のみ返却
-            if ($search_count_only_flag == 1) {
-                $search_count = $this->getHospitalCount($request, true);
-            } else {
-                $search_count = $this->getHospitalCount($request, true);
-                $targets =  $this->getHospitalCount($request, false);
-                $entities = $this->getHospitals($targets);
+            $search_count = $this->getHospitalCount($request, true);
+            $targets =  $this->getHospitalCount($request, false);
+            $entities = $this->getHospitals($targets);
 
-            }
-
-            // 対象データ取得
-//            $entities = $this->getHospitals($request);
-
-            // 結果生成
-            $status = 0;
+           // 結果生成
+           $status = 0;
 
             // 件数要素セット
             // page取得の場合、全件件数取得
 //            $search_count = $return_flag == 0 ? $entities->count() : $this->getHospitals($request, true);
             $return_count = count($entities);
-//        $return_count = 0;
+
             $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
             $return_to = $return_flag == 0 ? $search_count : $request->input('return_to');
 
@@ -139,10 +132,10 @@ class SearchController extends ApiBaseController
                 : compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
                 + $request->toJson()
                 + compact('hospitals');
-//        } catch (\Exception $e) {
-//            Log::error($e);
-//            return $this->createResponse($this->messages['system_error_api']);
-//        }
+        } catch (\Exception $e) {
+           Log::error($e);
+           return $this->createResponse($this->messages['system_error_api'], $request->input('callback'));
+        }
 
     }
 
@@ -152,31 +145,34 @@ class SearchController extends ApiBaseController
      * @param  App\Http\Requests\SearchRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function courses(SearchRequest $request)
+    public function courses(CourseSearchRequest $request)
     {
-//        try {
-            $search_cond_chk_result = $this->checkSearchCond($request, false);
-            if (!$search_cond_chk_result[0]) {
-                return $this->createResponse($search_cond_chk_result[1]);
-            }
+        try {
             // フラグセット
             $return_flag = $request->input('return_flag');
+            $search_count_only_flag = $request->input('search_count_only_flag');
             $search_condition_return_flag = $request->input('search_condition_return_flag');
+            $course_price_sort = $request->input('course_price_sort');
 
-        // 件数のみ返却
-        $search_count = $this->getCourseCount($request, true);
-        $targets =  $this->getCourseCount($request, false);
-        $entities = $this->getCourses($targets);
+            // 件数のみ返却
+            $search_count = $this->getCourseCount($request, true);
+            $targets =  $this->getCourseCount($request, false);
+            $entities = $this->getCourses($targets, $course_price_sort);
 
             // 結果生成
             $status = 0;
 
             // 件数要素セット
-            // page取得の場合、全件件数取得
-//            $search_count = $return_flag == 0 ? $entities->count() : $this->getCourses($request, true);
             $return_count = $entities->count();
             $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
             $return_to = $return_flag == 0 ? $search_count : $request->input('return_to');
+
+            if ($search_count_only_flag == 1) {
+                return $search_condition_return_flag == 0 ?
+                    compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
+                    :
+                    compact('status', 'search_count', 'return_count', 'return_from', 'return_to') + $request->toJson();
+            }
 
             // レスポンス生成
             $courses = SearchCoursesResource::collection($entities);
@@ -187,10 +183,10 @@ class SearchController extends ApiBaseController
                 : compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
                 + $request->toJson()
                 + compact('courses');
-//        } catch (\Exception $e) {
-//            Log::error($e);
-//            return $this->createResponse($this->messages['system_error_api']);
-//        }
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_api'], $request->input('callback'));
+        }
 
     }
 
@@ -217,6 +213,7 @@ class SearchController extends ApiBaseController
         $query->leftJoin('courses', function ($join) use ($target) {
             $join->on('hospitals.id', 'courses.hospital_id')
                 ->where('courses.web_reception', WebReception::ACCEPT)
+                ->where('courses.is_category', 0)
                 ->where('publish_start_date', '<=', $target)
                 ->where('publish_end_date', '>=', $target);
         });
@@ -237,12 +234,33 @@ class SearchController extends ApiBaseController
             $query->whereRaw('? >= DATE_ADD(CURRENT_DATE(), INTERVAL (30 * (reception_start_date DIV 1000) + MOD(reception_start_date, 1000)) DAY) ', [$target]);
             $query->whereDate('calendar_days.date', $target);
         }
-
+        
         if (!empty($request->input('freewords'))) {
-            $freewords = $request->input('freewords');
-            $query->where('hospital_name', 'like', '%'.$freewords.'%');
+            $freeword_str = str_replace('　', ' ', $request->input('freewords'));
+            $freewords = explode(' ', $freeword_str);
+            
+            $query->where(function ($q) use ($freewords) {
+                $q->orWhere('hospital_metas.hospital_name', 'like', '%' . $freewords[0] . '%');
+                for ($i = 1; $i < count($freewords); $i++) {
+                    $q->orWhere('hospital_metas.hospital_name', 'like', '%' . $freewords[$i] . '%');
+                }
 
-        }
+                $q->orWhere('hospital_metas.area_station', 'like', '%' . $freewords[0] . '%');
+                for ($i = 1; $i < count($freewords); $i++) {
+                    $q->orWhere('hospital_metas.area_station', 'like', '%' . $freewords[$i] . '%');
+                }
+
+                $q->orWhere('course_metas.category_exam_name', 'like', '%' . $freewords[0] . '%');
+                for ($i = 1; $i < count($freewords); $i++) {
+                    $q->orWhere('course_metas.category_exam_name', 'like', '%' . $freewords[$i] . '%');
+                }
+
+                $q->orWhere('course_metas.category_disease_name', 'like', '%' . $freewords[0] . '%');
+                for ($i = 1; $i < count($freewords); $i++) {
+                    $q->orWhere('course_metas.category_disease_name', 'like', '%' . $freewords[$i] . '%');
+                }
+            });
+        };
 
         // 公開医療機関指定
         $query->where('hospitals.status', Status::VALID);
@@ -257,8 +275,8 @@ class SearchController extends ApiBaseController
         $district_no = $request->input('district_no');
         if (isset($district_no)) {
             $districts = explode(',', $district_no);
-            $query->where('district_code', $districts);
-        };
+            $query->whereIn('district_code_id', $districts);
+         };
 
         // 路線コード
         $rail_no = $request->input('rail_no');
@@ -286,14 +304,13 @@ class SearchController extends ApiBaseController
             });
         };
 
-        // 条件設定フラグ
-        $condition_add_flg = false;
         // 食事あり
         $meal_flg = false;
         // ペア
         $pear_flg = false;
         // 女性医師
         $female_doctor_flg = false;
+        // コース分類コード
         $course_category = $request->input('course_category_code');
 
         if (isset($course_category)) {
@@ -310,46 +327,38 @@ class SearchController extends ApiBaseController
             }
         }
 
+        if ($meal_flg) {
+            $query->where('course_metas.meal_flg', 1);
+        }
+        if ($pear_flg) {
+            $query->where('course_metas.pear_flg', 1);
+        }
+        if ($female_doctor_flg) {
+            $query->where('course_metas.female_doctor_flg', 1);
+        }
+
         // 検査種別
         $exam_types = $request->input('exam_type');
         if (isset($exam_types)) {
             $condition_add_flg = true;
             $exam_types = explode(',', $exam_types);
             $query->where(function ($q) use ($exam_types, $meal_flg, $pear_flg, $female_doctor_flg) {
-                $q->where('course_metas.category_exam', 'like', '%' . $exam_types[0] . '%' );
+                $q->where('course_metas.category_exam', 'like', '%' . sprintf('%03d',$exam_types[0]) . '%' );
                 for($i = 1; $i < count($exam_types); $i++) {
-                    $q->orWhere('course_metas.category_exam', 'like', '%' . $exam_types[$i] . '%' );
-                }
-                if ($meal_flg) {
-                    $q->where('course_metas.meal_flg', 1);
-                }
-                if ($pear_flg) {
-                    $q->where('course_metas.pear_flg', 1);
-                }
-                if ($female_doctor_flg) {
-                    $q->where('course_metas.female_doctor_flg', 1);
+                    $q->orWhere('course_metas.category_exam', 'like', '%' . sprintf('%03d',$exam_types[$i]) . '%' );
                 }
             });
         }
-
+        
         // 対象となる疾患
         $diseases = $request->input('disease');
         if (isset($diseases)) {
             $condition_add_flg = true;
             $diseases = explode(',', $diseases);
             $query->where(function ($q) use ($diseases, $meal_flg, $pear_flg, $female_doctor_flg) {
-                $q->where('course_metas.category_disease', 'like', '%' . $diseases[0] . '%' );
+                $q->where('course_metas.category_disease', 'like', '%' . sprintf('%03d',$diseases[0]) . '%' );
                 for($i = 1; $i < count($diseases); $i++) {
-                    $q->orWhere('course_metas.category_disease', 'like', '%' . $diseases[$i] . '%' );
-                }
-                if ($meal_flg) {
-                    $q->where('course_metas.meal_flg', 1);
-                }
-                if ($pear_flg) {
-                    $q->where('course_metas.pear_flg', 1);
-                }
-                if ($female_doctor_flg) {
-                    $q->where('course_metas.female_doctor_flg', 1);
+                    $q->orWhere('course_metas.category_disease', 'like', '%' . sprintf('%03d',$diseases[$i]) . '%' );
                 }
             });
         }
@@ -360,32 +369,11 @@ class SearchController extends ApiBaseController
             $condition_add_flg = true;
             $parts = explode(',', $parts);
             $query->where(function ($q) use ($parts, $meal_flg, $pear_flg, $female_doctor_flg) {
-                $q->where('course_metas.category_part', 'like', '%' . $parts[0] . '%' );
+                $q->where('course_metas.category_part', 'like', '%' . sprintf('%03d',$parts[0]) . '%' );
                 for($i = 1; $i < count($parts); $i++) {
-                    $q->orWhere('course_metas.category_part', 'like', '%' . $parts[$i] . '%' );
-                }
-                if ($meal_flg) {
-                    $q->where('course_metas.meal_flg', 1);
-                }
-                if ($pear_flg) {
-                    $q->where('course_metas.pear_flg', 1);
-                }
-                if ($female_doctor_flg) {
-                    $q->where('course_metas.female_doctor_flg', 1);
+                    $q->orWhere('course_metas.category_part', 'like', '%' . sprintf('%03d',$parts[$i]) . '%' );
                 }
             });
-        }
-
-        if (!$condition_add_flg) {
-            if ($meal_flg) {
-                $query->where('course_metas.meal_flg', 1);
-            }
-            if ($pear_flg) {
-                $query->where('course_metas.pear_flg', 1);
-            }
-            if ($female_doctor_flg) {
-                $query->where('course_metas.female_doctor_flg', 1);
-            }
         }
 
         // コース金額(上限)
@@ -423,8 +411,13 @@ class SearchController extends ApiBaseController
             }
         }
 
+        // 現地カード対応
+        if (!empty($request->input('site_card'))) {
+            $query->where('hospital_metas.credit_card_flg', 1);
+        }
+
         // limit/offset
-        if (!$count_flg) {
+        if (!$count_flg && $request->input("return_flag") != 0) {
             $offset = intval($request->input('return_from')-1);
             $limit = intval($request->input('return_to')) - $offset;
             $query->offset($offset)->limit($limit);
@@ -460,7 +453,7 @@ class SearchController extends ApiBaseController
             $target = Carbon::today()->toDateString();
         }
 
-        $query = Course::select('courses.id', 'courses.order', 'hospitals.pvad', 'hospitals.pv_count')->distinct();
+        $query = Course::select('courses.id', 'courses.order', 'courses.price', 'hospitals.pvad', 'hospitals.pv_count')->distinct();
         $query->join('hospitals', function ($join) {
             $join->on('hospitals.id', 'courses.hospital_id')
                 ->where('hospitals.status', Status::VALID);
@@ -483,6 +476,7 @@ class SearchController extends ApiBaseController
             });
         }
         $query->where('courses.web_reception', WebReception::ACCEPT);
+        $query->where('courses.is_category', 0);
         $query->where('publish_start_date', '<=', $target);
         $query ->where('publish_end_date', '>=', $target);
 
@@ -490,11 +484,19 @@ class SearchController extends ApiBaseController
             $query->whereRaw('? >= DATE_ADD(CURRENT_DATE(), INTERVAL (30 * (reception_start_date DIV 1000) + MOD(reception_start_date, 1000)) DAY) ', [$target]);
             $query->whereDate('calendar_days.date', $target);
         }
-
+ 
         if (!empty($request->input('freewords'))) {
-            $freewords = $request->input('freewords');
-            $query->where('hospital_name', 'like', '%'.$freewords.'%');
+            $freeword_str = str_replace('　', ' ', $request->input('freewords'));
+            $freewords = explode(' ', $freeword_str);
 
+            foreach($freewords as $freeword) {
+                $query->where(function($q) use($freeword) {
+                    $q->orWhere('hospital_metas.hospital_name', 'like', '%'.$freeword.'%');
+                    $q->orWhere('hospital_metas.area_station', 'like', '%'.$freeword.'%');
+                    $q->orWhere('course_metas.category_exam_name', 'like', '%'.$freeword.'%');
+                    $q->orWhere('course_metas.category_disease_name', 'like', '%'.$freeword.'%');
+                });
+            }
         }
 
         // 都道府県コード
@@ -507,7 +509,7 @@ class SearchController extends ApiBaseController
         $district_no = $request->input('district_no');
         if (isset($district_no)) {
             $districts = explode(',', $district_no);
-            $query->where('district_code', $districts);
+            $query->whereIn('district_code_id', $districts);
         };
 
         // 路線コード
@@ -536,14 +538,13 @@ class SearchController extends ApiBaseController
             });
         };
 
-        // 条件設定フラグ
-        $condition_add_flg = false;
         // 食事あり
         $meal_flg = false;
         // ペア
         $pear_flg = false;
         // 女性医師
         $female_doctor_flg = false;
+        // コース分類コード
         $course_category = $request->input('course_category_code');
 
         if (isset($course_category)) {
@@ -560,24 +561,24 @@ class SearchController extends ApiBaseController
             }
         }
 
+        if ($meal_flg) {
+            $query->where('course_metas.meal_flg', 1);
+        }
+        if ($pear_flg) {
+            $query->where('course_metas.pear_flg', 1);
+        }
+        if ($female_doctor_flg) {
+            $query->where('course_metas.female_doctor_flg', 1);
+        }
+
         // 検査種別
         $exam_types = $request->input('exam_type');
         if (isset($exam_types)) {
-            $condition_add_flg = true;
             $exam_types = explode(',', $exam_types);
             $query->where(function ($q) use ($exam_types, $meal_flg, $pear_flg, $female_doctor_flg) {
-                $q->where('course_metas.category_exam', 'like', '%' . $exam_types[0] . '%' );
+                $q->where('course_metas.category_exam', 'like', '%' . sprintf('%03d', $exam_types[0]) . '%' );
                 for($i = 1; $i < count($exam_types); $i++) {
-                    $q->orWhere('course_metas.category_exam', 'like', '%' . $exam_types[$i] . '%' );
-                }
-                if ($meal_flg) {
-                    $q->where('course_metas.meal_flg', 1);
-                }
-                if ($pear_flg) {
-                    $q->where('course_metas.pear_flg', 1);
-                }
-                if ($female_doctor_flg) {
-                    $q->where('course_metas.female_doctor_flg', 1);
+                    $q->orWhere('course_metas.category_exam', 'like', '%' . sprintf('%03d', $exam_types[$i]) . '%' );
                 }
             });
         }
@@ -585,21 +586,11 @@ class SearchController extends ApiBaseController
         // 対象となる疾患
         $diseases = $request->input('disease');
         if (isset($diseases)) {
-            $condition_add_flg = true;
             $diseases = explode(',', $diseases);
             $query->where(function ($q) use ($diseases, $meal_flg, $pear_flg, $female_doctor_flg) {
-                $q->where('course_metas.category_disease', 'like', '%' . $diseases[0] . '%' );
+                $q->where('course_metas.category_disease', 'like', '%' . sprintf('%03d', $diseases[0]) . '%' );
                 for($i = 1; $i < count($diseases); $i++) {
-                    $q->orWhere('course_metas.category_disease', 'like', '%' . $diseases[$i] . '%' );
-                }
-                if ($meal_flg) {
-                    $q->where('course_metas.meal_flg', 1);
-                }
-                if ($pear_flg) {
-                    $q->where('course_metas.pear_flg', 1);
-                }
-                if ($female_doctor_flg) {
-                    $q->where('course_metas.female_doctor_flg', 1);
+                    $q->orWhere('course_metas.category_disease', 'like', '%' . sprintf('%03d', $diseases[$i]) . '%' );
                 }
             });
         }
@@ -607,35 +598,13 @@ class SearchController extends ApiBaseController
         // 気になる部位
         $parts = $request->input('part');
         if (isset($parts)) {
-            $condition_add_flg = true;
             $parts = explode(',', $parts);
             $query->where(function ($q) use ($parts, $meal_flg, $pear_flg, $female_doctor_flg) {
-                $q->where('course_metas.category_part', 'like', '%' . $parts[0] . '%' );
+                $q->where('course_metas.category_part', 'like', '%' . sprintf('%03d', $parts[0]) . '%' );
                 for($i = 1; $i < count($parts); $i++) {
-                    $q->orWhere('course_metas.category_part', 'like', '%' . $parts[$i] . '%' );
-                }
-                if ($meal_flg) {
-                    $q->where('course_metas.meal_flg', 1);
-                }
-                if ($pear_flg) {
-                    $q->where('course_metas.pear_flg', 1);
-                }
-                if ($female_doctor_flg) {
-                    $q->where('course_metas.female_doctor_flg', 1);
+                    $q->orWhere('course_metas.category_part', 'like', '%' . sprintf('%03d', $parts[$i]) . '%' );
                 }
             });
-        }
-
-        if (!$condition_add_flg) {
-            if ($meal_flg) {
-                $query->where('course_metas.meal_flg', 1);
-            }
-            if ($pear_flg) {
-                $query->where('course_metas.pear_flg', 1);
-            }
-            if ($female_doctor_flg) {
-                $query->where('course_metas.female_doctor_flg', 1);
-            }
         }
 
         // コース金額(上限)
@@ -673,17 +642,30 @@ class SearchController extends ApiBaseController
             }
         }
 
+        // 現地カード対応
+        if (!empty($request->input('site_card'))) {
+            $query->where('hospital_metas.credit_card_flg', 1);
+        }
+
         // limit/offset
-        if (!$count_flg) {
+        if (!$count_flg && $request->input('return_flag') != 0) {
             $offset = intval($request->input('return_from')-1);
             $limit = intval($request->input('return_to')) - $offset;
             $query->offset($offset)->limit($limit);
         }
 
         // 並び順
-        $query->orderBy('hospitals.pvad', 'asc');
-        $query->orderBy('hospitals.pv_count', 'asc');
-        $query->orderBy('courses.order', 'asc');
+        if($request->input('course_price_sort') == 0) {
+            $query->orderBy('courses.price');
+            $query->orderBy('courses.order');
+            $query->orderBy('hospitals.pvad', 'asc');
+            $query->orderBy('hospitals.pv_count', 'asc');
+        } else {
+            $query->orderBy('courses.price', 'desc');
+            $query->orderBy('courses.order');
+            $query->orderBy('hospitals.pvad', 'asc');
+            $query->orderBy('hospitals.pv_count', 'asc');
+        }
 
         $results = $query->get();
 
@@ -711,9 +693,12 @@ class SearchController extends ApiBaseController
         },
             'courses' => function ($query) use ($target_date) {
                 $query->where('web_reception', WebReception::ACCEPT)
+                    ->where('is_category', 0)
                 ->where('publish_start_date', '<=', $target_date)
                 ->where('publish_end_date', '>=', $target_date)
-                    ->orderBy('order');
+                    ->orderBy('order')->with(['course_details'=> function($query){
+                        $query->with('minor_classification');
+                    },'calendar','calendar_days', 'course_metas']);
             },
 
         ])
@@ -725,24 +710,28 @@ class SearchController extends ApiBaseController
 
     /**
      * @param $courses
+     * @param $course_price_sort
      * @return Course[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    private function getCourses($courses) {
+    private function getCourses($courses, $course_price_sort) {
 
-        $ids = [];
-        foreach ($courses as $course) {
-            $ids[] = $course->id;
+        $query = Course::whereIn('id', $courses->pluck('id'))
+            ->with([
+                'hospital',
+                'course_metas',
+                'course_details' => function ($query) {
+                    $query->whereIn('major_classification_id', [1, 2, 3, 4, 5, 6, 11, 13, 24])->with(['minor_classification']);
+                },
+                'course_options',
+                'calendar',
+                'calendar_days'
+            ]);
+        if($course_price_sort == 0) {
+            $query->orderBy('price')->orderBy('order');
+        } else {
+            $query->orderBy('price', 'desc')->orderBy('order');
         }
-
-        return Course::with([
-            'hospital',
-            'course_details' => function ($query) {
-                $query->whereIn('major_classification_id', [1, 2, 3, 4, 5, 6, 11, 13, 24]);
-            },
-            'course_options'
-        ])
-            ->orderBy('order')
-            ->get();
+        return $query->get();
     }
 
 //    /**

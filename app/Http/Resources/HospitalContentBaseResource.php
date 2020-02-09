@@ -64,10 +64,17 @@ class HospitalContentBaseResource extends Resource
         $images = $categories->map(function ($i) use ($image_group_number, $image_location_number) {
             $url = $this->_filepath($i->hospital_image);
             $alt = $i->hospital_image->memo1 ?? '';
-            return ($i->image_order === $image_group_number && $i->file_location_no == $image_location_number) ?
+
+            return ($i->image_order === $image_group_number && $i->file_location_no == $image_location_number && $image_location_number == 1) ?
                 collect(['img_main_url' => $url, 'img_main_alt' => $alt,])
                 : collect(['img_main_sp_url' => $url, 'img_main_sp_alt' => $alt,]);
         });
+
+        if (empty($images) && $image_location_number == 1) {
+            return ['img_main_url' => '', 'img_main_alt' => ''];
+        } elseif (empty($images) && $image_location_number == 2) {
+            return ['img_main_sp_url' => '', 'img_main_sp_alt' => ''];
+        }
         return $images->first();
     }
 
@@ -84,12 +91,15 @@ class HospitalContentBaseResource extends Resource
                 && $c->image_order == 2;
         });
 
-        $images = $categories->map(function ($i) {
-            $url = $this->_filepath($i->hospital_image);
-            $alt = $i->hospital_image->memo1 ?? '';
-            return ['img_sub_url' => $url, 'img_sub_alt' => $alt,];
-        });
-        return $images;
+        $results = [];
+        foreach ($categories as $category) {
+            $results[] = [
+                'img_sub_url' => $this->_filepath($category->hospital_image),
+                'img_sub_alt' => $category->hospital_image->memo1 ?? ''
+                ];
+        }
+
+        return $results;
     }
     /**
      * TOP（タイトル）/本文取得
@@ -228,7 +238,9 @@ class HospitalContentBaseResource extends Resource
                 && $c->image_order === 6;
         });
 
-        $texts = $categories->map(function ($i) {
+        $results = [];
+
+        foreach ($categories as $i) {
             $url = $this->_filepath($i->hospital_image);
             $alt = $i->title ?? '';
             $title = $i->title ?? '';
@@ -241,15 +253,16 @@ class HospitalContentBaseResource extends Resource
             $contents = $i->interview_details->map(function ($i) {
                 return $i->answer ?? '';
             });
-            return [
+            $results[] = [
                 'img_url' => $url,
                 'img_alt' => $alt,
                 'title' => $title ?? '',
                 'desc' => $desc ?? '',
                 'interview_q' => $interview_q,
             ];
-        });
-        return $texts;
+        }
+
+        return $results;
     }
 
     /**
@@ -264,21 +277,24 @@ class HospitalContentBaseResource extends Resource
             return isset($c->image_order)
                 && $c->image_order == 7;
         });
-        $texts = $categories->map(function ($i) {
+
+        $results = [];
+        foreach ($categories as $i) {
             $url = $this->_filepath($i->hospital_image);
             $alt = $i->hospital_image->memo1 ?? '';
             $name = $i->name ?? '';
             $bio = $i->career ?? '';
             $comment = $i->memo ?? '';
-            return [
+            $results[] = [
                 'img_url' => $url,
                 'img_alt' => $alt,
                 'name' => $name,
                 'bio' => $bio,
                 'comment' => $comment
             ];
-        });
-        return $texts;
+        }
+
+        return $results;
     }
 
     private function _filepath($hospital_image)

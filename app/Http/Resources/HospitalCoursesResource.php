@@ -15,10 +15,15 @@ class HospitalCoursesResource extends Resource
      */
     public function toArray($request)
     {
+        $hospital_code = '';
+        if (isset($this->contract_information) && isset($this->contract_information->code)) {
+            $hospital_code = $this->contract_information->code;
+        }
         return
             collect([])
-                ->merge(new HospitalBasicResource($this))
-                ->put('exam_type', $this->getCategoryType())
+                ->put('status', 0)
+                ->put('no', $this->id)
+                ->put('hospital_code', $hospital_code)
                 ->put('courses', CoursesBaseResource::collection($this->courses))
                 ->toArray();
     }

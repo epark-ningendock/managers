@@ -30,18 +30,18 @@ class SearchHospitalsResource extends Resource
             'update_dt' => Carbon::parse($this->update_at)->format('Y年m月d日'),
             'pref_name' => $this->prefecture->name,
             'district_name' => $this->districtCode->name,
-            'address1' => $this->address1,
-            'address2' => $this->address2,
+            'address1' => $this->address1 ?? '',
+            'address2' => $this->address2 ?? '',
             'stations' => Station::getStations($rails, $stations, $accesses),
             'closed_day' => $this->getClosedDay(),
-            'non_consultation' => $this->consultation_note,
-            'non_consultation_note' => $this->memo,
-            'img_sub_url' => $this->getImgSub($this->hospital_categories),
+            'non_consultation' => $this->consultation_note ?? '',
+            'non_consultation_note' => $this->memo ?? '',
+            'img_sub' => $this->getImgSub($this->hospital_categories),
             'movie' => $this->getMovieInfo(),
             'caption' => $this->getCaption($this->hospital_categories),
             'category' => new HospitalCategoryResource($this),
             'pickup' => $this->is_pickup,
-            'courses' => CoursesBaseResource::collection($this->courses),
+            'courses' => CourseBaseResource::collection($this->courses),
         ];
     }
 
@@ -244,11 +244,11 @@ class SearchHospitalsResource extends Resource
             && ($category->image_order === 2)
             && ($category->file_location_no == 1)
                 && !empty($category->hospital_image->path)) {
-                return $category->hospital_image->path;
+                return ['img_sub_url' => $category->hospital_image->path, 'img_sub_alt' => $category->hospital_image->memo1 ?? ''];
             }
         }
 
-        return '';
+        return ['img_sub_url' => '', 'img_sub_alt' => ''];
     }
 
 }

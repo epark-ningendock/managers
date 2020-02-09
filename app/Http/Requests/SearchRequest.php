@@ -48,6 +48,7 @@ class SearchRequest extends ValidationRequest
             'exam_type_text' => $this->get_course_category_text($this->input('exam_type')),
             'disease' => $this->get_course_category_text($this->input('disease')),
             'part' => $this->get_course_category_text($this->input('part')),
+            'site_card' => $this->get_site_card_name($this->input('site_card')),
         ];
         return compact('serach_condition', 'serach_condition_string');
     }
@@ -120,6 +121,14 @@ class SearchRequest extends ValidationRequest
             return $text;
         } else {
             return '';
+        }
+    }
+    protected function get_site_card_name($site_card)
+    {
+        if ($site_card == 1) {
+            return 'クレジットカード払い可';
+        } else {
+            return 'クレジットカード払い不可';
         }
     }
 }

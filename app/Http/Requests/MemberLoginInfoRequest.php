@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 
-class HospitalRequest extends ValidationRequest
+class MemberLoginInfoRequest extends ValidationRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -13,7 +13,7 @@ class HospitalRequest extends ValidationRequest
     public function rules()
     {
         return [
-            'hospital_code' => ['required','regex:/^D[0-9a-zA-Z]+$/u','exists:contract_informations,code'],
+            'epark_member_id' => 'required|numeric|exists:member_login_infos,epark_member_id',
         ];
 
     }

@@ -14,7 +14,7 @@ use Log;
 class CourseBaseResource extends Resource
 {
     /**
-     * 検査コース基本情報 resource into an array.
+     * Transform the resource into an array.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return array
@@ -25,147 +25,102 @@ class CourseBaseResource extends Resource
     }
 
     /**
-     * 検査コース基本情報
+     * 検査コース共通情報
      *
      * @return Illuminate\Support\Collection
      */
     protected function baseCollections()
     {
-        return collect(
-            [
-                'course_no' => $this[0]->id,
-                'course_code' => $this[0]->code,
-                'course_name' => $this[0]->name,
-                'course_url' => $this->createURL() . "/detail_hospital/" . $this[0]->hospital->contract_information->code . "/detail/" . $this[0]->code . ".html",
-                'web_reception' => $this->createReception(),
-                'course_flg_category' => $this[0]->is_category,
-                'course_img' => $this->getFlowImagePath($this[0]->hospital->hospital_categories, 1),
-                'flow_pc_img' => $this->getFlowImagePath($this[0]->hospital->hospital_categories, 2),
-                'flow_sp_img' => $this->getFlowImagePath($this[0]->hospital->hospital_categories, 3),
-                'course_point' => $this[0]->course_point,
-                'course_notice' => $this[0]->course_notice,
-                'course_cancel' => $this[0]->course_cancel,
-                'flg_price' => $this[0]->is_price,
-                'price' => $this[0]->price,
-                'flg_price_memo' => $this[0]->is_price_memo,
-                'price_memo' => $this[0]->price_memo,
-                'price_2' => $this[0]->regular_price,
-                'price_3' => $this[0]->discounted_price,
-                'tax_class' => $this[0]->tax_class_id,
-                'pre_account_price' => $this[0]->pre_account_price,
-                'flg_local_payment' => $this[0]->is_local_payment,
-                'flg_pre_account' => $this[0]->is_pre_account,
-//                'sho_names' => $this->createNames()[0],
-//                'exams' => $this->createNames()[1],
-//                'feature' => $this->createNames()[2],
-//                'require_time' => $this->createNames()[3],
-//                'result' => $this->createNames()[4],
-                'auto_calc_application' => $this[0]->auto_calc_application,
-            ]
-        );
+        return collect([
+            'course_no' => $this->id,
+            'course_code' => $this->code,
+            'course_name' => $this->name,
+            'course_url' => $this->createURL() . "/detail_hospital/" . $this->contract_information->code . "/detail/" . $this->code . ".html",
+            'sho_name' => $this->getShoName(),
+            'web_reception' => $this->createReception(),
+            'course_flg_category' => $this->is_category,
+            'course_img' => $this->getCourseImg($this->course_images),
+            'course_point' => $this->course_point ?? '',
+            'course_notice' => $this->course_notice ?? '',
+            'course_cancel' => $this->course_cancel ?? '',
+            'flg_price' => $this->is_price,
+            'price' => $this->price,
+            'flg_price_memo' => $this->is_price_memo ?? '',
+            'price_memo' => $this->price_memo ?? '',
+            'pre_account_price' => $this->pre_account_price ?? '',
+            'flg_local_payment' => $this->is_local_payment,
+            'flg_pre_account' => $this->is_pre_account,
+            'auto_calc_application' => $this->auto_calc_application,
+        ]);
     }
 
     /**
-     * @return string
+     * サブメイン画像取得
      *
+     * @param  医療機関カテゴリ
+     * @return パス
      */
-    private function createShoname() {
-        $result = '';
-        foreach ($this[0]->course_details as $detail) {
-            if ($detail->major_classification_id == 13
-                && $detail->middle_classification_id == 30
-                && $detail->select_status == 1
-                && $detail->status == Status::VALID) {
-                $result = $result . $detail->minor_classification->name . ',';
+    protected function getCourseImg($course_images)
+    {
+        if (!isset($course_images)) return '';
+
+        foreach ($course_images as $course_image) {
+            if ($course_image->type == '0') {
+                return $course_image->path;
             }
         }
 
-        if (!empty($result)) {
-            return rtrim($result, ',');
-        }
-
-        return $result;
+        return '';
     }
 
     /**
-     * コース画像取得
-     * 
-     * @param  医療機関カテゴリ
-     * @return サブメイン画像
+     * @return int
      */
-    private function getFlowImagepath($hospital_categories, $image_location_number) : string
-    {
-        $categories = $hospital_categories->filter(function ($c) use ($image_location_number) {
-            return isset($c->image_order) && intval($c->image_order) == $image_location_number;
-        });
-        $files = $categories->map(function ($c) {
-            if(isset($c->hospital_image->path)) {
-                return  $c->hospital_image->path ;
-            }
-        })->toArray();
-        return $files[0] ?? '';
-    }
-
     private function createReception()
     {
 
-        if ($this[0]->web_reception == strval(WebReception::NOT_ACCEPT)) {
+        if ($this->web_reception == strval(WebReception::NOT_ACCEPT)) {
             return WebReception::NOT_ACCEPT;
         }
 
         $target = Carbon::today();
-        if (($this[0]->publish_start_date != null &&
-                $this[0]->publish_start_date > $target)
-            || ($this[0]->publish_end_date != null &&
-                $this[0]->publish_end_date < $target)) {
+        if (($this->publish_start_date != null &&
+                $this->publish_start_date > $target)
+            || ($this->publish_end_date != null &&
+                $this->publish_end_date < $target)) {
             return WebReception::NOT_ACCEPT;
         }
 
-        if (isset($this[0]->calendar) && $this[0]->calendar->is_calendar_display == CalendarDisplay::HIDE) {
+        if (isset($this->calendar) && $this->calendar->is_calendar_display == strval(CalendarDisplay::HIDE)) {
             return WebReception::ACCEPT_HIDE_CALENDAR;
         }
 
         return WebReception::ACCEPT;
     }
 
-    private function createNames() {
-        $sho_names = '';
-        $exams = '';
-        $feature = '';
-        $require_time = '';
+    private function getShoName() {
+
         $result = '';
-        foreach ($this[0]->course_details as $detail) {
-            if ($detail->major_classification_id == 13
-                && $detail->middle_classification_id == 30
-            && $detail->select_status == 1) {
-                $sho_names += $detail->minor_classification->name . ',';
-            }
+        if (!isset($this->course_metas)) {
+            return '';
+        }
+        $category_exam = explode(' ', $this->course_metas->category_exam_name);
+        $category_disease = explode(' ', $this->course_metas->category_disease_name);
+        $category_part = explode(' ', $this->course_metas->category_part_name);
 
-            if ($detail->major_classification_id == 11
-                && $detail->middle_classification_id == 59
-                && $detail->select_status == 1) {
-                $exams += $detail->minor_classification->name . ',';
-            }
-
-            if ($detail->major_classification_id == 11
-                && $detail->select_status == 1) {
-                $feature += $detail->minor_classification->name . ',';
-            }
-
-            if ($detail->major_classification_id == 15
-                && $detail->middle_classification_id == 33
-                && $detail->select_status == 1) {
-                $require_time += $detail->minor_classification->name . ',' . $detail->inputstring;
-            }
-
-            if ($detail->major_classification_id == 19
-                && $detail->middle_classification_id == 37
-                && $detail->select_status == 1) {
-                $result += $detail->minor_classification->name . ',' . $detail->inputstring;
-            }
+        foreach ($category_exam as $exam) {
+            $result = $result . ',' . $exam;
         }
 
-        return [$sho_names, $exams, $feature, $require_time, $result];
+        foreach ($category_disease as $disease) {
+            $result = $result . ',' . $disease;
+        }
+
+        foreach ($category_part as $part) {
+            $result = $result . ',' . $part;
+        }
+
+        return ltrim($result, ',');
     }
 
     private function createURL() {

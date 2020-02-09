@@ -10,8 +10,9 @@ use Illuminate\Http\Resources\Json\Resource;
 use App\Reservation;
 use App\Holiday;
 use App\Enums\WebReception;
+use phpDocumentor\Reflection\Types\Parent_;
 
-class CoursesBaseResource extends Resource
+class CoursesBaseResource extends CourseBaseResource
 {
     /**
      * Transform the resource into an array.
@@ -21,7 +22,7 @@ class CoursesBaseResource extends Resource
      */
     public function toArray($request)
     {
-        return $this->baseCollections()->toArray();
+        return $this->baseCollections();
     }
 
     /**
@@ -31,31 +32,89 @@ class CoursesBaseResource extends Resource
      */
     protected function baseCollections()
     {
-        return collect([
-            'course_no' => $this->id,
-            'course_code' => $this->code,
-            'course_name' => $this->name,
-            'course_url' => $this->createURL() . "/detail_hospital/" . $this->contract_information->code . "/detail/" . $this->code . ".html",
-            'web_reception' => $this->createReception(),
-            'course_img' => $this->getCourseImg($this->course_images),
-            'course_point' => $this->course_point,
-            'flg_price' => $this->is_price,
-            'price' => $this->price,
-            'flg_price_memo' => $this->is_price_memo,
-            'price_memo' => $this->price_memo ?? '',
-            'pre_account_price' => $this->pre_account_price ?? '',
-            'flg_local_payment' => $this->is_local_payment,
-            'flg_pre_account' => $this->is_pre_account,
-            'auto_calc_application' => $this->auto_calc_application,
-            'category_chara' => $this->getCategoryChara(),
-            'category_content' => $this->getCategoryContent(),
-            'category_type' => $this->getCategoryType(),
-            'category_recommended' => $this->getCategoryRecommend(),
-            'course_option_flag' => isset($this->course_options) ? 1 : 0,
-            'month_calender' => new MonthlyCalendarResource($this),
-            'time_required' => $this->getTimeRequired(),
-            'result_examination' => $this->getResultExamination(),
-        ]);
+        return
+            parent::baseCollections()
+                ->put('category', $this->getCategory())
+                ->put('exams', $this->getExam())
+                ->put('feature', $this->getFeature())
+                ->put('require_time', $this->getRequireTime())
+                ->put('result', $this->getResult())
+                ->put('recommended', $this->getCategoryRecommend())
+                ->put('course_option_flag',  isset($this->course_options) ? 1 : 0)
+                ->toArray();
+    }
+
+    /**
+     * @return string
+     */
+    private function getResult() {
+        foreach ($this->course_details as $detail) {
+            if ($detail->major_classification_id == 19 && !empty($detail->inputstring)) {
+                return [$detail->inputstring];
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * 検査の所要時間
+     * @return string
+     */
+    private function getRequireTime() {
+        foreach ($this->course_details as $detail) {
+            if ($detail->major_classification_id == 15 && !empty($detail->inputstring)) {
+                return [$detail->inputstring];
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    private function getExam() {
+
+        $results = [];
+
+        foreach ($this->course_details as $detail) {
+            if (in_array($detail->major_classification_id, array(2, 3, 4, 5, 6))
+                && $detail->select_status == 1
+                && $detail->status == '1'
+                && !empty($detail->minor_classification->icon_name)
+            ) {
+                if (in_array($detail->minor_classification->icon_name, $results)) {
+                    continue;
+                }
+                $results[] = $detail->minor_classification->icon_name;
+            }
+        }
+        return $results;
+    }
+
+    /**
+     * 検索の特徴アイコン
+     * @return array
+     */
+    private function getFeature() {
+        $results = [];
+
+        foreach ($this->course_details as $detail) {
+            if (in_array($detail->major_classification_id, array(11))
+                && $detail->select_status == 1
+                && $detail->status == '1'
+                && !empty($detail->minor_classification->icon_name)
+            ) {
+                if (in_array($detail->minor_classification->icon_name, $results)) {
+                    continue;
+                }
+                $results[] = $detail->minor_classification->icon_name;
+            }
+        }
+
+        $results = array_unique($results, SORT_REGULAR);
+        return $results;
     }
 
     /**
@@ -63,27 +122,46 @@ class CoursesBaseResource extends Resource
      */
     private function getResultExamination() {
 
+        $results = [];
         foreach ($this->course_details as $detail) {
             if ($detail->major_classification_id == 19) {
-                return !empty($detail->inputstring) ? $detail->inputstring : '';
+                $results[] = ['id' => $detail->minor_classification_id,
+                    'title' => $detail->inputstring ?? '',
+                    'text' => $detail->inputstring ?? ''];
             }
         }
 
-        return '';
+        return $results;
     }
 
     /**
-     * @return string
+     * @return array
      */
-    private function getTimeRequired() {
+    private function getCategory() {
 
-        foreach ($this->course_details as $detail) {
-            if ($detail->major_classification_id == 15) {
-                return !empty($detail->inputstring) ? $detail->inputstring : '';
-            }
+        $results = [];
+        $category_chara = $this->getCategoryChara();
+        $category_content = $this->getCategoryContent();
+        $category_type = $this->getCategoryType();
+        $category_result_examination = $this->getResultExamination();
+
+        foreach ($category_chara as $c) {
+            $results[] = $c;
         }
 
-        return '';
+        foreach ($category_content as $c) {
+            $results[] = $c;
+        }
+
+        foreach ($category_type as $c) {
+            $results[] = $c;
+        }
+
+        foreach ($category_result_examination as $c) {
+            $results[] = $c;
+        }
+
+        return $results;
     }
 
     /**
@@ -97,7 +175,9 @@ class CoursesBaseResource extends Resource
                 && $detail->select_status == 1
                 && $detail->status == '1'
                 && $detail->minor_classification->is_icon == '1') {
-                $result = ['id' => $detail->minor_classification_id, 'title' => $detail->minor_classification->icon_name];
+                $result = ['id' => $detail->minor_classification_id,
+                    'title' => $detail->minor_classification->icon_name,
+                    'text' => $detail->minor_classification->name];
                 $results[] = $result;
             }
         }
@@ -120,29 +200,13 @@ class CoursesBaseResource extends Resource
                 && $detail->select_status == 1
                 && $detail->status == '1'
                 && $detail->minor_classification->is_icon == '1') {
-                $result = ['id' => $detail->major_classification_id, 'title' => $detail->minor_classification->icon_name];
+                $result = ['id' => $detail->minor_classification_id,
+                    'title' => $detail->minor_classification->icon_name,
+                    'text' => $detail->minor_classification->name];
                 $results[] = $result;
             }
         }
         return array_unique($results, SORT_REGULAR);
-    }
-
-    /**
-     * @return array
-     */
-    private function getCategoryType() {
-
-        $results = [];
-        foreach ($this->course_details as $detail) {
-            if ($detail->major_classification_id == 13
-                && $detail->select_status == 1
-                && $detail->status == '1') {
-                $result = ['id' => $detail->minor_classification_id, 'title' => $detail->minor_classification->name];
-                $results[] = $result;
-            }
-        }
-
-        return $results;
     }
 
     /**
@@ -162,6 +226,25 @@ class CoursesBaseResource extends Resource
         return $results;
     }
 
+    /**
+     * @return array
+     */
+    private function getCategoryType() {
+
+        $results = [];
+        foreach ($this->course_details as $detail) {
+            if ($detail->major_classification_id == 13
+                && $detail->select_status == 1
+                && $detail->status == '1') {
+                $result = ['id' => $detail->minor_classification_id,
+                    'title' => $detail->minor_classification->name,
+                    'text' => $detail->minor_classification->name];
+                $results[] = $result;
+            }
+        }
+
+        return $results;
+    }
 
     /**
      * @return int

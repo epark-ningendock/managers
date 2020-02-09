@@ -12,7 +12,42 @@ class ApiBaseController extends Controller
 
     public function __construct()
     {
-        $this->messages = config('api.search_api.message');
+        $this->messages = [
+            'system_error_db' => [
+                'status' => 1,
+                'status_code' => 400,
+                'code_number' => '02',
+                'code_detail' => '01',
+                'message' => trans('validation.for_api.system_error_db'),
+            ],
+            'system_error_api' => [
+                'status' => 1,
+                'status_code' => 400,
+                'code_number' => '02',
+                'code_detail' => '02',
+                'message' => trans('validation.for_api.system_error_api'),
+            ],
+            'data_empty_error' => [
+                'status' => 1,
+                'status_code' => 400,
+                'code_number' => '01',
+                'code_detail' => '13',
+                'message' => trans('validation.for_api.data_empty_error'),
+            ],
+            'errorDB' => [
+                'status' => 1,
+                'status_code' => 400,
+                'code_number' => '01',
+                'code_detail' => '13',
+                'message' => trans('validation.for_api.errorDB'),
+            ],
+            'success' =>[
+                'status' => 0,
+                'status_code' => 200,
+                'message_id' =>'00000',
+                'message' =>trans('messages.for_api.success'),
+            ],
+        ];
     }
 
     /**
@@ -21,140 +56,22 @@ class ApiBaseController extends Controller
      * @param array $message
      * @return response
      */
-    protected function createResponse(array $message) {
-        return response([
-            'code' => strval($message['code']),
-            'message' => $message['description']
-        ], 200)->header('Content-Type', 'application/json; charset=utf-8');
+    protected function createResponse(array $message, $callback = null) {
+        if(!$message) {
+            $message = [
+                'status' => 1,
+                'status_code' => 400,
+                'code_number' => '03',
+                'code_detail' => '01',
+                'message' => ' '
+            ];
+        }
+        $message = collect($message);
+
+        return response()->json($message->except(['status_code']), $message['status_code'])
+            ->setCallback($callback);
     }
 
-    /**
-     * 指定の医療機関コードが存在しているかチェックする
-     *
-     * @param $hospital_code
-     *
-     * @return
-     */
-    protected function isExistHospitalCode($hospital_code) {
-
-        $contract_information = ContractInformation::where('code', $hospital_code)->first();
-        if ($contract_information) {
-            return $contract_information->hospital_id;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 指定の検査コースが存在しているかチェックする
-     *
-     * @param $hopital_id
-     * @param $course_no
-     *
-     * @return
-     */
-    protected function isExistCouse($hopital_id, $course_code) {
-
-        $course = Course::where('code', $course_code)
-            ->where('hospital_id', $hopital_id)->first();
-        if ($course) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * @param $hospital_code
-     * @return array
-     */
-    protected function checkHospitalCode($hospital_code) {
-
-        if (!isset($hospital_code)) {
-            return [false, $this->messages['required_error']];
-        }
-
-        if (!preg_match('/^D[0-9a-zA-Z]+$/u', $hospital_code)) {
-            return [false, $this->messages['data_type_error']];
-        }
-
-        $hospital_id = $this->isExistHospitalCode($hospital_code);
-
-        if (!isset($hospital_id)) {
-            return [false, $this->messages['data_empty_error']];
-        }
-
-        return [true, $hospital_id];
-    }
-
-    /**
-     * @param $course_no
-     * @param $hospital_id
-     * @return array
-     */
-    protected function checkCourseCode($course_code, $hospital_id) {
-
-        if (!isset($course_code)) {
-            return [false, $this->messages['required_error']];
-        }
-
-        if (!$this->isExistCouse($hospital_id, $course_code)) {
-            return [false, $this->messages['data_empty_error']];
-        }
-
-        return [true];
-    }
-
-    /**
-     * @param $yyyyMM
-     * @return array
-     */
-    protected function checkMonthDate($yyyyMM) {
-
-        if (!is_numeric($yyyyMM)) {
-            return [false, $this->messages['data_type_error']];
-        }
-
-        if (!preg_match('/^2[0-9]{5}$/u', $yyyyMM)) {
-            return [false, $this->messages['data_type_error']];
-        }
-
-        return [true];
-    }
-
-    /**
-     * @param $yyyyMM
-     * @return array
-     */
-    protected function checkDate($yyyyMMdd) {
-
-        if (!is_numeric($yyyyMMdd)) {
-            return [false, $this->messages['data_type_error']];
-        }
-
-        if (!preg_match('/^2[0-9]{7}$/u', $yyyyMMdd)) {
-            return [false, $this->messages['data_type_error']];
-        }
-
-        return [true];
-    }
-
-    /**
-     * @param $yyyyMM
-     * @return array
-     */
-    protected function checkDayDate($yyyyMMdd) {
-
-        if (!is_numeric($yyyyMMdd)) {
-            return [false, $this->messages['data_type_error']];
-        }
-
-        if (!preg_match('/^[0-9]{8}$/u', $yyyyMMdd)) {
-            return [false, $this->messages['data_type_error']];
-        }
-
-        return [true];
-    }
 
     /**
      * @param SearchRequest $request
@@ -215,49 +132,6 @@ class ApiBaseController extends Controller
             return [false, $this->messages['data_range_error']];
         }
 
-        return [true];
-    }
-
-    /**
-     * @param $place_code
-     * @return array
-     */
-    protected function checkPlaceCode($place_code, $route_flg) {
-
-        if ($place_code != 0 && empty($place_code)) {
-            return [false, $this->messages['required_error']];
-        }
-
-        if (!is_numeric($place_code)) {
-            return [false, $this->messages['data_type_error']];
-        }
-
-        if ($route_flg) {
-            if ($place_code < 1 || $place_code > 47) {
-                return [false, $this->messages['data_range_error']];
-            }
-        } else {
-            if ($place_code < 0 || $place_code > 47) {
-                return [false, $this->messages['data_range_error']];
-            }
-        }
-
-        return [true];
-    }
-
-    /**
-     * @param $rail_no
-     * @return array
-     */
-    protected function checkRailNo($rail_no) {
-
-        if (empty($rail_no)) {
-            return [true];
-        }
-
-        if (!is_numeric($rail_no)) {
-            return [false, $this->messages['data_type_error']];
-        }
         return [true];
     }
 }

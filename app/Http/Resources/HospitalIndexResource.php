@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\Resource;
+use App\MedicalTreatmentTime;
 
 class HospitalIndexResource extends Resource
 {
@@ -17,28 +18,42 @@ class HospitalIndexResource extends Resource
     {
         return collect([])
             ->merge(new HospitalBasicResource($this))
-            ->put('pos_n', $this->latitude)
-            ->put('pos_e', $this->longitude)
-            ->put('tel', $this->tel)
-            ->put('tel_ppc', $this->paycall ?? '')
-            ->put('category_type', $this->getCategoryType())
-            ->put('society', $this->getSociety())
-            ->put('category', $this->getHospitalCategory())
-            ->put('top_title', $this->getTopdata()[0])
-            ->put('top_caption', $this->getTopdata()[1])
-            ->put('point', $this->getPoint())
-            ->put('closed_day', $this->getClosedDay())
+            ->put('open', $this->getMedicalTreatmentTime())
             ->put('non_consultation', $this->consultation_note ?? '')
             ->put('non_consultation_note', $this->memo ?? '')
             ->put('public_status', $this->status)
             ->put('update_at', Carbon::parse($this->updated_at)->format('Y-m-d'))
-            ->put('payment', $this->getPayment())
-            ->put('principal', $this->principal)
-            ->put('principal_history', $this->principal_history)
-            ->put('img_sub_url', $this->getImgSub($this->hospital_categories))
-            ->put('staff', $this->getStaff())
-            ->put('course_flg', $this->hasCourse())
+            ->merge(new HospitalContentBaseResource($this))
+            ->put('courses', CoursesBaseResource::collection($this->courses))
             ->toArray();
+    }
+
+    /**
+     * @return array
+     */
+    private function getMedicalTreatmentTime() {
+        $medical_treatment_times = $this->medical_treatment_times;
+        $week_data = [];
+        foreach ($medical_treatment_times as $entity) {
+            if ($entity->start == '-' && $entity->end == '-') {
+                continue;
+            }
+            $week_data[] = [
+                'start' => $entity->start ?? '',
+                'end' => $entity->end ?? '',
+                'mon' => $entity->mon,
+                'tue' => $entity->tue,
+                'wed' => $entity->wed,
+                'thu' => $entity->thu,
+                'fri' => $entity->fri,
+                'sat' => $entity->sat,
+                'sun' => $entity->sun,
+                'hol' => $entity->hol
+            ];
+
+        }
+
+       return $week_data;
     }
 
     /**

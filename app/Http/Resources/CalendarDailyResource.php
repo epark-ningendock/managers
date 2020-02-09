@@ -16,7 +16,7 @@ class CalendarDailyResource extends Resource
      */
     public function toArray($request)
     {
-        $reserv_enable_date = Carbon::today()->subMonth(floor($this->reception_start_date / 1000))->subDay($this->reception_start_date % 1000);
+        $reserv_enable_date = Carbon::today()->addMonth(floor($this->reception_start_date / 1000))->addDay($this->reception_start_date % 1000);
         $reserv_enableto_date = Carbon::today()->addMonth(floor($this->reception_end_date / 1000))->addDay($this->reception_end_date % 1000);
 
         $all_calendars = $this->calendar_days;
@@ -30,11 +30,11 @@ class CalendarDailyResource extends Resource
             }
 
             $appoint_status = 0;
-            if ($calendar_day->date->lt($reserv_enable_date)) {
+            if ($calendar_day->date < $reserv_enable_date) {
                 $appoint_status = 1;
             }
 
-            if ($calendar_day->date->gt($reserv_enableto_date)) {
+            if ($calendar_day->date > $reserv_enableto_date) {
                 $appoint_status = 2;
             }
 
@@ -42,7 +42,7 @@ class CalendarDailyResource extends Resource
                 $appoint_status = 2;
             }
 
-            $results[] = [$calendar_day->date->format('Ymd') => ['appoint_status' =>$appoint_status, 'reservation_frames' => $calendar_day->reservation_frames, 'appoint_num' => $calendar_day->reservation_count, 'closed_day' => $holiday_flg]];
+            $results[] = [$calendar_day->date->format('Ymd') => ['appoint_status' =>$appoint_status, 'reservation_frames' => $calendar_day->reservation_frames ?? 0, 'appoint_num' => $calendar_day->reservation_count ?? 0, 'closed_day' => $holiday_flg]];
 
         }
 

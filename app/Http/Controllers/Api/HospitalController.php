@@ -8,6 +8,9 @@ use App\Hospital;
 use App\Http\Resources\HospitalAccessResource;
 use App\Http\Resources\HospitalReservationFramesResource;
 use Illuminate\Http\Request;
+use App\Http\Requests\HospitalRequest;
+use App\Http\Requests\HospitalFrameRequest;
+use App\ContractInformation;
 
 use App\Http\Resources\HospitalIndexResource;
 use App\Http\Resources\HospitalBasicResource;
@@ -28,53 +31,17 @@ class HospitalController extends ApiBaseController
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(HospitalRequest $request)
     {
         try {
-            $hospital_code = $request->input('hospital_code');
-
-            $hospital_code_chk_result = $this->checkHospitalCode($hospital_code);
-            $hospital_id = null;
-
-            if (!$hospital_code_chk_result[0]) {
-                return $this->createResponse($hospital_code_chk_result[1]);
-            } else {
-                $hospital_id = $hospital_code_chk_result[1];
-            }
+            $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
             return new HospitalIndexResource($this->getHospitalData($hospital_id));
         } catch (\Exception $e) {
             Log::error($e);
-            return $this->createResponse($this->messages['system_error_db']);
+            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
         }
     }
-
-//    /**
-//     * 医療機関基本情報取得API
-//     *
-//     * @param  Illuminate\Http\Request  $request
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function basic(Request $request)
-//    {
-//        try {
-//            $hospital_code = $request->input('hospital_code');
-//
-//            $hospital_code_chk_result = $this->checkHospitalCode($hospital_code);
-//            $hospital_id = null;
-//
-//            if (!$hospital_code_chk_result[0]) {
-//                return $this->createResponse($hospital_code_chk_result[1]);
-//            } else {
-//                $hospital_id = $hospital_code_chk_result[1];
-//            }
-//            return new HospitalBasicResource($this->getHospitalData($hospital_id));
-//
-//        } catch (\Exception $e) {
-//            Log::error($e);
-//            return $this->createResponse($this->messages['system_error_db']);
-//        }
-//    }
 
     /**
      * 医療機関検査コース一覧情報取得API
@@ -82,23 +49,16 @@ class HospitalController extends ApiBaseController
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function courses(Request $request)
+    public function courses(HospitalRequest $request)
     {
         try {
-            $hospital_code = $request->input('hospital_code');
 
-            $hospital_code_chk_result = $this->checkHospitalCode($hospital_code);
-            $hospital_id = null;
+            $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
-            if (!$hospital_code_chk_result[0]) {
-                return $this->createResponse($hospital_code_chk_result[1]);
-            } else {
-                $hospital_id = $hospital_code_chk_result[1];
-            }
             return new HospitalCoursesResource($this->getHospitalData($hospital_id));
         } catch (\Exception $e) {
             Log::error($e);
-            return $this->createResponse($this->messages['system_error_db']);
+            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
         }
     }
 
@@ -108,35 +68,19 @@ class HospitalController extends ApiBaseController
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function frame(Request $request)
+    public function frame(HospitalFrameRequest $request)
     {
         try {
             $hospital_code = $request->input('hospital_code');
-            $get_from_yyyymmdd = $request->input('get_from_yyyymmdd');
-            $get_to_yyyymmdd = $request->input('get_to_yyyymmdd');
+            $get_from_yyyymmdd = $request->input('get_yyyymmdd_from');
+            $get_to_yyyymmdd = $request->input('get_yyyymmdd_to');
 
-            $hospital_code_chk_result = $this->checkHospitalCode($hospital_code);
-            $hospital_id = null;
+            $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
-            $from_yyyymmdd_chk_result = $this->checkDate($get_from_yyyymmdd);
-            if (!$from_yyyymmdd_chk_result[0]) {
-                return $this->createResponse($from_yyyymmdd_chk_result[1]);
-            }
-
-            $to_yyyymmdd_chk_result = $this->checkDate($get_to_yyyymmdd);
-            if (!$to_yyyymmdd_chk_result[0]) {
-                return $this->createResponse($to_yyyymmdd_chk_result[1]);
-            }
-
-            if (!$hospital_code_chk_result[0]) {
-                return $this->createResponse($hospital_code_chk_result[1]);
-            } else {
-                $hospital_id = $hospital_code_chk_result[1];
-            }
             return new HospitalReservationFramesResource($this->getHospitalFrames($hospital_id, $get_from_yyyymmdd, $get_to_yyyymmdd));
         } catch (\Exception $e) {
             Log::error($e);
-            return $this->createResponse($this->messages['system_error_db']);
+            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
         }
     }
 
@@ -146,23 +90,17 @@ class HospitalController extends ApiBaseController
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function contents(Request $request)
+    public function contents(HospitalRequest $request)
     {
         try {
             $hospital_code = $request->input('hospital_code');
 
-            $hospital_code_chk_result = $this->checkHospitalCode($hospital_code);
-            $hospital_id = null;
+            $hospital_id =  ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
-            if (!$hospital_code_chk_result[0]) {
-                return $this->createResponse($hospital_code_chk_result[1]);
-            } else {
-                $hospital_id = $hospital_code_chk_result[1];
-            }
             return new HospitalContentsResource($this->getContent($hospital_id));
         } catch (\Exception $e) {
             Log::error($e);
-            return $this->createResponse($this->messages['system_error_db']);
+            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
         }
     }
 
@@ -172,23 +110,17 @@ class HospitalController extends ApiBaseController
      * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function access(Request $request)
+    public function access(HospitalRequest $request)
     {
-        try {
+        try { 
             $hospital_code = $request->input('hospital_code');
 
-            $hospital_code_chk_result = $this->checkHospitalCode($hospital_code);
-            $hospital_id = null;
-
-            if (!$hospital_code_chk_result[0]) {
-                return $this->createResponse($hospital_code_chk_result[1]);
-            } else {
-                $hospital_id = $hospital_code_chk_result[1];
-            }
+            $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
+           
             return new HospitalAccessResource($this->getAccessData($hospital_id));
         } catch (\Exception $e) {
             Log::error($e);
-            return $this->createResponse($this->messages['system_error_db']);
+            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
         }
     }
 

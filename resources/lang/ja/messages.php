@@ -237,5 +237,9 @@ return [
     'perform_identification'               => '名寄せを実行する',
     'integration-success'                  => '名寄せが完了しました。',
     'integration-error'                    => 'エラーが発生しました。',
-    'input-required'                       => '入力内容をご確認ください。'
+    'input-required'                       => '入力内容をご確認ください。',
+
+    'for_api' => [
+        'success'                           => '正常に受け付けました',
+    ],
 ];
