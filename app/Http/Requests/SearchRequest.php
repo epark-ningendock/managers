@@ -104,7 +104,7 @@ class SearchRequest extends ValidationRequest
             $data = HospitalMinorClassification::select('name')->whereIn('id', $array)->get();
             $results = [];
             foreach ($data as $d) {
-                $results[] = $d->name ?? '';
+                $results[] = $d ?? '';
             }
             return $results;
         } else {
@@ -118,7 +118,7 @@ class SearchRequest extends ValidationRequest
             $data = MinorClassification::select('name')->whereIn('id', $array)->get();
             $results = [];
             foreach ($data as $d) {
-                $results[] = $d->name ?? '';
+                $results[] = $d ?? '';
             }
             return $results;
         } else {
