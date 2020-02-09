@@ -41,6 +41,7 @@ class CoursesBaseResource extends CourseBaseResource
                 ->put('result', $this->getResult())
                 ->put('recommended', $this->getCategoryRecommend())
                 ->put('course_option_flag',  isset($this->course_options) ? 1 : 0)
+                ->put('month_calender', new MonthlyCalendarResource($this))
                 ->toArray();
     }
 
