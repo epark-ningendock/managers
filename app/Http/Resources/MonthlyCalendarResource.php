@@ -56,7 +56,7 @@ class MonthlyCalendarResource extends Resource
 
         for($i = count($results); $i < 3; $i++) {
             $ym = Carbon::today()->addMonthsNoOverflow($i)->format('Ym');
-            $results[] = ['yyyymm' => $ym, 'apoint_ok' =>  0];
+            $results[] = ['yyyymm' => $ym, 'apoint_ok' =>  $appoint_ok];
         }
 
         return $results;
