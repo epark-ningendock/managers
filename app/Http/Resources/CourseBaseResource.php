@@ -100,7 +100,7 @@ class CourseBaseResource extends Resource
 
     private function getShoName() {
 
-        $result = '';
+        $result = [];
         if (!isset($this->course_metas)) {
             return '';
         }
@@ -109,18 +109,18 @@ class CourseBaseResource extends Resource
         $category_part = explode(' ', $this->course_metas->category_part_name);
 
         foreach ($category_exam as $exam) {
-            $result = $result . ',' . $exam;
+            $result[] = $exam;
         }
 
         foreach ($category_disease as $disease) {
-            $result = $result . ',' . $disease;
+            $result[] = $disease;
         }
 
         foreach ($category_part as $part) {
-            $result = $result . ',' . $part;
+            $result[] = $part;
         }
 
-        return ltrim($result, ',');
+        return $result;
     }
 
     private function createURL() {
