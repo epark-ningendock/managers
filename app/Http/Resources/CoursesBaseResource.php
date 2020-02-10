@@ -34,7 +34,7 @@ class CoursesBaseResource extends CourseBaseResource
     {
         return
             parent::baseCollections()
-                ->put('course_point', mb_strcut($this->course_point, 0 , 300, 'UTF-8'))
+                ->put('course_point', $this->getPoint())
                 ->put('category', $this->getCategory())
                 ->put('exams', $this->getExam())
                 ->put('feature', $this->getFeature())
@@ -45,6 +45,14 @@ class CoursesBaseResource extends CourseBaseResource
                 ->put('month_calender', new MonthlyCalendarResource($this))
                 ->put('all_calendar', new CalendarDailyResource($this))
                 ->toArray();
+    }
+
+    private function getPoint() {
+        if (strlen($this->course_point) > 254) {
+            return mb_strcut($this->course_point, 0 , 254, 'UTF-8') . '...';
+        } else {
+            return $this->course_point ?? '';
+        }
     }
 
     /**

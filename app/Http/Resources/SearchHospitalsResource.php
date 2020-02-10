@@ -201,11 +201,15 @@ class SearchHospitalsResource extends Resource
         });
 
         if (isset($el) && isset($el->caption)) {
-            return mb_strcut($el->caption, 0 , 300, 'UTF-8');
+            if (strlen($el->caption) > 254) {
+                return mb_strcut($el->caption, 0 , 254, 'UTF-8') . '...';
+            } else {
+                return $el->caption ?? '';
+            }
+
         } else {
             return '';
         }
-
     }
 
     /**
