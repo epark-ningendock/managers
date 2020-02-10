@@ -34,6 +34,7 @@ class CoursesBaseResource extends CourseBaseResource
     {
         return
             parent::baseCollections()
+                ->put('course_point', mb_strcut($this->course_point, 0 , 300, 'UTF-8'))
                 ->put('category', $this->getCategory())
                 ->put('exams', $this->getExam())
                 ->put('feature', $this->getFeature())
