@@ -20,10 +20,15 @@ class DailyCalendarResource extends Resource
         $from_date = Carbon::today()->startOfMonth()->toDateString();
         $to_date = Carbon::today()->addMonthsNoOverflow(5)->endOfMonth()->toDateString();
 
-        $reserv_enable_date = Carbon::today()->subMonth(floor($this->reception_start_date / 1000))->subDay($this->reception_start_date % 1000);
+        $reserv_enable_date = Carbon::today()->addMonth(floor($this->reception_start_date / 1000))->addbDay($this->reception_start_date % 1000);
         $reserv_enableto_date = Carbon::today()->addMonth(floor($this->reception_end_date / 1000))->addDay($this->reception_end_date % 1000);
         $calendar = $this->calendar;
-        $disp_flg = $calendar->is_calendar_display;
+        if (!$calendar) {
+            $disp_flg = 0;
+        } else {
+            $disp_flg = 1;
+        }
+//        $disp_flg = $calendar->is_calendar_display;
         $calendar_days = CalendarDay::where('calendar_id', $this->calendar_id)
             ->where('date', '>=', $from_date)
             ->where('date', '<=', $to_date)
@@ -34,7 +39,7 @@ class DailyCalendarResource extends Resource
         foreach ($calendar_days as $calendar_day) {
 
             $is_reservation_acceptance = $calendar_day->is_reservation_acceptance;
-            if ($disp_flg == strval(CalendarDisplay::HIDE)
+            if ($disp_flg == strval(CalendarDisplay::SHOW)
                 || $calendar_day < $reserv_enable_date
                 || $calendar_day > $reserv_enableto_date) {
                 $is_reservation_acceptance = CalendarDisplay::HIDE;
