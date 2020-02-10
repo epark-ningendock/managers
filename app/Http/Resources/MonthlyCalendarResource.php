@@ -27,9 +27,9 @@ class MonthlyCalendarResource extends Resource
 
         $calendar = Calendar::find($this->calendar_id);
         if (!$calendar) {
-            $disp_flg = 1;
-        } else {
             $disp_flg = 0;
+        } else {
+            $disp_flg = 1;
 
         }
 

@@ -34,7 +34,7 @@ class CalendarDailyResource extends Resource
                 $appoint_status = 1;
             }
 
-            if ($calendar_day->date > $reserv_enableto_date) {
+            if ($calendar_day->date >= $reserv_enableto_date) {
                 $appoint_status = 2;
             }
 
