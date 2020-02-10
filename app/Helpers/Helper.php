@@ -82,6 +82,7 @@ if ( !function_exists('billingDateFilter') ) :
 
         if ( $date->day < 21 ) {
 
+
             $startMonthNumber = ( $date->isCurrentMonth() ) ? $date->copy()->subMonth( 2 )->month : $date->copy()->subMonth( 1 )->month;
             $endMonthNumber   = ( $date->isCurrentMonth() ) ? $date->copy()->subMonth( 1 )->month : $date->month;
 
@@ -93,6 +94,10 @@ if ( !function_exists('billingDateFilter') ) :
             $startedDate = $date->copy()->setDate( $date->year, $date->copy()->subMonth( 1 )->month, 21 );
             $endedMonth  = $date->copy()->setDate( $date->year, $date->month, 20 );
 
+        }
+
+        if ($startedDate->month > $date->month) {
+            $startedDate->year = $startedDate->year - 1;
         }
 
         $selectBoxMonths = [
