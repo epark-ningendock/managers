@@ -23,12 +23,7 @@ class DailyCalendarResource extends Resource
         $reserv_enable_date = Carbon::today()->addMonth(floor($this->reception_start_date / 1000))->addbDay($this->reception_start_date % 1000);
         $reserv_enableto_date = Carbon::today()->addMonth(floor($this->reception_end_date / 1000))->addDay($this->reception_end_date % 1000);
         $calendar = $this->calendar;
-        if (!$calendar) {
-            $disp_flg = 0;
-        } else {
-            $disp_flg = 1;
-        }
-//        $disp_flg = $calendar->is_calendar_display;
+        $disp_flg = $calendar->is_calendar_display;
         $calendar_days = CalendarDay::where('calendar_id', $this->calendar_id)
             ->where('date', '>=', $from_date)
             ->where('date', '<=', $to_date)

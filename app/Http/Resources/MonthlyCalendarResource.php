@@ -26,12 +26,7 @@ class MonthlyCalendarResource extends Resource
         $from = $from->addMonthsNoOverflow($start_month)->addDays($start_day);
 
         $calendar = Calendar::find($this->calendar_id);
-        if (!$calendar) {
-            $disp_flg = 0;
-        } else {
-            $disp_flg = 1;
-
-        }
+        $disp_flg = $calendar->is_calendar_display;
 
         $monthly_wakus = CalendarDay::where('calendar_id', $this->calendar_id)
             ->where('date', '>=', $from)
