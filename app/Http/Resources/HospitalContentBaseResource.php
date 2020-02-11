@@ -251,20 +251,23 @@ class HospitalContentBaseResource extends Resource
             $alt = $i->title ?? '';
             $title = $i->title ?? '';
             $desc = $i->caption ?? '';
-            $interview_q = [];
-            foreach ($i->interview_details as $detail) {
-                array_push($interview_q, ['question' => $detail->question, 'answer' => $detail->answer]);
+            $contents = '';
+            if (!empty($i->interview_details)) {
+                $contents = '<ul>';
+                foreach ($i->interview_details as $detail) {
+                    $contents = $contents . '<li>';
+                    $contents = $contents . '<h4>' . $detail->question . '</h4>';
+                    $contents = $contents . '<p>' . $detail->answer . '</p>';
+                    $contents = $contents . '</li>';
+                }
+                $contents = $contents . '</ul>';
             }
-
-            $contents = $i->interview_details->map(function ($i) {
-                return $i->answer ?? '';
-            });
             $results[] = [
                 'img_url' => $url,
                 'img_alt' => $alt,
                 'title' => $title ?? '',
                 'desc' => $desc ?? '',
-                'interview_q' => $interview_q,
+                'contents' => $contents,
             ];
         }
 
