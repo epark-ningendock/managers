@@ -16,7 +16,7 @@ class CourseRequest extends ValidationRequest
         
         return [
             'hospital_code' => ['required','regex:/^D[0-9a-zA-Z]+$/u','exists:contract_informations,code'],
-            'course_no' => 'required|exists:courses,id',
+            'course_code' => 'required|exists:courses,code',
         ];
 
     }
