@@ -66,11 +66,11 @@ class CourseController extends ApiBaseController
     {
         try {
 
-            $course_code = $request->input('course_code');
+            $course_no = $request->input('course_no');
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
             // //検査コース基本情報取得
-            $course = $this->getCourseBasic($hospital_id, $course_code);
+            $course = $this->getCourseBasic($hospital_id, $course_no);
 
             if (!$course) {
                 return $this->createResponse($this->messages['data_empty_error'], $request->input('callback'));
@@ -96,11 +96,11 @@ class CourseController extends ApiBaseController
     {
         try {
 
-            $course_code = $request->input('course_code');
+            $course_no = $request->input('course_no');
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
             // //検査コースコンテンツ情報取得
-            $course = $this->getCourseContents($hospital_id, $course_code);
+            $course = $this->getCourseContents($hospital_id, $course_no);
 
             if (!$course) {
                 return $this->createResponse($this->messages['data_empty_error'], $request->input('callback'));
@@ -123,7 +123,7 @@ class CourseController extends ApiBaseController
      * @param  $course_no
      * @return Course
      */
-    private function getCourseBasic($hospital_id, $course_code)
+    private function getCourseBasic($hospital_id, $course_no)
     {
         $today = Carbon::today()->toDateString();
         return Course::with([
@@ -142,7 +142,7 @@ class CourseController extends ApiBaseController
             'contract_information'
         ])
             ->where('hospital_id', $hospital_id)
-            ->where('code', $course_code)
+            ->where('id', $course_no)
             ->where('is_category', 0)
             ->where('web_reception', 0)
             ->where('publish_start_date', '<=', $today)
@@ -157,7 +157,7 @@ class CourseController extends ApiBaseController
      * @param  $course_no
      * @return Course
      */
-    private function getCourseContents($hospital_id, $course_code)
+    private function getCourseContents($hospital_id, $course_no)
     {
         $today = Carbon::today()->toDateString();
         $end_day = Carbon::today()->addMonthsNoOverflow(5)->endOfMonth()->toDateString();
@@ -185,7 +185,7 @@ class CourseController extends ApiBaseController
             'contract_information'
         ])
             ->where('hospital_id', $hospital_id)
-            ->where('code', $course_code)
+            ->where('id', $course_no)
             ->where('is_category', 0)
             ->where('web_reception', 0)
             ->where('publish_start_date', '<=', $today)
