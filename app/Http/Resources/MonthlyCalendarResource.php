@@ -47,6 +47,7 @@ class MonthlyCalendarResource extends Resource
             });
 
         $results = [];
+        $appoint_ok = 0;
         foreach ($monthly_wakus as $monthly_waku) {
             $appoint_ok = 0;
             if ($disp_flg == strval(CalendarDisplay::SHOW) && ($monthly_waku[0] > $monthly_waku[1])) {
