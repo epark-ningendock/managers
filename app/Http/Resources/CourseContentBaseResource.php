@@ -130,7 +130,22 @@ class CourseContentBaseResource extends Resource
      */
     private function _options($course_options)
     {
-        if (!isset($course_options)) return;
+        if (!isset($course_options)) return [];
+        $options = [];
+        foreach ($course_options as $o) {
+            if (isset($o->option) && !empty($o->option->id)) {
+                $options[] = [
+                    'option' => [
+                        'cd' => $o->option->id,
+                        'title' => $o->option->name,
+                        'confirm' => $o->option->confirm,
+                        'price' => $o->option->price,
+                        'tax_class' => $o->option->tax_class_id,
+                    ],
+                ];
+            }
+        }
+
         $options = $course_options->map(function ($o) {
             if (isset($o->option) && isset($o->option->id)) {
                 return [
