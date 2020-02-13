@@ -41,7 +41,7 @@ class CalendarBaseResource extends Resource
                 'hospital_code' => $hospital_code,
                 'course_no' => $course->id,
                 'course_code' => $course->code,
-                'all_calendar' => new CalendarDailyResource($course)
+                'all_calender' => new CalendarDailyResource($course)
             ]
         );
     }

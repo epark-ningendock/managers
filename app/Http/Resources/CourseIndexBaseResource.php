@@ -62,7 +62,7 @@ class CourseIndexBaseResource extends Resource
                 'flg_local_payment' => $this->is_local_payment,
                 'flg_pre_account' => $this->is_pre_account,
                 'auto_calc_application' => $this->auto_calc_application,
-                'all_calendar' => new DailyCalendarResource($this)
+                'all_calender' => new DailyCalendarResource($this)
             ]
         );
     }
