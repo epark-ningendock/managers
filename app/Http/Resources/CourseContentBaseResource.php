@@ -146,19 +146,6 @@ class CourseContentBaseResource extends Resource
             }
         }
 
-        $options = $course_options->map(function ($o) {
-            if (isset($o->option) && isset($o->option->id)) {
-                return [
-                    'option' => [
-                        'cd' => $o->option->id,
-                        'title' => $o->option->name,
-                        'confirm' => $o->option->confirm,
-                        'price' => $o->option->price,
-                        'tax_class' => $o->option->tax_class_id,
-                    ],
-                ];
-            }
-        });
         return $options;
     }
 
