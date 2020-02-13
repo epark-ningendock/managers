@@ -132,7 +132,7 @@ class CourseContentBaseResource extends Resource
     {
         if (!isset($course_options)) return;
         $options = $course_options->map(function ($o) {
-            if (isset($o->option)) {
+            if (isset($o->option) && isset($o->option->id)) {
                 return [
                     'option' => [
                         'cd' => $o->option->id,
