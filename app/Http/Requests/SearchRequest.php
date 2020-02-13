@@ -114,8 +114,8 @@ class SearchRequest extends ValidationRequest
     protected function get_course_category_text($course_category_code)
     {
         if ($course_category_code) {
-//            $array = explode(",", $course_category_code);
-            $data = MinorClassification::select('name')->whereIn('id', $course_category_code)->get();
+            $array = explode(",", $course_category_code);
+            $data = MinorClassification::select('name')->whereIn('id', $array)->get();
             $results = [];
             foreach ($data as $d) {
                 $results[] = $d ?? '';

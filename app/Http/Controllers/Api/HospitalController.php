@@ -71,7 +71,6 @@ class HospitalController extends ApiBaseController
     public function frame(HospitalFrameRequest $request)
     {
         try {
-            $hospital_code = $request->input('hospital_code');
             $get_from_yyyymmdd = $request->input('get_yyyymmdd_from');
             $get_to_yyyymmdd = $request->input('get_yyyymmdd_to');
 
@@ -93,11 +92,44 @@ class HospitalController extends ApiBaseController
     public function contents(HospitalRequest $request)
     {
         try {
-            $hospital_code = $request->input('hospital_code');
 
             $hospital_id =  ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
             return new HospitalContentsResource($this->getContent($hospital_id));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
+        }
+    }
+
+    /**
+     * 公開中医療機関コード取得API
+     *
+     * @param  App\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function release(Request $request)
+    {
+        try {
+            return new HospitalReleaseResource($this->getReleaseHospital());
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
+        }
+
+    }
+
+    /**
+     * 公開中医療機関コース取得API
+     *
+     * @param  Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function release_course(Request $request)
+    {
+        try {
+            $data = ['hospital_code' => $request->input('hospital_code')];
+            return new HospitalReleaseCourseResource($data);
         } catch (\Exception $e) {
             Log::error($e);
             return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
@@ -267,5 +299,15 @@ class HospitalController extends ApiBaseController
             ->find($hospital_id);
 
         return $entity;
+    }
+
+    /**
+     * 公開中医療機関情報取得
+     */
+    private function getReleaseHospital() {
+
+        return Hospital::join('contract_informations', 'contract_informations.hospital_id', 'hospitals.id')
+            ->where('status', Status::VALID)
+            ->pluck('contract_informations.code');
     }
 }

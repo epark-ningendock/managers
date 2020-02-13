@@ -38,6 +38,13 @@ Route::prefix('v1')->group(function () {
     // 医療機関情報取得API
     Route::match(['get', 'post'], 'hospital/', 'HospitalController@index');
 
+    // 公開中医療機関情報取得API
+    Route::match(['get', 'post'], 'hospital/release/', 'HospitalController@release');
+
+    // 公開中医療機関コース情報取得API
+    Route::match(['get', 'post'], 'hospital/release_course/', 'HospitalController@release_course');
+
+
     // 医療機関空き枠情報取得API
     Route::match(['get', 'post'], 'hospital/frame', 'HospitalController@frame');
 

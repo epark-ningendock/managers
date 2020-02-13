@@ -34,6 +34,7 @@ class CoursesBaseResource extends CourseBaseResource
     {
         return
             parent::baseCollections()
+                ->put('hospital', $this->getHospital())
                 ->put('course_point', $this->getPoint())
                 ->put('category', $this->getCategory())
                 ->put('exams', $this->getExam())
@@ -45,6 +46,22 @@ class CoursesBaseResource extends CourseBaseResource
                 ->put('month_calender', new MonthlyCalendarResource($this))
                 ->put('all_calendar', new CalendarDailyResource($this))
                 ->toArray();
+    }
+
+    private function getHospital() {
+        $h = $this->hospital;
+        $rails = [$h->rail1, $h->rail2, $h->rail3, $h->rail4, $h->rail5];
+        $stations = [$h->station1, $h->station2, $h->station3, $h->station4, $h->station5];
+        $accesses = [$h->access1, $h->access2, $h->access3, $h->access4, $h->access5];
+        return [
+            'no' => $h->no,
+            'name' => $h->name,
+            'pref_name' => $h->prefecture->name,
+            'district_name' => $h->districtCode->name,
+            'address1' => $h->address1 ?? '',
+            'address2' => $h->address2 ?? '',
+            'stations' => Station::getStations($rails, $stations, $accesses)
+        ];
     }
 
     private function getPoint() {

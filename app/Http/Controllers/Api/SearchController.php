@@ -314,7 +314,8 @@ class SearchController extends ApiBaseController
         $course_category = $request->input('course_category_code');
 
         if (isset($course_category)) {
-            foreach ($course_category as $code) {
+            $course_categories = explode(',', $course_category);
+            foreach ($course_categories as $code) {
                 if ($code == '256') {
                     $meal_flg = true;
                 }
@@ -340,7 +341,6 @@ class SearchController extends ApiBaseController
         // 検査種別
         $exam_types = $request->input('exam_type');
         if (isset($exam_types)) {
-            $condition_add_flg = true;
             $exam_types = explode(',', $exam_types);
             $query->where(function ($q) use ($exam_types, $meal_flg, $pear_flg, $female_doctor_flg) {
                 $q->where('course_metas.category_exam', 'like', '%' . sprintf('%03d',$exam_types[0]) . '%' );
@@ -353,7 +353,6 @@ class SearchController extends ApiBaseController
         // 対象となる疾患
         $diseases = $request->input('disease');
         if (isset($diseases)) {
-            $condition_add_flg = true;
             $diseases = explode(',', $diseases);
             $query->where(function ($q) use ($diseases, $meal_flg, $pear_flg, $female_doctor_flg) {
                 $q->where('course_metas.category_disease', 'like', '%' . sprintf('%03d',$diseases[0]) . '%' );
@@ -366,7 +365,6 @@ class SearchController extends ApiBaseController
         // 気になる部位
         $parts = $request->input('part');
         if (isset($parts)) {
-            $condition_add_flg = true;
             $parts = explode(',', $parts);
             $query->where(function ($q) use ($parts, $meal_flg, $pear_flg, $female_doctor_flg) {
                 $q->where('course_metas.category_part', 'like', '%' . sprintf('%03d',$parts[0]) . '%' );
@@ -548,7 +546,8 @@ class SearchController extends ApiBaseController
         $course_category = $request->input('course_category_code');
 
         if (isset($course_category)) {
-            foreach ($course_category as $code) {
+            $course_categories = explode(',', $course_category);
+            foreach ($course_categories as $code) {
                 if ($code == '256') {
                     $meal_flg = true;
                 }

@@ -51,8 +51,7 @@ class HospitalReleaseCourseResource extends Resource
             }
             $course_data = [];
             foreach ($hospital->courses as $course) {
-                $c = ['course_code' => $course->code, 'course_no' => $course->id];
-                $course_data[] = $c;
+                $course_data[] = ['course_code' => $course->code, 'course_no' => $course->id];
             }
             $results[] = ['hospital_code' => $hospital->contract_information->code, 'courses' => $course_data];
         }
