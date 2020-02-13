@@ -153,34 +153,39 @@ class CourseContentBaseResource extends Resource
      * コース質問生成
      * 
      * @param  コース質問
-     * @return コース質問
+     * @return $questions
      */
     private function _questions($course_questions)
     {
-        if (!isset($course_questions)) return;
-        $questions = $course_questions->map(function ($q) {
-            $answers = collect(
-                [
-                    ['no' => 1, 'text' => $q->answer01 ?? ''],
-                    ['no' => 2, 'text' => $q->answer02 ?? ''],
-                    ['no' => 3, 'text' => $q->answer03 ?? ''],
-                    ['no' => 4, 'text' => $q->answer04 ?? ''],
-                    ['no' => 5, 'text' => $q->answer05 ?? ''],
-                    ['no' => 6, 'text' => $q->answer06 ?? ''],
-                    ['no' => 7, 'text' => $q->answer07 ?? ''],
-                    ['no' => 8, 'text' => $q->answer08 ?? ''],
-                    ['no' => 9, 'text' => $q->answer09 ?? ''],
-                    ['no' => 10, 'text' => $q->answer10 ?? ''],
-                ]
-            );
-            return [
-                'no' => $q->question_number,
-                'text' => $q->question_title,
-                'answer' => $answers->map(function ($a) {
-                    return $a;
-                }),
-            ];
-        });
+        if (!isset($course_questions)) return [];
+
+        $questions = [];
+        foreach ($course_questions as $q) {
+            if (isset($q) && !empty($q->question_title)) {
+                $answers = collect(
+                    [
+                        ['no' => 1, 'text' => $q->answer01 ?? ''],
+                        ['no' => 2, 'text' => $q->answer02 ?? ''],
+                        ['no' => 3, 'text' => $q->answer03 ?? ''],
+                        ['no' => 4, 'text' => $q->answer04 ?? ''],
+                        ['no' => 5, 'text' => $q->answer05 ?? ''],
+                        ['no' => 6, 'text' => $q->answer06 ?? ''],
+                        ['no' => 7, 'text' => $q->answer07 ?? ''],
+                        ['no' => 8, 'text' => $q->answer08 ?? ''],
+                        ['no' => 9, 'text' => $q->answer09 ?? ''],
+                        ['no' => 10, 'text' => $q->answer10 ?? ''],
+                    ]);
+                    $questions[] = [
+                        'no' => $q->question_number,
+                        'text' => $q->question_title,
+                        'answer' => $answers->map(function ($a) {
+                            return $a;
+                        }),
+                    ];
+            }
+
+        }
+
         return $questions;
     }
 }

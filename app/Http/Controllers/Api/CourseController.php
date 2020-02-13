@@ -164,7 +164,7 @@ class CourseController extends ApiBaseController
         return Course::with([
             'course_images',
             'course_details' => function ($query) {
-                $query->whereIn('major_classification_id', [2, 3, 4, 5, 6, 11, 13, 15, 16, 17, 18, 19, 20, 24, 25])
+                $query->whereIn('major_classification_id', [2, 3, 4, 5, 6, 11, 13, 15, 16, 17, 18, 19, 20, 22, 24, 25])
                 ->orderBy('major_classification_id')
                 ->orderBy('middle_classification_id')
                 ->orderBy('minor_classification_id')
