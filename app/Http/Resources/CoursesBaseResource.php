@@ -55,7 +55,7 @@ class CoursesBaseResource extends CourseBaseResource
         $stations = [$h->station1, $h->station2, $h->station3, $h->station4, $h->station5];
         $accesses = [$h->access1, $h->access2, $h->access3, $h->access4, $h->access5];
         return [
-            'no' => $h->no,
+            'no' => $h->id,
             'name' => $h->name,
             'pref_name' => $h->prefecture->name,
             'district_name' => $h->districtCode->name,
