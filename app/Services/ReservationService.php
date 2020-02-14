@@ -62,6 +62,7 @@ class ReservationService
             'hospital.district_code.prefecture',
             'hospital.hospital_email_setting',
             'course',
+            'course.course_images',
             'reservation_answers',
             'reservation_options',
             'reservation_options.option',

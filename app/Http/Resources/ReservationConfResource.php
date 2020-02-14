@@ -37,6 +37,7 @@ class ReservationConfResource extends Resource
             ->put('course_code', $this->course_code)
             ->put('course_name', $this->course->name)
             ->put('reservation_date', Carbon::parse($this->reservation_date)->toDateString())
+            ->put('reservation_accepted_date', Carbon::parse($this->created_at)->toDateString())
             ->put('start_time_hour', $this->start_time_hour)
             ->put('start_time_min', $this->start_time_min)
             ->put('end_time_hour', $this->end_time_hour)
