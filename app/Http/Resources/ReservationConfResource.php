@@ -30,6 +30,7 @@ class ReservationConfResource extends Resource
         return collect([])
             ->put('status', 0)
             ->put('result_code', $this->result_code)
+            ->put('reservation_id', $this->id)
             ->put('reservation_status', (string) $this->reservation_status)
             ->put('hospital_id', $this->hospital->id)
             ->put('hospital_code', $this->hospital->contract_information->code)
