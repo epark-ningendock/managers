@@ -152,14 +152,14 @@ class ReservationInfoNotificationController extends Controller
             throw new ReservationDateException();
         }
         $date = Carbon::parse($request->input('yoyakuDate'));
-        $yoyaku_bgn_time_array = explode(':', $request->input('yoyakuBgnTime'));
-        if (count($yoyaku_bgn_time_array) == 2) {
-            $start_h = $yoyaku_bgn_time_array[0];
-            $start_m = $yoyaku_bgn_time_array[1];
-        } elseif (strlen($request->input('yoyakuDate')) == 4) {
-            $start_h = substr($request->input('yoyakuDate'), 0, 2);
-            $start_m = substr($request->input('yoyakuDate'), 2, 2);
-        }
+//        $yoyaku_bgn_time_array = explode(':', $request->input('yoyakuBgnTime'));
+//        if (count($yoyaku_bgn_time_array) == 2) {
+//            $start_h = $yoyaku_bgn_time_array[0];
+//            $start_m = $yoyaku_bgn_time_array[1];
+//        } elseif (strlen($request->input('yoyakuDate')) == 4) {
+//            $start_h = substr($request->input('yoyakuDate'), 0, 2);
+//            $start_m = substr($request->input('yoyakuDate'), 2, 2);
+//        }
 
         if ($request->input('yoyakuStateKbn') == KenshinSysReservationStatus::PENDING) {
             $reservation->reservation_status = ReservationStatus::PENDING;
@@ -176,8 +176,8 @@ class ReservationInfoNotificationController extends Controller
             $reservation->completed_date = $date;
         }
 
-        $reservation->start_time_hour = $start_h;
-        $reservation->start_time_min = $start_m;
+        $reservation->kenshin_sys_start_time = $request->input('yoyakuBgnTime') ?? '';
+//        $reservation->start_time_min = $start_m;
         $reservation->todays_memo = $request->input('yoyakuComment');
         $reservation->save();
 
