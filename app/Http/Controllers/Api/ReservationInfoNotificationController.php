@@ -18,6 +18,7 @@ use App\Option;
 use App\OptionFutanCondition;
 use App\OptionTargetAge;
 use App\Reservation;
+use App\ReservationKenshinSysOption;
 use App\ReservationOption;
 use App\TargetAge;
 use Carbon\Carbon;
@@ -180,24 +181,24 @@ class ReservationInfoNotificationController extends Controller
         $reservation->todays_memo = $request->input('yoyakuComment');
         $reservation->save();
 
-//        if (empty($request->input(['optionList']))) {
-//            return;
-//        }
-//
-//        ReservationOption::where('reservation_id', $reservation->id)->delete();
-//
-//        foreach ($request->input(['optionList']) as $o) {
-//
-//            $option = KenshinSysOption::where('hospital_id', $hospital->id)
-//                ->where('kenshin_sys_course_no', $o['optionNo'])
-//                ->first();
-//
-//            $reservation_option = new ReservationOption();
-//            $reservation_option->reservation_id = $reservation->id;
-//            $reservation_option->option_id = $option->id;
+        ReservationKenshinSysOption::where('reservation_id', $reservation->id)->delete();
+
+        if (empty($request->input(['optionList']))) {
+            return;
+        }
+
+        foreach ($request->input(['optionList']) as $o) {
+
+            $option = KenshinSysOption::where('hospital_id', $hospital->id)
+                ->where('kenshin_sys_course_no', $o['optionNo'])
+                ->first();
+
+            $reservation_option = new ReservationKenshinSysOption();
+            $reservation_option->reservation_id = $reservation->id;
+            $reservation_option->kenshin_sys_option_id = $option->id;
 //            $reservation_option->option_price = $option->price;
-//            $reservation_option->status = Status::VALID;
-//            $reservation_option->save();
-//        }
+            $reservation_option->status = Status::VALID;
+            $reservation_option->save();
+        }
     }
 }
