@@ -189,9 +189,13 @@ class ReservationInfoNotificationController extends Controller
 
         foreach ($request->input(['optionList']) as $o) {
 
-            $option = KenshinSysOption::where('hospital_id', $hospital->id)
-                ->where('kenshin_sys_course_no', $o['optionNo'])
+            $option = KenshinSysOption::where('kenshin_sys_course_id', $reservation->kenshin_sys_course_id)
+                ->where('kenshin_sys_option_no', $o)
                 ->first();
+
+            if (!$option) {
+                continue;
+            }
 
             $reservation_option = new ReservationKenshinSysOption();
             $reservation_option->reservation_id = $reservation->id;
