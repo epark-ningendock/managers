@@ -200,7 +200,7 @@ class ReservationInfoNotificationController extends Controller
             $reservation_option = new ReservationKenshinSysOption();
             $reservation_option->reservation_id = $reservation->id;
             $reservation_option->kenshin_sys_option_id = $option->id;
-            $reservation_option->option_price = 0;
+            $reservation_option->kenshin_sys_option_price = 0;
             $reservation_option->status = Status::VALID;
             $reservation_option->save();
         }
