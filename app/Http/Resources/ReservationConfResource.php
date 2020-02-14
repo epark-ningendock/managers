@@ -35,10 +35,10 @@ class ReservationConfResource extends Resource
             ->put('hospital_id', $this->hospital->id)
             ->put('hospital_code', $this->hospital->contract_information->code)
             ->put('course_id', $this->course_id)
-            ->put('course_code', $this->course_code)
+            ->put('course_code', $this->course->course_code)
             ->put('course_name', $this->course->name)
             ->put('reservation_date', Carbon::parse($this->reservation_date)->toDateString())
-            ->put('reservation_accepted_date', Carbon::parse($this->created_at)->toDateString())
+            ->put('reservation_accepted_date', Carbon::parse($this->created_at)->toDateString('Y-m-d H:i:s'))
             ->put('start_time_hour', $this->start_time_hour)
             ->put('start_time_min', $this->start_time_min)
             ->put('end_time_hour', $this->end_time_hour)
@@ -128,18 +128,23 @@ class ReservationConfResource extends Resource
      * 予約オプション要素追加
      *
      * @param  予約オプション情報  $reservation_options
-     * @return 予約オプション情報
+     * @return $options
      */
     private function _reservation_options($reservation_options)
     {
-        $options = $reservation_options->map(function ($o) {
-            if (!isset($o->option)) return;
-            return [
+        $options = [];
+        foreach ($reservation_options as $o) {
+            if (!isset($o->option) || empty($o->option->id)) {
+                continue;
+            }
+            $options[] = [
                 'option_cd' => $o->option->id ?? '',
                 'option_name' => $o->option->name ?? '',
                 'option_price_tax' => $o->option_price ?? '',
             ];
-        });
+
+        }
+
         return $options;
     }
 
