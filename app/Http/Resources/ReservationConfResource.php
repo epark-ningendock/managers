@@ -15,17 +15,6 @@ class ReservationConfResource extends Resource
      */
     public function toArray($request)
     {
-        // 受診日
-        $completed_date = $this->reservation_date;
-
-        // キャンセル受付変更期限（日）
-        $cancellation_deadline = intval($this->course->cancellation_deadline);
-
-        // キャンセル可能日
-        $cancellation_date = Carbon::parse($completed_date)->subDay($cancellation_deadline)->toDateString();
-
-        // 町村字番地/建物名分割
-        $pieces = explode(' ', $this->customer->address2);
 
         return collect([])
             ->put('status', 0)
@@ -71,7 +60,7 @@ class ReservationConfResource extends Resource
             ->put('payment_method', $this->payment_method)
             ->put('cashpo_used_amount', $this->cashpo_used_price)
             ->put('amount_unsettled', $this->amount_unsettled)
-            ->put('cancellation_deadline', $cancellation_date)
+            ->put('cancellation_deadline', $this->course->cancellation_deadline)
             ->put('facility_name', $this->hospital->name)
             ->put(
                 'facility_addr',
