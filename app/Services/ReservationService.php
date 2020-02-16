@@ -603,7 +603,7 @@ class ReservationService
             $option_price = 0;
 
             foreach ($options as $option) {
-                $option_price += $option['option_price_tax'];
+                $option_price += $option->option_price_tax;
             }
             $entity->fee = ($request->input('course_price_tax')
                     + $option_price + $entity->adjustment_price) * ($entity->fee_rate / 100);
