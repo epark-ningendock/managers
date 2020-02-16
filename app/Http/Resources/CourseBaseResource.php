@@ -63,6 +63,9 @@ class CourseBaseResource extends Resource
         $results = [];
         foreach ($this->course_options as $course_option) {
             $option = $course_option->option;
+            if (!$option || empty($option->id)) {
+                continue;
+            }
             $results[] = ['cd' => $option->id, 'title' => $option->name, 'confirm' => $option->confirm, 'price' => $option->price];
         }
 
