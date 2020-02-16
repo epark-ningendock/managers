@@ -84,9 +84,9 @@ class ReservationConfResource extends Resource
                 collect([
                     'second_date' => $this->second_date,
                     'third_date' => $this->third_date,
-                    'choose_fg' => $this->is_choose,
+                    'choose_fg' => $this->is_choose ?? 0,
                     'campaign_cd' => $this->campaign_code,
-                    'tel_timezone' => $this->tel_timezone,
+                    'tel_timezone' => $this->tel_timezone ?? 1,
                     'is_health_insurance' => $this->is_health_insurance,
                     'insurance_assoc' => $this->insurance_assoc,
                 ])
