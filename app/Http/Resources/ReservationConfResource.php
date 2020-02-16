@@ -86,7 +86,7 @@ class ReservationConfResource extends Resource
                     'third_date' => $this->third_date,
                     'choose_fg' => $this->is_choose ?? 0,
                     'campaign_cd' => $this->campaign_code,
-                    'tel_timezone' => $this->tel_timezone ?? 1,
+                    'tel_timezone' => $this->tel_timezone,
                     'is_health_insurance' => $this->is_health_insurance,
                     'insurance_assoc' => $this->insurance_assoc,
                 ])
