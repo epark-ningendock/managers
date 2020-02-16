@@ -51,7 +51,71 @@ class CourseBaseResource extends Resource
             'flg_local_payment' => $this->is_local_payment,
             'flg_pre_account' => $this->is_pre_account,
             'auto_calc_application' => $this->auto_calc_application,
+            'options', $this->getOptions(),
+            'question', $this->getQuestion()
         ]);
+    }
+
+    /**
+     * @return array
+     */
+    private function getOptions() {
+        $results = [];
+        foreach ($this->course_options as $course_option) {
+            $option = $course_option->option;
+            $results[] = ['cd' => $option->id, 'title' => $option->name, 'confirm' => $option->confirm, 'price' => $option->price];
+        }
+
+        return $results;
+    }
+
+    /**
+     * @return array
+     */
+    private function getQuestion() {
+
+        $results = [];
+        foreach ($this->course_questions as $question) {
+            if ($question->is_question == 1) {
+                continue;
+            }
+
+            $answer = [];
+            if (isset($question->answer01)) {
+                $answer[] = ['no' => 1, 'text' => $question->answer01];
+            }
+            if (isset($question->answer02)) {
+                $answer[] = ['no' => 2, 'text' => $question->answer02];
+            }
+            if (isset($question->answer03)) {
+                $answer[] = ['no' => 3, 'text' => $question->answer03];
+            }
+            if (isset($question->answer04)) {
+                $answer[] = ['no' => 4, 'text' => $question->answer04];
+            }
+            if (isset($question->answer05)) {
+                $answer[] = ['no' => 5, 'text' => $question->answer05];
+            }
+            if (isset($question->answer06)) {
+                $answer[] = ['no' => 6, 'text' => $question->answer06];
+            }
+            if (isset($question->answer07)) {
+                $answer[] = ['no' => 7, 'text' => $question->answer07];
+            }
+            if (isset($question->answer08)) {
+                $answer[] = ['no' => 8, 'text' => $question->answer08];
+            }
+            if (isset($question->answer09)) {
+                $answer[] = ['no' => 9, 'text' => $question->answer09];
+            }
+            if (isset($question->answer10)) {
+                $answer[] = ['no' => 10, 'text' => $question->answer10];
+            }
+
+            $results[] = ['no' => $question->question_number, 'text' => $question->question_title, 'answer' => $answer];
+        }
+
+        return $results;
     }
 
     /**
