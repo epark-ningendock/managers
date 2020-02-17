@@ -13,6 +13,7 @@ use App\HospitalCategory;
 use App\HospitalEmailSetting;
 use App\HospitalPlan;
 use App\MonthlyWaku;
+use App\ReservationKenshinSysOption;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
@@ -375,6 +376,11 @@ class ReservationService
                 $ro->saveOrFail();
             }
 
+            $reservation_kenshin_sys_options = $this->_reservation_kenshin_sys_options_from_request($request, $reservation->id);
+            foreach ($reservation_kenshin_sys_options as $ro) {
+                $ro->saveOrFail();
+            }
+
             // 予約回答洗い替え
             ReservationAnswer::where('reservation_id', $reservation->id)->delete();
 
@@ -593,6 +599,11 @@ class ReservationService
         $entity->applicant_name = $request->input('last_name') . $request->input('first_name');
         $entity->applicant_name_kana = $request->input('last_name_kana') . $request->input('first_name_kana');
         $entity->applicant_tel = $request->input('tel_no') ?? $entity->applicant_tel;
+        $entity->medical_examination_system_id = 1;
+        $entity->kenshin_sys_yoyaku_no = $request->input('kenshin_sys_yoyaku_no') ?? null;
+        $entity->kenshin_sys_start_time = $request->input('kenshin_sys_start_time') ?? '';
+        $entity->kenshin_sys_end_time = $request->input('kenshin_sys_end_time') ?? '';
+        $entity->kenshin_sys_course_id = $request->input('kenshin_sys_course_id') ?? null;
 
         $options = [];
         if (!empty($request->input('option_array'))) {
@@ -639,6 +650,31 @@ class ReservationService
             $entity->reservation_id = $reservation_id;
             $entity->option_id = $o->option_cd;
             $entity->option_price = $o->option_price_tax ?? 0;
+            return $entity;
+        });
+
+        return $results;
+    }
+
+    /**
+     * 健診システム予約オプション entity生成
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $reservation_id
+     * @return Illuminate\Support\Collection
+     */
+    private function _reservation_kenshin_sys_options_from_request($request, $reservation_id): Collection
+    {
+        // request options取得
+        $options = collect(json_decode(json_encode($request->input('kenshin_sys_option_array'))))->filter(function ($o) {
+            return isset($o->option_cd);
+        });
+
+        $results = $options->map(function ($o) use ($reservation_id) {
+            $entity = new ReservationKenshinSysOption();
+            $entity->reservation_id = $reservation_id;
+            $entity->kenshin_sys_option_id = $o->option_cd;
+            $entity->kenshin_sys_option_price = $o->option_price_tax ?? 0;
             return $entity;
         });
 
