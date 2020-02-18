@@ -108,6 +108,12 @@ class Course extends SoftDeleteModel
         return $this->hasOne('App\ContractInformation', 'hospital_id', 'hospital_id');
     }
 
+    public function kenshin_sys_courses()
+    {
+        return $this->belongsToMany('App\KenshinSysCourse', 'course_match')
+            ->as('course_match')->withTimestamps();
+    }
+
 //    public function hospital()
 //    {
 //        return $this->hasOne('App\Hospital');

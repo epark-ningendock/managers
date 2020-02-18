@@ -28,7 +28,7 @@ class KenshinSysCourse extends SoftDeleteModel
         'kenshin_sys_course_age_kisan_date'
     ];
 
-    public function kenshin_sys_dantai_infos()
+    public function kenshin_sys_dantai_info()
     {
         return $this->belongsTo('App\KenshinSysDantaiInfo');
     }

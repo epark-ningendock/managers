@@ -14,7 +14,6 @@ use App\Hospital;
 use App\HospitalImage;
 use App\Http\Requests\CourseFormRequest;
 use App\KenshinSysCourse;
-use App\KenshinSysDantaiInfo;
 use App\MajorClassification;
 use App\MinorClassification;
 use Carbon\Carbon;
@@ -63,8 +62,9 @@ class CourseController extends Controller
         $today = Carbon::today();
         $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
             ->whereDate('life_time_to', '>=', $today)->get()->first();
-        $kenshin_sys_courses = KenshinSysCourse::with(['kenshin_sys_dantai_infos'])->where('kenshin_sys_hospital_id', $hospital->kenshin_sys_hospital_id)->get();
-        $course_match = [];
+        $kenshin_sys_courses = KenshinSysCourse::with(['kenshin_sys_dantai_info'])
+            ->where('kenshin_sys_hospital_id', $hospital->kenshin_sys_hospital_id)->get();
+        $course_matches = collect();
 
         $is_presettlement = $hospital->is_pre_account == '1' &&
             (Auth::user()->staff_auth->is_pre_account == Permission::EDIT
@@ -81,7 +81,7 @@ class CourseController extends Controller
             ->with('hospital', $hospital)
             ->with('images', $images)
             ->with('kenshin_sys_courses', $kenshin_sys_courses)
-            ->with('course_match', $course_match)
+            ->with('course_matches', $course_matches)
             ->with('is_presettlement', $is_presettlement);
     }
 
@@ -157,6 +157,11 @@ class CourseController extends Controller
         $is_presettlement = $hospital->is_pre_account == '1' &&
             (Auth::user()->staff_auth->is_pre_account == Permission::EDIT
                 || Auth::user()->staff_auth->is_pre_account == Permission::UPLOAD);
+
+        $kenshin_sys_courses = KenshinSysCourse::with(['kenshin_sys_dantai_info'])
+            ->where('kenshin_sys_hospital_id', $hospital->kenshin_sys_hospital_id)->get();
+        $course_matches = $course->kenshin_sys_courses()->get();
+
         return view('course.edit')
             ->with('calendars', $calendars)
             ->with('tax_class', $tax_class)
@@ -168,7 +173,9 @@ class CourseController extends Controller
             ->with('disp_date_end', $disp_date_end)
             ->with('hospital', $hospital)
             ->with('course', $course)
-            ->with('is_presettlement', $is_presettlement);
+            ->with('is_presettlement', $is_presettlement)
+            ->with('kenshin_sys_courses', $kenshin_sys_courses)
+            ->with('course_matches', $course_matches);
     }
 
     protected function saveCourse(CourseFormRequest $request, $course_param)
@@ -254,6 +261,23 @@ class CourseController extends Controller
                 $target_image = 'course_image_sp';
                 $target_type = CourseImageType::SP;
                 $this->saveCourseImage($request, $target_image, $target_type, $course->id);
+            }
+
+            //Course Kenshin
+            $kenshin_course_ids = collect($request->input('kenshin_sys_course_ids', []));
+
+            if ($kenshin_course_ids->isNotEmpty()) {
+                $kenshin_courses = KenshinSysCourse::whereIn('id', $kenshin_course_ids)->get();
+                if ($kenshin_courses->count() != $kenshin_course_ids->count()) {
+                    $request->session()->flash('error', trans('messages.invalid_kenshin_course_id'));
+                    return redirect()->back();
+                }
+
+                $course->kenshin_sys_courses()->sync($kenshin_course_ids);
+            } else {
+
+                // 検診システムコースの指定がない場合は、空配列を渡す
+                $course->kenshin_sys_courses()->sync(collect());
             }
 
             //Course Options

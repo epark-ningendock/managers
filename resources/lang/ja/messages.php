@@ -178,6 +178,7 @@ return [
     'option_description'                   => 'オプションの説明',
     'price'                                => '価格',
     'tax_classification'                   => '税区分',
+    'invalid_kenshin_course_id'            => '無効な検診システムコースID',
     'invalid_option_id'                    => '無効なオプションID',
     'option_sorting_updated'               => 'オプションソートの更新',
     'need_to_login'                        => 'あなたは最初にログインする必要があります',

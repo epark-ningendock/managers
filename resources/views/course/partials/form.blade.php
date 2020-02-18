@@ -10,6 +10,7 @@
     $course_questions = $course->course_questions;
   }
 
+  $o_kenshin_sys_course_ids = collect(old('kenshin_sys_course_ids', []));
   $o_option_ids = collect(old('option_ids', []));
   $o_minor_ids = collect(old('minor_ids'));
   $o_minor_values = collect(old('minor_values'));
@@ -403,6 +404,7 @@
   </div>
 </div>
 
+<<<<<<< HEAD
 {{--<div class="box box-primary">--}}
     {{--<div class="box-header with-border">--}}
         {{--<div class="box-tools" data-widget="collapse">--}}
@@ -445,6 +447,52 @@
         {{--</div>--}}
     {{--</div>--}}
 {{--</div>--}}
+=======
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <div class="box-tools" data-widget="collapse">
+            <button type="button" class="btn btn-sm">
+                <i class="fa fa-minus"></i></button>
+        </div>
+        <h1 class="box-title">健診システムコースの設定</h1>
+    </div>
+
+    <div class="form-entry">
+        <div class="box-body" id="kenshin-sys-course-setting">
+            <table class="table no-border table-hover table-striped ">
+                <tr>
+                    <td class="course-name"><span>健診システムコース名</span></td>
+                    <td class="dantai-name"><span>健診システム団体名</span></td>
+                    <td class="course-price">価格</td>
+                    <!--
+                    <td class="option-confirm">説明</td>
+                    -->
+                </tr>
+                @foreach($kenshin_sys_courses as $kenshin_course)
+                    <tr>
+                    @php
+                        $is_checked = false;
+                        if ($o_kenshin_sys_course_ids->isNotEmpty()) {
+                            $is_checked = $o_kenshin_sys_course_ids->contains($kenshin_course->id);
+                        } else if(isset($course_matches)) {
+                            $is_checked = $course_matches->contains($kenshin_course->id);
+                        }
+                    @endphp
+                        <td class="course-name">
+                            <input type="checkbox" id="course_set_price{{ $kenshin_course->id }}" name="kenshin_sys_course_ids[]" value="{{ $kenshin_course->id }}" {{ $is_checked ? 'checked' : '' }}/>
+                            <label class="mr-2" for="course_set_price{{ $kenshin_course->id }}">{{ $kenshin_course->kenshin_sys_course_name }}</label></td>
+                        <td class="dantai-name">{{ $kenshin_course->kenshin_sys_dantai_info->kenshin_sys_dantai_nm }}</td>
+                        <td class="course-price">{{ number_format($kenshin_course->kenshin_sys_course_kingaku) }} 円</td>
+                    <!--
+            <td class="option-confirm">{{ $kenshin_course->confirm }}</td>
+            -->
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+    </div>
+</div>
+>>>>>>> ee82f43e0829b942dd7c7df8e6bf24c49a0001c5
 
 <div class="box box-primary">
   <div class="box-header with-border">

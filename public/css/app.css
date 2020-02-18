@@ -3248,7 +3248,7 @@ input[type=checkbox] + label:before {
   text-align: left;
 }
 
-#kenshin-sys-course-setting input[type=checkbox] + label:before {
+#option-setting input[type=checkbox] + label:before {
   margin: 0 9px 0 0;
 }
 
