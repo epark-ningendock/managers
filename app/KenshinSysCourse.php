@@ -33,6 +33,11 @@ class KenshinSysCourse extends SoftDeleteModel
         return $this->belongsTo('App\KenshinSysDantaiInfo');
     }
 
+    public function kenshin_sys_options()
+    {
+        return $this->hasMany('App\KenshinSysOption');
+    }
+
     public function course_futan_conditions()
     {
         return $this->hasMany('App\CourseFutanCondition');
