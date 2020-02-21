@@ -34,39 +34,39 @@ class CourseInfoNotificationController extends Controller
         $messages = config('api.course_info_notification_api.message');
         $sysErrorMessages = config('api.unexpected_error.message');
         $app_name = env('APP_ENV');
-        $ip = $request->ip();
-        if ($app_name == 'production') {
-            $app_kbn = '1';
-        } else {
-            $app_kbn = '2';
-        }
-
-        // パラメータチェック
-        $Ocp_Apim_Subscription_key = $request->header('Ocp-Apim-Subscription-key');
-        $partner_code = $request->header('X-Partner-Code');
-        if (!isset($Ocp_Apim_Subscription_key)) {
-            return $this->createResponse($messages['errorSubscriptionKeyId']);
-        }
-        if (!isset($partner_code)) {
-            return $this->createResponse($messages['errorPartnerCdId']);
-        }
-
-        $kenshin_sys_cooperation = KenshinSysCooperation::where('ip', $ip)->first();
-        if (!$kenshin_sys_cooperation) {
-            return $this->createResponse($messages['errorAccessIp']);
-        }
-
-        if ($kenshin_sys_cooperation->app_kbn != $app_kbn) {
-            return $this->createResponse($messages['errorAccessIp']);
-        }
-
-        if ($kenshin_sys_cooperation->partner_code != $partner_code) {
-            return $this->createResponse($messages['errorPartnerCdId']);
-        }
-
-        if ($kenshin_sys_cooperation->subscription_key != $Ocp_Apim_Subscription_key) {
-            return $this->createResponse($messages['errorSubscriptionKeyId']);
-        }
+//        $ip = $request->ip();
+//        if ($app_name == 'production') {
+//            $app_kbn = '1';
+//        } else {
+//            $app_kbn = '2';
+//        }
+//
+//        // パラメータチェック
+//        $Ocp_Apim_Subscription_key = $request->header('Ocp-Apim-Subscription-key');
+//        $partner_code = $request->header('X-Partner-Code');
+//        if (!isset($Ocp_Apim_Subscription_key)) {
+//            return $this->createResponse($messages['errorSubscriptionKeyId']);
+//        }
+//        if (!isset($partner_code)) {
+//            return $this->createResponse($messages['errorPartnerCdId']);
+//        }
+//
+//        $kenshin_sys_cooperation = KenshinSysCooperation::where('ip', $ip)->first();
+//        if (!$kenshin_sys_cooperation) {
+//            return $this->createResponse($messages['errorAccessIp']);
+//        }
+//
+//        if ($kenshin_sys_cooperation->app_kbn != $app_kbn) {
+//            return $this->createResponse($messages['errorAccessIp']);
+//        }
+//
+//        if ($kenshin_sys_cooperation->partner_code != $partner_code) {
+//            return $this->createResponse($messages['errorPartnerCdId']);
+//        }
+//
+//        if ($kenshin_sys_cooperation->subscription_key != $Ocp_Apim_Subscription_key) {
+//            return $this->createResponse($messages['errorSubscriptionKeyId']);
+//        }
 
         if (empty($request->input('dantaiNo'))
             || !is_numeric($request->input('dantaiNo'))
@@ -187,10 +187,10 @@ class CourseInfoNotificationController extends Controller
             DB::commit();
         } catch (\Throwable $e) {
             $message = '[健診システム連携コース通知API] DBの登録に失敗しました。';
-            Log::error($message, [
-                '健診システム連携情報' => $kenshin_sys_cooperation->toArray(),
-                'exception' => $e,
-            ]);
+//            Log::error($message, [
+//                '健診システム連携情報' => $kenshin_sys_cooperation->toArray(),
+//                'exception' => $e,
+//            ]);
             DB::rollback();
             return $this->createResponse($sysErrorMessages['errorDB']);
         }
@@ -272,10 +272,10 @@ class CourseInfoNotificationController extends Controller
             $course->kenshin_sys_course_no = $kenshin_course['courseNo'];
             $course->kenshin_sys_course_name = $kenshin_course['courseNm'];
             $course->kenshin_sys_course_kingaku = $kenshin_course['courseKin'];
-            $course->kenshin_sys_riyou_bgn_date = Carbon::parse($kenshin_course['riyouBgnDate']);
-            $course->kenshin_sys_riyou_end_date = Carbon::parse($kenshin_course['riyouEndDate']);
+            $course->kenshin_sys_riyou_bgn_date = Carbon::createFromFormat('Ymd', $kenshin_course['riyouBgnDate'])->format('Y-m-d');
+            $course->kenshin_sys_riyou_end_date = Carbon::createFromFormat('Ymd', $kenshin_course['riyouEndDate'])->format('Y-m-d');
             $course->kenshin_sys_course_age_kisan_kbn = $kenshin_course['courseAgeKisanKbn'];
-            $course->kenshin_sys_course_age_kisan_date = $kenshin_course['courseAgeKisanDate'] ?? null;
+            $course->kenshin_sys_course_age_kisan_date = Carbon::parse($kenshin_course['courseAgeKisanDate']) ?? null;
             $course->save();
 
             // コース負担条件登録
@@ -343,7 +343,7 @@ class CourseInfoNotificationController extends Controller
                     $option->kenshin_sys_option_no = $kenshin_option['optionNo'];
                     $option->kenshin_sys_option_name = $kenshin_option['optionNm'];
                     $option->kenshin_sys_option_age_kisan_kbn = $kenshin_option['optionAgeKisanKbn'];
-                    $option->kenshin_sys_option_age_kisan_date = $kenshin_option['optionAgeKisanDate'] ?? null;
+                    $option->kenshin_sys_option_age_kisan_date = Carbon::parse($kenshin_option['optionAgeKisanDate']) ?? null;
                     $option->save();
 
                     $option_futan_jouken_list = $kenshin_option['optionFutanJoukenList'];
