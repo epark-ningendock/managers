@@ -83,6 +83,12 @@ class CourseInfoNotificationController extends Controller
                 if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 10) {
                     return $this->createResponse($messages['errorValidationId']);
                 }
+                if (!empty($course['courseDeleteFlg']) && $course['courseDeleteFlg'] == '1') {
+                    continue;
+                }
+                if (!empty($course['courseDeleteFlg']) && $course['courseDeleteFlg'] != '1') {
+                    return $this->createResponse($messages['errorValidationId']);
+                }
                 if (empty($course['courseNm'])) {
                     return $this->createResponse($messages['errorValidationId']);
                 }
