@@ -26,7 +26,7 @@ class CreateKenshinSysCoursesTable extends Migration
             $table->date('kenshin_sys_riyou_bgn_date');
             $table->date('kenshin_sys_riyou_end_date');
             $table->integer('kenshin_sys_course_age_kisan_kbn');
-            $table->date('kenshin_sys_course_age_kisan_date')->nullable();
+            $table->char('kenshin_sys_course_age_kisan_date', 4)->nullable();
             $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
 

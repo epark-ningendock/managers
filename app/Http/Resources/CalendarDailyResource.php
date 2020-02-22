@@ -42,7 +42,7 @@ class CalendarDailyResource extends Resource
                 $appoint_status = 2;
             }
 
-            $results[] = [$calendar_day->date->format('Ymd') => ['appoint_status' =>$appoint_status, 'reservation_frames' => $calendar_day->reservation_frames ?? 0, 'appoint_num' => $calendar_day->reservation_count ?? 0, 'closed_day' => $holiday_flg]];
+            $results[$calendar_day->date->format('Ymd')] = ['appoint_status' =>$appoint_status, 'reservation_frames' => $calendar_day->reservation_frames ?? 0, 'appoint_num' => $calendar_day->reservation_count ?? 0, 'closed_day' => $holiday_flg];
 
         }
 
