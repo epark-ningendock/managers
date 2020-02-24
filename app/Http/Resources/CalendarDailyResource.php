@@ -34,8 +34,8 @@ class CalendarDailyResource extends Resource
 
                 $res = json_decode($response->getBody()->getContents(), true);
 
-                $riyou_start_date = $this->kenshin_sys_courses[0]->kenshin_sys_course_riyou_bgn_date->format('Ymd');
-                $riyou_end_date = $this->kenshin_sys_courses[0]->kenshin_sys_course_riyou_end_date->format('Ymd');
+                $riyou_start_date = $this->kenshin_sys_courses[0]->kenshin_sys_riyou_bgn_date->format('Ymd');
+                $riyou_end_date = $this->kenshin_sys_courses[0]->kenshin_sys_riyou_end_date->format('Ymd');
 
                 if (!empty($res)) {
                     $wakus = $res['dayWakuList'];
