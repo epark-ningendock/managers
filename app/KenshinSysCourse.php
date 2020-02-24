@@ -24,8 +24,7 @@ class KenshinSysCourse extends SoftDeleteModel
 
     protected $dates = [
         'kenshin_sys_riyou_bgn_date',
-        'kenshin_sys_riyou_end_date',
-        'kenshin_sys_course_age_kisan_date'
+        'kenshin_sys_riyou_end_date'
     ];
 
     public function kenshin_sys_dantai_info()
