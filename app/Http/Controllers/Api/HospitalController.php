@@ -228,12 +228,7 @@ class HospitalController extends ApiBaseController
                 },
                 'courses.kenshin_sys_courses',
                 'courses.kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
-                    if ($request->input('sex') == Gender::MALE) {
-                        $sex = GenderTak::MALE;
-                    } else {
-                        $sex = GenderTak::FEMALE;
-                    }
-                    $q->where('sex', $sex);
+                    $q->where('sex', $request->input('sex'));
                     $q->where('honnin_kbn', $request->input('honnin_kbn'));
 
             }]);

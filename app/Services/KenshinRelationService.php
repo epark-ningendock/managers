@@ -79,18 +79,12 @@ class KenshinRelationService {
             $to_date = Carbon::today()->addMonthsNoOverflow(5)->endOfMonth()->format('Ymd');
         }
 
-        if ($course->sex == Gender::MALE) {
-            $sex = GenderTak::MALE;
-        } else {
-            $sex = GenderTak::FEMALE;
-        }
-
         return [
             'hospitalId' => $course->kenshin_sys_courses[0]->kenshin_sys_hospital_id,
             'dantaiNo' => $course->kenshin_sys_courses[0]->kenshin_sys_dantai_no,
             'courseNo' => $course->kenshin_sys_courses[0]->kenshin_sys_course_no,
-            'sex' => $sex,
-            'birth' => $course->birth,
+            'sex' => $course->sex,
+            'birth' => str_replace('-', '', $course->birth),
             'honninKbn' => $course->honnin_kbn,
             'targetBgnDate' => $from_date,
             'targetEndDate' => $to_date
