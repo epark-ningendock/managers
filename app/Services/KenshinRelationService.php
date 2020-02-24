@@ -83,9 +83,9 @@ class KenshinRelationService {
             'hospitalId' => $course->kenshin_sys_courses[0]->kenshin_sys_hospital_id,
             'dantaiNo' => $course->kenshin_sys_courses[0]->kenshin_sys_dantai_no,
             'courseNo' => $course->kenshin_sys_courses[0]->kenshin_sys_course_no,
-            'sex' => '1',
-            'birth' => '19790904',
-            'honninKbn' => '1',
+            'sex' => $course->sex,
+            'birth' => str_replace('-', '', $course->birth),
+            'honninKbn' => $course->honnin_kbn,
             'targetBgnDate' => $from_date,
             'targetEndDate' => $to_date
         ];
