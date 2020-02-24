@@ -34,19 +34,28 @@ class CalendarDailyResource extends Resource
 
                 $res = json_decode($response->getBody()->getContents(), true);
 
+                $riyou_start_date = Carbon::createFromFormat('Y-m-d', $this->kenshin_sys_courses[0]->kenshin_sys_course_riyou_bgn_date)->format('Ymd');
+                $riyou_end_date = Carbon::createFromFormat('Y-m-d', $this->kenshin_sys_courses[0]->kenshin_sys_course_riyou_end_date)->format('Ymd');
+
                 if (!empty($res)) {
                     $wakus = $res['dayWakuList'];
-                    $day = '';
                     foreach ($wakus as $waku) {
                         $waku_cnt = 0;
-                        foreach ($waku['wakuInfoList'] as $waku_info) {
-                            $waku_cnt = $waku_cnt + (int) $waku_info['akiWakuCount'];
-                        }
+                        if ($riyou_start_date > $waku['day'] || $riyou_end_date < $waku['day']) {
+                            $results[$waku['day']] = ['appoint_status' => 2,
+                                'reservation_frames' => 0,
+                                'appoint_num' => 0,
+                                'closed_day' => 1];
+                        } else {
+                            foreach ($waku['wakuInfoList'] as $waku_info) {
+                                $waku_cnt = $waku_cnt + (int) $waku_info['akiWakuCount'];
+                            }
 
-                        $results[$waku['day']] = ['appoint_status' => $waku_cnt > 0 ? 0 : 2,
-                            'reservation_frames' => $waku_cnt,
-                            'appoint_num' => 0,
-                            'closed_day' => 0];
+                            $results[$waku['day']] = ['appoint_status' => $waku_cnt > 0 ? 0 : 2,
+                                'reservation_frames' => $waku_cnt,
+                                'appoint_num' => 0,
+                                'closed_day' => 0];
+                        }
                     }
                 }
 
