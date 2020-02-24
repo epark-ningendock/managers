@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\Gender;
+use App\Enums\GenderTak;
 use App\Enums\ReservationStatus;
 use App\Enums\Status;
 use App\Hospital;
@@ -36,7 +38,15 @@ class HospitalController extends ApiBaseController
         try {
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
-            return new HospitalIndexResource($this->getHospitalData($hospital_id));
+            $hospital = $this->getHospitalData($hospital_id, $request);
+            if (!empty($request->input('sex'))) {
+                $hospital->setKenshinRelation(true,
+                    $request->input('sex'),
+                    $request->input('birth'),
+                    $request->input('honnin_kbn'));
+            }
+
+            return new HospitalIndexResource($hospital);
         } catch (\Exception $e) {
             Log::error($e);
             return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
@@ -55,7 +65,15 @@ class HospitalController extends ApiBaseController
 
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
-            return new HospitalCoursesResource($this->getHospitalData($hospital_id));
+            $hospital = $this->getHospitalData($hospital_id, $request);
+            if (!empty($request->input('sex'))) {
+                $hospital->setKenshinRelation(true,
+                    $request->input('sex'),
+                    $request->input('birth'),
+                    $request->input('honnin_kbn'));
+            }
+
+            return new HospitalCoursesResource($hospital);
         } catch (\Exception $e) {
             Log::error($e);
             return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
@@ -162,12 +180,12 @@ class HospitalController extends ApiBaseController
      * @param	string	$hospital_id	医療施設ID
      * @return	object					医療期間情報
      **/
-    private function getHospitalData($hospital_id)
+    private function getHospitalData($hospital_id, $request)
     {
         $today = Carbon::today()->toDateString();
         $from = Carbon::today()->toDateString();
         $to = Carbon::today()->addMonthsNoOverflow(5)->endOfMonth()->toDateString();
-        return Hospital::with([
+        $query = Hospital::with([
             'contract_information',
             'hospital_details',
             'hospital_details.minor_classification',
@@ -179,7 +197,7 @@ class HospitalController extends ApiBaseController
             'hospital_categories.image_order',
             'hospital_categories.hospital_image',
             'courses' => function ($query) use ($today) {
-            $query->where('is_category', 0)
+                $query->where('is_category', 0)
                     ->where('web_reception', 0)
                     ->where('publish_start_date', '<=', $today)
                     ->where('publish_end_date', '>=', $today)
@@ -197,15 +215,39 @@ class HospitalController extends ApiBaseController
                     ->where('date', '<=', $to)
                     ->orderBy('date');
             },
-        ])
-            ->whereHas('courses' , function($q) use ($today) {
-                $q->where('courses.is_category', 0)
-                ->where('web_reception', 0)
-                ->where('publish_start_date', '<=', $today)
-                ->where('publish_end_date', '>=', $today)
-                ;
-            })
-            ->find($hospital_id);
+        ]);
+
+        if (!empty($request->input('sex'))) {
+            $query->with([
+                'courses' => function ($query) use ($today) {
+                    $query->where('is_category', 0)
+                        ->where('web_reception', 0)
+                        ->where('publish_start_date', '<=', $today)
+                        ->where('publish_end_date', '>=', $today)
+                        ->orderBy('courses.order');
+                },
+                'courses.kenshin_sys_courses',
+                'courses.kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
+                    if ($request->input('sex') == Gender::MALE) {
+                        $sex = GenderTak::MALE;
+                    } else {
+                        $sex = GenderTak::FEMALE;
+                    }
+                    $q->where('sex', $sex);
+                    $q->where('honnin_kbn', $request->input('honnin_kbn'));
+
+            }]);
+        }
+
+//        $query->whereHas('courses' , function($q) use ($today) {
+//            $q->where('is_category', 0)
+//                ->where('web_reception', 0)
+//                ->where('publish_start_date', '<=', $today)
+//                ->where('publish_end_date', '>=', $today)
+//            ;
+//        });
+
+            return $query->find($hospital_id);
     }
 
     /**

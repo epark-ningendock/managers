@@ -117,3 +117,141 @@ if ( !function_exists('billingDateFilter') ) :
     }
 
 endif;
+
+if (! function_exists('getAgeTargetDate')) :
+    function getAgeTargetDate($birth, $reservationDate, $ageKisanKbn, $ageKisanDate, $medicalExamSysId)
+    {
+        $birthday = \Carbon\Carbon::createFromFormat('Ymd', $birth);
+        if ($reservationDate) {
+            $reservation_date = \Carbon\Carbon::createFromFormat('Y-m-d', $reservationDate);
+        } else {
+            $reservation_date = \Carbon\Carbon::today()->addDay(6);
+        }
+        $today = \Carbon\Carbon::today();
+        if ($medicalExamSysId == config('constant.medical_exam_sys_id.tak')) {
+            // 当日
+            if ($ageKisanKbn == 1) {
+
+                return calcAge($birthday, $reservation_date);
+                // 受診月末
+            } elseif ($ageKisanKbn == 2) {
+                return calcAge($birthday, $reservation_date->endOfMonth());
+            } elseif ($ageKisanKbn == 3) {
+                if ($today->month == 1 || $today->month == 2 || $today->month == 3) {
+                    $target_date = $today->subYear(1)->endOfYear();
+                    return calcAge($birthday, $target_date);
+                } else {
+                    return calcAge($birthday, $today->endOfYear());
+                }
+            } elseif ($ageKisanKbn == 4) {
+                $target_date = $today->setDate($today->year, 4, 1);
+                return calcAge($birthday, $target_date);
+            } elseif ($ageKisanKbn == 5) {
+                $target_date = $today->setDate($today->year, 3, 31);
+                return calcAge($birthday, $target_date);
+            } elseif ($ageKisanKbn == 6) {
+                $target_date = $today->endOfYear();
+                return calcAge($birthday, $target_date);
+            } elseif ($ageKisanKbn == 7) {
+                $target_date = $today->setDate($today->year + 1, 4, 1);
+                return calcAge($birthday, $target_date);
+            } elseif ($ageKisanKbn == 8) {
+                $target_m = (int)substr($ageKisanDate, 0, 2);
+                $target_d = (int)substr($ageKisanDate, 2, 2);
+                if ($today->month >= 4) {
+                    if ($target_m <= 3) {
+                        $target_y = $today->year;
+                    } else {
+                        $target_y = $today->year - 1;
+                    }
+                } else {
+                    if ($target_m <= 3) {
+                        $target_y = $today->year - 1;
+                    } else {
+                        $target_y = $today->year - 2;
+                    }
+                }
+                $target_date = $today->setDate($target_y, $target_m, $target_d);
+                return calcAge($birthday, $target_date);
+            } elseif ($ageKisanKbn == 9) {
+                $target_m = (int)substr($ageKisanDate, 0, 2);
+                $target_d = (int)substr($ageKisanDate, 2, 2);
+                if ($today->month >= 4) {
+                    if ($target_m <= 3) {
+                        $target_y = $today->year + 1;
+                    } else {
+                        $target_y = $today->year;
+                    }
+                } else {
+                    if ($target_m <= 3) {
+                        $target_y = $today->year;
+                    } else {
+                        $target_y = $today->year - 1;
+                    }
+                }
+                $target_date = $today->setDate($target_y, $target_m, $target_d);
+                return calcAge($birthday, $target_date);
+            } elseif ($ageKisanKbn == 10) {
+                $target_m = (int)substr($ageKisanDate, 0, 2);
+                $target_d = (int)substr($ageKisanDate, 2, 2);
+                if ($today->month >= 4) {
+                    if ($target_m <= 3) {
+                        $target_y = $today->year + 2;
+                    } else {
+                        $target_y = $today->year + 1;
+                    }
+                } else {
+                    if ($target_m <= 3) {
+                        $target_y = $today->year + 1;
+                    } else {
+                        $target_y = $today->year;
+                    }
+                }
+                $target_date = $today->setDate($target_y, $target_m, $target_d);
+                return calcAge($birthday, $target_date);
+            } elseif ($ageKisanKbn == 11) {
+                $target_m = (int)substr($ageKisanDate, 0, 2);
+                $target_d = (int)substr($ageKisanDate, 2, 2);
+                $target_date = $today->setDate($today->year - 1, $target_m, $target_d);
+                return calcAge($birthday, $target_date);
+            } elseif ($ageKisanKbn == 12) {
+                $target_m = (int)substr($ageKisanDate, 0, 2);
+                $target_d = (int)substr($ageKisanDate, 2, 2);
+                $target_date = $today->setDate($today->year, $target_m, $target_d);
+                return calcAge($birthday, $target_date);
+            } elseif ($ageKisanKbn == 13) {
+                $target_m = (int)substr($ageKisanDate, 0, 2);
+                $target_d = (int)substr($ageKisanDate, 2, 2);
+                $target_date = $today->setDate($today->year + 1, $target_m, $target_d);
+                return calcAge($birthday, $target_date);
+            }
+        }
+    }
+
+    function calcAge($birth_day, $target_date) {
+        $birth_year = (int)date("Y",$birth_day);
+        $birth_month = (int)date("m",$birth_day);
+        $birth_day = (int)date("d",$birth_day);
+
+        // 現在の年月日を取得
+        $now_year = $target_date->year;
+        $now_month = $target_date->month;
+        $now_day = $target_date->day;
+
+        // 年齢を計算
+        $age = $now_year - $birth_year;
+
+        // 「月」「日」で年齢を調整
+        if( $birth_month === $now_month ) {
+
+            if( $now_day < $birth_day ) {
+                $age--;
+            }
+
+        } elseif( $now_month < $birth_month ) {
+            $age--;
+        }
+
+        return $age;
+    }
+endif;

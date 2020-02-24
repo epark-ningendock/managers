@@ -12,6 +12,7 @@ class Hospital extends Model
 {
     use SoftDeletes, OptimisticLocking;
     protected $table = 'hospitals';
+    private $kenshin_relation_flg;
 
     //Note $fillable is temporary for factory, make it realistic field when business logic
     protected $fillable = [
@@ -408,5 +409,23 @@ class Hospital extends Model
         } else {
             return null;
         }
+    }
+
+    public function setKenshinRelation($kenshin_relation_flg, $sex, $birth, $honnin_kbn) {
+
+        if ($this->courses) {
+            foreach ($this->courses as $course) {
+                $course->kenshin_relation_flg = $kenshin_relation_flg;
+                $course->sex = $sex;
+                $course->birth = $birth;
+                $course->honnin_kbn = $honnin_kbn;
+            }
+        }
+
+        $this->kenshin_relation_flg = $kenshin_relation_flg;
+    }
+
+    public function getKenshinRelationFlg() {
+        return $this->kenshin_relation_flg;
     }
 }

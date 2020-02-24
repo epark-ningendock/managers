@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Calendar;
 use App\CalendarDay;
 use App\Enums\CalendarDisplay;
+use App\KenshinSysCourseWaku;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\Resource;
 
@@ -19,48 +20,88 @@ class MonthlyCalendarResource extends Resource
     public function toArray($request)
     {
 
-        $from = Carbon::today();
-        $to = Carbon::today()->addMonthsNoOverflow(2)->endOfMonth()->toDateString();
-        $start_month = $this->reception_start_date / 1000;
-        $start_day = $this->reception_start_date % 1000;
-        $from = $from->addMonthsNoOverflow($start_month)->addDays($start_day);
+        if ($this->kenshin_relation_flg && !empty($this->kenshin_sys_courses) && count($this->kenshin_sys_courses) > 0) {
+            $results = [];
+            if (!empty($this->kenshin_sys_courses[0]->course_futan_conditions)
+                && count($this->kenshin_sys_courses[0]->course_futan_conditions) > 0) {
+                $from = Carbon::today()->format('Ym');
+                $to = Carbon::today()->addMonthsNoOverflow(2)->endOfMonth()->format('Ym');
+                $course_wakus = KenshinSysCourseWaku::where('kenshin_sys_course_id', $this->kenshin_sys_courses[0]->id)
+                    ->where('jouken_no', $this->kenshin_sys_courses[0]->course_futan_conditions[0]->jouken_no)
+                    ->where('year_month', '>=', $from)
+                    ->where('year_month', '<=', $to)
+                    ->orderBy('year_month')
+                    ->get();
 
-        $calendar = Calendar::find($this->calendar_id);
-        if (!$calendar) {
-            $disp_flg = CalendarDisplay::HIDE;
-        } else {
-            $disp_flg = $calendar->is_calendar_display;
-        }
-
-
-        $monthly_wakus = CalendarDay::where('calendar_id', $this->calendar_id)
-            ->where('date', '>=', $from)
-            ->where('date', '<=', $to)
-            ->where('is_holiday', 0)
-            ->where('is_reservation_acceptance', 1)
-            ->get()
-            ->groupBy(function ($row) {
-                return $row->date->format('Ym');
-            })
-            ->map(function ($day) {
-                return collect([$day->sum('reservation_frames'), $day->sum('reservation_count'), $day[0]->date->format('Ym')]);
-            });
-
-        $results = [];
-        $appoint_ok = 0;
-        foreach ($monthly_wakus as $monthly_waku) {
-            $appoint_ok = 0;
-            if ($disp_flg == strval(CalendarDisplay::SHOW) && ($monthly_waku[0] > $monthly_waku[1])) {
-                $appoint_ok = 1;
+                if ($course_wakus) {
+                    foreach ($course_wakus as $course_waku) {
+                        if ($course_waku->waku_kbn == 1) {
+                            $appoint_ok = 1;
+                        } else {
+                            $appoint_ok = 0;
+                        }
+                        $results[] = ['yyyymm' => $course_waku->year_month, 'apoint_ok' =>  $appoint_ok];
+                    }
+                }
             }
-            $results[] = ['yyyymm' => $monthly_waku[2], 'apoint_ok' =>  $appoint_ok];
+
+            for($i = count($results); $i < 3; $i++) {
+                $ym = Carbon::today()->addMonthsNoOverflow($i)->format('Ym');
+                $results[] = ['yyyymm' => $ym, 'apoint_ok' =>  0];
+            }
+
+            return $results;
+
+        } else {
+            $from = Carbon::today();
+            $to = Carbon::today()->addMonthsNoOverflow(2)->endOfMonth()->toDateString();
+            $start_month = $this->reception_start_date / 1000;
+            $start_day = $this->reception_start_date % 1000;
+            $from = $from->addMonthsNoOverflow($start_month)->addDays($start_day);
+
+            $calendar = Calendar::find($this->calendar_id);
+            if (!$calendar) {
+                $disp_flg = CalendarDisplay::HIDE;
+            } else {
+                $disp_flg = $calendar->is_calendar_display;
+            }
+
+
+            $monthly_wakus = CalendarDay::where('calendar_id', $this->calendar_id)
+                ->where('date', '>=', $from)
+                ->where('date', '<=', $to)
+                ->where('is_holiday', 0)
+                ->where('is_reservation_acceptance', 1)
+                ->get()
+                ->groupBy(function ($row) {
+                    return $row->date->format('Ym');
+                })
+                ->map(function ($day) {
+                    return collect([$day->sum('reservation_frames'), $day->sum('reservation_count'), $day[0]->date->format('Ym')]);
+                });
+
+            $results = [];
+
+            if ($from->month > Carbon::today()->month) {
+                $ym = Carbon::today()->format('Ym');
+                $results[] = ['yyyymm' => $ym, 'apoint_ok' =>  0];
+            }
+
+            foreach ($monthly_wakus as $monthly_waku) {
+                $appoint_ok = 0;
+                if ($disp_flg == strval(CalendarDisplay::SHOW) && ($monthly_waku[0] > $monthly_waku[1])) {
+                    $appoint_ok = 1;
+                }
+                $results[] = ['yyyymm' => $monthly_waku[2], 'apoint_ok' =>  $appoint_ok];
+            }
+
+            for($i = count($results); $i < 3; $i++) {
+                $ym = Carbon::today()->addMonthsNoOverflow($i)->format('Ym');
+                $results[] = ['yyyymm' => $ym, 'apoint_ok' =>  0];
+            }
+
+            return $results;
         }
 
-        for($i = count($results); $i < 3; $i++) {
-            $ym = Carbon::today()->addMonthsNoOverflow($i)->format('Ym');
-            $results[] = ['yyyymm' => $ym, 'apoint_ok' =>  $appoint_ok];
-        }
-
-        return $results;
     }
 }

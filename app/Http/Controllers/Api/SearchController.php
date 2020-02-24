@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\GenderTak;
+use App\Enums\HonninKbn;
 use App\Enums\ReservationStatus;
 use App\Enums\Status;
 use App\Enums\WebReception;
@@ -16,71 +18,13 @@ use App\Course;
 
 use App\Http\Resources\SearchHospitalsResource;
 use App\Http\Resources\SearchCoursesResource;
+use App\TargetAge;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Log;
 
 class SearchController extends ApiBaseController
 {
-//    /**
-//     * 医療機関・検査コース一覧検索API
-//     *
-//     * @param  \Illuminate\Http\Request  $request
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function index(SearchRequest $request)
-//    {
-//        try {
-//            $search_cond_chk_result = $this->checkSearchCond($request, false);
-//            if (!$search_cond_chk_result[0]) {
-//                return $this->createResponse($search_cond_chk_result[1]);
-//            }
-//            // フラグセット
-//            $return_flag = $request->input('return_flag');
-//            $search_condition_return_flag = $request->input('search_condition_return_flag');
-//
-//            // 対象データ取得
-//            $hospitals = $this->getHospitals($request);
-//            $courses = $this->getCourses($request,true);
-//
-//            // 結果生成
-//            $status = 0;
-//
-//            // 件数要素セット
-//            $count = $hospitals->count() + $courses->count();
-//
-//            //医療施設検索ヒット数セット
-//            $hospitals_return_count = $hospitals->count();
-//
-//            //検査コース検索ヒット数セット
-//            $courses_return_count = $courses->count();
-//
-//            // page取得の場合、全件件数取得
-//            $hospitals_search_count = $return_flag == 0 ? $hospitals->count() : $this->getHospitals($request, true);
-//            $courses_search_count = $return_flag == 0 ? $courses->count() : $this->getCourses($request, true);
-//
-//            $return_count = $count;
-//            $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
-//            $return_to = $return_flag == 0 ? $count : $request->input('return_to');
-//
-//            // 対象データ取得
-//            $hospitals = SearchHospitalsResource::collection($hospitals);
-//            $courses = SearchCoursesResource::collection($courses);
-//
-//            // response
-//            return $search_condition_return_flag == 0 ?
-//                compact('status', 'hospitals_return_count', 'courses_return_count', 'hospitals_search_count', 'courses_search_count', 'return_from', 'return_to', 'hospitals', 'courses')
-//                : compact('status', 'hospitals_return_count', 'courses_return_count', 'hospitals_search_count', 'courses_search_count', 'return_from', 'return_to')
-//                + $request->toJson()
-//                + compact('hospitals', 'courses');
-//
-//        } catch (\Exception $e) {
-//            Log::error($e);
-//            return $this->createResponse($this->messages['system_error_api']);
-//        }
-//
-//    }
-
     /**
      * 医療機関一覧検索API
      *
@@ -678,7 +622,7 @@ class SearchController extends ApiBaseController
     /**
      * @param $hospitals
      */
-    private function getHospitals($hospitals) {
+    private function getHospitals($request, $hospitals) {
 
         $ids = [];
         foreach ($hospitals as $hospital) {
@@ -687,24 +631,86 @@ class SearchController extends ApiBaseController
 
         $target_date = Carbon::today()->toDateString();
 
-        return Hospital::with(['hospital_categories' => function ($query) {
+        $query = Hospital::with(['hospital_categories' => function ($query) {
             $query->whereIn('image_order', [2, 3, 4]);
         },
             'courses' => function ($query) use ($target_date) {
                 $query->where('web_reception', WebReception::ACCEPT)
                     ->where('is_category', 0)
-                ->where('publish_start_date', '<=', $target_date)
-                ->where('publish_end_date', '>=', $target_date)
+                    ->where('publish_start_date', '<=', $target_date)
+                    ->where('publish_end_date', '>=', $target_date)
                     ->orderBy('order')->with(['course_details'=> function($query){
                         $query->with('minor_classification');
                     },'calendar','calendar_days', 'course_metas']);
             },
 
         ])
-        ->whereIn('id', $ids)
+            ->whereIn('id', $ids)
             ->orderBy('hospitals.pvad', 'DESC')
-            ->orderBy('hospitals.pv_count', 'DESC')
-            ->get();
+            ->orderBy('hospitals.pv_count', 'DESC');
+
+        if (!empty($request->input('sex'))) {
+            $query->with(['courses.kenshin_sys_courses', 'courses.kenshin_sys_courses.course_futan_conditions']);
+        }
+
+        $hospitals = $query->get();
+
+        $today = Carbon::today();
+
+        foreach ($hospitals as $hospital) {
+            if (empty($hospital->kenshin_sys_hospital_id) || empty($hospital->courses)) {
+                continue;
+            }
+
+            foreach ($hospital->course as $key => $course) {
+                if (empty($course->kenshin_sys_courses)) {
+                    continue;
+                }
+                foreach ($course->kenshin_sys_courses as $kenshin_sys_course) {
+                    if ($kenshin_sys_course->kenshin_sys_riyou_bgn_date > $today
+                    || $kenshin_sys_course->kenshin_sys_riyou_end_date < $today) {
+                        unset($hospital->course[$key]);
+                        continue;
+                    }
+                    $course_futan_condition = $kenshin_sys_course->course_futan_conditions;
+                    if ($course_futan_condition->sex != GenderTak::ALL
+                    && $course_futan_condition->sex != $request->input('sex')) {
+                        unset($hospital->course[$key]);
+                        continue;
+                    }
+                    if ($course_futan_condition->honnin_kbn != HonninKbn::ALL
+                        && $course_futan_condition->honnin_kbn != $request->input('honnin_kbn')) {
+                        unset($hospital->course[$key]);
+                        continue;
+                    }
+                    $age = getAgeTargetDate($request->input('birth'),
+                        null,
+                        $course_futan_condition->kenshin_sys_course_age_kisan_kbn,
+                        $course_futan_condition->kenshin_sys_course_age_kisan_date,
+                        $hospital->medical_examination_system_id);
+
+                    $target_ages = TargetAge::where('course_futan_condition_id', $course_futan_condition->id)
+                        ->get();
+
+                    if ($target_ages) {
+                        $exist_flg = false;
+                        foreach ($target_ages as $target_age) {
+                          if ($target_age->target_age == $age) {
+                              $exist_flg = true;
+                              break;
+                          }
+                        }
+                        if (!$exist_flg) {
+                            unset($hospital->course[$key]);
+                            continue;
+                        }
+                    }
+                }
+
+            }
+        }
+
+        return $hospitals;
     }
 
     /**
