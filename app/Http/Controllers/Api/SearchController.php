@@ -46,7 +46,7 @@ class SearchController extends ApiBaseController
             // 件数のみ返却
             $search_count = $this->getHospitalCount($request, true);
             $targets =  $this->getHospitalCount($request, false);
-            $entities = $this->getHospitals($targets);
+            $entities = $this->getHospitals($request, $targets);
 
            // 結果生成
            $status = 0;
