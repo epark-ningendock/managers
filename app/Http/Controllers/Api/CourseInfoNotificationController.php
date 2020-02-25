@@ -275,7 +275,7 @@ class CourseInfoNotificationController extends Controller
             $course->kenshin_sys_riyou_bgn_date = Carbon::createFromFormat('Ymd', $kenshin_course['riyouBgnDate'])->format('Y-m-d');
             $course->kenshin_sys_riyou_end_date = Carbon::createFromFormat('Ymd', $kenshin_course['riyouEndDate'])->format('Y-m-d');
             $course->kenshin_sys_course_age_kisan_kbn = $kenshin_course['courseAgeKisanKbn'];
-            $course->kenshin_sys_course_age_kisan_date = Carbon::parse($kenshin_course['courseAgeKisanDate']) ?? null;
+            $course->kenshin_sys_course_age_kisan_date = $kenshin_course['courseAgeKisanDate'] ?? null;
             $course->save();
 
             // コース負担条件登録
@@ -343,7 +343,7 @@ class CourseInfoNotificationController extends Controller
                     $option->kenshin_sys_option_no = $kenshin_option['optionNo'];
                     $option->kenshin_sys_option_name = $kenshin_option['optionNm'];
                     $option->kenshin_sys_option_age_kisan_kbn = $kenshin_option['optionAgeKisanKbn'];
-                    $option->kenshin_sys_option_age_kisan_date = Carbon::parse($kenshin_option['optionAgeKisanDate']) ?? null;
+                    $option->kenshin_sys_option_age_kisan_date = $kenshin_option['optionAgeKisanDate'] ?? null;
                     $option->save();
 
                     $option_futan_jouken_list = $kenshin_option['optionFutanJoukenList'];
