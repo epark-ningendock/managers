@@ -187,10 +187,10 @@ class CourseInfoNotificationController extends Controller
             DB::commit();
         } catch (\Throwable $e) {
             $message = '[健診システム連携コース通知API] DBの登録に失敗しました。';
-//            Log::error($message, [
-//                '健診システム連携情報' => $kenshin_sys_cooperation->toArray(),
-//                'exception' => $e,
-//            ]);
+            Log::error($message, [
+                '健診システム連携情報' => $kenshin_sys_cooperation->toArray(),
+                'exception' => $e,
+            ]);
             DB::rollback();
             return $this->createResponse($sysErrorMessages['errorDB']);
         }
@@ -356,8 +356,8 @@ class CourseInfoNotificationController extends Controller
                             $option_futan_condition->honnin_kbn = $kenshin_option_futan_jouken['honninKbn'];
                             $option_futan_condition->futan_kingaku = $kenshin_option_futan_jouken['futanKin'];
                             $option_futan_condition->yusen_kbn = $kenshin_option_futan_jouken['yusenKbn'];
-                            $option_futan_condition->riyou_bgn_date = $kenshin_option_futan_jouken['riyouBgnDate'];
-                            $option_futan_condition->riyou_end_date = $kenshin_option_futan_jouken['riyouEndDate'];
+                            $option_futan_condition->riyou_bgn_date = Carbon::createFromFormat('Ymd', $kenshin_option_futan_jouken['riyouBgnDate'])->format('Y-m-d');
+                            $option_futan_condition->riyou_end_date = Carbon::createFromFormat('Ymd', $kenshin_option_futan_jouken['riyouEndDate'])->format('Y-m-d');
                             $option_futan_condition->save();
 
                             $kenshin_option_target_ages = $kenshin_option_futan_jouken['targetAgeList'];
