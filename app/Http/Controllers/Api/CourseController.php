@@ -316,8 +316,8 @@ class CourseController extends ApiBaseController
 
             if (!empty($request->input('sex'))) {
                 $query->with([
-                    'courses.kenshin_sys_courses',
-                    'courses.kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
+                    'kenshin_sys_courses',
+                    'kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
                         $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL])
                             ->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL]);
 
