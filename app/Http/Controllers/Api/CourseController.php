@@ -125,7 +125,7 @@ class CourseController extends ApiBaseController
      * @param  $course_no
      * @return Course
      */
-    private function getCourseBasic($hospital_id, $course_code, $request)
+    private function getCourseBasic($hospital_id, $course_code)
     {
         $today = Carbon::today()->toDateString();
         $query = Course::with([
@@ -149,16 +149,6 @@ class CourseController extends ApiBaseController
             ->where('web_reception', 0)
             ->where('publish_start_date', '<=', $today)
             ->where('publish_end_date', '>=', $today);
-
-        if (!empty($request->input('sex'))) {
-            $query->with([
-                'kenshin_sys_courses',
-                'kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
-                    $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL])
-                        ->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL]);
-
-                }]);
-        }
 
         return $query->first();
     }
