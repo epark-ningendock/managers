@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\Gender;
 use App\Enums\GenderTak;
+use App\Enums\HonninKbn;
 use App\Enums\ReservationStatus;
 use App\Enums\Status;
 use App\Hospital;
@@ -228,8 +229,8 @@ class HospitalController extends ApiBaseController
                 },
                 'courses.kenshin_sys_courses',
                 'courses.kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
-                    $q->where('sex', $request->input('sex'));
-                    $q->where('honnin_kbn', $request->input('honnin_kbn'));
+                    $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL]);
+                    $q->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL]);
 
             }]);
         }
