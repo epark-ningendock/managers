@@ -229,8 +229,8 @@ class HospitalController extends ApiBaseController
                 },
                 'courses.kenshin_sys_courses',
                 'courses.kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
-                    $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL]);
-                    $q->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL]);
+                    $q->whereIn('sex', [$request->input('sex'), 3]);
+                    $q->whereIn('honnin_kbn', [$request->input('honnin_kbn'), 3]);
 
             }]);
         }
