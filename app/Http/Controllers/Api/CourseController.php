@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\CalendarDay;
+use App\Enums\GenderTak;
+use App\Enums\HonninKbn;
 use App\Enums\ReservationStatus;
 use App\Enums\Status;
 use App\Hospital;
@@ -123,10 +125,10 @@ class CourseController extends ApiBaseController
      * @param  $course_no
      * @return Course
      */
-    private function getCourseBasic($hospital_id, $course_code)
+    private function getCourseBasic($hospital_id, $course_code, $request)
     {
         $today = Carbon::today()->toDateString();
-        return Course::with([
+        $query = Course::with([
             'course_images',
             'course_details' => function ($query) {
                 $query->whereIn('major_classification_id', [2, 3, 4, 5, 6, 11, 13, 15, 16, 17, 18, 19, 20, 24, 25])
@@ -146,8 +148,19 @@ class CourseController extends ApiBaseController
             ->where('is_category', 0)
             ->where('web_reception', 0)
             ->where('publish_start_date', '<=', $today)
-            ->where('publish_end_date', '>=', $today)
-            ->first();
+            ->where('publish_end_date', '>=', $today);
+
+        if (!empty($request->input('sex'))) {
+            $query->with([
+                'kenshin_sys_courses',
+                'kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
+                    $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL])
+                        ->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL]);
+
+                }]);
+        }
+
+        return $query->first();
     }
 
     /**
@@ -300,7 +313,7 @@ class CourseController extends ApiBaseController
             $from = $serach_condition->get_yyyymmdd_from;
             $to = $serach_condition->get_yyyymmdd_to;
 
-            $course = Course::with([
+            $query = Course::with([
                 'calendar_days' => function ($query) use ($from, $to) {
                     $query->where('date', '>=', $from)
                         ->where('date', '<=', $to)
@@ -309,11 +322,29 @@ class CourseController extends ApiBaseController
             ])
                 ->where('code', $serach_condition->course_code)
                 ->where('hospital_id', $hospital_id)
-                ->where('is_category', 0)
-                ->first();
+                ->where('is_category', 0);
+
+            if (!empty($request->input('sex'))) {
+                $query->with([
+                    'courses.kenshin_sys_courses',
+                    'courses.kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
+                        $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL])
+                            ->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL]);
+
+                    }]);
+            }
+
+            $course = $query->first();
 
             if (!$course) {
                 return $this->createResponse($this->messages['data_empty_error'], $request->input('callback'));
+            }
+
+            if (!empty($request->input('sex'))) {
+                $course->kenshin_relation_flg = true;
+                $course->sex = $request->input('sex');
+                $course->birth = $request->input('birth');
+                $course->honnin_kbn = $request->input('honnin_kbn');
             }
 
             $data = ['hospital_id' => $hospital_id, 'hospital_code' => $serach_condition->hospital_code,  'course' => $course];

@@ -67,6 +67,7 @@ class HospitalController extends ApiBaseController
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
             $hospital = $this->getHospitalData($hospital_id, $request);
+            \Illuminate\Support\Facades\Log::info('パラメータ：'. $request->input('sex'));
             if (!empty($request->input('sex'))) {
                 $hospital->setKenshinRelation(true,
                     $request->input('sex'),
@@ -229,8 +230,8 @@ class HospitalController extends ApiBaseController
                 },
                 'courses.kenshin_sys_courses',
                 'courses.kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
-                    $q->whereIn('sex', [1, 3]);
-                    $q->whereIn('honnin_kbn', [1, 3]);
+                    $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL])
+                    ->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL]);
 
             }]);
         }
