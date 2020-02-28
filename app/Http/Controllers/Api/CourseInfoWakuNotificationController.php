@@ -151,6 +151,7 @@ class CourseInfoWakuNotificationController extends Controller
             foreach ($c['monthWakuList'] as $month_waku) {
                 $kenshin_sys_course_waku = KenshinSysCourseWaku::where('kenshin_sys_course_id', $course->id)
                     ->where('year_month', $month_waku['month'])
+                    ->where('jouken_no', $c['joukenNo'])
                     ->first();
 
                 if (!$kenshin_sys_course_waku) {
