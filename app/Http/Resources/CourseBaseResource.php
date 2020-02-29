@@ -52,7 +52,8 @@ class CourseBaseResource extends Resource
             'flg_pre_account' => $this->is_pre_account,
             'auto_calc_application' => $this->auto_calc_application,
             'options' => $this->getOptions(),
-            'question' => $this->getQuestion()
+            'question' => $this->getQuestion(),
+            'kenshin_relation_flg' => $this->kenshin_relation_flg ?? 0
         ]);
     }
 
@@ -61,13 +62,54 @@ class CourseBaseResource extends Resource
      */
     private function getOptions() {
         $results = [];
-        foreach ($this->course_options as $course_option) {
-            $option = $course_option->option;
-            if (!$option || empty($option->id)) {
-                continue;
+        if ($this->kenshin_relation_flg) {
+            if (!empty($this->kenshin_sys_courses)
+                && count($this->kenshin_sys_courses) > 0
+                && !empty($this->kenshin_sys_courses[0]->kenshin_sys_options)
+                && count($this->kenshin_sys_courses[0]->kenshin_sys_options) > 0) {
+                $kenshin_sys_options = $this->kenshin_sys_courses[0]->kenshin_sys_options;
+
+                foreach ($kenshin_sys_options as $option) {
+                    if (empty($option->option_futan_conditions)) {
+                        continue;
+                    }
+                    $option_futan_conditions = $option->option_futan_conditions;
+                    foreach ($option_futan_conditions as $c) {
+                        if (empty($c->optionn_target_ages)) {
+                            $results[] = ['cd' => $option->id,
+                                'title' => $option->kenshin_sys_option_name,
+                                'confirm' => '',
+                                'price' => $c->futan_kingaku];
+                        } else {
+                            $target_date = getAgeTargetDate($this->birth,
+                                $this->reservation_date,
+                                $option->kenshin_sys_option_age_kisan_kbn,
+                                $option->kenshin_sys_option_age_kisan_date,
+                                $this->medical_exam_sys_id);
+                            $age = calcAge($this->birth, $target_date);
+                            foreach ($c->optionn_target_ages as $target_age) {
+                                if ($age == $target_age->target_age) {
+                                    $results[] = ['cd' => $option->id,
+                                        'title' => $option->kenshin_sys_option_name,
+                                        'confirm' => '',
+                                        'price' => $c->futan_kingaku];
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
-            $results[] = ['cd' => $option->id, 'title' => $option->name, 'confirm' => $option->confirm, 'price' => $option->price];
+        } else {
+            foreach ($this->course_options as $course_option) {
+                $option = $course_option->option;
+                if (!$option || empty($option->id)) {
+                    continue;
+                }
+                $results[] = ['cd' => $option->id, 'title' => $option->name, 'confirm' => $option->confirm, 'price' => $option->price];
+            }
         }
+
 
         return $results;
     }

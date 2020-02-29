@@ -72,14 +72,24 @@ class CourseController extends ApiBaseController
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
             // //検査コース基本情報取得
-            $course = $this->getCourseBasic($hospital_id, $course_code);
+            $course = $this->getCourseBasic($hospital_id, $course_code, $request);
 
             if (!$course) {
                 return $this->createResponse($this->messages['data_empty_error'], $request->input('callback'));
             }
+
             // その他コース情報取得
             $hospital = $this->getHospitalData($course->hospital_id);
             $data = ['course' => $course,  'hospital' => $hospital];
+
+            if (!empty($request->input('sex'))) {
+                $course->kenshin_relation_flg = true;
+                $course->medical_exam_sys_id = $hospital->medical_examination_system_id;
+                $course->reservation_date = $request->input('reservation_date');
+                $course->sex = $request->input('sex');
+                $course->birth = $request->input('birth');
+                $course->honnin_kbn = $request->input('honnin_kbn');
+            }
 
             return new CourseBasicResource($data);
         } catch (\Exception $e) {
@@ -125,7 +135,7 @@ class CourseController extends ApiBaseController
      * @param  $course_no
      * @return Course
      */
-    private function getCourseBasic($hospital_id, $course_code)
+    private function getCourseBasic($hospital_id, $course_code, $request)
     {
         $today = Carbon::today()->toDateString();
         $query = Course::with([
@@ -149,6 +159,26 @@ class CourseController extends ApiBaseController
             ->where('web_reception', 0)
             ->where('publish_start_date', '<=', $today)
             ->where('publish_end_date', '>=', $today);
+
+        if (!empty($request->input('sex'))) {
+            $query->with([
+                'kenshin_sys_courses',
+                'kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
+                    $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL])
+                        ->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL]);
+
+                },
+                'kenshin_sys_courses.kenshin_sys_options',
+                'kenshin_sys_courses.kenshin_sys_options.option_futan_conditions' => function ($q) use ($request) {
+                    $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL])
+                        ->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL])
+                        ->orderBy('yusen_kbn');
+                    },
+                'kenshin_sys_courses.kenshin_sys_options.option_futan_conditions.option_target_ages'
+                ]);
+        } else {
+            $query->with(['course_options']);
+        }
 
         return $query->first();
     }

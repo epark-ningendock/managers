@@ -67,7 +67,6 @@ class HospitalController extends ApiBaseController
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
             $hospital = $this->getHospitalData($hospital_id, $request);
-            \Illuminate\Support\Facades\Log::info('パラメータ：'. $request->input('sex'));
             if (!empty($request->input('sex'))) {
                 $hospital->setKenshinRelation(true,
                     $request->input('sex'),

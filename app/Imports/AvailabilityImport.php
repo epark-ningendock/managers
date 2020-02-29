@@ -3,6 +3,9 @@
 namespace App\Imports;
 
 use App\Availabil;
+use App\CalendarDay;
+use App\ConvertedIdString;
+use App\Enums\Status;
 use App\Hospital;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
@@ -56,16 +59,35 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
             $deleted_at = Carbon::today();
         }
 
-        $model = new Availabil([
-            'hospital_no' => $old_id,
-            'course_no' => $row['course_no'],
-            'reservation_dt' => $row['reservation_dt'],
-            'line_id' => $row['line_id'],
-            'appoint_number' => $row['appoint_number'],
+//        $model = new Availabil([
+//            'hospital_no' => $old_id,
+//            'course_no' => $row['course_no'],
+//            'reservation_dt' => $row['reservation_dt'],
+//            'line_id' => $row['line_id'],
+//            'appoint_number' => $row['appoint_number'],
+//            'reservation_frames' => $row['reservation_frames'],
+//            'created_at' => $row['rgst'],
+//            'updated_at' => $row['updt'],
+//            'deleted_at' => $deleted_at,
+//        ]);
+//        $model->save();
+
+        $c = ConvertedIdString::where('table_name', 'calendars')
+            ->where('old_id', $row['line_id'])
+            ->where('hospital_no', $row['hospital_no'])
+            ->first();
+
+        $model = new CalendarDay([
+            'date' => Carbon::createFromFormat('Ymd', $row['reservation_dt'])->format('Y-m-d'),
+            'is_holiday' => 0,  //
+            'is_reservation_acceptance' => 1,
             'reservation_frames' => $row['reservation_frames'],
-            'created_at' => $row['rgst'],
-            'updated_at' => $row['updt'],
-            'deleted_at' => $deleted_at,
+            'calendar_id' => $c->new_id,
+            'reservation_count' => $row['appoint_number'],
+            'status' => $row['status'],
+            'created_at' => Carbon::today(),
+            'updated_at' => Carbon::today(),
+            'deleted_at' => $deleted_at
         ]);
         $model->save();
     }
