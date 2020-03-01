@@ -1,0 +1,5 @@
+"LINEGROUP_ID","SEQ_NO","LINEGROUP_NAME","LINEGROUP_NAME_SHORT","OUTSIDE_RESERVATION","DO_NOT_SPECIFY_LINE_FG","LINEGROUP_TYPE","VACCINE_FG","RABIES_FG","SAME_TIME_LIMIT","LINEGROUP_CANCELLATION_DAYS","LINEGROUP_START_DAYS","LINEGROUP_END_DAYS","CREATE_USER_NO","CREATE_DATE","MODIFY_USER_NO","MODIFY_DATE","DELETE_FG","DATA_VERSION"
+"21268","1","人間ドックコース（脳ドック付）【水・土2日間】","人間ドックコース（脳ドック付）【水・土2日間】","0","0","0","0","0",\N,"7","6000","6","system","2017-08-18 12:13:28","A2062","2018-01-23 09:52:52","0","8"
+"21269","2","心臓ドックコース","心臓ドックコース","0","0","0","0","0",\N,"7","6000","6","system","2017-08-18 12:13:28","A2062","2018-01-23 09:53:00","0","7"
+"21270","3","乳がん検診コース","乳がん検診コース","0","0","0","0","0",\N,"7","6000","6","system","2017-08-18 12:13:28","A2062","2018-01-23 09:53:08","0","9"
+"21271","4","健保コース","健保コース","0","0","0","0","0",\N,"7",\N,\N,"A2064","2017-12-05 16:01:07","A2064","2017-12-05 16:01:07","0","1"
