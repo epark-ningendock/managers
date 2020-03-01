@@ -221,35 +221,63 @@ return [
 //        'seed' => true,
 //    ],
 
-   'm_option.csv' => [
-       'model' => Option::class,
-       'import' => OptionImport::class,
-       'seed' => true,
-   ],
-   'm_course_option_group.csv' => [
-       'model' => CourseOption::class,
-       'import' => CourseOptionImport::class,
-       'seed' => false,
-   ],
-   // 'm_availability.csv' => [
-   //     'model' => Availabil::class,
-   //     'import' => AvailabilityImport::class,
+   // 'm_option.csv' => [
+   //     'model' => Option::class,
+   //     'import' => OptionImport::class,
+   //     'seed' => true,
    // ],
+   // 'm_course_option_group.csv' => [
+   //     'model' => CourseOption::class,
+   //     'import' => CourseOptionImport::class,
+   //     'seed' => false,
+   // ],
+   'm_availability_1.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
+   'm_availability_2.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
+   'm_availability_3.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
+   'm_availability_4.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
+   'm_availability_5.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
+   'm_availability_6.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
+   'm_availability_7.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
+   'm_availability_8.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
 //    't_reserve_claim.csv' => [
 //        'model' => \App\ReservationOption::class,
 //        'import' => \App\Imports\ReservationOptionImport::class,
 //        'seed' => true,
 //    ],
-   't_consideration_list.csv' => [
-       'model' => \App\ConsiderationList::class,
-       'import' => \App\Imports\ConsiderationListImport::class,
-       'seed' => true,
-   ],
-   't_pv.csv' => [
-        'model' => PvRecord::class,
-        'import' => PvRecordImport::class,
-        'seed' => false,
-    ],
+   // 't_consideration_list.csv' => [
+   //     'model' => \App\ConsiderationList::class,
+   //     'import' => \App\Imports\ConsiderationListImport::class,
+   //     'seed' => true,
+   // ],
+   // 't_pv.csv' => [
+   //      'model' => PvRecord::class,
+   //      'import' => PvRecordImport::class,
+   //      'seed' => false,
+   //  ],
 //    'm_hospital_meta.csv' => [
 //        'model' => HospitalMeta::class,
 //        'import' => HospitalMetaImport::class,
