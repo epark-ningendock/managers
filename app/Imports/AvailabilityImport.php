@@ -77,6 +77,10 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
             ->where('hospital_no', $old_id)
             ->first();
 
+        if (!$c) {
+            return;
+        }
+
         $model = new CalendarDay([
             'date' => Carbon::createFromFormat('Ymd', $row['reservation_dt'])->format('Y-m-d'),
             'is_holiday' => 0,  //
