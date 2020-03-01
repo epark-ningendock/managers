@@ -42,7 +42,7 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
     {
         $row = $row->toArray();
 
-        if (empty( $row['line_id'])) {
+        if (empty( $row['line_id']) || $row['hospital_no'] < 2000) {
             return;
         }
 
@@ -74,7 +74,7 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
 
         $c = ConvertedIdString::where('table_name', 'calendars')
             ->where('old_id', $row['line_id'])
-            ->where('hospital_no', $row['hospital_no'])
+            ->where('hospital_no', $old_id)
             ->first();
 
         $model = new CalendarDay([
