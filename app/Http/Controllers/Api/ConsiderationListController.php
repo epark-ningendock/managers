@@ -176,6 +176,9 @@ class ConsiderationListController extends ApiBaseController
 
         $params = [];
         foreach ($results as $result) {
+            if (empty($result->contra)) {
+                continue;
+            }
             $param = [
               'epark_member_id' => $result->epark_member_id,
                 'hospital_id' => $result->hospital_id,
