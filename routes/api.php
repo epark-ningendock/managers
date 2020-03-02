@@ -85,7 +85,7 @@ Route::prefix('v1')->group(function () {
     // 予約一覧取得
     Route::get('reservation-get-all', 'ReservationApiController@get_all');
 // PV登録
-    Route::match(['get', 'post'], 'pv/', 'PvRegistController@store');
+    Route::post('pv/', 'PvRegistController@store');
 // EPARK会員ログイン情報
     Route::match(['get', 'post'], 'member-login-info-store/', 'MemberLoginInfoController@store');
     Route::match(['get', 'post'], 'member-login-info-show', 'MemberLoginInfoController@show');

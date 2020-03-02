@@ -40,20 +40,19 @@ class MonthlyCalendarResource extends Resource
                         } else {
                             $appoint_ok = 0;
                         }
-                        $results[] = ['yyyymm' => $course_waku->year_month, 'apoint_ok' => $appoint_ok];
+                        $results[] = ['yyyymm' => $course_waku->year_month, 'apoint_ok' =>  $appoint_ok];
                     }
                 }
             }
 
-            for ($i = count($results); $i < 3; $i++) {
+            for($i = count($results); $i < 3; $i++) {
                 $ym = Carbon::today()->addMonthsNoOverflow($i)->format('Ym');
-                $results[] = ['yyyymm' => $ym, 'apoint_ok' => 0];
+                $results[] = ['yyyymm' => $ym, 'apoint_ok' =>  0];
             }
 
             return $results;
 
         } else {
-
             $from = Carbon::today();
             $to = Carbon::today()->addMonthsNoOverflow(2)->endOfMonth()->toDateString();
             $start_month = $this->reception_start_date / 1000;
@@ -84,7 +83,7 @@ class MonthlyCalendarResource extends Resource
 
             if ($from->month > Carbon::today()->month) {
                 $ym = Carbon::today()->format('Ym');
-                $results[] = ['yyyymm' => $ym, 'apoint_ok' => 0];
+                $results[] = ['yyyymm' => $ym, 'apoint_ok' =>  0];
             }
 
             foreach ($monthly_wakus as $monthly_waku) {
@@ -92,12 +91,12 @@ class MonthlyCalendarResource extends Resource
                 if ($disp_flg == strval(CalendarDisplay::SHOW) && ($monthly_waku[0] > $monthly_waku[1])) {
                     $appoint_ok = 1;
                 }
-                $results[] = ['yyyymm' => $monthly_waku[2], 'apoint_ok' => $appoint_ok];
+                $results[] = ['yyyymm' => $monthly_waku[2], 'apoint_ok' =>  $appoint_ok];
             }
 
-            for ($i = count($results); $i < 3; $i++) {
+            for($i = count($results); $i < 3; $i++) {
                 $ym = Carbon::today()->addMonthsNoOverflow($i)->format('Ym');
-                $results[] = ['yyyymm' => $ym, 'apoint_ok' => 0];
+                $results[] = ['yyyymm' => $ym, 'apoint_ok' =>  0];
             }
 
             return $results;

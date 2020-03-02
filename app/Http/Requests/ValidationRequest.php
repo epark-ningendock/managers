@@ -47,6 +47,21 @@ class ValidationRequest extends FormRequest
                 'error_no' => '01',
                 'detail_code' => '13',
             ]),
+            'hospital_no.required' => json_encode([
+                'message' => trans('validation.for_api.required'),
+                'error_no' => '03',
+                'detail_code' => '01',
+            ]),
+            'hospital_no.numeric' => json_encode([
+                'message' => trans('validation.for_api.numeric'),
+                'error_no' => '06',
+                'detail_code' => '01',
+            ]),
+            'hospital_no.exists' => json_encode([
+                'message' => trans('validation.for_api.exists'),
+                'error_no' => '01',
+                'detail_code' => '13',
+            ]),
             'course_code.required' => json_encode([
                 'message' => trans('validation.for_api.required'),
                 'error_no' => '03',
