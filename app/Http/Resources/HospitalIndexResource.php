@@ -19,7 +19,7 @@ class HospitalIndexResource extends Resource
         return collect([])
             ->merge(new HospitalBasicResource($this))
             ->put('open', $this->getMedicalTreatmentTime())
-            ->put('closed_day', $this->getMedicalTreatmentTime())
+            ->put('closed_day', $this->getClosedDay())
             ->put('non_consultation', $this->consultation_note ?? '')
             ->put('non_consultation_note', $this->memo ?? '')
             ->put('public_status', $this->status)
@@ -32,7 +32,7 @@ class HospitalIndexResource extends Resource
     /**
      * @return array
      */
-    private function getMedicalTreatmentTime() {
+    private function getClosedDay() {
         $medical_treatment_times = $this->medical_treatment_times;
 
         $mon_flg = false;
@@ -100,5 +100,33 @@ class HospitalIndexResource extends Resource
         $result = rtrim($result, '・');
 
         return $result;
+    }
+
+    /**
+     * @return array
+     */
+    private function getMedicalTreatmentTime() {
+        $medical_treatment_times = $this->medical_treatment_times;
+        $week_data = [];
+        foreach ($medical_treatment_times as $entity) {
+            if ($entity->start == '-' && $entity->end == '-') {
+                continue;
+            }
+            $week_data[] = [
+                'start' => $entity->start ?? '',
+                'end' => $entity->end ?? '',
+                'mon' => $entity->mon,
+                'tue' => $entity->tue,
+                'wed' => $entity->wed,
+                'thu' => $entity->thu,
+                'fri' => $entity->fri,
+                'sat' => $entity->sat,
+                'sun' => $entity->sun,
+                'hol' => $entity->hol
+            ];
+
+        }
+
+       return $week_data;
     }
 }
