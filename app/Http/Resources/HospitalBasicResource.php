@@ -39,6 +39,7 @@ class HospitalBasicResource extends Resource
             'tel' => $this->tel ?? '',
             'tel_ppc'=> $this->paycall ?? '',
             'stations' => Station::getStations($rails, $stations, $accesses),
+            'medical_examination_system_id' =>$this->medical_examination_system_id ?? '',
 //            'movie' => $this->getMovieInfo(),
         ];
     }
