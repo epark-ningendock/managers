@@ -230,17 +230,17 @@ class HospitalController extends ApiBaseController
 
                 if (!empty($request->input('sort_key'))) {
                     if ($request->input('sort_key') == 'row') {
-                        $query->orderBy('courses.price');
-                        $query->orderBy('courses.order');
+                        $query->orderBy('price');
+                        $query->orderBy('order');
                     } elseif ($request->input('sort_key') == 'high') {
-                        $query->orderBy('courses.price', 'desc');
-                        $query->orderBy('courses.order');
+                        $query->orderBy('price', 'desc');
+                        $query->orderBy('order');
                     } elseif ($request->input('sort_key') == 'number') {
                         $query->withCount(['reservations' => function ($q) {
                             $q->where('reservation_date', '>=', Carbon::today()->subMonthNoOverflow()->toDateString());
                         }]);
                         $query->orderBy('reservations_count', 'desc');
-                        $query->orderBy('courses.order');
+                        $query->orderBy('order');
                     }
                 } else {
                     $query->orderBy('courses.order');
@@ -269,20 +269,20 @@ class HospitalController extends ApiBaseController
                         ->where('publish_end_date', '>=', $today);
                     if (!empty($request->input('sort_key'))) {
                         if ($request->input('sort_key') == 'row') {
-                            $query->orderBy('courses.price');
-                            $query->orderBy('courses.order');
+                            $query->orderBy('price');
+                            $query->orderBy('order');
                         } elseif ($request->input('sort_key') == 'high') {
-                            $query->orderBy('courses.price', 'desc');
-                            $query->orderBy('courses.order');
+                            $query->orderBy('price', 'desc');
+                            $query->orderBy('order');
                         } elseif ($request->input('sort_key') == 'number') {
                             $query->withCount(['reservations' => function ($q) {
                                 $q->where('reservation_date', '>=', Carbon::today()->subMonthNoOverflow()->toDateString());
                             }]);
                             $query->orderBy('reservations_count', 'desc');
-                            $query->orderBy('courses.order');
+                            $query->orderBy('order');
                         }
                     } else {
-                        $query->orderBy('courses.order');
+                        $query->orderBy('order');
                     }
                 },
                 'courses.kenshin_sys_courses',
