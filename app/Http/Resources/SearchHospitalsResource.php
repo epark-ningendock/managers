@@ -18,10 +18,6 @@ class SearchHospitalsResource extends Resource
     public function toArray($request)
     {
 
-        $rails = [$this->rail1, $this->rail2, $this->rail3, $this->rail4, $this->rail5];
-        $stations = [$this->station1, $this->station2, $this->station3, $this->station4, $this->station5];
-        $accesses = [$this->access1, $this->access2, $this->access3, $this->access4, $this->access5];
-
         return [
             'no' => $this->id,
             'url_basic' => $this->url,
@@ -32,7 +28,7 @@ class SearchHospitalsResource extends Resource
             'district_name' => $this->district_code->name,
             'address1' => $this->address1 ?? '',
             'address2' => $this->address2 ?? '',
-            'stations' => Station::getStations($rails, $stations, $accesses),
+            'stations' => $this->getStationInfo(),
             'closed_day' => $this->getClosedDay(),
             'non_consultation' => $this->consultation_note ?? '',
             'non_consultation_note' => $this->memo ?? '',

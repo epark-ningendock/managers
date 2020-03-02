@@ -15,10 +15,6 @@ class HospitalBasicResource extends Resource
      */
     public function toArray($request)
     {
-        $rails = [$this->rail1, $this->rail2, $this->rail3, $this->rail4, $this->rail5];
-        $stations = [$this->station1, $this->station2, $this->station3, $this->station4, $this->station5];
-        $accesses = [$this->access1, $this->access2, $this->access3, $this->access4, $this->access5];
-
         $hospital_code = '';
         if (isset($this->contract_information) && isset($this->contract_information->code)) {
             $hospital_code = $this->contract_information->code;
@@ -38,7 +34,7 @@ class HospitalBasicResource extends Resource
             'pos_e'=> $this->longitude ?? '',
             'tel' => $this->tel ?? '',
             'tel_ppc'=> $this->paycall ?? '',
-            'stations' => Station::getStations($rails, $stations, $accesses),
+            'stations' => $this->getStationInfo(),
             'medical_examination_system_id' =>$this->medical_examination_system_id ?? '',
 //            'movie' => $this->getMovieInfo(),
         ];

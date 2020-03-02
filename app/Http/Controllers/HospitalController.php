@@ -116,6 +116,11 @@ class HospitalController extends Controller
      * @param $hospital
      */
     private function createHospitalMeta($hospital) {
+        $hospital_meta = HospitalMeta::where('hospital_id', $hospital->id)->first();
+        if (!$hospital_meta) {
+            $hospital_meta = new HospitalMeta();
+            $hospital_meta->hospital_id = $hospital->id;
+        }
         $area_station = '';
         if (!empty($hospital->prefecture_id)) {
             $prefecture = Prefecture::find($hospital->prefecture_id);
@@ -134,60 +139,90 @@ class HospitalController extends Controller
         }
 
         if (!empty($hospital->rail1)) {
-            $rail1 = Rail::find($hospital->rail1)->name;
-            $area_station = $area_station . $rail1 . ' ';
+            $rail1 = Rail::find($hospital->rail1);
+            if ($rail1) {
+                $area_station = $area_station . $rail1->name . ' ';
+                $hospital_meta->rail1 = $rail1->name;
+            }
         }
 
         if (!empty($hospital->station1)) {
-            $station1 = Station::find($hospital->station1)->name;
-            $area_station = $area_station . $station1 . ' ';
+            $station1 = Station::find($hospital->station1);
+            if ($station1) {
+                $area_station = $area_station . $station1->name . ' ';
+                $hospital_meta->station1 = $station1->name;
+            }
         }
 
         if (!empty($hospital->rail2)) {
-            $rail2 = Rail::find($hospital->rail2)->name;
-            $area_station = $area_station . $rail2 . ' ';
+            $rail2 = Rail::find($hospital->rail2);
+            if ($rail2) {
+                $area_station = $area_station . $rail2->name . ' ';
+                $hospital_meta->rail2 = $rail2->name;
+            }
         }
 
         if (!empty($hospital->station2)) {
-            $station2 = Station::find($hospital->station2)->name;
-            $area_station = $area_station . $station2 . ' ';
+            $station2 = Station::find($hospital->station2);
+            if ($station2) {
+                $area_station = $area_station . $station2->name . ' ';
+                $hospital_meta->station2 = $station2->name;
+            }
         }
 
         if (!empty($hospital->rail3)) {
-            $rail3 = Rail::find($hospital->rail3)->name;
-            $area_station = $area_station . $rail3 . ' ';
+            $rail3 = Rail::find($hospital->rail3);
+            if ($rail3) {
+                $area_station = $area_station . $rail3->name . ' ';
+                $hospital_meta->rail3 = $rail3->name;
+            }
         }
 
         if (!empty($hospital->station3)) {
-            $station3 = Station::find($hospital->station3)->name;
-            $area_station = $area_station . $station3 . ' ';
+            $station3 = Station::find($hospital->station3);
+            if ($station3) {
+                $area_station = $area_station . $station3->name . ' ';
+                $hospital_meta->station3 = $station3->name;
+            }
         }
 
         if (!empty($hospital->rail4)) {
-            $rail4 = Rail::find($hospital->rail4)->name;
-            $area_station = $area_station . $rail4 . ' ';
+            $rail4 = Rail::find($hospital->rail4);
+            if ($rail4) {
+                $area_station = $area_station . $rail4->name . ' ';
+                $hospital_meta->rail4 = $rail4->name;
+            }
         }
 
         if (!empty($hospital->station4)) {
-            $station4 = Station::find($hospital->station4)->name;
-            $area_station = $area_station . $station4 . ' ';
+            $station4 = Station::find($hospital->station4);
+            if ($station4) {
+                $area_station = $area_station . $station4->name . ' ';
+                $hospital_meta->station4 = $station4->name;
+            }
         }
 
         if (!empty($hospital->rail5)) {
-            $rail5 = Rail::find($hospital->rail5)->name;
-            $area_station = $area_station . $rail5 . ' ';
+            $rail5 = Rail::find($hospital->rail5);
+            if ($rail5) {
+                $area_station = $area_station . $rail5->name . ' ';
+                $hospital_meta->rail5 = $rail5->name;
+            }
         }
 
         if (!empty($hospital->station5)) {
-            $station5 = Station::find($hospital->station5)->name;
-            $area_station = $area_station . $station5 . ' ';
+            $station5 = Station::find($hospital->station5);
+            if ($station5) {
+                $area_station = $area_station . $station5->name . ' ';
+                $hospital_meta->station5 = $station5->name;
+            }
         }
 
-        $hospital_meta = HospitalMeta::where('hospital_id', $hospital->id)->first();
-        if (!$hospital_meta) {
-            $hospital_meta = new HospitalMeta();
-            $hospital_meta->hospital_id = $hospital->id;
-        }
+        $hospital_meta->access1 = $hospital->access1;
+        $hospital_meta->access2 = $hospital->access2;
+        $hospital_meta->access3 = $hospital->access3;
+        $hospital_meta->access4 = $hospital->access4;
+        $hospital_meta->access5 = $hospital->access5;
         $hospital_meta->hospital_name = $hospital->name . ' ' . $hospital->kana;
         $hospital_meta->area_station = $area_station;
 

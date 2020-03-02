@@ -33,7 +33,7 @@ class SearchController extends ApiBaseController
      */
     public function hospitals(HospitalSearchRequest $request)
     {
-       try {
+//       try {
             $search_cond_chk_result = $this->checkSearchCond($request, true);
             if (!$search_cond_chk_result[0]) {
                 return $this->createResponse($search_cond_chk_result[1]);
@@ -76,10 +76,10 @@ class SearchController extends ApiBaseController
                 : compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
                 + $request->toJson()
                 + compact('hospitals');
-        } catch (\Exception $e) {
-           Log::error($e);
-           return $this->createResponse($this->messages['system_error_api'], $request->input('callback'));
-        }
+//        } catch (\Exception $e) {
+//           Log::error($e);
+//           return $this->createResponse($this->messages['system_error_api'], $request->input('callback'));
+//        }
 
     }
 
@@ -632,6 +632,7 @@ class SearchController extends ApiBaseController
         $target_date = Carbon::today()->toDateString();
 
         $query =  Hospital::with([
+            'hospital_metas',
             'hospital_details' => function ($query) {
                 $query->with([
                     'minor_classification'
@@ -686,25 +687,25 @@ class SearchController extends ApiBaseController
                 continue;
             }
 
-            foreach ($hospital->course as $key => $course) {
+            foreach ($hospital->courses as $key => $course) {
                 if (empty($course->kenshin_sys_courses)) {
                     continue;
                 }
                 foreach ($course->kenshin_sys_courses as $kenshin_sys_course) {
                     if ($kenshin_sys_course->kenshin_sys_riyou_bgn_date > $today
                     || $kenshin_sys_course->kenshin_sys_riyou_end_date < $today) {
-                        unset($hospital->course[$key]);
+                        unset($hospital->courses[$key]);
                         continue;
                     }
                     $course_futan_condition = $kenshin_sys_course->course_futan_conditions;
                     if ($course_futan_condition->sex != GenderTak::ALL
                     && $course_futan_condition->sex != $request->input('sex')) {
-                        unset($hospital->course[$key]);
+                        unset($hospital->courses[$key]);
                         continue;
                     }
                     if ($course_futan_condition->honnin_kbn != HonninKbn::ALL
                         && $course_futan_condition->honnin_kbn != $request->input('honnin_kbn')) {
-                        unset($hospital->course[$key]);
+                        unset($hospital->courses[$key]);
                         continue;
                     }
                     $age = getAgeTargetDate($request->input('birth'),
@@ -725,7 +726,7 @@ class SearchController extends ApiBaseController
                           }
                         }
                         if (!$exist_flg) {
-                            unset($hospital->course[$key]);
+                            unset($hospital->courses[$key]);
                             continue;
                         }
                     }
@@ -757,6 +758,7 @@ class SearchController extends ApiBaseController
                 'calendar',
                 'calendar_days',
                 'hospital',
+                'hospital_metas',
                 'contract_information',
             ]);
         if($course_price_sort == 0) {

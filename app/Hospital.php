@@ -428,4 +428,29 @@ class Hospital extends Model
     public function getKenshinRelationFlg() {
         return $this->kenshin_relation_flg;
     }
+
+    public function getStationInfo() {
+
+        $hospital_metas = $this->hospital_metas;
+        $returnData = [];
+
+        for ($i = 1; $i < 6; $i++) {
+            if (!empty($hospital_metas->{'rail' .$i})) {
+                $returnData[$i - 1]['rail_line'] = $hospital_metas->{'rail' .$i};
+            } else {
+                continue;
+            }
+            if (!empty($hospital_metas->{'station' .$i})) {
+                $returnData[$i - 1]['station'] = $hospital_metas->{'station' .$i};
+            } else {
+                $returnData[$i - 1]['station'] = '';
+            }
+            if (!empty($hospital_metas->{'accesses' .$i})) {
+                $returnData[$i - 1]['access'] =  $hospital_metas->{'accesses' .$i};
+            } else {
+                $returnData[$i - 1]['access'] =  '';
+            }
+        }
+        return $returnData;
+    }
 }

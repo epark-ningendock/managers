@@ -51,9 +51,6 @@ class CoursesBaseResource extends CourseBaseResource
 
     private function getHospital() {
         $h = $this->hospital;
-        $rails = [$h->rail1, $h->rail2, $h->rail3, $h->rail4, $h->rail5];
-        $stations = [$h->station1, $h->station2, $h->station3, $h->station4, $h->station5];
-        $accesses = [$h->access1, $h->access2, $h->access3, $h->access4, $h->access5];
         return [
             'no' => $h->id,
             'name' => $h->name,
@@ -61,7 +58,7 @@ class CoursesBaseResource extends CourseBaseResource
             'district_name' => $h->districtCode->name,
             'address1' => $h->address1 ?? '',
             'address2' => $h->address2 ?? '',
-            'stations' => Station::getStations($rails, $stations, $accesses)
+            'stations' => $h->getStationInfo()
         ];
     }
 
