@@ -29,7 +29,7 @@ class SearchHospitalsResource extends Resource
             'name' => $this->name,
             'update_dt' => Carbon::parse($this->update_at)->format('Y年m月d日'),
             'pref_name' => $this->prefecture->name,
-            'district_name' => $this->districtCode->name,
+            'district_name' => $this->district_code->name,
             'address1' => $this->address1 ?? '',
             'address2' => $this->address2 ?? '',
             'stations' => Station::getStations($rails, $stations, $accesses),
@@ -49,7 +49,6 @@ class SearchHospitalsResource extends Resource
      * @return string
      */
     private function getClosedDay() {
-        $medical_treatment_times = MedicalTreatmentTime::where('hospital_id', $this->id)->get();
 
         $mon_flg = false;
         $tue_flg = false;
@@ -59,7 +58,7 @@ class SearchHospitalsResource extends Resource
         $sat_flg = false;
         $sun_flg = false;
         $hol_flg = false;
-        foreach ($medical_treatment_times as $entity) {
+        foreach ($this->medical_treatment_times as $entity) {
             if ($entity->mon == 1) {
                 $mon_flg = true;
             }

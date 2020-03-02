@@ -11,6 +11,7 @@ use App\Enums\Status;
 use App\Hospital;
 use App\HospitalCategory;
 use App\HospitalEmailSetting;
+use App\HospitalOptionPlan;
 use App\HospitalPlan;
 use App\MonthlyWaku;
 use App\ReservationKenshinSysOption;
@@ -618,8 +619,21 @@ class ReservationService
             }
             $entity->fee = ($request->input('course_price_tax')
                     + $option_price + $entity->adjustment_price) * ($entity->fee_rate / 100);
+            if ($entity->site_code == 'Special') {
+                $hospital_option_plan = HospitalOptionPlan::where('hospital_id', $entity->hospital_id)
+                    ->where('option_plan_id', 6)
+                    ->where('from', '<=', Carbon::today()->toDateString())
+                    ->where(function($q) {
+                        $q->whereDate('to', '>=', Carbon::today()->toDateString())
+                            ->orWhere('to', '=', null);
+                    })->first();
+
+                if ($hospital_option_plan) {
+                    $entity->fee = $entity->fee + $hospital_option_plan->pay_per_use_price;
+                }
+            }
             $entity->is_free_hp_link = 0;
-        } else {
+        } elseif ($entity->site_code == 'OP') {
             $entity->fee = $this->getHpfee($hospital);
             if ($entity->fee > 0) {
                 $entity->is_free_hp_link = IsFreeHpLink::FREE;

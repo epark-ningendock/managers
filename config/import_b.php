@@ -17,10 +17,10 @@ return [
         'model' => \App\Calendar::class,
         'import' => \App\Imports\CalendarImport::class,
     ],
-    // 'calendar_days.csv' => [
-    //     'model' => \App\CalendarDay::class,
-    //     'import' => \App\Imports\CalendarDayImport::class,
-    // ],
+    'calendar_days.csv' => [
+        'model' => \App\CalendarDay::class,
+        'import' => \App\Imports\CalendarDayImport::class,
+    ],
     'T_OP_M_HYB_APPOINT_HOLIDAY.csv' => [
         'model' => \App\Holiday::class,
         'import' => \App\Imports\HolidayImport::class,

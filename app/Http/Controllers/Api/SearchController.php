@@ -631,17 +631,38 @@ class SearchController extends ApiBaseController
 
         $target_date = Carbon::today()->toDateString();
 
-        $query = Hospital::with(['hospital_categories' => function ($query) {
-            $query->whereIn('image_order', [2, 3, 4]);
-        },
+        $query =  Hospital::with([
+            'hospital_details' => function ($query) {
+                $query->with([
+                    'minor_classification'
+                ]);
+            },
+            'hospital_categories' => function ($query) {
+                $query->whereIn('image_order', [2, 3, 4])->with([
+                    'hospital_image',
+                ]);
+            },
+            'contract_information',
+            'medical_treatment_times',
+            'prefecture',
+            'district_code',
             'courses' => function ($query) use ($target_date) {
                 $query->where('web_reception', WebReception::ACCEPT)
                     ->where('is_category', 0)
                     ->where('publish_start_date', '<=', $target_date)
                     ->where('publish_end_date', '>=', $target_date)
-                    ->orderBy('order')->with(['course_details'=> function($query){
-                        $query->with('minor_classification');
-                    },'calendar','calendar_days', 'course_metas']);
+                    ->orderBy('order')
+                    ->with([
+                        'course_details'=> function($query){
+                            $query->with('minor_classification');
+                        },
+                        'calendar',
+                        'calendar_days',
+                        'course_metas',
+                        'course_images',
+                        'hospital',
+                        'contract_information',
+                    ]);
             },
 
         ])
@@ -722,14 +743,16 @@ class SearchController extends ApiBaseController
 
         $query = Course::whereIn('id', $courses->pluck('id'))
             ->with([
-                'hospital',
                 'course_metas',
                 'course_details' => function ($query) {
                     $query->whereIn('major_classification_id', [1, 2, 3, 4, 5, 6, 11, 13, 24])->with(['minor_classification']);
                 },
                 'course_options',
+                'course_images',
                 'calendar',
-                'calendar_days'
+                'calendar_days',
+                'hospital',
+                'contract_information',
             ]);
         if($course_price_sort == 0) {
             $query->orderBy('price')->orderBy('order');

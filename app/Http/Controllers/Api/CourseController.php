@@ -242,7 +242,8 @@ class CourseController extends ApiBaseController
                     ->orderBy('minor_classification_id');
                 },
             'course_details.minor_classification',
-            'contract_information'
+            'contract_information',
+            'calendar',
         ])
             ->where('hospital_id', $hospital_id)
             ->where('courses.id', '<>', $course_id)

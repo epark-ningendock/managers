@@ -12,6 +12,7 @@ if(isset($hospital)) {
   $tour_movie = 0;
   $exam_movie = 0;
   $special_page = 0;
+  $pay_per_use_price = 0;
   foreach ($hospital_option_plans as $hospital_option_plan) {
       if ($hospital_option_plan->option_plan_id == 1) {
         $dr_movie = 1;
@@ -25,6 +26,7 @@ if(isset($hospital)) {
         $exam_movie = 5;
       } elseif ($hospital_option_plan->option_plan_id == 6) {
         $special_page = 6;
+        $pay_per_use_price = $hospital_option_plan->pay_per_use_price ?? 0;
       }
   }
  }
@@ -173,8 +175,10 @@ $o_minor_values = collect(old('minor_values'));
                   </div>
                   <div class="form-group margin-none py-sm-1">
                       <input type="hidden" name="special_page" value="0"/>
-                      <input type="checkbox" id="special_page" class="option-plan-checkbox"　name="special_page" value="6" @if($special_page == 6) checked @endif/>
+                      <input type="checkbox" id="special_page" class="option-plan-checkbox" name="special_page" value="6" @if($special_page == 6) checked @endif/>
                       <label for="special_page">特集ページ　（1,100円）</label>
+                      <label class="mr-2" for="pay_per_use_price" style="margin-left: 12px;">1回当たりの料金</label>
+                      <input class="form-control w8em" type="number" id="pay_per_use_price" name="pay_per_use_price" value="{{ old('pay_per_use_price', (isset($pay_per_use_price) ? $pay_per_use_price : 0)) }}">円
                   </div>
 
           </div>

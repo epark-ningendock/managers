@@ -147,14 +147,39 @@ class HospitalController extends ApiBaseController
     public function release_course(Request $request)
     {
         try {
-            $data = ['hospital_code' => $request->input('hospital_code')];
-            return new HospitalReleaseCourseResource($data);
+            return new HospitalReleaseCourseResource($this->getReleaseCourses());
         } catch (\Exception $e) {
             Log::error($e);
             return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
         }
     }
 
+
+
+    /**
+     * 医療機関手数料利率取得API
+     *
+     * @param  Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function fee_rate(HospitalRequest $request){
+        try {
+            $hospital_code = $request->input('hospital_code');
+            $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
+            $hospitalPlan = HospitalPlan::where('hospital_id', $hospital_id)
+            ->whereDate('from', '<=', Carbon::today())
+            ->where('hospital_id', $hospital_id)
+            ->where(function($q) {
+                $q->whereDate('to', '>=', Carbon::today())
+                    ->orWhere('to', '=', null);
+            })->get()->first();
+
+            return new HospitalFeerateResource($hospitalPlan->contractPlan);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
+        }
+    }
     /**
      * 医療機関アクセス情報取得API
      *
@@ -304,6 +329,7 @@ class HospitalController extends ApiBaseController
      */
     private function getContent($hospital_id)
     {
+        $today = Carbon::today()->toDateString();
         $entity = Hospital::with([
             'contract_information',
             'hospital_categories' => function ($query) {
@@ -312,6 +338,19 @@ class HospitalController extends ApiBaseController
             },
             'hospital_categories.hospital_image',
             'hospital_categories.interview_details',
+            'courses' => function ($query) use ($today) {
+                $query->where('is_category', 0)
+                        ->where('web_reception', 0)
+                        ->where('publish_start_date', '<=', $today)
+                        ->where('publish_end_date', '>=', $today)
+                        ->orderBy('courses.order');
+            },
+            'courses.course_details' => function ($query) {
+                $query->whereIn('major_classification_id', [2, 3, 4, 5, 6, 11, 13, 15, 19, 24]);
+            },
+            'courses.course_details.minor_classification' => function ($query) {
+                $query->orderBy('order');
+            },
         ])
             ->find($hospital_id);
 
@@ -347,5 +386,40 @@ class HospitalController extends ApiBaseController
         return Hospital::join('contract_informations', 'contract_informations.hospital_id', 'hospitals.id')
             ->where('status', Status::VALID)
             ->pluck('contract_informations.code');
+    }
+
+ /**
+     * 公開中コース情報取得
+     */
+    private function getReleaseCourses() {
+
+        $hospitals = Hospital::with([
+            'contract_information',
+            'courses'
+        ])
+            ->whereHas('courses', function ($q) {
+                $q->where('publish_start_date', '<=', Carbon::today())
+                    ->orWhereNull('publish_start_date');
+                $q->where('publish_end_date', '>=', Carbon::today())
+                    ->orWhereNull('publish_end_date');
+                $q->where('status', Status::VALID);
+                $q->where('is_category', 0);
+            })
+            ->where('status', Status::VALID)
+            ->get();
+
+        $results = [];
+        foreach ($hospitals as $hospital) {
+            if (!isset($hospital->contract_information)) {
+                continue;
+            }
+            $course_data = [];
+            foreach ($hospital->courses as $course) {
+                $course_data[] = ['course_code' => $course->code, 'course_no' => $course->id];
+            }
+            $results[] = ['hospital_code' => $hospital->contract_information->code, 'courses' => $course_data];
+        }
+
+        return $results;
     }
 }

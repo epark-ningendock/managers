@@ -19,7 +19,7 @@ class SearchCoursesResource extends CoursesBaseResource
 
         return collect([])
             ->put('no', $this->hospital->id)
-            ->put('hospital_code', $this->hospital->contract_information->code ?? '')
+            ->put('hospital_code', $this->contract_information->code ?? '')
             ->merge(parent::baseCollections())
             ->put('month_calender', new MonthlyCalendarResource($this))
             ->put('paycall', $this->hospital->paycall ?? '')
