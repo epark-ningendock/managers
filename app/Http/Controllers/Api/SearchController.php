@@ -662,6 +662,9 @@ class SearchController extends ApiBaseController
                         'course_images',
                         'hospital',
                         'contract_information',
+                        'course_options',
+                        'course_options.option',
+                        'course_questions'
                     ]);
             },
 
@@ -748,6 +751,8 @@ class SearchController extends ApiBaseController
                     $query->whereIn('major_classification_id', [1, 2, 3, 4, 5, 6, 11, 13, 24])->with(['minor_classification']);
                 },
                 'course_options',
+                'course_options.option',
+                'course_questions',
                 'course_images',
                 'calendar',
                 'calendar_days',
