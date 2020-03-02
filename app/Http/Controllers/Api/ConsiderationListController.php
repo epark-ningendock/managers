@@ -78,7 +78,7 @@ class ConsiderationListController extends ApiBaseController
         try {
             //
             $results = ConsiderationList::with([
-                'hospital',
+                'contract_informations',
                 'course'
             ])
             ->where('epark_member_id', $request->epark_member_id)
@@ -179,7 +179,7 @@ class ConsiderationListController extends ApiBaseController
             $param = [
               'epark_member_id' => $result->epark_member_id,
                 'hospital_id' => $result->hospital_id,
-                'hospital_code' => $result->hospital->contract_information->code,
+                'hospital_code' => $result->contract_informations->code,
                 'course_id' => $result->course_id ?? '',
                 'course_code' => $result->course->code ?? '',
                 'display_kbn' => $result->display_kbn
