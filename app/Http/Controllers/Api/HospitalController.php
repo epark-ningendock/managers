@@ -222,12 +222,29 @@ class HospitalController extends ApiBaseController
             },
             'hospital_categories.image_order',
             'hospital_categories.hospital_image',
-            'courses' => function ($query) use ($today) {
+            'courses' => function ($query) use ($today, $request) {
                 $query->where('is_category', 0)
                     ->where('web_reception', 0)
                     ->where('publish_start_date', '<=', $today)
-                    ->where('publish_end_date', '>=', $today)
-                    ->orderBy('courses.order');
+                    ->where('publish_end_date', '>=', $today);
+
+                if (!empty($request->input('sort_key'))) {
+                    if ($request->input('sort_key') == 'row') {
+                        $query->orderBy('courses.price');
+                        $query->orderBy('courses.order');
+                    } elseif ($request->input('sort_key') == 'high') {
+                        $query->orderBy('courses.price', 'desc');
+                        $query->orderBy('courses.order');
+                    } elseif ($request->input('sort_key') == 'number') {
+                        $query->withCount(['reservations' => function ($q) {
+                            $q->where('reservation_date', '>=', Carbon::today()->subMonthNoOverflow()->toDateString());
+                        }]);
+                        $query->orderBy('reservations_count', 'desc');
+                        $query->orderBy('courses.order');
+                    }
+                } else {
+                    $query->orderBy('courses.order');
+                }
             },
             'courses.course_details' => function ($query) {
                 $query->whereIn('major_classification_id', [2, 3, 4, 5, 6, 11, 13, 15, 19, 24]);
