@@ -36,16 +36,12 @@ class ConsiderationListController extends ApiBaseController
         if (!isset($request->display_kbn) || !DispKbn::hasValue($request->display_kbn)) {
             return $this->createResponse($messages['errorDisplayKbn']);
         }
-        if (!isset($request->status) || !NickUse::hasValue($request->status)) {
-            return $this->createResponse($messages['errorStatus']);
-        }
 
         $params = [
             'epark_member_id' => $request->epark_member_id,
             'hospital_id' => $request->hospital_id,
             'course_id' => $request->course_id,
-            'display_kbn' => $request->display_kbn,
-            'status' => $request->status,
+            'display_kbn' => $request->display_kbn
         ];
 
         DB::beginTransaction();
@@ -79,7 +75,7 @@ class ConsiderationListController extends ApiBaseController
             return $this->createResponse($messages['errorEparkMemberId']);
         }
 
-//        try {
+        try {
             //
             $results = ConsiderationList::with([
                 'contract_informations',
@@ -90,14 +86,14 @@ class ConsiderationListController extends ApiBaseController
             if (! $results) {
                 return $this->createResponse($messages['errorNotExistInfo']);
             }
-//        } catch (\Throwable $e) {
-//            $message = '[検討中リストAPI] DB処理に失敗しました。';
-//            Log::error($message, [
-//                'epark_member_id' => $request->epark_member_id,
-//                'exception' => $e,
-//            ]);
-//            return $this->createResponse($sysErrorMessages['errorDB']);
-//        }
+        } catch (\Throwable $e) {
+            $message = '[検討中リストAPI] DB処理に失敗しました。';
+            Log::error($message, [
+                'epark_member_id' => $request->epark_member_id,
+                'exception' => $e,
+            ]);
+            return $this->createResponse($sysErrorMessages['errorDB']);
+        }
 
         return $this->createConsiderationListResponse($messages['success'], $results);
 
@@ -218,7 +214,7 @@ class ConsiderationListController extends ApiBaseController
         $target->hospital_id = $params['hospital_id'];
         $target->course_id = $params['course_id'];
         $target->display_kbn = $params['display_kbn'];
-        $target->status = $params['status'];
+        $target->status = Status::VALID;
         $target->save();
     }
 
