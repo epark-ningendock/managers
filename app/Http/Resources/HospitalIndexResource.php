@@ -51,7 +51,7 @@ class HospitalIndexResource extends Resource
             if ($entity->tue == 1) {
                 $tue_flg = true;
             }
-            if ($entity->web == 1) {
+            if ($entity->wed == 1) {
                 $wed_flg = true;
             }
             if ($entity->thu == 1) {
