@@ -15,7 +15,7 @@ class DistrictResource extends Resource
     public function toArray($request)
     {
         return [
-            'district_no' => $this->district_code,
+            'district_no' => $this->id,
             'district_name' => $this->name,
             'count' => $this->hospitals->count()
         ];
