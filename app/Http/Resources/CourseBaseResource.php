@@ -38,6 +38,7 @@ class CourseBaseResource extends Resource
             'course_url' => $this->createURL() . "/detail_hospital/" . $this->contract_information->code . "/detail/" . $this->code . ".html",
             'sho_name' => $this->getShoName(),
             'web_reception' => $this->createReception(),
+            'cancellation_deadline' => $this->cancellation_deadline ?? 0,
             'course_flg_category' => $this->is_category,
             'course_img' => $this->getCourseImg($this->course_images),
             'course_point' => $this->course_point ?? '',
