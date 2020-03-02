@@ -810,11 +810,10 @@ class ReservationService
     }
 
     private function getClaimMonth(Carbon $reservationDate) {
-        $targetDate = Carbon::today();
         if ($reservationDate->day < 21) {
-            return $targetDate->year . sprintf('%02d', $targetDate->month);
+            return $reservationDate->year . sprintf('%02d', $reservationDate->month);
         } else {
-            return $targetDate->year . sprintf('%02d', $targetDate->addMonth()->month);
+            return $reservationDate->year . sprintf('%02d', $reservationDate->addMonth()->month);
         }
     }
 }
