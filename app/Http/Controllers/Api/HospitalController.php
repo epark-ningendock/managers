@@ -229,7 +229,7 @@ class HospitalController extends ApiBaseController
                     ->where('publish_end_date', '>=', $today);
 
                 if (!empty($request->input('sort_key'))) {
-                    if ($request->input('sort_key') == 'row') {
+                    if ($request->input('sort_key') == 'low') {
                         $query->orderBy('price');
                         $query->orderBy('order');
                     } elseif ($request->input('sort_key') == 'high') {
@@ -268,7 +268,7 @@ class HospitalController extends ApiBaseController
                         ->where('publish_start_date', '<=', $today)
                         ->where('publish_end_date', '>=', $today);
                     if (!empty($request->input('sort_key'))) {
-                        if ($request->input('sort_key') == 'row') {
+                        if ($request->input('sort_key') == 'low') {
                             $query->orderBy('price');
                             $query->orderBy('order');
                         } elseif ($request->input('sort_key') == 'high') {
