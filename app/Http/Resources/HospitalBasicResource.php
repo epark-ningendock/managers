@@ -36,6 +36,7 @@ class HospitalBasicResource extends Resource
             'tel_ppc'=> $this->paycall ?? '',
             'stations' => $this->getStationInfo(),
             'medical_examination_system_id' =>$this->medical_examination_system_id ?? '',
+            'kenshin_sys_hospital_no' => $this->kenshin_sys_hospital_id
 //            'movie' => $this->getMovieInfo(),
         ];
     }
