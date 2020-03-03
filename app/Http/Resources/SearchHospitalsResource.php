@@ -107,10 +107,6 @@ class SearchHospitalsResource extends Resource
             $result = $result . '祝・';
         }
 
-        if (!empty($this->consultation_note)) {
-            $result = $result . '（'. $this->consultation_note . '）';
-        }
-
         return rtrim($result, '・');
     }
 
