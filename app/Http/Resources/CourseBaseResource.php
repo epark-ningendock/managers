@@ -54,8 +54,20 @@ class CourseBaseResource extends Resource
             'auto_calc_application' => $this->auto_calc_application,
             'options' => $this->getOptions(),
             'question' => $this->getQuestion(),
-            'kenshin_relation_flg' => $this->kenshin_relation_flg ?? 0
+            'kenshin_relation_flg' => $this->kenshin_relation_flg ?? 0,
+            'kenshin_sys_dantai_no' => $this->getKenshinSysInfo()[0],
+            'kenshin_sys_course_no' => $this->getKenshinSysInfo()[1]
         ]);
+    }
+
+    private function getKenshinSysInfo() {
+        if ($this->kenshin_relation_flg
+            && !empty($this->kenshin_sys_courses)
+            && count($this->kenshin_sys_courses) > 0) {
+            return [$this->kenshin_sys_courses[0]->kenshin_sys_dantai_no, $this->kenshin_sys_courses[0]->kenshin_sys_course_no];
+        }
+
+        return ['', ''];
     }
 
     /**
