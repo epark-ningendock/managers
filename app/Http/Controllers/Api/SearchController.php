@@ -289,7 +289,7 @@ class SearchController extends ApiBaseController
             $query->where(function ($q) use ($exam_types, $meal_flg, $pear_flg, $female_doctor_flg) {
                 $q->where('course_metas.category_exam', 'like', '%' . sprintf('%03d',$exam_types[0]) . '%' );
                 for($i = 1; $i < count($exam_types); $i++) {
-                    $q->orWhere('course_metas.category_exam', 'like', '%' . sprintf('%03d',$exam_types[$i]) . '%' );
+                    $q->where('course_metas.category_exam', 'like', '%' . sprintf('%03d',$exam_types[$i]) . '%' );
                 }
             });
         }
@@ -301,7 +301,7 @@ class SearchController extends ApiBaseController
             $query->where(function ($q) use ($diseases, $meal_flg, $pear_flg, $female_doctor_flg) {
                 $q->where('course_metas.category_disease', 'like', '%' . sprintf('%03d',$diseases[0]) . '%' );
                 for($i = 1; $i < count($diseases); $i++) {
-                    $q->orWhere('course_metas.category_disease', 'like', '%' . sprintf('%03d',$diseases[$i]) . '%' );
+                    $q->where('course_metas.category_disease', 'like', '%' . sprintf('%03d',$diseases[$i]) . '%' );
                 }
             });
         }
@@ -313,7 +313,7 @@ class SearchController extends ApiBaseController
             $query->where(function ($q) use ($parts, $meal_flg, $pear_flg, $female_doctor_flg) {
                 $q->where('course_metas.category_part', 'like', '%' . sprintf('%03d',$parts[0]) . '%' );
                 for($i = 1; $i < count($parts); $i++) {
-                    $q->orWhere('course_metas.category_part', 'like', '%' . sprintf('%03d',$parts[$i]) . '%' );
+                    $q->where('course_metas.category_part', 'like', '%' . sprintf('%03d',$parts[$i]) . '%' );
                 }
             });
         }
