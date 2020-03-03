@@ -203,6 +203,11 @@ class SearchController extends ApiBaseController
                 for ($i = 1; $i < count($freewords); $i++) {
                     $q->orWhere('course_metas.category_disease_name', 'like', '%' . $freewords[$i] . '%');
                 }
+
+                $q->orWhere('courses.name', 'like', '%' . $freewords[0] . '%');
+                for ($i = 1; $i < count($freewords); $i++) {
+                    $q->orWhere('courses.name', 'like', '%' . $freewords[$i] . '%');
+                }
             });
         };
 
@@ -437,6 +442,7 @@ class SearchController extends ApiBaseController
                     $q->orWhere('hospital_metas.area_station', 'like', '%'.$freeword.'%');
                     $q->orWhere('course_metas.category_exam_name', 'like', '%'.$freeword.'%');
                     $q->orWhere('course_metas.category_disease_name', 'like', '%'.$freeword.'%');
+                    $q->orWhere('name', 'like', '%'.$freeword.'%');
                 });
             }
         }
