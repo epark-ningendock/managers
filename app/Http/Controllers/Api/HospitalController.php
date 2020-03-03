@@ -154,8 +154,6 @@ class HospitalController extends ApiBaseController
         }
     }
 
-
-
     /**
      * 医療機関手数料利率取得API
      *

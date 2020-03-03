@@ -56,15 +56,19 @@ class CourseBaseResource extends Resource
             'question' => $this->getQuestion(),
             'kenshin_relation_flg' => $this->kenshin_relation_flg ?? 0,
             'kenshin_sys_dantai_no' => $this->getKenshinSysInfo()[0],
-            'kenshin_sys_course_no' => $this->getKenshinSysInfo()[1]
+            'kenshin_sys_course_no' => $this->getKenshinSysInfo()[1],
+            'kenshin_sys_course_jouken_no' => $this->getKenshinSysInfo()[2]
         ]);
     }
 
     private function getKenshinSysInfo() {
         if ($this->kenshin_relation_flg
             && !empty($this->kenshin_sys_courses)
-            && count($this->kenshin_sys_courses) > 0) {
-            return [$this->kenshin_sys_courses[0]->kenshin_sys_dantai_no, $this->kenshin_sys_courses[0]->kenshin_sys_course_no];
+            && count($this->kenshin_sys_courses) > 0
+            && !empty($this->kenshin_sys_courses[0]->course_futan_conditions)) {
+            return [$this->kenshin_sys_courses[0]->kenshin_sys_dantai_no,
+                $this->kenshin_sys_courses[0]->kenshin_sys_course_no,
+                $this->kenshin_sys_courses[0]->course_futan_conditions[0]->jouken_no];
         }
 
         return ['', ''];
