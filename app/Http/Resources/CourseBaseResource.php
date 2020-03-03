@@ -71,7 +71,7 @@ class CourseBaseResource extends Resource
                 $this->kenshin_sys_courses[0]->course_futan_conditions[0]->jouken_no];
         }
 
-        return ['', ''];
+        return ['', '', ''];
     }
 
     /**
