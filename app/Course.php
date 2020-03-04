@@ -100,7 +100,7 @@ class Course extends SoftDeleteModel
 
     public function hospital_metas()
     {
-        return $this->hasOne('App\HospitalMeta');
+        return $this->hasOne('App\HospitalMeta', 'hospital_id', 'hospital_id');
     }
 
     public function hospital()
