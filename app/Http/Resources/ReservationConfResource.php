@@ -28,6 +28,8 @@ class ReservationConfResource extends Resource
             ->put('status', 0)
             ->put('result_code', $this->result_code)
             ->put('reservation_id', $this->id)
+            ->put('kenshin_sys_yoyaku_no', $this->kenshin_sys_yoyaku_no)
+            ->put('medical_exam_sys_id', $this->medical_examination_system_id)
             ->put('reservation_status', (string) $this->reservation_status)
             ->put('hospital_id', $this->hospital->id)
             ->put('hospital_code', $this->hospital->contract_information->code)
