@@ -117,7 +117,11 @@ class HospitalContentBaseResource extends Resource
         $texts = $categories->map(function ($t) {
             $title = $t->title ?? '';
             $caption = $t->caption ?? '';
-            return collect(['title' => $title, 'caption' => strstr($caption, '<p class="s-movie">', true),]);
+
+            if (strstr($caption, '<p class="s-movie">', true)) {
+                $caption = strstr($caption, '<p class="s-movie">', true);
+            }
+            return collect(['title' => $title, 'caption' => $caption,]);
         });
         return $texts->first();
     }
