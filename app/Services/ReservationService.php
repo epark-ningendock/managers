@@ -604,6 +604,8 @@ class ReservationService
         $entity->kenshin_sys_yoyaku_no = $request->input('kenshin_sys_yoyaku_no') ?? null;
         $entity->kenshin_sys_start_time = $request->input('kenshin_sys_start_time') ?? '';
         $entity->kenshin_sys_end_time = $request->input('kenshin_sys_end_time') ?? '';
+        $entity->kenshin_sys_yoyaku_waku_no = $request->input('kenshin_sys_yoyaku_waku_no') ?? null;
+        $entity->kenshin_sys_yoyaku_waku_seq = $request->input('kenshin_sys_yoyaku_waku_seq') ?? null;
         $entity->kenshin_sys_course_id = $request->input('kenshin_sys_course_id') ?? null;
 
         $options = [];
