@@ -710,11 +710,14 @@ class ReservationService
         if (! $courseQuestions) {
             return;
         }
-        Log::error('質問情報:' . var_dump($q_answers, true));
+        \Illuminate\Support\Facades\Log::info('質問情報:' . var_dump($q_answers, true));
+        Log::info('質問情報:' . var_dump($q_answers, true));
         $idx = 1;
         foreach ($courseQuestions as $courseQuestion) {
             foreach ($q_answers as $q_answer) {
+                \Illuminate\Support\Facades\Log::info('質問情報ID:' . $q_answer['id']);
                 if ($courseQuestion->question_number == $q_answer['id']) {
+                    \Illuminate\Support\Facades\Log::info('質問情報タイトル:' . $q_answer['question_title']);
                     $entity = new ReservationAnswer();
                     $entity->reservation_id = $reservation_id;
                     $entity->course_id = $request->input('course_id');
