@@ -158,17 +158,18 @@ class ReservationConfResource extends Resource
     {
         $reservation_answers = $reservation_answers->map(function ($a) {
             $answers = [
-                ['answer_title1' => $a->question_answer01 ?? '', 'answer1' => $a->answer01 ?? '',],
-                ['answer_title2' => $a->question_answer02 ?? '', 'answer2' => $a->answer02 ?? '',],
-                ['answer_title3' => $a->question_answer03 ?? '', 'answer3' => $a->answer03 ?? '',],
-                ['answer_title4' => $a->question_answer04 ?? '', 'answer4' => $a->answer04 ?? '',],
-                ['answer_title5' => $a->question_answer05 ?? '', 'answer5' => $a->answer05 ?? '',],
-                ['answer_title6' => $a->question_answer06 ?? '', 'answer6' => $a->answer06 ?? '',],
-                ['answer_title7' => $a->question_answer07 ?? '', 'answer7' => $a->answer07 ?? '',],
-                ['answer_title8' => $a->question_answer08 ?? '', 'answer8' => $a->answer08 ?? '',],
-                ['answer_title9' => $a->question_answer09 ?? '', 'answer9' => $a->answer09 ?? '',],
-                ['answer_title10' => $a->question_answer10 ?? '', 'answer10' => $a->answer10 ?? '',],
+                ['answer_title' => $a->question_answer01 ?? '', 'answer' => $a->answer01 ?? ''],
+                ['answer_title' => $a->question_answer02 ?? '', 'answer' => $a->answer02 ?? ''],
+                ['answer_title' => $a->question_answer03 ?? '', 'answer' => $a->answer03 ?? ''],
+                ['answer_title' => $a->question_answer04 ?? '', 'answer' => $a->answer04 ?? ''],
+                ['answer_title' => $a->question_answer05 ?? '', 'answer' => $a->answer05 ?? ''],
+                ['answer_title' => $a->question_answer06 ?? '', 'answer' => $a->answer06 ?? ''],
+                ['answer_title' => $a->question_answer07 ?? '', 'answer' => $a->answer07 ?? ''],
+                ['answer_title' => $a->question_answer08 ?? '', 'answer' => $a->answer08 ?? ''],
+                ['answer_title' => $a->question_answer09 ?? '', 'answer' => $a->answer09 ?? ''],
+                ['answer_title' => $a->question_answer10 ?? '', 'answer' => $a->answer10 ?? '']
             ];
+
             // array->object->collection
             $answers = collect(json_decode(json_encode($answers)))->filter(function ($q) {
                 return isset($q) && $q->answer_title !== '';
