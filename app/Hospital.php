@@ -445,7 +445,7 @@ class Hospital extends Model
             } else {
                 $returnData[$i - 1]['station'] = '';
             }
-            if (!empty($hospital_metas->{'accesses' .$i})) {
+            if (!empty($hospital_metas->{'access' .$i})) {
                 $returnData[$i - 1]['access'] =  $hospital_metas->{'access' .$i};
             } else {
                 $returnData[$i - 1]['access'] =  '';
