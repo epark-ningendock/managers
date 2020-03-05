@@ -722,16 +722,16 @@ class ReservationService
                         $entity->course_id = $request->input('course_id');
                         $entity->course_question_id = $q_answer->id;
                         $entity->question_title = $q_answer->question_title;
-                        $entity->question_answer01 = $courseQuestion->question_answer01;
-                        $entity->question_answer02 = $courseQuestion->question_answer02;
-                        $entity->question_answer03 = $courseQuestion->question_answer03;
-                        $entity->question_answer04 = $courseQuestion->question_answer04;
-                        $entity->question_answer05 = $courseQuestion->question_answer05;
-                        $entity->question_answer06 = $courseQuestion->question_answer06;
-                        $entity->question_answer07 = $courseQuestion->question_answer07;
-                        $entity->question_answer08 = $courseQuestion->question_answer08;
-                        $entity->question_answer09 = $courseQuestion->question_answer09;
-                        $entity->question_answer10 = $courseQuestion->question_answer10;
+                        $entity->question_answer01 = $courseQuestion->answer01;
+                        $entity->question_answer02 = $courseQuestion->answer02;
+                        $entity->question_answer03 = $courseQuestion->answer03;
+                        $entity->question_answer04 = $courseQuestion->answer04;
+                        $entity->question_answer05 = $courseQuestion->answer05;
+                        $entity->question_answer06 = $courseQuestion->answer06;
+                        $entity->question_answer07 = $courseQuestion->answer07;
+                        $entity->question_answer08 = $courseQuestion->answer08;
+                        $entity->question_answer09 = $courseQuestion->answer09;
+                        $entity->question_answer10 = $courseQuestion->answer10;
 
                         foreach ((array)$q_answer->answers as $answer) {
                             if ($idx == 1) {
