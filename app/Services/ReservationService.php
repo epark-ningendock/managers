@@ -635,7 +635,7 @@ class ReservationService
                 }
             }
             $entity->is_free_hp_link = 0;
-        } elseif ($entity->site_code == 'OP') {
+        } elseif ($entity->site_code == 'HP') {
             $entity->fee = $this->getHpfee($hospital);
             if ($entity->fee > 0) {
                 $entity->is_free_hp_link = IsFreeHpLink::FREE;
@@ -713,7 +713,7 @@ class ReservationService
         $idx = 1;
         foreach ($courseQuestions as $courseQuestion) {
             foreach ($q_answers as $q_answer) {
-                if ($courseQuestion->id == $q_answer['id']) {
+                if ($courseQuestion->question_number == $q_answer['id']) {
                     $entity = new ReservationAnswer();
                     $entity->reservation_id = $reservation_id;
                     $entity->course_id = $request->input('course_id');
