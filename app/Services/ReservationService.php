@@ -716,12 +716,12 @@ class ReservationService
             foreach ($courseQuestions as $courseQuestion) {
                 foreach ($q_answers as $q_answer) {
 
-                    if ($courseQuestion->question_number == $q_answer['id']) {
+                    if ($courseQuestion->question_number == $q_answer->id) {
                         $entity = new ReservationAnswer();
                         $entity->reservation_id = $reservation_id;
                         $entity->course_id = $request->input('course_id');
-                        $entity->course_question_id = $q_answer['id'];
-                        $entity->question_title = $q_answer['question_title'];
+                        $entity->course_question_id = $q_answer->id;
+                        $entity->question_title = $q_answer->question_title;
                         $entity->question_answer01 = $courseQuestion->question_answer01;
                         $entity->question_answer02 = $courseQuestion->question_answer02;
                         $entity->question_answer03 = $courseQuestion->question_answer03;
@@ -733,7 +733,7 @@ class ReservationService
                         $entity->question_answer09 = $courseQuestion->question_answer09;
                         $entity->question_answer10 = $courseQuestion->question_answer10;
 
-                        foreach ($q_answer['answer'] as $answer) {
+                        foreach ((array)$q_answer->answer as $answer) {
                             if ($idx == 1) {
                                 $entity->answer01 = intval($answer);
                             } elseif ($idx == 2) {
