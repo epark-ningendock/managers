@@ -735,25 +735,25 @@ class ReservationService
 
                         foreach ((array)$q_answer->answers as $answer) {
                             if ($idx == 1) {
-                                $entity->answer01 = intval($answer);
+                                $entity->answer01 = $answer;
                             } elseif ($idx == 2) {
-                                $entity->answer02 = intval($answer);
+                                $entity->answer02 = $answer;
                             } elseif ($idx == 3) {
-                                $entity->answer03 = intval($answer);
+                                $entity->answer03 = $answer;
                             } elseif ($idx == 4) {
-                                $entity->answer04 = intval($answer);
+                                $entity->answer04 = $answer;
                             } elseif ($idx == 5) {
-                                $entity->answer05 = intval($answer);
+                                $entity->answer05 = $answer;
                             } elseif ($idx == 6) {
-                                $entity->answer06 = intval($answer);
+                                $entity->answer06 = $answer;
                             } elseif ($idx == 7) {
-                                $entity->answer07 = intval($answer);
+                                $entity->answer07 = $answer;
                             } elseif ($idx == 8) {
-                                $entity->answer08 = intval($answer);
+                                $entity->answer08 = $answer;
                             } elseif ($idx == 9) {
-                                $entity->answer09 = intval($answer);
+                                $entity->answer09 = $answer;
                             } elseif ($idx == 10) {
-                                $entity->answer10 = intval($answer);
+                                $entity->answer10 = $answer;
                             }
 
                             $idx += 1;
