@@ -733,7 +733,7 @@ class ReservationService
                         $entity->question_answer09 = $courseQuestion->question_answer09;
                         $entity->question_answer10 = $courseQuestion->question_answer10;
 
-                        foreach ((array)$q_answer->answer as $answer) {
+                        foreach ((array)$q_answer->answers as $answer) {
                             if ($idx == 1) {
                                 $entity->answer01 = intval($answer);
                             } elseif ($idx == 2) {
