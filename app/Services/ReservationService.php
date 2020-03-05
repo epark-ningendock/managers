@@ -710,6 +710,9 @@ class ReservationService
         if (! $courseQuestions) {
             return;
         }
+        \Illuminate\Support\Facades\Log::info('質問情報：'. var_dump($q_answers, true));
+        Log::error('質問情報:' . $q_answers);
+        Log::error('質問情報:' . var_dump($q_answers, true));
         $idx = 1;
         foreach ($courseQuestions as $courseQuestion) {
             foreach ($q_answers as $q_answer) {
@@ -755,7 +758,7 @@ class ReservationService
 
                         $idx += 1;
                     }
-                    $entity->saveOrFail();
+                    $entity->save();
                 }
             }
 
