@@ -735,25 +735,25 @@ class ReservationService
 
                         foreach ((array)$q_answer->answers as $answer) {
                             if ($idx == 1) {
-                                $entity->answer01 = (array)$answer[0];
+                                $entity->answer01 = $answer->answer;
                             } elseif ($idx == 2) {
-                                $entity->answer02 = (array)$answer[0];
+                                $entity->answer02 = $answer->answer;
                             } elseif ($idx == 3) {
-                                $entity->answer03 = (array)$answer[0];
+                                $entity->answer03 = $answer->answer;
                             } elseif ($idx == 4) {
-                                $entity->answer04 = (array)$answer[0];
+                                $entity->answer04 = $answer->answer;
                             } elseif ($idx == 5) {
-                                $entity->answer05 = (array)$answer[0];
+                                $entity->answer05 = $answer->answer;
                             } elseif ($idx == 6) {
-                                $entity->answer06 = (array)$answer[0];
+                                $entity->answer06 = $answer->answer;
                             } elseif ($idx == 7) {
-                                $entity->answer07 = (array)$answer[0];
+                                $entity->answer07 = $answer->answer;
                             } elseif ($idx == 8) {
-                                $entity->answer08 = (array)$answer[0];
+                                $entity->answer08 = $answer->answer;
                             } elseif ($idx == 9) {
-                                $entity->answer09 = (array)$answer[0];
+                                $entity->answer09 = $answer->answer;
                             } elseif ($idx == 10) {
-                                $entity->answer10 = (array)$answer[0];
+                                $entity->answer10 = $answer->answer;
                             }
 
                             $idx += 1;
