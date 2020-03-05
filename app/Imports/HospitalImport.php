@@ -121,7 +121,7 @@ class HospitalImport extends ImportAbstract implements WithChunkReading
 
         $model->save();
 
-        $this->createHospitalMeta($model);
+        $this->createHospitalMeta($model, $row['district_no']);
 
         // 医療機関プラン
         $contract_plan = ContractPlan::query()->where('plan_code', sprintf('Y0%02d', $row['plan_cd']))->first();
@@ -157,7 +157,7 @@ class HospitalImport extends ImportAbstract implements WithChunkReading
     /**
      * @param $hospital
      */
-    private function createHospitalMeta($hospital) {
+    private function createHospitalMeta($hospital, $district_code) {
         $hospital_meta = new HospitalMeta();
         $area_station = '';
         if (!empty($hospital->prefecture_id)) {
@@ -256,6 +256,7 @@ class HospitalImport extends ImportAbstract implements WithChunkReading
             }
         }
 
+        $hospital_meta->district_code = $district_code;
         $hospital_meta->access1 = $hospital->access1;
         $hospital_meta->access2 = $hospital->access2;
         $hospital_meta->access3 = $hospital->access3;

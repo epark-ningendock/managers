@@ -121,6 +121,7 @@ class HospitalController extends Controller
             $hospital_meta = new HospitalMeta();
             $hospital_meta->hospital_id = $hospital->id;
         }
+        $district = DistrictCode::find($hospital->district_code_id);
         $area_station = '';
         if (!empty($hospital->prefecture_id)) {
             $prefecture = Prefecture::find($hospital->prefecture_id);
@@ -218,6 +219,7 @@ class HospitalController extends Controller
             }
         }
 
+        $hospital_meta->district_code = $district->district_code;
         $hospital_meta->access1 = $hospital->access1;
         $hospital_meta->access2 = $hospital->access2;
         $hospital_meta->access3 = $hospital->access3;

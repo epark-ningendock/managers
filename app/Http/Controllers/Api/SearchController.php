@@ -219,7 +219,7 @@ class SearchController extends ApiBaseController
         $district_no = $request->input('district_no');
         if (isset($district_no)) {
             $districts = explode(',', $district_no);
-            $query->whereIn('district_code_id', $districts);
+            $query->whereIn('hospital_metas.district_code', $districts);
          };
 
         // 路線コード
@@ -451,7 +451,7 @@ class SearchController extends ApiBaseController
         $district_no = $request->input('district_no');
         if (isset($district_no)) {
             $districts = explode(',', $district_no);
-            $query->whereIn('district_code_id', $districts);
+            $query->whereIn('hospital_metas.district_code', $districts);
         };
 
         // 路線コード
