@@ -54,11 +54,22 @@ class CourseBaseResource extends Resource
             'auto_calc_application' => $this->auto_calc_application,
             'options' => $this->getOptions(),
             'question' => $this->getQuestion(),
-            'kenshin_relation_flg' => $this->kenshin_relation_flg ?? 0,
+            'kenshin_relation_flg' => $this->isKenshinRelation(),
             'kenshin_sys_dantai_no' => $this->getKenshinSysInfo()[0],
             'kenshin_sys_course_no' => $this->getKenshinSysInfo()[1],
             'kenshin_sys_course_jouken_no' => $this->getKenshinSysInfo()[2]
         ]);
+    }
+
+    private function isKenshinRelation() {
+
+        if ($this->kenshin_relation_flg && !empty($this->kenshin_sys_courses)
+            && count($this->kenshin_sys_courses) > 0) {
+
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     private function getKenshinSysInfo() {
