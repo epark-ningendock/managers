@@ -159,6 +159,7 @@ class CourseController extends ApiBaseController
             ->where('web_reception', 0)
             ->where('publish_start_date', '<=', $today)
             ->where('publish_end_date', '>=', $today);
+        $query->with(['course_options']);
 
         if (!empty($request->input('sex'))) {
             $query->with([
@@ -176,8 +177,6 @@ class CourseController extends ApiBaseController
                     },
                 'kenshin_sys_courses.kenshin_sys_options.option_futan_conditions.option_target_ages'
                 ]);
-        } else {
-            $query->with(['course_options']);
         }
 
         return $query->first();
