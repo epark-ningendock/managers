@@ -710,8 +710,7 @@ class ReservationService
         if (! $courseQuestions) {
             return;
         }
-        \Illuminate\Support\Facades\Log::info('質問情報：'. var_dump($q_answers, true));
-        Log::error('質問情報:' . $q_answers);
+        \Illuminate\Support\Facades\Log::info('質問情報： ID:'. $q_answers[0]['id'] . 'タイトル:'. $q_answers[0]['question_title']);
         Log::error('質問情報:' . var_dump($q_answers, true));
         $idx = 1;
         foreach ($courseQuestions as $courseQuestion) {
