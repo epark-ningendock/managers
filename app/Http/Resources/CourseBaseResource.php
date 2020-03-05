@@ -79,10 +79,9 @@ class CourseBaseResource extends Resource
      */
     private function getOptions() {
         $results = [];
-        if ($this->kenshin_relation_flg) {
-            if (!empty($this->kenshin_sys_courses)
-                && count($this->kenshin_sys_courses) > 0
-                && !empty($this->kenshin_sys_courses[0]->kenshin_sys_options)
+        if ($this->kenshin_relation_flg && !empty($this->kenshin_sys_courses)
+        && count($this->kenshin_sys_courses) > 0) {
+            if (!empty($this->kenshin_sys_courses[0]->kenshin_sys_options)
                 && count($this->kenshin_sys_courses[0]->kenshin_sys_options) > 0) {
                 $kenshin_sys_options = $this->kenshin_sys_courses[0]->kenshin_sys_options;
 
