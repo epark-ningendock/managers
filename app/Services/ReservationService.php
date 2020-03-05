@@ -735,25 +735,25 @@ class ReservationService
 
                         foreach ((array)$q_answer->answers as $answer) {
                             if ($idx == 1) {
-                                $entity->answer01 = $answer;
+                                $entity->answer01 = (array)$answer[0];
                             } elseif ($idx == 2) {
-                                $entity->answer02 = $answer;
+                                $entity->answer02 = (array)$answer[0];
                             } elseif ($idx == 3) {
-                                $entity->answer03 = $answer;
+                                $entity->answer03 = (array)$answer[0];
                             } elseif ($idx == 4) {
-                                $entity->answer04 = $answer;
+                                $entity->answer04 = (array)$answer[0];
                             } elseif ($idx == 5) {
-                                $entity->answer05 = $answer;
+                                $entity->answer05 = (array)$answer[0];
                             } elseif ($idx == 6) {
-                                $entity->answer06 = $answer;
+                                $entity->answer06 = (array)$answer[0];
                             } elseif ($idx == 7) {
-                                $entity->answer07 = $answer;
+                                $entity->answer07 = (array)$answer[0];
                             } elseif ($idx == 8) {
-                                $entity->answer08 = $answer;
+                                $entity->answer08 = (array)$answer[0];
                             } elseif ($idx == 9) {
-                                $entity->answer09 = $answer;
+                                $entity->answer09 = (array)$answer[0];
                             } elseif ($idx == 10) {
-                                $entity->answer10 = $answer;
+                                $entity->answer10 = (array)$answer[0];
                             }
 
                             $idx += 1;
