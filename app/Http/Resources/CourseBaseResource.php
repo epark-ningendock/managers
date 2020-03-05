@@ -103,10 +103,11 @@ class CourseBaseResource extends Resource
                     $option_futan_conditions = $option->option_futan_conditions;
                     foreach ($option_futan_conditions as $c) {
                         if (empty($c->optionn_target_ages)) {
-                            $results[] = ['cd' => $option->id,
+                            $results[] = ['cd' => $option->kenshin_sys_option_no,
                                 'title' => $option->kenshin_sys_option_name,
                                 'confirm' => '',
-                                'price' => $c->futan_kingaku];
+                                'price' => $c->futan_kingaku,
+                                'id' => $option->id];
                         } else {
                             $target_date = getAgeTargetDate($this->birth,
                                 $this->reservation_date,
@@ -116,10 +117,11 @@ class CourseBaseResource extends Resource
                             $age = calcAge($this->birth, $target_date);
                             foreach ($c->optionn_target_ages as $target_age) {
                                 if ($age == $target_age->target_age) {
-                                    $results[] = ['cd' => $option->id,
+                                    $results[] = ['cd' => $option->kenshin_sys_option_no,
                                         'title' => $option->kenshin_sys_option_name,
                                         'confirm' => '',
-                                        'price' => $c->futan_kingaku];
+                                        'price' => $c->futan_kingaku,
+                                        'id' => $option->id];
                                 }
                             }
                         }
