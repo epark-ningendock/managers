@@ -706,7 +706,7 @@ class ReservationService
     private function _reservation_answers_from_request($request, $reservation_id)
     {
         $q_answers = json_decode(json_encode($request->input('q_anser')));
-        $courseQuestions = CourseQuestion::where('course_id', $request->input('course_id'));
+        $courseQuestions = CourseQuestion::where('course_id', $request->input('course_id'))->get();
         if (! $courseQuestions) {
             return;
         }
@@ -714,51 +714,50 @@ class ReservationService
         $idx = 1;
         foreach ($courseQuestions as $courseQuestion) {
             foreach ($q_answers as $q_answer) {
-                foreach ($q_answer as $q) {
-                    if ($courseQuestion->question_number == $q['id']) {
-                        $entity = new ReservationAnswer();
-                        $entity->reservation_id = $reservation_id;
-                        $entity->course_id = $request->input('course_id');
-                        $entity->course_question_id = $q['id'];
-                        $entity->question_title = $q['question_title'];
-                        $entity->question_answer01 = $courseQuestion->question_answer01;
-                        $entity->question_answer02 = $courseQuestion->question_answer02;
-                        $entity->question_answer03 = $courseQuestion->question_answer03;
-                        $entity->question_answer04 = $courseQuestion->question_answer04;
-                        $entity->question_answer05 = $courseQuestion->question_answer05;
-                        $entity->question_answer06 = $courseQuestion->question_answer06;
-                        $entity->question_answer07 = $courseQuestion->question_answer07;
-                        $entity->question_answer08 = $courseQuestion->question_answer08;
-                        $entity->question_answer09 = $courseQuestion->question_answer09;
-                        $entity->question_answer10 = $courseQuestion->question_answer10;
 
-                        foreach ($q['answer'] as $answer) {
-                            if ($idx == 1) {
-                                $entity->answer01 = intval($answer);
-                            } elseif ($idx == 2) {
-                                $entity->answer02 = intval($answer);
-                            } elseif ($idx == 3) {
-                                $entity->answer03 = intval($answer);
-                            } elseif ($idx == 4) {
-                                $entity->answer04 = intval($answer);
-                            } elseif ($idx == 5) {
-                                $entity->answer05 = intval($answer);
-                            } elseif ($idx == 6) {
-                                $entity->answer06 = intval($answer);
-                            } elseif ($idx == 7) {
-                                $entity->answer07 = intval($answer);
-                            } elseif ($idx == 8) {
-                                $entity->answer08 = intval($answer);
-                            } elseif ($idx == 9) {
-                                $entity->answer09 = intval($answer);
-                            } elseif ($idx == 10) {
-                                $entity->answer10 = intval($answer);
-                            }
+                if ($courseQuestion->question_number == $q_answer['id']) {
+                    $entity = new ReservationAnswer();
+                    $entity->reservation_id = $reservation_id;
+                    $entity->course_id = $request->input('course_id');
+                    $entity->course_question_id = $q_answer['id'];
+                    $entity->question_title = $q_answer['question_title'];
+                    $entity->question_answer01 = $courseQuestion->question_answer01;
+                    $entity->question_answer02 = $courseQuestion->question_answer02;
+                    $entity->question_answer03 = $courseQuestion->question_answer03;
+                    $entity->question_answer04 = $courseQuestion->question_answer04;
+                    $entity->question_answer05 = $courseQuestion->question_answer05;
+                    $entity->question_answer06 = $courseQuestion->question_answer06;
+                    $entity->question_answer07 = $courseQuestion->question_answer07;
+                    $entity->question_answer08 = $courseQuestion->question_answer08;
+                    $entity->question_answer09 = $courseQuestion->question_answer09;
+                    $entity->question_answer10 = $courseQuestion->question_answer10;
 
-                            $idx += 1;
+                    foreach ($q_answer['answer'] as $answer) {
+                        if ($idx == 1) {
+                            $entity->answer01 = intval($answer);
+                        } elseif ($idx == 2) {
+                            $entity->answer02 = intval($answer);
+                        } elseif ($idx == 3) {
+                            $entity->answer03 = intval($answer);
+                        } elseif ($idx == 4) {
+                            $entity->answer04 = intval($answer);
+                        } elseif ($idx == 5) {
+                            $entity->answer05 = intval($answer);
+                        } elseif ($idx == 6) {
+                            $entity->answer06 = intval($answer);
+                        } elseif ($idx == 7) {
+                            $entity->answer07 = intval($answer);
+                        } elseif ($idx == 8) {
+                            $entity->answer08 = intval($answer);
+                        } elseif ($idx == 9) {
+                            $entity->answer09 = intval($answer);
+                        } elseif ($idx == 10) {
+                            $entity->answer10 = intval($answer);
                         }
-                        $entity->save();
+
+                        $idx += 1;
                     }
+                    $entity->save();
                 }
             }
 
