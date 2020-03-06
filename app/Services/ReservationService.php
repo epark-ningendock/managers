@@ -68,6 +68,7 @@ class ReservationService
             'reservation_answers',
             'reservation_options',
             'reservation_options.option',
+            'reservation_kenshin_sys_options',
             'customer',
             'customer.prefecture',
         ])->find($reservation_id);

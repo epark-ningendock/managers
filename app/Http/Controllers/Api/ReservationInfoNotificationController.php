@@ -199,7 +199,7 @@ class ReservationInfoNotificationController extends Controller
         }
         $reservation->save();
 
-        ReservationKenshinSysOption::where('reservation_id', $reservation->id)->delete();
+        ReservationKenshinSysOption::where('reservation_id', $reservation->id)->forceDelete();
 
         if (empty($request->input(['optionList']))) {
             return;

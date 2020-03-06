@@ -30,13 +30,15 @@ class ReservationConfResource extends Resource
             ->put('reservation_id', $this->id)
             ->put('kenshin_sys_hospital_id', $this->kenshin_sys_hospital_id)
             ->put('kenshin_sys_yoyaku_no', $this->kenshin_sys_yoyaku_no)
+            ->put('kenshin_yoyaku_waku_nm', $this->kenshin_sys_yoyaku_waku_nm ?? '')
+            ->put('kenshin_start_time', $this->kenshin_sys_start_time ?? '')
             ->put('medical_exam_sys_id', $this->medical_examination_system_id)
             ->put('reservation_status', (string) $this->reservation_status)
             ->put('hospital_id', $this->hospital->id)
             ->put('hospital_code', $this->hospital->contract_information->code)
             ->put('course_id', $this->course_id)
             ->put('course_code', $this->course->code)
-            ->put('course_name', $this->course->name)
+            ->put('course_name', !empty($this->course_name) ? $this->course_name : $this->course->name)
             ->put('reservation_date', Carbon::parse($this->reservation_date)->toDateString())
             ->put('reservation_accepted_date', Carbon::parse($this->created_at)->format('Y-m-d H:i:s'))
             ->put('start_time_hour', $this->start_time_hour)
@@ -80,8 +82,8 @@ class ReservationConfResource extends Resource
                 $this->hospital->address1 . ' ' . $this->hospital->address2
             )
             ->put('facility_tel', $this->hospital->tel)
-            ->put('course_price_tax', $this->course->price)
-            ->put('option_array', $this->_reservation_options($this->reservation_options))
+            ->put('course_price_tax', $this->tax_included_price)
+            ->put('option_array', $this->_reservation_options())
             ->put(
                 'other_info',
                 collect([
@@ -130,19 +132,39 @@ class ReservationConfResource extends Resource
      * @param  予約オプション情報  $reservation_options
      * @return $options
      */
-    private function _reservation_options($reservation_options)
+    private function _reservation_options()
     {
-        $options = [];
-        foreach ($reservation_options as $o) {
-            if (!isset($o->option) || empty($o->option->id)) {
-                continue;
-            }
-            $options[] = [
-                'option_cd' => $o->option->id ?? '',
-                'option_name' => $o->option->name ?? '',
-                'option_price_tax' => $o->option_price ?? '',
-            ];
 
+        $options = [];
+        if (!empty($this->reservation_kenshin_sys_options)
+            && count($this->reservation_kenshin_sys_options) > 0) {
+            foreach ($this->reservation_kenshin_sys_options as $o) {
+                if (!isset($o->option) || empty($o->option->id)) {
+                    continue;
+                }
+                $options[] = [
+                    'option_id' => $o->kenshin_sys_option_id ?? '',
+                    'option_cd' => $o->kenshin_sys_option_no ?? '',
+                    'option_name' => $o->kenshin_sys_option_name ?? '',
+                    'option_price_tax' => $o->kenshin_sys_option_price ?? '',
+                ];
+
+            }
+
+        } else {
+            if (!empty($this->reservation_options)) {
+                foreach ($this->reservation_options as $o) {
+                    if (!isset($o->option) || empty($o->option->id)) {
+                        continue;
+                    }
+                    $options[] = [
+                        'option_cd' => $o->option->id ?? '',
+                        'option_name' => $o->option->name ?? '',
+                        'option_price_tax' => $o->option_price ?? '',
+                    ];
+
+                }
+            }
         }
 
         return $options;
