@@ -201,11 +201,11 @@ class ReservationInfoNotificationController extends Controller
 
         ReservationKenshinSysOption::where('reservation_id', $reservation->id)->forceDelete();
 
-        if (empty($request->input(['optionList']))) {
+        if (empty($request->input('optionList')) && count($request->input('optionList')) < 1) {
             return;
         }
 
-        foreach ($request->input(['optionList']) as $o) {
+        foreach ($request->input('optionList') as $o) {
 
             $option = KenshinSysOption::where('kenshin_sys_course_id', $reservation->kenshin_sys_course_id)
                 ->where('kenshin_sys_option_no', $o)
