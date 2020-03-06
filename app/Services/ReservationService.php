@@ -554,6 +554,7 @@ class ReservationService
 
         $entity->hospital_id = $request->input('hospital_id');
         $entity->course_id = $request->input('course_id');
+        $entity->course_name = $request->input('cours_name');
         $entity->reservation_date = new Carbon($request->input('reservation_date'));
         $entity->start_time_hour = $request->input('start_time_hour') ?? $entity->start_time_hour;
         $entity->start_time_min = $request->input('start_time_min') ?? $entity->start_time_min;
@@ -606,6 +607,7 @@ class ReservationService
         $entity->kenshin_sys_end_time = $request->input('kenshin_sys_end_time') ?? '';
         $entity->kenshin_sys_yoyaku_waku_no = $request->input('kenshin_sys_yoyaku_waku_no') ?? null;
         $entity->kenshin_sys_yoyaku_waku_seq = $request->input('kenshin_sys_yoyaku_waku_seq') ?? null;
+        $entity->kenshin_sys_yoyaku_waku_nm = $request->input('kenshin_sys_yoyaku_waku_nm') ?? null;
         $entity->kenshin_sys_course_id = $request->input('kenshin_sys_course_id') ?? null;
 
         $options = [];

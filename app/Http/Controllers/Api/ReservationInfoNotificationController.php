@@ -176,6 +176,18 @@ class ReservationInfoNotificationController extends Controller
             $reservation->completed_date = $date;
         }
 
+        if (!empty($request->input('courseNm'))) {
+            $reservation->course_name = $request->input('courseNm');
+        }
+
+        if (!empty($request->input('yoyakuWakuNm'))) {
+            $reservation->kenshin_sys_yoyaku_waku_nm = $request->input('yoyakuWakuNm');
+        }
+
+        if (!empty($request->input('futanKin'))) {
+            $reservation->tax_included_price = $request->input('futanKin');
+        }
+
         $reservation->kenshin_sys_start_time = $request->input('yoyakuBgnTime') ?? '';
 //        $reservation->start_time_min = $start_m;
         $reservation->todays_memo = $request->input('yoyakuComment');
@@ -200,13 +212,17 @@ class ReservationInfoNotificationController extends Controller
                 ->first();
 
             if (!$option) {
-                continue;
+                $option_id = 9999;
+            } else {
+                $option_id = $option->id;
             }
 
             $reservation_option = new ReservationKenshinSysOption();
             $reservation_option->reservation_id = $reservation->id;
-            $reservation_option->kenshin_sys_option_id = $option->id;
-            $reservation_option->kenshin_sys_option_price = 0;
+            $reservation_option->kenshin_sys_option_id = $option_id;
+            $reservation_option->kenshin_sys_option_no = $o->optionNo;
+            $reservation_option->kenshin_sys_option_name = $o->optionNm;
+            $reservation_option->kenshin_sys_option_price = $o->optionFutanKin;
             $reservation_option->status = Status::VALID;
             $reservation_option->save();
         }
