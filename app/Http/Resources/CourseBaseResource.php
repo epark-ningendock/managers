@@ -56,6 +56,7 @@ class CourseBaseResource extends Resource
             'question' => $this->getQuestion(),
             'kenshin_relation_flg' => $this->isKenshinRelation(),
             'kenshin_sys_dantai_no' => $this->getKenshinSysInfo()[0],
+            'kenshin_sys_course_id' => $this->getKenshinSysInfo()[3],
             'kenshin_sys_course_no' => $this->getKenshinSysInfo()[1],
             'kenshin_sys_course_jouken_no' => $this->getKenshinSysInfo()[2]
         ]);
@@ -79,10 +80,11 @@ class CourseBaseResource extends Resource
             && !empty($this->kenshin_sys_courses[0]->course_futan_conditions)) {
             return [$this->kenshin_sys_courses[0]->kenshin_sys_dantai_no,
                 $this->kenshin_sys_courses[0]->kenshin_sys_course_no,
-                $this->kenshin_sys_courses[0]->course_futan_conditions[0]->jouken_no];
+                $this->kenshin_sys_courses[0]->course_futan_conditions[0]->jouken_no,
+                $this->kenshin_sys_courses[0]->id];
         }
 
-        return ['', '', ''];
+        return ['', '', '',''];
     }
 
     /**
