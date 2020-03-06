@@ -201,7 +201,7 @@ class ReservationInfoNotificationController extends Controller
 
         ReservationKenshinSysOption::where('reservation_id', $reservation->id)->forceDelete();
 
-        if (empty($request->input('optionList')) && count($request->input('optionList')) < 1) {
+        if (empty($request->input('optionList')) || count($request->input('optionList')) < 1) {
             return;
         }
 
@@ -217,12 +217,31 @@ class ReservationInfoNotificationController extends Controller
                 $option_id = $option->id;
             }
 
+            if (empty($o)) {
+                continue;
+            }
+
+            $option_no = null;
+            if (!empty($o->optionNo)) {
+                $option_no = $o->optionNo;
+            }
+            $option_nm = null;
+            if (!empty($o->optionNm)) {
+                $option_nm = $o->optionNm;
+            }
+
+            $option_futan_kin = 0;
+            if (!empty($o->optionFutanKin)) {
+                $option_futan_kin = $o->optionFutanKin;
+            }
+
+
             $reservation_option = new ReservationKenshinSysOption();
             $reservation_option->reservation_id = $reservation->id;
             $reservation_option->kenshin_sys_option_id = $option_id;
-            $reservation_option->kenshin_sys_option_no = $o->optionNo;
-            $reservation_option->kenshin_sys_option_name = $o->optionNm;
-            $reservation_option->kenshin_sys_option_price = $o->optionFutanKin;
+            $reservation_option->kenshin_sys_option_no = $option_no;
+            $reservation_option->kenshin_sys_option_name = $option_nm;
+            $reservation_option->kenshin_sys_option_price = $option_futan_kin;
             $reservation_option->status = Status::VALID;
             $reservation_option->save();
         }
