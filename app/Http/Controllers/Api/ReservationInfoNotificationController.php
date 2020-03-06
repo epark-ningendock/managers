@@ -151,6 +151,7 @@ class ReservationInfoNotificationController extends Controller
         if (!$reservation) {
             throw new ReservationDateException();
         }
+        $date = Carbon::today();
         if (!empty($request->input('yoyakuDate'))) {
             $date = Carbon::createFromFormat('Ymd', $request->input('yoyakuDate'));
         }
@@ -172,7 +173,7 @@ class ReservationInfoNotificationController extends Controller
             $reservation->reservation_date = $date;
         } elseif ($request->input('yoyakuStateKbn') == KenshinSysReservationStatus::CANCELLED) {
             $reservation->reservation_status = ReservationStatus::CANCELLED;
-            $reservation->cancel_date = Carbon::today();
+            $reservation->cancel_date = $date;
         } elseif ($request->input('yoyakuStateKbn') == KenshinSysReservationStatus::COMPLETED) {
             $reservation->reservation_status = ReservationStatus::COMPLETED;
             $reservation->reservation_date = $date;
