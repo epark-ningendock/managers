@@ -139,9 +139,6 @@ class ReservationConfResource extends Resource
         if (!empty($this->reservation_kenshin_sys_options)
             && count($this->reservation_kenshin_sys_options) > 0) {
             foreach ($this->reservation_kenshin_sys_options as $o) {
-                if (!isset($o->option) || empty($o->option->id)) {
-                    continue;
-                }
                 $options[] = [
                     'option_id' => $o->kenshin_sys_option_id ?? '',
                     'option_cd' => $o->kenshin_sys_option_no ?? '',

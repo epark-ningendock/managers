@@ -217,7 +217,7 @@ class ReservationInfoNotificationController extends Controller
                 $option_id = $option->id;
             }
 
-            if (empty($o)) {
+            if (empty($o['optionNo'])) {
                 continue;
             }
 
