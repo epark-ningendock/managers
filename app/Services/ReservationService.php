@@ -690,7 +690,7 @@ class ReservationService
             $entity = new ReservationKenshinSysOption();
             $entity->reservation_id = $reservation_id;
             $entity->kenshin_sys_option_id = $o->option_id;
-            $entity->kenshin_sys_option_id = $o->option_cd;
+            $entity->kenshin_sys_option_no = $o->option_cd;
             $entity->kenshin_sys_option_name = $o->option_name;
             $entity->kenshin_sys_option_price = $o->option_price_tax ?? 0;
             return $entity;
