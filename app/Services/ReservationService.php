@@ -665,6 +665,8 @@ class ReservationService
             return isset($o->option_cd);
         });
 
+        ReservationOption::where('reservation_id', $reservation_id)->forceDelete();
+
         $results = $options->map(function ($o) use ($reservation_id) {
             $entity = new ReservationOption();
             $entity->reservation_id = $reservation_id;
@@ -690,6 +692,7 @@ class ReservationService
             return isset($o->option_cd);
         });
 
+        ReservationKenshinSysOption::where('reservation_id', $reservation_id)->forceDelete();
         $results = $options->map(function ($o) use ($reservation_id) {
             $entity = new ReservationKenshinSysOption();
             $entity->reservation_id = $reservation_id;
