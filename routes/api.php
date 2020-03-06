@@ -81,7 +81,7 @@ Route::prefix('v1')->group(function () {
 // 予約確認API
     Route::get('reservation-conf', 'ReservationApiController@conf');
 // 予約キャンセルAPI
-    Route::match(['get', 'post'], 'reservation-cancel/', 'ReservationApiController@cancel');
+    Route::post('reservation-cancel/', 'ReservationApiController@cancel');
     // 予約一覧取得
     Route::get('reservation-get-all', 'ReservationApiController@get_all');
 // PV登録
