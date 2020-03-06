@@ -222,17 +222,17 @@ class ReservationInfoNotificationController extends Controller
             }
 
             $option_no = null;
-            if (!empty($o->optionNo)) {
-                $option_no = $o->optionNo;
+            if (!empty($o['optionNo'])) {
+                $option_no = $o['optionNo'];
             }
             $option_nm = null;
-            if (!empty($o->optionNm)) {
-                $option_nm = $o->optionNm;
+            if (!empty($o['optionNm'])) {
+                $option_nm = $o['optionNm'];
             }
 
             $option_futan_kin = 0;
-            if (!empty($o->optionFutanKin)) {
-                $option_futan_kin = $o->optionFutanKin;
+            if (!empty($o['optionFutanKin'])) {
+                $option_futan_kin = $o['optionFutanKin'];
             }
 
 
