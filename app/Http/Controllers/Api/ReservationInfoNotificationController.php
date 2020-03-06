@@ -151,7 +151,10 @@ class ReservationInfoNotificationController extends Controller
         if (!$reservation) {
             throw new ReservationDateException();
         }
-        $date = Carbon::createFromFormat('Ymd', $request->input('yoyakuDate'));
+        if (!empty($request->input('yoyakuDate'))) {
+            $date = Carbon::createFromFormat('Ymd', $request->input('yoyakuDate'));
+        }
+
 //        $yoyaku_bgn_time_array = explode(':', $request->input('yoyakuBgnTime'));
 //        if (count($yoyaku_bgn_time_array) == 2) {
 //            $start_h = $yoyaku_bgn_time_array[0];
