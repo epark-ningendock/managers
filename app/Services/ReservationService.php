@@ -602,7 +602,8 @@ class ReservationService
         $entity->applicant_name = $request->input('last_name') . $request->input('first_name');
         $entity->applicant_name_kana = $request->input('last_name_kana') . $request->input('first_name_kana');
         $entity->applicant_tel = $request->input('tel_no') ?? $entity->applicant_tel;
-        $entity->medical_examination_system_id = 1;
+        $entity->medical_examination_system_id = $hospital->medical_examination_system_id;
+        $entity->kenshin_sys_hospital_id = $hospital->kenshin_sys_hospital_id;
         $entity->kenshin_sys_yoyaku_no = $request->input('kenshin_sys_yoyaku_no') ?? null;
         $entity->kenshin_sys_start_time = $request->input('kenshin_sys_start_time') ?? '';
         $entity->kenshin_sys_end_time = $request->input('kenshin_sys_end_time') ?? '';
