@@ -136,159 +136,68 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                 $target = str_replace('{', '', $target);
                 $target = str_replace('\"', '', $target);
                 $tmp_strs = explode('#comma#', $target);
-                $questions = [];
-                $title = '';
-                $answers = [];
-                foreach ($tmp_strs as $tmp_str) {
+                $tmp_answers = [];
+                $tim_ans = [];
+                $tmp_title = '';
+                foreach ($tmp_strs as $k => $tmp_str) {
                     if (strpos($tmp_str, 'question_title')) {
-                        $questions[] = [$title, $answers];
-                        $title = $tmp_str;
-                        $answers = [];
-                    }
-                    if (strpos($tmp_str, 'answer')) {
-                        $ans = explode(':', $tmp_str);
-                        $answers[] = $ans[1];
+                        $tmp_title = str_replace('question_title', '', $tmp_str);
+                        $tmp_title = str_replace(':', '', $tmp_title);
+                        if ($k != 0) {
+                            $tmp_answers[] = [$tmp_title, $tim_ans];
+                            $tim_ans = [];
+                        }
+                    } else {
+                        $tim_ans[] = $tmp_str;
                     }
                 }
-                $questions[] = [$title, $answers];
 
-                foreach ($questions as $question) {
+                $tmp_answers[] = [$tmp_title, $tim_ans];
 
-                    if (empty($question[0])) {
+                foreach ($tmp_answers as $tmp_answer) {
+
+                    if (empty($tmp_answer[0])) {
                         continue;
                     }
-//                    $target = mb_substr($question[0], 0, 4);
-//                $course_questions = $reservation
-//                    ->course
-//                    ->course_questions
-//                    ->where('question_title', 'LIKE', "%{$target}%")->get();
 
                     $course_questions = CourseQuestion::where('course_id', $course_id)
                         ->get();
-
                     if (is_null($course_questions) || count($course_questions) == 0) {
-                    Log::error('reservation に course_questionsレコードが存在しません。');
+                        Log::error('reservation に course_questionsレコードが存在しません。');
+                    }
+
+                    foreach ($course_questions as $c) {
+                        $target = mb_substr($tmp_answer[0], 0, 3);
+                        if (strpos($c->question_title, $target)) {
+
+                            $reservation_answers = new ReservationAnswer();
+                            $reservation_answers->question_title = $tmp_answer[0];
+                            $reservation_answers->course_id = $course_id;
+                            $reservation_answers->course_question_id = $c->id;
+
+                            $regist_flg = false;
+                            foreach ($tmp_answer as $i => $ans) {
+                                $tmp_a = explode('|', $ans);
+                                if (count($tmp_a) < 2) {
+                                    continue;
+                                }
+                                $a = 0;
+                                if (strpos($tmp_a[0], '1')) {
+                                    $a = 1;
+                                }
+
+                                $reservation_answers->{'question_answer' . sprintf('%02d', $i)} = $tmp_a[1];
+                                $reservation_answers->{'answer' . sprintf('%02d', $i)} = $a;
+                                $regist_flg = true;
+                            }
+                            if ($regist_flg) {
+                                $reservation_answers->save();
+                            }
+                        }
+                    }
+
                 }
 
-                    $course_questions->each(function (CourseQuestion $course_question) use (
-                        $reservation,
-                        $question,
-                        $course_id
-                    ) {
-                        $target = mb_substr($question[0], 0, 4);
-                        if (!strpos($course_question->question_title, $target)) {
-                            return;
-                        }
-                    $answers = $question[1];
-                    $i = count($answers);
-                    $reservation_answers = new ReservationAnswer();
-                    $reservation_answers->question_title = $question[0];
-                    $reservation_answers->course_id = $course_id;
-                    $reservation_answers->course_question_id = $course_question->id;
-                    if ($i > 0) {
-                        $ans = 1;
-                        if (strpos($answers[0], '0|')) {
-                            $ans = 0;
-                        }
-                        $answer = str_replace('0|', '', $answers[0]);
-                        $answer = str_replace('1|', '', $answer);
-                        $reservation_answers->question_answer01 = $answer;
-                        $reservation_answers->answer01 = $ans;
-                    }
-                    if ($i > 1) {
-                        $ans = 1;
-                        if (strpos($answers[1], '0|')) {
-                            $ans = 0;
-                        }
-                        $answer = str_replace('0|', '', $answers[1]);
-                        $answer = str_replace('1|', '', $answer);
-                        $reservation_answers->question_answer02 = $answer;
-                        $reservation_answers->answer02 = $ans;
-                    }
-                    if ($i > 2) {
-                        $ans = 1;
-                        if (strpos($answers[2], '0|')) {
-                            $ans = 0;
-                        }
-                        $answer = str_replace('0|', '', $answers[2]);
-                        $answer = str_replace('1|', '', $answer);
-                        $reservation_answers->question_answer03 = $answer;
-                        $reservation_answers->answer03 = $ans;
-                    }
-                    if ($i > 3) {
-                        $ans = 1;
-                        if (strpos($answers[3], '0|')) {
-                            $ans = 0;
-                        }
-                        $answer = str_replace('0|', '', $answers[3]);
-                        $answer = str_replace('1|', '', $answer);
-                        $reservation_answers->question_answer04 = $answer;
-                        $reservation_answers->answer04 = $ans;
-                    }
-                    if ($i > 4) {
-                        $ans = 1;
-                        if (strpos($answers[4], '0|')) {
-                            $ans = 0;
-                        }
-                        $answer = str_replace('0|', '', $answers[4]);
-                        $answer = str_replace('1|', '', $answer);
-                        $reservation_answers->question_answer05 = $answer;
-                        $reservation_answers->answer05 = $ans;
-                    }
-                    if ($i > 5) {
-                        $ans = 1;
-                        if (strpos($answers[5], '0|')) {
-                            $ans = 0;
-                        }
-                        $answer = str_replace('0|', '', $answers[5]);
-                        $answer = str_replace('1|', '', $answer);
-                        $reservation_answers->question_answer06 = $answer;
-                        $reservation_answers->answer06 = $ans;
-                    }
-                    if ($i > 6) {
-                        $ans = 1;
-                        if (strpos($answers[6], '0|')) {
-                            $ans = 0;
-                        }
-                        $answer = str_replace('0|', '', $answers[6]);
-                        $answer = str_replace('1|', '', $answer);
-                        $reservation_answers->question_answer07 = $answer;
-                        $reservation_answers->answer07 = $ans;
-                    }
-                    if ($i > 7) {
-                        $ans = 1;
-                        if (strpos($answers[7], '0|')) {
-                            $ans = 0;
-                        }
-                        $answer = str_replace('0|', '', $answers[7]);
-                        $answer = str_replace('1|', '', $answer);
-                        $reservation_answers->question_answer08 = $answer;
-                        $reservation_answers->answer08 = $ans;
-                    }
-                    if ($i > 8) {
-                        $ans = 1;
-                        if (strpos($answers[8], '0|')) {
-                            $ans = 0;
-                        }
-                        $answer = str_replace('0|', '', $answers[8]);
-                        $answer = str_replace('1|', '', $answer);
-                        $reservation_answers->question_answer09 = $answer;
-                        $reservation_answers->answer09 = $ans;
-                    }
-                    if ($i > 9) {
-                        $ans = 1;
-                        if (strpos($answers[9], '0|')) {
-                            $ans = 0;
-                        }
-                        $answer = str_replace('0|', '', $answers[9]);
-                        $answer = str_replace('1|', '', $answer);
-                        $reservation_answers->question_answer10 = $answer;
-                        $reservation_answers->answer10 = $ans;
-                    }
-                    $reservation_answers->save();
-
-                });
-                }
             }
 
             $options = explode('|', $this->getValue($row, 'OPTION_CD'));
