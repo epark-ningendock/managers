@@ -69,26 +69,26 @@ use App\TaxClass;
 
 return [
     // ステージングでのインポートの為、一部コメントアウトしています
-    'm_pref.csv' => [
-        'model' => Prefecture::class,
-        'import' => PrefectureImport::class,
-        'seed' => true,
-    ],
-    'm_tax_class.csv' => [
-        'model' => TaxClass::class,
-        'import' => TaxImport::class,
-        'seed' => true,
-    ],
-    'm_district.csv' => [
-        'model' => DistrictCode::class,
-        'import' => DistrictCodeImport::class,
-        'seed' => true,
-    ],
-    'm_item_type.csv' => [
-        'model' => ClassificationType::class,
-        'import' => ClassificationTypeImport::class,
-        'seed' => true,
-    ],
+    // 'm_pref.csv' => [
+    //     'model' => Prefecture::class,
+    //     'import' => PrefectureImport::class,
+    //     'seed' => true,
+    // ],
+    // 'm_tax_class.csv' => [
+    //     'model' => TaxClass::class,
+    //     'import' => TaxImport::class,
+    //     'seed' => true,
+    // ],
+    // 'm_district.csv' => [
+    //     'model' => DistrictCode::class,
+    //     'import' => DistrictCodeImport::class,
+    //     'seed' => true,
+    // ],
+    // 'm_item_type.csv' => [
+    //     'model' => ClassificationType::class,
+    //     'import' => ClassificationTypeImport::class,
+    //     'seed' => true,
+    // ],
 //    'm_item_category_dai.csv' => [
 //        'model' => MajorClassification::class,
 //        'import' => MajorClassificationImport::class,
@@ -109,41 +109,57 @@ return [
     //     'import' => ContractPlanImport::class,
     //     'seed' => false,
     // ],
-    'm_hospital.csv' => [
-        'model' => Hospital::class,
-        'import' => HospitalImport::class,
-        'seed' => true,
-    ],
-    'm_hospital_category_dai.csv' => [
-        'model' => HospitalMajorClassification::class,
-        'import' => HospitalMajorClassificationImport::class,
-        'seed' => true,
-    ],
-    'm_hospital_category_chu.csv' => [
-        'model' => HospitalMiddleClassification::class,
-        'import' => HospitalMiddleClassificationImport::class,
-        'seed' => true,
-    ],
-    'm_hospital_category_sho.csv' => [
-        'model' => HospitalMinorClassification::class,
-        'import' => HospitalMinorClassificationImport::class,
-        'seed' => true,
-    ],
+    // 'm_hospital.csv' => [
+    //     'model' => Hospital::class,
+    //     'import' => HospitalImport::class,
+    //     'seed' => true,
+    // ],
+    // 'm_hospital_category_dai.csv' => [
+    //     'model' => HospitalMajorClassification::class,
+    //     'import' => HospitalMajorClassificationImport::class,
+    //     'seed' => true,
+    // ],
+    // 'm_hospital_category_chu.csv' => [
+    //     'model' => HospitalMiddleClassification::class,
+    //     'import' => HospitalMiddleClassificationImport::class,
+    //     'seed' => true,
+    // ],
+    // 'm_hospital_category_sho.csv' => [
+    //     'model' => HospitalMinorClassification::class,
+    //     'import' => HospitalMinorClassificationImport::class,
+    //     'seed' => true,
+    // ],
     // 'm_staff.csv' => [
     //     'model' => Staff::class,
     //     'import' => StaffImport::class,
     //     'seed' => false,
     // ],
-//    'm_course_basic.csv' => [
-//        'model' => Course::class,
-//        'import' => CourseImport::class,
-//        'seed' => false,
-//    ],
-//    'm_course_detail.csv' => [
-//        'model' => CourseDetail::class,
-//        'import' => CourseDetailImport::class,
-//        'seed' => false,
-//    ],
+   'm_course_basic.csv' => [
+       'model' => Course::class,
+       'import' => CourseImport::class,
+       'seed' => false,
+   ],
+   'm_course_detail_1.csv' => [
+       'model' => CourseDetail::class,
+       'import' => CourseDetailImport::class,
+       'seed' => false,
+   ],
+   'm_course_detail_2.csv' => [
+       'model' => CourseDetail::class,
+       'import' => CourseDetailImport::class,
+       'seed' => false,
+   ],
+   'm_course_detail_3.csv' => [
+       'model' => CourseDetail::class,
+       'import' => CourseDetailImport::class,
+       'seed' => false,
+   ],
+   'm_course_detail_4.csv' => [
+       'model' => CourseDetail::class,
+       'import' => CourseDetailImport::class,
+       'seed' => false,
+   ],
+
 //
 //    'm_course_question.csv' => [
 //        'model' => CourseQuestion::class,
