@@ -175,6 +175,7 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
 
                             $regist_flg = false;
                             foreach ($tmp_answer[1] as $i => $ans) {
+                                Log::error('回答生成。');
                                 $tmp_a = explode('|', $ans);
                                 if (count($tmp_a) < 2) {
                                     continue;
@@ -183,10 +184,14 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                                 if (strpos($tmp_a[0], '1')) {
                                     $a = 1;
                                 }
+                                Log::error('回答生成2。');
 
                                 $reservation_answers->{'question_answer' . sprintf('%02d', $i)} = $tmp_a[1];
                                 $reservation_answers->{'answer' . sprintf('%02d', $i)} = $a;
-                                $regist_flg = true;
+
+                                if (!$regist_flg) {
+                                    $regist_flg = true;
+                                }
                             }
                             if ($regist_flg) {
                                 $reservation_answers->save();
