@@ -232,15 +232,15 @@ return [
    //     'import' => CourseOptionImport::class,
    //     'seed' => false,
    // ],
-   'm_availability_1.csv' => [
-       'model' => Availabil::class,
-       'import' => AvailabilityImport::class,
-   ],
-   'm_availability_2.csv' => [
-       'model' => Availabil::class,
-       'import' => AvailabilityImport::class,
-   ],
-   'm_availability3.csv' => [
+   // 'm_availability_1.csv' => [
+   //     'model' => Availabil::class,
+   //     'import' => AvailabilityImport::class,
+   // ],
+   // 'm_availability_2.csv' => [
+   //     'model' => Availabil::class,
+   //     'import' => AvailabilityImport::class,
+   // ],
+   'm_availability_3.csv' => [
        'model' => Availabil::class,
        'import' => AvailabilityImport::class,
    ],
