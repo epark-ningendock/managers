@@ -169,6 +169,7 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                         $target = mb_substr($tmp_answer[0], 0, 3);
                         if (strpos($c->question_title, $target) !== false) {
                             $reservation_answers = new ReservationAnswer();
+                            $reservation_answers->reservation_id = $reservation->id;
                             $reservation_answers->question_title = $tmp_answer[0];
                             $reservation_answers->course_id = $course_id;
                             $reservation_answers->course_question_id = $c->id;
