@@ -133,6 +133,8 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                 $target = $this->getValue($row, 'Q_ANSWER');
                 $target = str_replace('[', '', $target);
                 $target = str_replace('{', '', $target);
+                $target = str_replace(']', '', $target);
+                $target = str_replace('}', '', $target);
                 $target = str_replace('\"', '', $target);
                 $tmp_strs = explode('#comma#', $target);
                 $tmp_answers = [];
