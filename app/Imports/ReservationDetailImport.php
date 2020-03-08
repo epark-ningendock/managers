@@ -129,7 +129,9 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
 //            $answer_json = str_replace('#comma#', ',', $answer_json);
 //            $questions = json_decode($answer_json, false, 512, JSON_OBJECT_AS_ARRAY);
 
+            Log::error('処理開始');
             if (!empty($reservation->course_id)) {
+                Log::error('処理開始2');
                 $target = $this->getValue($row, 'Q_ANSWER');
                 $target = str_replace('[', '', $target);
                 $target = str_replace('{', '', $target);
@@ -154,6 +156,7 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                 $tmp_answers[] = [$tmp_title, $tim_ans];
 
                 foreach ($tmp_answers as $tmp_answer) {
+                    Log::error('処理開始3');
 
                     if (empty($tmp_answer[0])) {
                         continue;
@@ -197,9 +200,9 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
 
                 }
 
-              } else {
-                  Log::error('reservation がありません。。');
-              }
+            } else {
+                Log::error('reservation がありません。。');
+            }
 
 //            $options = explode('|', $this->getValue($row, 'OPTION_CD'));
 //            $option_prices = explode('|', $this->getValue($row, 'OPTION_PRICE_TAX'));
