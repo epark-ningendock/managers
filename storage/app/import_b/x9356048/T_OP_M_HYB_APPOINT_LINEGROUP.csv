@@ -1,0 +1,5 @@
+"LINEGROUP_ID","SEQ_NO","LINEGROUP_NAME","LINEGROUP_NAME_SHORT","OUTSIDE_RESERVATION","DO_NOT_SPECIFY_LINE_FG","LINEGROUP_TYPE","VACCINE_FG","RABIES_FG","SAME_TIME_LIMIT","LINEGROUP_CANCELLATION_DAYS","LINEGROUP_START_DAYS","LINEGROUP_END_DAYS","CREATE_USER_NO","CREATE_DATE","MODIFY_USER_NO","MODIFY_DATE","DELETE_FG","DATA_VERSION"
+"21353","1","【Aコース】脳ドック （頭部MRI/MRA＋動脈硬化測定）","【Aコース】脳ドック （頭部MRI/MRA＋動脈硬化測定）","1","0","0","0","0",\N,"3","6000","13","system","2017-08-18 12:13:27","A2867","2020-02-17 17:35:47","0","13"
+"21354","2","【Bコース】脳ドック （頭部MRI/MRA＋動脈硬化測定＋頸部MRA）","【Bコース】脳ドック （頭部MRI/MRA＋動脈硬化測定＋頸部M","1","0","0","0","0",\N,"3","6000","13","system","2017-08-18 12:13:27","A2867","2020-02-17 17:39:13","0","13"
+"21355","3","【Cコース】脳ドック （頭部MRI/MRA＋動脈硬化測定＋頸部MRA＋血液検査）","【Cコース】脳ドック （頭部MRI/MRA＋動脈硬化測定＋頸部M","1","0","0","0","0",\N,"3","6000","13","system","2017-08-18 12:13:27","A2867","2020-02-17 17:40:55","0","12"
+"21356","4","健保コース","健保コース","0","0","0","0","0",\N,"7","6000","6","A2636","2018-05-24 17:30:55","A2636","2018-05-24 17:30:55","0","1"
