@@ -232,22 +232,22 @@ return [
    //     'import' => CourseOptionImport::class,
    //     'seed' => false,
    // ],
-   // 'm_availability_5.csv' => [
-   //     'model' => Availabil::class,
-   //     'import' => AvailabilityImport::class,
-   // ],
-   // 'm_availability_6.csv' => [
-   //     'model' => Availabil::class,
-   //     'import' => AvailabilityImport::class,
-   // ],
-   // 'm_availability_7.csv' => [
-   //     'model' => Availabil::class,
-   //     'import' => AvailabilityImport::class,
-   // ],
-   // 'm_availability_8.csv' => [
-   //     'model' => Availabil::class,
-   //     'import' => AvailabilityImport::class,
-   // ],
+   'm_availability_1.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
+   'm_availability_2.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
+   'm_availability_3.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
+   'm_availability_4.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
 //    't_reserve_claim.csv' => [
 //        'model' => \App\ReservationOption::class,
 //        'import' => \App\Imports\ReservationOptionImport::class,
@@ -263,9 +263,9 @@ return [
    //     'import' => PvRecordImport::class,
    //     'seed' => false,
    // ],
-   'm_hospital_meta.csv' => [
-       'model' => HospitalMeta::class,
-       'import' => HospitalMetaImport::class,
-       'seed' => false,
-   ],
+   // 'm_hospital_meta.csv' => [
+   //     'model' => HospitalMeta::class,
+   //     'import' => HospitalMetaImport::class,
+   //     'seed' => false,
+   // ],
 ];
