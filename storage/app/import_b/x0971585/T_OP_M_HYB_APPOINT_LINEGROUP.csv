@@ -1,3 +1,0 @@
-"LINEGROUP_ID","SEQ_NO","LINEGROUP_NAME","LINEGROUP_NAME_SHORT","OUTSIDE_RESERVATION","DO_NOT_SPECIFY_LINE_FG","LINEGROUP_TYPE","VACCINE_FG","RABIES_FG","SAME_TIME_LIMIT","LINEGROUP_CANCELLATION_DAYS","LINEGROUP_START_DAYS","LINEGROUP_END_DAYS","CREATE_USER_NO","CREATE_DATE","MODIFY_USER_NO","MODIFY_DATE","DELETE_FG","DATA_VERSION"
-"20828","1","人間ドック　（柏市国民健康保険の特定健康診査の受診券は対象外です）","人間ドック　（柏市国民健康保険の特定健康診査の受診券は対象外です","0","0","0","0","0",\N,"0",\N,\N,"system","2017-08-18 12:13:22","A2064","2017-09-10 17:16:10","0","4"
-"20829","2","脳ドック　（柏市国民健康保険の特定健康診査の受診券は対象外です）","脳ドック　（柏市国民健康保険の特定健康診査の受診券は対象外です）","0","0","0","0","0",\N,"0",\N,\N,"system","2017-08-18 12:13:22","A2064","2017-09-10 17:16:21","0","4"

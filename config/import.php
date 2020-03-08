@@ -253,19 +253,19 @@ return [
 //        'import' => \App\Imports\ReservationOptionImport::class,
 //        'seed' => true,
 //    ],
-   't_consideration_list.csv' => [
-       'model' => \App\ConsiderationList::class,
-       'import' => \App\Imports\ConsiderationListImport::class,
-       'seed' => true,
-   ],
-   't_pv.csv' => [
-       'model' => PvRecord::class,
-       'import' => PvRecordImport::class,
+   // 't_consideration_list.csv' => [
+   //     'model' => \App\ConsiderationList::class,
+   //     'import' => \App\Imports\ConsiderationListImport::class,
+   //     'seed' => true,
+   // ],
+   // 't_pv.csv' => [
+   //     'model' => PvRecord::class,
+   //     'import' => PvRecordImport::class,
+   //     'seed' => false,
+   // ],
+   'm_hospital_meta.csv' => [
+       'model' => HospitalMeta::class,
+       'import' => HospitalMetaImport::class,
        'seed' => false,
    ],
-//    'm_hospital_meta.csv' => [
-//        'model' => HospitalMeta::class,
-//        'import' => HospitalMetaImport::class,
-//        'seed' => false,
-//    ],
 ];

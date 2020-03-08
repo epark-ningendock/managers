@@ -1,4 +1,0 @@
-"LINEGROUP_ID","SEQ_NO","LINEGROUP_NAME","LINEGROUP_NAME_SHORT","OUTSIDE_RESERVATION","DO_NOT_SPECIFY_LINE_FG","LINEGROUP_TYPE","VACCINE_FG","RABIES_FG","SAME_TIME_LIMIT","LINEGROUP_CANCELLATION_DAYS","LINEGROUP_START_DAYS","LINEGROUP_END_DAYS","CREATE_USER_NO","CREATE_DATE","MODIFY_USER_NO","MODIFY_DATE","DELETE_FG","DATA_VERSION"
-"1","1","【定期的なカラダのチェック】定期健診(+オプション付与可能、ABC検査、前立腺腫瘍マーカー検査、各種感染検査など)","【定期的なカラダのチェック】定期健診(+オプション付与可能、AB","1","0","0","0","0",\N,"20","6000","2","A2867","2018-12-17 18:00:30","A3211","2020-01-23 10:31:50","0","6"
-"2","2","【短時間で実施】簡易健診（法定健診B）","【短時間で実施】簡易健診（法定健診B）","1","0","0","0","0",\N,"20","6000","2","A2867","2018-12-18 10:39:25","A3211","2020-01-23 10:32:05","0","8"
-"3","3","健保コース","健保コース","0","0","0","0","0",\N,"7","6000","6","A2636","2018-12-18 15:54:56","A2636","2018-12-18 15:54:56","0","1"
