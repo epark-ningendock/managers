@@ -1,4 +1,0 @@
-"LINEGROUP_ID","SEQ_NO","LINEGROUP_NAME","LINEGROUP_NAME_SHORT","OUTSIDE_RESERVATION","DO_NOT_SPECIFY_LINE_FG","LINEGROUP_TYPE","VACCINE_FG","RABIES_FG","SAME_TIME_LIMIT","LINEGROUP_CANCELLATION_DAYS","LINEGROUP_START_DAYS","LINEGROUP_END_DAYS","CREATE_USER_NO","CREATE_DATE","MODIFY_USER_NO","MODIFY_DATE","DELETE_FG","DATA_VERSION"
-"1","1","【当日結果診断付き】乳がん検診（マンモグラフィ）","【当日結果診断付き】乳がん検診（マンモグラフィ）","1","0","0","0","0",\N,"7","3000","1","A2062","2018-02-19 10:05:41","A3271","2020-01-15 14:18:49","0","8"
-"2","2","【当日結果診断付き】乳がん検診（マンモグラフィ+乳腺エコー）","【当日結果診断付き】乳がん検診（マンモグラフィ+乳腺エコー）","1","0","0","0","0",\N,"7","3000","1","A2062","2018-02-19 10:20:11","A3271","2020-01-15 14:19:01","0","9"
-"3","3","健保コース","健保コース","0","0","0","0","0",\N,"7","6000","6","A2636","2018-05-09 13:40:17","A2636","2018-05-09 13:40:17","0","1"
