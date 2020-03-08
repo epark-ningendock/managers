@@ -140,7 +140,6 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                 $tmp_title = '';
                 foreach ($tmp_strs as $k => $tmp_str) {
                     if (strpos($tmp_str, 'question_title') !== false) {
-                        Log::error('タイトルあり');
                         $tmp_title = str_replace('question_title', '', $tmp_str);
                         $tmp_title = str_replace(':', '', $tmp_title);
                         if ($k != 0) {
@@ -157,7 +156,6 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
                 foreach ($tmp_answers as $tmp_answer) {
 
                     if (empty($tmp_answer[0])) {
-                        Log::error('タイトルなし');
                         continue;
                     }
 
@@ -169,8 +167,9 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
 
                     foreach ($course_questions as $c) {
                         $target = mb_substr($tmp_answer[0], 0, 3);
-                        if (strpos($c->question_title, $target)) {
-
+                        Log::error('コース質問あり');
+                        if (strpos($c->question_title, $target) !== false) {
+                            Log::error('コース質問マッチング');
                             $reservation_answers = new ReservationAnswer();
                             $reservation_answers->question_title = $tmp_answer[0];
                             $reservation_answers->course_id = $course_id;
