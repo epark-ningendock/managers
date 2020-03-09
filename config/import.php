@@ -217,19 +217,19 @@ return [
 //        'seed' => false,
 //    ],
    'm_availability_5.csv' => [
-       'model' => Availabil::class,
+       'model' => CalendarDay::class,
        'import' => AvailabilityImport::class,
    ],
    'm_availability_6.csv' => [
-       'model' => Availabil::class,
+       'model' => CalendarDay::class,
        'import' => AvailabilityImport::class,
    ],
    'm_availability_7.csv' => [
-       'model' => Availabil::class,
+       'model' => CalendarDay::class,
        'import' => AvailabilityImport::class,
    ],
    'm_availability_8.csv' => [
-       'model' => Availabil::class,
+       'model' => CalendarDay::class,
        'import' => AvailabilityImport::class,
    ],
 //    't_reserve_claim.csv' => [

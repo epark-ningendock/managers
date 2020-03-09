@@ -30,7 +30,7 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
      */
     public function getNewClassName(): string
     {
-        return Availabil::class;
+        return CalendarDay::class;
     }
 
     /**
@@ -77,7 +77,7 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
             ->where('hospital_no', $old_id)
             ->first();
 
-        if ($c) {
+        if (!$c) {
             return;
         }
 
