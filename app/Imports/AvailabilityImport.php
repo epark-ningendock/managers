@@ -85,9 +85,9 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
         $date = Carbon::createFromFormat('Ymd', $row['reservation_dt'])->format('Y-m-d');
         $ca = CalendarDay::where('calendar_id', $c->new_id)
             ->where('date', $date)
-            ->get();
+            ->exists();
 
-        if (!empty($ca)) {
+        if ($ca) {
             Log::error('日カレンダーすでにあり');
             return;
         }
