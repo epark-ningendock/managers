@@ -35,7 +35,10 @@ class PlaceController extends ApiBaseController
 
             $data = ['place_data' => $place_data, 'place_code' => $place_code];
 
-            return new PlaceResource($data);
+            $result = new PlaceResource($data);
+            $callback = $request->input('callback');
+
+            return response()->json($result)->setCallback($callback);
         } catch (\Throwable $e) {
             Log::error($e);
             return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));

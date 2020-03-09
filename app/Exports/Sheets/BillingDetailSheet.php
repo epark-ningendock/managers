@@ -60,6 +60,11 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
 
                     }
 
+                    $comp_date = '';
+                    if (isset($reservation->completed_date)) {
+                        $comp_date = $reservation->completed_date->format('Y/m/d');
+                    }
+
                     $hp_link_status = '';
                     if ( ($reservation->site_code == 'HP') && ( $reservation->fee == 0) && ( $reservation->reservation_status->value == '4') ) {
                         $hp_link_status = 'HPリンク（キャンセル）';
@@ -76,7 +81,7 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         $billing->hospital->contract_information->contractor_name,
                         $billing->hospital->name,
                         $channel,
-                        $reservation->completed_date->format('Y/m/d'),
+                        $comp_date,
                         $hp_link_status,
                         $channel == '月額' ? $reservation->course->name : $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->plan_name,
                         $reservation->reservation_options->isEmpty() ? '' : '有',
@@ -85,6 +90,7 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         number_format($reservation->tax_excluded_price),
                         $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->plan_name ?? '',
                         (isset($reservation->site_code) && ( $reservation->site_code == 'HP') ) ? 'HPリンク' : '',
+                        (isset($reservation->site_code) && ( $reservation->site_code == 'Special') ) ? '○' : '',
                         $reservation->fee_rate . '%',
                     ];
 
@@ -114,7 +120,8 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
             '手数料_税抜',
             'ROOKプラン',
             'OP',
-            '手数料料率',
+            '特集ページ',
+            '手数料率',
         ];
     }
 

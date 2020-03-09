@@ -15,6 +15,7 @@ use App\HospitalOptionPlan;
 use App\HospitalPlan;
 use App\MonthlyWaku;
 use App\ReservationKenshinSysOption;
+use App\TaxClass;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
@@ -574,7 +575,7 @@ class ReservationService
         $entity->is_representative = $request->input('representative_fg');
 
         $entity->tax_included_price = $request->input('course_price_tax') ?? $entity->tax_included_price;
-        $entity->tax_rate = $course->tax_class->rate ?? 0;
+        $entity->tax_rate = resolve(TaxClass::class)->nowTax();
 
         $other_infos = $request->input('other_info');
         $other_info = $other_infos[0];

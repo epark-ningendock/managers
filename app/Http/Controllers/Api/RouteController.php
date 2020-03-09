@@ -31,7 +31,10 @@ class RouteController extends ApiBaseController
 
             $data = ['pref' => $pref, 'routes' => $rails];
 
-            return new RouteResource($data);
+            $result = new RouteResource($data);
+            $callback = $request->input('callback');
+
+            return response()->json($result)->setCallback($callback);
        } catch (\Exception $e) {
            Log::error($e);
            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));

@@ -42,21 +42,24 @@ class CourseSearchRequest extends SearchRequest
         $validator->after(function ($validator) {
             $return_from = $this->input('return_from');
             $return_to = $this->input('return_to');
-            if(($return_to - $return_from) >= 20) {
-                $validator->errors()->add('return_from_to',json_encode([
-                    'message' => trans('validation.for_api.diff'),
-                    'error_no' => '11',
-                    'detail_code' => '02',
-                ]));
+            $flg = $this->input('return_flag');
+            
+            if($flg == 1 && isset($return_from) && isset($return_to)){
+                if(($return_to - $return_from) >= 20) {
+                    $validator->errors()->add('return_from_to',json_encode([
+                        'message' => trans('validation.for_api.diff'),
+                        'error_no' => '11',
+                        'detail_code' => '02',
+                    ]));
+                }
+                if($return_to <= $return_from) {
+                    $validator->errors()->add('return_from_to',json_encode([
+                        'message' => trans('validation.for_api.order'),
+                        'error_no' => '11',
+                        'detail_code' => '02',
+                    ]));
+                }
             }
-            if($return_to <= $return_from) {
-                $validator->errors()->add('return_from_to',json_encode([
-                    'message' => trans('validation.for_api.order'),
-                    'error_no' => '11',
-                    'detail_code' => '02',
-                ]));
-            }
-
         });
     }
     

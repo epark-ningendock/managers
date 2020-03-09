@@ -184,6 +184,7 @@
                 <th>手数料率</th>
                 <th>手数料（税込）</th>
                 <th>無料HPリンク</th>
+                <th>特集ページ</th>
             </tr>
             </thead>
             <tbody>
@@ -212,7 +213,8 @@
                     <td>{{ (isset($reservation->adjustment_price) ) ? number_format($reservation->adjustment_price) . '円' : '' }}</td>
                     <td>{{ $reservation->fee_rate }}%</td>
                     <td>{{ ( isset($reservation->fee) ) ? number_format($reservation->fee) . '円' : '' }}</td>
-                    <td>{{ (isset($reservation->is_free_hp_link) && ( $reservation->is_free_hp_link == 1) ) ? '無料HPリンク' : '' }}</td>
+                    <td>{{ (isset($reservation->site_code) && ( $reservation->site_code == 'HP') && isset($reservation->is_free_hp_link) && ( $reservation->is_free_hp_link == 1) ) ? '無料HPリンク' : '' }}</td>
+                    <td>{{ (isset($reservation->site_code) && ( $reservation->site_code == 'Special') ) ? '○' : '' }}</td>
                 </tr>
             @endforeach
                 @else

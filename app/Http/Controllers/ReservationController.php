@@ -177,6 +177,8 @@ class ReservationController extends Controller
             $query->whereIn('reservation_status', $status_filter);
         }
 
+        $query->orderBy('reservation_date', 'desc');
+
         return $query;
     }
 

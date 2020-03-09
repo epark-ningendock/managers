@@ -597,7 +597,7 @@ class CalendarController extends Controller
                     'date' => $date,
                     'is_holiday' => isset($holiday),
                     'frame' => isset($calendar_day)? $calendar_day->reservation_frames : -1,
-                    'is_reservation_acceptance' => (!isset($calendar_day) || $calendar_day->is_reservation_acceptance == CalendarDisplay::SHOW)
+                    'is_reservation_acceptance' => (!isset($calendar_day) || $calendar_day->is_reservation_acceptance == CalendarDisplay::HIDE)
                 ]);
             }
         }

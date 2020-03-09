@@ -59,23 +59,25 @@ class SearchController extends ApiBaseController
             $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
             $return_to = $return_flag == 0 ? $search_count : $request->input('return_to');
 
+            $callback = $request->input('callback');
+
             // 件数のみ返却
             if ($search_count_only_flag == 1) {
                 return $search_condition_return_flag == 0 ?
-                    compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
+                    response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to'))->setCallback($callback)
                     :
-                    compact('status', 'search_count', 'return_count', 'return_from', 'return_to') + $request->toJson();
+                    response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to') + $request->toJson())->setCallback($callback);
             }
 
             // レスポンス生成
             $hospitals = SearchHospitalsResource::collection($entities);
-
             // response
             return $search_condition_return_flag == 0 ?
-                compact('status', 'search_count', 'return_count', 'return_from', 'return_to', 'hospitals')
-                : compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
+                response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to', 'hospitals'))
+                    ->setCallback($callback)
+                : response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
                 + $request->toJson()
-                + compact('hospitals');
+                + compact('hospitals'))->setCallback($callback);
 //        } catch (\Exception $e) {
 //           Log::error($e);
 //           return $this->createResponse($this->messages['system_error_api'], $request->input('callback'));
@@ -110,12 +112,14 @@ class SearchController extends ApiBaseController
             $return_count = $entities->count();
             $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
             $return_to = $return_flag == 0 ? $search_count : $request->input('return_to');
+            
+            $callback = $request->input('callback');
 
             if ($search_count_only_flag == 1) {
                 return $search_condition_return_flag == 0 ?
-                    compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
+                response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to'))->setCallback($callback)
                     :
-                    compact('status', 'search_count', 'return_count', 'return_from', 'return_to') + $request->toJson();
+                response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to') + $request->toJson())->setCallback($callback);
             }
 
             // レスポンス生成
@@ -123,10 +127,11 @@ class SearchController extends ApiBaseController
 
             // response
             return $search_condition_return_flag == 0 ?
-                compact('status', 'search_count', 'return_count', 'return_from', 'return_to', 'courses')
-                : compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
+                response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to', 'courses'))
+                    ->setCallback($callback)
+                : response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
                 + $request->toJson()
-                + compact('courses');
+                + compact('courses'))->setCallback($callback);
         } catch (\Exception $e) {
             Log::error($e);
             return $this->createResponse($this->messages['system_error_api'], $request->input('callback'));

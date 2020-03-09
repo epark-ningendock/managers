@@ -47,13 +47,12 @@ class BillingController extends Controller {
 
 	public function excelExport( BillingFilters $billingFilters ) {
 
-    $selectedMonth = $this->getSelectedMonth();
+	    $selectedMonth = $this->getSelectedMonth();
+	    $yyyymm = str_replace('-', '', $selectedMonth);
+	    $dateFilter = billingDateFilter(str_replace('-', '', $selectedMonth));
+	    $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $yyyymm)->paginate(20);
 
-		$dateFilter = billingDateFilter(str_replace('-', '', $selectedMonth));
 
-    $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(20);
-
-		$yyyymm = str_replace('-', '', $selectedMonth);
 
 		return $this->excel->download( new BillingExport( $billings, $dateFilter['startedDate'], $dateFilter['endedDate'], $selectedMonth ), "顧客請求対象_$yyyymm.xlsx" );
 
