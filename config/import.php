@@ -1,6 +1,7 @@
 <?php
 
 use App\Availabil;
+use App\CalendarDay;
 use App\ClassificationType;
 use App\ConsiderationList;
 use App\ContractPlan;
