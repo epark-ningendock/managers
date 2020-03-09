@@ -77,7 +77,7 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
             ->where('hospital_no', $old_id)
             ->first();
 
-        if (!$c) {
+        if ($c) {
             return;
         }
 
