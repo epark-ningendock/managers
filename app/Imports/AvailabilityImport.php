@@ -8,6 +8,7 @@ use App\ConvertedIdString;
 use App\Enums\Status;
 use App\Hospital;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
@@ -87,9 +88,11 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
             ->get();
 
         if (!empty($ca)) {
+            Log::error('日カレンダーすでにあり');
             return;
         }
 
+        Log::error('日カレンダーなし');
         $appoint_status = 1;
         if ($row['appoint_status'] != 1) {
             $appoint_status = 0;

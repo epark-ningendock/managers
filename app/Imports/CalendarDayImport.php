@@ -6,13 +6,13 @@ use App\Availabil;
 use App\CalendarDay;
 use App\ConvertedIdString;
 use App\Enums\Status;
-use App\MonthlyWaku;
+use App\Hospital;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
 
-class CalendarDayImport extends ImportBAbstract implements WithChunkReading
+class AvailabilityImport extends ImportAbstract implements WithChunkReading
 {
     /**
      * 旧システムのインポート対象テーブルのプライマリーキーを返す
@@ -21,7 +21,7 @@ class CalendarDayImport extends ImportBAbstract implements WithChunkReading
      */
     public function getOldPrimaryKeyName(): string
     {
-        return '';
+        return 'hospital_no';
     }
 
     /**
@@ -37,45 +37,80 @@ class CalendarDayImport extends ImportBAbstract implements WithChunkReading
     /**
      * @param Row $row
      * @return mixed
+     * @throws \Exception
      */
     public function onRow(Row $row)
     {
-        try {
-            $row = $row->toArray();
+        $row = $row->toArray();
 
-            $date = $row['date'];
-            if ($date >= '20200101') {
-                $c = ConvertedIdString::where('table_name', 'calendars')
-                    ->where('old_id', $row['line_id'])
-                    ->where('hospital_no', $this->hospital_no)
-                    ->first();
-
-                $appoint_num = Availabil::where('hospital_no', $this->hospital_no)
-                    ->where('line_id',  $row['line_id'])
-                    ->where('reservation_dt', $row['date'])
-                    ->sum('appoint_number');
-
-                if (empty($appoint_num)) {
-                    $appoint_num = 0;
-                }
-
-                $model = new CalendarDay([
-                    'date' => Carbon::create($row['date']),
-                    'is_holiday' => 0,  //
-                    'is_reservation_acceptance' => 1,
-                    'reservation_frames' => $row['frame'],
-                    'calendar_id' => $c->new_id,
-                    'reservation_count' => $appoint_num,
-                    'status' => Status::VALID,
-                    'created_at' => Carbon::today(),
-                    'updated_at' => Carbon::today(),
-                ]);
-                $model->save();
-            }
-
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
+        if (empty( $row['line_id']) || $row['hospital_no'] < 2000) {
+            return;
         }
+
+        $hospital_id = $this->getId('hospitals', $row['hospital_no']);
+
+        if (is_null($hospital_id)) {
+            return;
+        }
+
+        $old_id = Hospital::find($hospital_id)->old_karada_dog_id;
+
+        $deleted_at = null;
+        if ($row['status'] == 'X') {
+            $deleted_at = Carbon::today();
+        }
+
+//        $model = new Availabil([
+//            'hospital_no' => $old_id,
+//            'course_no' => $row['course_no'],
+//            'reservation_dt' => $row['reservation_dt'],
+//            'line_id' => $row['line_id'],
+//            'appoint_number' => $row['appoint_number'],
+//            'reservation_frames' => $row['reservation_frames'],
+//            'created_at' => $row['rgst'],
+//            'updated_at' => $row['updt'],
+//            'deleted_at' => $deleted_at,
+//        ]);
+//        $model->save();
+
+        $c = ConvertedIdString::where('table_name', 'calendars')
+            ->where('old_id', $row['line_id'])
+            ->where('hospital_no', $old_id)
+            ->first();
+
+        if (!$c) {
+            return;
+        }
+
+        $date = Carbon::createFromFormat('Ymd', $row['reservation_dt'])->format('Y-m-d');
+        $ca = CalendarDay::where('calendar_id', $c->new_id)
+            ->where('date', $date)
+            ->get();
+
+        if (!empty($ca)) {
+            Log::error('日カレンダーすでにあり');
+            return;
+        }
+
+        Log::error('日カレンダーなし');
+        $appoint_status = 1;
+        if ($row['appoint_status'] != 1) {
+            $appoint_status = 0;
+        }
+
+        $model = new CalendarDay([
+            'date' => $date,
+            'is_holiday' => $row['holiday'],  //
+            'is_reservation_acceptance' => $appoint_status,
+            'reservation_frames' => $row['reservation_frames'],
+            'calendar_id' => $c->new_id,
+            'reservation_count' => $row['appoint_number'],
+            'status' => $row['status'],
+            'created_at' => Carbon::today(),
+            'updated_at' => Carbon::today(),
+            'deleted_at' => $deleted_at
+        ]);
+        $model->save();
     }
 
     public function batchSize(): int
