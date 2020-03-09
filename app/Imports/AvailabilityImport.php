@@ -86,14 +86,19 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
             ->where('date', $date)
             ->get();
 
-        if ($ca) {
+        if (!empty($ca)) {
             return;
+        }
+
+        $appoint_status = 1;
+        if ($row['appoint_status'] != 1) {
+            $appoint_status = 0;
         }
 
         $model = new CalendarDay([
             'date' => $date,
-            'is_holiday' => 0,  //
-            'is_reservation_acceptance' => 1,
+            'is_holiday' => $row['holiday'],  //
+            'is_reservation_acceptance' => $appoint_status,
             'reservation_frames' => $row['reservation_frames'],
             'calendar_id' => $c->new_id,
             'reservation_count' => $row['appoint_number'],
