@@ -1,6 +1,7 @@
 <?php
 
 use App\Availabil;
+use App\CalendarDay;
 use App\ClassificationType;
 use App\ConsiderationList;
 use App\ContractPlan;
@@ -217,19 +218,19 @@ return [
 //        'seed' => false,
 //    ],
 'm_availability_1.csv' => [
-    'model' => Availabil::class,
+    'model' => CalendarDay::class,
     'import' => AvailabilityImport::class,
 ],
 'm_availability_2.csv' => [
-    'model' => Availabil::class,
+    'model' => CalendarDay::class,
     'import' => AvailabilityImport::class,
 ],
 'm_availability_3.csv' => [
-    'model' => Availabil::class,
+    'model' => CalendarDay::class,
     'import' => AvailabilityImport::class,
 ],
 'm_availability_4.csv' => [
-    'model' => Availabil::class,
+    'model' => CalendarDay::class,
     'import' => AvailabilityImport::class,
 ],
 //    't_reserve_claim.csv' => [
