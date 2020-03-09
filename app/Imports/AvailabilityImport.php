@@ -88,11 +88,9 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
             ->exists();
 
         if ($ca) {
-            Log::error('日カレンダーすでにあり');
             return;
         }
 
-        Log::error('日カレンダーなし');
         $appoint_status = 1;
         if ($row['appoint_status'] != 1) {
             $appoint_status = 0;
