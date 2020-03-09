@@ -42,7 +42,7 @@ class SearchController extends ApiBaseController
             $return_flag = $request->input('return_flag');
             $search_count_only_flag = $request->input('search_count_only_flag');
             $search_condition_return_flag = $request->input('search_condition_return_flag');
-
+        
             // 件数のみ返却
             $search_count = $this->getHospitalCount($request, true);
             $targets =  $this->getHospitalCount($request, false);
@@ -112,7 +112,7 @@ class SearchController extends ApiBaseController
             $return_count = $entities->count();
             $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
             $return_to = $return_flag == 0 ? $search_count : $request->input('return_to');
-
+            
             $callback = $request->input('callback');
 
             if ($search_count_only_flag == 1) {
@@ -448,7 +448,7 @@ class SearchController extends ApiBaseController
             $query->whereRaw('? >= DATE_ADD(CURRENT_DATE(), INTERVAL (30 * (reception_start_date DIV 1000) + MOD(reception_start_date, 1000)) DAY) ', [$target]);
             $query->whereDate('calendar_days.date', $target);
         }
-
+ 
         if (!empty($request->input('freewords'))) {
             $freeword_str = str_replace('　', ' ', $request->input('freewords'));
             $freewords = explode(' ', $freeword_str);
@@ -679,7 +679,7 @@ class SearchController extends ApiBaseController
                         'course_details'=> function($query){
                             $query->with('minor_classification');
                         },
-//                        'calendar',
+                        'calendar',
 //                        'calendar_days',
                         'course_metas',
                         'course_images',

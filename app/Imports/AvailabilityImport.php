@@ -91,14 +91,14 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
             return;
         }
 
-        $appoint_status = 1;
-        if ($row['appoint_status'] != 1) {
-            $appoint_status = 0;
+        $appoint_status = 0;
+        if ($row['appoint_status'] != 0) {
+            $appoint_status = 1;
         }
 
         $model = new CalendarDay([
             'date' => $date,
-            'is_holiday' => $row['holiday'],  //
+            'is_holiday' => $row['holiday'],
             'is_reservation_acceptance' => $appoint_status,
             'reservation_frames' => $row['reservation_frames'],
             'calendar_id' => $c->new_id,

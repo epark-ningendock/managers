@@ -125,31 +125,31 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
             $reservation->is_health_insurance = 0;
             $reservation->save();
 
-            $answer_json = str_replace(['\"', '\\\\'], ['"', '\\'], $this->getValue($row, 'Q_ANSWER'));
-            $answer_json = str_replace('#comma#', ',', $answer_json);
+//            $answer_json = str_replace(['\"', '\\\\'], ['"', '\\'], $this->getValue($row, 'Q_ANSWER'));
+            $answer_json = str_replace('#comma#', ',', $this->getValue($row, 'Q_ANSWER'));
             $questions = json_decode($answer_json, false, 512, JSON_OBJECT_AS_ARRAY);
 
             if (!empty($reservation->course_id)) {
-                $target = $this->getValue($row, 'Q_ANSWER');
-                $target = str_replace('[', '', $target);
-                $target = str_replace('{', '', $target);
-                $target = str_replace(']', '', $target);
-                $target = str_replace('}', '', $target);
-                $target = str_replace('\"', '', $target);
-                $tmp_strs = explode('#comma#', $target);
+//                $target = $this->getValue($row, 'Q_ANSWER');
+//                $tmp_strs = explode('#comma#', $target);
                 $tmp_answers = [];
                 $tim_ans = [];
                 $tmp_title = '';
-                foreach ($tmp_strs as $k => $tmp_str) {
-                    if (strpos($tmp_str, 'question_title') !== false) {
-                        $tmp_title = str_replace('question_title', '', $tmp_str);
+                foreach ($questions as $k => $tmp_str) {
+                    $target = str_replace('[', '', $tmp_str);
+                    $target = str_replace('{', '', $target);
+                    $target = str_replace(']', '', $target);
+                    $target = str_replace('}', '', $target);
+                    $target = str_replace('\"', '', $target);
+                    if (strpos($target, 'question_title') !== false) {
+                        $tmp_title = str_replace('question_title', '', $target);
                         $tmp_title = str_replace(':', '', $tmp_title);
                         if ($k != 0) {
                             $tmp_answers[] = [$tmp_title, $tim_ans];
                             $tim_ans = [];
                         }
                     } else {
-                        $tim_ans[] = $tmp_str;
+                        $tim_ans[] = $target;
                     }
                 }
 

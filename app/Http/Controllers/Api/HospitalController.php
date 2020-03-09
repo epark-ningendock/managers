@@ -251,6 +251,7 @@ class HospitalController extends ApiBaseController
                 $query->orderBy('order');
             },
             'courses.course_images.hospital_image',
+            'courses.calendar'.
             'courses.calendar_days' => function ($query) use ($from, $to) {
                 $query->where('date', '>=', $from)
                     ->where('date', '<=', $to)
