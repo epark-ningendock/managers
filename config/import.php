@@ -217,10 +217,7 @@ return [
 //        'import' => CourseOptionImport::class,
 //        'seed' => false,
 //    ],
-'m_availability_1.csv' => [
-    'model' => CalendarDay::class,
-    'import' => AvailabilityImport::class,
-],
+
 'm_availability_2.csv' => [
     'model' => CalendarDay::class,
     'import' => AvailabilityImport::class,
@@ -230,6 +227,18 @@ return [
     'import' => AvailabilityImport::class,
 ],
 'm_availability_4.csv' => [
+    'model' => CalendarDay::class,
+    'import' => AvailabilityImport::class,
+],
+'m_availability_5.csv' => [
+    'model' => CalendarDay::class,
+    'import' => AvailabilityImport::class,
+],
+'m_availability_6.csv' => [
+    'model' => CalendarDay::class,
+    'import' => AvailabilityImport::class,
+],
+'m_availability_7.csv' => [
     'model' => CalendarDay::class,
     'import' => AvailabilityImport::class,
 ],
