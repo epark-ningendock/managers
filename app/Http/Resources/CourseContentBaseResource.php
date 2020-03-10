@@ -57,7 +57,7 @@ class CourseContentBaseResource extends Resource
                 continue;
             }
 
-            if ($d->middle_classification_id != $detail->major_classification_id) {
+            if ($d != null && $d->middle_classification_id != $detail->major_classification_id) {
                 if ($i != 0) {
                     $middle_ids[] = ['id' => $d->middle_classification_id,
                         'title' =>  $d->middle_classification->name,
@@ -79,7 +79,7 @@ class CourseContentBaseResource extends Resource
                         'icon' => $detail->inputstring];
                 }
 
-            } elseif ($d->middle_classification_id != $detail->middle_classification_id) {
+            } elseif ($d != null &&  $d->middle_classification_id != $detail->middle_classification_id) {
                 $middle_ids[] = ['id' => $d->middle_classification_id,
                     'title' => $d->middle_classification->name,
                     'category_small' => $minor_ids];
