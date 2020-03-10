@@ -315,8 +315,8 @@ class HospitalContentBaseResource extends Resource
             ];
         }
 
-        if (empty($results)) {
-            $results[] = ['', '', '', '', ''];
+        if (empty($results) || count($results) == 0) {
+            $results[] = ['img_url' =>'', 'img_alt' => '', 'name' => '', 'bio' => '', 'comment' => ''];
         }
 
         return $results;
