@@ -26,11 +26,22 @@ class CoursesResource extends CoursesBaseResource
             ->put('course_point', $this->course_point)
             ->put('category', $this->getCategory())
             ->put('recommended', $recommended)
-            ->put('course_option_flag', empty($this->course_option) ? 0 : 1)
+            ->put('course_option_flag', $this->hasCourseOption())
 //            ->put('month_calender', new MonthlyCalendarResource($this))
 //            ->put('all_calender', new DailyCalendarResource($this))
             ->toArray();
     }
+
+    private function hasCourseOption() {
+
+        foreach ($this->course_option as $op) {
+            if (!empty($op) && !empty($op->id) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
     private function getCategory() {
 
         $results = [];
