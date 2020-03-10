@@ -70,7 +70,7 @@ class MonthlyCalendarResource extends Resource
                 ->where('date', '>=', $from)
                 ->where('date', '<=', $to)
                 ->where('is_holiday', 0)
-                ->where('is_reservation_acceptance', 1)
+                ->where('is_reservation_acceptance', 0)
                 ->get()
                 ->groupBy(function ($row) {
                     return $row->date->format('Ym');
