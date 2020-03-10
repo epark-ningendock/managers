@@ -246,6 +246,8 @@ class HospitalController extends ApiBaseController
             },
             'courses.course_details' => function ($query) {
                 $query->whereIn('major_classification_id', [2, 3, 4, 5, 6, 11, 13, 15, 19, 24]);
+                $query->orderBy('major_classification_id');
+                $query->orderBy('middle_classification_id');
             },
             'courses.course_details.minor_classification' => function ($query) {
                 $query->orderBy('order');
