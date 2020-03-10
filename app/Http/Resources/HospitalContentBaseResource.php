@@ -33,8 +33,8 @@ class HospitalContentBaseResource extends Resource
         $staff = $this->_staff($this->hospital_categories);
 
         return collect([])
-            ->merge($this->_main_image($this->hospital_categories, 1, 1) ?? $main_image_pc)
-            ->merge($this->_main_image($this->hospital_categories, 1, 2) ?? $main_image_sp)
+            ->merge($this->_main_image($this->hospital_categories, 2, 1) ?? $main_image_pc)
+            ->merge($this->_main_image($this->hospital_categories, 2, 2) ?? $main_image_sp)
             ->put('img_sub', $this->_sub_images($this->hospital_categories))
             ->merge($this->_top_title($this->hospital_categories) ?? $top_title)
             ->put('point', $this->_recommend($this->hospital_categories))
