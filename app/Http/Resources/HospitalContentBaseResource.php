@@ -42,7 +42,7 @@ class HospitalContentBaseResource extends Resource
             ->merge($this->_photo($this->hospital_categories) ?? $photo)
             ->merge($this->_hospital_movie($this->hospital_categories) ?? $hospital_movie)
             ->put('interview', $this->_interview($this->hospital_categories))
-            ->put('staff_staff_img_url', $staff[0])
+            ->put('staff_img_url', $staff[0])
             ->put('staff_img_alt', $staff[1])
             ->put('staff_name', $staff[2])
             ->put('staff_comment', $staff[3])
