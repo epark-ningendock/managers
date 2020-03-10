@@ -99,6 +99,10 @@ class HospitalIndexResource extends Resource
 
         $result = rtrim($result, '・');
 
+        if (empty($result)) {
+            $result = 'なし';
+        }
+
         return $result;
     }
 
