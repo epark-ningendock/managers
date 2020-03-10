@@ -34,8 +34,8 @@ class CoursesResource extends CoursesBaseResource
 
     private function hasCourseOption() {
 
-        foreach ($this->course_option as $op) {
-            if (!empty($op) && !empty($op->id) {
+        foreach ($this->course_options as $op) {
+            if (!empty($op) && !empty($op->id)) {
                 return 1;
             }
         }

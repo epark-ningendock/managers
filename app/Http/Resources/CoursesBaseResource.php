@@ -43,11 +43,22 @@ class CoursesBaseResource extends CourseBaseResource
                 ->put('require_time', $this->getRequireTime())
                 ->put('result', $this->getResult())
                 ->put('recommended', $this->getCategoryRecommend())
-                ->put('course_option_flag',  empty($this->course_options) ? 0 : 1)
+                ->put('course_option_flag', $this->hasCourseOption())
                 ->put('month_calender', new MonthlyCalendarResource($this))
                 ->put('all_calender', new CalendarDailyResource($this))
                 ->toArray();
     }
+
+    private function hasCourseOption() {
+
+        foreach ($this->course_options as $op) {
+            if (!empty($op) && !empty($op->id)) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
 
     private function getHospital() {
         $h = $this->hospital;
