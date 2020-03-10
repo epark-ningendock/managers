@@ -246,11 +246,11 @@ class SearchController extends ApiBaseController
             if (isset($rail_no)) {
                 $rails = explode(',', $rail_no);
                 $query->where(function ($q) use ($rails) {
-                    $q->whereIn('rail1', $rails)
-                        ->orWhereIn('rail2', $rails)
-                        ->orWhereIn('rail3', $rails)
-                        ->orWhereIn('rail4', $rails)
-                        ->orWhereIn('rail5', $rails);
+                    $q->whereIn('hospitals.rail1', $rails)
+                        ->orWhereIn('hospitals.rail2', $rails)
+                        ->orWhereIn('hospitals.rail3', $rails)
+                        ->orWhereIn('hospitals.rail4', $rails)
+                        ->orWhereIn('hospitals.rail5', $rails);
                 });
             };
 
@@ -259,11 +259,11 @@ class SearchController extends ApiBaseController
             if (isset($station_no)) {
                 $stations = explode(',', $station_no);
                 $query->where(function ($q) use ($stations) {
-                    $q->whereIn('station1', $stations)
-                        ->orWhereIn('station2', $stations)
-                        ->orWhereIn('station3', $stations)
-                        ->orWhereIn('station4', $stations)
-                        ->orWhereIn('station5', $stations);
+                    $q->whereIn('hospitals.station1', $stations)
+                        ->orWhereIn('hospitals.station2', $stations)
+                        ->orWhereIn('hospitals.station3', $stations)
+                        ->orWhereIn('hospitals.station4', $stations)
+                        ->orWhereIn('hospitals.station5', $stations);
                 });
             };
 
@@ -481,11 +481,11 @@ class SearchController extends ApiBaseController
         if (isset($rail_no)) {
             $rails = explode(',', $rail_no);
             $query->where(function ($q) use ($rails) {
-                $q->whereIn('rail1', $rails)
-                    ->orWhereIn('rail2', $rails)
-                    ->orWhereIn('rail3', $rails)
-                    ->orWhereIn('rail4', $rails)
-                    ->orWhereIn('rail5', $rails);
+                $q->whereIn('hospitals.rail1', $rails)
+                    ->orWhereIn('hospitals.rail2', $rails)
+                    ->orWhereIn('hospitals.rail3', $rails)
+                    ->orWhereIn('hospitals.rail4', $rails)
+                    ->orWhereIn('hospitals.rail5', $rails);
             });
         };
 
@@ -494,11 +494,11 @@ class SearchController extends ApiBaseController
         if (isset($station_no)) {
             $stations = explode(',', $station_no);
             $query->where(function ($q) use ($stations) {
-                $q->whereIn('station1', $stations)
-                    ->orWhereIn('station2', $stations)
-                    ->orWhereIn('station3', $stations)
-                    ->orWhereIn('station4', $stations)
-                    ->orWhereIn('station5', $stations);
+                $q->whereIn('hospitals.station1', $stations)
+                    ->orWhereIn('hospitals.station2', $stations)
+                    ->orWhereIn('hospitals.station3', $stations)
+                    ->orWhereIn('hospitals.station4', $stations)
+                    ->orWhereIn('hospitals.station5', $stations);
             });
         };
 

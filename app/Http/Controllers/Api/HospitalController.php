@@ -250,6 +250,7 @@ class HospitalController extends ApiBaseController
             'courses.course_details.minor_classification' => function ($query) {
                 $query->orderBy('order');
             },
+            'courses.course_options',
             'courses.course_images.hospital_image',
             'courses.calendar',
             'courses.calendar_days' => function ($query) use ($from, $to) {

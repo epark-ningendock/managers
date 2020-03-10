@@ -47,6 +47,8 @@ class CourseContentBaseResource extends Resource
         $minor_ids = [];
         $major_id = 0;
         $middle_id = 0;
+        $major = null;
+        $middle = null;
         $i = 0;
         $d = null;
         foreach ($course_details as $detail) {
@@ -58,11 +60,11 @@ class CourseContentBaseResource extends Resource
             if ($major_id != $detail->major_classification_id) {
                 if ($i != 0) {
                     $middle_ids[] = ['id' => $middle_id,
-                        'title' => $detail->middle_classification->name,
+                        'title' => $middle->name,
                         'category_small' => $minor_ids];
                     $major_ids[] = ['id' => $major_id,
-                        'title' => $detail->major_classification->icon_name,
-                        'type_no' => $detail->major_classification->classification_type_id,
+                        'title' => $major->name,
+                        'type_no' => $major->classification_type_id,
                         'category_middle' => $middle_ids];
                 }
                 $middle_ids = [];
@@ -78,10 +80,12 @@ class CourseContentBaseResource extends Resource
                 }
 
                 $major_id = $detail->major_classification_id;
+                $major = $detail->major_classification;
                 $middle_id = $detail->middle_classification_id;
+                $middle = $detail->middle_classification;
             } elseif ($middle_id != $detail->middle_classification_id) {
                 $middle_ids[] = ['id' => $middle_id,
-                    'title' => $detail->middle_classification->name,
+                    'title' => $middle->name,
                     'category_small' => $minor_ids];
                 $minor_ids = [];
 
@@ -95,6 +99,7 @@ class CourseContentBaseResource extends Resource
                         'icon' => $detail->inputstring];
                 }
                 $middle_id = $detail->middle_classification_id;
+                $middle = $detail->middle_classification;
             } else {
                 if ($detail->minor_classification->is_fregist == 1) {
                     $minor_ids[] = ['id' => $detail->minor_classification_id,
@@ -112,11 +117,11 @@ class CourseContentBaseResource extends Resource
         }
 
         $middle_ids[] = ['id' => $middle_id,
-            'title' => $d->middle_classification->name,
+            'title' => $middle->name,
             'category_small' => $minor_ids];
         $major_ids[] = ['id' => $major_id,
-            'title' => $d->major_classification->icon_name,
-            'type_no' => $d->major_classification->classification_type_id,
+            'title' => $major->name,
+            'type_no' => $major->classification_type_id,
             'category_middle' => $middle_ids];
 
         return $major_ids;

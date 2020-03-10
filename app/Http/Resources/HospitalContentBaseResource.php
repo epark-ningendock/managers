@@ -42,16 +42,11 @@ class HospitalContentBaseResource extends Resource
             ->merge($this->_photo($this->hospital_categories) ?? $photo)
             ->merge($this->_hospital_movie($this->hospital_categories) ?? $hospital_movie)
             ->put('interview', $this->_interview($this->hospital_categories))
-            ->put('staff_img_url', '')
-            ->put('staff_img_alt', '')
-            ->put('staff_name', '')
-            ->put('staff_comment', '')
-            ->put('staff_bio', '')
-//            ->put('staff_img_url', $staff['img_url'])
-//            ->put('staff_img_alt', $staff['img_alt'])
-//            ->put('staff_name', $staff['name'])
-//            ->put('staff_comment', $staff['comment'])
-//            ->put('staff_bio', $staff['bio'])
+            ->put('staff_img_url', $staff[0]['img_url'])
+            ->put('staff_img_alt', $staff[0]['img_alt'])
+            ->put('staff_name', $staff[0]['name'])
+            ->put('staff_comment', $staff[0]['comment'])
+            ->put('staff_bio', $staff[0]['bio'])
             ->put('free_area', $this->free_area ?? '')
             ->put('principal', $this->principal ?? '')
             ->put('principal_bio', $this->principal_history ?? '')
@@ -128,9 +123,9 @@ class HospitalContentBaseResource extends Resource
             $title = $t->title ?? '';
             $caption = $t->caption ?? '';
 
-            if (strstr($caption, '<p class="s-movie">', true)) {
-                $caption = strstr($caption, '<p class="s-movie">', true);
-            }
+//            if (strstr($caption, '<p class="s-movie">', true)) {
+//                $caption = strstr($caption, '<p class="s-movie">', true);
+//            }
             return collect(['title' => $title, 'caption' => $caption,]);
         });
         return $texts->first();
@@ -318,6 +313,7 @@ class HospitalContentBaseResource extends Resource
                 'bio' => $bio,
                 'comment' => $comment
             ];
+            break;
         }
 
         if (empty($results) || count($results) == 0) {
