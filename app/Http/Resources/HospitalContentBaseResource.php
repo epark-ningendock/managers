@@ -30,6 +30,7 @@ class HospitalContentBaseResource extends Resource
         $top_title = collect(['title' => '', 'caption' => '',]);
         $photo = collect(['photo' => '', 'photo_desc' => '',]);
         $hospital_movie = collect(['access_movie_url' => '',]);
+        $staff = $this->_staff($this->hospital_categories);
 
         return collect([])
             ->merge($this->_main_image($this->hospital_categories, 1, 1) ?? $main_image_pc)
@@ -41,7 +42,11 @@ class HospitalContentBaseResource extends Resource
             ->merge($this->_photo($this->hospital_categories) ?? $photo)
             ->merge($this->_hospital_movie($this->hospital_categories) ?? $hospital_movie)
             ->put('interview', $this->_interview($this->hospital_categories))
-            ->put('staff', $this->_staff($this->hospital_categories))
+            ->put('staff_staff_img_url', $staff[0])
+            ->put('staff_img_alt', $staff[1])
+            ->put('staff_name', $staff[2])
+            ->put('staff_comment', $staff[3])
+            ->put('staff_bio', $staff[4])
             ->put('free_area', $this->free_area ?? '')
             ->put('principal', $this->principal ?? '')
             ->put('principal_bio', $this->principal_history ?? '')
@@ -308,6 +313,10 @@ class HospitalContentBaseResource extends Resource
                 'bio' => $bio,
                 'comment' => $comment
             ];
+        }
+
+        if (empty($results)) {
+            $results[] = ['', '', '', '', ''];
         }
 
         return $results;
