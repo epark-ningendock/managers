@@ -707,7 +707,7 @@ class SearchController extends ApiBaseController
 
 
         ])
-            ->whereIn('id', $ids)
+            ->whereIn('hospitals.id', $ids)
             ->orderBy('hospitals.pvad', 'DESC')
             ->orderBy('hospitals.pv_count', 'DESC');
 
