@@ -661,6 +661,7 @@ class SearchController extends ApiBaseController
 
         $query =  Hospital::with([
             'hospital_metas',
+            'hospital_images',
             'hospital_details' => function ($query) {
                 $query->with([
                     'minor_classification'
@@ -680,22 +681,30 @@ class SearchController extends ApiBaseController
                     ->where('is_category', 0)
                     ->where('publish_start_date', '<=', $target_date)
                     ->where('publish_end_date', '>=', $target_date)
-                    ->orderBy('order')
-                    ->with([
-                        'course_details'=> function($query){
-                            $query->with('minor_classification');
-                        },
-                        'calendar',
+                    ->orderBy('order');
+//                    ->with([
+//                        'course_details'=> function($query){
+//                            $query->with('minor_classification');
+//                        },
+//                        'calendar',
 //                        'calendar_days',
-                        'course_metas',
-                        'course_images',
-                        'hospital',
+//                        'course_metas',
+//                        'course_images',
+//                        'hospital',
 //                        'contract_information',
-                        'course_options',
-                        'course_options.option',
-                        'course_questions'
-                    ]);
+//                        'course_options',
+//                        'course_options.option',
+//                        'course_questions'
+//                    ]);
             },
+            'courses.course_details',
+            'courses.course_details.minor_classification',
+            'courses.calendar',
+            'courses.course_metas',
+            'courses.course_options',
+            'courses.course_options.option',
+            'courses.course_questions'
+
 
         ])
             ->whereIn('id', $ids)
