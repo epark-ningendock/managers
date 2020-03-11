@@ -44,6 +44,7 @@ class SearchController extends ApiBaseController
             $search_condition_return_flag = $request->input('search_condition_return_flag');
         // 結果生成
         $status = 0;
+        $callback = $request->input('callback');
         
             // 件数のみ返却
         // 件数のみ返却
@@ -66,7 +67,6 @@ class SearchController extends ApiBaseController
             $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
             $return_to = $return_flag == 0 ? count($targets) : $request->input('return_to');
 
-            $callback = $request->input('callback');
             $return_count = count($entities);
             $search_count = $return_count;
 
@@ -654,14 +654,13 @@ class SearchController extends ApiBaseController
         $ids = [];
         foreach ($hospitals as $hospital) {
             $ids[] = $hospital->id;
-            Log::error('医療機関ID:' .$hospital->id);
         }
 
         $target_date = Carbon::today()->toDateString();
 
         $query =  Hospital::with([
             'hospital_metas',
-//            'hospital_images',
+            'hospital_images',
             'hospital_details' => function ($q) {
                 $q->with([
                     'minor_classification'
