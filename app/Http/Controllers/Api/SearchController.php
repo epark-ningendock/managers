@@ -378,9 +378,9 @@ class SearchController extends ApiBaseController
             if (!empty($request->input('site_card'))) {
                 $query->where('hospital_metas.credit_card_flg', 1);
             }
-            $query->where('hospitals.status', Status::VALID);
         }
 
+        $query->where('hospitals.status', Status::VALID);
         // 並び順
         $query->orderBy('hospitals.pvad', 'desc');
         $query->orderBy('hospitals.pv_count', 'desc');
