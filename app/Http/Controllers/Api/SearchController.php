@@ -384,12 +384,12 @@ class SearchController extends ApiBaseController
         $query->orderBy('hospitals.pv_count', 'desc');
 
         // limit/offset
-//            if (!$count_flg && $request->input("return_flag") != 0) {
-        $offset = intval($request->input('return_from')-1);
-        $limit = intval($request->input('return_to')) - $offset;
-        $query->offset(0);
-        $query->limit(20);
-//            }
+            if (!$count_flg && $request->input("return_flag") != 0) {
+                $offset = intval($request->input('return_from')-1);
+                $limit = intval($request->input('return_to')) - $offset;
+                $query->offset($offset);
+                $query->limit($limit);
+            }
 
         $results = $query->get();
 
