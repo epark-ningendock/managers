@@ -718,58 +718,61 @@ class SearchController extends ApiBaseController
 
         $today = Carbon::today();
 
-        foreach ($hospitals as $hospital) {
-            if (empty($hospital->kenshin_sys_hospital_id) || empty($hospital->courses)) {
-                continue;
-            }
-
-            foreach ($hospital->courses as $key => $course) {
-                if (empty($course->kenshin_sys_courses)) {
+        if (!empty($request->input('sex'))) {
+            foreach ($hospitals as $hospital) {
+                if (empty($hospital->kenshin_sys_hospital_id) || empty($hospital->courses)) {
                     continue;
                 }
-                foreach ($course->kenshin_sys_courses as $kenshin_sys_course) {
-                    if ($kenshin_sys_course->kenshin_sys_riyou_bgn_date > $today
-                    || $kenshin_sys_course->kenshin_sys_riyou_end_date < $today) {
-                        unset($hospital->courses[$key]);
-                        continue;
-                    }
-                    $course_futan_condition = $kenshin_sys_course->course_futan_conditions;
-                    if ($course_futan_condition->sex != GenderTak::ALL
-                    && $course_futan_condition->sex != $request->input('sex')) {
-                        unset($hospital->courses[$key]);
-                        continue;
-                    }
-                    if ($course_futan_condition->honnin_kbn != HonninKbn::ALL
-                        && $course_futan_condition->honnin_kbn != $request->input('honnin_kbn')) {
-                        unset($hospital->courses[$key]);
-                        continue;
-                    }
-                    $age = getAgeTargetDate($request->input('birth'),
-                        null,
-                        $course_futan_condition->kenshin_sys_course_age_kisan_kbn,
-                        $course_futan_condition->kenshin_sys_course_age_kisan_date,
-                        $hospital->medical_examination_system_id);
 
-                    $target_ages = TargetAge::where('course_futan_condition_id', $course_futan_condition->id)
-                        ->get();
-
-                    if ($target_ages) {
-                        $exist_flg = false;
-                        foreach ($target_ages as $target_age) {
-                          if ($target_age->target_age == $age) {
-                              $exist_flg = true;
-                              break;
-                          }
-                        }
-                        if (!$exist_flg) {
+                foreach ($hospital->courses as $key => $course) {
+                    if (empty($course->kenshin_sys_courses)) {
+                        continue;
+                    }
+                    foreach ($course->kenshin_sys_courses as $kenshin_sys_course) {
+                        if ($kenshin_sys_course->kenshin_sys_riyou_bgn_date > $today
+                            || $kenshin_sys_course->kenshin_sys_riyou_end_date < $today) {
                             unset($hospital->courses[$key]);
                             continue;
                         }
-                    }
-                }
+                        $course_futan_condition = $kenshin_sys_course->course_futan_conditions;
+                        if ($course_futan_condition->sex != GenderTak::ALL
+                            && $course_futan_condition->sex != $request->input('sex')) {
+                            unset($hospital->courses[$key]);
+                            continue;
+                        }
+                        if ($course_futan_condition->honnin_kbn != HonninKbn::ALL
+                            && $course_futan_condition->honnin_kbn != $request->input('honnin_kbn')) {
+                            unset($hospital->courses[$key]);
+                            continue;
+                        }
+                        $age = getAgeTargetDate($request->input('birth'),
+                            null,
+                            $course_futan_condition->kenshin_sys_course_age_kisan_kbn,
+                            $course_futan_condition->kenshin_sys_course_age_kisan_date,
+                            $hospital->medical_examination_system_id);
 
+                        $target_ages = TargetAge::where('course_futan_condition_id', $course_futan_condition->id)
+                            ->get();
+
+                        if ($target_ages) {
+                            $exist_flg = false;
+                            foreach ($target_ages as $target_age) {
+                                if ($target_age->target_age == $age) {
+                                    $exist_flg = true;
+                                    break;
+                                }
+                            }
+                            if (!$exist_flg) {
+                                unset($hospital->courses[$key]);
+                                continue;
+                            }
+                        }
+                    }
+
+                }
             }
         }
+
 
         return $hospitals;
     }
