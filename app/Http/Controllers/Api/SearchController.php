@@ -387,8 +387,8 @@ class SearchController extends ApiBaseController
 //            if (!$count_flg && $request->input("return_flag") != 0) {
                 $offset = intval($request->input('return_from')-1);
                 $limit = intval($request->input('return_to')) - $offset;
-                $query->skip($offset);
-                $query->take($limit);
+                $query->offset(0);
+                $query->limit(20);
 //            }
         }
 
