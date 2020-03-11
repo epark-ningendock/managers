@@ -25,7 +25,7 @@ class RequestMiddleware
     {
         \Log::info(url()->current());
         \DB::listen(function ($query) {
-            \Log::info("Query Time:{$query->time}s] $query->sql");
+            \Log::debug("Query Time:{$query->time}s] $query->sql");
         });
     }
 }

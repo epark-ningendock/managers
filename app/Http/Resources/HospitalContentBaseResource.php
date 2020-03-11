@@ -31,6 +31,7 @@ class HospitalContentBaseResource extends Resource
         $photo = collect(['photo' => '', 'photo_desc' => '',]);
         $hospital_movie = collect(['access_movie_url' => '',]);
         $staff = $this->_staff($this->hospital_categories);
+        $category = new HospitalCategoryResource($this);
 
         return collect([])
             ->merge($this->_main_image($this->hospital_categories, 2, 1) ?? $main_image_pc)
@@ -42,15 +43,22 @@ class HospitalContentBaseResource extends Resource
             ->merge($this->_photo($this->hospital_categories) ?? $photo)
             ->merge($this->_hospital_movie($this->hospital_categories) ?? $hospital_movie)
             ->put('interview', $this->_interview($this->hospital_categories))
-            ->put('staff_img_url', $staff[0]['img_url'])
-            ->put('staff_img_alt', $staff[0]['img_alt'])
-            ->put('staff_name', $staff[0]['name'])
-            ->put('staff_comment', $staff[0]['comment'])
-            ->put('staff_bio', $staff[0]['bio'])
+            ->put('staff_flg', $staff[0])
+            ->put('staff', $staff[1])
             ->put('free_area', $this->free_area ?? '')
             ->put('principal', $this->principal ?? '')
             ->put('principal_bio', $this->principal_history ?? '')
-            ->put('category', new HospitalCategoryResource($this));
+            ->put('category', $category)
+            ->put('facility_flg', $this->getFacilityFlg($category));
+    }
+
+    private function getFacilityFlg($category) {
+
+        if(in_array(10, array_column((array)$category, 'id'))) {
+            return 1;
+        }
+
+        return 0;
     }
 
     /**
@@ -290,7 +298,7 @@ class HospitalContentBaseResource extends Resource
      * スタッフ
      * 
      * @param  医療機関カテゴリ
-     * @return 医療施設メイン
+     * @return
      */
     private function _staff($hospital_categories)
     {
@@ -316,11 +324,12 @@ class HospitalContentBaseResource extends Resource
             break;
         }
 
-        if (empty($results) || count($results) == 0) {
-            $results[] = ['img_url' =>'', 'img_alt' => '', 'name' => '', 'bio' => '', 'comment' => ''];
+        $staff_flg = 0;
+        if (count($results) > 0) {
+            $staff_flg = 1;
         }
 
-        return $results;
+        return [$staff_flg, $results];
     }
 
     private function _filepath($hospital_image)
