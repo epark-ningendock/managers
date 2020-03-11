@@ -661,23 +661,22 @@ class SearchController extends ApiBaseController
 
         $query =  Hospital::with([
             'hospital_metas',
-            'hospital_images',
-            'hospital_details' => function ($query) {
-                $query->with([
+//            'hospital_images',
+            'hospital_details' => function ($q) {
+                $q->with([
                     'minor_classification'
                 ]);
             },
-            'hospital_categories' => function ($query) {
-                $query->whereIn('image_order', [2, 3, 4])->with([
-                    'hospital_image',
-                ]);
+            'hospital_categories' => function ($qu) {
+                $qu->whereIn('image_order', [2, 3, 4]);
             },
+            'hospital_categories.hospital_image',
             'contract_information',
             'medical_treatment_times',
             'prefecture',
             'district_code',
-            'courses' => function ($query) use ($target_date) {
-                $query->where('web_reception', WebReception::ACCEPT)
+            'courses' => function ($que) use ($target_date) {
+                $que->where('web_reception', WebReception::ACCEPT)
                     ->where('is_category', 0)
                     ->where('publish_start_date', '<=', $target_date)
                     ->where('publish_end_date', '>=', $target_date)
