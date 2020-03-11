@@ -321,7 +321,6 @@ class HospitalContentBaseResource extends Resource
                 'bio' => $bio,
                 'comment' => $comment
             ];
-            break;
         }
 
         $staff_flg = 0;
