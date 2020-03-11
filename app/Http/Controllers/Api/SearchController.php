@@ -382,19 +382,19 @@ class SearchController extends ApiBaseController
                 $query->where('hospital_metas.credit_card_flg', 1);
             }
             $query->where('hospitals.status', Status::VALID);
-
-            // limit/offset
-//            if (!$count_flg && $request->input("return_flag") != 0) {
-                $offset = intval($request->input('return_from')-1);
-                $limit = intval($request->input('return_to')) - $offset;
-                $query->offset(0);
-                $query->limit(20);
-//            }
         }
 
         // 並び順
         $query->orderBy('hospitals.pvad', 'desc');
         $query->orderBy('hospitals.pv_count', 'desc');
+
+        // limit/offset
+//            if (!$count_flg && $request->input("return_flag") != 0) {
+        $offset = intval($request->input('return_from')-1);
+        $limit = intval($request->input('return_to')) - $offset;
+        $query->offset(0);
+        $query->limit(20);
+//            }
 
         $results = $query->get();
 
