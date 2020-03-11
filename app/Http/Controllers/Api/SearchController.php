@@ -69,6 +69,7 @@ class SearchController extends ApiBaseController
 
             $callback = $request->input('callback');
             $return_count = count($entities);
+            $search_count = $return_count;
 
             // レスポンス生成
             $hospitals = SearchHospitalsResource::collection($entities);
