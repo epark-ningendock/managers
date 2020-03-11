@@ -42,33 +42,32 @@ class SearchController extends ApiBaseController
             $return_flag = $request->input('return_flag');
             $search_count_only_flag = $request->input('search_count_only_flag');
             $search_condition_return_flag = $request->input('search_condition_return_flag');
-        // 結果生成
-        $status = 0;
-        $callback = $request->input('callback');
         
             // 件数のみ返却
-        // 件数のみ返却
-        if ($search_count_only_flag == 1) {
             $search_count = $this->getHospitalCount($request, true);
-            $return_count = $search_count;
-            return $search_condition_return_flag == 0 ?
-                response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to'))->setCallback($callback)
-                :
-                response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to') + $request->toJson())->setCallback($callback);
-        } else {
             $targets =  $this->getHospitalCount($request, false);
             $entities = $this->getHospitals($request, $targets);
+
+           // 結果生成
+           $status = 0;
 
             // 件数要素セット
             // page取得の場合、全件件数取得
 //            $search_count = $return_flag == 0 ? $entities->count() : $this->getHospitals($request, true);
-
+            $return_count = count($entities);
 
             $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
-            $return_to = $return_flag == 0 ? count($targets) : $request->input('return_to');
+            $return_to = $return_flag == 0 ? $search_count : $request->input('return_to');
 
-            $return_count = count($entities);
-            $search_count = $return_count;
+            $callback = $request->input('callback');
+
+            // 件数のみ返却
+            if ($search_count_only_flag == 1) {
+                return $search_condition_return_flag == 0 ?
+                    response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to'))->setCallback($callback)
+                    :
+                    response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to') + $request->toJson())->setCallback($callback);
+            }
 
             // レスポンス生成
             $hospitals = SearchHospitalsResource::collection($entities);
@@ -77,12 +76,8 @@ class SearchController extends ApiBaseController
                 response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to', 'hospitals'))
                     ->setCallback($callback)
                 : response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
-                    + $request->toJson()
-                    + compact('hospitals'))->setCallback($callback);
-        }
-
-
-
+                + $request->toJson()
+                + compact('hospitals'))->setCallback($callback);
 //        } catch (\Exception $e) {
 //           Log::error($e);
 //           return $this->createResponse($this->messages['system_error_api'], $request->input('callback'));
