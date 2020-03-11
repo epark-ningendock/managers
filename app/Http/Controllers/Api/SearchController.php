@@ -45,8 +45,6 @@ class SearchController extends ApiBaseController
         
             // 件数のみ返却
             $search_count = $this->getHospitalCount($request, true);
-            $targets =  $this->getHospitalCount($request, false);
-            $entities = $this->getHospitals($request, $targets);
 
            // 結果生成
            $status = 0;
@@ -54,7 +52,7 @@ class SearchController extends ApiBaseController
             // 件数要素セット
             // page取得の場合、全件件数取得
 //            $search_count = $return_flag == 0 ? $entities->count() : $this->getHospitals($request, true);
-            $return_count = count($entities);
+            $return_count = $search_count;
 
             $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
             $return_to = $return_flag == 0 ? $search_count : $request->input('return_to');
@@ -68,6 +66,10 @@ class SearchController extends ApiBaseController
                     :
                     response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to') + $request->toJson())->setCallback($callback);
             }
+
+        $targets =  $this->getHospitalCount($request, false);
+        $entities = $this->getHospitals($request, $targets);
+        $return_count = count($entities);
 
             // レスポンス生成
             $hospitals = SearchHospitalsResource::collection($entities);
