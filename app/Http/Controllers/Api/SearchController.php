@@ -42,6 +42,8 @@ class SearchController extends ApiBaseController
             $return_flag = $request->input('return_flag');
             $search_count_only_flag = $request->input('search_count_only_flag');
             $search_condition_return_flag = $request->input('search_condition_return_flag');
+        // 結果生成
+        $status = 0;
         
             // 件数のみ返却
         // 件数のみ返却
@@ -55,9 +57,6 @@ class SearchController extends ApiBaseController
         } else {
             $targets =  $this->getHospitalCount($request, false);
             $entities = $this->getHospitals($request, $targets);
-
-            // 結果生成
-            $status = 0;
 
             // 件数要素セット
             // page取得の場合、全件件数取得
