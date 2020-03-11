@@ -654,6 +654,7 @@ class SearchController extends ApiBaseController
         $ids = [];
         foreach ($hospitals as $hospital) {
             $ids[] = $hospital->id;
+            Log::error('医療機関ID:' .$hospital->id);
         }
 
         $target_date = Carbon::today()->toDateString();
