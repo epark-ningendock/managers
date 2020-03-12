@@ -69,8 +69,11 @@ class MemberLoginInfoController extends ApiBaseController
             return $this->createResponse($this->messages['errorDB'], $request->input('callback'));
         }
 
-        return $this->createLoginInfoResponse($this->messages['success'], $memberLoginInfo);
+        if (!$memberLoginInfo) {
+            return $this->createResponse($this->messages['data_empty_error']);
+        }
 
+        return $this->createLoginInfoResponse($this->messages['success'], $memberLoginInfo);
     }
 
     /**

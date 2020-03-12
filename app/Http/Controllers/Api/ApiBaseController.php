@@ -29,7 +29,7 @@ class ApiBaseController extends Controller
             ],
             'data_empty_error' => [
                 'status' => 1,
-                'status_code' => 400,
+                'status_code' => 200,
                 'code_number' => '01',
                 'code_detail' => '13',
                 'message' => trans('validation.for_api.data_empty_error'),

@@ -334,7 +334,7 @@ class ReservationService
         }
 
         if ($process === self::REGISTRATION) { // 新規の場合、予約枠数の確認
-            if ($calendar_day->reservation_frames == 0 || $calendar_day->is_reservation_acceptance == 0) {
+            if ($calendar_day->reservation_frames == 0 || $calendar_day->is_reservation_acceptance != 0) {
                 return 4;
             }
 
