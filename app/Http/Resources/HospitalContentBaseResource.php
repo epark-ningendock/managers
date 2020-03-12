@@ -31,7 +31,6 @@ class HospitalContentBaseResource extends Resource
         $photo = collect(['photo' => '', 'photo_desc' => '',]);
         $hospital_movie = collect(['access_movie_url' => '',]);
         $staff = $this->_staff($this->hospital_categories);
-        $category = new HospitalCategoryResource($this);
 
         return collect([])
             ->merge($this->_main_image($this->hospital_categories, 2, 1) ?? $main_image_pc)
@@ -48,17 +47,22 @@ class HospitalContentBaseResource extends Resource
             ->put('free_area', $this->free_area ?? '')
             ->put('principal', $this->principal ?? '')
             ->put('principal_bio', $this->principal_history ?? '')
-            ->put('category', $category)
-            ->put('facility_flg', $this->getFacilityFlg($category));
+            ->put('category', new HospitalCategoryResource($this))
+            ->put('facility_flg', $this->getFacilityFlg());
     }
 
-    private function getFacilityFlg($category) {
+    private function getFacilityFlg() {
 
         $result = 0;
-        foreach ($category as $c) {
-            if ($c['id'] > 10) {
-                $result = 1;
-                break;
+        if (!empty($this->hospital_details)) {
+            foreach ($this->hospital_details as $detail) {
+
+                if (!empty($detail->inputstring) || (isset($detail->select_status) && ($detail->select_status == 1))) {
+                    if  ($detail->minor_classification_id > 10) {
+                        $result = 1;
+                        break;
+                    }
+                }
             }
         }
         return $result;
