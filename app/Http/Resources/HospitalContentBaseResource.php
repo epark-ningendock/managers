@@ -54,10 +54,11 @@ class HospitalContentBaseResource extends Resource
 
     private function getFacilityFlg($category) {
 
-        if(in_array(10, array_column((array)$category, 'id'))) {
-            return 1;
+        foreach ($category as $c) {
+            if ($c['id'] > 10) {
+                return 1;
+            }
         }
-
         return 0;
     }
 
