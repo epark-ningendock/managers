@@ -435,6 +435,9 @@ class Hospital extends Model
         $returnData = [];
 
         for ($i = 1; $i < 6; $i++) {
+            if (empty($hospital_metas->{'station' .$i})) {
+                continue;
+            }
             if (!empty($hospital_metas->{'rail' .$i})) {
                 $returnData[$i - 1]['rail_line'] = $hospital_metas->{'rail' .$i};
             } else {
