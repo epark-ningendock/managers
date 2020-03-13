@@ -249,21 +249,21 @@ class Hospital extends Model
             $query->whereHas('courses.calendar_days', function ($query) use ($from, $to) {
                 $query->where('date', '>=', $from)
                     ->where('date', '<=', $to)
-                    ->where('is_reservation_acceptance', 1);
+                    ->where('is_reservation_acceptance', 0);
             });
         } // 受診希望日FROM
         else {
             if (isset($from) and empty($to)) {
                 $query->whereHas('courses.calendar_days', function ($query) use ($from) {
                     $query->where('date', '>=', $from)
-                        ->where('is_reservation_acceptance', 1);
+                        ->where('is_reservation_acceptance', 0);
                 });
             } // 受診希望日TO
             else {
                 if (empty($from) and isset($to)) {
                     $query->whereHas('courses.calendar_days', function ($query) use ($to) {
                         $query->where('date', '<=', $to)
-                            ->where('is_reservation_acceptance', 1);
+                            ->where('is_reservation_acceptance', 0);
                     });
                 }
             }

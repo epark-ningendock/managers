@@ -389,7 +389,7 @@ class CourseController extends ApiBaseController
             ->where('date', '>=', $serach_condition->get_yyyymmdd_from)
             ->where('date', '<=', $serach_condition->get_yyyymmdd_to)
             ->where('is_holiday', 0)
-            ->where('is_reservation_acceptance', 1)
+            ->where('is_reservation_acceptance', 0)
             ->get()
             ->groupBy(function ($row) {
                 return $row->date->format('m');

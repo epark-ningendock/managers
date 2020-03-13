@@ -189,7 +189,7 @@ class SearchController extends ApiBaseController
                 $query->leftJoin('calendar_days', function ($join) use ($target) {
                     $join->on('calendars.id', 'calendar_days.calendar_id')
                         ->where('reservation_frames', '>', 'reservation_count')
-                        ->where('is_reservation_acceptance', 1)
+                        ->where('is_reservation_acceptance', 0)
                         ->whereDate('calendar_days.date', $target)
                         ->where('is_holiday', 0);
                 });
@@ -436,7 +436,7 @@ class SearchController extends ApiBaseController
             $query->leftJoin('calendar_days', function ($join) use ($target) {
                 $join->on('calendars.id', 'calendar_days.calendar_id')
                     ->where('reservation_frames', '>', 'reservation_count')
-                    ->where('is_reservation_acceptance', 1)
+                    ->where('is_reservation_acceptance', 0)
                     ->whereDate('calendar_days.date', $target)
                     ->where('is_holiday', 0);
             });

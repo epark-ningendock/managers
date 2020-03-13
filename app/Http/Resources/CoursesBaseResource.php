@@ -324,7 +324,7 @@ class CoursesBaseResource extends CourseBaseResource
                 $c['appoint_status'] = 1; // 受付開始前
             else if ($day > $courses->reception_end_date || $c->reservation_frames <= $c->reservation_count)
                 $c['appoint_status'] = 2; // 受付終了
-            else if ($c->is_reservation_acceptance === 0)
+            else if ($c->is_reservation_acceptance === 1)
                 $c['appoint_status'] = 3; // 受付不可
             else if ($c->is_holiday === 1)
                 $c['appoint_status'] = 3; // 受付不可

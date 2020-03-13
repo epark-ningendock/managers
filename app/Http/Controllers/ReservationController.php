@@ -497,7 +497,7 @@ class ReservationController extends Controller
                 ->where('is_holiday', 1)
                 ->whereDate('date', $reservation_date)->get()->first();
 
-            if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '1') && $calendar_day->reservation_frames == 0) {
+            if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '0') && $calendar_day->reservation_frames == 0) {
                 DB::rollback();
                 return redirect()->back()->with('error', trans('messages.reservation.not_reservable'))->withInput();
             }
@@ -743,7 +743,7 @@ class ReservationController extends Controller
                 ->where('is_holiday', 1)
                 ->whereDate('date', $reservation_date)->get()->first();
 
-            if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '1') && $calendar_day->reservation_frames == 0) {
+            if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '0') && $calendar_day->reservation_frames == 0) {
                 DB::rollback();
                 return redirect()->back()->with('error', trans('messages.reservation.not_reservable'))->withInput();
             }
