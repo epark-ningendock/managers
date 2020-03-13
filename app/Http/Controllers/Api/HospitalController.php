@@ -82,27 +82,6 @@ class HospitalController extends ApiBaseController
     }
 
     /**
-     * 医療機関空き枠一覧情報取得API
-     *
-     * @param  Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function frame(HospitalFrameRequest $request)
-    {
-        try {
-            $get_from_yyyymmdd = $request->input('get_yyyymmdd_from');
-            $get_to_yyyymmdd = $request->input('get_yyyymmdd_to');
-
-            $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
-
-            return new HospitalReservationFramesResource($this->getHospitalFrames($hospital_id, $get_from_yyyymmdd, $get_to_yyyymmdd));
-        } catch (\Exception $e) {
-            Log::error($e);
-            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
-        }
-    }
-
-    /**
      * 医療機関コンテンツ情報取得API
      *
      * @param  Illuminate\Http\Request  $request
@@ -307,56 +286,6 @@ class HospitalController extends ApiBaseController
     }
 
     /**
-     * @param $hospital_id
-     * @param $get_from_date
-     * @param $get_to_date
-     */
-    private function getHospitalFrames($hospital_id, $get_from_date, $get_to_date) {
-
-        $today = Carbon::today()->toDateString();
-        $from_date = Carbon::createMidnightDate(
-            substr($get_from_date, 0, 4),
-            substr($get_from_date, 4, 2),
-            substr($get_from_date, 6, 2))->toDateString();
-
-        $to_date = Carbon::createMidnightDate(
-            substr($get_to_date, 0, 4),
-            substr($get_to_date, 4, 2),
-            substr($get_to_date, 6, 2))->toDateString();
-
-        return Hospital::with([
-            'hospital_categories' => function ($query) {
-                $query->whereIn('image_order', [3, 4]);
-            },
-            'contract_information',
-            'courses'=> function ($query) use ($today) {
-            $query->where('is_category', 0)
-                ->where('web_reception', 0)
-                ->where('publish_start_date', '<=', $today)
-                ->where('publish_end_date', '>=', $today)
-                ->orderBy('courses.order');
-        },
-            'courses.course_details' => function ($query) {
-                $query->whereIn('major_classification_id', [11, 13]);
-            },
-            'courses.course_details.minor_classification',
-            'courses.calendar_days' => function ($query) use ($from_date, $to_date) {
-                $query->where('date', '>=', $from_date)
-                ->where('date', '<=', $to_date);
-            },
-        ])
-            ->whereHas('courses' , function($q) use ($today) {
-                $q->where('courses.is_category', 0)
-                    ->where('web_reception', 0)
-                    ->where('publish_start_date', '<=', $today)
-                    ->where('publish_end_date', '>=', $today)
-                ;
-            })
-            ->find($hospital_id);
-
-    }
-
-    /**
      * 医療機関コースコンテンツ取得
      *
      * @param  string $hospital_id 医療機関ID
@@ -369,6 +298,8 @@ class HospitalController extends ApiBaseController
             'contract_information',
             'hospital_categories' => function ($query) {
                 $query->whereIn('image_order', [3, 4, 6, 7, 8]);
+                $query->orderBy('image_order');
+                $query->orderBy('file_location_no');
                 $query->orderBy('order2');
             },
             'hospital_categories.hospital_image',

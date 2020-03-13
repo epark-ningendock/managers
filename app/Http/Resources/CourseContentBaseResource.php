@@ -121,13 +121,15 @@ class CourseContentBaseResource extends Resource
             $d = $detail;
         }
 
-        $middle_ids[] = ['id' => $middle_id,
-            'title' => $middle->name,
-            'category_small' => $minor_ids];
-        $major_ids[] = ['id' => $major_id,
-            'title' => $major->name,
-            'type_no' => $major->classification_type_id,
-            'category_middle' => $middle_ids];
+        if (isset($middle) && isset($major)) {
+            $middle_ids[] = ['id' => $middle_id,
+                'title' => $middle->name,
+                'category_small' => $minor_ids];
+            $major_ids[] = ['id' => $major_id,
+                'title' => $major->name,
+                'type_no' => $major->classification_type_id,
+                'category_middle' => $middle_ids];
+        }
 
         return $major_ids;
     }

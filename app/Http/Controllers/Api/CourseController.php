@@ -212,7 +212,11 @@ class CourseController extends ApiBaseController
                     ->orderBy('date');
             },
             'course_options',
-            'course_options.option',
+            'course_options.option' => function ($query) {
+                $query->orderBy('order');
+
+            }
+            ,
             'course_questions',
             'contract_information'
         ])
