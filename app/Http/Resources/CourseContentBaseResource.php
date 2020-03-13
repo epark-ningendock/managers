@@ -42,6 +42,11 @@ class CourseContentBaseResource extends Resource
     private function _categories($course_details)
     {
         $results = [];
+
+        if (empty($course_details)) {
+            return $results;
+        }
+
         $major_ids = [];
         $middle_ids = [];
         $minor_ids = [];
