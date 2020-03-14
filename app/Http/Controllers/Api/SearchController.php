@@ -210,6 +210,11 @@ class SearchController extends ApiBaseController
                         $q->orWhere('hospital_metas.hospital_name', 'like', '%' . $freewords[$i] . '%');
                     }
 
+                    $q->orWhere('courses.name', 'like', '%' . $freewords[0] . '%');
+                    for ($i = 1; $i < count($freewords); $i++) {
+                        $q->orWhere('courses.name', 'like', '%' . $freewords[$i] . '%');
+                    }
+
                     $q->orWhere('hospital_metas.area_station', 'like', '%' . $freewords[0] . '%');
                     for ($i = 1; $i < count($freewords); $i++) {
                         $q->orWhere('hospital_metas.area_station', 'like', '%' . $freewords[$i] . '%');
@@ -458,6 +463,7 @@ class SearchController extends ApiBaseController
             foreach($freewords as $freeword) {
                 $query->where(function($q) use($freeword) {
                     $q->orWhere('hospital_metas.hospital_name', 'like', '%'.$freeword.'%');
+                    $q->orWhere('courses.name', 'like', '%'.$freeword.'%');
                     $q->orWhere('hospital_metas.area_station', 'like', '%'.$freeword.'%');
                     $q->orWhere('course_metas.category_exam_name', 'like', '%'.$freeword.'%');
                     $q->orWhere('course_metas.category_disease_name', 'like', '%'.$freeword.'%');

@@ -26,7 +26,12 @@ class RouteController extends ApiBaseController
             $place_code = $request->input('place_code');
             $rail_no = $request->input('rail_no');
 
-            $pref = $this->getPrefData($place_code);
+            if (empty($place_code)) {
+                $pref = $this->getPrefDataByRailNo($rail_no);
+            } else {
+                $pref = $this->getPrefData($place_code);
+            }
+
             $rails = $this->getRailData($place_code, $rail_no);
 
             $data = ['pref' => $pref, 'routes' => $rails];
@@ -63,6 +68,27 @@ class RouteController extends ApiBaseController
 
     /**
      * @param $place_code
+     * @return mixed
+     */
+    private function getPrefDataByRailNo($rain_no) {
+
+        $select = [
+            DB::raw("prefectures.code AS code"),
+            DB::raw("prefectures.name AS name"),
+            DB::raw("COUNT(hospitals.id) AS hospital_count")
+        ];
+
+        $query = Prefecture::query();
+        $query->select($select);
+        $query->join('prefecture_rail', 'prefecture_rail.prefecture_id', 'prefectures.id');
+        $query->leftJoin('hospitals', 'hospitals.prefecture_id', 'prefectures.id');
+        $query->where('prefecture_rail.rail_id', $rain_no);
+        $query->groupBy('prefectures.code', 'prefectures.name');
+        return $query->first();
+    }
+
+    /**
+     * @param $place_code
      * @param $rain_no
      * @return \Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
@@ -88,7 +114,10 @@ class RouteController extends ApiBaseController
                 });
 
         });
-        $query->where('prefecture_rail.prefecture_id', $place_code);
+        if (!empty($place_code)) {
+            $query->where('prefecture_rail.prefecture_id', $place_code);
+        }
+
         if (!empty($rain_no)) {
             $query->where('rails.id', $rain_no);
         }

@@ -38,7 +38,7 @@ class MemberLoginInfoImport extends ImportAbstract implements WithChunkReading
         $row = $row->toArray();
 
         $contact_name = null;
-        if (!empty($row['contact_name'])) {
+        if (!empty($row['contact_name']) && $row['contact_name'] !== 'NULL') {
             $contact_name =  $row['contact_name'];
         }
 

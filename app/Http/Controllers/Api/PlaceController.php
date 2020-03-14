@@ -23,6 +23,7 @@ class PlaceController extends ApiBaseController
 
         try {
             $query = Prefecture::with([
+                'district_codes',
                 'district_codes.hospitals',
                 'hospitals',
             ]);
