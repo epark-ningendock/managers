@@ -140,32 +140,32 @@ return [
 //        'import' => CourseImport::class,
 //        'seed' => false,
 //    ],
-   'm_course_detail_7.csv' => [
+   'm_course_detail_13.csv' => [
        'model' => CourseDetail::class,
        'import' => CourseDetailImport::class,
        'seed' => false,
    ],
-   'm_course_detail_8.csv' => [
+   'm_course_detail_14.csv' => [
        'model' => CourseDetail::class,
        'import' => CourseDetailImport::class,
        'seed' => false,
    ],
-   'm_course_detail_9.csv' => [
+   'm_course_detail_15.csv' => [
        'model' => CourseDetail::class,
        'import' => CourseDetailImport::class,
        'seed' => false,
    ],
-   'm_course_detail_10.csv' => [
+   'm_course_detail_16.csv' => [
        'model' => CourseDetail::class,
        'import' => CourseDetailImport::class,
        'seed' => false,
    ],
-   'm_course_detail_11.csv' => [
+   'm_course_detail_17.csv' => [
        'model' => CourseDetail::class,
        'import' => CourseDetailImport::class,
        'seed' => false,
    ],
-   'm_course_detail_12.csv' => [
+   'm_course_detail_18.csv' => [
        'model' => CourseDetail::class,
        'import' => CourseDetailImport::class,
        'seed' => false,
