@@ -17,7 +17,9 @@ class BillingFilters extends QueryFilters
 
     public function hospital_name($hospital_name)
     {
-        $hospitals = Hospital::has('contract_information')
+        $hospitals = Hospital::whereHas('contract_information', function ($query) {
+            $query->whereNotNull('code');
+        })
             ->where('name', 'LIKE', "%". $hospital_name . "%" )
             ->where('status', '<>', Status::DELETED)
             ->get();
