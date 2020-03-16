@@ -43,7 +43,7 @@ class BillingListingSheet implements FromCollection, WithHeadings, WithMapping, 
 
         return [
             $this->endedDate->format('m'),
-            $billing->hospital->contract_information->property_no,
+            $billing->hospital->contract_information->customer_no,
             $billing->hospital->contract_information->contractor_name,
             $billing->hospital->name,
             number_format(floor($taxExcludePrice)),
@@ -56,7 +56,7 @@ class BillingListingSheet implements FromCollection, WithHeadings, WithMapping, 
     {
         return [
             '請求対象月',
-            '物件番号',
+            '顧客番号',
             '法人名',
             '医療機関名',
             '請求金額小計',
