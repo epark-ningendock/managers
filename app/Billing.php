@@ -39,6 +39,11 @@ class Billing extends SoftDeleteModel
         return $this->belongsTo(Hospital::class);
     }
 
+    public function contract_information()
+    {
+        return $this->hasOne('App\ContractInformation', 'hospital_id', 'hospital_id');
+    }
+
     public function billing_option_plans()
     {
         return $this->hasMany(BillingOptionPlan::class);
