@@ -36,6 +36,7 @@ class CourseInfoWakuNotificationController extends Controller
         $sysErrorMessages = config('api.unexpected_error.message');
         $app_name = env('APP_ENV');
         $ip = $request->ip();
+        $ip = '172.30.0.3';
         if ($app_name == 'production') {
             $app_kbn = AppKbn::PRODUCTION;
         } else {
@@ -82,7 +83,7 @@ class CourseInfoWakuNotificationController extends Controller
 
         if (!empty($request->input('courseList'))) {
             foreach ($request->input('courseList') as $course) {
-                if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 15) {
+                if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 16) {
                     return $this->createResponse($messages['errorValidationId']);
                 }
                 if (empty($course['joukenNo']) || !is_numeric($course['joukenNo']) || strlen($course['joukenNo']) > 10) {
@@ -94,23 +95,24 @@ class CourseInfoWakuNotificationController extends Controller
         $params = [
             'hospital_id' => $request->input('hospitalId'),
             'dantai_no' => $request->input('dantaiNo'),
-            'course_list' => $request->input('courseList')
+            'course_list' => $request->input('courseList'),
+            'medical_sys_id' => $kenshin_sys_cooperation->medical_examination_system_id
         ];
 
         DB::beginTransaction();
-        try {
+//        try {
             // 登録
             $this->registCourseWakuInfo($params);
             DB::commit();
-        } catch (\Throwable $e) {
-            $message = '[健診システム連携コース通知API] DBの登録に失敗しました。';
-            Log::error($message, [
-                '健診システム連携情報' => $kenshin_sys_cooperation->toArray(),
-                'exception' => $e,
-            ]);
-            DB::rollback();
-            return $this->createResponse($sysErrorMessages['errorDB']);
-        }
+//        } catch (\Throwable $e) {
+//            $message = '[健診システム連携コース通知API] DBの登録に失敗しました。';
+//            Log::error($message, [
+//                '健診システム連携情報' => $kenshin_sys_cooperation->toArray(),
+//                'exception' => $e,
+//            ]);
+//            DB::rollback();
+//            return $this->createResponse($sysErrorMessages['errorDB']);
+//        }
 
         return $this->createResponse($messages['success']);
     }
@@ -142,6 +144,11 @@ class CourseInfoWakuNotificationController extends Controller
             $course = KenshinSysCourse::where('kenshin_sys_hospital_id', $params['hospital_id'])
                 ->where('kenshin_sys_dantai_no', $params['dantai_no'])
                 ->where('kenshin_sys_course_no', $c['courseNo'])
+                ->whereHas('kenshin_sys_dantai_info', function ($query) use ($params) {
+                    $query->where('medical_examination_system_id', $params['medical_sys_id'])
+                        ->where('kenshin_sys_dantai_no', $params['dantai_no'])
+                        ->where('kenshin_sys_hospital_id', $params['hospital_id']);
+                })
                 ->first();
 
             if (!$course) {
