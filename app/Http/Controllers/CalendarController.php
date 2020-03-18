@@ -574,10 +574,10 @@ class CalendarController extends Controller
             $calendar_days = $course->calendar->calendar_days()
                 ->whereBetween('date', [$started_date, $end_date])->orderBy('date')->get();
 
-            $holidays = Holiday::where('hospital_id', session()->get('hospital_id'))
-                                ->where('is_holiday', 1)
-                                ->whereBetween('date', [$started_date, $end_date])
-                                ->orderBy('date')->get();
+//            $holidays = Holiday::where('hospital_id', session()->get('hospital_id'))
+//                                ->where('is_holiday', 1)
+//                                ->whereBetween('date', [$started_date, $end_date])
+//                                ->orderBy('date')->get();
 
 
             $period = CarbonPeriod::create($started_date, $end_date);
@@ -589,14 +589,15 @@ class CalendarController extends Controller
                     return $day->date->isSameDay($date);
                 });
 
-                $holiday = $holidays->first(function ($day) use ($date) {
-                    return $day->date->isSameDay($date);
-                });
+//                $holiday = $holidays->first(function ($day) use ($date) {
+//                    return $day->date->isSameDay($date);
+//                });
 
                 $calendars->push([
                     'date' => $date,
-                    'is_holiday' => isset($holiday),
-                    'frame' => isset($calendar_day)? $calendar_day->reservation_frames : -1,
+//                    'is_holiday' => isset($holiday),
+                    'is_holiday' => isset($calendar_day) ? $calendar_day->is_holiday : 1,
+                    'frame' => isset($calendar_day)? ($calendar_day->reservation_frames - $calendar_day->reservation_count) : -1,
                     'is_reservation_acceptance' => (!isset($calendar_day) || $calendar_day->is_reservation_acceptance == CalendarDisplay::HIDE)
                 ]);
             }
