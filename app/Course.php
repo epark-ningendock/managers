@@ -285,16 +285,6 @@ class Course extends SoftDeleteModel
         return $query;
     }
 
-    public function get_course_option() {
-
-        return CourseOption::whereHas('option', function ($query) {
-            $query->where('status', Status::VALID);
-            $query->whereNotNull('deleted_at');
-            $query->where('course_id', $this->id);
-            $query->orderBy('order');
-        })->get();
-    }
-
     const AILIAS_FOR_HOSPITAL_API = [
         'id',
         'hospital_id',

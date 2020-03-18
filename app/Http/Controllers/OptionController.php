@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CourseOption;
 use App\Http\Requests\OptionformStore;
 use App\Option;
 use App\TaxClass;
@@ -75,6 +76,9 @@ class OptionController extends Controller
     public function destroy($id)
     {
         $option = Option::findOrFail($id);
+
+        CourseOption::where('option_id', $id)->delete();
+
         $option->delete();
 
         return redirect(route('option.index'))->with('success', trans('messages.deleted', ['name' => trans('messages.option_name')]));

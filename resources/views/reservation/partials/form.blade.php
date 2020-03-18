@@ -350,11 +350,12 @@
                             questionGroup.empty();
 
                             if (data && data.length > 0) {
-                                const courseOptions = data[0].get_course_option;
+                                const courseOptions = data[0].course_options;
                                 const courseQuestions = data[0].course_questions;
 
                                 $('.option-container').show();
                                 courseOptions.forEach(function (courseOption) {
+
                                     let $courseOptionOldData = @json(old('course_options'), JSON_PRETTY_PRINT);
 
                                     let $courseOptionOldValue = ( $courseOptionOldData ) ? $courseOptionOldData : {};
@@ -371,7 +372,6 @@
                                         .append($(`<td>${courseOption.option.name}</td>`))
                                         .append($(`<td>${courseOption.option.price.toLocaleString()}円</td>`))
                                         .appendTo(tbody);
-
                                 });
 
 
