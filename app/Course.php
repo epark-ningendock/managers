@@ -290,6 +290,7 @@ class Course extends SoftDeleteModel
         return CourseOption::whereHas('option', function ($query) {
             $query->where('status', Status::VALID);
             $query->whereNotNull('deleted_at');
+            $query->where('course_id', $this->id);
             $query->orderBy('order');
         })->get();
     }
