@@ -105,15 +105,15 @@
               <label for="is_pending">仮受付</label>
             </div>
             <div class="checkbox ml-2">
-              <input type="checkbox" id="is_reception_completed" name="is_reception_completed" value="2" @if(isset($is_reception_completed)) checked @endif/>
+              <input type="checkbox" id="is_reception_completed" name="is_reception_completed" value="3" @if(isset($is_reception_completed)) checked @endif/>
               <label for="is_reception_completed">受付確定</label>
             </div>
             <div class="checkbox ml-2">
-              <input type="checkbox" id="is_completed" name="is_completed" value="3" @if(isset($is_completed)) checked @endif />
+              <input type="checkbox" id="is_completed" name="is_completed" value="4" @if(isset($is_completed)) checked @endif />
               <label for="is_completed">受診完了</label>
             </div>
             <div class="checkbox ml-2">
-              <input type="checkbox" id="is_cancelled" name="is_cancelled" value="4" @if(isset($is_cancelled)) checked @endif/>
+              <input type="checkbox" id="is_cancelled" name="is_cancelled" value="5" @if(isset($is_cancelled)) checked @endif/>
               <label for="is_cancelled">キャンセル</label>
             </div>
           </div>

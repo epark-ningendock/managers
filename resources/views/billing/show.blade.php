@@ -53,7 +53,7 @@
                     </div>
 
                 @endif
-                
+
                 @if ( session('hospital_id') )
                     @if (!empty($billing->hospital->hospitalOptionPlan($billing->id, $endedDate)))
                         <div class="form-group ">

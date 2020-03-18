@@ -73,18 +73,16 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
 
             $fee = 0;
             $fee_rate = 0;
-            $member_id = $this->getValue($row, 'EPARK_MEMBER_ID');
-            if (isset($member_id)) {
-                if (isset($hospital->hospital_plan) && isset($hospital->hospital_plan->contract_plan)) {
-                    $fee_rate = $hospital->hospital_plan->contract_plan->fee_rate;
-                } else {
-                    $fee_rate = 10;
-                }
-                $course_price = intval($this->getValue($row, 'COURSE_PRICE_TAX'));
-                $option_price = intval($this->getValue($row, 'OPTION_PRICE_TAX'));
-                $adjusts = intval($this->getValue($row, 'ADJUSTMENTS'));
-                $fee = floor(($course_price + $option_price + $adjusts) * ($fee_rate / 100));
+//            $member_id = $this->getValue($row, 'EPARK_MEMBER_ID');
+            if (isset($hospital->hospital_plan) && isset($hospital->hospital_plan->contractPlan)) {
+                $fee_rate = $hospital->hospital_plan->contractPlan->fee_rate;
+            } else {
+                $fee_rate = 10;
             }
+            $course_price = intval($this->getValue($row, 'COURSE_PRICE_TAX'));
+            $option_price = intval($this->getValue($row, 'OPTION_PRICE_TAX'));
+            $adjusts = intval($this->getValue($row, 'ADJUSTMENTS'));
+            $fee = floor(($course_price + $option_price + $adjusts) * ($fee_rate / 100));
 
             $memo = '';
             if (!empty($this->getValue($row, 'MEMO_APPOINT'))) {
