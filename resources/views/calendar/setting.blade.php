@@ -155,19 +155,19 @@
                               <span class="day-label text-red">休</span>
                             @else
                               <a class="is_reservation_acceptance day-label" data-origin="{{  isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">
-                                {{ isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0' ? '✕' : '◯' }}
+                                {{ isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '1' ? '✕' : '◯' }}
                               </a>
                             @endif
                             <input type="hidden" name="is_reservation_acceptances[]" value="{{ isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">                
                             @php
                               $reservation_frames = 0;
-                              if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0')) {
+                              if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '1')) {
                                 $reservation_frames = '';
                               } else if (isset($day['calendar_day']) || $day['is_holiday'] == 1) {
                                 if(isset($day['calendar_day'])) $reservation_frames = $day['calendar_day']->reservation_frames;
                               }
                             @endphp
-                            <select name="reservation_frames[]" @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0')) disabled @endif class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
+                            <select name="reservation_frames[]" @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '1')) disabled @endif class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
                                     @if($day['is_holiday']) data-holiday="true" @endif
                                     @if(isset($day['holiday'])) data-public-holiday="true" @endif
                                     data-origin="{{ $reservation_frames }}">
@@ -179,7 +179,7 @@
                               @endforeach
                             </select>
                             {{-- 受付不可の場合、受付枠数ををhidden属性にする --}}
-                            @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0'))
+                            @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '1'))
                               <input type="hidden" name="reservation_frames[]" />
                             @endif
 

@@ -598,11 +598,17 @@ class CalendarController extends Controller
                     $holiday = false;
                 }
 
+                $frames = 0;
+                if (isset($calendar_day)) {
+                    $frames = $calendar_day->reservation_frames - $calendar_day->reservation_count;
+                }
+
                 $calendars->push([
                     'date' => $date,
 //                    'is_holiday' => isset($holiday),
                     'is_holiday' => $holiday,
-                    'frame' => isset($calendar_day)? ($calendar_day->reservation_frames - $calendar_day->reservation_count) : -1,
+//                    'frame' => isset($calendar_day)? ($calendar_day->reservation_frames - $calendar_day->reservation_count) : -1,
+                    'frame' => $frames,
                     'is_reservation_acceptance' => (!isset($calendar_day) || $calendar_day->is_reservation_acceptance == CalendarDisplay::HIDE)
                 ]);
             }
