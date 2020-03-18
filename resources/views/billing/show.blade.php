@@ -53,12 +53,7 @@
                     </div>
 
                 @endif
-                <div class="form-group ">
-                    <p>
-                        <span class="text-bold label-text">プラン名</span>
-                        {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}　
-                    </p>
-                </div>
+                
                 @if ( session('hospital_id') )
                     @if (!empty($billing->hospital->hospitalOptionPlan($billing->id, $endedDate)))
                         <div class="form-group ">

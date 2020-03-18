@@ -100,19 +100,19 @@ class CourseInfoWakuNotificationController extends Controller
         ];
 
         DB::beginTransaction();
-//        try {
+        try {
             // 登録
             $this->registCourseWakuInfo($params);
             DB::commit();
-//        } catch (\Throwable $e) {
-//            $message = '[健診システム連携コース通知API] DBの登録に失敗しました。';
-//            Log::error($message, [
-//                '健診システム連携情報' => $kenshin_sys_cooperation->toArray(),
-//                'exception' => $e,
-//            ]);
-//            DB::rollback();
-//            return $this->createResponse($sysErrorMessages['errorDB']);
-//        }
+        } catch (\Throwable $e) {
+            $message = '[健診システム連携コース通知API] DBの登録に失敗しました。';
+            Log::error($message, [
+                '健診システム連携情報' => $kenshin_sys_cooperation->toArray(),
+                'exception' => $e,
+            ]);
+            DB::rollback();
+            return $this->createResponse($sysErrorMessages['errorDB']);
+        }
 
         return $this->createResponse($messages['success']);
     }
