@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Enums\Status;
 use Illuminate\Support\Facades\Log;
 
 use App\Enums\WebReception;
@@ -282,6 +283,15 @@ class Course extends SoftDeleteModel
         Log::debug($query->toSql());
 
         return $query;
+    }
+
+    public function get_course_option() {
+
+        return CourseOption::whereHas('option', function ($query) {
+            $query->where('status', Status::VALID);
+            $query->whereNotNull('deleted_at');
+            $query->orderBy('order');
+        })->get();
     }
 
     const AILIAS_FOR_HOSPITAL_API = [

@@ -350,30 +350,27 @@
                             questionGroup.empty();
 
                             if (data && data.length > 0) {
-                                const courseOptions = data[0].course_options;
+                                const courseOptions = data[0].get_course_option;
                                 const courseQuestions = data[0].course_questions;
 
                                 $('.option-container').show();
                                 courseOptions.forEach(function (courseOption) {
-                                    if (!Object.keys(courseOption.option).length) {
-                                        let $courseOptionOldData = @json(old('course_options'), JSON_PRETTY_PRINT);
+                                    let $courseOptionOldData = @json(old('course_options'), JSON_PRETTY_PRINT);
 
-                                        let $courseOptionOldValue = ( $courseOptionOldData ) ? $courseOptionOldData : {};
+                                    let $courseOptionOldValue = ( $courseOptionOldData ) ? $courseOptionOldData : {};
 
-                                        let checkedOldValue = ($courseOptionOldValue.hasOwnProperty(courseOption.option.id)  ) ? 'checked' : '';
+                                    let checkedOldValue = ($courseOptionOldValue.hasOwnProperty(courseOption.option.id)  ) ? 'checked' : '';
 
-                                        $('<tr></tr>')
-                                            .append($(`<td style="text-align:left; padding-left:15px;">
+                                    $('<tr></tr>')
+                                        .append($(`<td style="text-align:left; padding-left:15px;">
                                                      <input ${checkedOldValue} id ="option-${courseOption.option.id}" type="checkbox" class="checkbox option"
                                                         data-price="${courseOption.option.price}" name="course_options[${courseOption.option.id}]"
                                                         value="${courseOption.option.price}"/>
                                                      <label for="option-${courseOption.option.id}""></label>
                                                     </td>`))
-                                            .append($(`<td>${courseOption.option.name}</td>`))
-                                            .append($(`<td>${courseOption.option.price.toLocaleString()}円</td>`))
-                                            .appendTo(tbody);
-                                    }
-
+                                        .append($(`<td>${courseOption.option.name}</td>`))
+                                        .append($(`<td>${courseOption.option.price.toLocaleString()}円</td>`))
+                                        .appendTo(tbody);
 
                                 });
 
