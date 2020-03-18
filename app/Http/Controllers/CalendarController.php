@@ -593,10 +593,15 @@ class CalendarController extends Controller
 //                    return $day->date->isSameDay($date);
 //                });
 
+                $holiday = true;
+                if (isset($calendar_day) && $calendar_day->is_holiday == CalendarDisplay::SHOW) {
+                    $holiday = false;
+                }
+
                 $calendars->push([
                     'date' => $date,
 //                    'is_holiday' => isset($holiday),
-                    'is_holiday' => isset($calendar_day) ? $calendar_day->is_holiday : 1,
+                    'is_holiday' => $holiday,
                     'frame' => isset($calendar_day)? ($calendar_day->reservation_frames - $calendar_day->reservation_count) : -1,
                     'is_reservation_acceptance' => (!isset($calendar_day) || $calendar_day->is_reservation_acceptance == CalendarDisplay::HIDE)
                 ]);
