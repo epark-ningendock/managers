@@ -355,7 +355,7 @@
 
                                 $('.option-container').show();
                                 courseOptions.forEach(function (courseOption) {
-                                    if (courseOption.option) {
+                                    if (courseOption[key]) {
                                         let $courseOptionOldData = @json(old('course_options'), JSON_PRETTY_PRINT);
 
                                         let $courseOptionOldValue = ( $courseOptionOldData ) ? $courseOptionOldData : {};
