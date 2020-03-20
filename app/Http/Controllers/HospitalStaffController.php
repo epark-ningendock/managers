@@ -83,6 +83,12 @@ class HospitalStaffController extends Controller
     {
         $hospital_staff = HospitalStaff::findOrFail($id);
 
+        $hospital_id = session()->get('hospital_id');
+
+        if ($hospital_id != $hospital_staff->hospital_id) {
+            abort(404);
+        }
+
         return view('hospital_staff.edit', compact('hospital_staff'));
     }
 

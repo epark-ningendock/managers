@@ -41,6 +41,10 @@ class EmailTemplateController extends Controller
     public function edit($id)
     {
         $email_template = EmailTemplate::findOrFail($id);
+        $hospital_id = session()->get('hospital_id');
+        if (isset($hospital_id) && $hospital_id != $email_template->hospital_id) {
+            abort(404);
+        }
 
         return view('email_template.edit', compact('email_template'));
     }
@@ -66,6 +70,10 @@ class EmailTemplateController extends Controller
     public function destroy($id)
     {
         $email_template = EmailTemplate::findOrFail($id);
+        $hospital_id = session()->get('hospital_id');
+        if (isset($hospital_id) && $hospital_id != $email_template->hospital_id) {
+            abort(404);
+        }
         $email_template->delete();
 
         return redirect('email-template')->with('success', trans('messages.deleted', ['name' => trans('messages.names.email_template')]));

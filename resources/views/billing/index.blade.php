@@ -123,7 +123,7 @@
                 @if ( !empty($billing->hospital) )
                     <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
                         <td>{{ $billing->hospital->contract_information->customer_no ?? '' }}</td>
-                        <td style="text-align: left">{{ $billing->hospital->name }}</td>
+                        <td style="text-align: left"><a target="_blank" href="{{ route('hospital.select', $billing->hospital_id) }}">{{ $billing->hospital->name }}</a></td>
                         <!--
                         <td>{{ BillingStatus::getDescription($billing->status) }}</td>
                         -->

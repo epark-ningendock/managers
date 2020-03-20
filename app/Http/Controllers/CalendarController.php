@@ -92,6 +92,10 @@ class CalendarController extends Controller
      */
     public function edit(Calendar $calendar)
     {
+        $hospital_id = session()->get('hospital_id');
+        if (isset($hospital_id) && $hospital_id != $calendar->hospital_id) {
+            abort(404);
+        }
         $unregistered_courses = Course::whereNull('calendar_id')->where('hospital_id', session()->get('hospital_id'))->get();
         return view('calendar.edit')
             ->with('unregistered_courses', $unregistered_courses)
@@ -200,6 +204,10 @@ class CalendarController extends Controller
     public function setting($id)
     {
         $calendar = Calendar::findOrFail($id);
+        $hospital_id = session()->get('hospital_id');
+        if (isset($hospital_id) && $hospital_id != $calendar->hospital_id) {
+            abort(404);
+        }
         $start = Carbon::now()->startOfMonth();
         $end = Carbon::now()->addMonth(5)->endOfMonth();
         $months = collect();

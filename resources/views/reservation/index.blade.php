@@ -227,7 +227,7 @@
                   受診完了
                 </button> --}}
               @endif
-              @if(!$reservation->reservation_status->is(ReservationStatus::CANCELLED) && !$reservation->reservation_status->is(ReservationStatus::COMPLETED))
+              @if(!$reservation->reservation_status->is(ReservationStatus::CANCELLED))
                 <button class="btn btn-danger ml-3 delete-popup-btn" data-id="{{ $reservation->id }}"
                         data-message="{{ trans('messages.reservation.cancel_confirmation') }}"
                         data-modal="#reservation-cancel-modal"

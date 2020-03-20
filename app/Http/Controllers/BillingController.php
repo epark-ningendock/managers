@@ -51,7 +51,7 @@ class BillingController extends Controller {
 	    $selectedMonth = $this->getSelectedMonth();
 	    $yyyymm = str_replace('-', '', $selectedMonth);
 	    $dateFilter = billingDateFilter(str_replace('-', '', $selectedMonth));
-	    $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $yyyymm)->has('contract_information')->paginate(20);
+	    $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $yyyymm)->has('contract_information')->get();
 
 
 
@@ -135,6 +135,12 @@ class BillingController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show( Billing $billing ) {
+
+        $hospital_id = session()->get('hospital_id');
+
+        if (isset($hospital_id) && $hospital_id != $billing->hospital_id) {
+            abort(404);
+        }
 
         $dateFilter = billingDateFilter($billing->billing_month);
 

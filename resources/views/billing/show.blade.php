@@ -186,7 +186,7 @@
             @if (! $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->isEmpty() )
             @foreach( $billing->hospital->reservationByCompletedDate($startedDate, $endedDate) as $reservation)
                 <tr>
-                    <td><a class="btn btn-primary ml-3" target="_blank" href="{{ route('reservation.edit', ['reservation' => $reservation]) }}">{{ $reservation->id }}</a></td>
+                    <td><a target="_blank" href="{{ route('reservation.edit', ['reservation' => $reservation]) }}">{{ $reservation->id }}</a></td>
                     <td>{{ $reservation->reservation_date->format('Y-m-d') }}</td>
                     <td>{{ $reservation->customer->family_name .' ' . $reservation->customer->first_name }}</td>
                     <td>{{ ( isset($reservation->channel) && ( $reservation->channel == 1)) ? 'WEB' : 'TEL' }}</td>

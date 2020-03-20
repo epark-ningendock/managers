@@ -134,6 +134,11 @@ class CustomerController extends Controller
 
     public function edit(Customer $customer)
     {
+        $hospital_id = session()->get('hospital_id');
+
+        if ($hospital_id != $customer->hospital_id) {
+            abort(404);
+        }
         $prefectures = Prefecture::all();
         $customer_detail = Customer::findOrFail($customer->id);
 

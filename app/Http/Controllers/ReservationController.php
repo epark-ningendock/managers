@@ -370,8 +370,7 @@ class ReservationController extends Controller
         try {
             DB::beginTransaction();
             $reservation = Reservation::findOrFail($id);
-            if (!$reservation->reservation_status->is(ReservationStatus::RECEPTION_COMPLETED) &&
-                !$reservation->reservation_status->is(ReservationStatus::PENDING)) {
+            if ($reservation->reservation_status->is(ReservationStatus::CANCELLED)) {
                 return redirect()->back()->withErrors(trans('messages.reservation.invalid_reservation_status'))->withInput();
             }
             $reservation->reservation_status = ReservationStatus::CANCELLED;
@@ -688,8 +687,13 @@ class ReservationController extends Controller
 
     public function edit(Reservation $reservation)
     {
+        $hospital_id = session()->get('hospital_id');
 
-        $courses = Course::where('hospital_id', session()->get('hospital_id'))->get();
+        if (isset($hospital_id) && $hospital_id != $reservation->hospital_id) {
+            abort(404);
+        }
+
+        $courses = Course::where('hospital_id', $reservation->hospital_id)->get();
         $reservation_answers = $reservation->reservation_answers;
 
         $course_question_ids = [];

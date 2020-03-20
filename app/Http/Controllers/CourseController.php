@@ -93,6 +93,12 @@ class CourseController extends Controller
     public function copy($id)
     {
         $courses = Course::findOrFail($id);
+
+        $hospital_id = session()->get('hospital_id');
+        if (isset($hospital_id) && $hospital_id != $courses->hospital_id) {
+            abort(404);
+        }
+
         return $this->create()->with('course', $courses);
     }
 
@@ -141,6 +147,11 @@ class CourseController extends Controller
      */
     public function edit(Course $course)
     {
+        $hospital_id = session()->get('hospital_id');
+
+        if (isset($hospital_id) && $hospital_id != $course->hospital_id) {
+            abort(404);
+        }
         $hospital_id = session()->get('hospital_id');
         $hospital = Hospital::find($hospital_id);
         $images = HospitalImage::where('hospital_id', $hospital_id)->get();
