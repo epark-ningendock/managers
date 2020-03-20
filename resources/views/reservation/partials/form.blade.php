@@ -1,3 +1,6 @@
+@php
+    use \App\Enums\Gender;
+@endphp
 <div class="form-entry" id="reservation">
 <div class="box-body">
 
@@ -278,6 +281,129 @@
 
     </div>
 
+    <div class="form-group">
+        <legend class="mb-0">{{ trans('messages.gender') }}</legend>
+        @foreach(Gender::getValues() as $gender)
+            <div class="radio">
+                <input type="radio"
+                       id="sex{{ $gender }}"
+                       name="sex"
+                       value="{{ $gender }}"
+                        {{ old('sex', (isset($customer_detail) && isset($customer_detail->sex) ? $customer_detail->sex->value : Gender::MALE)) == $gender ? 'checked' : '' }}
+                />
+
+                <label for="sex{{ $gender }}" class="radio-label">{{ Gender::getDescription($gender) }}</label>
+            </div>
+        @endforeach
+        @if ($errors->has('sex')) <p class="help-block has-error">{{ $errors->first('sex') }}</p> @endif
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group @if ($errors->has('birthday')) has-error @endif">
+                <label for="birthday">{{ trans('messages.birthday') }}<span style="display: inline-block;text-indent: 15px;">yyyy-MM-dd形式で入力してください</span></label>
+                <div class="input-group date datepicker mt-1"  data-date-format="yyyy-mm-dd" data-provide="datepicker">
+                    <input type="text" class="form-control date-picker" name="birthday" id="birthday"
+                           value="{{ old('birthday', ( isset($customer_detail) ? $customer_detail->birthday : '')) }}"/>
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div>
+                </div>
+                @if ($errors->has('birthday')) <p class="help-block">{{ $errors->first('birthday') }}</p> @endif
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <legend>{{ trans('messages.address') }}</legend>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group @if ($errors->has('postcode')) has-error @endif">
+                <label for="postcode">{{ trans('messages.postcode') }}</label>
+                <span class="p-country-name" style="display:none;">Japan</span>
+                <input type="text" class="form-control" name="postcode1" id="postcode1"
+                       value="{{ old('postcode1', ( isset($customer_detail) ? substr($customer_detail->postcode, 0, 3) : '')) }}" style="display: inline-block; width: 80px;"/> -
+                <input type="text" class="form-control" name="postcode2" id="postcode2"
+                       value="{{ old('postcode2', ( isset($customer_detail) ? substr($customer_detail->postcode, 3) : '')) }}" style="display: inline-block; width: 80px;"/>
+                <input type="hidden" name="postcode" id="postcode" class="p-postal-code" size="8" maxlength="8" value="{{ old('postcode', (isset($customer_detail) ? $customer_detail->postcode : '')) }}" />
+                <button type="button" class="btn btn-primary ml-4" id="postcode-search" style="margin-top:-4px;">郵便番号で住所を検索する</button>
+                @if ($errors->has('postcode')) <p class="help-block">{{ $errors->first('postcode') }}</p> @endif
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group @if ($errors->has('prefecture_id')) has-error @endif">
+                <label for="prefecture_id">{{ trans('messages.prefectures') }}</label>
+                <select name="prefecture_id" id="prefecture_id" class="form-control p-region-id">
+                    <option value=""></option>
+                    @foreach($prefectures as $prefecture)
+                        <option value="{{ $prefecture->id }}"
+                                @if(old('prefecture_id', (isset($customer_detail)? $customer_detail->prefecture_id : null)) == $prefecture->id )
+                                selected="selected"
+                                @endif
+                        >{{ $prefecture->name }}</option>
+                    @endforeach
+                </select>
+
+                @if ($errors->has('prefecture_id')) <p class="help-block">{{ $errors->first('prefecture_id') }}</p> @endif
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group py-sm-1 @if ($errors->has('address1')) has-error @endif">
+                @if ($errors->has('address1')) <p class="help-block">{{ $errors->first('address1') }}</p> @endif
+                <div class="form-group py-sm-1 @if ($errors->has('address1')) has-error @endif">
+                    <label for="address1">{{ trans('messages.address1') }}
+                    </label>
+                    <input type="text" class="form-control p-locality" name="address1" id="address1"
+                           value="{{ old('address1', ( isset($customer_detail) ? $customer_detail->address1 : '')) }}"/>
+                    @if ($errors->has('address1')) <p class="help-block">{{ $errors->first('address1') }}</p> @endif
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group py-sm-1 @if ($errors->has('address2')) has-error @endif">
+                @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
+                <label for="address2">{{ trans('messages.address2') }}
+                </label>
+                <input type="text" class="form-control p-street-address p-extended-address" name="address2" id="address2"
+                       value="{{ old('address2', ( isset($customer_detail) ? $customer_detail->address2 : '')) }}"/>
+                @if ($errors->has('address2')) <p class="help-block">{{ $errors->first('address2') }}</p> @endif
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group py-sm-1 @if ($errors->has('email')) has-error @endif">
+                <label for="email">{{ trans('messages.email') }}
+                </label>
+                <input type="text" class="form-control" name="email" id="email"
+                       value="{{ old('email', ( isset($customer_detail) ? $customer_detail->email : '')) }}"/>
+                @if ($errors->has('email')) <p class="help-block">{{ $errors->first('email') }}</p> @endif
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group py-sm-1 @if ($errors->has('memo')) has-error @endif">
+                <label for="memo">{{ trans('messages.memo') }}
+                </label>
+                <textarea class="form-control" name="memo" id="memo" cols="30" rows="5">{{ old('memo', ( isset($customer_detail) ? $customer_detail->memo : '')) }}</textarea>
+                @if ($errors->has('memo')) <p class="help-block">{{ $errors->first('memo') }}</p> @endif
+            </div>
+        </div>
+    </div>
+
     <div class="row">
 
         <div class="col-md-3">
@@ -321,6 +447,13 @@
                 return true;
             }
 
+            // $('#postcode-search').click(function(event){
+            //     event.preventDefault();
+            //     event.stopPropagation();
+            //     $('#postcode').val(`${$('#postcode1').val()}${$('#postcode2').val()}`);
+            //     //to trigger native keyup event
+            //     $('.p-postal-code')[0].dispatchEvent(new KeyboardEvent('keyup', {'key': ''}));
+            // });
 
             /* ---------------------------------------------------
             // course options and questions
@@ -436,6 +569,26 @@
         })(jQuery);
     </script>
 @stop
+
+@push('js')
+    <script src="{{ asset('js/yubinbango.js') }}" charset="UTF-8"></script>
+    <script>
+        (function ($) {
+
+            /* ---------------------------------------------------
+             combine postcode before submit
+            -----------------------------------------------------*/
+
+            $('#postcode-search').click(function(event){
+                event.preventDefault();
+                event.stopPropagation();
+                $('#postcode').val(`${$('#postcode1').val()}${$('#postcode2').val()}`);
+                //to trigger native keyup event
+                $('.p-postal-code')[0].dispatchEvent(new KeyboardEvent('keyup', {'key': ''}));
+            });
+        })(jQuery);
+    </script>
+@endpush
 
 @push('css')
     <style>

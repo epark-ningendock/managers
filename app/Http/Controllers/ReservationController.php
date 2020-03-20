@@ -16,6 +16,7 @@ use App\Mail\Reservation\ReservationOperationMail;
 use App\Http\Requests\ReservationCreateFormRequest;
 use App\Http\Requests\ReservationFormRequest;
 use App\Http\Requests\ReservationUpdateFormRequest;
+use App\Prefecture;
 use App\Reservation;
 use App\ReservationOption;
 use App\Services\ReservationExportService;
@@ -470,8 +471,9 @@ class ReservationController extends Controller
     public function create()
     {
         $courses = Course::where('hospital_id', session()->get('hospital_id'))->get();
+        $prefectures = Prefecture::all();
 
-        return view('reservation.create')->with(['courses' => $courses]);
+        return view('reservation.create')->with(['courses' => $courses, 'prefectures' => $prefectures]);
     }
 
 
@@ -558,6 +560,14 @@ class ReservationController extends Controller
                     'first_name_kana' => $request->first_name_kana,
                     'family_name_kana' => $request->family_name_kana,
                     'tel' => $request->tel,
+                    'sex' => $request->sex,
+                    'email' => $request->email,
+                    'postcode' => $request->postcode1 . $request->postcode2,
+                    'prefecture_id' => $request->prefecture_id,
+                    'address1' => $request->address1,
+                    'address2' => $request->address2,
+                    'birthday' => $request->birthday,
+                    'memo' => $request->memo,
                     'registration_card_number' => $request->registration_card_number,
                     'hospital_id' => session()->get('hospital_id'),
                 ]);

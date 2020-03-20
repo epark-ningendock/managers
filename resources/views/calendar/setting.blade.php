@@ -112,6 +112,7 @@
               <p><input type="checkbox" class="week" id="week-3" checked /> <label for="week-3">第3週</label></p>
               <p><input type="checkbox" class="week" id="week-4" checked /> <label for="week-4">第4週</label></p>
               <p><input type="checkbox" class="week" id="week-5" checked /> <label for="week-5">第5週</label></p>
+              <p><input type="checkbox" class="week" id="week-6" checked /> <label for="week-5">第6週</label></p>
           </div>
         <button class="btn btn-primary pull-right" id="bulk-update">一括反映</button>
     </div>
@@ -280,15 +281,15 @@
               $('.is_reservation_acceptance').click(function() {
                   if($(this).html().trim() == '✕') {
                       $(this).html('◯');
-                      $(this).next('input:hidden').val('1');
+                      $(this).next('input:hidden').val('0');
                       $(this).siblings('select')
                              .prop('disabled', false)
-                             .val('0')
+                             .val('1')
                              .change()
                              .next('input:hidden').remove();
                   } else {
                       $(this).html('✕');
-                      $(this).next('input:hidden').val('0');
+                      $(this).next('input:hidden').val('1');
                       $(this).siblings('select')
                              .prop('disabled', true)
                              .val('')
@@ -365,6 +366,8 @@
                                   weekKey += 4;
                               } else if(ele.parent().parent().parent().attr('class') === 'week-5') {
                                   weekKey += 5;
+                              } else if(ele.parent().parent().parent().attr('class') === 'week-6') {
+                                  weekKey += 6;
                               }
 
                               if (isPublicHoliday && holidayFrame) {
@@ -419,17 +422,17 @@
                   $('.is_reservation_acceptance').each(function(i, ele) {
                       ele = $(ele)
                        const origin = ele.data('origin');
-                      if(origin == '1') {
+                      if(origin == '0') {
                           ele.html('◯');
-                          ele.next('input:hidden').val('1');
+                          ele.next('input:hidden').val('0');
                           ele.siblings('select')
                               .prop('disabled', false)
-                              .val('0')
+                              .val('1')
                               .change()
                               .next('input:hidden').remove();
                       } else {
                           ele.html('✕');
-                          ele.next('input:hidden').val('0');
+                          ele.next('input:hidden').val('1');
                           const select = ele.siblings('select')
                                             .prop('disabled', true)
                                             .val('')
