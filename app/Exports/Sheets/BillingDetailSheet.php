@@ -47,23 +47,16 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
 
                 foreach( $reservations as $key => $reservation) {
 
-                    if ( count($reservations) == ($key+1) ) {
-                        // $channel = $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->monthly_contract_fee;
-                        $channel = '月額';
+                    if ( $reservation->terminal_type == 2 || $reservation->terminal_type == 3 ) {
+                        $channel = 'WEB';
                     } else {
-
-                        if ( $reservation->channel == 2 || $reservation->channel == 3 ) {
-                            $channel = 'WEB';
-                        } else {
-                            $channel = 'TEL';
-                        }
-
+                        $channel = 'TEL';
                     }
 
-                    $comp_date = '';
-                    if (isset($reservation->completed_date)) {
-                        $comp_date = $reservation->completed_date->format('Y/m/d');
-                    }
+                    $comp_date = $reservation->reservation_date->format('Y/m/d');
+//                    if (isset($reservation->completed_date)) {
+//                        $comp_date = $reservation->completed_date->format('Y/m/d');
+//                    }
 
                     $hp_link_status = '';
                     if ( ($reservation->site_code == 'HP') && ( $reservation->fee == 0) && ( $reservation->reservation_status->value == '4') ) {
@@ -88,7 +81,7 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         $channel,
                         $comp_date,
                         $hp_link_status,
-                        $channel == '月額' ? $reservation->course->name : $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->plan_name,
+                        $reservation->course->name,
                         $reservation->reservation_options->isEmpty() ? '' : '有',
                         number_format($the_amount),
                         number_format($the_amount / $tax_rate), //need to verify calculation1
