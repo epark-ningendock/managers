@@ -95,7 +95,7 @@ class CourseInfoNotificationController extends Controller
                     if (empty($course['courseNm'])) {
                         return $this->createResponse($messages['errorValidationId']);
                     }
-                    if (empty($course['courseKin']) || !is_numeric($course['courseKin'])) {
+                    if (!is_numeric($course['courseKin'])) {
                         return $this->createResponse($messages['errorValidationId']);
                     }
                     if (empty($course['riyouBgnDate']) || !is_numeric($course['riyouBgnDate']) || strlen($course['riyouBgnDate']) != 8) {
@@ -219,7 +219,7 @@ class CourseInfoNotificationController extends Controller
                     if (empty($course['courseNm'])) {
                         return $this->createResponse($messages['errorValidationId']);
                     }
-                    if (empty($course['courseKin']) || !is_numeric($course['courseKin'])) {
+                    if ( !is_numeric($course['courseKin'])) {
                         return $this->createResponse($messages['errorValidationId']);
                     }
                     if (empty($course['riyouBgnDate']) || !is_numeric($course['riyouBgnDate']) || strlen($course['riyouBgnDate']) != 8) {
