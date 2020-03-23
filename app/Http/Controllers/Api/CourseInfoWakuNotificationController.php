@@ -96,7 +96,7 @@ class CourseInfoWakuNotificationController extends Controller
         } elseif ($kenshin_sys_cooperation->medical_examination_system_id == $medical_sys_ids['itec']) {
             if (!empty($request->input('courseList'))) {
                 foreach ($request->input('courseList') as $course) {
-                    if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 30) {
+                    if (empty($course['courseNo']) ||  strlen($course['courseNo']) > 30) {
                         return $this->createResponse($messages['errorValidationId']);
                     }
                     if (!empty($course['joukenNo']) && (!is_numeric($course['joukenNo']) || strlen($course['joukenNo']) > 10)) {
