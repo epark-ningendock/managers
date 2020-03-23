@@ -77,7 +77,8 @@ class CourseBaseResource extends Resource
         if ($this->kenshin_relation_flg
             && !empty($this->kenshin_sys_courses)
             && count($this->kenshin_sys_courses) > 0
-            && !empty($this->kenshin_sys_courses[0]->course_futan_conditions)) {
+            && !empty($this->kenshin_sys_courses[0]->course_futan_conditions
+            && count($this->kenshin_sys_courses[0]->course_futan_conditions) > 0)) {
             return [$this->kenshin_sys_courses[0]->kenshin_sys_dantai_no,
                 $this->kenshin_sys_courses[0]->kenshin_sys_course_no,
                 $this->kenshin_sys_courses[0]->course_futan_conditions[0]->jouken_no,
