@@ -213,7 +213,7 @@ class CourseInfoNotificationController extends Controller
 
             if (!empty($request->input('courseList'))) {
                 foreach ($request->input('courseList') as $course) {
-                    if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 16) {
+                    if (empty($course['courseNo']) || strlen($course['courseNo']) > 30) {
                         return $this->createResponse($messages['errorValidationId']);
                     }
                     if (empty($course['courseNm'])) {
@@ -241,21 +241,21 @@ class CourseInfoNotificationController extends Controller
                         return $this->createResponse($messages['errorValidationId']);
                     }
                     foreach ($course['courseFutanJoukenList'] as $futanJouken) {
-                        if (empty($futanJouken['joukenNo']) || !is_numeric($futanJouken['joukenNo']) || strlen($futanJouken['joukenNo']) > 10) {
+                        if (!empty($futanJouken['joukenNo']) && (!is_numeric($futanJouken['joukenNo']) || strlen($futanJouken['joukenNo']) > 10)) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
-                        if (empty($futanJouken['sex']) || !is_numeric($futanJouken['sex']) || (intval($futanJouken['sex']) != 0 && intval($futanJouken['sex']) != 1)) {
+                        if (!empty($futanJouken['sex']) && (!is_numeric($futanJouken['sex']) || (intval($futanJouken['sex']) != 0 && intval($futanJouken['sex']) != 1))) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
-                        if (empty($futanJouken['honninKbn']) || !is_numeric($futanJouken['honninKbn']) || (intval($futanJouken['honninKbn']) != 1 && intval($futanJouken['honninKbn']) != 2)) {
+                        if (!empty($futanJouken['honninKbn']) && (!is_numeric($futanJouken['honninKbn']) || (intval($futanJouken['honninKbn']) != 1 && intval($futanJouken['honninKbn']) != 2  && intval($futanJouken['honninKbn']) != 3))) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
                         if (!is_numeric($futanJouken['futanKin']) || strlen($futanJouken['futanKin']) > 9) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
-                        if (empty($futanJouken['targetAgeList'])) {
-                            return $this->createResponse($messages['errorValidationId']);
-                        }
+//                        if (empty($futanJouken['targetAgeList'])) {
+//                            return $this->createResponse($messages['errorValidationId']);
+//                        }
                     }
 
                     if (isset($course['optionList'])) {
@@ -280,22 +280,22 @@ class CourseInfoNotificationController extends Controller
                                 return $this->createResponse($messages['errorValidationId']);
                             }
                             foreach ($option['optionFutanJoukenList'] as $optionFutanJouken) {
-                                if (empty($optionFutanJouken['sex']) || !is_numeric($optionFutanJouken['sex']) || (intval($optionFutanJouken['sex']) != 0 && intval($optionFutanJouken['sex']) != 1)) {
+                                if (!empty($optionFutanJouken['sex']) && (!is_numeric($optionFutanJouken['sex']) || (intval($optionFutanJouken['sex']) != 0 && intval($optionFutanJouken['sex']) != 1))) {
                                     return $this->createResponse($messages['errorValidationId']);
                                 }
-                                if (empty($optionFutanJouken['honninKbn']) || !is_numeric($optionFutanJouken['honninKbn']) || (intval($optionFutanJouken['honninKbn']) != 1 && intval($optionFutanJouken['honninKbn']) != 2 && intval($optionFutanJouken['honninKbn']) != 3)) {
+                                if (!empty($optionFutanJouken['honninKbn']) && (!is_numeric($optionFutanJouken['honninKbn']) || (intval($optionFutanJouken['honninKbn']) != 1 && intval($optionFutanJouken['honninKbn']) != 2 && intval($optionFutanJouken['honninKbn']) != 3))) {
                                     return $this->createResponse($messages['errorValidationId']);
                                 }
                                 if (!is_numeric($optionFutanJouken['futanKin']) || strlen($optionFutanJouken['futanKin']) > 9) {
                                     return $this->createResponse($messages['errorValidationId']);
                                 }
-                                if (empty($optionFutanJouken['yusenKbn']) || !is_numeric($optionFutanJouken['yusenKbn']) || strlen($optionFutanJouken['yusenKbn']) > 2) {
+                                if (!empty($optionFutanJouken['yusenKbn']) && (!is_numeric($optionFutanJouken['yusenKbn']) || strlen($optionFutanJouken['yusenKbn']) > 2)) {
                                     return $this->createResponse($messages['errorValidationId']);
                                 }
-                                if (empty($optionFutanJouken['riyouBgnDate']) || !is_numeric($optionFutanJouken['riyouBgnDate']) || strlen($optionFutanJouken['riyouBgnDate']) != 8) {
+                                if (!empty($optionFutanJouken['riyouBgnDate']) && (!is_numeric($optionFutanJouken['riyouBgnDate']) || strlen($optionFutanJouken['riyouBgnDate']) != 8)) {
                                     return $this->createResponse($messages['errorValidationId']);
                                 }
-                                if (empty($optionFutanJouken['riyouEndDate']) || !is_numeric($optionFutanJouken['riyouEndDate']) || strlen($optionFutanJouken['riyouEndDate']) != 8) {
+                                if (!empty($optionFutanJouken['riyouEndDate']) && (!is_numeric($optionFutanJouken['riyouEndDate']) || strlen($optionFutanJouken['riyouEndDate']) != 8)) {
                                     return $this->createResponse($messages['errorValidationId']);
                                 }
                             }
@@ -309,6 +309,7 @@ class CourseInfoNotificationController extends Controller
                 'dantai_no' => $request->input('dantaiNo'),
                 'dantai_nm' => $request->input('dantaiNm'),
                 'course_list' => $request->input('courseList'),
+//                'medical_sys_id' => 2
                 'medical_sys_id' => $kenshin_sys_cooperation->medical_examination_system_id
             ];
 

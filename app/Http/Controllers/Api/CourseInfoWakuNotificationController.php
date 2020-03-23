@@ -33,6 +33,7 @@ class CourseInfoWakuNotificationController extends Controller
     public function registcoursewaku(Request $request)
     {
         $messages = config('api.course_info_notification_api.message');
+        $medical_sys_ids = config('constant.medical_exam_sys_id');
         $sysErrorMessages = config('api.unexpected_error.message');
         $app_name = env('APP_ENV');
         $ip = $request->ip();
@@ -81,16 +82,31 @@ class CourseInfoWakuNotificationController extends Controller
             return $this->createResponse($messages['errorValidationId']);
         }
 
-        if (!empty($request->input('courseList'))) {
-            foreach ($request->input('courseList') as $course) {
-                if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 16) {
-                    return $this->createResponse($messages['errorValidationId']);
+        if ($kenshin_sys_cooperation->medical_examination_system_id == $medical_sys_ids['tak']) {
+            if (!empty($request->input('courseList'))) {
+                foreach ($request->input('courseList') as $course) {
+                    if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 16) {
+                        return $this->createResponse($messages['errorValidationId']);
+                    }
+                    if (empty($course['joukenNo']) || !is_numeric($course['joukenNo']) || strlen($course['joukenNo']) > 10) {
+                        return $this->createResponse($messages['errorValidationId']);
+                    }
                 }
-                if (empty($course['joukenNo']) || !is_numeric($course['joukenNo']) || strlen($course['joukenNo']) > 10) {
-                    return $this->createResponse($messages['errorValidationId']);
+            }
+        } elseif ($kenshin_sys_cooperation->medical_examination_system_id == $medical_sys_ids['itec']) {
+            if (!empty($request->input('courseList'))) {
+                foreach ($request->input('courseList') as $course) {
+                    if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 30) {
+                        return $this->createResponse($messages['errorValidationId']);
+                    }
+                    if (!empty($course['joukenNo']) && (!is_numeric($course['joukenNo']) || strlen($course['joukenNo']) > 10)) {
+                        return $this->createResponse($messages['errorValidationId']);
+                    }
                 }
             }
         }
+
+
 
         $params = [
             'hospital_id' => $request->input('hospitalId'),
