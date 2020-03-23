@@ -34,7 +34,7 @@ class CourseFutanCondition extends SoftDeleteModel
         ]);
     }
 
-    public function courses()
+    public function kenshin_sys_courses()
     {
         return $this->belongsTo(KenshinSysCourse::class);
     }
