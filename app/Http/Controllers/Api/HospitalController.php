@@ -266,7 +266,10 @@ class HospitalController extends ApiBaseController
                         $query->orderBy('order');
                     }
                 },
-                'courses.kenshin_sys_courses',
+                'courses.kenshin_sys_courses' => function ($q) use ($today) {
+                    $q->where('kenshin_sys_riyou_bgn_date', '>=', $today)
+                        ->where('kenshin_sys_riyou_end_date', '<=', $today);
+                },
                 'courses.kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
                     $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL])
                     ->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL]);

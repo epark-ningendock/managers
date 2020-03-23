@@ -202,6 +202,7 @@ class ReservationController extends Controller
         ];
         $callback = function () use ($columnNames, $rows) {
             $file = fopen('php://output', 'w');
+            stream_filter_prepend($file,'convert.iconv.utf-8/cp932');
             fputcsv($file, $columnNames);
             foreach ($rows as $row) {
                 fputcsv($file, $row);
