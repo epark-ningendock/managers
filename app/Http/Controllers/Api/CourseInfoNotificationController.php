@@ -244,7 +244,7 @@ class CourseInfoNotificationController extends Controller
                         if (!empty($futanJouken['joukenNo']) && (!is_numeric($futanJouken['joukenNo']) || strlen($futanJouken['joukenNo']) > 10)) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
-                        if (!empty($futanJouken['sex']) && (!is_numeric($futanJouken['sex']) || (intval($futanJouken['sex']) != 0 && intval($futanJouken['sex']) != 1))) {
+                        if (!empty($futanJouken['sex']) && (!is_numeric($futanJouken['sex']) || (intval($futanJouken['sex']) != 0 && intval($futanJouken['sex']) != 1 && intval($futanJouken['sex']) != 2))) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
                         if (!empty($futanJouken['honninKbn']) && (!is_numeric($futanJouken['honninKbn']) || (intval($futanJouken['honninKbn']) != 1 && intval($futanJouken['honninKbn']) != 2  && intval($futanJouken['honninKbn']) != 3))) {
@@ -280,7 +280,7 @@ class CourseInfoNotificationController extends Controller
                                 return $this->createResponse($messages['errorValidationId']);
                             }
                             foreach ($option['optionFutanJoukenList'] as $optionFutanJouken) {
-                                if (!empty($optionFutanJouken['sex']) && (!is_numeric($optionFutanJouken['sex']) || (intval($optionFutanJouken['sex']) != 0 && intval($optionFutanJouken['sex']) != 1))) {
+                                if (!empty($optionFutanJouken['sex']) && (!is_numeric($optionFutanJouken['sex']) || (intval($optionFutanJouken['sex']) != 0 && intval($optionFutanJouken['sex']) != 1 && intval($optionFutanJouken['sex']) != 2))) {
                                     return $this->createResponse($messages['errorValidationId']);
                                 }
                                 if (!empty($optionFutanJouken['honninKbn']) && (!is_numeric($optionFutanJouken['honninKbn']) || (intval($optionFutanJouken['honninKbn']) != 1 && intval($optionFutanJouken['honninKbn']) != 2 && intval($optionFutanJouken['honninKbn']) != 3))) {
