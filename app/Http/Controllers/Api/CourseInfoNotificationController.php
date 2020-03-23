@@ -36,7 +36,7 @@ class CourseInfoNotificationController extends Controller
         $medical_sys_ids = config('constant.medical_exam_sys_id');
         $app_name = env('APP_ENV');
         $ip = $request->ip();
-        $ip = '172.30.0.3';
+//        $ip = '172.30.0.3';
         if ($app_name == 'production') {
             $app_kbn = '1';
         } else {
