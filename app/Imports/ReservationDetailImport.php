@@ -123,114 +123,111 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
             $reservation->is_health_insurance = 0;
             $reservation->save();
 
-//            $answer_json = str_replace(['\"', '\\\\'], ['"', '\\'], $this->getValue($row, 'Q_ANSWER'));
-            $answer_json = str_replace('#comma#', ',', $this->getValue($row, 'Q_ANSWER'));
-            $questions = json_decode($answer_json, false, 512, JSON_OBJECT_AS_ARRAY);
-
-            if (!empty($reservation->course_id)) {
-//                $target = $this->getValue($row, 'Q_ANSWER');
-//                $tmp_strs = explode('#comma#', $target);
-                $tmp_answers = [];
-                $tim_ans = [];
-                $tmp_title = '';
-                foreach ($questions as $k => $tmp_str) {
-                    $target = str_replace('[', '', $tmp_str);
-                    $target = str_replace('{', '', $target);
-                    $target = str_replace(']', '', $target);
-                    $target = str_replace('}', '', $target);
-                    $target = str_replace('\"', '', $target);
-                    if (strpos($target, 'question_title') !== false) {
-                        $tmp_title = str_replace('question_title', '', $target);
-                        $tmp_title = str_replace(':', '', $tmp_title);
-                        if ($k != 0) {
-                            $tmp_answers[] = [$tmp_title, $tim_ans];
-                            $tim_ans = [];
-                        }
-                    } else {
-                        $tim_ans[] = $target;
-                    }
-                }
-
-                $tmp_answers[] = [$tmp_title, $tim_ans];
-
-                foreach ($tmp_answers as $tmp_answer) {
-
-                    if (empty($tmp_answer[0])) {
-                        continue;
-                    }
-
-                    $course_questions = CourseQuestion::where('course_id', $course_id)
-                        ->get();
-                    if (is_null($course_questions) || count($course_questions) == 0) {
-                        Log::error('reservation に course_questionsレコードが存在しません。');
-                    }
-
-                    foreach ($course_questions as $c) {
-                        $target = mb_substr($tmp_answer[0], 0, 3);
-                        if (strpos($c->question_title, $target) !== false) {
-                            $reservation_answers = new ReservationAnswer();
-                            $reservation_answers->reservation_id = $reservation->id;
-                            $reservation_answers->question_title = $tmp_answer[0];
-                            $reservation_answers->course_id = $course_id;
-                            $reservation_answers->course_question_id = $c->id;
-
-                            $regist_flg = false;
-                            foreach ($tmp_answer[1] as $i => $ans) {
-
-                                $tmp_a = explode('|', $ans);
-                                if (count($tmp_a) < 2) {
-                                    continue;
-                                }
-                                $a = 0;
-                                if (strpos($tmp_a[0], '1')) {
-                                    $a = 1;
-                                }
-
-                                $n = $i + 1;
-
-                                $reservation_answers->{'question_answer' . sprintf('%02d', $n)} = $tmp_a[1];
-                                $reservation_answers->{'answer' . sprintf('%02d', $n)} = $a;
-
-                                if (!$regist_flg) {
-                                    $regist_flg = true;
-                                }
-                            }
-                            if ($regist_flg) {
-                                $reservation_answers->save();
-                            }
-                        }
-                    }
-
-                }
-
-            } else {
-                Log::error('reservation がありません。。');
-            }
-
-            $options = explode('|', $this->getValue($row, 'OPTION_CD'));
-            $option_prices = explode('|', $this->getValue($row, 'OPTION_PRICE_TAX'));
-
-            for ($i = 0; $i < count($options); $i++) {
-
-                $hospital_no = trim($this->hospital_no);
-                $option_cd = $options[$i];
-                $option_group_cd = $this->getValue($row, 'OPTION_GROUP_CD');
-
-                $old_option = OldOption::query()->where('hospital_no', $hospital_no)
-                    ->where('option_cd', $option_cd)
-                    ->where('option_group_cd', $option_group_cd)
-                    ->first();
-                if (!$old_option) {
-                    continue;
-                }
-                $reservation_option = new ReservationOption();
-                $reservation_option->reservation_id = $reservation->id;
-                $reservation_option->option_id = $old_option->option_id;
-                $reservation_option->option_price = $option_prices[$i];
-                $reservation_option->status = Status::VALID;
-                $reservation_option->save();
-
-            }
+//            $answer_json = str_replace('#comma#', ',', $this->getValue($row, 'Q_ANSWER'));
+//            $questions = json_decode($answer_json, false, 512, JSON_OBJECT_AS_ARRAY);
+//
+//            if (!empty($reservation->course_id)) {
+//                $tmp_answers = [];
+//                $tim_ans = [];
+//                $tmp_title = '';
+//                foreach ($questions as $k => $tmp_str) {
+//                    $target = str_replace('[', '', $tmp_str);
+//                    $target = str_replace('{', '', $target);
+//                    $target = str_replace(']', '', $target);
+//                    $target = str_replace('}', '', $target);
+//                    $target = str_replace('\"', '', $target);
+//                    if (strpos($target, 'question_title') !== false) {
+//                        $tmp_title = str_replace('question_title', '', $target);
+//                        $tmp_title = str_replace(':', '', $tmp_title);
+//                        if ($k != 0) {
+//                            $tmp_answers[] = [$tmp_title, $tim_ans];
+//                            $tim_ans = [];
+//                        }
+//                    } else {
+//                        $tim_ans[] = $target;
+//                    }
+//                }
+//
+//                $tmp_answers[] = [$tmp_title, $tim_ans];
+//
+//                foreach ($tmp_answers as $tmp_answer) {
+//
+//                    if (empty($tmp_answer[0])) {
+//                        continue;
+//                    }
+//
+//                    $course_questions = CourseQuestion::where('course_id', $course_id)
+//                        ->get();
+//                    if (is_null($course_questions) || count($course_questions) == 0) {
+//                        Log::error('reservation に course_questionsレコードが存在しません。');
+//                    }
+//
+//                    foreach ($course_questions as $c) {
+//                        $target = mb_substr($tmp_answer[0], 0, 3);
+//                        if (strpos($c->question_title, $target) !== false) {
+//                            $reservation_answers = new ReservationAnswer();
+//                            $reservation_answers->reservation_id = $reservation->id;
+//                            $reservation_answers->question_title = $tmp_answer[0];
+//                            $reservation_answers->course_id = $course_id;
+//                            $reservation_answers->course_question_id = $c->id;
+//
+//                            $regist_flg = false;
+//                            foreach ($tmp_answer[1] as $i => $ans) {
+//
+//                                $tmp_a = explode('|', $ans);
+//                                if (count($tmp_a) < 2) {
+//                                    continue;
+//                                }
+//                                $a = 0;
+//                                if (strpos($tmp_a[0], '1')) {
+//                                    $a = 1;
+//                                }
+//
+//                                $n = $i + 1;
+//
+//                                $reservation_answers->{'question_answer' . sprintf('%02d', $n)} = $tmp_a[1];
+//                                $reservation_answers->{'answer' . sprintf('%02d', $n)} = $a;
+//
+//                                if (!$regist_flg) {
+//                                    $regist_flg = true;
+//                                }
+//                            }
+//                            if ($regist_flg) {
+//                                $reservation_answers->save();
+//                            }
+//                        }
+//                    }
+//
+//                }
+//
+//            } else {
+//                Log::error('reservation がありません。。');
+//            }
+//
+//            $options = explode('|', $this->getValue($row, 'OPTION_CD'));
+//            $option_prices = explode('|', $this->getValue($row, 'OPTION_PRICE_TAX'));
+//
+//            for ($i = 0; $i < count($options); $i++) {
+//
+//                $hospital_no = trim($this->hospital_no);
+//                $option_cd = $options[$i];
+//                $option_group_cd = $this->getValue($row, 'OPTION_GROUP_CD');
+//
+//                $old_option = OldOption::query()->where('hospital_no', $hospital_no)
+//                    ->where('option_cd', $option_cd)
+//                    ->where('option_group_cd', $option_group_cd)
+//                    ->first();
+//                if (!$old_option) {
+//                    continue;
+//                }
+//                $reservation_option = new ReservationOption();
+//                $reservation_option->reservation_id = $reservation->id;
+//                $reservation_option->option_id = $old_option->option_id;
+//                $reservation_option->option_price = $option_prices[$i];
+//                $reservation_option->status = Status::VALID;
+//                $reservation_option->save();
+//
+//            }
 
         } catch (\Throwable $e) {
             Log::error($e->getMessage());

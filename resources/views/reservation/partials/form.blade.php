@@ -171,9 +171,9 @@
         </div>
 
         <div class="col-md-9">
-            <div class=" @if ($errors->has('reservation_memo')) has-error @endif">
-                <textarea class="form-control" name="reservation_memo" id="reservation_memo">{{ old('reservation_memo') }}</textarea>
-                @if ($errors->has('reservation_memo')) <p class="help-block">{{ $errors->first('reservation_memo') }}</p> @endif
+            <div class=" @if ($errors->has('todays_memo')) has-error @endif">
+                <textarea class="form-control" name="todays_memo" id="reservation_memo">{{ old('todays_memo') }}</textarea>
+                @if ($errors->has('todays_memo')) <p class="help-block">{{ $errors->first('todays_memo') }}</p> @endif
             </div>
         </div>
 

@@ -565,6 +565,7 @@ class ReservationService
         $entity->channel = 1;
         $entity->reservation_status = $process === self::REGISTRATION ? ReservationStatus::PENDING : $entity->reservation_status;
         $entity->user_message = $request->input('user_message') ?? $entity->user_message;
+        $entity->reservation_memo = $request->input('user_message') ?? $entity->user_message;
         $entity->site_code = $request->input('site_code') ?? $entity->site_code;
         $entity->customer_id = $request->input('customer_id') ?? $entity->customer_id;
         $entity->epark_member_id = $request->input('epark_member_id') ?? $entity->epark_member_id;

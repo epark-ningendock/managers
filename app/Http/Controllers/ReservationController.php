@@ -263,8 +263,8 @@ class ReservationController extends Controller
                 $reservation->cashpo_used_price,
                 $reservation->acceptance_number,
                 Reservation::getChannel($reservation->channel),
-                $reservation->reservation_memo,
                 $reservation->todays_memo,
+                $reservation->internal_memo,
             ];
 
             $questions = collect();
