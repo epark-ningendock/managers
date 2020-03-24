@@ -15,14 +15,14 @@ class ApiBaseController extends Controller
         $this->messages = [
             'system_error_db' => [
                 'status' => 1,
-                'status_code' => 400,
+                'status_code' => 200,
                 'code_number' => '02',
                 'code_detail' => '01',
                 'message' => trans('validation.for_api.system_error_db'),
             ],
             'system_error_api' => [
                 'status' => 1,
-                'status_code' => 400,
+                'status_code' => 200,
                 'code_number' => '02',
                 'code_detail' => '02',
                 'message' => trans('validation.for_api.system_error_api'),
@@ -36,7 +36,7 @@ class ApiBaseController extends Controller
             ],
             'errorDB' => [
                 'status' => 1,
-                'status_code' => 400,
+                'status_code' => 200,
                 'code_number' => '01',
                 'code_detail' => '13',
                 'message' => trans('validation.for_api.errorDB'),
@@ -60,7 +60,7 @@ class ApiBaseController extends Controller
         if(!$message) {
             $message = [
                 'status' => 1,
-                'status_code' => 400,
+                'status_code' => 200,
                 'code_number' => '03',
                 'code_detail' => '01',
                 'message' => ' '
