@@ -195,7 +195,7 @@ class ReservationInfoNotificationController extends Controller
         $reservation->kenshin_sys_start_time = $request->input('yoyakuBgnTime') ?? '';
 //        $reservation->start_time_min = $start_m;
         $reservation->todays_memo = $request->input('yoyakuComment');
-        $reservation->internail_memo = $request->input('yoyakuComment');
+        $reservation->internal_memo = $request->input('yoyakuComment');
         if (!empty($request->input('yoyakuWakuNo'))) {
             $reservation->kenshin_sys_yoyaku_waku_no = $request->input('yoyakuWakuNo');
         }
