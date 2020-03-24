@@ -37,7 +37,7 @@ class CourseInfoWakuNotificationController extends Controller
         $sysErrorMessages = config('api.unexpected_error.message');
         $app_name = env('APP_ENV');
         $ip = $request->ip();
-        $ip = '172.30.0.3';
+//        $ip = '172.30.0.3';
         if ($app_name == 'production') {
             $app_kbn = AppKbn::PRODUCTION;
         } else {
