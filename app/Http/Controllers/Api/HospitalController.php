@@ -199,7 +199,63 @@ class HospitalController extends ApiBaseController
             },
             'hospital_categories.image_order',
             'hospital_categories.hospital_image',
-            'courses' => function ($query) use ($today, $request) {
+
+        ]);
+
+        if (!empty($request->input('sex'))) {
+            $query->with([
+                'courses' => function ($query) use ($today, $request) {
+                    $query->where('is_category', 0)
+                        ->where('web_reception', 0)
+                        ->where('publish_start_date', '<=', $today)
+                        ->where('publish_end_date', '>=', $today);
+                    if (!empty($request->input('sort_key'))) {
+                        if ($request->input('sort_key') == 'low') {
+                            $query->orderBy('price');
+                            $query->orderBy('order');
+                        } elseif ($request->input('sort_key') == 'high') {
+                            $query->orderBy('price', 'desc');
+                            $query->orderBy('order');
+                        } elseif ($request->input('sort_key') == 'number') {
+                            $query->withCount(['reservations' => function ($q) {
+                                $q->where('reservation_date', '>=', Carbon::today()->subMonthNoOverflow()->toDateString());
+                            }]);
+                            $query->orderBy('reservations_count', 'desc');
+                            $query->orderBy('order');
+                        }
+                    } else {
+                        $query->orderBy('order');
+                    }
+                },
+                'courses.kenshin_sys_courses' => function ($q) use ($today) {
+                    $q->where('kenshin_sys_riyou_bgn_date', '<=', $today)
+                        ->where('kenshin_sys_riyou_end_date', '>=', $today);
+                },
+                'courses.kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
+                    $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL])
+                    ->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL]);
+
+            },
+                'courses.course_details' => function ($query) {
+                    $query->whereIn('major_classification_id', [2, 3, 4, 5, 6, 11, 13, 15, 19, 24]);
+                    $query->orderBy('major_classification_id');
+                    $query->orderBy('middle_classification_id');
+                },
+                'courses.course_details.minor_classification' => function ($query) {
+                    $query->orderBy('order');
+                },
+                'courses.course_options',
+                'courses.course_images.hospital_image',
+                'courses.calendar',
+                'courses.calendar_days' => function ($query) use ($from, $to) {
+                    $query->where('date', '>=', $from)
+                        ->where('date', '<=', $to)
+                        ->orderBy('date');
+                }
+            ]);
+        } else {
+            $query->with([
+                'courses' => function ($query) use ($today, $request) {
                 $query->where('is_category', 0)
                     ->where('web_reception', 0)
                     ->where('publish_start_date', '<=', $today)
@@ -238,43 +294,8 @@ class HospitalController extends ApiBaseController
                 $query->where('date', '>=', $from)
                     ->where('date', '<=', $to)
                     ->orderBy('date');
-            },
-        ]);
-
-        if (!empty($request->input('sex'))) {
-            $query->with([
-                'courses' => function ($query) use ($today, $request) {
-                    $query->where('is_category', 0)
-                        ->where('web_reception', 0)
-                        ->where('publish_start_date', '<=', $today)
-                        ->where('publish_end_date', '>=', $today);
-                    if (!empty($request->input('sort_key'))) {
-                        if ($request->input('sort_key') == 'low') {
-                            $query->orderBy('price');
-                            $query->orderBy('order');
-                        } elseif ($request->input('sort_key') == 'high') {
-                            $query->orderBy('price', 'desc');
-                            $query->orderBy('order');
-                        } elseif ($request->input('sort_key') == 'number') {
-                            $query->withCount(['reservations' => function ($q) {
-                                $q->where('reservation_date', '>=', Carbon::today()->subMonthNoOverflow()->toDateString());
-                            }]);
-                            $query->orderBy('reservations_count', 'desc');
-                            $query->orderBy('order');
-                        }
-                    } else {
-                        $query->orderBy('order');
-                    }
-                },
-                'courses.kenshin_sys_courses' => function ($q) use ($today) {
-                    $q->where('kenshin_sys_riyou_bgn_date', '<=', $today)
-                        ->where('kenshin_sys_riyou_end_date', '>=', $today);
-                },
-                'courses.kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
-                    $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL])
-                    ->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL]);
-
-            }]);
+            }
+            ]);
         }
 
 //        $query->whereHas('courses' , function($q) use ($today) {
