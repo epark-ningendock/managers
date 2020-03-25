@@ -297,7 +297,7 @@
           (function(){
               $('#is_reception_completed').change(function(){
                 if($('#is_reception_completed').prop('checked')){
-                  $('#is_reception_completed').val('2')
+                  $('#is_reception_completed').val('3')
                 }
               });
           })();
@@ -305,7 +305,7 @@
           (function(){
               $('#is_completed').change(function(){
                 if($('#is_completed').prop('checked')){
-                  $('#is_completed').val('3')
+                  $('#is_completed').val('4')
                 }
               });
           })();
@@ -313,7 +313,7 @@
           (function(){
               $('#is_cancelled').change(function(){
                 if($('#is_cancelled').prop('checked')){
-                  $('#is_cancelled').val('4')
+                  $('#is_cancelled').val('5')
                 }
               });
           })();

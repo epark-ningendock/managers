@@ -47,7 +47,7 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
 
                 foreach( $reservations as $key => $reservation) {
 
-                    if ( $reservation->terminal_type == 2 || $reservation->terminal_type == 3 ) {
+                    if ( $reservation->terminal_type == '2' || $reservation->terminal_type == '3' ) {
                         $channel = 'WEB';
                     } else {
                         $channel = 'TEL';
