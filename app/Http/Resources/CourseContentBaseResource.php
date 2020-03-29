@@ -58,7 +58,7 @@ class CourseContentBaseResource extends Resource
         $d = null;
         foreach ($course_details as $detail) {
 
-            if ($detail->select_status != 1 || $detail->status != '1') {
+            if (($detail->select_status != 1 && empty($detail->inputstring)) || $detail->status != '1') {
                 continue;
             }
 
