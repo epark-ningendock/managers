@@ -292,9 +292,9 @@
         </div>
 
         <div class="col-md-9">
-            <div class=" @if ($errors->has('reservation_memo')) has-error @endif">
-                <textarea class="form-control" name="reservation_memo" id="reservation_memo">{{ old('reservation_memo', $reservation->reservation_memo) }}</textarea>
-                @if ($errors->has('reservation_memo')) <p class="help-block">{{ $errors->first('reservation_memo') }}</p> @endif
+            <div class=" @if ($errors->has('todays_memo')) has-error @endif">
+                <textarea class="form-control" name="todays_memo" id="reservation_memo">{{ old('todays_memo', $reservation->todays_memo) }}</textarea>
+                @if ($errors->has('todays_memo')) <p class="help-block">{{ $errors->first('todays_memo') }}</p> @endif
             </div>
         </div>
 
@@ -315,7 +315,25 @@
         </div>
 
     </div>
-    
+
+    @if ($reservation->cancellation_reason)
+        <div class="row form-group">
+
+            <div class="col-md-3">
+                <label for="internal_memo">キャンセル理由</label>
+            </div>
+
+            <div class="col-md-9">
+                <div class=" @if ($errors->has('cancellation_reason')) has-error @endif">
+                    <textarea class="form-control" name="cancellation_reason" id="cancellation_reason">{{ old('cancellation_reason', $reservation->cancellation_reason) }}</textarea>
+                    @if ($errors->has('cancellation_reason')) <p class="help-block">{{ $errors->first('cancellation_reason') }}</p> @endif
+                </div>
+            </div>
+
+        </div>
+    @endif
+
+
     <h2 class="section-title">申込者情報</h2>
 
     <div class="row form-group no-field">
@@ -462,7 +480,7 @@
 
         <div class="col-md-9">
             <span id="" class="ml-2">
-                {{$reservation->customer->address or '-' }}
+                {{$reservation->customer->address()}}
             </span>
         </div>
 

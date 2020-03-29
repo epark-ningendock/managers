@@ -565,10 +565,11 @@ class CalendarController extends Controller
         $course = Course::find($course_id);
         if ($course) {
             $today = Carbon::parse($request->input('start_date', Carbon::today()->format('Y/m/d')));
+//            $today = $today->copy()->subMonthNoOverflow(2);
             $started_date = (Carbon::MONDAY == $today->dayOfWeek) ? $today : $today->previous(Carbon::MONDAY);
 
             if(isset($request->reservation_date)) {
-                $reservation_date = Carbon::parse($request->reservation_date);
+                $reservation_date = Carbon::parse($request->reservation_date)->subMonthNoOverflow(2);
                 if ($reservation_date->isPast()) {
                     $started_date = $reservation_date->copy()->previous(Carbon::MONDAY);
                 }

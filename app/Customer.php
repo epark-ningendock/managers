@@ -100,4 +100,13 @@ class Customer extends SoftDeleteModel
             ->withTrashed();
     }
 
+    public function address() {
+        $prefecture = Prefecture::find($this->prefecture_id);
+        $prefecture_name = '';
+        if ($prefecture) {
+            $prefecture_name = $prefecture->name;
+        }
+        $address = $prefecture_name . $this->address1 . $this->address2;
+        return $address ?? '-';
+    }
 }

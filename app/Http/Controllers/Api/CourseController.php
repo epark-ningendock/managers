@@ -112,7 +112,7 @@ class CourseController extends ApiBaseController
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
             // //検査コースコンテンツ情報取得
-            $course = $this->getCourseContents($hospital_id, $course_code);
+            $course = $this->getCourseContents($hospital_id, $course_code, $request);
 
             if (!$course) {
                 return $this->createResponse($this->messages['data_empty_error'], $request->input('callback'));
@@ -154,11 +154,15 @@ class CourseController extends ApiBaseController
             'contract_information'
         ])
             ->where('hospital_id', $hospital_id)
-            ->where('code', $course_code)
-            ->where('is_category', 0)
-            ->where('web_reception', 0)
-            ->where('publish_start_date', '<=', $today)
-            ->where('publish_end_date', '>=', $today);
+            ->where('code', $course_code);
+
+        if ($request->input('preview_flg') != '1') {
+            $query->where('is_category', 0)
+                ->where('web_reception', 0)
+                ->where('publish_start_date', '<=', $today)
+                ->where('publish_end_date', '>=', $today);
+        }
+
         $query->with(['course_options']);
 
         if (!empty($request->input('sex'))) {
@@ -189,11 +193,11 @@ class CourseController extends ApiBaseController
      * @param  $course_no
      * @return Course
      */
-    private function getCourseContents($hospital_id, $course_code)
+    private function getCourseContents($hospital_id, $course_code, $request)
     {
         $today = Carbon::today()->toDateString();
         $end_day = Carbon::today()->addMonthsNoOverflow(5)->endOfMonth()->toDateString();
-        return Course::with([
+        $query = Course::with([
             'course_images',
             'course_details' => function ($query) {
                 $query->whereIn('major_classification_id', [2, 3, 4, 5, 6, 11, 13, 15, 16, 17, 18, 19, 20, 22, 24, 25])
@@ -221,12 +225,16 @@ class CourseController extends ApiBaseController
             'contract_information'
         ])
             ->where('hospital_id', $hospital_id)
-            ->where('code', $course_code)
-            ->where('is_category', 0)
-            ->where('web_reception', 0)
-            ->where('publish_start_date', '<=', $today)
-            ->where('publish_end_date', '>=', $today)
-            ->first();
+            ->where('code', $course_code);
+
+        if ($request->input('preview_flg') != '1') {
+            $query->where('is_category', 0)
+                ->where('web_reception', 0)
+                ->where('publish_start_date', '<=', $today)
+                ->where('publish_end_date', '>=', $today);
+        }
+
+        return $query ->first();
     }
 
     /**

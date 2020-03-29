@@ -19,6 +19,15 @@
         data-family_name_kana="{{  $customer->family_name_kana }}"
         data-first_name_kana="{{  $customer->first_name_kana }}"
         data-tel="{{  $customer->tel }}"
+        data-sex="{{  $customer->sex }}"
+        data-birthday="{{  $customer->birthday }}"
+        data-postcode1="{{  substr($customer->postcode, 0, 3) }}"
+        data-postcode2="{{  substr($customer->postcode, 3) }}"
+        data-prefecture_id="{{  $customer->prefecture_id }}"
+        data-address1="{{  $customer->address1 }}"
+        data-address2="{{  $customer->address2 }}"
+        data-email="{{  $customer->email }}"
+        data-memo="{{  $customer->memo }}"
         data-registration_card_number="{{  $customer->registration_card_number }}"
         >
             <td>{{ $customer->id }}</td>

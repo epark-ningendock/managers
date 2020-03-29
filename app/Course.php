@@ -307,4 +307,16 @@ class Course extends SoftDeleteModel
         'auto_calc_application',
         'calender_id',
     ];
+
+    public function preiwe_url() {
+        $app_name = env('APP_ENV');
+        if ($app_name == 'production') {
+            $url = 'https://www.docknet.jp/prev/';
+        } else {
+            $url = 'https://dev2019.docknet.jp/prev/';
+        }
+        $code = ContractInformation::where('hospital_id', $this->hospital_id)->first()->code;
+
+        return $url . $code . '/' . $this->code;
+    }
 }

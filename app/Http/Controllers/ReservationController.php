@@ -265,6 +265,7 @@ class ReservationController extends Controller
                 Reservation::getChannel($reservation->channel),
                 $reservation->todays_memo,
                 $reservation->internal_memo,
+                $reservation->cancellation_reason,
             ];
 
             $questions = collect();
@@ -311,6 +312,7 @@ class ReservationController extends Controller
             '受付形態',
             '受付・予約メモ',
             '医療機関備考',
+            'キャンセル理由',
         ];
 
         for ($i = 0; $i < $question_count; $i++) {
@@ -550,6 +552,20 @@ class ReservationController extends Controller
 
             if ($request->customer_id) {
                 $customer = Customer::findOrFail($request->customer_id);
+                $customer->first_name = $request->first_name;
+                $customer->family_name = $request->family_name;
+                $customer->first_name_kana = $request->first_name_kana;
+                $customer->family_name_kana = $request->family_name_kana;
+                $customer->tel = $request->tel;
+                $customer->sex = $request->sex;
+                $customer->email = $request->email;
+                $customer->postcode = $request->postcode1 . $request->postcode2;
+                $customer->prefecture_id = $request->prefecture_id;
+                $customer->address1 = $request->address1;
+                $customer->address2 = $request->address2;
+                $customer->birthday = $request->birthday;
+                $customer->memo = $request->memo;
+                $customer->registration_card_number = $request->registration_card_number;
                 if (Reservation::where('customer_id', $request->customer_id)->count() > 0) {
                     $reservation->is_repeat = true;
                 }
