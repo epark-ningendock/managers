@@ -61,7 +61,7 @@
             <a class="btn btn-primary ml-3" href="{{ route('course.copy', $course->id) }}">
                 <i class="fa fa-copy"></i>
             </a>
-            <a class="btn btn-default ml-3" href="{{ $course->preview_url() }}">
+            <a class="btn btn-default ml-3" target="_blank" href="{{ $course->preview_url() }}">
               プレビュー
             </a>
           </td>
