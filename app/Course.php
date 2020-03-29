@@ -308,7 +308,7 @@ class Course extends SoftDeleteModel
         'calender_id',
     ];
 
-    public function preiwe_url() {
+    public function preview_url() {
         $app_name = env('APP_ENV');
         if ($app_name == 'production') {
             $url = 'https://www.docknet.jp/prev/';
