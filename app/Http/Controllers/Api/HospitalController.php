@@ -205,10 +205,13 @@ class HospitalController extends ApiBaseController
         if (!empty($request->input('sex'))) {
             $query->with([
                 'courses' => function ($query) use ($today, $request) {
-                    $query->where('is_category', 0)
-                        ->where('web_reception', 0)
-                        ->where('publish_start_date', '<=', $today)
-                        ->where('publish_end_date', '>=', $today);
+                    if ($request->input('preview_flg') != '1') {
+                        $query->where('is_category', 0)
+                            ->where('web_reception', 0)
+                            ->where('publish_start_date', '<=', $today)
+                            ->where('publish_end_date', '>=', $today);
+                    }
+
                     if (!empty($request->input('sort_key'))) {
                         if ($request->input('sort_key') == 'low') {
                             $query->orderBy('price');
@@ -256,10 +259,12 @@ class HospitalController extends ApiBaseController
         } else {
             $query->with([
                 'courses' => function ($query) use ($today, $request) {
-                $query->where('is_category', 0)
-                    ->where('web_reception', 0)
-                    ->where('publish_start_date', '<=', $today)
-                    ->where('publish_end_date', '>=', $today);
+                    if ($request->input('preview_flg') != '1') {
+                        $query->where('is_category', 0)
+                            ->where('web_reception', 0)
+                            ->where('publish_start_date', '<=', $today)
+                            ->where('publish_end_date', '>=', $today);
+                    }
 
                 if (!empty($request->input('sort_key'))) {
                     if ($request->input('sort_key') == 'low') {
