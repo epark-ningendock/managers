@@ -62,11 +62,11 @@ class SearchRequest extends ValidationRequest
         if (isset($district_no)) {
             $params = explode(',', $district_no);
             $result = '';
-            $distoricts = DistrictCode::whereIn('district_code', $params)->get();
+            $distoricts = DistrictCode::whereIn('id', $params)->get();
             foreach ($distoricts as $district) {
-                $result = $result . ',' . $district->name;
+                $result = $result . '、' . $district->name;
             }
-            return ltrim($result, ',');
+            return ltrim($result, '、');
         }
         return '';
     }
@@ -104,7 +104,7 @@ class SearchRequest extends ValidationRequest
             $data = HospitalMinorClassification::select('name')->whereIn('id', $array)->get();
             $results = [];
             foreach ($data as $d) {
-                $results[] = $d ?? '';
+                $results[] = $d->name ?? '';
             }
             return $results;
         } else {
@@ -118,7 +118,7 @@ class SearchRequest extends ValidationRequest
             $data = MinorClassification::select('name')->whereIn('id', $array)->get();
             $results = [];
             foreach ($data as $d) {
-                $results[] = $d ?? '';
+                $results[] = $d->name ?? '';
             }
             return $results;
         } else {
@@ -130,7 +130,7 @@ class SearchRequest extends ValidationRequest
         if ($site_card == 1) {
             return 'クレジットカード払い可';
         } else {
-            return 'クレジットカード払い不可';
+            return '';
         }
     }
 }

@@ -6,11 +6,13 @@ use App\ConsiderationList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\ConsiderationListStoreRequest;
+use App\Http\Requests\ConsiderationListDestroyRequest;
+use App\Http\Requests\ConsiderationListShowRequest;
+use App\Http\Resources\ConsiderationListShowResource;
 
 use App\Enums\DispKbn;
-use App\Enums\NickUse;
 use App\Enums\Status;
-use App\MemberLoginInfo;
 
 
 class ConsiderationListController extends ApiBaseController
@@ -19,29 +21,14 @@ class ConsiderationListController extends ApiBaseController
      * 検討中リスト登録を実行する
      * @param Request $request
      */
-    public function store(Request $request)
+    public function store(ConsiderationListStoreRequest $request)
     {
-        $messages = config('api.consideration_list_api.message');
-        $sysErrorMessages = config('api.sys_error.message');
-        // パラメータチェック
-        if (!isset($request->epark_member_id) || !is_numeric($request->epark_member_id)) {
-            return $this->createResponse($messages['errorEparkMemberId']);
-        }
-        if (isset($request->hospital_id) && !is_numeric($request->hospital_id)) {
-            return $this->createResponse($messages['errorHospitalId']);
-        }
-        if (isset($request->course_id) && !is_numeric($request->course_id)) {
-            return $this->createResponse($messages['errorCourseId']);
-        }
-        if (!isset($request->display_kbn) || !DispKbn::hasValue($request->display_kbn)) {
-            return $this->createResponse($messages['errorDisplayKbn']);
-        }
-
         $params = [
             'epark_member_id' => $request->epark_member_id,
             'hospital_id' => $request->hospital_id,
-            'course_id' => $request->course_id,
-            'display_kbn' => $request->display_kbn
+            'course_id' => $request->course_id == ''? 0 : $request->course_id,
+            'display_kbn' => $request->course_id == ''? DispKbn::FACILITY : DispKbn::COURSE,
+            'status' => Status::VALID,
         ];
 
         DB::beginTransaction();
@@ -56,80 +43,45 @@ class ConsiderationListController extends ApiBaseController
                 'exception' => $e,
             ]);
             DB::rollback();
-            return $this->createResponse($sysErrorMessages['errorDB']);
+            return $this->createResponse($this->messages['errorDB'], $request->input('callback'));
         }
-
-        return $this->createResponse($messages['success']);
+        return $this->createResponse($this->messages['success'], $request->input('callback'));
     }
 
     /**
      * 検討中リストを返す
      * @param Request $request
      */
-    public function show(Request $request)
+    public function show(ConsiderationListShowRequest $request)
     {
-        $messages = config('api.consideration_list_api.message');
-        $sysErrorMessages = config('api.sys_error.message');
-        // パラメータチェック
-        if (!isset($request->epark_member_id) || !is_numeric($request->epark_member_id)) {
-            return $this->createResponse($messages['errorEparkMemberId']);
-        }
-
         try {
-            //
             $results = ConsiderationList::with([
                 'contract_informations',
                 'course'
             ])
-            ->where('epark_member_id', $request->epark_member_id)
-                ->get();
-            if (! $results) {
-                return $this->createResponse($messages['errorNotExistInfo']);
-            }
-        } catch (\Throwable $e) {
-            $message = '[検討中リストAPI] DB処理に失敗しました。';
-            Log::error($message, [
-                'epark_member_id' => $request->epark_member_id,
-                'exception' => $e,
-            ]);
-            return $this->createResponse($sysErrorMessages['errorDB']);
+            ->where('epark_member_id', '=', $request->epark_member_id)
+            ->where('status', '=', 1)
+            ->where('display_kbn', '=', $request->display_kbn)
+            ->get();
+
+            return new ConsiderationListShowResource($results);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
         }
-
-        return $this->createConsiderationListResponse($messages['success'], $results);
-
     }
 
     /**
      * 検討中情報を削除する
      * @param Request $request
      */
-    public function destroy(Request $request)
+    public function destroy(ConsiderationListDestroyRequest $request)
     {
-        $messages = config('api.consideration_list_api.message');
-        $sysErrorMessages = config('api.sys_error.message');
-        // パラメータチェック
-        if (!isset($request->epark_member_id) || !is_numeric($request->epark_member_id)) {
-            return $this->createResponse($messages['errorEparkMemberId']);
-        }
-        if (!isset($request->display_kbn) || !DispKbn::hasValue($request->display_kbn)) {
-            return $this->createResponse($messages['errorDisplayKbn']);
-        }
-
-        if (Disp::FACILITY == $request->display_kbn) {
-            if (! isset($request->hospital_id) || !is_numeric($request->hospital_id)) {
-                return $this->createResponse($messages['errorHospitalId']);
-            }
-        } else {
-            if (!isset($request->course_id) || !is_numeric($request->course_id)) {
-                return $this->createResponse($messages['errorCourseId']);
-            }
-        }
-
         $params = [
             'epark_member_id' => $request->epark_member_id,
             'hospital_id' => $request->hospital_id,
-            'course_id' => $request->course_id,
-            'display_kbn' => $request->display_kbn,
+            'course_id' => $request->course_id == ''? 0 : $request->course_id,
+            'display_kbn' => $request->course_id == ''? DispKbn::FACILITY : DispKbn::COURSE,
         ];
 
         DB::beginTransaction();
@@ -144,56 +96,9 @@ class ConsiderationListController extends ApiBaseController
                 'exception' => $e,
             ]);
             DB::rollback();
-            return $this->createResponse($sysErrorMessages['errorDB']);
+            return $this->createResponse($this->messages['errorDB'], $request->input('callback'));
         }
-
-        return $this->createResponse($messages['success']);
-
-    }
-
-    /**
-     * レスポンスを生成する
-     *
-     * @param array $message
-     * @param $statusCode
-     * @return response
-     */
-    protected function createResponse(array $message, $statusCode = 200) {
-        return response([
-            'statusCode' => strval($statusCode),
-            'message' => $message['description'],
-            'messageId' => $message['code'],
-        ], $statusCode)->header('Content-Type', 'application/json; charset=utf-8');
-    }
-
-    /**
-     * EPARK会員ログイン情報レスポンスを生成する
-     *
-     * @param  $message
-     * @return response
-     */
-    protected function createConsiderationListResponse($message, $results) {
-
-        $params = [];
-        foreach ($results as $result) {
-
-            $param = [
-              'epark_member_id' => $result->epark_member_id,
-                'hospital_id' => $result->hospital_id,
-                'hospital_code' => $result->contract_informations->code,
-                'course_id' => $result->course_id ?? '',
-                'course_code' => $result->course->code ?? '',
-                'display_kbn' => $result->display_kbn
-//                'status' => $result->status
-            ];
-            $params[] = $param;
-        }
-        return response([
-            'status_code' => strval(200),
-            'message' => $message['description'],
-            'message_id' => $message['code'],
-            'data' => $params,
-        ], 200)->header('Content-Type', 'application/json; charset=utf-8');
+        return $this->createResponse($this->messages['success'], $request->input('callback'));
     }
 
     /**
@@ -215,7 +120,7 @@ class ConsiderationListController extends ApiBaseController
         $target->hospital_id = $params['hospital_id'];
         $target->course_id = $params['course_id'];
         $target->display_kbn = $params['display_kbn'];
-        $target->status = Status::VALID;
+        $target->status = $params['status'];
         $target->save();
     }
 

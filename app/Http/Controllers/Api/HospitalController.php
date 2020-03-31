@@ -8,19 +8,23 @@ use App\Enums\HonninKbn;
 use App\Enums\ReservationStatus;
 use App\Enums\Status;
 use App\Hospital;
+use App\HospitalPlan;
 use App\Http\Resources\HospitalAccessResource;
 use App\Http\Resources\HospitalReservationFramesResource;
 use Illuminate\Http\Request;
 use App\Http\Requests\HospitalRequest;
 use App\Http\Requests\HospitalFrameRequest;
+use App\Http\Requests\HospitalShopownerRequest;
 use App\ContractInformation;
 
 use App\Http\Resources\HospitalIndexResource;
 use App\Http\Resources\HospitalBasicResource;
 use App\Http\Resources\HospitalCoursesResource;
 use App\Http\Resources\HospitalContentsResource;
+use App\Http\Resources\HospitalShopownerResource;
 use App\Http\Resources\HospitalReleaseResource;
 use App\Http\Resources\HospitalReleaseCourseResource;
+use App\Http\Resources\HospitalFeerateResource;
 use App\Http\Resources\HospitalReserveCntBaseResource;
 
 use Carbon\Carbon;
@@ -132,7 +136,7 @@ class HospitalController extends ApiBaseController
             return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
         }
     }
-
+ 
     /**
      * 医療機関手数料利率取得API
      *
@@ -171,6 +175,27 @@ class HospitalController extends ApiBaseController
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
            
             return new HospitalAccessResource($this->getAccessData($hospital_id));
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
+        }
+    }
+
+    /**
+     * iFlag契約者ID取得API
+     * 
+     * @param Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function shopowner(HospitalShopownerRequest $request)
+    {
+        try {
+            $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
+            $data = Hospital::with([
+                'contract_information'
+            ])->find($hospital_id);
+
+            return new HospitalShopownerResource($data);
         } catch (\Exception $e) {
             Log::error($e);
             return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));

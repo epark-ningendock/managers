@@ -77,11 +77,11 @@ class ContractInformationImport extends ImportBAbstract implements WithChunkRead
             'application_date' =>$application_date,
             'billing_start_date' => $billing_start_date,
             'cancellation_date' => $cancel_date,
-            'representative_name_kana' => $this->getValue($row, 'DELEGATE_NAME_KANA') ?? '',
-            'representative_name' => $this->getValue($row, 'DELEGATE_NAME') ?? '',
+            'representative_name_kana' => $this->getValue($row, 'DELEGATE_NAME_KANA'),
+            'representative_name' => $this->getValue($row, 'DELEGATE_NAME'),
             'postcode' => $this->getValue($row, 'POSTCODE'),
             'address' => null, // @todo 文字列で都道府県から接続？？？
-            'tel' => $this->getValue($row, 'TEL') ?? '',
+            'tel' => $this->getValue($row, 'TEL'),
             'fax' => $this->getValue($row, 'FAX'),
             'karada_dog_id' => $this->hospital_no, // @todo 確認
             'customer_no' => $this->getValue($row, 'CUST_NO'),

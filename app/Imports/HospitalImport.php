@@ -170,7 +170,6 @@ class HospitalImport extends ImportAbstract implements WithChunkReading
             $district = DistrictCode::find($hospital->district_code_id);
             if ($district) {
                 $area_station = $area_station . $district->name . ' ';
-                $hospital_meta->district_code = $district->code;
             }
         }
         if (!empty($hospital->address1)) {
@@ -257,6 +256,7 @@ class HospitalImport extends ImportAbstract implements WithChunkReading
             }
         }
 
+        $hospital_meta->district_code = $district_code;
         $hospital_meta->access1 = $hospital->access1;
         $hospital_meta->access2 = $hospital->access2;
         $hospital_meta->access3 = $hospital->access3;

@@ -127,12 +127,10 @@ return [
     */
 
     'to' => [
-        // 管理者-予約用
-        'admin_reservation' => env('MAIL_TO_RESERVATION_ADMIN_ADDRESS'),
-        'admin_all' => env('MAIL_TO_ADMIN_ALL_ADDRESS'),
-        'admin_claim' => env('MAIL_TO_ADMIN_CLAIM_ADDRESS'),
-        // システムアラートメール送信先
-        'alert' => env('MAIL_TO_ALERT_ADDRESS'),
+        // 管理者
+        'gyoumu' => env('MAIL_TO_GYOUMU_ADMIN_ADDRESS'),
+        'system' => env('MAIL_TO_SYSTEM_ADMIN_ADDRESS'),
+        'dev' => env('MAIL_TO_DEV_ADMIN_ADDRESS'),
     ],
 
 ];

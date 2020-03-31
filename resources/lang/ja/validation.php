@@ -453,5 +453,9 @@ return [
         'price_upper_limit' => '検査コース希望金額上限【price_upper_limit】',
         'price_lower_limit' => '検査コース希望金額下限【price_lower_limit】',
         'string_limit_size' => '文字列短縮文字数【string_limit_size】',
+        
+        'hospital_id' => '医療施設ID【hospital_id】',
+        'course_id' => '検査コース【course_id】',
+        'display_kbn' =>'表示区分【display_kbn】'
     ],
 ];

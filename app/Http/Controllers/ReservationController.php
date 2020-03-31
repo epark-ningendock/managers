@@ -860,7 +860,7 @@ class ReservationController extends Controller
             'reservation' => $reservation
         ];
 
-        Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new ReservationCheckMail($mailContext));
+        Mail::to(config('mail.to.gyoumu'))->send(new ReservationCheckMail($mailContext));
 
         if (isset($customer->email)) {
             Mail::to($customer->email)->send(new ReservationCheckMail($mailContext));

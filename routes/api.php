@@ -39,10 +39,10 @@ Route::prefix('v1')->group(function () {
     Route::match(['get', 'post'], 'hospital/', 'HospitalController@index');
 
     // 公開中医療機関情報取得API
-    Route::match(['get', 'post'], 'hospital/release/', 'HospitalController@release');
+    Route::match(['get', 'post'], 'hospitals/', 'HospitalController@release');
 
     // 公開中医療機関コース情報取得API
-    Route::match(['get', 'post'], 'hospital/release_course/', 'HospitalController@release_course');
+    Route::match(['get', 'post'], 'courses/', 'HospitalController@release_course');
 
 
     // 医療機関空き枠情報取得API
@@ -74,6 +74,15 @@ Route::prefix('v1')->group(function () {
 
     // 対象一覧取得（路線）API
     Route::match(['get', 'post'], 'route/', 'RouteController@index');
+  
+    // 医療機関・検査コース毎の予約数取得API
+    Route::match(['get', 'post'], 'reserve_vol/', 'ReserveVolController@index');
+
+    // iFlag契約者ID取得API
+    Route::match(['get','post'], 'hospital/shopowner/', 'HospitalController@shopowner');
+
+    // 医療機関手数料取得API
+    Route::match(['get', 'post'], 'fee_rate/', 'HospitalController@fee_rate');
 
 // 以下予約API
 // 予約登録/更新API
@@ -90,9 +99,9 @@ Route::prefix('v1')->group(function () {
     Route::match(['get', 'post'], 'member-login-info-store/', 'MemberLoginInfoController@store');
     Route::match(['get', 'post'], 'member-login-info-show', 'MemberLoginInfoController@show');
 // 検討中リスト
-    Route::match(['get', 'post'], 'consideration-list-store/', 'ConsiderationListController@store');
+    Route::post('consideration-list-store/', 'ConsiderationListController@store');
     Route::match(['get', 'post'], 'consideration-list-show/', 'ConsiderationListController@show');
-    Route::match(['get', 'post', 'delete'],'consideration-list-destroy/', 'ConsiderationListController@destroy');
+    Route::delete('consideration-list-destroy/', 'ConsiderationListController@destroy');
 
     // コース通知API
     Route::post('registcourse/', 'CourseInfoNotificationController@registcourse');

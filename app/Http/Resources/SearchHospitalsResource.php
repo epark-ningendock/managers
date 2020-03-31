@@ -23,7 +23,7 @@ class SearchHospitalsResource extends Resource
             'url_basic' => $this->url,
             'hospital_code' => $this->contract_information->code,
             'name' => $this->name,
-            'update_dt' => Carbon::parse($this->update_at)->format('Y年m月d日'),
+            'update_dt' => Carbon::parse($this->updated_at)->format('Y年m月d日'),
             'pref_name' => $this->prefecture->name,
             'district_name' => $this->district_code->name,
             'address1' => $this->address1 ?? '',

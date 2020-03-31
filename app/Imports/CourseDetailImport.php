@@ -54,20 +54,14 @@ class CourseDetailImport extends ImportAbstract implements WithChunkReading
 
             if (!$converted_idstring) {
                 return;
-            }
-
-            $input_string = '';
-            if (!empty($row['inputstring']) && $row['inputstring'] != 'NULL') {
-                $input_string =  $row['inputstring'];
-            }
-
+            } 
             $model = new CourseDetail([
                 'course_id' => $converted_idstring->new_id,
                 'major_classification_id' => $row['item_category_dai_no'],
                 'middle_classification_id' => $row['item_category_chu_no'],
                 'minor_classification_id' => $row['item_category_sho_no'],
                 'select_status' => $row['select_status'],
-                'inputstring' => $input_string,
+                'inputstring' => $row['inputstring'],
                 'created_at' => $row['rgst'],
                 'updated_at' => $row['updt'],
             ]);

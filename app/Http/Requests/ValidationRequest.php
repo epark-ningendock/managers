@@ -472,6 +472,46 @@ class ValidationRequest extends FormRequest
                 'error_no' => '06',
                 'detail_code' => '01',
             ]),
+            
+            // 医療施設ID
+            'hospital_id.required' => json_encode([
+                'message' => trans('validation.for_api.required'),
+                'error_no' => '03',
+                'detail_code' => '01',
+            ]),
+            'hospital_id.numeric' => json_encode([
+                'message' => trans('validation.for_api.numeric'),
+                'error_no' => '06',
+                'detail_code' => '01',
+            ]),
+             // 検査コース
+             'course_id.required' => json_encode([
+                'message' => trans('validation.for_api.required'),
+                'error_no' => '03',
+                'detail_code' => '01',
+            ]),
+            'course_id.numeric' => json_encode([
+                'message' => trans('validation.for_api.numeric'),
+                'error_no' => '06',
+                'detail_code' => '01',
+            ]),
+            // ニックネーム使用
+            'display_kbn.required' => json_encode([
+                'message' => trans('validation.for_api.required'),
+                'error_no' => '03',
+                'detail_code' => '01',
+            ]),
+            'display_kbn.numeric' => json_encode([
+                'message' => trans('validation.for_api.numeric'),
+                'error_no' => '06',
+                'detail_code' => '01',
+            ]),
+            'display_kbn.enum_value' => json_encode([
+                'message' => trans('validation.for_api.enum_value'),
+                'error_no' => '06',
+                'detail_code' => '01',
+            ]),
+
         ];
     }
 

@@ -295,7 +295,7 @@ class BillingController extends Controller {
 	            ];
 
 	            Mail::to( [
-	                env('DOCK_EMAIL_ADDRESS'),
+	                config('mail.to.gyoumu'),
 	            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
 	        }
 		}	

@@ -2,13 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Course;
-use App\Enums\Status;
-use App\Hospital;
-use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\Resource;
 
-class HospitalReleaseCourseResource extends Resource
+class HospitalShopownerResource extends Resource
 {
     /**
      * Transform the resource into an array.
@@ -18,7 +14,10 @@ class HospitalReleaseCourseResource extends Resource
      */
     public function toArray($request)
     {
-        return $this->resource;
-    }
-
+        return [
+            'status' => 0,
+            'hospital_code' => $this->contract_information->code,
+            'shopowner_id' => $this->old_karada_dog_id,
+        ];
+    } 
 }
