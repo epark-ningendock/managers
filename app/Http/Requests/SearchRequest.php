@@ -62,7 +62,7 @@ class SearchRequest extends ValidationRequest
         if (isset($district_no)) {
             $params = explode(',', $district_no);
             $result = '';
-            $distoricts = DistrictCode::whereIn('id', $params)->get();
+            $distoricts = DistrictCode::whereIn('district_code', $params)->get();
             foreach ($distoricts as $district) {
                 $result = $result . '、' . $district->name;
             }
