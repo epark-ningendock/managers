@@ -397,7 +397,7 @@ class HospitalImagesController extends Controller
             $order2 = isset($file[$image_prefix.$i.'_order2']) ? $file[$image_prefix.$i.'_order2'] : 0 ;
             $name_2 = isset($file[$image_prefix.$i.'_name']) ? $file[$image_prefix.$i.'_name'] : '' ;
 
-            Log::info('画像情報：' . var_dump($file, true));
+            Log::error('画像情報：' . var_dump($file, true));
             
             $location_no = isset($file[$image_prefix.$i]) ? $file[$image_prefix.$i] : null ;
 //            $location_no = isset($file[$image_prefix.$i.'_location']) ? $file[$image_prefix.$i.'_location'] : null ;
