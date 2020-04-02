@@ -10,6 +10,7 @@ use App\HospitalCategory;
 use App\Lock;
 use App\InterviewDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use phpDocumentor\Reflection\File;
 use Illuminate\Support\Facades\DB;
 use Reshadman\OptimisticLocking\StaleModelLockingException;
@@ -396,7 +397,11 @@ class HospitalImagesController extends Controller
             $order2 = isset($file[$image_prefix.$i.'_order2']) ? $file[$image_prefix.$i.'_order2'] : 0 ;
             $name_2 = isset($file[$image_prefix.$i.'_name']) ? $file[$image_prefix.$i.'_name'] : '' ;
 
-            $location_no = isset($file[$image_prefix.$i.'_location']) ? $file[$image_prefix.$i.'_location'] : null ;
+            Log::info('画像情報：' . var_dump($file, true));
+            
+            $location_no = isset($file[$image_prefix.$i]) ? $file[$image_prefix.$i] : null ;
+//            $location_no = isset($file[$image_prefix.$i.'_location']) ? $file[$image_prefix.$i.'_location'] : null ;
+
             //画像の登録確認
             //tab画像だけはタブのカテゴリ$file_locationもチェックする
             if($image_order == ImageGroupNumber::IMAGE_GROUP_TAB) {
