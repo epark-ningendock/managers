@@ -508,13 +508,13 @@ class ReservationService
         $entity->birthday = date('Ymd', strtotime($request->input('birthday'))) ?? $entity->birthday ?? '';
 
         // 以下補完（epark人間ドックの場合、予約者=受診者になる)
-        $district =  $request->input('district') ?? '';
-        $building_name =  $request->input('building_name') ?? '';
-        $address2 = $district . ' ' . $building_name;
+        // $district =  $request->input('district') ?? '';
+        // $building_name =  $request->input('building_name') ?? '';
+        // $address2 = $district . ' ' . $building_name;
         $entity->postcode = $request->input('post_code') ?? $entity->postcode;
         $entity->prefecture_id = $request->input('prov_code') ?? $entity->prefecture_id;
-        $entity->address1 = $request->input('city') ?? '';
-        $entity->address2 = $address2 !== ' ' ? $address2 : $entity->address2;
+        $entity->address1 = $request->input('district') ?? $entity->address1;
+        $entity->address2 = $request->input('building_name') ?? $entity->address2;
         $entity->claim_count = $process === self::REGISTRATION ? 0 : $entity->claim_count;
         $entity->recall_count = $process === self::REGISTRATION ? 0 : $entity->recall_count;
         $entity->epark_member_id = $request->input('epark_member_id') ?? $entity->epark_member_id;
@@ -564,8 +564,8 @@ class ReservationService
         $entity->end_time_min = $request->input('end_time_min') ?? $entity->end_time_min;
         $entity->channel = 1;
         $entity->reservation_status = $process === self::REGISTRATION ? ReservationStatus::PENDING : $entity->reservation_status;
-        $entity->user_message = $request->input('user_message') ?? $entity->user_message;
-        $entity->reservation_memo = $request->input('user_message') ?? $entity->user_message;
+        $entity->user_message = $request->input('user_message');
+        $entity->reservation_memo = $request->input('user_message');
         $entity->site_code = $request->input('site_code') ?? $entity->site_code;
         $entity->customer_id = $request->input('customer_id') ?? $entity->customer_id;
         $entity->epark_member_id = $request->input('epark_member_id') ?? $entity->epark_member_id;
@@ -579,15 +579,17 @@ class ReservationService
         $entity->tax_rate = 10;
 //        $entity->tax_rate = resolve(TaxClass::class)->nowTax();
 
-        $other_infos = $request->input('other_info');
-        $other_info = $other_infos[0];
-        $entity->second_date = $other_info['second_date'] ?? $entity->second_date;
-        $entity->third_date = $other_info['third_date'] ?? $entity->third_date;
-        $entity->is_choose = $other_info['choose_fg'] ?? $entity->is_choose;
-        $entity->campaign_code = $other_info['campaign_cd'] ?? $entity->campaign_code;
-        $entity->tel_timezone = $other_info['tel_timezone'] ?? $entity->tel_timezone;
-        $entity->insurance_assoc_id = $other_info['insurer_number'] ?? $entity->insurance_assoc_id;
-        $entity->insurance_assoc = $other_info['insurance_assoc'] ?? $entity->insurance_assoc;       
+        $other_info = $request->input('other_info');
+        if (!empty($other_info)) {
+            $entity->second_date = $other_info['second_date'] ?? $entity->second_date;
+            $entity->third_date = $other_info['third_date'] ?? $entity->third_date;
+            $entity->is_choose = $other_info['choose_fg'] ?? $entity->is_choose;
+            $entity->campaign_code = $other_info['campaign_cd'] ?? $entity->campaign_code;
+            $entity->tel_timezone = $other_info['tel_timezone'] ?? $entity->tel_timezone;
+            $entity->insurance_assoc_id = $other_info['insurer_number'] ?? $entity->insurance_assoc_id;
+            $entity->insurance_assoc = $other_info['insurance_assoc'] ?? $entity->insurance_assoc;
+        }
+
         $entity->mail_type = $process === self::REGISTRATION ? '1' : '2';
         $entity->cancelled_appoint_code = $request->input('cancelled_appoint_code') ?? $entity->cancelled_appoint_code;
 
