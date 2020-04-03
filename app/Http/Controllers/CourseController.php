@@ -233,12 +233,14 @@ class CourseController extends Controller
             $course_data['reception_end_date'] = $reception_end_month * 1000 + $reception_end_day;
             $course_data['reception_acceptance_date'] = $reception_acceptance_month * 1000 + $reception_acceptance_day;
 
+            $code_store_flg = false;
             if (isset($course_param)) {
                 $course = $course_param;
             } else {
                 $course = new Course();
                 $max_order = Course::where('hospital_id', session()->get('hospital_id'))->max('order');
                 $course_data['order'] = $max_order + 1;
+                $code_store_flg = true;
             }
             $course->fill($course_data);
             $course->hospital_id = session()->get('hospital_id');
@@ -254,8 +256,10 @@ class CourseController extends Controller
             //force to update updated_at. otherwise version will not be updated
             $course->touch();
             $course->save();
-            $course->code = 'C' . $course->id . 'H' . $course->hospital_id;
-            $course->save();
+            if ($code_store_flg) {
+                $course->code = 'C' . $course->id . 'H' . $course->hospital_id;
+                $course->save();
+            }
 
             //Course Images
             if ($request->has('course_image_main')) {

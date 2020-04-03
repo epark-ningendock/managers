@@ -74,9 +74,10 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
             $fee = 0;
             $fee_rate = 0;
             $member_id = $this->getValue($row, 'EPARK_MEMBER_ID');
+            $contract_plan = $hospital->hospitalPlanByDate(Carbon::today())->contractPlan;
             if (isset($member_id)) {
-                if (isset($hospital->hospital_plan) && isset($hospital->hospital_plan->contract_plan)) {
-                    $fee_rate = $hospital->hospital_plan->contract_plan->fee_rate;
+                if ($contract_plan) {
+                    $fee_rate = $contract_plan->fee_rate;
                 } else {
                     $fee_rate = 10;
                 }
@@ -125,12 +126,25 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
             $reservation->is_health_insurance = 0;
             $reservation->save();
 
-            $answer_json = str_replace(['\"', '\\\\'], ['"', '\\'], $this->getValue($row, 'Q_ANSWER'));
+            $target_str = $this->unicode_unescape($this->getValue($row, 'Q_ANSWER'));
+            $answer_json = str_replace(['\"', '\\\\'], ['"', '\\'], $target_str);
             $answer_json = str_replace('#comma#', ',', $answer_json);
             $questions = json_decode($answer_json, false, 512, JSON_OBJECT_AS_ARRAY);
 
+            if (!function_exists('codepoint_encode')) {
+                function codepoint_encode($str) {
+                    return substr(json_encode($str), 1, -1);
+                }
+            }
+
+            if (!function_exists('codepoint_decode')) {
+                function codepoint_decode($str) {
+                    return json_decode(sprintf('"%s"', $str));
+                }
+            }
             if (!empty($reservation->course_id)) {
                 $target = $this->getValue($row, 'Q_ANSWER');
+                $target = codepoint_decode($target);
                 $target = str_replace('[', '', $target);
                 $target = str_replace('{', '', $target);
                 $target = str_replace(']', '', $target);
@@ -237,6 +251,19 @@ class ReservationDetailImport extends ImportBAbstract implements WithChunkReadin
         } catch (\Throwable $e) {
             Log::error($e->getMessage());
         }
+    }
+
+    function unicode_unescape($str) {
+        $callback = function ($matches) {
+            if (empty($matches[2])) {
+                $code = hexdec($matches[3]);
+                return mb_convert_encoding(pack("N*", $code), "UTF-8", "UTF-32BE");
+            } else {
+                $code = hexdec($matches[2]);
+                return mb_convert_encoding(pack("n*", $code), "UTF-8", "UTF-16BE");
+            }
+        };
+        return preg_replace_callback("/(\\\\u([0-9a-zA-Z]{4})|\\\\U([0-9a-zA-Z]{8}))/", $callback, $str);
     }
 
     public function batchSize(): int
