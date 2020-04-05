@@ -72,7 +72,7 @@ class ReservationMail extends Mailable
         // キャンセル変更受付期限日
         $reservation_date = $this->entity->reservation_date;
         $cancellation_deadline = intval($this->entity->course->cancellation_deadline);
-        $cancellation_date = Carbon::create($reservation_date)->subDays($cancellation_deadline);
+        $cancellation_date = Carbon::createFromFormat($reservation_date)->subDays($cancellation_deadline);
         $cancellation_date = date('Y/m/d', strtotime($cancellation_date));
 
         return $this
