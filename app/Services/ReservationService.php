@@ -410,6 +410,7 @@ class ReservationService
         // メールで使用する情報の取得
         $entity = $this->find($reservation->id);
         $hospital_email_setting = HospitalEmailSetting::where('hospital_id', $entity->hospital_id)->first();
+        $entity->process_kbn = $reservation->process_kbn;
 
         \Illuminate\Support\Facades\Log::info('予約ID:'. $reservation->id);
         \Illuminate\Support\Facades\Log::info('医療機関ID:'. $reservation->hospital_id);
