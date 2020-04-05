@@ -197,7 +197,7 @@ class ReservationService
             // 店舗名
             'shop_name' => $course->hospital->name,
             // 店舗URL
-            'shop_url' => $this->createURL().'/'.$contract_information->code . '/basic.html',
+            'shop_url' => 'https://www.docknet.jp/detail_hospital/'.$contract_information->code ,
             // 店舗画像URL
             'shop_image_url' => $hospital_category->hospital_image->path,
             // 予約キャンセルURL
