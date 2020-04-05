@@ -14,7 +14,7 @@ use Carbon\Carbon;
 use Log;
 
 // 送信元
-define('EPARK_MAIL_FROM', Config::get('app.epark_mail_from'));
+define('EPARK_MAIL_FROM', config('mail.from.address'));
 class ReservationMail extends Mailable
 {
     use Queueable, SerializesModels;
