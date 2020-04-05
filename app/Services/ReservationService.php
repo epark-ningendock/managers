@@ -420,43 +420,47 @@ class ReservationService
         // メール送信フラグ追加
         $entity->mail_fg = $reservation->mail_fg ?? 1;
         // 顧客へメール送信
-        if ($reservation->mail_fg == 1) {
-            $to = $entity->customer->email;
-            try {
-                if (!$is_cancel) { // 登録/変更完了メール
-                    Mail::to($to)->send(new ReservationCompleteMail($entity, true));
-                } else { // 予約キャンセルメール
-                    Mail::to($to)->send(new ReservationCancelMail($entity, true));
-                }
-            } catch (\Exception $e) { // mail送信失敗
-                Log::error($e);
-                return -1; // メール送信失敗
+        $to = $entity->customer->email;
+        try {
+            if (!$is_cancel) { // 登録/変更完了メール
+                Mail::to($to)->send(new ReservationCompleteMail($entity, true));
+            } else { // 予約キャンセルメール
+                Mail::to($to)->send(new ReservationCancelMail($entity, true));
             }
+        } catch (\Exception $e) { // mail送信失敗
+            Log::error($e);
+            return -1; // メール送信失敗
         }
+
 
         $hospital_mails = [];
-        if ($hospital_email_setting) {
-            $hospital_mails = [
-                $hospital_email_setting->reception_email1,
-                $hospital_email_setting->reception_email2,
-                $hospital_email_setting->reception_email3,
-                $hospital_email_setting->reception_email4,
-                $hospital_email_setting->reception_email5,
-            ];
-        }
-
-        foreach ($hospital_mails as $m) {
-            if (!empty($m)) {
-                $tos[] = $m;
+        if ($hospital_email_setting
+            && $hospital_email_setting->email_receptionn_flg == 1
+            && $hospital_email_setting->web_reception_email_flg == 1) {
+            if ($hospital_email_setting) {
+                $hospital_mails = [
+                    $hospital_email_setting->reception_email1,
+                    $hospital_email_setting->reception_email2,
+                    $hospital_email_setting->reception_email3,
+                    $hospital_email_setting->reception_email4,
+                    $hospital_email_setting->reception_email5,
+                ];
             }
         }
 
         try {
-            // 医療機関へメール送信
-            if ($is_cancel && $hospital_email_setting->in_hospital_cancellation_email_reception_flg == 1) {
-                Mail::to($tos)->send(new ReservationCancelMail($entity, false));
-            } elseif ($hospital_email_setting->web_reception_email_flg == 1) {
-                Mail::to($to)->send(new ReservationCompleteMail($entity, false));
+            if (!empty($hospital_mails)) {
+                foreach ($hospital_mails as $m) {
+                    if (!empty($m)) {
+                        $tos[] = $m;
+                    }
+                }
+                // 医療機関へメール送信
+                if ($is_cancel && $hospital_email_setting->in_hospital_cancellation_email_reception_flg == 1) {
+                    Mail::to($tos)->send(new ReservationCancelMail($entity, false));
+                } elseif ($hospital_email_setting->web_reception_email_flg == 1) {
+                    Mail::to($to)->send(new ReservationCompleteMail($entity, false));
+                }
             }
 
             // 事業部へメール
