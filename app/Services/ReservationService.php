@@ -410,7 +410,7 @@ class ReservationService
         // メールで使用する情報の取得
         $entity = $this->find($reservation->id);
         $hospital_email_setting = HospitalEmailSetting::where('hospital_id', $entity->hospital_id)
-            ->where('email_receptionn_flg', 1)
+            ->where('email_reception_flg', 1)
             ->where('web_reception_email_flg', 1)
             ->first();
         $entity->process_kbn = $reservation->process_kbn;
