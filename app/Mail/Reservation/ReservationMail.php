@@ -236,7 +236,7 @@ class ReservationMail extends Mailable
                 $results[] = ['question_title' => $a->question_title, 'answer' => $ans];
             }
         });
-        return $results->isEmpty() ? [] : $results;
+        return $results;
     }
 
     /**
