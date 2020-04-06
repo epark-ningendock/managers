@@ -169,7 +169,7 @@ class ReservationApiController extends ApiBaseController
                 $oldEntity = Reservation::find($request->input('reservation_id'));
             }
             // カレンダーの予約数を1つ減らす
-            if ($oldEntity) {
+            if ($process === 1 && $oldEntity) {
                 $this->_reservation_service->registReservationToCalendar($oldEntity, -1);
             }
 
