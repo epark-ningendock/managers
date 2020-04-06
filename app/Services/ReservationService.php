@@ -459,7 +459,7 @@ class ReservationService
                 if ($is_cancel && $hospital_email_setting->in_hospital_cancellation_email_reception_flg == 1) {
                     Mail::to($tos)->send(new ReservationCancelMail($entity, false));
                 } elseif ($hospital_email_setting->web_reception_email_flg == 1) {
-                    Mail::to($to)->send(new ReservationCompleteMail($entity, false));
+                    Mail::to($tos)->send(new ReservationCompleteMail($entity, false));
                 }
             }
 
