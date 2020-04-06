@@ -464,9 +464,9 @@ class ReservationService
             }
 
             // 事業部へメール
-            if ($is_cancel && $hospital_email_setting->in_hospital_cancellation_email_reception_flg == 1) {
+            if ($is_cancel) {
                 Mail::to(EPARK_MAIL_TO)->send(new ReservationCancelMail($entity, false));
-            } elseif ($hospital_email_setting->web_reception_email_flg == 1) {
+            } else {
                 Mail::to(EPARK_MAIL_TO)->send(new ReservationCompleteMail($entity, false));
             }
         } catch (\Exception $e) { // mail送信失敗
