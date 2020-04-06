@@ -190,7 +190,7 @@ class ReservationMail extends Mailable
     {
         $results = [];
 
-        collect(json_decode(json_encode($reservation_answers)))->map(function ($a) {
+        foreach ($reservation_answers as $a) {
             if ($a->answer01 == 1
                 || $a->answer02 == 1
                 || $a->answer03 == 1
@@ -234,8 +234,9 @@ class ReservationMail extends Mailable
                 }
                 $ans = rtrim($ans, '、');
                 $results[] = ['question_title' => $a->question_title, 'answer' => $ans];
+
             }
-        });
+        }
         return $results;
     }
 
