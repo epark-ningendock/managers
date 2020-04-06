@@ -567,7 +567,7 @@ class ReservationService
         $entity->end_time_hour = $request->input('end_time_hour') ?? $entity->end_time_hour;
         $entity->end_time_min = $request->input('end_time_min') ?? $entity->end_time_min;
         $entity->channel = 1;
-        $entity->reservation_status = ReservationStatus::PENDING;
+        $entity->reservation_status = $process === self::REGISTRATION ? ReservationStatus::PENDING : $entity->reservation_status;
         $entity->user_message = $request->input('user_message');
         $entity->reservation_memo = $request->input('user_message');
         $entity->site_code = $request->input('site_code') ?? $entity->site_code;

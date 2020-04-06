@@ -101,20 +101,6 @@ class HospitalEmailSettingImport extends ImportBAbstract implements WithEvents
     public static function afterImport(AfterImport $event)
     {
         $model = new HospitalEmailSetting(static::$arr);
-        if ($model->in_hospital_confirmation_email_reception_flg == 1
-            || $model->in_hospital_change_email_reception_flg == 1
-            || $model->in_hospital_cancellation_email_reception_flg == 1) {
-            $model->in_hospital_email_reception_flg = 1;
-        }
-
-        if (!empty($model->reception_email1)
-        || !empty($model->reception_email2)
-        || !empty($model->reception_email3)
-        || !empty($model->reception_email4)) {
-            $model->in_hospital_reception_email_flg = 1;
-            $model->web_reception_email_flg = 1;
-        }
-
         $model->save();
         static::$arr = [];
     }
