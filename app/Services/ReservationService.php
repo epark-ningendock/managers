@@ -730,7 +730,7 @@ class ReservationService
                 return;
             }
 
-            $idx = 1;
+
             foreach ($courseQuestions as $courseQuestion) {
                 foreach ($q_answers as $q_answer) {
 
@@ -751,6 +751,7 @@ class ReservationService
                         $entity->question_answer09 = $courseQuestion->answer09;
                         $entity->question_answer10 = $courseQuestion->answer10;
 
+                        $idx = 1;
                         foreach ((array)$q_answer->answers as $answer) {
                             if ($idx == 1) {
                                 $entity->answer01 = $answer->answer;

@@ -77,7 +77,7 @@ TEL： {{$電話番号}}
 施設の選び方：{{$施設の選び方}}
 キャンペーンコード：{{$キャンペーンコード}}
 @foreach($questions as $question)
-{{$question['answer_title']}}： {{$question['answer']}}
+{{$question['question_title']}}： {{$question['answer']}}
 @endforeach
 電話がつながりやすい時間帯：{{$電話が繋がりやすい時間帯}}
 所属する健康保険組合名：{{$所属する健康保険組合名}}

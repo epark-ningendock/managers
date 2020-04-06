@@ -616,13 +616,13 @@
                 <label for="status">状態</label>
                 <group class="inline-radio two-option" style="width: 200px;">
                     <div class="status-btn">
-                        <input type="radio" class="checkbox d-inline-block mr-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 1 ? 'checked' : '' }}
-                        value="1"
+                        <input type="radio" class="checkbox d-inline-block mr-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 0 ? 'checked' : '' }}
+                        value="0"
                         ><label>利用する</label>
                     </div>
                     <div class="status-btn">
-                        <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 0 ? 'checked' : '' }}
-                        value="0"><label>利用しない</label>
+                        <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 1 ? 'checked' : '' }}
+                        value="1"><label>利用しない</label>
                     </div>
                     <input type="hidden" class="hidden-q" value="{{ $is_question }}" name="is_questions[]"/>
                 </group>

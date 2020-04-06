@@ -188,28 +188,55 @@ class ReservationMail extends Mailable
      */
     private function _questions($reservation_answers): array
     {
-        $results = collect(json_decode(json_encode($reservation_answers)))->map(function ($a) {
-            $answers = collect([
-                ['answer_title' => $a->question_answer01 ?? '', 'answer' => $a->answer01 ?? '',],
-                ['answer_title' => $a->question_answer02 ?? '', 'answer' => $a->answer02 ?? '',],
-                ['answer_title' => $a->question_answer03 ?? '', 'answer' => $a->answer03 ?? '',],
-                ['answer_title' => $a->question_answer04 ?? '', 'answer' => $a->answer04 ?? '',],
-                ['answer_title' => $a->question_answer05 ?? '', 'answer' => $a->answer05 ?? '',],
-                ['answer_title' => $a->question_answer06 ?? '', 'answer' => $a->answer06 ?? '',],
-                ['answer_title' => $a->question_answer07 ?? '', 'answer' => $a->answer07 ?? '',],
-                ['answer_title' => $a->question_answer08 ?? '', 'answer' => $a->answer08 ?? '',],
-                ['answer_title' => $a->question_answer09 ?? '', 'answer' => $a->answer09 ?? '',],
-                ['answer_title' => $a->question_answer10 ?? '', 'answer' => $a->answer10 ?? '',],
-            ]);
-            $answers = collect(json_decode(json_encode($answers)))->filter(function ($q) {
-                return isset($q) && $q->answer_title !== '';
-            });
-            $answers = $answers->map(function ($q) {
-                return ['answer_title' => $q->answer_title, 'answer' => $q->answer];
-            });
-            return $answers;
+        $results = [];
+
+        collect(json_decode(json_encode($reservation_answers)))->map(function ($a) {
+            if ($a->answer01 == 1
+                || $a->answer02 == 1
+                || $a->answer03 == 1
+                || $a->answer04 == 1
+                || $a->answer05 == 1
+                || $a->answer06 == 1
+                || $a->answer07 == 1
+                || $a->answer08 == 1
+                || $a->answer09 == 1
+                || $a->answer10 == 1) {
+                $ans = '';
+                if ($a->answer01 == 1) {
+                    $ans = $a->question_answer01 . '、';
+                }
+                if ($a->answer02 == 1) {
+                    $ans = $ans . $a->question_answer02 . '、';
+                }
+                if ($a->answer03 == 1) {
+                    $ans = $ans . $a->question_answer03 . '、';
+                }
+                if ($a->answer04 == 1) {
+                    $ans = $ans . $a->question_answer04 . '、';
+                }
+                if ($a->answer05 == 1) {
+                    $ans = $ans . $a->question_answer05 . '、';
+                }
+                if ($a->answer06 == 1) {
+                    $ans = $ans . $a->question_answer06 . '、';
+                }
+                if ($a->answer07 == 1) {
+                    $ans = $ans . $a->question_answer07 . '、';
+                }
+                if ($a->answer08 == 1) {
+                    $ans = $ans . $a->question_answer08 . '、';
+                }
+                if ($a->answer09 == 1) {
+                    $ans = $ans . $a->question_answer09 . '、';
+                }
+                if ($a->answer10 == 1) {
+                    $ans = $ans . $a->question_answer10 . '、';
+                }
+                $ans = rtrim($ans, '、');
+                $results[] = ['question_title' => $a->question_title, 'answer' => $ans];
+            }
         });
-        return $results->isEmpty() ? [] : $results->toArray()[0];
+        return $results->isEmpty() ? [] : $results;
     }
 
     /**
