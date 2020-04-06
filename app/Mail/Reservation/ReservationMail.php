@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Enums\Gender;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -76,6 +77,13 @@ class ReservationMail extends Mailable
         $cancellation_date = $cancellation_date->subDays($cancellation_deadline);
         $cancellation_date = date('Y/m/d', strtotime($cancellation_date));
 
+        // 性別
+        if ($this->entity->customer->sex == Gender::MALE) {
+            $sex = '男';
+        } else {
+            $sex = '女';
+        }
+
         return $this
             ->from(EPARK_MAIL_FROM)
             ->subject($this->subject)
@@ -85,7 +93,7 @@ class ReservationMail extends Mailable
                 '名' => $this->entity->customer->first_name ?? '',
                 '医療施設名' => $this->entity->hospital->name ?? '',
                 '医療施設住所' => $facility_addr,
-                '医療施設電話番号' => $this->entity->hospital->tell ?? '',
+                '医療施設電話番号' => $this->entity->hospital->tel ?? '',
                 '検査コース名' => $this->entity->course->name ?? '',
                 'コース料金' => $this->entity->course->price ?? '',
                 // 'オプション名' => '',
@@ -93,7 +101,7 @@ class ReservationMail extends Mailable
                 'options' => $options,
 
                 'コース料金＋オプション総額' => $course_options_price,
-                '調整金額' => $this->entity->adjustment_price ?? '',
+                '調整金額' => $this->entity->adjustment_price ?? '0',
                 'コース料金＋オプション総額＋調整金額' => $course_amount,
                 '支払方法' => $this->entity->payment_method ?? '',
                 'カード決済額' => $this->entity->settlement_price ?? '',
@@ -112,7 +120,7 @@ class ReservationMail extends Mailable
                     date('Y/m/d', strtotime($this->entity->third_date)) : '',
                 '姓読み仮名' => $this->entity->customer->family_name_kana ?? '',
                 '名読み仮名' => $this->entity->customer->first_name_kana ?? '',
-                '性別' =>  $this->entity->customer->sex,
+                '性別' =>  $sex,
                 '年' => date('Y', strtotime($this->entity->customer->birthday)),
                 '月' => date('m', strtotime($this->entity->customer->birthday)),
                 '日' => date('d', strtotime($this->entity->customer->birthday)),

@@ -409,7 +409,10 @@ class ReservationService
     {
         // メールで使用する情報の取得
         $entity = $this->find($reservation->id);
-        $hospital_email_setting = HospitalEmailSetting::where('hospital_id', $entity->hospital_id)->first();
+        $hospital_email_setting = HospitalEmailSetting::where('hospital_id', $entity->hospital_id)
+            ->where('email_receptionn_flg', 1)
+            ->where('web_reception_email_flg', 1)
+            ->first();
         $entity->process_kbn = $reservation->process_kbn;
 
         \Illuminate\Support\Facades\Log::info('予約ID:'. $reservation->id);
@@ -435,18 +438,14 @@ class ReservationService
 
 
         $hospital_mails = [];
-        if ($hospital_email_setting
-            && $hospital_email_setting->email_receptionn_flg == 1
-            && $hospital_email_setting->web_reception_email_flg == 1) {
-            if ($hospital_email_setting) {
-                $hospital_mails = [
-                    $hospital_email_setting->reception_email1,
-                    $hospital_email_setting->reception_email2,
-                    $hospital_email_setting->reception_email3,
-                    $hospital_email_setting->reception_email4,
-                    $hospital_email_setting->reception_email5,
-                ];
-            }
+        if ($hospital_email_setting) {
+            $hospital_mails = [
+                $hospital_email_setting->reception_email1,
+                $hospital_email_setting->reception_email2,
+                $hospital_email_setting->reception_email3,
+                $hospital_email_setting->reception_email4,
+                $hospital_email_setting->reception_email5,
+            ];
         }
 
         try {

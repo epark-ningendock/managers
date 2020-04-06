@@ -14,6 +14,7 @@ use App\Services\ReservationService;
 
 use App\Http\Resources\ReservationConfResource;
 use App\Http\Resources\ReservationStoreResource;
+use App\Reservation;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -160,6 +161,16 @@ class ReservationApiController extends ApiBaseController
                 $this->failedResult(['00', '05', 'コースID:'.$request->input('course_id').'登録失敗（予約不可(必須項目エラー、引数エラー、顧客チェック失敗エラー、その他エラー、メール送信エラー）']);
             } elseif ($result == 5) {
                 $this->failedResult(['00', '03', '登録失敗（予約枠埋まり)']);
+            }
+
+            // 処理区分セット
+            $process = intval($request->input('process_kbn'));
+            if ($process === 1) { // 更新
+                $oldEntity = Reservation::find($request->input('reservation_id'));
+            }
+            // カレンダーの予約数を1つ減らす
+            if ($oldEntity) {
+                $this->_reservation_service->registReservationToCalendar($oldEntity, -1);
             }
 
             // 予約登録／更新
