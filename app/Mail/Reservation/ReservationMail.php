@@ -71,7 +71,7 @@ class ReservationMail extends Mailable
         $timezone = $timezones[$tel_timezone];
 
         // キャンセル変更受付期限日
-        $reservation_date = $this->entity->reservation_date;
+        $reservation_date = date('Y/m/d', strtotime($this->entity->reservation_date));
         $cancellation_deadline = intval($this->entity->course->cancellation_deadline);
         $cancellation_date = new Carbon($reservation_date);
         $cancellation_date = $cancellation_date->subDays($cancellation_deadline);
