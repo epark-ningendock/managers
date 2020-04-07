@@ -358,6 +358,7 @@ class ReservationController extends Controller
 
             Session::flash('success', trans('messages.reservation.accept_success'));
             DB::commit();
+            $this->reservation_mail_send($reservation, false);
 
         } catch (\Exception $e) {
             DB::rollback();
