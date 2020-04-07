@@ -10,12 +10,16 @@ use App\Enums\ReservationStatus;
 use App\Holiday;
 use App\ContractInformation;
 use App\Hospital;
+use App\HospitalEmailSetting;
 use App\HospitalPlan;
 use App\Mail\Reservation\ReservationCheckMail;
 use App\Mail\Reservation\ReservationOperationMail;
 use App\Http\Requests\ReservationCreateFormRequest;
 use App\Http\Requests\ReservationFormRequest;
 use App\Http\Requests\ReservationUpdateFormRequest;
+use App\Mail\ReservationCancelMail;
+use App\Mail\ReservationChangeMail;
+use App\Mail\ReservationReceptionCompleteMail;
 use App\Prefecture;
 use App\Reservation;
 use App\ReservationOption;
@@ -400,6 +404,7 @@ class ReservationController extends Controller
             Session::flash('success', trans('messages.reservation.cancel_success'));
             DB::commit();
 
+            $this->reservation_mail_send($reservation, false);
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -444,6 +449,8 @@ class ReservationController extends Controller
             Session::flash('success', trans('messages.reservation.complete_success'));
             DB::commit();
 
+            $this->reservation_mail_send($reservation, false);
+
         } catch (\Exception $e) {
             DB::rollback();
 
@@ -461,7 +468,62 @@ class ReservationController extends Controller
         }
         return redirect()->back();
 
+    }
+
+    /**
+     * @param $reservation
+     * @param $customer_flg
+     */
+    private function reservation_mail_send($reservation, $change_flg) {
+
+        // 確定メール送信（受診者）
+        if (!empty($reservation->epark_member_id)) {
+            $to = $reservation->customer->email;
+            Mail::to($to)->send(new ReservationReceptionCompleteMail($reservation, true));
         }
+
+        // 確定メール送信（施設）
+        $query = HospitalEmailSetting::where('hospital_id', $reservation->hospital_id)
+            ->where('in_hospital_email_reception_flg', 1);
+
+        if (!$change_flg && $reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+            $query->where('in_hospital_confirmation_email_reception_flg', 1);
+        }
+        if (!$change_flg && $reservation->reservation_status == ReservationStatus::CANCELLED) {
+            $query->where('in_hospital_cancellation_email_reception_flg', 1);
+        }
+        if ($change_flg) {
+            $query->where('in_hospital_change_email_reception_flg', 1);
+        }
+        $hospital_email_setting = $query->first();
+        $hospital_mails = [];
+        if ($hospital_email_setting) {
+            $hospital_mails = [
+                $hospital_email_setting->reception_email1,
+                $hospital_email_setting->reception_email2,
+                $hospital_email_setting->reception_email3,
+                $hospital_email_setting->reception_email4,
+                $hospital_email_setting->reception_email5,
+            ];
+        }
+
+        if (!empty($hospital_mails)) {
+            foreach ($hospital_mails as $m) {
+                if (!empty($m)) {
+                    $tos[] = $m;
+                }
+            }
+            // 医療機関へメール送信
+            $gyoumu_mail = config('mail.to.gyoumu');
+            if ($change_flg) {
+                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationChangeMail($reservation, false));
+            } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
+                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationCancelMail($reservation, false));
+            } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationReceptionCompleteMail($reservation, false));
+            }
+        }
+    }
 
     /**
      * bulk reservation status update
@@ -880,6 +942,8 @@ class ReservationController extends Controller
             $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '変更');
 
             DB::commit();
+
+            $this->reservation_mail_send($reservation, true);
 
         } catch (\Exception $i) {
             DB::rollback();

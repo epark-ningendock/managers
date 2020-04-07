@@ -151,6 +151,7 @@ class ReservationService
 //                'proxyauth' => 'CURLAUTH_BASIC',
 //                'proxyuserpwd' => $proxyAuth,
             ]);
+            Log::info('予約履歴 APIリクエスト処理終了', ['レスポンス' => $response ]);
         } catch (Exception $e) {
             Log::error('予約履歴 APIリクエスト処理 システムエラー', ['message' => $e->getMessage()]);
         }
