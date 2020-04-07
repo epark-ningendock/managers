@@ -19,6 +19,7 @@ use App\Http\Requests\ReservationFormRequest;
 use App\Http\Requests\ReservationUpdateFormRequest;
 use App\Mail\ReservationCancelMail;
 use App\Mail\ReservationChangeMail;
+use App\Mail\ReservationReceptionCancelMail;
 use App\Mail\ReservationReceptionCompleteMail;
 use App\Prefecture;
 use App\Reservation;
@@ -520,7 +521,7 @@ class ReservationController extends Controller
             if ($change_flg) {
                 Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationChangeMail($reservation, false));
             } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
-                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationCancelMail($reservation, false));
+                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationReceptionCancelMail($reservation, false));
             } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
                 Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationReceptionCompleteMail($reservation, false));
             }

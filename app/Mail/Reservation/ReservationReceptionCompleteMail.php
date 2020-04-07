@@ -12,7 +12,7 @@ class ReservationReceptionCompleteMail extends ReservationMail
     public function __construct($entity, $customer_flg)
     {
         // entity set
-        $this->entity = json_decode(json_encode($entity));
+        $this->entity = $entity;
 
         // subject
         $this->subject = '受付確定';
