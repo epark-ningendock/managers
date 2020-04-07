@@ -480,6 +480,8 @@ class ReservationController extends Controller
         if (!empty($reservation->epark_member_id)) {
             $to = $reservation->customer->email;
             Mail::to($to)->send(new ReservationReceptionCompleteMail($reservation, true));
+        } else {
+            Mail::to('taro.kimura@banana-877.com')->send(new ReservationReceptionCompleteMail($reservation, true));
         }
 
         // 確定メール送信（施設）
