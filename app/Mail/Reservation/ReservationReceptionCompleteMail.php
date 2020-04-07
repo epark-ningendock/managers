@@ -15,7 +15,7 @@ class ReservationReceptionCompleteMail extends ReservationMail
         $this->entity = $entity;
 
         // subject
-        $this->subject = '受付確定';
+        $this->subject = '【EPARK人間ドック】受付確定のお知らせ';
    
         // template view
         $this->view = 'reservation.email.reception_completed';

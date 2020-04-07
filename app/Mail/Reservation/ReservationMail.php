@@ -84,6 +84,13 @@ class ReservationMail extends Mailable
             $sex = '女';
         }
 
+        $type = '';
+        if ($this->entity->site_code == 'HP') {
+            $type = 'HP';
+        } elseif ($this->entity->site_code == 'Special') {
+            $type = '特集ページ';
+        }
+
         return $this
             ->from(EPARK_MAIL_FROM)
             ->subject($this->subject)
@@ -110,6 +117,7 @@ class ReservationMail extends Mailable
                 '確定日' => $reservation_date,
                 '受付日' => date('Y/m/d', strtotime($this->entity->created_at)),
                 '受付時間' => $this->entity->start_time_hour . ':' . $this->entity->start_time_min,
+                '受付形態' => $type,
 
                 '備考' => $this->entity->reservation_memo ?? '',
 

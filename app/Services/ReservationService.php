@@ -13,6 +13,8 @@ use App\HospitalCategory;
 use App\HospitalEmailSetting;
 use App\HospitalOptionPlan;
 use App\HospitalPlan;
+use App\Mail\ReservationCancelFaxToMail;
+use App\Mail\ReservationCompleteFaxToMail;
 use App\MonthlyWaku;
 use App\ReservationKenshinSysOption;
 use App\TaxClass;
@@ -449,14 +451,33 @@ class ReservationService
 
 
         $hospital_mails = [];
+        $hospital_fax = [];
         if ($hospital_email_setting) {
-            $hospital_mails = [
-                $hospital_email_setting->reception_email1,
-                $hospital_email_setting->reception_email2,
-                $hospital_email_setting->reception_email3,
-                $hospital_email_setting->reception_email4,
-                $hospital_email_setting->reception_email5,
-            ];
+            if (strpos($hospital_email_setting->reception_email1, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email1;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email1;
+            }
+            if (strpos($hospital_email_setting->reception_email2, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email2;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email2;
+            }
+            if (strpos($hospital_email_setting->reception_email3, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email3;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email3;
+            }
+            if (strpos($hospital_email_setting->reception_email4, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email4;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email4;
+            }
+            if (strpos($hospital_email_setting->reception_email5, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email5;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email5;
+            }
         }
 
         try {
@@ -471,6 +492,20 @@ class ReservationService
                     Mail::to($tos)->send(new ReservationCancelMail($entity, false));
                 } elseif ($hospital_email_setting->web_reception_email_flg == 1) {
                     Mail::to($tos)->send(new ReservationCompleteMail($entity, false));
+                }
+            }
+
+            if (!empty($hospital_fax)) {
+                foreach ($hospital_fax as $fax_to) {
+                    if (!empty($fax_to)) {
+                        $fax_tos[] = $fax_to;
+                    }
+                }
+                // 医療機関へメール送信
+                if ($is_cancel && $hospital_email_setting->in_hospital_cancellation_email_reception_flg == 1) {
+                    Mail::to($fax_tos)->send(new ReservationCancelFaxToMail($entity));
+                } elseif ($hospital_email_setting->web_reception_email_flg == 1) {
+                    Mail::to($fax_tos)->send(new ReservationCompleteFaxToMail($entity));
                 }
             }
 

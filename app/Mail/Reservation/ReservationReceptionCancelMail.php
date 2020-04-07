@@ -13,7 +13,7 @@ class ReservationReceptionCancelMail extends ReservationMail
     public function __construct($entity, $customer_flg)
     {
         // subject
-        $this->subject = '予約キャンセル';
+        $this->subject = '【EPARK人間ドック】予約キャンセルのお知らせ';
 
         // entity set
         $this->entity = $entity;

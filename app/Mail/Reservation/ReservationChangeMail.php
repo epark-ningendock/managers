@@ -15,7 +15,7 @@ class ReservationChangeMail extends ReservationMail
         $this->entity = $entity;
 
         // subject
-        $this->subject = '予約変更';
+        $this->subject = '【EPARK人間ドック】予約変更のお知らせ';
    
         // template view
         $this->view = 'reservation.email.reservation_change';

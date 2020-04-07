@@ -17,9 +17,12 @@ use App\Mail\Reservation\ReservationOperationMail;
 use App\Http\Requests\ReservationCreateFormRequest;
 use App\Http\Requests\ReservationFormRequest;
 use App\Http\Requests\ReservationUpdateFormRequest;
+use App\Mail\ReservationCancelFaxToMail;
 use App\Mail\ReservationCancelMail;
+use App\Mail\ReservationChangeFaxToMail;
 use App\Mail\ReservationChangeMail;
 use App\Mail\ReservationReceptionCancelMail;
+use App\Mail\ReservationReceptionCompleteFaxToMail;
 use App\Mail\ReservationReceptionCompleteMail;
 use App\Prefecture;
 use App\Reservation;
@@ -501,14 +504,33 @@ class ReservationController extends Controller
         }
         $hospital_email_setting = $query->first();
         $hospital_mails = [];
+        $hospital_fax = [];
         if ($hospital_email_setting) {
-            $hospital_mails = [
-                $hospital_email_setting->reception_email1,
-                $hospital_email_setting->reception_email2,
-                $hospital_email_setting->reception_email3,
-                $hospital_email_setting->reception_email4,
-                $hospital_email_setting->reception_email5,
-            ];
+            if (strpos($hospital_email_setting->reception_email1, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email1;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email1;
+            }
+            if (strpos($hospital_email_setting->reception_email2, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email2;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email2;
+            }
+            if (strpos($hospital_email_setting->reception_email3, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email3;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email3;
+            }
+            if (strpos($hospital_email_setting->reception_email4, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email4;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email4;
+            }
+            if (strpos($hospital_email_setting->reception_email5, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email5;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email5;
+            }
         }
 
         if (!empty($hospital_mails)) {
@@ -525,6 +547,22 @@ class ReservationController extends Controller
                 Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationReceptionCancelMail($reservation, false));
             } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
                 Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationReceptionCompleteMail($reservation, false));
+            }
+        }
+
+        if (!empty($hospital_fax)) {
+            foreach ($hospital_fax as $fax_to) {
+                if (!empty($fax_to)) {
+                    $fax_tos[] = $fax_to;
+                }
+            }
+            // 医療機関へメール送信
+            if ($change_flg) {
+                Mail::to($tos)->send(new ReservationChangeFaxToMail($reservation));
+            } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
+                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationCancelFaxToMail($reservation));
+            } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationReceptionCompleteFaxToMail($reservation));
             }
         }
     }
