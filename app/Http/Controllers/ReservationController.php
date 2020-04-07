@@ -444,7 +444,7 @@ class ReservationController extends Controller
             $reservation->completed_date = Carbon::now();
             $reservation->save();
 
-            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+//            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
 
             Session::flash('success', trans('messages.reservation.complete_success'));
             DB::commit();
@@ -487,13 +487,13 @@ class ReservationController extends Controller
             ->where('in_hospital_email_reception_flg', 1);
 
         if (!$change_flg && $reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
-            $query->where('in_hospital_confirmation_email_reception_flg', 1);
+            $query->where('in_hospital_confirmation_email_reception_flg', '1');
         }
         if (!$change_flg && $reservation->reservation_status == ReservationStatus::CANCELLED) {
-            $query->where('in_hospital_cancellation_email_reception_flg', 1);
+            $query->where('in_hospital_cancellation_email_reception_flg', '1');
         }
         if ($change_flg) {
-            $query->where('in_hospital_change_email_reception_flg', 1);
+            $query->where('in_hospital_change_email_reception_flg', '1');
         }
         $hospital_email_setting = $query->first();
         $hospital_mails = [];
@@ -981,9 +981,9 @@ class ReservationController extends Controller
 
         Mail::to(config('mail.to.gyoumu'))->send(new ReservationCheckMail($mailContext));
 
-        if (isset($customer->email)) {
-            Mail::to($customer->email)->send(new ReservationCheckMail($mailContext));
-        }
+//        if (isset($customer->email)) {
+//            Mail::to($customer->email)->send(new ReservationCheckMail($mailContext));
+//        }
 
 //        if (isset($contract_information)) {
 //            Mail::to($contract_information->email)->send(new ReservationCheckMail($mailContext));
