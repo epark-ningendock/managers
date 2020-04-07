@@ -90,7 +90,7 @@ class ReservationApiController extends ApiBaseController
 
             try {
                 // 予約履歴apiより予約履歴をキャンセル実行する。
-                $this->_reservation_service->request($request, $entity);
+                $this->_reservation_service->request($entity);
             } catch (\Exception $e) {
                 Log::error('予約履歴API実行に失敗しました。:'. $e);
             }
@@ -180,7 +180,7 @@ class ReservationApiController extends ApiBaseController
 
             try {
                 // 予約履歴apiより予約履歴登録を実行する。
-                $this->_reservation_service->request($request, $entity);
+                $this->_reservation_service->request($entity);
             } catch (\Exception $e) {
                 Log::error('予約履歴API実行に失敗しました。:'. $e);
             }

@@ -124,16 +124,16 @@ class ReservationService
     /**
      * 予約API 共通API call
      *
-     * @param  Illuminate\Http\Request  $request
+     * @param  $entity
      * @return response json
      */
-    public function request($request, $entity)
+    public function request($entity)
     {
         $uri = env('RESERVATION_HISTORY_API').'set/';
 
         $headers = $this->getRequestHeaders();
 
-        $params = $this->getApiParams($request, $entity);
+        $params = $this->getApiParams($entity);
 
         $quotaguard_env = env("QUOTAGUARDSTATIC_URL");
         $quotaguard = parse_url($quotaguard_env);
@@ -156,6 +156,8 @@ class ReservationService
         }
     }
 
+
+
     /**
      * APIのリクエストヘッダーを作成する
      *
@@ -171,8 +173,8 @@ class ReservationService
         return $headers;
     }
 
-    public function getApiParams($request, $entity) {
-        $course = Course::find($request->input('course_id'));
+    public function getApiParams($entity) {
+        $course = Course::find($entity->course_id);
         $course_name = '';
         if ($course) {
             $course_name = $course->name;
@@ -185,7 +187,7 @@ class ReservationService
 
         $params = [
             // EPARK会員ID
-            'member_id' => $request->input('epark_member_id'),
+            'member_id' => $entity->epark_member_id,
             // サービスID
             'service_id' => \config('constant.service_id'),
             // 予約ID
@@ -231,6 +233,14 @@ class ReservationService
     private function changeReservationStatus($entity) {
         if ($entity->reservation_status == ReservationStatus::CANCELLED) {
             return 9;
+        }
+
+        if ($entity->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+            return 1;
+        }
+
+        if ($entity->reservation_status == ReservationStatus::COMPLETED) {
+            return 3;
         }
 
         if ($entity->reservation_status == ReservationStatus::PENDING) {

@@ -24,6 +24,7 @@ use App\Services\ReservationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -353,12 +354,23 @@ class ReservationController extends Controller
             Session::flash('success', trans('messages.reservation.accept_success'));
             DB::commit();
 
-            return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
 
             return redirect()->back()->withErrors(trans('messages.reservation.accept_error'))->withInput();
         }
+
+        // 予約履歴api更新
+        try {
+            if (!empty($reservation->epark_member_id)) {
+                $this->_reservation_service->request($reservation);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('予約履歴api更新に失敗しました。');
+        }
+
+        return redirect()->back();
     }
 
     /**
@@ -388,12 +400,24 @@ class ReservationController extends Controller
             Session::flash('success', trans('messages.reservation.cancel_success'));
             DB::commit();
 
-            return redirect()->back();
+
         } catch (\Exception $e) {
             DB::rollback();
 
             return redirect()->back()->withErrors(trans('messages.reservation.cancel_error'))->withInput();
         }
+
+        // 予約履歴api更新
+        try {
+            if (!empty($reservation->epark_member_id)) {
+                $this->_reservation_service->request($reservation);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('予約履歴api更新に失敗しました。');
+        }
+
+        return redirect()->back();
     }
 
     /**
@@ -420,13 +444,24 @@ class ReservationController extends Controller
             Session::flash('success', trans('messages.reservation.complete_success'));
             DB::commit();
 
-            return redirect()->back();
         } catch (\Exception $e) {
             DB::rollback();
 
             return redirect()->back()->withErrors(trans('messages.reservation.complete_error'))->withInput();
         }
-    }
+
+        // 予約履歴api更新
+        try {
+            if (!empty($reservation->epark_member_id)) {
+                $this->_reservation_service->request($reservation);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('予約履歴api更新に失敗しました。');
+        }
+        return redirect()->back();
+
+        }
 
     /**
      * bulk reservation status update
@@ -591,6 +626,9 @@ class ReservationController extends Controller
             }
 
             $reservation->customer_id = $customer->id;
+            if (!empty($customer->epark_member_id)) {
+                $reservation->epark_member_id = $customer->epark_member_id;
+            }
             $reservation->save();
             // カレンダーの予約数を1つ増やす
             $this->_reservation_service->registReservationToCalendar($reservation, 1);
@@ -602,13 +640,22 @@ class ReservationController extends Controller
 
             DB::commit();
 
-            return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
-
         } catch (\Exception $i) {
             DB::rollback();
 
             return redirect()->back()->with('error', trans('messages.reservation.complete_error'))->withInput();
         }
+
+        // 予約履歴api更新
+        try {
+            if (!empty($reservation->epark_member_id)) {
+                $this->_reservation_service->request($reservation);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('予約履歴api更新に失敗しました。');
+        }
+        return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
 
     }
 
@@ -758,7 +805,6 @@ class ReservationController extends Controller
 
     public function update(ReservationUpdateFormRequest $request, Reservation $reservation)
     {
-
         try {
             DB::beginTransaction();
             $today = Carbon::today();
@@ -835,14 +881,23 @@ class ReservationController extends Controller
 
             DB::commit();
 
-            return redirect('reservation')->with('success', trans('messages.reservation.update_success'));
-
         } catch (\Exception $i) {
             DB::rollback();
 
             return redirect()->back()->with('error', trans('messages.reservation.status_update_error'))->withInput();
         }
 
+        // 予約履歴api更新
+        try {
+            if (!empty($reservation->epark_member_id)) {
+                $this->_reservation_service->request($reservation);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('予約履歴api更新に失敗しました。');
+        }
+
+        return redirect('reservation')->with('success', trans('messages.reservation.update_success'));
     }
 
     /**

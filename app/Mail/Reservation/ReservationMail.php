@@ -66,7 +66,7 @@ class ReservationMail extends Mailable
         $questions = !empty($questions) ? $questions : [];
 
         // 電話が繋がりやすい時間帯
-        $timezones =  ['特になし', '9時～', '', '12時～', '', '', '', '13時～', ];
+        $timezones =  ['', '特に希望なし', '9時～12時', '', '12時～13時', '', '', '', '13時～17時', ];
         $tel_timezone = $this->entity->tel_timezone ?? 4;
         $timezone = $timezones[$tel_timezone];
 
