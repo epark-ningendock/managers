@@ -12,7 +12,7 @@ class ReservationChangeFaxToMail extends ReservationMail
     public function __construct($entity)
     {
         // entity set
-        $this->entity = json_decode(json_encode($entity));
+        $this->entity = $entity;
 
         // subject
         $this->subject = '【EPARK人間ドック】予約変更のお知らせ';
