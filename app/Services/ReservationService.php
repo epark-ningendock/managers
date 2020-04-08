@@ -432,7 +432,7 @@ class ReservationService
         \Illuminate\Support\Facades\Log::info('医療機関ID:'. $reservation->hospital_id);
 
         // キャンセル処理(処理区分がある)かどうか
-        $is_cancel = $entity->reservation_status === ReservationStatus::CANCELLED ? true : false;
+        $is_cancel = $entity->reservation_status == ReservationStatus::CANCELLED ? true : false;
 
         // メール送信フラグ追加
         $entity->mail_fg = $reservation->mail_fg ?? 1;
