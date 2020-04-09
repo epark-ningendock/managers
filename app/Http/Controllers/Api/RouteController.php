@@ -102,7 +102,7 @@ class RouteController extends ApiBaseController
 
         $query = Rail::query();
         $query->select($select);
-        $query->join('prefecture_rail', 'prefecture_rail.rail_id', 'rails.id');
+        $query->join('prefecture_rail', 'prefecture_rail.rail_id', '=', 'rails.id');
         $query->leftJoin('hospitals' , function ($join) {
             $join->on('hospitals.prefecture_id', '=', 'prefecture_rail.prefecture_id')
                 ->where(function ($q) {

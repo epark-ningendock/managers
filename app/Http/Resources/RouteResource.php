@@ -64,7 +64,7 @@ class RouteResource extends Resource
 
         $query = RailStation::query();
         $query->select($select);
-        $query->join('stations', 'rail_station.station_id', 'stations.id');
+        $query->join('stations', 'rail_station.station_id', '=', 'stations.id');
         $query->leftJoin('hospitals' , function ($join) {
             $join->on('hospitals.prefecture_id', '=', 'stations.prefecture_id')
                 ->where(function ($q) {
