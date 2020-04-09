@@ -61,19 +61,19 @@ class HospitalMetaImport extends ImportAbstract implements WithChunkReading
                         $hospital_meta->credit_card_flg = 1;
                     }
 
-                    if ($detail->minor_classification_id == 1 and $detail->select_status = 1) {
+                    if ($detail->minor_classification_id == 1 and $detail->select_status == 1) {
                         $hospital_meta->parking_flg = 1;
                     }
 
-                    if ($detail->minor_classification_id == 3 and $detail->select_status = 1) {
+                    if ($detail->minor_classification_id == 3 and $detail->select_status == 1) {
                         $hospital_meta->pick_up_flg = 1;
                     }
 
-                    if ($detail->minor_classification_id == 16 and $detail->select_status = 1) {
+                    if ($detail->minor_classification_id == 16 and $detail->select_status == 1) {
                         $hospital_meta->children_flg = 1;
                     }
 
-                    if ($detail->minor_classification_id == 19 and $detail->select_status = 1) {
+                    if ($detail->minor_classification_id == 19 and $detail->select_status == 1) {
                         $hospital_meta->dedicate_floor_flg = 1;
                     }
                 }
