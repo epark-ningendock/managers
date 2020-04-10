@@ -145,11 +145,11 @@ return [
     //     'seed' => false,
     // ],
 //
-   'm_course_question.csv' => [
-       'model' => CourseQuestion::class,
-       'import' => CourseQuestionImport::class,
-       'seed' => false,
-   ],
+   // 'm_course_question.csv' => [
+   //     'model' => CourseQuestion::class,
+   //     'import' => CourseQuestionImport::class,
+   //     'seed' => false,
+   // ],
    'm_file_location.csv' => [
        'model' => ImageOrder::class,
        'import' => ImageOrderImport::class,
@@ -205,7 +205,7 @@ return [
 //        'import' => PrefectureRailImport::class,
 //        'seed' => true,
 //    ],
-
+   //
    'm_option.csv' => [
        'model' => Option::class,
        'import' => OptionImport::class,
@@ -225,16 +225,16 @@ return [
 //        'import' => \App\Imports\ReservationOptionImport::class,
 //        'seed' => true,
 //    ],
-//    't_consideration_list.csv' => [
-//        'model' => \App\ConsiderationList::class,
-//        'import' => \App\Imports\ConsiderationListImport::class,
-//        'seed' => true,
-//    ],
-//    't_pv.csv' => [
-//        'model' => PvRecord::class,
-//        'import' => PvRecordImport::class,
-//        'seed' => false,
-//    ],
+   // 't_consideration_list.csv' => [
+   //     'model' => \App\ConsiderationList::class,
+   //     'import' => \App\Imports\ConsiderationListImport::class,
+   //     'seed' => true,
+   // ],
+   // 't_pv.csv' => [
+   //     'model' => PvRecord::class,
+   //     'import' => PvRecordImport::class,
+   //     'seed' => false,
+   // ],
 //    'm_hospital_meta.csv' => [
 //        'model' => HospitalMeta::class,
 //        'import' => HospitalMetaImport::class,
