@@ -134,27 +134,27 @@ return [
 //        'import' => StaffImport::class,
 //        'seed' => false,
 //    ],
-    'm_course_basic.csv' => [
-        'model' => Course::class,
-        'import' => CourseImport::class,
-        'seed' => false,
-    ],
-    'm_course_detail_1.csv' => [
+    // 'm_course_basic.csv' => [
+    //     'model' => Course::class,
+    //     'import' => CourseImport::class,
+    //     'seed' => false,
+    // ],
+    'm_course_detail_5.csv' => [
         'model' => CourseDetail::class,
         'import' => CourseDetailImport::class,
         'seed' => false,
     ],
-    'm_course_detail_2.csv' => [
+    'm_course_detail_6.csv' => [
         'model' => CourseDetail::class,
         'import' => CourseDetailImport::class,
         'seed' => false,
     ],
-    'm_course_detail_3.csv' => [
+    'm_course_detail_7.csv' => [
         'model' => CourseDetail::class,
         'import' => CourseDetailImport::class,
         'seed' => false,
     ],
-    'm_course_detail_4.csv' => [
+    'm_course_detail_8.csv' => [
         'model' => CourseDetail::class,
         'import' => CourseDetailImport::class,
         'seed' => false,
