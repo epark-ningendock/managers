@@ -134,16 +134,16 @@ return [
 //        'import' => StaffImport::class,
 //        'seed' => false,
 //    ],
-    'm_course_basic.csv' => [
-        'model' => Course::class,
-        'import' => CourseImport::class,
-        'seed' => false,
-    ],
-    'm_course_detail.csv' => [
-        'model' => CourseDetail::class,
-        'import' => CourseDetailImport::class,
-        'seed' => false,
-    ],
+    // 'm_course_basic.csv' => [
+    //     'model' => Course::class,
+    //     'import' => CourseImport::class,
+    //     'seed' => false,
+    // ],
+    // 'm_course_detail.csv' => [
+    //     'model' => CourseDetail::class,
+    //     'import' => CourseDetailImport::class,
+    //     'seed' => false,
+    // ],
 //
 //    'm_course_question.csv' => [
 //        'model' => CourseQuestion::class,
@@ -216,10 +216,26 @@ return [
 //        'import' => CourseOptionImport::class,
 //        'seed' => false,
 //    ],
-//    'm_availability.csv' => [
-//        'model' => Availabil::class,
-//        'import' => AvailabilityImport::class,
-//    ],
+   'm_availability_1.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
+   'm_availability_2.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
+   'm_availability_3.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
+   'm_availability_4.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
+   'm_availability_5.csv' => [
+       'model' => Availabil::class,
+       'import' => AvailabilityImport::class,
+   ],
 //    't_reserve_claim.csv' => [
 //        'model' => \App\ReservationOption::class,
 //        'import' => \App\Imports\ReservationOptionImport::class,
