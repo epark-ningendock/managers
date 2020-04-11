@@ -40,15 +40,16 @@ class RouteResource extends Resource
     private function createRailData() {
         $results = [];
         foreach ($this['routes'] as $rail) {
-            $result = [
-                'rail_no'=>$rail->id,
-                'rail_name'=>$rail->name,
-                'count'=>$rail->hospital_count,
-                'stations' => $this->createStation($rail)
-            ];
+            if ($rail->hospital_count > 0) {
+                $result = [
+                    'rail_no'=>$rail->id,
+                    'rail_name'=>$rail->name,
+                    'count'=>$rail->hospital_count,
+                    'stations' => $this->createStation($rail)
+                ];
 
-            array_push($results, $result);
-
+                array_push($results, $result);
+            }
         }
 
         return $results;
@@ -87,11 +88,13 @@ class RouteResource extends Resource
 
         $results = [];
         foreach ($stations as $station) {
-            $result = ['station_no' => $station->id,
-            'station_name' => $station->name,
-            'count' => $station->hospital_count];
+            if ($station->hospital_count > 0) {
+                $result = ['station_no' => $station->id,
+                    'station_name' => $station->name,
+                    'count' => $station->hospital_count];
 
-            $results[] = $result;
+                $results[] = $result;
+            }
         }
 
         return $results;
