@@ -8,6 +8,7 @@
         - 
         <i class="fa fa-user"> {{ $hospital_staff->name }}</i>
     </h1>
+    <h5 align="right"><a href="{{ './manual/09_change-password.pdf' }}" target="_blank">パスワード変更の使い方</a></h5>
 @stop
 
 @section('form')

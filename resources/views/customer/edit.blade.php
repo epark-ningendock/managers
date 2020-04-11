@@ -6,6 +6,7 @@
       -
       <span> 受診者情報管理</span>
   </h1>
+  <h5 align="right"><a href="{{ './manual/02_examinee.pdf' }}" target="_blank">受診者情報管理の使い方</a></h5>
 @stop
 
 @section('form')

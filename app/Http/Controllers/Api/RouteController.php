@@ -104,14 +104,19 @@ class RouteController extends ApiBaseController
         $query->select($select);
         $query->join('prefecture_rail', 'prefecture_rail.rail_id', '=', 'rails.id');
         $query->leftJoin('hospitals' , function ($join) {
-            $join->on('hospitals.prefecture_id', '=', 'prefecture_rail.prefecture_id')
-                ->where(function ($q) {
-                    $q->orWhere('hospitals.rail1', '=', 'prefecture_rail.rail_id');
-                    $q->orWhere('hospitals.rail2', '=', 'prefecture_rail.rail_id');
-                    $q->orWhere('hospitals.rail3', '=', 'prefecture_rail.rail_id');
-                    $q->orWhere('hospitals.rail4', '=', 'prefecture_rail.rail_id');
-                    $q->orWhere('hospitals.rail5', '=', 'prefecture_rail.rail_id');
-                });
+            $join->on('hospitals.rail1', '=', 'rails.id')
+                ->orOn('hospitals.rail2', '=', 'rails.id')
+                ->orOn('hospitals.rail3', '=', 'rails.id')
+                ->orOn('hospitals.rail4', '=', 'rails.id')
+                ->orOn('hospitals.rail5', '=', 'rails.id');
+
+//                ->where(function ($q) {
+//                    $q->orWhere('hospitals.rail1', '=', 'prefecture_rail.rail_id');
+//                    $q->orWhere('hospitals.rail2', '=', 'prefecture_rail.rail_id');
+//                    $q->orWhere('hospitals.rail3', '=', 'prefecture_rail.rail_id');
+//                    $q->orWhere('hospitals.rail4', '=', 'prefecture_rail.rail_id');
+//                    $q->orWhere('hospitals.rail5', '=', 'prefecture_rail.rail_id');
+//                });
 
         });
         if (!empty($place_code)) {

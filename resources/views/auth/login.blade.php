@@ -43,6 +43,7 @@
            class="text-center"
         >パスワードをお忘れの方はこちら！</a>
         <br>
+        <h5 align="right"><a href="{{ './manual/00_login.pdf' }}" target="_blank">ログイン方法はこちら</a></h5>
       </div>
     </div>
   </div>
