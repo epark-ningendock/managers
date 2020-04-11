@@ -66,8 +66,7 @@ class RouteResource extends Resource
         $query->select($select);
         $query->join('stations', 'rail_station.station_id', '=', 'stations.id');
         $query->leftJoin('hospitals' , function ($join) {
-            $join->on('hospitals.prefecture_id', '=', 'stations.prefecture_id')
-                ->orOn('hospitals.station1', '=', 'stations.id')
+            $join->on('hospitals.station1', '=', 'stations.id')
                 ->orOn('hospitals.station2', '=', 'stations.id')
                 ->orOn('hospitals.station3', '=', 'stations.id')
                 ->orOn('hospitals.station4', '=', 'stations.id')
@@ -75,6 +74,10 @@ class RouteResource extends Resource
 
         });
         $query->where('rail_station.rail_id', $rail->id);
+        if (!empty($this['pref']->code)) {
+            $query->where('stations.prefecture_id', $rail->id);
+        }
+
         $query->groupBy('stations.id', 'stations.name');
         $stations = $query->get();
 
