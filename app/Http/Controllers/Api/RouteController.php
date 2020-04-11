@@ -121,8 +121,8 @@ class RouteController extends ApiBaseController
         if (!empty($rain_no)) {
             $query->where('rails.id', $rain_no);
         }
-        $query->where('prefecture_rail.status', Status::VALID);
-        $query->where('rails.status', Status::VALID);
+        $query->where('prefecture_rail.status', '=', Status::VALID);
+        $query->where('rails.status', '=', Status::VALID);
         $query->groupBy('rails.id', 'rails.name');
 
         return $query->get();

@@ -134,52 +134,52 @@ return [
 //        'import' => StaffImport::class,
 //        'seed' => false,
 //    ],
-    // 'm_course_basic.csv' => [
-    //     'model' => Course::class,
-    //     'import' => CourseImport::class,
-    //     'seed' => false,
-    // ],
-    // 'm_course_detail.csv' => [
-    //     'model' => CourseDetail::class,
-    //     'import' => CourseDetailImport::class,
-    //     'seed' => false,
-    // ],
+    'm_course_basic.csv' => [
+        'model' => Course::class,
+        'import' => CourseImport::class,
+        'seed' => false,
+    ],
+    'm_course_detail.csv' => [
+        'model' => CourseDetail::class,
+        'import' => CourseDetailImport::class,
+        'seed' => false,
+    ],
 //
-   // 'm_course_question.csv' => [
-   //     'model' => CourseQuestion::class,
-   //     'import' => CourseQuestionImport::class,
-   //     'seed' => false,
-   // ],
-   // 'm_file_location.csv' => [
-   //     'model' => ImageOrder::class,
-   //     'import' => ImageOrderImport::class,
-   //     'seed' => false,
-   // ],
-   // 'm_hospital_file.csv' => [
-   //     'model' => HospitalImage::class,
-   //     'import' => HospitalImageImport::class,
-   //     'seed' => false,
-   // ],
-   // 'm_hospital_time.csv' => [
-   //     'model' => MedicalTreatmentTime::class,
-   //     'import' => MedicalTreatmentTimeImport::class,
-   //     'seed' => false,
-   // ],
-   // 'm_hospital_detail.csv' => [
-   //     'model' => HospitalDetail::class,
-   //     'import' => HospitalDetailImport::class,
-   //     'seed' => false,
-   // ],
-   // 'm_course_file.csv' => [
-   //     'model' => CourseImage::class,
-   //     'import' => CourseImageImport::class,
-   //     'seed' => false,
-   // ],
-   // 'm_hospital_category.csv' => [
-   //     'model' => HospitalCategory::class,
-   //     'import' => HospitalCategoryImport::class,
-   //     'seed' => false,
-   // ],
+//    'm_course_question.csv' => [
+//        'model' => CourseQuestion::class,
+//        'import' => CourseQuestionImport::class,
+//        'seed' => false,
+//    ],
+//    'm_file_location.csv' => [
+//        'model' => ImageOrder::class,
+//        'import' => ImageOrderImport::class,
+//        'seed' => false,
+//    ],
+//    'm_hospital_file.csv' => [
+//        'model' => HospitalImage::class,
+//        'import' => HospitalImageImport::class,
+//        'seed' => false,
+//    ],
+//    'm_hospital_time.csv' => [
+//        'model' => MedicalTreatmentTime::class,
+//        'import' => MedicalTreatmentTimeImport::class,
+//        'seed' => false,
+//    ],
+//    'm_hospital_detail.csv' => [
+//        'model' => HospitalDetail::class,
+//        'import' => HospitalDetailImport::class,
+//        'seed' => false,
+//    ],
+//    'm_course_file.csv' => [
+//        'model' => CourseImage::class,
+//        'import' => CourseImageImport::class,
+//        'seed' => false,
+//    ],
+//    'm_hospital_category.csv' => [
+//        'model' => HospitalCategory::class,
+//        'import' => HospitalCategoryImport::class,
+//        'seed' => false,
+//    ],
 //    'm_rail_corp.csv' => [
 //        'model' => RailwayCompany::class,
 //        'import' => RailwayCompanyImport::class,
@@ -205,17 +205,17 @@ return [
 //        'import' => PrefectureRailImport::class,
 //        'seed' => true,
 //    ],
-   //
-   // 'm_option.csv' => [
-   //     'model' => Option::class,
-   //     'import' => OptionImport::class,
-   //     'seed' => true,
-   // ],
-   // 'm_course_option_group.csv' => [
-   //     'model' => CourseOption::class,
-   //     'import' => CourseOptionImport::class,
-   //     'seed' => false,
-   // ],
+
+//    'm_option.csv' => [
+//        'model' => Option::class,
+//        'import' => OptionImport::class,
+//        'seed' => true,
+//    ],
+//    'm_course_option_group.csv' => [
+//        'model' => CourseOption::class,
+//        'import' => CourseOptionImport::class,
+//        'seed' => false,
+//    ],
 //    'm_availability.csv' => [
 //        'model' => Availabil::class,
 //        'import' => AvailabilityImport::class,
@@ -225,16 +225,16 @@ return [
 //        'import' => \App\Imports\ReservationOptionImport::class,
 //        'seed' => true,
 //    ],
-   't_consideration_list.csv' => [
-       'model' => \App\ConsiderationList::class,
-       'import' => \App\Imports\ConsiderationListImport::class,
-       'seed' => true,
-   ],
-   't_pv.csv' => [
-       'model' => PvRecord::class,
-       'import' => PvRecordImport::class,
-       'seed' => false,
-   ],
+//    't_consideration_list.csv' => [
+//        'model' => \App\ConsiderationList::class,
+//        'import' => \App\Imports\ConsiderationListImport::class,
+//        'seed' => true,
+//    ],
+//    't_pv.csv' => [
+//        'model' => PvRecord::class,
+//        'import' => PvRecordImport::class,
+//        'seed' => false,
+//    ],
 //    'm_hospital_meta.csv' => [
 //        'model' => HospitalMeta::class,
 //        'import' => HospitalMetaImport::class,
