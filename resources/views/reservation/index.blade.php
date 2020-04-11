@@ -16,7 +16,7 @@
       -
       <i class="fa fa-book"> 受付一覧</i>
   </h1>
-    <h6 align="right"><a href="{{ '../manual/06_reception.pdf' }}" target="_blank">受付の使い方</a></h6>
+    <h6 align="right"><a href="{{ './manual/06_reception.pdf' }}" target="_blank">受付の使い方</a></h6>
 @stop
 
 <!-- search section -->
