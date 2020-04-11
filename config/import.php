@@ -220,22 +220,22 @@ return [
        'model' => Availabil::class,
        'import' => AvailabilityImport::class,
    ],
-   'm_availability_2.csv' => [
-       'model' => Availabil::class,
-       'import' => AvailabilityImport::class,
-   ],
-   'm_availability_3.csv' => [
-       'model' => Availabil::class,
-       'import' => AvailabilityImport::class,
-   ],
-   'm_availability_4.csv' => [
-       'model' => Availabil::class,
-       'import' => AvailabilityImport::class,
-   ],
-   'm_availability_5.csv' => [
-       'model' => Availabil::class,
-       'import' => AvailabilityImport::class,
-   ],
+   // 'm_availability_2.csv' => [
+   //     'model' => Availabil::class,
+   //     'import' => AvailabilityImport::class,
+   // ],
+   // 'm_availability_3.csv' => [
+   //     'model' => Availabil::class,
+   //     'import' => AvailabilityImport::class,
+   // ],
+   // 'm_availability_4.csv' => [
+   //     'model' => Availabil::class,
+   //     'import' => AvailabilityImport::class,
+   // ],
+   // 'm_availability_5.csv' => [
+   //     'model' => Availabil::class,
+   //     'import' => AvailabilityImport::class,
+   // ],
 //    't_reserve_claim.csv' => [
 //        'model' => \App\ReservationOption::class,
 //        'import' => \App\Imports\ReservationOptionImport::class,
