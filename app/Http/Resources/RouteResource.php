@@ -75,7 +75,7 @@ class RouteResource extends Resource
         });
         $query->where('rail_station.rail_id', $rail->id);
         if (!empty($this['pref']->code)) {
-            $query->where('stations.prefecture_id', $rail->id);
+            $query->where('stations.prefecture_id', $this['pref']->code);
         }
 
         $query->groupBy('stations.id', 'stations.name');
