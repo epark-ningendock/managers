@@ -10,6 +10,7 @@ use App\Hospital;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Row;
+use Illuminate\Support\Facades\Log;
 
 class AvailabilityImport extends ImportAbstract implements WithChunkReading
 {
@@ -49,6 +50,7 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
         $hospital_id = $this->getId('hospitals', $row['hospital_no']);
 
         if (is_null($hospital_id)) {
+            Log::error('医療期間なし');
             return;
         }
 
@@ -78,6 +80,7 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
             ->first();
 
         if (!$c) {
+            Log::error('カレンダーなし');
             return;
         }
 
@@ -87,13 +90,14 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
             ->get();
 
         if ($ca) {
+            Log::error('すでに存在している');
             return;
         }
 
         $model = new CalendarDay([
             'date' => $date,
-            'is_holiday' => 0,  //
-            'is_reservation_acceptance' => 1,
+            'is_holiday' => $row['holiday'],  //
+            'is_reservation_acceptance' => 0,
             'reservation_frames' => $row['reservation_frames'],
             'calendar_id' => $c->new_id,
             'reservation_count' => $row['appoint_number'],
