@@ -111,6 +111,13 @@ class MonthlyCalendarResource extends Resource
                 }
             }
 
+            foreach ($results as $key => $r) {
+                $id[$key] = $r['yyyymm'];
+            }
+
+
+            array_multisort($id, SORT_ASC, $results);
+
 //            for($i = count($results); $i < 3; $i++) {
 //                $ym = Carbon::today()->addMonthsNoOverflow($i)->format('Ym');
 //                $results[] = ['yyyymm' => $ym, 'apoint_ok' =>  0];
