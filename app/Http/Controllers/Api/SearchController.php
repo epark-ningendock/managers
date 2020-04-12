@@ -42,7 +42,7 @@ class SearchController extends ApiBaseController
             $return_flag = $request->input('return_flag');
             $search_count_only_flag = $request->input('search_count_only_flag');
             $search_condition_return_flag = $request->input('search_condition_return_flag');
-        
+
             // 件数のみ返却
             $search_count = $this->getHospitalCount($request, true);
 
@@ -114,7 +114,7 @@ class SearchController extends ApiBaseController
             $return_count = $entities->count();
             $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
             $return_to = $return_flag == 0 ? $search_count : $request->input('return_to');
-            
+
             $callback = $request->input('callback');
 
             if ($search_count_only_flag == 1) {
@@ -243,9 +243,13 @@ class SearchController extends ApiBaseController
 
             // 市区町村コード
             $district_no = $request->input('district_no');
+            $district_array = [];
             if (isset($district_no)) {
                 $districts = explode(',', $district_no);
-                $query->whereIn('hospital_metas.district_code', $districts);
+                foreach ($districts as $d) {
+                    $district_array[] = ltrim($d, '0');
+                }
+                $query->whereIn('hospital_metas.district_code', $district_array);
             };
 
             // 路線コード
@@ -455,7 +459,7 @@ class SearchController extends ApiBaseController
             $query->whereRaw('? >= DATE_ADD(CURRENT_DATE(), INTERVAL (30 * (reception_start_date DIV 1000) + MOD(reception_start_date, 1000)) DAY) ', [$target]);
             $query->whereDate('calendar_days.date', $target);
         }
- 
+
         if (!empty($request->input('freewords'))) {
             $freeword_str = str_replace('　', ' ', $request->input('freewords'));
             $freewords = explode(' ', $freeword_str);
@@ -478,11 +482,19 @@ class SearchController extends ApiBaseController
         };
 
         // 市区町村コード
-        $district_no = $request->input('district_no');
+        $district_array = [];
         if (isset($district_no)) {
             $districts = explode(',', $district_no);
-            $query->whereIn('hospital_metas.district_code', $districts);
+            foreach ($districts as $d) {
+                $district_array[] = ltrim($d, '0');
+            }
+            $query->whereIn('hospital_metas.district_code', $district_array);
         };
+//        $district_no = $request->input('district_no');
+//        if (isset($district_no)) {
+//            $districts = explode(',', $district_no);
+//            $query->whereIn('hospital_metas.district_code', $districts);
+//        };
 
         // 路線コード
         $rail_no = $request->input('rail_no');
