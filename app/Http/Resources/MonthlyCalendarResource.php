@@ -86,6 +86,12 @@ class MonthlyCalendarResource extends Resource
                 $results[] = ['yyyymm' => $ym, 'apoint_ok' =>  0];
             }
 
+            $target_month = [];
+            $target_ym1 = Carbon::today()->format('Ym');
+            $target_ym2 = Carbon::today()->addMonthsNoOverflow()->format('Ym');
+            $target_ym3= Carbon::today()->addMonthsNoOverflow(2)->format('Ym');
+            $target_month[] = [$target_ym1, $target_ym2, $target_ym3];
+
             foreach ($monthly_wakus as $monthly_waku) {
                 $appoint_ok = 0;
                 if ($disp_flg == strval(CalendarDisplay::SHOW) && ($monthly_waku[0] > $monthly_waku[1])) {
@@ -94,10 +100,22 @@ class MonthlyCalendarResource extends Resource
                 $results[] = ['yyyymm' => $monthly_waku[2], 'apoint_ok' =>  $appoint_ok];
             }
 
-            for($i = count($results); $i < 3; $i++) {
-                $ym = Carbon::today()->addMonthsNoOverflow($i)->format('Ym');
-                $results[] = ['yyyymm' => $ym, 'apoint_ok' =>  0];
+            foreach ($target_month as $target_ym) {
+                $exist_flg = false;
+                foreach ($results as $r) {
+                    if ($target_ym == $r['yyyymm']) {
+                        $exist_flg = true;
+                    }
+                }
+                if (!$exist_flg) {
+                    $results[] = ['yyyymm' => $target_ym, 'apoint_ok' =>  0];
+                }
             }
+
+//            for($i = count($results); $i < 3; $i++) {
+//                $ym = Carbon::today()->addMonthsNoOverflow($i)->format('Ym');
+//                $results[] = ['yyyymm' => $ym, 'apoint_ok' =>  0];
+//            }
 
             return $results;
         }
