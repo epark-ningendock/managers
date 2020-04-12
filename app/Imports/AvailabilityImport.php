@@ -89,7 +89,7 @@ class AvailabilityImport extends ImportAbstract implements WithChunkReading
             ->where('date', $date)
             ->get();
 
-        if ($ca) {
+        if (!empty($ca) && !empty($ca->id)) {
             Log::error('すでに存在している');
             return;
         }
