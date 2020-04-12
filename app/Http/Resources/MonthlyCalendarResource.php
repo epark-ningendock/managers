@@ -88,7 +88,7 @@ class MonthlyCalendarResource extends Resource
 
             $target_month = [];
             $target_ym1 = Carbon::today()->format('Ym');
-            $target_ym2 = Carbon::today()->addMonthsNoOverflow()->format('Ym');
+            $target_ym2 = Carbon::today()->addMonthsNoOverflow(1)->format('Ym');
             $target_ym3= Carbon::today()->addMonthsNoOverflow(2)->format('Ym');
             $target_month[] = [$target_ym1, $target_ym2, $target_ym3];
 
