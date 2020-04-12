@@ -220,10 +220,10 @@ return [
 //     'model' => Availabil::class,
 //     'import' => AvailabilityImport::class,
 // ],
-   'm_availability_2.csv' => [
-       'model' => Availabil::class,
-       'import' => AvailabilityImport::class,
-   ],
+   // 'm_availability_2.csv' => [
+   //     'model' => Availabil::class,
+   //     'import' => AvailabilityImport::class,
+   // ],
    'm_availability_3.csv' => [
        'model' => Availabil::class,
        'import' => AvailabilityImport::class,
@@ -240,26 +240,26 @@ return [
        'model' => Availabil::class,
        'import' => AvailabilityImport::class,
    ],
-   'm_availability_7.csv' => [
-       'model' => Availabil::class,
-       'import' => AvailabilityImport::class,
-   ],
-   'm_availability_8.csv' => [
-       'model' => Availabil::class,
-       'import' => AvailabilityImport::class,
-   ],
-   'm_availability_9.csv' => [
-       'model' => Availabil::class,
-       'import' => AvailabilityImport::class,
-   ],
-   'm_availability_10.csv' => [
-       'model' => Availabil::class,
-       'import' => AvailabilityImport::class,
-   ],
-   'm_availability_11.csv' => [
-       'model' => Availabil::class,
-       'import' => AvailabilityImport::class,
-   ],
+   // 'm_availability_7.csv' => [
+   //     'model' => Availabil::class,
+   //     'import' => AvailabilityImport::class,
+   // ],
+   // 'm_availability_8.csv' => [
+   //     'model' => Availabil::class,
+   //     'import' => AvailabilityImport::class,
+   // ],
+   // 'm_availability_9.csv' => [
+   //     'model' => Availabil::class,
+   //     'import' => AvailabilityImport::class,
+   // ],
+   // 'm_availability_10.csv' => [
+   //     'model' => Availabil::class,
+   //     'import' => AvailabilityImport::class,
+   // ],
+   // 'm_availability_11.csv' => [
+   //     'model' => Availabil::class,
+   //     'import' => AvailabilityImport::class,
+   // ],
 
 //    't_reserve_claim.csv' => [
 //        'model' => \App\ReservationOption::class,
