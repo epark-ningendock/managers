@@ -211,6 +211,7 @@ class SearchController extends ApiBaseController
             }
 
             if (!empty($request->input('freewords'))) {
+                \Illuminate\Support\Facades\Log::error('キーワード：' . $request->input('freewords'));
                 $freeword_str = str_replace('　', ' ', $request->input('freewords'));
                 $freewords = explode(' ', $freeword_str);
 
