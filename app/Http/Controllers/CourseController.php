@@ -49,7 +49,7 @@ class CourseController extends Controller
      */
     public function create()
     {
-        
+
         $hospital_id = session()->get('hospital_id');
         $hospital = Hospital::find($hospital_id);
         $images = HospitalImage::where('hospital_id', $hospital_id)->get();
@@ -118,7 +118,7 @@ class CourseController extends Controller
                 'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
                 'processing' => '登録'
             ];
-            Mail::to(config('mail.to.system'))->send(new CourseSettingNotificationMail($data));
+//            Mail::to(config('mail.to.system'))->send(new CourseSettingNotificationMail($data));
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.course')]));
             return redirect('course');
         } catch (Exception $e) {
@@ -499,7 +499,7 @@ class CourseController extends Controller
                 'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
                 'processing' => '更新'
             ];
-            Mail::to(config('mail.to.system'))->send(new CourseSettingNotificationMail($data));
+//            Mail::to(config('mail.to.system'))->send(new CourseSettingNotificationMail($data));
 
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.course')]));
             return redirect('course');
@@ -532,7 +532,7 @@ class CourseController extends Controller
             'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
             'processing' => '削除'
         ];
-        Mail::to(config('mail.to.system'))->send(new CourseSettingNotificationMail($data));
+//        Mail::to(config('mail.to.system'))->send(new CourseSettingNotificationMail($data));
 
         $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.course')]));
         return redirect()->back();

@@ -31,7 +31,7 @@ class HospitalStaffOperationMail extends Mailable
     {
         // dd($this->data);
         return $this
-            ->from(env('EPARK_EMAIL_ADDRESS'))
+            ->from(env('MAIL_FROM_ADDRESS'))
             ->subject($this->data['subject'])
             ->view('hospital_staff.email.operation-mail');
     }

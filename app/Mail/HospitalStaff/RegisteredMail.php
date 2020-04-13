@@ -32,7 +32,7 @@ class RegisteredMail extends Mailable
     public function build()
     {
         return $this
-        ->from('epark@example.com')
+            ->from(env('MAIL_FROM_ADDRESS'))
         ->subject('【EPARK人間ドック】ご登録ありがとうございます')
         ->view('hospital_staff.email.registered');
     }

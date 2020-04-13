@@ -29,7 +29,7 @@ class PasswordResetConfirmMail extends Mailable
     public function build()
     {
         return $this
-        ->from('epark@example.com')
+            ->from(env('MAIL_FROM_ADDRESS'))
         ->subject('【EPARK人間ドック】パスワードリセットが完了しました')
         ->view('hospital_staff.email.password-reset-confirm');
     }
