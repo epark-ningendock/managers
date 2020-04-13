@@ -215,9 +215,11 @@ class SearchController extends ApiBaseController
                 $freewords = explode(' ', $freeword_str);
 
                 $query->where(function ($q) use ($freewords) {
-                    $q->orWhere('hospital_metas.hospital_name', 'like', '%' . $freewords[0] . '%');
+                    $word = $freewords[0];
+                    $q->orWhere('hospital_metas.hospital_name', 'like', "%{$word}%");
                     for ($i = 1; $i < count($freewords); $i++) {
-                        $q->orWhere('hospital_metas.hospital_name', 'like', '%' . $freewords[$i] . '%');
+                        $w = $freewords[$i];
+                        $q->orWhere('hospital_metas.hospital_name', 'like', "%{$w}%");
                     }
                 });
 
@@ -226,21 +228,27 @@ class SearchController extends ApiBaseController
 //                        $q->orWhere('courses.name', 'like', '%' . $freewords[$i] . '%');
 //                    }
                 $query->where(function ($q) use ($freewords) {
-                    $q->orWhere('hospital_metas.area_station', 'like', '%' . $freewords[0] . '%');
+                    $word = $freewords[0];
+                    $q->orWhere('hospital_metas.area_station', 'like',  "%{$word}%");
                     for ($i = 1; $i < count($freewords); $i++) {
-                        $q->orWhere('hospital_metas.area_station', 'like', '%' . $freewords[$i] . '%');
+                        $w = $freewords[$i];
+                        $q->orWhere('hospital_metas.area_station', 'like', "%{$w}%");
                     }
                 });
                 $query->where(function ($q) use ($freewords) {
-                $q->orWhere('course_metas.category_exam_name', 'like', '%' . $freewords[0] . '%');
+                    $word = $freewords[0];
+                $q->orWhere('course_metas.category_exam_name', 'like',  "%{$word}%");
                     for ($i = 1; $i < count($freewords); $i++) {
-                        $q->orWhere('course_metas.category_exam_name', 'like', '%' . $freewords[$i] . '%');
+                        $w = $freewords[$i];
+                        $q->orWhere('course_metas.category_exam_name', "%{$w}%");
                     }
                 });
                 $query->where(function ($q) use ($freewords) {
-                    $q->orWhere('course_metas.category_disease_name', 'like', '%' . $freewords[0] . '%');
+                    $word = $freewords[0];
+                    $q->orWhere('course_metas.category_disease_name',  "%{$word}%");
                     for ($i = 1; $i < count($freewords); $i++) {
-                        $q->orWhere('course_metas.category_disease_name', 'like', '%' . $freewords[$i] . '%');
+                        $w = $freewords[$i];
+                        $q->orWhere('course_metas.category_disease_name', "%{$w}%");
                     }
                 });
             };
