@@ -211,17 +211,16 @@ class SearchController extends ApiBaseController
             }
 
             if (!empty($request->input('freewords'))) {
-                \Illuminate\Support\Facades\Log::error('キーワード：' . $request->input('freewords'));
                 $freeword_str = str_replace('　', ' ', $request->input('freewords'));
                 $freewords = explode(' ', $freeword_str);
 
                 $query->where(function ($q) use ($freewords) {
                     $word = $freewords[0];
-                    $q->where('hospital_metas.hospital_name', 'like', '%' . $word . '%');
-//                    for ($i = 1; $i < count($freewords); $i++) {
-//                        $w = $freewords[$i];
-//                        $q->orWhere('hospital_metas.hospital_name', 'like', '%' . $w . '%');
-//                    }
+                    $q->where('hospitals.name', 'like', '%' . $word . '%');
+                    for ($i = 1; $i < count($freewords); $i++) {
+                        $w = $freewords[$i];
+                        $q->orWhere('hospitals.name', 'like', '%' . $w . '%');
+                    }
                 });
 
 //                    $q->orWhere('courses.name', 'like', '%' . $freewords[0] . '%');
