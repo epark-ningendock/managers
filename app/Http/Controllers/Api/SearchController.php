@@ -210,10 +210,10 @@ class SearchController extends ApiBaseController
                         $q->orWhere('hospital_metas.hospital_name', 'like', '%' . $freewords[$i] . '%');
                     }
 
-                    $q->orWhere('courses.name', 'like', '%' . $freewords[0] . '%');
-                    for ($i = 1; $i < count($freewords); $i++) {
-                        $q->orWhere('courses.name', 'like', '%' . $freewords[$i] . '%');
-                    }
+//                    $q->orWhere('courses.name', 'like', '%' . $freewords[0] . '%');
+//                    for ($i = 1; $i < count($freewords); $i++) {
+//                        $q->orWhere('courses.name', 'like', '%' . $freewords[$i] . '%');
+//                    }
 
                     $q->orWhere('hospital_metas.area_station', 'like', '%' . $freewords[0] . '%');
                     for ($i = 1; $i < count($freewords); $i++) {
@@ -487,7 +487,12 @@ class SearchController extends ApiBaseController
         // 路線コード
         $rail_no = $request->input('rail_no');
         if (isset($rail_no)) {
-            $rails = explode(',', $rail_no);
+            if (is_array($rail_no)) {
+                $rails = $rail_no;
+            } else {
+                $rails = explode(',', $rail_no);
+            }
+
             $query->where(function ($q) use ($rails) {
                 $q->whereIn('hospitals.rail1', $rails)
                     ->orWhereIn('hospitals.rail2', $rails)
