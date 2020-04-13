@@ -161,22 +161,12 @@ class SearchController extends ApiBaseController
                 ->whereNotNull('contract_informations.code');
         });
         $query->join('hospital_metas', 'hospitals.id', 'hospital_metas.hospital_id');
-        $query->leftJoin('courses', function ($join) use ($target, $request) {
+        $query->leftJoin('courses', function ($join) use ($target) {
             $join->on('hospitals.id', 'courses.hospital_id')
                 ->where('courses.web_reception', WebReception::ACCEPT)
                 ->where('courses.is_category', 0)
                 ->where('publish_start_date', '<=', $target)
                 ->where('publish_end_date', '>=', $target);
-//            if (!empty($request->input('freewords'))) {
-//                $freeword_str = str_replace('　', ' ', $request->input('freewords'));
-//                $freewords = explode(' ', $freeword_str);
-//                $join->where(function ($q) use ($freewords) {
-//                    $q->where('courses.name', 'like', '%' . $freewords[0] . '%');
-//                    for ($i = 1; $i < count($freewords); $i++) {
-//                        $q->orWhere('courses.name', 'like', '%' . $freewords[$i] . '%');
-//                    }
-//                });
-//            }
         });
 
         if (isset($reservation_dt)
@@ -214,43 +204,32 @@ class SearchController extends ApiBaseController
                 $freeword_str = str_replace('　', ' ', $request->input('freewords'));
                 $freewords = explode(' ', $freeword_str);
 
-                $query->whereHas('hospital_metas', function ($q) use ($freewords) {
-                    $word = $freewords[0];
-                    $q->orWhere('hospital_metas.hospital_name', 'like', '%明治%');
+                $query->where(function ($q) use ($freewords) {
+                    $q->orWhere('hospital_metas.hospital_name', 'like', '%' . $freewords[0] . '%');
                     for ($i = 1; $i < count($freewords); $i++) {
-                        $w = $freewords[$i];
-                        $q->orWhere('hospital_metas.hospital_name', 'like', "%{$w}%");
+                        $q->orWhere('hospital_metas.hospital_name', 'like', '%' . $freewords[$i] . '%');
+                    }
+
+                    $q->orWhere('courses.name', 'like', '%' . $freewords[0] . '%');
+                    for ($i = 1; $i < count($freewords); $i++) {
+                        $q->orWhere('courses.name', 'like', '%' . $freewords[$i] . '%');
+                    }
+
+                    $q->orWhere('hospital_metas.area_station', 'like', '%' . $freewords[0] . '%');
+                    for ($i = 1; $i < count($freewords); $i++) {
+                        $q->orWhere('hospital_metas.area_station', 'like', '%' . $freewords[$i] . '%');
+                    }
+
+                    $q->orWhere('course_metas.category_exam_name', 'like', '%' . $freewords[0] . '%');
+                    for ($i = 1; $i < count($freewords); $i++) {
+                        $q->orWhere('course_metas.category_exam_name', 'like', '%' . $freewords[$i] . '%');
+                    }
+
+                    $q->orWhere('course_metas.category_disease_name', 'like', '%' . $freewords[0] . '%');
+                    for ($i = 1; $i < count($freewords); $i++) {
+                        $q->orWhere('course_metas.category_disease_name', 'like', '%' . $freewords[$i] . '%');
                     }
                 });
-
-//                    $q->orWhere('courses.name', 'like', '%' . $freewords[0] . '%');
-//                    for ($i = 1; $i < count($freewords); $i++) {
-//                        $q->orWhere('courses.name', 'like', '%' . $freewords[$i] . '%');
-//                    }
-//                $query->where(function ($q) use ($freewords) {
-//                    $word = $freewords[0];
-//                    $q->orWhere('hospital_metas.area_station', 'like',  "%{$word}%");
-//                    for ($i = 1; $i < count($freewords); $i++) {
-//                        $w = $freewords[$i];
-//                        $q->orWhere('hospital_metas.area_station', 'like', "%{$w}%");
-//                    }
-//                });
-//                $query->where(function ($q) use ($freewords) {
-//                    $word = $freewords[0];
-//                    $q->orWhere('course_metas.category_exam_name', 'like',  "%{$word}%");
-//                    for ($i = 1; $i < count($freewords); $i++) {
-//                        $w = $freewords[$i];
-//                        $q->orWhere('course_metas.category_exam_name', "%{$w}%");
-//                    }
-//                });
-//                $query->where(function ($q) use ($freewords) {
-//                    $word = $freewords[0];
-//                    $q->orWhere('course_metas.category_disease_name',  "%{$word}%");
-//                    for ($i = 1; $i < count($freewords); $i++) {
-//                        $w = $freewords[$i];
-//                        $q->orWhere('course_metas.category_disease_name', "%{$w}%");
-//                    }
-//                });
             };
 
             // 公開医療機関指定
