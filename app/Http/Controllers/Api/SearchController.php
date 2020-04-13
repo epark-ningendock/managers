@@ -214,7 +214,7 @@ class SearchController extends ApiBaseController
                 $freeword_str = str_replace('　', ' ', $request->input('freewords'));
                 $freewords = explode(' ', $freeword_str);
 
-                $query->whereHas(function ($q) use ($freewords) {
+                $query->whereHas('hospital_metas', function ($q) use ($freewords) {
                     $word = $freewords[0];
                     $q->orWhere('hospital_metas.hospital_name', 'like', '%明治%');
                     for ($i = 1; $i < count($freewords); $i++) {
