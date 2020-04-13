@@ -161,12 +161,22 @@ class SearchController extends ApiBaseController
                 ->whereNotNull('contract_informations.code');
         });
         $query->join('hospital_metas', 'hospitals.id', 'hospital_metas.hospital_id');
-        $query->leftJoin('courses', function ($join) use ($target) {
+        $query->leftJoin('courses', function ($join) use ($target, $request) {
             $join->on('hospitals.id', 'courses.hospital_id')
                 ->where('courses.web_reception', WebReception::ACCEPT)
                 ->where('courses.is_category', 0)
                 ->where('publish_start_date', '<=', $target)
                 ->where('publish_end_date', '>=', $target);
+            if (!empty($request->input('freewords'))) {
+                $freeword_str = str_replace('　', ' ', $request->input('freewords'));
+                $freewords = explode(' ', $freeword_str);
+                $join->where(function ($q) use ($freewords) {
+                    $q->orWhere('name', 'like', '%' . $freewords[0] . '%');
+                    for ($i = 1; $i < count($freewords); $i++) {
+                        $q->orWhere('name', 'like', '%' . $freewords[$i] . '%');
+                    }
+                });
+            }
         });
 
         if (isset($reservation_dt)
