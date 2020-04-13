@@ -33,7 +33,7 @@ class SearchController extends ApiBaseController
      */
     public function hospitals(HospitalSearchRequest $request)
     {
-//       try {
+       try {
             $search_cond_chk_result = $this->checkSearchCond($request, true);
             if (!$search_cond_chk_result[0]) {
                 return $this->createResponse($search_cond_chk_result[1]);
@@ -80,10 +80,10 @@ class SearchController extends ApiBaseController
                 : response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to')
                 + $request->toJson()
                 + compact('hospitals'))->setCallback($callback);
-//        } catch (\Exception $e) {
-//           Log::error($e);
-//           return $this->createResponse($this->messages['system_error_api'], $request->input('callback'));
-//        }
+        } catch (\Exception $e) {
+           Log::error($e);
+           return $this->createResponse($this->messages['system_error_api'], $request->input('callback'));
+        }
 
     }
 
