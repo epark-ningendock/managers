@@ -171,9 +171,9 @@ class SearchController extends ApiBaseController
                 $freeword_str = str_replace('　', ' ', $request->input('freewords'));
                 $freewords = explode(' ', $freeword_str);
                 $join->where(function ($q) use ($freewords) {
-                    $q->where('name', 'like', '%' . $freewords[0] . '%');
+                    $q->where('courses.name', 'like', '%' . $freewords[0] . '%');
                     for ($i = 1; $i < count($freewords); $i++) {
-                        $q->orWhere('name', 'like', '%' . $freewords[$i] . '%');
+                        $q->orWhere('courses.name', 'like', '%' . $freewords[$i] . '%');
                     }
                 });
             }
