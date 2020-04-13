@@ -243,13 +243,9 @@ class SearchController extends ApiBaseController
 
             // 市区町村コード
             $district_no = $request->input('district_no');
-            $district_array = [];
             if (isset($district_no)) {
                 $districts = explode(',', $district_no);
-                foreach ($districts as $d) {
-                    $district_array[] = ltrim($d, '0');
-                }
-                $query->whereIn('hospital_metas.district_code', $district_array);
+                $query->whereIn('hospital_metas.district_code', $districts);
             };
 
             // 路線コード
@@ -482,19 +478,11 @@ class SearchController extends ApiBaseController
         };
 
         // 市区町村コード
-        $district_array = [];
+        $district_no = $request->input('district_no');
         if (isset($district_no)) {
             $districts = explode(',', $district_no);
-            foreach ($districts as $d) {
-                $district_array[] = ltrim($d, '0');
-            }
-            $query->whereIn('hospital_metas.district_code', $district_array);
+            $query->whereIn('hospital_metas.district_code', $districts);
         };
-//        $district_no = $request->input('district_no');
-//        if (isset($district_no)) {
-//            $districts = explode(',', $district_no);
-//            $query->whereIn('hospital_metas.district_code', $districts);
-//        };
 
         // 路線コード
         $rail_no = $request->input('rail_no');
