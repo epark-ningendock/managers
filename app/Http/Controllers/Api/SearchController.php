@@ -216,7 +216,7 @@ class SearchController extends ApiBaseController
 
                 $query->where(function ($q) use ($freewords) {
                     $word = $freewords[0];
-                    $q->orWhere('hospital_metas.hospital_name', 'like', "%{$word}%");
+                    $q->orWhere('hospital_metas.hospital_name', 'like', '%明治%');
                     for ($i = 1; $i < count($freewords); $i++) {
                         $w = $freewords[$i];
                         $q->orWhere('hospital_metas.hospital_name', 'like', "%{$w}%");
