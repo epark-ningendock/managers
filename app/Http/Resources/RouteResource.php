@@ -18,6 +18,17 @@ class RouteResource extends Resource
      */
     public function toArray($request)
     {
+        $pref = $this['pref'];
+        if (!isset($pref) || !isset($pref->code)) {
+            return ['status'=> 1,
+                'place'=>[
+                    'pref_no'=> '',
+                    'pref_name' => '',
+                    'count' => 0,
+                    'rails' => []
+                ]
+            ];
+        }
         return[
             'status'=> 0,
             'place'=>[
