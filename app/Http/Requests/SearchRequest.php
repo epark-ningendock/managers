@@ -55,7 +55,13 @@ class SearchRequest extends ValidationRequest
 
     protected function get_pref_name($pref_cd)
     {
-        return isset($pref_cd) ? Prefecture::select('name')->find($pref_cd)->name : '';
+        if (isset($pref_cd)) {
+            $pref = Prefecture::select('name')->find($pref_cd);
+            if (!empty($pref)) {
+                return $pref->name;
+            }
+        }
+        return '';
     }
     protected function get_district_name($district_no)
     {

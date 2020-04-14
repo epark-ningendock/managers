@@ -82,6 +82,10 @@ class HospitalMetaImport extends ImportAbstract implements WithChunkReading
 
             $courses = Course::where('hospital_id', $hospital->id)->get();
 
+            $course_name = '';
+            $category_exam_names = '';
+            $category_disease_names = '';
+
             if ($courses) {
                 foreach ($courses as $course) {
                     $course_meta = CourseMeta::where('course_id', $course->id)->first();
@@ -90,6 +94,8 @@ class HospitalMetaImport extends ImportAbstract implements WithChunkReading
                         $course_meta->hospital_id = $hospital->id;
                         $course_meta->course_id = $course->id;
                     }
+
+                    $course_name = $course_name . ' ' . $course->name;
 
                     $category_exam_name = '';
                     $category_disease_name = '';
@@ -134,6 +140,10 @@ class HospitalMetaImport extends ImportAbstract implements WithChunkReading
                         }
                     }
 
+                    $category_exam_names = $category_exam_names . ' ' . $category_exam_name;
+                    $category_disease_names = $category_disease_names . ' ' . $category_disease_name;
+
+                    $course_meta->course_name = $course->name;
                     $course_meta->category_exam_name = $category_exam_name;
                     $course_meta->category_exam = $category_exam;
                     $course_meta->category_disease_name = $category_disease_name;
@@ -146,6 +156,10 @@ class HospitalMetaImport extends ImportAbstract implements WithChunkReading
                     $course_meta->save();
                 }
             }
+            $hospital_meta->course_name = $course_name;
+            $hospital_meta->category_exam_name = $category_exam_names;
+            $hospital_meta->category_disease_name = $category_disease_names;
+            $hospital_meta->save();
         }
     }
 

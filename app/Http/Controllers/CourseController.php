@@ -12,6 +12,7 @@ use App\CourseQuestion;
 use App\Enums\CourseImageType;
 use App\Hospital;
 use App\HospitalImage;
+use App\HospitalMeta;
 use App\Http\Requests\CourseFormRequest;
 use App\KenshinSysCourse;
 use App\MajorClassification;
@@ -411,6 +412,23 @@ class CourseController extends Controller
             $course_meta->pear_flg = $pear_flg;
             $course_meta->female_doctor_flg = $female_doctor_flg;
             $course_meta->save();
+
+            $course_metas = CourseMeta::where('hospital_id', $hospital->id)->get();
+            $course_name = '';
+            $category_exam_names = '';
+            $category_disease_names = '';
+            foreach ($course_metas as $c) {
+                $course_name = $course_name . ' ' . $c->course_name;
+                $category_exam_names = $category_exam_names . ' ' . $c->category_exam_name;
+                $category_disease_names = $category_disease_names . ' ' . $c->category_disease_name;
+            }
+            $hospital_meta = HospitalMeta::where('hospital_id', $hospital->id)->first();
+            if ($hospital_meta) {
+                $hospital_meta->course_name = $course_name;
+                $hospital_meta->category_exam_name = $category_exam_names;
+                $hospital_meta->category_disease_name = $category_disease_names;
+                $hospital_meta->save();
+            }
 
             //Course Question
             $is_questions = $request->input('is_questions');
