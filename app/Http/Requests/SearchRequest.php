@@ -73,7 +73,11 @@ class SearchRequest extends ValidationRequest
     protected function get_rail_name($rail_no)
     {
         if (isset($rail_no)) {
-            $params = explode(',', $rail_no);
+            if (is_array($rail_no)) {
+                $params = $rail_no;
+            } else {
+                $params = explode(',', $rail_no);
+            }
             $result = '';
             $rails = Rail::whereIn('id', $params)->get();
             foreach ($rails as $rail) {

@@ -18,6 +18,11 @@ class SearchHospitalsResource extends Resource
     public function toArray($request)
     {
 
+        if (!empty($this->district_code) && !empty($this->district_code->name)) {
+            $pref_name = $this->district_code->name;
+        } else {
+            $pref_name = '';
+        }
         return [
             'no' => $this->id,
             'url_basic' => $this->url,
@@ -25,7 +30,7 @@ class SearchHospitalsResource extends Resource
             'name' => $this->name,
             'update_dt' => Carbon::parse($this->updated_at)->format('Y年m月d日'),
             'pref_name' => $this->prefecture->name,
-            'district_name' => $this->district_code->name,
+            'district_name' => $pref_name,
             'address1' => $this->address1 ?? '',
             'address2' => $this->address2 ?? '',
             'stations' => $this->getStationInfo(),
