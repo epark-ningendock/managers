@@ -250,7 +250,7 @@ class CustomerController extends Controller
 
         return response()->json([
             'data' => view('reservation.partials.create.customer-list', ['customers' => $customers])->render()
-        ]);
+        ]);  
     }
 
     public function integration($id, Request $request)

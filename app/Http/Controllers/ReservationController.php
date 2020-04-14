@@ -483,12 +483,12 @@ class ReservationController extends Controller
     private function reservation_mail_send($reservation, $change_flg) {
 
         // 確定メール送信（受診者）
-//        if (!empty($reservation->epark_member_id)) {
-//            $to = $reservation->customer->email;
-//            Mail::to($to)->send(new ReservationReceptionCompleteMail($reservation, true));
-//        } else {
-//            Mail::to('taro.kimura@banana-877.com')->send(new ReservationReceptionCompleteMail($reservation, true));
-//        }
+        if (!empty($reservation->epark_member_id)) {
+            $to = $reservation->customer->email;
+            Mail::to($to)->send(new ReservationReceptionCompleteMail($reservation, true));
+        } else {
+            Mail::to('taro.kimura@banana-877.com')->send(new ReservationReceptionCompleteMail($reservation, true));
+        }
 
         // 確定メール送信（施設）
         $query = HospitalEmailSetting::where('hospital_id', $reservation->hospital_id)
@@ -542,13 +542,13 @@ class ReservationController extends Controller
             }
             // 医療機関へメール送信
             $gyoumu_mail = config('mail.to.gyoumu');
-//            if ($change_flg) {
-//                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationChangeMail($reservation, false));
-//            } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
-//                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationReceptionCancelMail($reservation, false));
-//            } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
-//                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationReceptionCompleteMail($reservation, false));
-//            }
+            if ($change_flg) {
+                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationChangeMail($reservation, false));
+            } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
+                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationReceptionCancelMail($reservation, false));
+            } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationReceptionCompleteMail($reservation, false));
+            }
         }
 
         if (!empty($hospital_fax)) {
@@ -558,13 +558,13 @@ class ReservationController extends Controller
                 }
             }
             // 医療機関へメール送信
-//            if ($change_flg) {
-//                Mail::to($fax_tos)->send(new ReservationChangeFaxToMail($reservation));
-//            } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
-//                Mail::to($fax_tos)->cc($gyoumu_mail)->send(new ReservationCancelFaxToMail($reservation));
-//            } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
-//                Mail::to($fax_tos)->cc($gyoumu_mail)->send(new ReservationReceptionCompleteFaxToMail($reservation));
-//            }
+            if ($change_flg) {
+                Mail::to($fax_tos)->send(new ReservationChangeFaxToMail($reservation));
+            } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
+                Mail::to($fax_tos)->cc($gyoumu_mail)->send(new ReservationCancelFaxToMail($reservation));
+            } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+                Mail::to($fax_tos)->cc($gyoumu_mail)->send(new ReservationReceptionCompleteFaxToMail($reservation));
+            }
         }
     }
 
@@ -1022,8 +1022,15 @@ class ReservationController extends Controller
             'reservation' => $reservation
         ];
 
-//        Mail::to(config('mail.to.gyoumu'))->send(new ReservationCheckMail($mailContext));
+        Mail::to(config('mail.to.gyoumu'))->send(new ReservationCheckMail($mailContext));
 
+//        if (isset($customer->email)) {
+//            Mail::to($customer->email)->send(new ReservationCheckMail($mailContext));
+//        }
+
+//        if (isset($contract_information)) {
+//            Mail::to($contract_information->email)->send(new ReservationCheckMail($mailContext));
+//        }
     }
 
 }

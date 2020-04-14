@@ -298,7 +298,7 @@ class BillingController extends Controller {
 //	                config('mail.to.gyoumu'),
 //	            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
 	        }
-		}
+		}	
 
 	public function hospitalBilling() {
 
@@ -307,6 +307,6 @@ class BillingController extends Controller {
 
 		return view( 'billing.hospital-billing-listing', [
 			'billings'        => $billings,
-		] );
+		] );		
 	}
 }

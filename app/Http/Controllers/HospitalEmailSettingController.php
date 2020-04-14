@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\HospitalEmailSetting\HospitalEmailSettingOperationMail;
 
 class HospitalEmailSettingController extends Controller
-{
+{   
     public function index()
     {
         self::is_staff();
@@ -25,10 +25,10 @@ class HospitalEmailSettingController extends Controller
     public function update(HospitalEmailSettingRequest $request, $id)
     {
         self::is_staff();
-
+        
         try {
             DB::beginTransaction();
-
+            
             $hospital_email_setting = HospitalEmailSetting::findOrFail($id);
             $inputs = request()->all();
 
@@ -41,7 +41,7 @@ class HospitalEmailSettingController extends Controller
             } else {
                 $hospital_email_setting->update($inputs);
             }
-
+            
             DB::commit();
             $data = [
                 'hospital_email_setting' => $hospital_email_setting,
