@@ -251,7 +251,11 @@ class SearchController extends ApiBaseController
             // 路線コード
             $rail_no = $request->input('rail_no');
             if (isset($rail_no)) {
-                $rails = explode(',', $rail_no);
+                if (is_array($rail_no)) {
+                    $rails = $rail_no;
+                } else {
+                    $rails = explode(',', $rail_no);
+                }
                 $query->where(function ($q) use ($rails) {
                     $q->whereIn('hospitals.rail1', $rails)
                         ->orWhereIn('hospitals.rail2', $rails)
