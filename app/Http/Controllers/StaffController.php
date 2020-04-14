@@ -78,7 +78,7 @@ class StaffController extends Controller
                 'is_invoice' => ['required', Rule::in([0, 1, 3, 7])],
                 'is_pre_account' => ['required', Rule::in([0, 1, 3, 7])]
             ]);
-            
+
             $staff_auths = [
                 'is_hospital' => $request->is_hospital,
                 'is_staff' => $request->is_staff,
@@ -104,21 +104,21 @@ class StaffController extends Controller
                 'status',
                 'department_id'
             ]);
-            
+
             $staff = new Staff($staff_data);
             $staff->password = bcrypt($staff_data['password']);
             $staff->save();
 
             $staff_auth = new StaffAuth($staff_auths);
             $staff->staff_auth()->save($staff_auth);
-            
+
             $data = [
                 'staff' => $staff,
                 'password' => $staff_data['password']
             ];
-            
-            Mail::to($staff->email)
-                ->send(new RegisteredMail($data));
+
+//            Mail::to($staff->email)
+//                ->send(new RegisteredMail($data));
 
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.staff')]));
             DB::commit();
@@ -155,7 +155,7 @@ class StaffController extends Controller
                 'is_invoice' => ['required', Rule::in([0, 1, 3, 7])],
                 'is_pre_account' => ['required', Rule::in([0, 1, 3, 7])]
             ]);
-            
+
             $staff_auths = [
                 'is_hospital' => $request->is_hospital,
                 'is_staff' => $request->is_staff,
@@ -168,9 +168,9 @@ class StaffController extends Controller
 
         $this->staffLoginIdValidation($request->login_id);
 //        $this->staffEmailValidation($request->email);
-        
+
         $staff = Staff::findOrFail($id);
-        
+
         try {
             DB::beginTransaction();
             if ($staff->updated_at > $request['updated_at']) {
@@ -179,7 +179,7 @@ class StaffController extends Controller
 
             $staff->update($request->only(['name', 'login_id', 'email', 'authority', 'status', 'department_id']));
             $staff->save();
-            
+
             $staff->staff_auth()->update($staff_auths);
 
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.staff')]));
@@ -264,7 +264,7 @@ class StaffController extends Controller
                 if ($staff->updated_at > $request['updated_at']) {
                     throw new ExclusiveLockException;
                 }
-                
+
                 $password = bcrypt($request->password);
 
                 if (!$staff->first_login_at) {

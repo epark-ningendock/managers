@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\HospitalEmailSetting\HospitalEmailSettingOperationMail;
 
 class HospitalEmailSettingController extends Controller
-{   
+{
     public function index()
     {
         self::is_staff();
@@ -25,10 +25,10 @@ class HospitalEmailSettingController extends Controller
     public function update(HospitalEmailSettingRequest $request, $id)
     {
         self::is_staff();
-        
+
         try {
             DB::beginTransaction();
-            
+
             $hospital_email_setting = HospitalEmailSetting::findOrFail($id);
             $inputs = request()->all();
 
@@ -41,14 +41,14 @@ class HospitalEmailSettingController extends Controller
             } else {
                 $hospital_email_setting->update($inputs);
             }
-            
+
             DB::commit();
             $data = [
                 'hospital_email_setting' => $hospital_email_setting,
                 'staff_name' => Auth::user()->name,
                 'processing' => '更新'
                 ];
-            Mail::to(config('mail.to.gyoumu'))->send(new HospitalEmailSettingOperationMail($data));
+//            Mail::to(config('mail.to.gyoumu'))->send(new HospitalEmailSettingOperationMail($data));
 
             return redirect('hospital-email-setting')->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_email_setting')]));
         } catch (StaleModelLockingException $e) {

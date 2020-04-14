@@ -153,7 +153,7 @@ class CalendarController extends Controller
                 'subject' => '【EPARK人間ドック】カレンダー登録・更新・削除のお知らせ',
                 'processing' => '更新'
              ];
-//            Mail::to(config('mail.to.system'))->send(new CalendarSettingNotificationMail($data));
+//             Mail::to(config('mail.to.system'))->send(new CalendarSettingNotificationMail($data));
 
             Session::flash('success', trans('messages.updated', ['name' => trans('messages.names.calendar')]));
             return redirect('calendar');
