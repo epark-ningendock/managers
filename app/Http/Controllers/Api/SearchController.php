@@ -42,7 +42,7 @@ class SearchController extends ApiBaseController
             $return_flag = $request->input('return_flag');
             $search_count_only_flag = $request->input('search_count_only_flag');
             $search_condition_return_flag = $request->input('search_condition_return_flag');
-        
+
             // 件数のみ返却
             $search_count = $this->getHospitalCount($request, true);
 
@@ -114,7 +114,7 @@ class SearchController extends ApiBaseController
             $return_count = $entities->count();
             $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
             $return_to = $return_flag == 0 ? $search_count : $request->input('return_to');
-            
+
             $callback = $request->input('callback');
 
             if ($search_count_only_flag == 1) {
@@ -210,9 +210,9 @@ class SearchController extends ApiBaseController
                         $q->orWhere('hospital_metas.hospital_name', 'like', '%' . $freewords[$i] . '%');
                     }
 
-                    $q->orWhere('courses.name', 'like', '%' . $freewords[0] . '%');
+                    $q->orWhere('hospital_metas.course_name', 'like', '%' . $freewords[0] . '%');
                     for ($i = 1; $i < count($freewords); $i++) {
-                        $q->orWhere('courses.name', 'like', '%' . $freewords[$i] . '%');
+                        $q->orWhere('hospital_metas.course_name', 'like', '%' . $freewords[$i] . '%');
                     }
 
                     $q->orWhere('hospital_metas.area_station', 'like', '%' . $freewords[0] . '%');
@@ -220,15 +220,15 @@ class SearchController extends ApiBaseController
                         $q->orWhere('hospital_metas.area_station', 'like', '%' . $freewords[$i] . '%');
                     }
 
-                    $q->orWhere('course_metas.category_exam_name', 'like', '%' . $freewords[0] . '%');
+                    $q->orWhere('hospital_metas.category_exam_name', 'like', '%' . $freewords[0] . '%');
                     for ($i = 1; $i < count($freewords); $i++) {
-                        $q->orWhere('course_metas.category_exam_name', 'like', '%' . $freewords[$i] . '%');
+                        $q->orWhere('hospital_metas.category_exam_name', 'like', '%' . $freewords[$i] . '%');
                     }
 
-                    $q->orWhere('course_metas.category_disease_name', 'like', '%' . $freewords[0] . '%');
-                    for ($i = 1; $i < count($freewords); $i++) {
-                        $q->orWhere('course_metas.category_disease_name', 'like', '%' . $freewords[$i] . '%');
-                    }
+//                    $q->orWhere('course_metas.category_disease_name', 'like', '%' . $freewords[0] . '%');
+//                    for ($i = 1; $i < count($freewords); $i++) {
+//                        $q->orWhere('course_metas.category_disease_name', 'like', '%' . $freewords[$i] . '%');
+//                    }
                 });
             };
 
@@ -459,7 +459,7 @@ class SearchController extends ApiBaseController
             $query->whereRaw('? >= DATE_ADD(CURRENT_DATE(), INTERVAL (30 * (reception_start_date DIV 1000) + MOD(reception_start_date, 1000)) DAY) ', [$target]);
             $query->whereDate('calendar_days.date', $target);
         }
- 
+
         if (!empty($request->input('freewords'))) {
             $freeword_str = str_replace('　', ' ', $request->input('freewords'));
             $freewords = explode(' ', $freeword_str);
@@ -467,10 +467,10 @@ class SearchController extends ApiBaseController
             foreach($freewords as $freeword) {
                 $query->where(function($q) use($freeword) {
                     $q->orWhere('hospital_metas.hospital_name', 'like', '%'.$freeword.'%');
-                    $q->orWhere('courses.name', 'like', '%'.$freeword.'%');
+                    $q->orWhere('hospital_metas.course_name', 'like', '%'.$freeword.'%');
                     $q->orWhere('hospital_metas.area_station', 'like', '%'.$freeword.'%');
-                    $q->orWhere('course_metas.category_exam_name', 'like', '%'.$freeword.'%');
-                    $q->orWhere('course_metas.category_disease_name', 'like', '%'.$freeword.'%');
+                    $q->orWhere('hospital_metas.category_exam_name', 'like', '%'.$freeword.'%');
+//                    $q->orWhere('course_metas.category_disease_name', 'like', '%'.$freeword.'%');
                 });
             }
         }
