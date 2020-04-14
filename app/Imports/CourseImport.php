@@ -47,9 +47,14 @@ class CourseImport extends ImportAbstract implements WithChunkReading
             $web_reception = 0;
         }
 
+        $calendar = $row['calender'];
+        if ($row['web_reception'] == 1) {
+            $calendar = null;
+        }
+
         $model = new Course([
             'hospital_id' => $this->getId('hospitals', $row['hospital_no']),
-            'calendar_id' => $row['calender'],
+            'calendar_id' => $calendar,
             'code' => $row['code'],
             'name' => $row['name'],
             'web_reception' => $web_reception,

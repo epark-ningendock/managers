@@ -236,7 +236,7 @@ class HospitalContractInformationController extends Controller
                 'contract_information' => $contract,
                 'subject' => '【EPARK人間ドック】医療機関契約情報登録・更新のお知らせ'
             ];
-            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new HospitalNewRegistMail($data));
+//            Mail::to(config('mail.to.gyoumu'))->send(new HospitalNewRegistMail($data));
 
             return redirect()->route('contract.index')->with('success', trans('messages.contract_saved') );
         } catch(ValidationException $e) {

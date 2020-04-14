@@ -18,6 +18,17 @@ class RouteResource extends Resource
      */
     public function toArray($request)
     {
+        $pref = $this['pref'];
+        if (!isset($pref) || !isset($pref->code)) {
+            return ['status'=> 1,
+                'place'=>[
+                    'pref_no'=> '',
+                    'pref_name' => '',
+                    'count' => 0,
+                    'rails' => []
+                ]
+            ];
+        }
         return[
             'status'=> 0,
             'place'=>[
@@ -40,15 +51,16 @@ class RouteResource extends Resource
     private function createRailData() {
         $results = [];
         foreach ($this['routes'] as $rail) {
-            $result = [
-                'rail_no'=>$rail->id,
-                'rail_name'=>$rail->name,
-                'count'=>$rail->hospital_count,
-                'stations' => $this->createStation($rail)
-            ];
+            if ($rail->hospital_count > 0) {
+                $result = [
+                    'rail_no'=>$rail->id,
+                    'rail_name'=>$rail->name,
+                    'count'=>$rail->hospital_count,
+                    'stations' => $this->createStation($rail)
+                ];
 
-            array_push($results, $result);
-
+                array_push($results, $result);
+            }
         }
 
         return $results;
@@ -64,19 +76,20 @@ class RouteResource extends Resource
 
         $query = RailStation::query();
         $query->select($select);
-        $query->join('stations', 'rail_station.station_id', 'stations.id');
+        $query->join('stations', 'rail_station.station_id', '=', 'stations.id');
         $query->leftJoin('hospitals' , function ($join) {
-            $join->on('hospitals.prefecture_id', '=', 'stations.prefecture_id')
-                ->where(function ($q) {
-                    $q->orWhere('hospitals.station1', '=', 'stations.id');
-                    $q->orWhere('hospitals.station2', '=', 'stations.id');
-                    $q->orWhere('hospitals.station3', '=', 'stations.id');
-                    $q->orWhere('hospitals.station4', '=', 'stations.id');
-                    $q->orWhere('hospitals.station5', '=', 'stations.id');
-                });
+            $join->on('hospitals.station1', '=', 'stations.id')
+                ->orOn('hospitals.station2', '=', 'stations.id')
+                ->orOn('hospitals.station3', '=', 'stations.id')
+                ->orOn('hospitals.station4', '=', 'stations.id')
+                ->orOn('hospitals.station5', '=', 'stations.id');
 
         });
         $query->where('rail_station.rail_id', $rail->id);
+        if (!empty($this['pref']->code)) {
+            $query->where('stations.prefecture_id', $this['pref']->code);
+        }
+
         $query->groupBy('stations.id', 'stations.name');
         $stations = $query->get();
 
@@ -86,11 +99,13 @@ class RouteResource extends Resource
 
         $results = [];
         foreach ($stations as $station) {
-            $result = ['station_no' => $station->id,
-            'station_name' => $station->name,
-            'count' => $station->hospital_count];
+            if ($station->hospital_count > 0) {
+                $result = ['station_no' => $station->id,
+                    'station_name' => $station->name,
+                    'count' => $station->hospital_count];
 
-            $results[] = $result;
+                $results[] = $result;
+            }
         }
 
         return $results;

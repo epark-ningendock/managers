@@ -4,14 +4,17 @@ namespace App\Http\Controllers\Api;
 
 use App\ConvertedId;
 use App\Enums\ReservationStatus;
+use App\Http\Requests\ReservationGetAllRequest;
 use App\Http\Requests\ReservationShowRequest;
 use App\Http\Requests\ReservationStoreRequest;
 use App\Http\Requests\ReservationCancelRequest;
 
+use App\Http\Resources\ReservationAllResource;
 use App\Services\ReservationService;
 
 use App\Http\Resources\ReservationConfResource;
 use App\Http\Resources\ReservationStoreResource;
+use App\Reservation;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -87,7 +90,7 @@ class ReservationApiController extends ApiBaseController
 
             try {
                 // 予約履歴apiより予約履歴をキャンセル実行する。
-                $this->_reservation_service->request($request, $entity);
+                $this->_reservation_service->request($entity);
             } catch (\Exception $e) {
                 Log::error('予約履歴API実行に失敗しました。:'. $e);
             }
@@ -143,7 +146,8 @@ class ReservationApiController extends ApiBaseController
      */
     public function store(ReservationStoreRequest $request)
     {
-//        try {
+        try {
+
             $reservation_id = $request->input('reservation_id');
             $reservation_id = $this->convertReservationId($reservation_id);
             // 予約可能かチェック
@@ -154,9 +158,19 @@ class ReservationApiController extends ApiBaseController
             } elseif ($result == 2 || $result == 4) {
                 $this->failedResult(['00', '04', '登録失敗（予約枠なし(予約済みエラー、受付数オーバーエラー)）']);
             } elseif ($result == 3) {
-                $this->failedResult(['00', '05', '登録失敗（予約不可(必須項目エラー、引数エラー、顧客チェック失敗エラー、その他エラー、メール送信エラー）']);
+                $this->failedResult(['00', '05', 'コースID:'.$request->input('course_id').'登録失敗（予約不可(必須項目エラー、引数エラー、顧客チェック失敗エラー、その他エラー、メール送信エラー）']);
             } elseif ($result == 5) {
                 $this->failedResult(['00', '03', '登録失敗（予約枠埋まり)']);
+            }
+
+            // 処理区分セット
+            $process = intval($request->input('process_kbn'));
+            if ($process === 1) { // 更新
+                $oldEntity = Reservation::find($request->input('reservation_id'));
+            }
+            // カレンダーの予約数を1つ減らす
+            if ($process === 1 && $oldEntity) {
+                $this->_reservation_service->registReservationToCalendar($oldEntity, -1);
             }
 
             // 予約登録／更新
@@ -166,7 +180,7 @@ class ReservationApiController extends ApiBaseController
 
             try {
                 // 予約履歴apiより予約履歴登録を実行する。
-                $this->_reservation_service->request($request, $entity);
+                $this->_reservation_service->request($entity);
             } catch (\Exception $e) {
                 Log::error('予約履歴API実行に失敗しました。:'. $e);
             }
@@ -174,14 +188,16 @@ class ReservationApiController extends ApiBaseController
             // 処理区分をentityに追加
             $entity->process_kbn = intval($request->input('process_kbn'));
 
+            Log::info('メール送信処理開始');
             // 完了メール送信
             $entity->result_code = $this->_reservation_service->mail($entity);
+            Log::info('メール送信処理終了');
 
             return new ReservationStoreResource($entity);
-//        } catch (\Exception $e) {
-//            Log::error('予約登録処理に失敗しました。:'. $e);
-//            $this->failedResult(['00', '01', '内部エラー']);
-//        }
+        } catch (\Exception $e) {
+            Log::error('予約登録処理に失敗しました。:'. $e);
+            $this->failedResult(['00', '01', '内部エラー']);
+        }
 
     }
 
@@ -203,5 +219,31 @@ class ReservationApiController extends ApiBaseController
         throw new HttpResponseException(
             response()->json($response, 400)->setCallback($callback)
         );
+    }
+
+    /**
+     * 予約一覧取得API
+     *
+     * @param  App\Http\Requests\ReservationShowRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function get_all(ReservationGetAllRequest $request)
+    {
+        try {
+            // パラメータ取得
+            $epark_member_id = $request->input('epark_member_id');
+
+            // 対象取得
+            $reservations = $this->_reservation_service->find_all_id($epark_member_id);
+
+            $data = ['reservations' => $reservations];
+
+            // response set
+            return new ReservationAllResource($data);
+        } catch (\Exception $e) {
+            Log::error('予約情報取得に失敗しました。:'. $e);
+            $this->failedResult(['00', '01', '内部エラー']);
+        }
+
     }
 }

@@ -43,13 +43,19 @@ class Station extends Model
             if (isset($rails[$i])) {
                 $r =  Rail::select(['name'])->find($rails[$i]);
                 $returnData[$i]['rail_line'] = $r['name'];
+            } else {
+                continue;
             }
             if (isset($stations[$i])) {
                 $s =  Station::select(['name'])->find($stations[$i]);
                 $returnData[$i]['station'] = $s['name'];
+            } else {
+                $returnData[$i]['station'] = '';
             }
             if (isset($accesses[$i])) {
                 $returnData[$i]['access'] =  $accesses[$i];
+            } else {
+                $returnData[$i]['access'] =  '';
             }
 
         }

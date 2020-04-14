@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Requests\PvRegistStoreRequest;
 
 class PvRegistController extends ApiBaseController
 {
@@ -15,19 +16,11 @@ class PvRegistController extends ApiBaseController
      * PV登録を実行する
      * @param Request $request
      */
-    public function store(Request $request)
-    {
+    public function store(PvRegistStoreRequest $request)
+   {
         try {
-            $messages = config('api.consideration_list_api.message');
-            $sysErrorMessages = config('api.sys_error.message');
             $hospitalId = $request->input('hospital_no');
-            if (!empty($hospitalId) && $this->isExistHospital($hospitalId)) {
-                // PVデータ更新
-                $this->registPv($hospitalId);
-            } else {
-                $this->createResponse($messages['errorHospitalId']);
-            }
-            return $this->createResponse($messages['success']);
+              $this->registPv($hospitalId);
         } catch (\Exception $e) {
             $message = '[PV登録API] DBの登録に失敗しました。';
             Log::error($message, [
@@ -35,24 +28,12 @@ class PvRegistController extends ApiBaseController
                 'exception' => $e,
             ]);
             DB::rollback();
-            return $this->createResponse($sysErrorMessages['errorDB']);
+            return $this->createResponse($this->messages['errorDB'], $request->input('callback'));
         }
+        return $this->createResponse($this->messages['success'], $request->input('callback'));
     }
+    
 
-    /**
-     * 医療機関存在チェック
-     * @param int $hospitalId
-     */
-    protected function isExistHospital(int $hospitalId) {
-
-       $hospital = Hospital::find($hospitalId);
-
-       if (empty($hospital)) {
-           return false;
-       }
-
-       return true;
-    }
 
     /**
      * 指定医療機関IDにてPVデータ登録を行う

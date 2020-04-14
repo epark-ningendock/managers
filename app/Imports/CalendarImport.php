@@ -57,6 +57,11 @@ class CalendarImport extends ImportBAbstract implements WithChunkReading
 
             $model->save();
 
+//            $c = ConvertedIdString::where('table_name', 'calendars')
+//                ->where('old_id', $this->getValue($row, 'LINE_ID'))
+//                ->where('hospital_no', $this->hospital_no)
+//                ->first();
+
             $courses = Course::where('hospital_id', $con->new_id)
                 ->where('calendar_id', $this->getValue($row, 'LINE_ID'))
                 ->get();

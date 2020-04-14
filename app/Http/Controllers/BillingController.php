@@ -34,7 +34,8 @@ class BillingController extends Controller {
 		$dateFilter = billingDateFilter(str_replace('-', '', $selectedMonth));
 		session()->put('hospital_id', null);
 
-		$billings = Billing::filter( $billingFilters )->where('billing_month', '=', str_replace('-', '', $selectedMonth))->paginate(20);
+		$billings = Billing::filter( $billingFilters )
+            ->where('billing_month', '=', str_replace('-', '', $selectedMonth))->has('contract_information')->paginate(20);
 
 		return view( 'billing.index', [
 			'billings'        => $billings,
@@ -47,13 +48,12 @@ class BillingController extends Controller {
 
 	public function excelExport( BillingFilters $billingFilters ) {
 
-    $selectedMonth = $this->getSelectedMonth();
+	    $selectedMonth = $this->getSelectedMonth();
+	    $yyyymm = str_replace('-', '', $selectedMonth);
+	    $dateFilter = billingDateFilter(str_replace('-', '', $selectedMonth));
+	    $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $yyyymm)->has('contract_information')->get();
 
-		$dateFilter = billingDateFilter(str_replace('-', '', $selectedMonth));
 
-    $billings = Billing::filter( $billingFilters )->where('billing_month', '=', $selectedMonth)->paginate(20);
-
-		$yyyymm = str_replace('-', '', $selectedMonth);
 
 		return $this->excel->download( new BillingExport( $billings, $dateFilter['startedDate'], $dateFilter['endedDate'], $selectedMonth ), "顧客請求対象_$yyyymm.xlsx" );
 
@@ -135,6 +135,12 @@ class BillingController extends Controller {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show( Billing $billing ) {
+
+        $hospital_id = session()->get('hospital_id');
+
+        if (isset($hospital_id) && $hospital_id != $billing->hospital_id) {
+            abort(404);
+        }
 
         $dateFilter = billingDateFilter($billing->billing_month);
 
@@ -240,12 +246,12 @@ class BillingController extends Controller {
 	            'selectedMonth' => $selectedMonth
             ];
 
-            Mail::to( [
-                $hospitalEmailSetting->billing_email1,
-                $hospitalEmailSetting->billing_email2,
-                $hospitalEmailSetting->billing_email3,
-                $hospitalEmailSetting->billing_fax_number . '@faxmail.com',
-            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
+//            Mail::to( [
+//                $hospitalEmailSetting->billing_email1,
+//                $hospitalEmailSetting->billing_email2,
+//                $hospitalEmailSetting->billing_email3,
+//                $hospitalEmailSetting->billing_fax_number . '@faxmail.com',
+//            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
 
             $billingMailHistory = new BillingMailHistory();
 
@@ -288,9 +294,9 @@ class BillingController extends Controller {
 		            'selectedMonth' => $billing->billing_month
 	            ];
 
-	            Mail::to( [
-	                env('DOCK_EMAIL_ADDRESS'),
-	            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
+//	            Mail::to( [
+//	                config('mail.to.gyoumu'),
+//	            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
 	        }
 		}	
 

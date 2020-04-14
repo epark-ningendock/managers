@@ -19,12 +19,12 @@ class CreateCourseMetaTable extends Migration
             $table->increments('id');
             $table->integer('course_id')->unsigned();
             $table->integer('hospital_id')->unsigned();
-            $table->string('category_exam_name')->nullable();
-            $table->string('category_disease_name')->nullable();
-            $table->string('category_part_name')->nullable();
-            $table->string('category_exam')->nullable();
-            $table->string('category_disease')->nullable();
-            $table->string('category_part')->nullable();
+            $table->text('category_exam_name')->nullable();
+            $table->text('category_disease_name')->nullable();
+            $table->text('category_part_name')->nullable();
+            $table->text('category_exam')->nullable();
+            $table->text('category_disease')->nullable();
+            $table->text('category_part')->nullable();
             $table->tinyInteger('meal_flg')->default(0);
             $table->tinyInteger('pear_flg')->default(0);
             $table->tinyInteger('female_doctor_flg')->default(0);

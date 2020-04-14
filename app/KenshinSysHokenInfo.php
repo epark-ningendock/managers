@@ -7,7 +7,7 @@ use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class KenshinSysHokenInfo extends SoftDeleteModel
 {
-    use SoftDeletes, OptimisticLocking;
+    use SoftDeletes;
 
     protected $dates = [
         'deleted_at'];

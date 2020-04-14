@@ -107,6 +107,7 @@ class HospitalAttentionController extends Controller
                 $tour_movie = $request->get('tour_movie');
                 $exam_movie = $request->get('exam_movie');
                 $special_page = $request->get('special_page');
+                $pay_per_use_price = $request->get('pay_per_use_price');
 
                 if ($dr_movie == 1) {
                     $this->registOptionPlan($hospital_id, $dr_movie);
@@ -139,7 +140,7 @@ class HospitalAttentionController extends Controller
                 }
 
                 if ($special_page == 6) {
-                    $this->registOptionPlan($hospital_id, $special_page);
+                    $this->registOptionPlan($hospital_id, $special_page, $pay_per_use_price);
                 } else {
                     $this->deleteOptionPlan($hospital_id, 6);
                 }
@@ -270,18 +271,20 @@ class HospitalAttentionController extends Controller
      * @param $hospital_id
      * @param $option_plan_id
      */
-    private function registOptionPlan($hospital_id, $option_plan_id) {
+    private function registOptionPlan($hospital_id, $option_plan_id, $pay_per_use = null) {
         $hospital_option_plan = HospitalOptionPlan::where('hospital_id', $hospital_id)
             ->where('option_plan_id', $option_plan_id)
             ->first();
 
         if (!$hospital_option_plan) {
             $hospital_option_plan = new HospitalOptionPlan();
+            $hospital_option_plan->from = Carbon::today();
             $hospital_option_plan->hospital_id = $hospital_id;
             $hospital_option_plan->option_plan_id = $option_plan_id;
-            $hospital_option_plan->from = Carbon::today();
-            $hospital_option_plan->save();
         }
+
+        $hospital_option_plan->pay_per_use_price = $pay_per_use;
+        $hospital_option_plan->save();
     }
 
     /**

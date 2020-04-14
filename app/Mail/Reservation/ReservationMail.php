@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Enums\Gender;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -14,7 +15,7 @@ use Carbon\Carbon;
 use Log;
 
 // 送信元
-define('EPARK_MAIL_FROM', Config::get('app.epark_mail_from'));
+define('EPARK_MAIL_FROM', config('mail.from.address'));
 class ReservationMail extends Mailable
 {
     use Queueable, SerializesModels;
@@ -65,15 +66,30 @@ class ReservationMail extends Mailable
         $questions = !empty($questions) ? $questions : [];
 
         // 電話が繋がりやすい時間帯
-        $timezones =  ['特になし', '9時～', '', '12時～', '', '', '', '13時～', ];
+        $timezones =  ['', '特に希望なし', '9時～12時', '', '12時～13時', '', '', '', '13時～17時', ];
         $tel_timezone = $this->entity->tel_timezone ?? 4;
         $timezone = $timezones[$tel_timezone];
 
         // キャンセル変更受付期限日
-        $reservation_date = $this->entity->reservation_date;
+        $reservation_date = date('Y/m/d', strtotime($this->entity->reservation_date));
         $cancellation_deadline = intval($this->entity->course->cancellation_deadline);
-        $cancellation_date = Carbon::create($reservation_date)->subDays($cancellation_deadline);
+        $cancellation_date = new Carbon($reservation_date);
+        $cancellation_date = $cancellation_date->subDays($cancellation_deadline);
         $cancellation_date = date('Y/m/d', strtotime($cancellation_date));
+
+        // 性別
+        if ($this->entity->customer->sex == Gender::MALE) {
+            $sex = '男';
+        } else {
+            $sex = '女';
+        }
+
+        $type = '';
+        if ($this->entity->site_code == 'HP') {
+            $type = 'HP';
+        } elseif ($this->entity->site_code == 'Special') {
+            $type = '特集ページ';
+        }
 
         return $this
             ->from(EPARK_MAIL_FROM)
@@ -84,7 +100,7 @@ class ReservationMail extends Mailable
                 '名' => $this->entity->customer->first_name ?? '',
                 '医療施設名' => $this->entity->hospital->name ?? '',
                 '医療施設住所' => $facility_addr,
-                '医療施設電話番号' => $this->entity->hospital->tell ?? '',
+                '医療施設電話番号' => $this->entity->hospital->tel ?? '',
                 '検査コース名' => $this->entity->course->name ?? '',
                 'コース料金' => $this->entity->course->price ?? '',
                 // 'オプション名' => '',
@@ -92,7 +108,7 @@ class ReservationMail extends Mailable
                 'options' => $options,
 
                 'コース料金＋オプション総額' => $course_options_price,
-                '調整金額' => $this->entity->adjustment_price ?? '',
+                '調整金額' => $this->entity->adjustment_price ?? '0',
                 'コース料金＋オプション総額＋調整金額' => $course_amount,
                 '支払方法' => $this->entity->payment_method ?? '',
                 'カード決済額' => $this->entity->settlement_price ?? '',
@@ -101,6 +117,7 @@ class ReservationMail extends Mailable
                 '確定日' => $reservation_date,
                 '受付日' => date('Y/m/d', strtotime($this->entity->created_at)),
                 '受付時間' => $this->entity->start_time_hour . ':' . $this->entity->start_time_min,
+                '受付形態' => $type,
 
                 '備考' => $this->entity->reservation_memo ?? '',
 
@@ -111,7 +128,7 @@ class ReservationMail extends Mailable
                     date('Y/m/d', strtotime($this->entity->third_date)) : '',
                 '姓読み仮名' => $this->entity->customer->family_name_kana ?? '',
                 '名読み仮名' => $this->entity->customer->first_name_kana ?? '',
-                '性別' =>  $this->entity->customer->sex,
+                '性別' =>  $sex,
                 '年' => date('Y', strtotime($this->entity->customer->birthday)),
                 '月' => date('m', strtotime($this->entity->customer->birthday)),
                 '日' => date('d', strtotime($this->entity->customer->birthday)),
@@ -179,28 +196,56 @@ class ReservationMail extends Mailable
      */
     private function _questions($reservation_answers): array
     {
-        $results = collect(json_decode(json_encode($reservation_answers)))->map(function ($a) {
-            $answers = collect([
-                ['answer_title' => $a->question_answer01 ?? '', 'answer' => $a->answer01 ?? '',],
-                ['answer_title' => $a->question_answer02 ?? '', 'answer' => $a->answer02 ?? '',],
-                ['answer_title' => $a->question_answer03 ?? '', 'answer' => $a->answer03 ?? '',],
-                ['answer_title' => $a->question_answer04 ?? '', 'answer' => $a->answer04 ?? '',],
-                ['answer_title' => $a->question_answer05 ?? '', 'answer' => $a->answer05 ?? '',],
-                ['answer_title' => $a->question_answer06 ?? '', 'answer' => $a->answer06 ?? '',],
-                ['answer_title' => $a->question_answer07 ?? '', 'answer' => $a->answer07 ?? '',],
-                ['answer_title' => $a->question_answer08 ?? '', 'answer' => $a->answer08 ?? '',],
-                ['answer_title' => $a->question_answer09 ?? '', 'answer' => $a->answer09 ?? '',],
-                ['answer_title' => $a->question_answer10 ?? '', 'answer' => $a->answer10 ?? '',],
-            ]);
-            $answers = collect(json_decode(json_encode($answers)))->filter(function ($q) {
-                return isset($q) && $q->answer_title !== '';
-            });
-            $answers = $answers->map(function ($q) {
-                return ['answer_title' => $q->answer_title, 'answer' => $q->answer];
-            });
-            return $answers;
-        });
-        return $results->isEmpty() ? [] : $results->toArray()[0];
+        $results = [];
+
+        foreach ($reservation_answers as $a) {
+            if ($a->answer01 == 1
+                || $a->answer02 == 1
+                || $a->answer03 == 1
+                || $a->answer04 == 1
+                || $a->answer05 == 1
+                || $a->answer06 == 1
+                || $a->answer07 == 1
+                || $a->answer08 == 1
+                || $a->answer09 == 1
+                || $a->answer10 == 1) {
+                $ans = '';
+                if ($a->answer01 == 1) {
+                    $ans = $a->question_answer01 . '、';
+                }
+                if ($a->answer02 == 1) {
+                    $ans = $ans . $a->question_answer02 . '、';
+                }
+                if ($a->answer03 == 1) {
+                    $ans = $ans . $a->question_answer03 . '、';
+                }
+                if ($a->answer04 == 1) {
+                    $ans = $ans . $a->question_answer04 . '、';
+                }
+                if ($a->answer05 == 1) {
+                    $ans = $ans . $a->question_answer05 . '、';
+                }
+                if ($a->answer06 == 1) {
+                    $ans = $ans . $a->question_answer06 . '、';
+                }
+                if ($a->answer07 == 1) {
+                    $ans = $ans . $a->question_answer07 . '、';
+                }
+                if ($a->answer08 == 1) {
+                    $ans = $ans . $a->question_answer08 . '、';
+                }
+                if ($a->answer09 == 1) {
+                    $ans = $ans . $a->question_answer09 . '、';
+                }
+                if ($a->answer10 == 1) {
+                    $ans = $ans . $a->question_answer10 . '、';
+                }
+                $ans = rtrim($ans, '、');
+                $results[] = ['question_title' => $a->question_title, 'answer' => $ans];
+
+            }
+        }
+        return $results;
     }
 
     /**

@@ -10,12 +10,21 @@ use App\Enums\ReservationStatus;
 use App\Holiday;
 use App\ContractInformation;
 use App\Hospital;
+use App\HospitalEmailSetting;
 use App\HospitalPlan;
 use App\Mail\Reservation\ReservationCheckMail;
 use App\Mail\Reservation\ReservationOperationMail;
 use App\Http\Requests\ReservationCreateFormRequest;
 use App\Http\Requests\ReservationFormRequest;
 use App\Http\Requests\ReservationUpdateFormRequest;
+use App\Mail\ReservationCancelFaxToMail;
+use App\Mail\ReservationCancelMail;
+use App\Mail\ReservationChangeFaxToMail;
+use App\Mail\ReservationChangeMail;
+use App\Mail\ReservationReceptionCancelMail;
+use App\Mail\ReservationReceptionCompleteFaxToMail;
+use App\Mail\ReservationReceptionCompleteMail;
+use App\Prefecture;
 use App\Reservation;
 use App\ReservationOption;
 use App\Services\ReservationExportService;
@@ -23,6 +32,7 @@ use App\Services\ReservationService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -177,6 +187,8 @@ class ReservationController extends Controller
             $query->whereIn('reservation_status', $status_filter);
         }
 
+        $query->orderBy('reservation_date', 'desc');
+
         return $query;
     }
 
@@ -199,6 +211,7 @@ class ReservationController extends Controller
         ];
         $callback = function () use ($columnNames, $rows) {
             $file = fopen('php://output', 'w');
+            stream_filter_prepend($file,'convert.iconv.utf-8/cp932');
             fputcsv($file, $columnNames);
             foreach ($rows as $row) {
                 fputcsv($file, $row);
@@ -259,8 +272,9 @@ class ReservationController extends Controller
                 $reservation->cashpo_used_price,
                 $reservation->acceptance_number,
                 Reservation::getChannel($reservation->channel),
-                $reservation->reservation_memo,
                 $reservation->todays_memo,
+                $reservation->internal_memo,
+                $reservation->cancellation_reason,
             ];
 
             $questions = collect();
@@ -307,6 +321,7 @@ class ReservationController extends Controller
             '受付形態',
             '受付・予約メモ',
             '医療機関備考',
+            'キャンセル理由',
         ];
 
         for ($i = 0; $i < $question_count; $i++) {
@@ -346,13 +361,26 @@ class ReservationController extends Controller
 
             Session::flash('success', trans('messages.reservation.accept_success'));
             DB::commit();
+            $this->reservation_mail_send($reservation, false);
 
-            return redirect()->back();
         } catch (\Exception $e) {
+            Log::error($e);
             DB::rollback();
 
             return redirect()->back()->withErrors(trans('messages.reservation.accept_error'))->withInput();
         }
+
+        // 予約履歴api更新
+        try {
+            if (!empty($reservation->epark_member_id)) {
+                $this->_reservation_service->request($reservation);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('予約履歴api更新に失敗しました。');
+        }
+
+        return redirect()->back();
     }
 
     /**
@@ -367,8 +395,7 @@ class ReservationController extends Controller
         try {
             DB::beginTransaction();
             $reservation = Reservation::findOrFail($id);
-            if (!$reservation->reservation_status->is(ReservationStatus::RECEPTION_COMPLETED) &&
-                !$reservation->reservation_status->is(ReservationStatus::PENDING)) {
+            if ($reservation->reservation_status->is(ReservationStatus::CANCELLED)) {
                 return redirect()->back()->withErrors(trans('messages.reservation.invalid_reservation_status'))->withInput();
             }
             $reservation->reservation_status = ReservationStatus::CANCELLED;
@@ -383,12 +410,25 @@ class ReservationController extends Controller
             Session::flash('success', trans('messages.reservation.cancel_success'));
             DB::commit();
 
-            return redirect()->back();
+            $this->reservation_mail_send($reservation, false);
+
         } catch (\Exception $e) {
             DB::rollback();
 
             return redirect()->back()->withErrors(trans('messages.reservation.cancel_error'))->withInput();
         }
+
+        // 予約履歴api更新
+        try {
+            if (!empty($reservation->epark_member_id)) {
+                $this->_reservation_service->request($reservation);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('予約履歴api更新に失敗しました。');
+        }
+
+        return redirect()->back();
     }
 
     /**
@@ -410,16 +450,121 @@ class ReservationController extends Controller
             $reservation->completed_date = Carbon::now();
             $reservation->save();
 
-            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+//            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
 
             Session::flash('success', trans('messages.reservation.complete_success'));
             DB::commit();
 
-            return redirect()->back();
+//            $this->reservation_mail_send($reservation, false);
+
         } catch (\Exception $e) {
             DB::rollback();
 
             return redirect()->back()->withErrors(trans('messages.reservation.complete_error'))->withInput();
+        }
+
+        // 予約履歴api更新
+        try {
+            if (!empty($reservation->epark_member_id)) {
+                $this->_reservation_service->request($reservation);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('予約履歴api更新に失敗しました。');
+        }
+        return redirect()->back();
+
+    }
+
+    /**
+     * @param $reservation
+     * @param $customer_flg
+     */
+    private function reservation_mail_send($reservation, $change_flg) {
+
+        // 確定メール送信（受診者）
+//        if (!empty($reservation->epark_member_id)) {
+//            $to = $reservation->customer->email;
+//            Mail::to($to)->send(new ReservationReceptionCompleteMail($reservation, true));
+//        } else {
+//            Mail::to('taro.kimura@banana-877.com')->send(new ReservationReceptionCompleteMail($reservation, true));
+//        }
+
+        // 確定メール送信（施設）
+        $query = HospitalEmailSetting::where('hospital_id', $reservation->hospital_id)
+            ->where('in_hospital_email_reception_flg', 1);
+
+        if (!$change_flg && $reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+            $query->where('in_hospital_confirmation_email_reception_flg', '1');
+        }
+        if (!$change_flg && $reservation->reservation_status == ReservationStatus::CANCELLED) {
+            $query->where('in_hospital_cancellation_email_reception_flg', '1');
+        }
+        if ($change_flg) {
+            $query->where('in_hospital_change_email_reception_flg', '1');
+        }
+        $hospital_email_setting = $query->first();
+        $hospital_mails = [];
+        $hospital_fax = [];
+        if ($hospital_email_setting) {
+            if (strpos($hospital_email_setting->reception_email1, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email1;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email1;
+            }
+            if (strpos($hospital_email_setting->reception_email2, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email2;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email2;
+            }
+            if (strpos($hospital_email_setting->reception_email3, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email3;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email3;
+            }
+            if (strpos($hospital_email_setting->reception_email4, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email4;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email4;
+            }
+            if (strpos($hospital_email_setting->reception_email5, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email5;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email5;
+            }
+        }
+
+        if (!empty($hospital_mails)) {
+            foreach ($hospital_mails as $m) {
+                if (!empty($m)) {
+                    $tos[] = $m;
+                }
+            }
+            // 医療機関へメール送信
+            $gyoumu_mail = config('mail.to.gyoumu');
+//            if ($change_flg) {
+//                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationChangeMail($reservation, false));
+//            } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
+//                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationReceptionCancelMail($reservation, false));
+//            } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+//                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationReceptionCompleteMail($reservation, false));
+//            }
+        }
+
+        if (!empty($hospital_fax)) {
+            foreach ($hospital_fax as $fax_to) {
+                if (!empty($fax_to)) {
+                    $fax_tos[] = $fax_to;
+                }
+            }
+            // 医療機関へメール送信
+//            if ($change_flg) {
+//                Mail::to($fax_tos)->send(new ReservationChangeFaxToMail($reservation));
+//            } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
+//                Mail::to($fax_tos)->cc($gyoumu_mail)->send(new ReservationCancelFaxToMail($reservation));
+//            } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+//                Mail::to($fax_tos)->cc($gyoumu_mail)->send(new ReservationReceptionCompleteFaxToMail($reservation));
+//            }
         }
     }
 
@@ -468,8 +613,9 @@ class ReservationController extends Controller
     public function create()
     {
         $courses = Course::where('hospital_id', session()->get('hospital_id'))->get();
+        $prefectures = Prefecture::all();
 
-        return view('reservation.create')->with(['courses' => $courses]);
+        return view('reservation.create')->with(['courses' => $courses, 'prefectures' => $prefectures]);
     }
 
 
@@ -495,7 +641,7 @@ class ReservationController extends Controller
                 ->where('is_holiday', 1)
                 ->whereDate('date', $reservation_date)->get()->first();
 
-            if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '1') && $calendar_day->reservation_frames == 0) {
+            if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '0') && $calendar_day->reservation_frames == 0) {
                 DB::rollback();
                 return redirect()->back()->with('error', trans('messages.reservation.not_reservable'))->withInput();
             }
@@ -546,6 +692,20 @@ class ReservationController extends Controller
 
             if ($request->customer_id) {
                 $customer = Customer::findOrFail($request->customer_id);
+                $customer->first_name = $request->first_name;
+                $customer->family_name = $request->family_name;
+                $customer->first_name_kana = $request->first_name_kana;
+                $customer->family_name_kana = $request->family_name_kana;
+                $customer->tel = $request->tel;
+                $customer->sex = $request->sex;
+                $customer->email = $request->email;
+                $customer->postcode = $request->postcode1 . $request->postcode2;
+                $customer->prefecture_id = $request->prefecture_id;
+                $customer->address1 = $request->address1;
+                $customer->address2 = $request->address2;
+                $customer->birthday = $request->birthday;
+                $customer->memo = $request->memo;
+                $customer->registration_card_number = $request->registration_card_number;
                 if (Reservation::where('customer_id', $request->customer_id)->count() > 0) {
                     $reservation->is_repeat = true;
                 }
@@ -556,6 +716,14 @@ class ReservationController extends Controller
                     'first_name_kana' => $request->first_name_kana,
                     'family_name_kana' => $request->family_name_kana,
                     'tel' => $request->tel,
+                    'sex' => $request->sex,
+                    'email' => $request->email,
+                    'postcode' => $request->postcode1 . $request->postcode2,
+                    'prefecture_id' => $request->prefecture_id,
+                    'address1' => $request->address1,
+                    'address2' => $request->address2,
+                    'birthday' => $request->birthday,
+                    'memo' => $request->memo,
                     'registration_card_number' => $request->registration_card_number,
                     'hospital_id' => session()->get('hospital_id'),
                 ]);
@@ -563,6 +731,9 @@ class ReservationController extends Controller
             }
 
             $reservation->customer_id = $customer->id;
+            if (!empty($customer->epark_member_id)) {
+                $reservation->epark_member_id = $customer->epark_member_id;
+            }
             $reservation->save();
             // カレンダーの予約数を1つ増やす
             $this->_reservation_service->registReservationToCalendar($reservation, 1);
@@ -574,13 +745,22 @@ class ReservationController extends Controller
 
             DB::commit();
 
-            return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
-
         } catch (\Exception $i) {
             DB::rollback();
 
             return redirect()->back()->with('error', trans('messages.reservation.complete_error'))->withInput();
         }
+
+        // 予約履歴api更新
+        try {
+            if (!empty($reservation->epark_member_id)) {
+                $this->_reservation_service->request($reservation);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('予約履歴api更新に失敗しました。');
+        }
+        return redirect('reservation')->with('success', trans('messages.reservation.complete_success'));
 
     }
 
@@ -676,8 +856,13 @@ class ReservationController extends Controller
 
     public function edit(Reservation $reservation)
     {
+        $hospital_id = session()->get('hospital_id');
 
-        $courses = Course::where('hospital_id', session()->get('hospital_id'))->get();
+        if (isset($hospital_id) && $hospital_id != $reservation->hospital_id) {
+            abort(404);
+        }
+
+        $courses = Course::where('hospital_id', $reservation->hospital_id)->get();
         $reservation_answers = $reservation->reservation_answers;
 
         $course_question_ids = [];
@@ -725,7 +910,6 @@ class ReservationController extends Controller
 
     public function update(ReservationUpdateFormRequest $request, Reservation $reservation)
     {
-
         try {
             DB::beginTransaction();
             $today = Carbon::today();
@@ -741,7 +925,7 @@ class ReservationController extends Controller
                 ->where('is_holiday', 1)
                 ->whereDate('date', $reservation_date)->get()->first();
 
-            if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '1') && $calendar_day->reservation_frames == 0) {
+            if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '0') && $calendar_day->reservation_frames == 0) {
                 DB::rollback();
                 return redirect()->back()->with('error', trans('messages.reservation.not_reservable'))->withInput();
             }
@@ -802,7 +986,7 @@ class ReservationController extends Controller
 
             DB::commit();
 
-            return redirect('reservation')->with('success', trans('messages.reservation.update_success'));
+            $this->reservation_mail_send($reservation, true);
 
         } catch (\Exception $i) {
             DB::rollback();
@@ -810,6 +994,17 @@ class ReservationController extends Controller
             return redirect()->back()->with('error', trans('messages.reservation.status_update_error'))->withInput();
         }
 
+        // 予約履歴api更新
+        try {
+            if (!empty($reservation->epark_member_id)) {
+                $this->_reservation_service->request($reservation);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('予約履歴api更新に失敗しました。');
+        }
+
+        return redirect('reservation')->with('success', trans('messages.reservation.update_success'));
     }
 
     /**
@@ -827,15 +1022,8 @@ class ReservationController extends Controller
             'reservation' => $reservation
         ];
 
-        Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new ReservationCheckMail($mailContext));
+//        Mail::to(config('mail.to.gyoumu'))->send(new ReservationCheckMail($mailContext));
 
-        if (isset($customer->email)) {
-            Mail::to($customer->email)->send(new ReservationCheckMail($mailContext));
-        }
-
-//        if (isset($contract_information)) {
-//            Mail::to($contract_information->email)->send(new ReservationCheckMail($mailContext));
-//        }
     }
 
 }

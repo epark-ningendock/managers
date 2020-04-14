@@ -18,30 +18,31 @@ class SearchHospitalsResource extends Resource
     public function toArray($request)
     {
 
-        $rails = [$this->rail1, $this->rail2, $this->rail3, $this->rail4, $this->rail5];
-        $stations = [$this->station1, $this->station2, $this->station3, $this->station4, $this->station5];
-        $accesses = [$this->access1, $this->access2, $this->access3, $this->access4, $this->access5];
-
+        if (!empty($this->district_code) && !empty($this->district_code->name)) {
+            $pref_name = $this->district_code->name;
+        } else {
+            $pref_name = '';
+        }
         return [
             'no' => $this->id,
             'url_basic' => $this->url,
             'hospital_code' => $this->contract_information->code,
             'name' => $this->name,
-            'update_dt' => Carbon::parse($this->update_at)->format('Y年m月d日'),
+            'update_dt' => Carbon::parse($this->updated_at)->format('Y年m月d日'),
             'pref_name' => $this->prefecture->name,
-            'district_name' => $this->districtCode->name,
-            'address1' => $this->address1,
-            'address2' => $this->address2,
-            'stations' => Station::getStations($rails, $stations, $accesses),
+            'district_name' => $pref_name,
+            'address1' => $this->address1 ?? '',
+            'address2' => $this->address2 ?? '',
+            'stations' => $this->getStationInfo(),
             'closed_day' => $this->getClosedDay(),
-            'non_consultation' => $this->consultation_note,
-            'non_consultation_note' => $this->memo,
-            'img_sub_url' => $this->getImgSub($this->hospital_categories),
+            'non_consultation' => $this->consultation_note ?? '',
+            'non_consultation_note' => $this->memo ?? '',
+            'img_sub' => $this->getImgSub($this->hospital_categories),
             'movie' => $this->getMovieInfo(),
             'caption' => $this->getCaption($this->hospital_categories),
             'category' => new HospitalCategoryResource($this),
             'pickup' => $this->is_pickup,
-            'courses' => CoursesBaseResource::collection($this->courses),
+            'courses' => CourseBaseResource::collection($this->courses),
         ];
     }
 
@@ -49,7 +50,6 @@ class SearchHospitalsResource extends Resource
      * @return string
      */
     private function getClosedDay() {
-        $medical_treatment_times = MedicalTreatmentTime::where('hospital_id', $this->id)->get();
 
         $mon_flg = false;
         $tue_flg = false;
@@ -59,7 +59,7 @@ class SearchHospitalsResource extends Resource
         $sat_flg = false;
         $sun_flg = false;
         $hol_flg = false;
-        foreach ($medical_treatment_times as $entity) {
+        foreach ($this->medical_treatment_times as $entity) {
             if ($entity->mon == 1) {
                 $mon_flg = true;
             }
@@ -110,10 +110,6 @@ class SearchHospitalsResource extends Resource
         }
         if (!$hol_flg) {
             $result = $result . '祝・';
-        }
-
-        if (!empty($this->consultation_note)) {
-            $result = $result . '（'. $this->consultation_note . '）';
         }
 
         return rtrim($result, '・');
@@ -201,11 +197,15 @@ class SearchHospitalsResource extends Resource
         });
 
         if (isset($el) && isset($el->caption)) {
-            return $el->caption;
+            if (strlen($el->caption) > 254) {
+                return mb_strcut($el->caption, 0 , 254, 'UTF-8') . '...';
+            } else {
+                return $el->caption ?? '';
+            }
+
         } else {
             return '';
         }
-
     }
 
     /**
@@ -244,11 +244,11 @@ class SearchHospitalsResource extends Resource
             && ($category->image_order === 2)
             && ($category->file_location_no == 1)
                 && !empty($category->hospital_image->path)) {
-                return $category->hospital_image->path;
+                return ['img_sub_url' => $category->hospital_image->path, 'img_sub_alt' => $category->hospital_image->memo1 ?? ''];
             }
         }
 
-        return '';
+        return ['img_sub_url' => '', 'img_sub_alt' => ''];
     }
 
 }

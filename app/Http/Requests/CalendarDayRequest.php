@@ -13,17 +13,17 @@ class CalendarDayRequest extends ValidationRequest
 //     *
 //     * @return array
 //     */
-//    public function rules()
-//    {
-//        return [
-//            'hospital_code' => 'required|alpha_num',
-//            'course_no' => 'required|numeric',
-//            // 検査コース空満情報（日別）
-//            'get_yyyymmdd_from' => 'nullable|date_format:Ymd',
-//            'get_yyyymmdd_to' => 'nullable|date_format:Ymd',
-//
-//        ];
-//    }
+   public function rules()
+   {
+       return [
+           'hospital_code' => ['required','regex:/^D[0-9a-zA-Z]+$/u','exists:contract_informations,code'],
+           'course_code' => 'required|alpha_num|exists:courses,code',
+           // 検査コース空満情報（日別）
+           'get_yyyymmdd_from' => ['nullable','numeric','regex:/^2[0-9]{7}$/u'],
+           'get_yyyymmdd_to' => ['nullable','numeric','regex:/^2[0-9]{7}$/u'],
+
+       ];
+   }
 
     /**
      * 検査コース空満情報取得API request to array

@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\CalendarDay;
+use App\Enums\GenderTak;
+use App\Enums\HonninKbn;
 use App\Enums\ReservationStatus;
 use App\Enums\Status;
 use App\Hospital;
 use App\Http\Requests\CalendarMonthlyRequest;
+use App\Http\Resources\CalendarBaseResource;
 use App\Reservation;
 use Illuminate\Http\Request;
 use App\Http\Requests\CalendarDayRequest;
+use App\Http\Requests\CourseRequest;
 use App\Course;
-
+use App\ContractInformation;
 use App\Http\Resources\CourseIndexResource;
 use App\Http\Resources\CourseBasicResource;
 use App\Http\Resources\CourseContentsResource;
@@ -28,31 +32,19 @@ class CourseController extends ApiBaseController
      * @param  App\Http\Requests\CourseRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(CourseRequest $request)
     {
-//        try {
+        try {
+
             $course_code = $request->input('course_code');
-            $hospital_code = $request->input('hospital_code');
 
-            $hospital_code_chk_result = $this->checkHospitalCode($hospital_code);
-            $hospital_id = null;
+            $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
-            if (!$hospital_code_chk_result[0]) {
-                return $this->createResponse($hospital_code_chk_result[1]);
-            } else {
-                $hospital_id = $hospital_code_chk_result[1];
-            }
-
-            $course_no_chk_result = $this->checkCourseCode($course_code, $hospital_id);
-
-            if (!$course_no_chk_result[0]) {
-                return $this->createResponse($course_no_chk_result[1]);
-            }
-            //検査コースコンテンツ情報取得
+            // //検査コースコンテンツ情報取得
             $course = $this->getCourseContents($hospital_id, $course_code);
 
             if (!$course) {
-                return $this->createResponse($this->messages['data_empty_error']);
+                return $this->createResponse($this->messages['data_empty_error'], $request->input('callback'));
             }
             // その他コース情報取得
             $courses = $this->getCourses($hospital_id, $course->id);
@@ -60,10 +52,80 @@ class CourseController extends ApiBaseController
             $data = ['course' => $course, 'courses' => $courses, 'hospital' => $hospital];
 
             return new CourseIndexResource($data);
-//        } catch (\Exception $e) {
-//            Log::error($e);
-//            return $this->createResponse($this->messages['system_error_db']);
-//        }
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
+        }
+    }
+
+    /**
+     * 検査コース基本情報取得API
+     *
+     * @param  App\Http\Requests\CourseRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function basic(CourseRequest $request)
+    {
+        try {
+
+            $course_code = $request->input('course_code');
+            $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
+
+            // //検査コース基本情報取得
+            $course = $this->getCourseBasic($hospital_id, $course_code, $request);
+
+            if (!$course) {
+                return $this->createResponse($this->messages['data_empty_error'], $request->input('callback'));
+            }
+
+            // その他コース情報取得
+            $hospital = $this->getHospitalData($course->hospital_id);
+            $data = ['course' => $course,  'hospital' => $hospital];
+
+            if (!empty($request->input('sex'))) {
+                $course->kenshin_relation_flg = true;
+                $course->medical_exam_sys_id = $hospital->medical_examination_system_id;
+                $course->reservation_date = $request->input('reservation_date');
+                $course->sex = $request->input('sex');
+                $course->birth = $request->input('birth');
+                $course->honnin_kbn = $request->input('honnin_kbn');
+            }
+
+            return new CourseBasicResource($data);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
+        }
+    }
+
+    /**
+     * 検査コースコンテンツ情報取得API
+     *
+     * @param  App\Http\Requests\CourseRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function contents(CourseRequest $request)
+    {
+        try {
+
+            $course_code = $request->input('course_code');
+            $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
+
+            // //検査コースコンテンツ情報取得
+            $course = $this->getCourseContents($hospital_id, $course_code, $request);
+
+            if (!$course) {
+                return $this->createResponse($this->messages['data_empty_error'], $request->input('callback'));
+            }
+            // その他コース情報取得
+            $hospital = $this->getHospitalData($course->hospital_id);
+            $data = ['course' => $course, 'hospital' => $hospital];
+
+            return new CourseContentsResource($data);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
+        }
     }
 
     /**
@@ -73,13 +135,72 @@ class CourseController extends ApiBaseController
      * @param  $course_no
      * @return Course
      */
-    private function getCourseContents($hospital_id, $course_code)
+    private function getCourseBasic($hospital_id, $course_code, $request)
     {
         $today = Carbon::today()->toDateString();
-        return Course::with([
+        $query = Course::with([
             'course_images',
             'course_details' => function ($query) {
                 $query->whereIn('major_classification_id', [2, 3, 4, 5, 6, 11, 13, 15, 16, 17, 18, 19, 20, 24, 25])
+                    ->orderBy('major_classification_id')
+                    ->orderBy('middle_classification_id')
+                    ->orderBy('minor_classification_id')
+                ;},
+            'course_details.major_classification',
+            'course_details.middle_classification',
+            'course_details.minor_classification' => function ($query) {
+                $query->where('status', Status::VALID);
+            },
+            'contract_information'
+        ])
+            ->where('hospital_id', $hospital_id)
+            ->where('code', $course_code);
+
+        if ($request->input('preview_flg') != '1') {
+            $query->where('is_category', 0)
+                ->where('web_reception', 0)
+                ->where('publish_start_date', '<=', $today)
+                ->where('publish_end_date', '>=', $today);
+        }
+
+        $query->with(['course_options']);
+
+        if (!empty($request->input('sex'))) {
+            $query->with([
+                'kenshin_sys_courses',
+                'kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
+                    $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL])
+                        ->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL]);
+
+                },
+                'kenshin_sys_courses.kenshin_sys_options',
+                'kenshin_sys_courses.kenshin_sys_options.option_futan_conditions' => function ($q) use ($request) {
+                    $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL])
+                        ->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL])
+                        ->orderBy('yusen_kbn');
+                    },
+                'kenshin_sys_courses.kenshin_sys_options.option_futan_conditions.option_target_ages'
+                ]);
+        }
+
+        return $query->first();
+    }
+
+    /**
+     * 検査コースコンテンツ情報取得
+     *
+     * @param  $hospital_code
+     * @param  $course_no
+     * @return Course
+     */
+    private function getCourseContents($hospital_id, $course_code, $request)
+    {
+        $today = Carbon::today()->toDateString();
+        $end_day = Carbon::today()->addMonthsNoOverflow(5)->endOfMonth()->toDateString();
+        $query = Course::with([
+            'course_images',
+            'course_details' => function ($query) {
+                $query->whereIn('major_classification_id', [2, 3, 4, 5, 6, 11, 13, 15, 16, 17, 18, 19, 20, 22, 24, 25])
                 ->orderBy('major_classification_id')
                 ->orderBy('middle_classification_id')
                 ->orderBy('minor_classification_id')
@@ -89,16 +210,31 @@ class CourseController extends ApiBaseController
             'course_details.minor_classification' => function ($query) {
             $query->where('status', Status::VALID);
             },
+            'calendar_days' => function ($query) use ($today, $end_day) {
+                $query->where('date', '>=', $today)
+                    ->where('date', '<=', $end_day)
+                    ->orderBy('date');
+            },
+            'course_options',
+            'course_options.option' => function ($query) {
+                $query->orderBy('order');
+
+            }
+            ,
             'course_questions',
             'contract_information'
         ])
             ->where('hospital_id', $hospital_id)
-            ->where('code', $course_code)
-            ->where('is_category', 0)
-            ->where('web_reception', 0)
-            ->where('publish_start_date', '<=', $today)
-            ->where('publish_end_date', '>=', $today)
-            ->first();
+            ->where('code', $course_code);
+
+        if ($request->input('preview_flg') != '1') {
+            $query->where('is_category', 0)
+                ->where('web_reception', 0)
+                ->where('publish_start_date', '<=', $today)
+                ->where('publish_end_date', '>=', $today);
+        }
+
+        return $query ->first();
     }
 
     /**
@@ -117,7 +253,8 @@ class CourseController extends ApiBaseController
                     ->orderBy('minor_classification_id');
                 },
             'course_details.minor_classification',
-            'contract_information'
+            'contract_information',
+            'calendar',
         ])
             ->where('hospital_id', $hospital_id)
             ->where('courses.id', '<>', $course_id)
@@ -163,34 +300,7 @@ class CourseController extends ApiBaseController
             // 検索条件取得
             $serach_condition = $request->toObject();
 
-            $hospital_code_chk_result = $this->checkHospitalCode($serach_condition->hospital_code);
-            $hospital_id = null;
-
-            if (!$hospital_code_chk_result[0]) {
-                return $this->createResponse($hospital_code_chk_result[1]);
-            } else {
-                $hospital_id = $hospital_code_chk_result[1];
-            }
-
-            $course_no_chk_result = $this->checkCourseCode($serach_condition->course_code, $hospital_id);
-
-            if (!$course_no_chk_result[0]) {
-                return $this->createResponse($course_no_chk_result[1]);
-            }
-
-            if (!empty($request->input('get_yyyymm_from'))) {
-                $from_chk_result = $this->checkMonthDate($request->input('get_yyyymm_from'));
-                if (!$from_chk_result[0]) {
-                    return $this->createResponse($from_chk_result[1]);
-                }
-            }
-
-            if (!empty($request->input('get_yyyymm_to'))) {
-                $to_chk_result = $this->checkMonthDate($request->input('get_yyyymm_to'));
-                if (!$to_chk_result[0]) {
-                    return $this->createResponse($to_chk_result[1]);
-                }
-            }
+            $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
             $course = Course::where('code', $serach_condition->course_code)
                 ->where('hospital_id', $hospital_id)
@@ -198,14 +308,14 @@ class CourseController extends ApiBaseController
                 ->first();
 
             if (!$course) {
-                return $this->createResponse($this->messages['data_empty_error']);
+                return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
             }
 
             // 医療機関の検査コースのカレンダー取得
             $month_data = $this->getMonthReservationEnableInfo($serach_condition, $course);
 
             if (!$month_data) {
-                return $this->createResponse($this->messages['data_empty_error']);
+                return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
             }
 
             $data = ['search_cond' => $serach_condition,  'course' => $course, 'month_data' => $month_data];
@@ -214,7 +324,7 @@ class CourseController extends ApiBaseController
             return new CalendarMonthlyResource($data);
         } catch (\Throwable $e) {
             Log::error($e);
-            return $this->createResponse($this->messages['system_error_db']);
+            return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
         }
     }
 
@@ -230,60 +340,56 @@ class CourseController extends ApiBaseController
             // 検索条件取得
             $serach_condition = $request->toObject();
 
-            $hospital_code_chk_result = $this->checkHospitalCode($serach_condition->hospital_code);
-            $hospital_id = null;
+            $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
-            if (!$hospital_code_chk_result[0]) {
-                return $this->createResponse($hospital_code_chk_result[1]);
-            } else {
-                $hospital_id = $hospital_code_chk_result[1];
-            }
+            $from = $serach_condition->get_yyyymmdd_from;
+            $to = $serach_condition->get_yyyymmdd_to;
 
-            $course_no_chk_result = $this->checkCourseCode($serach_condition->course_code, $hospital_id);
-
-            if (!$course_no_chk_result[0]) {
-                return $this->createResponse($course_no_chk_result[1]);
-            }
-
-            if (!empty($request->input('get_yyyymmdd_from'))) {
-                $from_chk_result = $this->checkDayDate($request->input('get_yyyymmdd_from'));
-                if (!$from_chk_result[0]) {
-                    return $this->createResponse($from_chk_result[1]);
-                }
-            }
-
-            if (!empty($request->input('get_yyyymmdd_to'))) {
-                $to_chk_result = $this->checkDayDate($request->input('get_yyyymmdd_to'));
-                if (!$to_chk_result[0]) {
-                    return $this->createResponse($to_chk_result[1]);
-                }
-            }
-
-            $course = Course::where('code', $serach_condition->course_code)
+            $query = Course::with([
+                'calendar_days' => function ($query) use ($from, $to) {
+                    $query->where('date', '>=', $from)
+                        ->where('date', '<=', $to)
+                        ->orderBy('date');
+                },
+            ])
+                ->where('code', $serach_condition->course_code)
                 ->where('hospital_id', $hospital_id)
-                ->where('is_category', 0)
-                ->first();
+                ->where('is_category', 0);
+
+            if (!empty($request->input('sex'))) {
+                $query->with([
+                    'kenshin_sys_courses',
+                    'kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
+                        $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL])
+                            ->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL]);
+
+                    }]);
+            }
+
+            $course = $query->first();
 
             if (!$course) {
-                return $this->createResponse($this->messages['data_empty_error']);
+                return $this->createResponse($this->messages['data_empty_error'], $request->input('callback'));
             }
 
-            // 医療機関の検査コースのカレンダー取得
-            $calendar_dailys = $this->getDayReservationEnableInfo($serach_condition, $course);
-
-            if (!$calendar_dailys) {
-                return $this->createResponse($this->messages['data_empty_error']);
+            if (!empty($request->input('sex'))) {
+                $course->kenshin_relation_flg = true;
+                $course->sex = $request->input('sex');
+                $course->birth = $request->input('birth');
+                $course->honnin_kbn = $request->input('honnin_kbn');
             }
 
-            $data = ['search_cond' => $serach_condition,  'course' => $course, 'day_data' => $calendar_dailys];
+            $data = ['hospital_id' => $hospital_id, 'hospital_code' => $serach_condition->hospital_code,  'course' => $course];
 
             // response
-            return new CalendarDailyResource($data);
+            return new CalendarBaseResource($data);
         } catch (\Throwable $e) {
-            Log::error($e);
-            return $this->createResponse($this->messages['system_error_db']);
+            
+           Log::error($e);
+           return $this->createResponse($this->messages['system_error_db'], $request->input('callback'));
         }
     }
+    
 
     /**
      * 月次予約可否情報を返す
@@ -295,7 +401,7 @@ class CourseController extends ApiBaseController
             ->where('date', '>=', $serach_condition->get_yyyymmdd_from)
             ->where('date', '<=', $serach_condition->get_yyyymmdd_to)
             ->where('is_holiday', 0)
-            ->where('is_reservation_acceptance', 1)
+            ->where('is_reservation_acceptance', 0)
             ->get()
             ->groupBy(function ($row) {
                 return $row->date->format('m');
@@ -326,13 +432,12 @@ class CourseController extends ApiBaseController
         $from = $serach_condition->get_yyyymmdd_from;
         $to = $serach_condition->get_yyyymmdd_to;
 
-        $reserv_enable_date = Carbon::today()->subMonth(floor($course->reception_start_date / 1000))->subDay($course->reception_start_date % 1000);
-        $reserv_enableto_date = Carbon::today()->addMonth(floor($course->reception_end_date / 1000))->addDay($course->reception_end_date % 1000);
-
         $calendar_days = CalendarDay::where('calendar_id', $course->calendar_id)
             ->where('date', '>=', $from)
             ->where('date', '<=', $to)
             ->get();
+
+        return $calendar_days;
 
         $results = [];
 

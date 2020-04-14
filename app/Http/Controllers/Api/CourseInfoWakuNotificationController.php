@@ -7,6 +7,7 @@ use App\CourseFutanCondition;
 use App\Enums\AppKbn;
 use App\Hospital;
 use App\KenshinSysCooperation;
+use App\KenshinSysCourse;
 use App\KenshinSysCourseWaku;
 use App\KenshinSysDantaiInfo;
 use App\Option;
@@ -19,6 +20,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\Controller;
+use mysql_xdevapi\Exception;
+use Symfony\Component\Debug\Debug;
 
 
 class CourseInfoWakuNotificationController extends Controller
@@ -30,9 +33,11 @@ class CourseInfoWakuNotificationController extends Controller
     public function registcoursewaku(Request $request)
     {
         $messages = config('api.course_info_notification_api.message');
+        $medical_sys_ids = config('constant.medical_exam_sys_id');
         $sysErrorMessages = config('api.unexpected_error.message');
-        $app_name = env('APP_NAME');
-        $ip = Request::ip();
+        $app_name = env('APP_ENV');
+        $ip = $request->ip();
+//        $ip = '172.30.0.3';
         if ($app_name == 'production') {
             $app_kbn = AppKbn::PRODUCTION;
         } else {
@@ -40,8 +45,8 @@ class CourseInfoWakuNotificationController extends Controller
         }
 
         // パラメータチェック
-        $Ocp_Apim_Subscription_key = $request->input('Ocp-Apim-Subscription-key');
-        $partner_code = $request->input('X-Partner-Code');
+        $Ocp_Apim_Subscription_key = $request->header('Ocp-Apim-Subscription-key');
+        $partner_code = $request->header('X-Partner-Code');
         if (!isset($Ocp_Apim_Subscription_key)) {
             return $this->createResponse($messages['errorSubscriptionKeyId']);
         }
@@ -66,32 +71,48 @@ class CourseInfoWakuNotificationController extends Controller
             return $this->createResponse($messages['errorSubscriptionKeyId']);
         }
 
-        $hospital = Hospital::where('kenshin_sys_hospital_id')->fist();
+        $hospital = Hospital::where('kenshin_sys_hospital_id', $request->input('hospitalId'))->first();
         if (!$hospital) {
             return $this->createResponse($messages['errorValidationId']);
         }
 
         if (empty($request->input('dantaiNo'))
             || !is_numeric($request->input('dantaiNo'))
-        || strlen($request->input('dantaiNo')) > 10) {
+        || strlen($request->input('dantaiNo')) > 15) {
             return $this->createResponse($messages['errorValidationId']);
         }
 
-        if (!empty($request->input('courseList'))) {
-            foreach ($request->input('courseList') as $course) {
-                if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 10) {
-                    return $this->createResponse($messages['errorValidationId']);
+        if ($kenshin_sys_cooperation->medical_examination_system_id == $medical_sys_ids['tak']) {
+            if (!empty($request->input('courseList'))) {
+                foreach ($request->input('courseList') as $course) {
+                    if (empty($course['courseNo']) || !is_numeric($course['courseNo']) || strlen($course['courseNo']) > 16) {
+                        return $this->createResponse($messages['errorValidationId']);
+                    }
+                    if (empty($course['joukenNo']) || !is_numeric($course['joukenNo']) || strlen($course['joukenNo']) > 10) {
+                        return $this->createResponse($messages['errorValidationId']);
+                    }
                 }
-                if (empty($course['joukenNo']) || !is_numeric($course['joukenNo']) || strlen($course['joukenNo']) > 10) {
-                    return $this->createResponse($messages['errorValidationId']);
+            }
+        } elseif ($kenshin_sys_cooperation->medical_examination_system_id == $medical_sys_ids['itec']) {
+            if (!empty($request->input('courseList'))) {
+                foreach ($request->input('courseList') as $course) {
+                    if (empty($course['courseNo']) ||  strlen($course['courseNo']) > 30) {
+                        return $this->createResponse($messages['errorValidationId']);
+                    }
+                    if (!empty($course['joukenNo']) && (!is_numeric($course['joukenNo']) || strlen($course['joukenNo']) > 10)) {
+                        return $this->createResponse($messages['errorValidationId']);
+                    }
                 }
             }
         }
 
+
+
         $params = [
             'hospital_id' => $request->input('hospitalId'),
             'dantai_no' => $request->input('dantaiNo'),
-            'course_list' => $request->input('courseList')
+            'course_list' => $request->input('courseList'),
+            'medical_sys_id' => $kenshin_sys_cooperation->medical_examination_system_id
         ];
 
         DB::beginTransaction();
@@ -120,8 +141,8 @@ class CourseInfoWakuNotificationController extends Controller
      */
     protected function createResponse( array $message, $statusCode = 200) {
         return response([
-            'status_code' => strval($statusCode),
-            'result_code' => $message['code'],
+            'statusCode' => strval($statusCode),
+            'resultCode' => $message['code'],
             'message' => $message['description'],
         ], $statusCode)
             ->header('Content-Type', 'application/json; charset=utf-8')
@@ -134,29 +155,34 @@ class CourseInfoWakuNotificationController extends Controller
      */
     protected function registCourseWakuInfo(array $params) {
 
-        // 医療機関情報取得
-        $hospital = Hospital::where('kenshin_sys_hospital_id', $params['hospital_id'])->first();
-        $kenshin_sys_dantai_info = KenshinSysDantaiInfo::where('hospita_id', $params['hospital_id'])
-            ->where('kenshin_sys_dantai_no', $params['dantai_no'])->first();
-
         foreach ($params['course_list'] as $c) {
             // コース情報取得
-            $course = Course::where('kenshin_sys_dantai_info_id', $kenshin_sys_dantai_info->id)
+            $course = KenshinSysCourse::where('kenshin_sys_hospital_id', $params['hospital_id'])
+                ->where('kenshin_sys_dantai_no', $params['dantai_no'])
                 ->where('kenshin_sys_course_no', $c['courseNo'])
-                ->where('hospital_id', $hospital->id)
+                ->whereHas('kenshin_sys_dantai_info', function ($query) use ($params) {
+                    $query->where('medical_examination_system_id', $params['medical_sys_id'])
+                        ->where('kenshin_sys_dantai_no', $params['dantai_no'])
+                        ->where('kenshin_sys_hospital_id', $params['hospital_id']);
+                })
                 ->first();
 
+            if (!$course) {
+                continue;
+            }
+
             foreach ($c['monthWakuList'] as $month_waku) {
-                $kenshin_sys_course_waku = KenshinSysCourseWaku::where('course_id', $course->id)
-                    ->where('kenshin_sys_course_no', $c['courseNo'])
+                $kenshin_sys_course_waku = KenshinSysCourseWaku::where('kenshin_sys_course_id', $course->id)
                     ->where('year_month', $month_waku['month'])
+                    ->where('jouken_no', $c['joukenNo'])
                     ->first();
 
                 if (!$kenshin_sys_course_waku) {
                     $kenshin_sys_course_waku = new KenshinSysCourseWaku();
                 }
-                $kenshin_sys_course_waku->course_id = $course->id;
+                $kenshin_sys_course_waku->kenshin_sys_course_id = $course->id;
                 $kenshin_sys_course_waku->kenshin_sys_course_no = $c['courseNo'];
+                $kenshin_sys_course_waku->jouken_no = $c['joukenNo'];
                 $kenshin_sys_course_waku->year_month = $month_waku['month'];
                 $kenshin_sys_course_waku->waku_kbn = $month_waku['wakuInfo'];
                 $kenshin_sys_course_waku->save();

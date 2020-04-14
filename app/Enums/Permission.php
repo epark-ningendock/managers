@@ -16,7 +16,7 @@ final class Permission extends Enum implements LocalizedEnum
         Permission::NONE => 0,
         Permission::VIEW => 1,
         Permission::EDIT => 2,
-        Permission::UPLOAD => 4,
+        Permission::UPLOAD => 7,
     ];
 
     public function getPermissionBit()

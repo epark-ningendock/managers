@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Course;
 use App\CourseDetail;
 use App\CourseImage;
+use App\CourseMatch;
 use App\CourseMeta;
 use App\CourseOption;
 use App\CourseQuestion;
@@ -12,6 +13,7 @@ use App\Enums\CourseImageType;
 use App\Hospital;
 use App\HospitalImage;
 use App\Http\Requests\CourseFormRequest;
+use App\KenshinSysCourse;
 use App\MajorClassification;
 use App\MinorClassification;
 use Carbon\Carbon;
@@ -60,6 +62,9 @@ class CourseController extends Controller
         $today = Carbon::today();
         $tax_class = TaxClass::whereDate('life_time_from', '<=', $today)
             ->whereDate('life_time_to', '>=', $today)->get()->first();
+        $kenshin_sys_courses = KenshinSysCourse::with(['kenshin_sys_dantai_info'])
+            ->where('kenshin_sys_hospital_id', $hospital->kenshin_sys_hospital_id)->get();
+        $course_matches = collect();
 
         $is_presettlement = $hospital->is_pre_account == '1' &&
             (Auth::user()->staff_auth->is_pre_account == Permission::EDIT
@@ -75,6 +80,8 @@ class CourseController extends Controller
             ->with('disp_date_end', $disp_date_end)
             ->with('hospital', $hospital)
             ->with('images', $images)
+            ->with('kenshin_sys_courses', $kenshin_sys_courses)
+            ->with('course_matches', $course_matches)
             ->with('is_presettlement', $is_presettlement);
     }
 
@@ -86,6 +93,12 @@ class CourseController extends Controller
     public function copy($id)
     {
         $courses = Course::findOrFail($id);
+
+        $hospital_id = session()->get('hospital_id');
+        if (isset($hospital_id) && $hospital_id != $courses->hospital_id) {
+            abort(404);
+        }
+
         return $this->create()->with('course', $courses);
     }
 
@@ -105,7 +118,7 @@ class CourseController extends Controller
                 'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
                 'processing' => '登録'
             ];
-            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CourseSettingNotificationMail($data));
+//            Mail::to(config('mail.to.system'))->send(new CourseSettingNotificationMail($data));
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.course')]));
             return redirect('course');
         } catch (Exception $e) {
@@ -135,6 +148,11 @@ class CourseController extends Controller
     public function edit(Course $course)
     {
         $hospital_id = session()->get('hospital_id');
+
+        if (isset($hospital_id) && $hospital_id != $course->hospital_id) {
+            abort(404);
+        }
+        $hospital_id = session()->get('hospital_id');
         $hospital = Hospital::find($hospital_id);
         $images = HospitalImage::where('hospital_id', $hospital_id)->get();
         $majors = MajorClassification::orderBy('classification_type_id', 'asc')->orderBy('order', 'asc')->get();
@@ -150,6 +168,11 @@ class CourseController extends Controller
         $is_presettlement = $hospital->is_pre_account == '1' &&
             (Auth::user()->staff_auth->is_pre_account == Permission::EDIT
                 || Auth::user()->staff_auth->is_pre_account == Permission::UPLOAD);
+
+        $kenshin_sys_courses = KenshinSysCourse::with(['kenshin_sys_dantai_info'])
+            ->where('kenshin_sys_hospital_id', $hospital->kenshin_sys_hospital_id)->get();
+        $course_matches = $course->kenshin_sys_courses()->get();
+
         return view('course.edit')
             ->with('calendars', $calendars)
             ->with('tax_class', $tax_class)
@@ -161,7 +184,9 @@ class CourseController extends Controller
             ->with('disp_date_end', $disp_date_end)
             ->with('hospital', $hospital)
             ->with('course', $course)
-            ->with('is_presettlement', $is_presettlement);
+            ->with('is_presettlement', $is_presettlement)
+            ->with('kenshin_sys_courses', $kenshin_sys_courses)
+            ->with('course_matches', $course_matches);
     }
 
     protected function saveCourse(CourseFormRequest $request, $course_param)
@@ -208,13 +233,14 @@ class CourseController extends Controller
             $course_data['reception_end_date'] = $reception_end_month * 1000 + $reception_end_day;
             $course_data['reception_acceptance_date'] = $reception_acceptance_month * 1000 + $reception_acceptance_day;
 
+            $code_store_flg = false;
             if (isset($course_param)) {
                 $course = $course_param;
             } else {
                 $course = new Course();
                 $max_order = Course::where('hospital_id', session()->get('hospital_id'))->max('order');
                 $course_data['order'] = $max_order + 1;
-                $course->code = 'C' . $course->id . 'H' . $course->hospital_id;
+                $code_store_flg = true;
             }
             $course->fill($course_data);
             $course->hospital_id = session()->get('hospital_id');
@@ -230,6 +256,10 @@ class CourseController extends Controller
             //force to update updated_at. otherwise version will not be updated
             $course->touch();
             $course->save();
+            if ($code_store_flg) {
+                $course->code = 'C' . $course->id . 'H' . $course->hospital_id;
+                $course->save();
+            }
 
             //Course Images
             if ($request->has('course_image_main')) {
@@ -246,6 +276,23 @@ class CourseController extends Controller
                 $target_image = 'course_image_sp';
                 $target_type = CourseImageType::SP;
                 $this->saveCourseImage($request, $target_image, $target_type, $course->id);
+            }
+
+            //Course Kenshin
+            $kenshin_course_ids = collect($request->input('kenshin_sys_course_ids', []));
+
+            if ($kenshin_course_ids->isNotEmpty()) {
+                $kenshin_courses = KenshinSysCourse::whereIn('id', $kenshin_course_ids)->get();
+                if ($kenshin_courses->count() != $kenshin_course_ids->count()) {
+                    $request->session()->flash('error', trans('messages.invalid_kenshin_course_id'));
+                    return redirect()->back();
+                }
+
+                $course->kenshin_sys_courses()->sync($kenshin_course_ids);
+            } else {
+
+                // 検診システムコースの指定がない場合は、空配列を渡す
+                $course->kenshin_sys_courses()->sync(collect());
             }
 
             //Course Options
@@ -452,7 +499,7 @@ class CourseController extends Controller
                 'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
                 'processing' => '更新'
             ];
-            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CourseSettingNotificationMail($data));
+//            Mail::to(config('mail.to.system'))->send(new CourseSettingNotificationMail($data));
 
             $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.course')]));
             return redirect('course');
@@ -485,7 +532,7 @@ class CourseController extends Controller
             'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
             'processing' => '削除'
         ];
-        Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new CourseSettingNotificationMail($data));
+//        Mail::to(config('mail.to.system'))->send(new CourseSettingNotificationMail($data));
 
         $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.course')]));
         return redirect()->back();

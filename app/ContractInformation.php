@@ -45,4 +45,9 @@ class ContractInformation extends Model
     {
         return $this->belongsTo('App\ContractPlan');
     }
+
+    public function consideration_list()
+    {
+        return $this->hasMany('App\ConsiderationList', 'hospital_id', 'hospital_id');
+    }
 }

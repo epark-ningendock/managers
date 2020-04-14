@@ -17,11 +17,12 @@ class CreateKenshinSysOptionsTable extends Migration
     {
         Schema::create('kenshin_sys_options', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('kenshin_sys_course_id');
-            $table->integer('kenshin_sys_option_no');
+            $table->bigInteger('kenshin_sys_course_id')->unsigned();
+            $table->bigInteger('kenshin_sys_option_no');
             $table->string('kenshin_sys_option_name', 100);
             $table->integer('kenshin_sys_option_age_kisan_kbn');
-            $table->date('kenshin_sys_option_age_kisan_date');
+            $table->char('kenshin_sys_option_age_kisan_date', 4)->nullable();
+            $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
 
         });

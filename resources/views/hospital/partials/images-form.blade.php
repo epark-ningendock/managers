@@ -21,7 +21,7 @@
     <div class="form-group ">
         {{Form::label('main', '施設メイン',['class' => 'form_label'])}}
         <?php $main_image_category = $hospital->hospital_categories->firstWhere('image_order', ImageGroupNumber::IMAGE_GROUP_FACILITY_MAIN); ?>
-        @if(!is_null($main_image_category) && !is_null($main_image_category->hospital_image->path))
+        @if(!is_null($main_image_category) && !is_null($main_image_category->hospital_image) && !is_null($main_image_category->hospital_image->path))
             <div class="main_image_area">
                 <img class="object-fit" src="{{$main_image_category->hospital_image->path}}" height="200">
                 <p class="file_delete_text">
@@ -57,7 +57,7 @@
         <div class="col-sm-6">
             {{Form::label('sub_'.$i, 'サブメイン'.$i,['class' => 'form_label'])}}
             <?php $sub_image_category = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB)->where('file_location_no', $i)->first(); ?>
-            @if (!is_null($sub_image_category))
+            @if (!is_null($sub_image_category) && !is_null($sub_image_category->hospital_image))
                 <div class="sub_image_area">
                     <img class="object-fit" src="{{$sub_image_category->hospital_image->path}}">
                     <p class="file_delete_text">
@@ -120,7 +120,7 @@
                     <?php $image_speciality = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_SPECIALITY)->where('file_location_no', $i)->first(); ?>
                     <div class="col-sm-6" @if(is_null($image_speciality) && $i != 1) style="display: none" @endif>
                         {{Form::label('speciality_1_caption', 'こだわり'.$i,['class' => 'form_label'])}}
-                        @if (!is_null($image_speciality) && !is_null($image_speciality->hospital_image->path))
+                        @if (!is_null($image_speciality) && !is_null($image_speciality->hospital_image) && !is_null($image_speciality->hospital_image->path))
                             <div class="speciality_image_area">
                                 <img class="object-fit" src="{{$image_speciality->hospital_image->path}}" width="150">
                                 <p class="file_delete_text">
@@ -312,7 +312,7 @@
         <?php $i = $staff_tab['order'];?>
         <div class="row photo-tab" data-order="{{$i}}" @if(is_null($staff_tab) && $i != 1) style="display: none" @endif>
             <div class="col-sm-6">
-                @if(!is_null($staff_tab) && !is_null($staff_tab->hospital_image->path))
+                @if(!is_null($staff_tab) && !is_null($staff_tab->hospital_image) && !is_null($staff_tab->hospital_image->path))
                     <div class="tab_image_area">
                         <img class="object-fit" src="{{$staff_tab->hospital_image->path}}">
                         <p class="file_delete_text">
@@ -436,7 +436,7 @@
             <?php $i = $facility_tab['order'];?>
             <div class="row photo-tab" data-order="{{$i}}" @if(is_null($facility_tab) && $i != 1) style="display: none" @endif>
                 <div class="col-sm-6">
-                    @if(!is_null($facility_tab) && !is_null($facility_tab->hospital_image->path))
+                    @if(!is_null($facility_tab) && !is_null($facility_tab->hospital_image) && !is_null($facility_tab->hospital_image->path))
                         <div class="tab_image_area">
                             <img class="object-fit" src="{{$facility_tab->hospital_image->path}}">
                             <p class="file_delete_text">
@@ -556,7 +556,7 @@
             <?php $i = $internal_tab['order'];?>
             <div class="row photo-tab" data-order="{{$i}}" @if(is_null($internal_tab) && $i != 1) style="display: none" @endif>
                 <div class="col-sm-6">
-                    @if(!is_null($internal_tab) && !is_null($internal_tab->hospital_image->path))
+                    @if(!is_null($internal_tab) && !is_null($internal_tab->hospital_image) && !is_null($internal_tab->hospital_image->path))
                         <div class="tab_image_area">
                             <img class="object-fit" src="{{$internal_tab->hospital_image->path}}">
                             <p class="file_delete_text">
@@ -675,7 +675,7 @@
             <?php $i = $external_tab['order'];?>
             <div class="row photo-tab" data-order="{{$i}}" @if(is_null($external_tab) && $i != 1) style="display: none" @endif>
                 <div class="col-sm-6">
-                    @if(!is_null($external_tab) && !is_null($external_tab->hospital_image->path))
+                    @if(!is_null($external_tab) && !is_null($external_tab->hospital_image) && !is_null($external_tab->hospital_image->path))
                         <div class="tab_image_area">
                             <img class="object-fit" src="{{$external_tab->hospital_image->path}}">
                             <p class="file_delete_text">
@@ -794,7 +794,7 @@
             <?php $i = $another_tab['order'];?>
             <div class="row photo-tab" data-order="{{$i}}" @if(is_null($another_tab) && $i != 1) style="display: none" @endif>
                 <div class="col-sm-6">
-                    @if(!is_null($another_tab) && !is_null($another_tab->hospital_image->path))
+                    @if(!is_null($another_tab) && !is_null($another_tab->hospital_image) && !is_null($another_tab->hospital_image->path))
                         <div class="tab_image_area">
                             <img class="object-fit" src="{{$another_tab->hospital_image->path}}">
                             <p class="file_delete_text">
@@ -909,7 +909,7 @@
                     {{Form::label('sub_'.$i, '画像選択'.$i,['class' => 'form_label'])}}
                         <div class="select-photo-area">
                             <?php $select_photo = $select_photos->where('order', $i)->first(); ?>
-                            @if (isset($select_photo->hospital_image->id) && !is_null($select_photo->hospital_image->path))
+                            @if (isset($select_photo->hospital_image) && isset($select_photo->hospital_image->id) && !is_null($select_photo->hospital_image->path))
                                 <input type="hidden" value="{{$select_photo->hospital_image->id}}" class="select-photo" name="select_photo[{{$i}}]">
                                 <p class="photo"><img src="{{$select_photo->hospital_image->path}}"></p>
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticModal{{$i}}">
@@ -979,7 +979,7 @@
         <?php $staff = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_STAFF)->where('file_location_no', $i)->first();?>
         <div class="col-sm-6 staff_box" data-order="{{$i}}" @if(is_null($staff) && $i != 1) style="display: none" @endif>
             <p class="box_staff_title">医師・スタッフ{{$i}}</p>
-            @if(!is_null($staff) && !is_null($staff->hospital_image->path))
+            @if(!is_null($staff) && !is_null($staff->hospital_image) && !is_null($staff->hospital_image->path))
                 <div class="staff_image_area">
                     <img class="object-fit" src="{{$staff->hospital_image->path}}">
                     <p class="file_delete_text">

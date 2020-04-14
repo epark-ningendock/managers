@@ -16,7 +16,6 @@ class HospitalReleaseResource extends Resource
     public function toArray($request)
     {
         return [
-            'status' => 0,
             'hospital_code' => $this->all(),
         ];
     }

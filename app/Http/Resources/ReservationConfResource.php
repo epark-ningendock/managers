@@ -24,16 +24,23 @@ class ReservationConfResource extends Resource
         // キャンセル可能日
         $cancellation_date = Carbon::parse($completed_date)->subDay($cancellation_deadline)->toDateString();
 
-        // 町村字番地/建物名分割
-        $pieces = explode(' ', $this->customer->address2);
-
         return collect([])
             ->put('status', 0)
             ->put('result_code', $this->result_code)
+            ->put('reservation_id', $this->id)
+            ->put('kenshin_sys_hospital_id', $this->kenshin_sys_hospital_id)
+            ->put('kenshin_sys_yoyaku_no', $this->kenshin_sys_yoyaku_no)
+            ->put('kenshin_yoyaku_waku_nm', $this->kenshin_sys_yoyaku_waku_nm ?? '')
+            ->put('kenshin_start_time', $this->kenshin_sys_start_time ?? '')
+            ->put('medical_exam_sys_id', $this->medical_examination_system_id)
             ->put('reservation_status', (string) $this->reservation_status)
+            ->put('hospital_id', $this->hospital->id)
+            ->put('hospital_code', $this->hospital->contract_information->code)
             ->put('course_id', $this->course_id)
-            ->put('course_name', $this->course->name)
+            ->put('course_code', $this->course->code)
+            ->put('course_name', !empty($this->course_name) ? $this->course_name : $this->course->name)
             ->put('reservation_date', Carbon::parse($this->reservation_date)->toDateString())
+            ->put('reservation_accepted_date', Carbon::parse($this->created_at)->format('Y-m-d H:i:s'))
             ->put('start_time_hour', $this->start_time_hour)
             ->put('start_time_min', $this->start_time_min)
             ->put('end_time_hour', $this->end_time_hour)
@@ -75,16 +82,16 @@ class ReservationConfResource extends Resource
                 $this->hospital->address1 . ' ' . $this->hospital->address2
             )
             ->put('facility_tel', $this->hospital->tel)
-            ->put('course_price_tax', $this->course->price)
-            ->put('option_array', $this->_reservation_options($this->reservation_options))
+            ->put('course_price_tax', $this->tax_included_price)
+            ->put('option_array', $this->_reservation_options())
             ->put(
                 'other_info',
                 collect([
                     'second_date' => $this->second_date,
                     'third_date' => $this->third_date,
-                    'choose_fg' => $this->is_choose,
+                    'choose_fg' => $this->is_choose ?? 0,
                     'campaign_cd' => $this->campaign_code,
-                    'tel_timezone' => $this->tel_timezone,
+                    'tel_timezone' => $this->tel_timezone ?? 1,
                     'is_health_insurance' => $this->is_health_insurance,
                     'insurance_assoc' => $this->insurance_assoc,
                 ])
@@ -123,18 +130,40 @@ class ReservationConfResource extends Resource
      * 予約オプション要素追加
      *
      * @param  予約オプション情報  $reservation_options
-     * @return 予約オプション情報
+     * @return $options
      */
-    private function _reservation_options($reservation_options)
+    private function _reservation_options()
     {
-        $options = $reservation_options->map(function ($o) {
-            if (!isset($o->option)) return;
-            return [
-                'option_cd' => $o->option->id ?? '',
-                'option_name' => $o->option->name ?? '',
-                'option_price_tax' => $o->option_price ?? '',
-            ];
-        });
+
+        $options = [];
+        if (!empty($this->reservation_kenshin_sys_options)
+            && count($this->reservation_kenshin_sys_options) > 0) {
+            foreach ($this->reservation_kenshin_sys_options as $o) {
+                $options[] = [
+                    'option_id' => $o->kenshin_sys_option_id ?? '',
+                    'option_cd' => $o->kenshin_sys_option_no ?? '',
+                    'option_name' => $o->kenshin_sys_option_name ?? '',
+                    'option_price_tax' => $o->kenshin_sys_option_price ?? '',
+                ];
+
+            }
+
+        } else {
+            if (!empty($this->reservation_options)) {
+                foreach ($this->reservation_options as $o) {
+                    if (!isset($o->option) || empty($o->option->id)) {
+                        continue;
+                    }
+                    $options[] = [
+                        'option_cd' => $o->option->id ?? '',
+                        'option_name' => $o->option->name ?? '',
+                        'option_price_tax' => $o->option_price ?? '',
+                    ];
+
+                }
+            }
+        }
+
         return $options;
     }
 
@@ -148,17 +177,18 @@ class ReservationConfResource extends Resource
     {
         $reservation_answers = $reservation_answers->map(function ($a) {
             $answers = [
-                ['answer_title' => $a->question_answer01 ?? '', 'answer' => $a->answer01 ?? '',],
-                ['answer_title' => $a->question_answer02 ?? '', 'answer' => $a->answer02 ?? '',],
-                ['answer_title' => $a->question_answer03 ?? '', 'answer' => $a->answer03 ?? '',],
-                ['answer_title' => $a->question_answer04 ?? '', 'answer' => $a->answer04 ?? '',],
-                ['answer_title' => $a->question_answer05 ?? '', 'answer' => $a->answer05 ?? '',],
-                ['answer_title' => $a->question_answer06 ?? '', 'answer' => $a->answer06 ?? '',],
-                ['answer_title' => $a->question_answer07 ?? '', 'answer' => $a->answer07 ?? '',],
-                ['answer_title' => $a->question_answer08 ?? '', 'answer' => $a->answer08 ?? '',],
-                ['answer_title' => $a->question_answer09 ?? '', 'answer' => $a->answer09 ?? '',],
-                ['answer_title' => $a->question_answer10 ?? '', 'answer' => $a->answer10 ?? '',],
+                ['answer_title' => $a->question_answer01 ?? '', 'answer' => $a->answer01 ?? ''],
+                ['answer_title' => $a->question_answer02 ?? '', 'answer' => $a->answer02 ?? ''],
+                ['answer_title' => $a->question_answer03 ?? '', 'answer' => $a->answer03 ?? ''],
+                ['answer_title' => $a->question_answer04 ?? '', 'answer' => $a->answer04 ?? ''],
+                ['answer_title' => $a->question_answer05 ?? '', 'answer' => $a->answer05 ?? ''],
+                ['answer_title' => $a->question_answer06 ?? '', 'answer' => $a->answer06 ?? ''],
+                ['answer_title' => $a->question_answer07 ?? '', 'answer' => $a->answer07 ?? ''],
+                ['answer_title' => $a->question_answer08 ?? '', 'answer' => $a->answer08 ?? ''],
+                ['answer_title' => $a->question_answer09 ?? '', 'answer' => $a->answer09 ?? ''],
+                ['answer_title' => $a->question_answer10 ?? '', 'answer' => $a->answer10 ?? '']
             ];
+
             // array->object->collection
             $answers = collect(json_decode(json_encode($answers)))->filter(function ($q) {
                 return isset($q) && $q->answer_title !== '';

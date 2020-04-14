@@ -18,7 +18,6 @@ class CreateOptionTargetAgesTable extends Migration
         Schema::create('option_target_ages', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('option_futan_condition_id')->unsigned();
-            $table->foreign('option_futan_condition_id')->references('id')->on('option_futan_conditions');
             $table->integer('target_age');
             $this->addCommonColumns($table);
         });

@@ -25,8 +25,13 @@ class ConsiderationList extends SoftDeleteModel
         return $this->belongsTo('App\Hospital');
     }
 
+    public function contract_informations()
+    {
+        return $this->belongsTo('App\ContractInformation', 'hospital_id', 'hospital_id');
+    }
+
     public function course()
     {
-        return $this->belongsTo('App\Course');
+        return $this->belongsTo('App\Course', 'course_id', 'id');
     }
 }

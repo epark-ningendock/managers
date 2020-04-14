@@ -13,10 +13,10 @@ class CourseRequest extends ValidationRequest
      */
     public function rules()
     {
+        
         return [
-            'hospital_code' => 'required|alpha_num|exists:contract_informations,code',
-            'course_no' => 'required|numeric|exists:courses,id',
-            'course_code' => 'nullable|exists:courses,code',
+            'hospital_code' => ['required','regex:/^D[0-9a-zA-Z]+$/u','exists:contract_informations,code'],
+            'course_code' => 'required|exists:courses,code',
         ];
 
     }

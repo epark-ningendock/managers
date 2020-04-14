@@ -134,6 +134,11 @@ class CustomerController extends Controller
 
     public function edit(Customer $customer)
     {
+        $hospital_id = session()->get('hospital_id');
+
+        if ($hospital_id != $customer->hospital_id) {
+            abort(404);
+        }
         $prefectures = Prefecture::all();
         $customer_detail = Customer::findOrFail($customer->id);
 
@@ -212,7 +217,7 @@ class CustomerController extends Controller
            'email' => $customer->email
         ]);
 
-        Mail::to($customer->email)->send(new CustomerSendMail($attributes));
+//        Mail::to($customer->email)->send(new CustomerSendMail($attributes));
 
         $mail_history = new MailHistory($attributes);
         $mail_history->save();

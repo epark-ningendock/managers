@@ -14,8 +14,8 @@ class RouteRequest extends ValidationRequest
     public function rules()
     {
         return [
-            'place_code' => 'required|numeric|min:1|max:47',
-            'rail_no' => 'nullable|numeric',
+            'place_code' => 'nullable|numeric|min:1|max:47|required_without_all:rail_no',
+            'rail_no' => 'nullable|numeric|required_without_all:place_code',
         ];
 
     }

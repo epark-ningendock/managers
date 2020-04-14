@@ -7,7 +7,7 @@ use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class KenshinSysCooperation extends SoftDeleteModel
 {
-    use SoftDeletes, OptimisticLocking;
+    use SoftDeletes;
 
     protected $dates = [
         'created_at',
@@ -29,5 +29,9 @@ class KenshinSysCooperation extends SoftDeleteModel
     public function medical_examination_systems()
     {
         return $this->belongsTo('App\MedicalExaminationSystem');
+    }
+
+    public function hospitals() {
+        return $this->hasMany(Hospital::class, 'medical_examination_system_id', 'medical_examination_system_id');
     }
 }

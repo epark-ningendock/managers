@@ -16,6 +16,7 @@
       -
       <i class="fa fa-book"> 受付一覧</i>
   </h1>
+    <h5 align="right"><a href="{{ './manual/06_reception.pdf' }}" target="_blank">受付の使い方</a></h5>
 @stop
 
 <!-- search section -->
@@ -105,15 +106,15 @@
               <label for="is_pending">仮受付</label>
             </div>
             <div class="checkbox ml-2">
-              <input type="checkbox" id="is_reception_completed" name="is_reception_completed" value="2" @if(isset($is_reception_completed)) checked @endif/>
+              <input type="checkbox" id="is_reception_completed" name="is_reception_completed" value="3" @if(isset($is_reception_completed)) checked @endif/>
               <label for="is_reception_completed">受付確定</label>
             </div>
             <div class="checkbox ml-2">
-              <input type="checkbox" id="is_completed" name="is_completed" value="3" @if(isset($is_completed)) checked @endif />
+              <input type="checkbox" id="is_completed" name="is_completed" value="4" @if(isset($is_completed)) checked @endif />
               <label for="is_completed">受診完了</label>
             </div>
             <div class="checkbox ml-2">
-              <input type="checkbox" id="is_cancelled" name="is_cancelled" value="4" @if(isset($is_cancelled)) checked @endif/>
+              <input type="checkbox" id="is_cancelled" name="is_cancelled" value="5" @if(isset($is_cancelled)) checked @endif/>
               <label for="is_cancelled">キャンセル</label>
             </div>
           </div>
@@ -227,7 +228,7 @@
                   受診完了
                 </button> --}}
               @endif
-              @if(!$reservation->reservation_status->is(ReservationStatus::CANCELLED) && !$reservation->reservation_status->is(ReservationStatus::COMPLETED))
+              @if(!$reservation->reservation_status->is(ReservationStatus::CANCELLED))
                 <button class="btn btn-danger ml-3 delete-popup-btn" data-id="{{ $reservation->id }}"
                         data-message="{{ trans('messages.reservation.cancel_confirmation') }}"
                         data-modal="#reservation-cancel-modal"
@@ -297,7 +298,7 @@
           (function(){
               $('#is_reception_completed').change(function(){
                 if($('#is_reception_completed').prop('checked')){
-                  $('#is_reception_completed').val('2')
+                  $('#is_reception_completed').val('3')
                 }
               });
           })();
@@ -305,7 +306,7 @@
           (function(){
               $('#is_completed').change(function(){
                 if($('#is_completed').prop('checked')){
-                  $('#is_completed').val('3')
+                  $('#is_completed').val('4')
                 }
               });
           })();
@@ -313,7 +314,7 @@
           (function(){
               $('#is_cancelled').change(function(){
                 if($('#is_cancelled').prop('checked')){
-                  $('#is_cancelled').val('4')
+                  $('#is_cancelled').val('5')
                 }
               });
           })();

@@ -53,12 +53,7 @@
                     </div>
 
                 @endif
-                <div class="form-group ">
-                    <p>
-                        <span class="text-bold label-text">プラン名</span>
-                        {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}　
-                    </p>
-                </div>
+
                 @if ( session('hospital_id') )
                     @if (!empty($billing->hospital->hospitalOptionPlan($billing->id, $endedDate)))
                         <div class="form-group ">
@@ -184,13 +179,14 @@
                 <th>手数料率</th>
                 <th>手数料（税込）</th>
                 <th>無料HPリンク</th>
+                <th>特集ページ</th>
             </tr>
             </thead>
             <tbody>
             @if (! $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->isEmpty() )
             @foreach( $billing->hospital->reservationByCompletedDate($startedDate, $endedDate) as $reservation)
                 <tr>
-                    <td>{{ $reservation->id }}</td>
+                    <td><a target="_blank" href="{{ route('reservation.edit', ['reservation' => $reservation]) }}">{{ $reservation->id }}</a></td>
                     <td>{{ $reservation->reservation_date->format('Y-m-d') }}</td>
                     <td>{{ $reservation->customer->family_name .' ' . $reservation->customer->first_name }}</td>
                     <td>{{ ( isset($reservation->channel) && ( $reservation->channel == 1)) ? 'WEB' : 'TEL' }}</td>
@@ -212,7 +208,8 @@
                     <td>{{ (isset($reservation->adjustment_price) ) ? number_format($reservation->adjustment_price) . '円' : '' }}</td>
                     <td>{{ $reservation->fee_rate }}%</td>
                     <td>{{ ( isset($reservation->fee) ) ? number_format($reservation->fee) . '円' : '' }}</td>
-                    <td>{{ (isset($reservation->is_free_hp_link) && ( $reservation->is_free_hp_link == 1) ) ? '無料HPリンク' : '' }}</td>
+                    <td>{{ (isset($reservation->site_code) && ( $reservation->site_code == 'HP') && isset($reservation->is_free_hp_link) && ( $reservation->is_free_hp_link == 1) ) ? '無料HPリンク' : '' }}</td>
+                    <td>{{ (isset($reservation->site_code) && ( $reservation->site_code == 'Special') ) ? '○' : '' }}</td>
                 </tr>
             @endforeach
                 @else

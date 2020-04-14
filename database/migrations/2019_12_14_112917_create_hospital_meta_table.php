@@ -19,7 +19,7 @@ class CreateHospitalMetaTable extends Migration
             $table->increments('id');
             $table->integer('hospital_id')->unsigned();
             $table->string('hospital_name')->nullable();
-            $table->string('area_station')->nullable();
+            $table->text('area_station')->nullable();
             $table->tinyInteger('credit_card_flg')->default(0);
             $table->tinyInteger('parking_flg')->default(0);
             $table->tinyInteger('pick_up_flg')->default(0);

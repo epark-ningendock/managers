@@ -1,21 +1,21 @@
 <?php
 
-use Illuminate\Http\Request;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//use Illuminate\Http\Request;
+//
+///*
+//|--------------------------------------------------------------------------
+//| API Routes
+//|--------------------------------------------------------------------------
+//|
+//| Here is where you can register API routes for your application. These
+//| routes are loaded by the RouteServiceProvider within a group which
+//| is assigned the "api" middleware group. Enjoy building your API!
+//|
+//*/
+//
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 Route::prefix('v1')->group(function () {
     // 医療機関一覧検索API
     Route::match(['get', 'post'], 'search/hospitals/', 'SearchController@hospitals');
@@ -37,6 +37,13 @@ Route::prefix('v1')->group(function () {
 
     // 医療機関情報取得API
     Route::match(['get', 'post'], 'hospital/', 'HospitalController@index');
+
+    // 公開中医療機関情報取得API
+    Route::match(['get', 'post'], 'hospitals/', 'HospitalController@release');
+
+    // 公開中医療機関コース情報取得API
+    Route::match(['get', 'post'], 'courses/', 'HospitalController@release_course');
+
 
     // 医療機関空き枠情報取得API
     Route::match(['get', 'post'], 'hospital/frame', 'HospitalController@frame');
@@ -67,27 +74,40 @@ Route::prefix('v1')->group(function () {
 
     // 対象一覧取得（路線）API
     Route::match(['get', 'post'], 'route/', 'RouteController@index');
+  
+    // 医療機関・検査コース毎の予約数取得API
+    Route::match(['get', 'post'], 'reserve_vol/', 'ReserveVolController@index');
+
+    // iFlag契約者ID取得API
+    Route::match(['get','post'], 'hospital/shopowner/', 'HospitalController@shopowner');
+
+    // 医療機関手数料取得API
+    Route::match(['get', 'post'], 'fee_rate/', 'HospitalController@fee_rate');
 
 // 以下予約API
 // 予約登録/更新API
-    Route::post('reservation-store', 'ReservationApiController@store');
+    Route::post('reservation-store/', 'ReservationApiController@store');
 // 予約確認API
     Route::get('reservation-conf', 'ReservationApiController@conf');
 // 予約キャンセルAPI
-    Route::post('reservation-cancel', 'ReservationApiController@cancel');
+    Route::post('reservation-cancel/', 'ReservationApiController@cancel');
+    // 予約一覧取得
+    Route::get('reservation-get-all', 'ReservationApiController@get_all');
 // PV登録
-    Route::match(['post'], 'pv/', 'PvRegistController@store');
+    Route::post('pv/', 'PvRegistController@store');
 // EPARK会員ログイン情報
-    Route::post('memberLoginInfo', 'MemberLoginInfoController@store')->name('member-login-info.store');
-    Route::get('memberLoginInfo', 'MemberLoginInfoController@show')->name('member-login-info.show');
+    Route::match(['get', 'post'], 'member-login-info-store/', 'MemberLoginInfoController@store');
+    Route::match(['get', 'post'], 'member-login-info-show', 'MemberLoginInfoController@show');
 // 検討中リスト
-    Route::post('considerationList', 'ConsiderationListController@store')->name('consideration-list.store');
-    Route::get('considerationList', 'ConsiderationListController@show')->name('consideration-list.show');
-    Route::delete('considerationList', 'ConsiderationListController@destroy')->name('consideration-list.destroy');
+    Route::post('consideration-list-store/', 'ConsiderationListController@store');
+    Route::match(['get', 'post'], 'consideration-list-show/', 'ConsiderationListController@show');
+    Route::delete('consideration-list-destroy/', 'ConsiderationListController@destroy');
 
     // コース通知API
-    Route::post('registcourse', 'CourseInfoNotificationController@registcourse')->name('course-info-notification.registcourse');
+    Route::post('registcourse/', 'CourseInfoNotificationController@registcourse');
     // コース通知API
-    Route::post('registcoursewaku', 'CourseInfoWakuNotificationController@registcourse')->name('course-info-waku-notification.registcoursewaku');
+    Route::post('registcoursewaku/', 'CourseInfoWakuNotificationController@registcoursewaku');
+    // 予約情報通知API
+    Route::post('yoyakustate/', 'ReservationInfoNotificationController@notice');
 });
 

@@ -60,8 +60,8 @@ class HospitalStaffController extends Controller
                 'password' => $hospital_staff_data['password']
             ];
             
-            Mail::to($hospital_staff->email)
-                ->send(new RegisteredMail($data));
+//            Mail::to($hospital_staff->email)
+//                ->send(new RegisteredMail($data));
             
             $data = [
                 'hospital_staff' => $hospital_staff,
@@ -69,7 +69,7 @@ class HospitalStaffController extends Controller
                 'subject' => '【EPARK人間ドック】医療機関スタッフ登録・更新・削除のお知らせ',
                 'processing' => '登録'
                 ];
-            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new HospitalStaffOperationMail($data));
+//            Mail::to(config('mail.to.gyoumu'))->send(new HospitalStaffOperationMail($data));
 
             DB::commit();
             return redirect('hospital-staff')->with('success', trans('messages.created', ['name' => trans('messages.names.hospital_staff')]));
@@ -82,6 +82,12 @@ class HospitalStaffController extends Controller
     public function edit($id)
     {
         $hospital_staff = HospitalStaff::findOrFail($id);
+
+        $hospital_id = session()->get('hospital_id');
+
+        if ($hospital_id != $hospital_staff->hospital_id) {
+            abort(404);
+        }
 
         return view('hospital_staff.edit', compact('hospital_staff'));
     }
@@ -113,7 +119,7 @@ class HospitalStaffController extends Controller
                 'subject' => '【EPARK人間ドック】医療機関スタッフ登録・更新・削除のお知らせ',
                 'processing' => '更新'
                 ];
-            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new HospitalStaffOperationMail($data));
+//            Mail::to(config('mail.to.gyoumu'))->send(new HospitalStaffOperationMail($data));
 
             return redirect('hospital-staff')->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_staff')]));
         } catch (ExclusiveLockException $e) {
@@ -138,7 +144,7 @@ class HospitalStaffController extends Controller
                 'subject' => '【EPARK人間ドック】医療機関スタッフ登録・更新・削除のお知らせ',
                 'processing' => '削除'
                 ];
-            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new HospitalStaffOperationMail($data));
+//            Mail::to(config('mail.to.gyoumu'))->send(new HospitalStaffOperationMail($data));
             
             return redirect('hospital-staff')->with('error', trans('messages.deleted', ['name' => trans('messages.names.hospital_staff')]));
 
@@ -228,8 +234,8 @@ class HospitalStaffController extends Controller
                 'staff'  => $staff,
                 'reset_token'   => $reset_token
             );
-            Mail::to($request->email)
-                ->send(new PasswordResetMail($data));
+//            Mail::to($request->email)
+//                ->send(new PasswordResetMail($data));
             return redirect('/login')->with('success', "メールを送信しました。\nメールに記載されたURLを開き、パスワード初期化手続きを続行してください。");
         } else {
             $validator = Validator::make([], []);
@@ -273,8 +279,8 @@ class HospitalStaffController extends Controller
             'password' => bcrypt($request->password),
             'first_login_at' => Carbon::now()
         ]);
-        Mail::to($staff->email)
-            ->send(new PasswordResetConfirmMail());
+//        Mail::to($staff->email)
+//            ->send(new PasswordResetConfirmMail());
         return redirect('/login')->with('success', 'パスワードを更新しました。');
     }
 

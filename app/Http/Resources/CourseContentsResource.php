@@ -3,8 +3,9 @@
 namespace App\Http\Resources;
 
 use App\Enums\Status;
+use Illuminate\Http\Resources\Json\Resource;
 
-class CourseContentsResource extends CourseContentBaseResource
+class CourseContentsResource extends Resource
 {
     /**
      * 検査コースコンテンツ情報 resource into an array.
@@ -14,15 +15,17 @@ class CourseContentsResource extends CourseContentBaseResource
      */
     public function toArray($request)
     {
+        $course = $this['course'];
+        $hospital = $this['hospital'];
 
         return collect([])
             ->put('status', 0)        
-            ->put('no', $this->hospital->id)
-            ->put('hospital_code', $this->hospital->contract_information->code)
-            ->put('course_no', $this->id)
-            ->put('course_code', $this->code)
-            ->put('sho_name', $this->createShoname())
-            ->merge(parent::baseCollections())
+            ->put('no', $hospital->id)
+            ->put('hospital_code', $hospital->contract_information->code)
+            ->put('course_no', $course->id)
+            ->put('course_code', $course->code)
+            ->put('sho_name', $this->createShoname($course))
+            ->merge(new CourseContentBaseResource($course))
             ->toArray();
     }
 
@@ -30,9 +33,9 @@ class CourseContentsResource extends CourseContentBaseResource
      * @return string
      *
      */
-    private function createShoname() {
+    private function createShoname($course) {
         $result = '';
-        foreach ($this->course_details as $detail) {
+        foreach ($course->course_details as $detail) {
             if ($detail->major_classification_id == 13
                 && $detail->middle_classification_id == 30
                 && $detail->select_status == 1

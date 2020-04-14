@@ -7,11 +7,12 @@ use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class KenshinSysCourse extends SoftDeleteModel
 {
-    use EnumTrait, OptimisticLocking;
+    use EnumTrait;
 
     protected $fillable = [
         'kenshin_sys_hospital_id',
         'kenshin_sys_dantai_info_id',
+        'kenshin_sys_dantai_no',
         'kenshin_sys_course_no',
         'kenshin_sys_course_name',
         'kenshin_sys_course_kingaku',
@@ -23,13 +24,17 @@ class KenshinSysCourse extends SoftDeleteModel
 
     protected $dates = [
         'kenshin_sys_riyou_bgn_date',
-        'kenshin_sys_riyou_end_date',
-        'kenshin_sys_course_age_kisan_date'
+        'kenshin_sys_riyou_end_date'
     ];
 
-    public function kenshin_sys_dantai_infos()
+    public function kenshin_sys_dantai_info()
     {
         return $this->belongsTo('App\KenshinSysDantaiInfo');
+    }
+
+    public function kenshin_sys_options()
+    {
+        return $this->hasMany('App\KenshinSysOption');
     }
 
     public function course_futan_conditions()

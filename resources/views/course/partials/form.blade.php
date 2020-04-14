@@ -10,6 +10,7 @@
     $course_questions = $course->course_questions;
   }
 
+  $o_kenshin_sys_course_ids = collect(old('kenshin_sys_course_ids', []));
   $o_option_ids = collect(old('option_ids', []));
   $o_minor_ids = collect(old('minor_ids'));
   $o_minor_values = collect(old('minor_values'));
@@ -404,6 +405,51 @@
 </div>
 
 <div class="box box-primary">
+    <div class="box-header with-border">
+        <div class="box-tools" data-widget="collapse">
+            <button type="button" class="btn btn-sm">
+                <i class="fa fa-minus"></i></button>
+        </div>
+        <h1 class="box-title">健診システムコースの設定</h1>
+    </div>
+
+    <div class="form-entry">
+        <div class="box-body" id="kenshin-sys-course-setting">
+            <table class="table no-border table-hover table-striped ">
+                <tr>
+                    <td class="course-name"><span>健診システムコース名</span></td>
+                    <td class="dantai-name"><span>健診システム団体名</span></td>
+                    <td class="course-price">価格</td>
+                    <!--
+                    <td class="option-confirm">説明</td>
+                    -->
+                </tr>
+                @foreach($kenshin_sys_courses as $kenshin_course)
+                    <tr>
+                        @php
+                            $is_checked = false;
+                            if ($o_kenshin_sys_course_ids->isNotEmpty()) {
+                                $is_checked = $o_kenshin_sys_course_ids->contains($kenshin_course->id);
+                            } else if(isset($course_matches)) {
+                                $is_checked = $course_matches->contains($kenshin_course->id);
+                            }
+                        @endphp
+                        <td class="course-name">
+                            <input type="checkbox" id="course_set_price{{ $kenshin_course->id }}" name="kenshin_sys_course_ids[]" value="{{ $kenshin_course->id }}" {{ $is_checked ? 'checked' : '' }}/>
+                            <label class="mr-2" for="course_set_price{{ $kenshin_course->id }}">{{ $kenshin_course->kenshin_sys_course_name }}</label></td>
+                        <td class="dantai-name">{{ $kenshin_course->kenshin_sys_dantai_info->kenshin_sys_dantai_nm }}</td>
+                        <td class="course-price">{{ number_format($kenshin_course->kenshin_sys_course_kingaku) }} 円</td>
+                    <!--
+            <td class="option-confirm">{{ $kenshin_course->confirm }}</td>
+            -->
+                    </tr>
+                @endforeach
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="box box-primary">
   <div class="box-header with-border">
     <div class="box-tools" data-widget="collapse">
       <button type="button" class="btn btn-sm">
@@ -434,7 +480,7 @@
         @endphp
           <td class="option-name">
               <input type="checkbox" id="option_set_price{{ $option->id }}" name="option_ids[]" value="{{ $option->id }}" {{ $is_checked ? 'checked' : '' }}/>
-              <label class="mr-2" for="option_set_price{{ $option->id }}">{{ $option->name }}</label></td>
+              <label class="mr-2" for="option_set_price{{ $option->id }}">　{{ $option->name }}</label></td>
           <td class="option-price">{{ number_format($option->price) }} 円</td>
             <!--
             <td class="option-confirm">{{ $option->confirm }}</td>
@@ -570,13 +616,13 @@
                 <label for="status">状態</label>
                 <group class="inline-radio two-option" style="width: 200px;">
                     <div class="status-btn">
-                        <input type="radio" class="checkbox d-inline-block mr-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 1 ? 'checked' : '' }}
-                        value="1"
+                        <input type="radio" class="checkbox d-inline-block mr-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 0 ? 'checked' : '' }}
+                        value="0"
                         ><label>利用する</label>
                     </div>
                     <div class="status-btn">
-                        <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 0 ? 'checked' : '' }}
-                        value="0"><label>利用しない</label>
+                        <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 1 ? 'checked' : '' }}
+                        value="1"><label>利用しない</label>
                     </div>
                     <input type="hidden" class="hidden-q" value="{{ $is_question }}" name="is_questions[]"/>
                 </group>

@@ -91,7 +91,7 @@ class ContractInformationImport extends ImportBAbstract implements WithChunkRead
             'created_at' => $this->getValue($row, 'CREATE_DATE'),
             'updated_at' => $this->getValue($row, 'MODIFY_DATE'),
             'property_no' => $this->getValue($row, 'CONTRACT_NO'),
-            'contract_plan_id' => sprintf('Y0%02d', $hospital->plan_code),
+            'contract_plan_id' => intval( $hospital->plan_code),
             'hospital_id' => $hospital->id,
             'service_start_date' => $service_start_date,
             'service_end_date' => $service_end_date

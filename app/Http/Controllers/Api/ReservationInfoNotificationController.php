@@ -13,10 +13,12 @@ use App\Hospital;
 use App\KenshinSysCooperation;
 use App\KenshinSysCourseWaku;
 use App\KenshinSysDantaiInfo;
+use App\KenshinSysOption;
 use App\Option;
 use App\OptionFutanCondition;
 use App\OptionTargetAge;
 use App\Reservation;
+use App\ReservationKenshinSysOption;
 use App\ReservationOption;
 use App\TargetAge;
 use Carbon\Carbon;
@@ -37,8 +39,8 @@ class ReservationInfoNotificationController extends Controller
     {
         $messages = config('api.course_info_notification_api.message');
         $sysErrorMessages = config('api.unexpected_error.message');
-        $app_name = env('APP_NAME');
-        $ip = Request::ip();
+        $app_name = env('APP_ENV');
+        $ip = $request->ip();
         if ($app_name == 'production') {
             $app_kbn = AppKbn::PRODUCTION;
         } else {
@@ -46,8 +48,8 @@ class ReservationInfoNotificationController extends Controller
         }
 
         // パラメータチェック
-        $Ocp_Apim_Subscription_key = $request->input('Ocp-Apim-Subscription-key');
-        $partner_code = $request->input('X-Partner-Code');
+        $Ocp_Apim_Subscription_key = $request->header('Ocp-Apim-Subscription-key');
+        $partner_code = $request->header('X-Partner-Code');
         if (!isset($Ocp_Apim_Subscription_key)) {
             return $this->createResponse($messages['errorSubscriptionKeyId']);
         }
@@ -72,7 +74,7 @@ class ReservationInfoNotificationController extends Controller
             return $this->createResponse($messages['errorSubscriptionKeyId']);
         }
 
-        $hospital = Hospital::where('kenshin_sys_hospital_id')->fist();
+        $hospital = Hospital::where('kenshin_sys_hospital_id', $request->input('hospitalId'))->first();
         if (!$hospital) {
             return $this->createResponse($messages['errorValidationId']);
         }
@@ -98,7 +100,7 @@ class ReservationInfoNotificationController extends Controller
         }
 
         DB::beginTransaction();
-        try {
+//        try {
             try {
                 // 登録
                 $this->registReservation($hospital, $request);
@@ -107,15 +109,15 @@ class ReservationInfoNotificationController extends Controller
             }
 
             DB::commit();
-        } catch (\Throwable $e) {
-            $message = '[健診システム連携コース通知API] DBの登録に失敗しました。';
-            Log::error($message, [
-                '健診システム連携情報' => $kenshin_sys_cooperation->toArray(),
-                'exception' => $e,
-            ]);
-            DB::rollback();
-            return $this->createResponse($sysErrorMessages['errorDB']);
-        }
+//        } catch (\Throwable $e) {
+//            $message = '[健診システム連携コース通知API] DBの登録に失敗しました。';
+//            Log::error($message, [
+//                '健診システム連携情報' => $kenshin_sys_cooperation->toArray(),
+//                'exception' => $e,
+//            ]);
+//            DB::rollback();
+//            return $this->createResponse($sysErrorMessages['errorDB']);
+//        }
 
         return $this->createResponse($messages['success']);
     }
@@ -149,15 +151,19 @@ class ReservationInfoNotificationController extends Controller
         if (!$reservation) {
             throw new ReservationDateException();
         }
-        $date = Carbon::parse($request->input('yoyakuDate'));
-        $yoyaku_bgn_time_array = explode(':', $request->input('yoyakuBgnTime'));
-        if (count($yoyaku_bgn_time_array) == 2) {
-            $start_h = $yoyaku_bgn_time_array[0];
-            $start_m = $yoyaku_bgn_time_array[1];
-        } elseif (strlen($request->input('yoyakuDate')) == 4) {
-            $start_h = substr($request->input('yoyakuDate'), 0, 2);
-            $start_m = substr($request->input('yoyakuDate'), 2, 2);
+        $date = Carbon::today();
+        if (!empty($request->input('yoyakuDate'))) {
+            $date = Carbon::createFromFormat('Ymd', $request->input('yoyakuDate'));
         }
+
+//        $yoyaku_bgn_time_array = explode(':', $request->input('yoyakuBgnTime'));
+//        if (count($yoyaku_bgn_time_array) == 2) {
+//            $start_h = $yoyaku_bgn_time_array[0];
+//            $start_m = $yoyaku_bgn_time_array[1];
+//        } elseif (strlen($request->input('yoyakuDate')) == 4) {
+//            $start_h = substr($request->input('yoyakuDate'), 0, 2);
+//            $start_m = substr($request->input('yoyakuDate'), 2, 2);
+//        }
 
         if ($request->input('yoyakuStateKbn') == KenshinSysReservationStatus::PENDING) {
             $reservation->reservation_status = ReservationStatus::PENDING;
@@ -167,34 +173,80 @@ class ReservationInfoNotificationController extends Controller
             $reservation->reservation_date = $date;
         } elseif ($request->input('yoyakuStateKbn') == KenshinSysReservationStatus::CANCELLED) {
             $reservation->reservation_status = ReservationStatus::CANCELLED;
-            $reservation->cancel_date = Carbon::today();
+            $reservation->cancel_date = $date;
         } elseif ($request->input('yoyakuStateKbn') == KenshinSysReservationStatus::COMPLETED) {
             $reservation->reservation_status = ReservationStatus::COMPLETED;
             $reservation->reservation_date = $date;
             $reservation->completed_date = $date;
         }
 
-        $reservation->start_time_hour = $start_h;
-        $reservation->start_time_min = $start_m;
+        if (!empty($request->input('courseNm'))) {
+            $reservation->course_name = $request->input('courseNm');
+        }
+
+        if (!empty($request->input('yoyakuWakuNm'))) {
+            $reservation->kenshin_sys_yoyaku_waku_nm = $request->input('yoyakuWakuNm');
+        }
+
+        if (!empty($request->input('futanKin'))) {
+            $reservation->tax_included_price = $request->input('futanKin');
+        }
+
+        $reservation->kenshin_sys_start_time = $request->input('yoyakuBgnTime') ?? '';
+//        $reservation->start_time_min = $start_m;
         $reservation->todays_memo = $request->input('yoyakuComment');
+        $reservation->internal_memo = $request->input('yoyakuComment');
+        if (!empty($request->input('yoyakuWakuNo'))) {
+            $reservation->kenshin_sys_yoyaku_waku_no = $request->input('yoyakuWakuNo');
+        }
+        if (!empty($request->input('yoyakuWakuSeq'))) {
+            $reservation->kenshin_sys_yoyaku_waku_seq = $request->input('yoyakuWakuSeq');
+        }
         $reservation->save();
 
-        if (empty($request->input(['optionList']))) {
+        ReservationKenshinSysOption::where('reservation_id', $reservation->id)->forceDelete();
+
+        if (empty($request->input('optionList')) || count($request->input('optionList')) < 1) {
             return;
         }
 
-        ReservationOption::where('reservation_id', $reservation->id)->delete();
+        foreach ($request->input('optionList') as $o) {
 
-        foreach ($request->input(['optionList']) as $o) {
-
-            $option = Option::where('hospital_id', $hospital->id)
-                ->where('kenshin_sys_course_no', $o['optionNo'])
+            $option = KenshinSysOption::where('kenshin_sys_course_id', $reservation->kenshin_sys_course_id)
+                ->where('kenshin_sys_option_no', $o)
                 ->first();
 
-            $reservation_option = new ReservationOption();
+            if (!$option) {
+                $option_id = 9999;
+            } else {
+                $option_id = $option->id;
+            }
+
+            if (empty($o['optionNo'])) {
+                continue;
+            }
+
+            $option_no = null;
+            if (!empty($o['optionNo'])) {
+                $option_no = $o['optionNo'];
+            }
+            $option_nm = null;
+            if (!empty($o['optionNm'])) {
+                $option_nm = $o['optionNm'];
+            }
+
+            $option_futan_kin = 0;
+            if (!empty($o['optionFutanKin'])) {
+                $option_futan_kin = $o['optionFutanKin'];
+            }
+
+
+            $reservation_option = new ReservationKenshinSysOption();
             $reservation_option->reservation_id = $reservation->id;
-            $reservation_option->option_id = $option->id;
-            $reservation_option->option_price = $option->price;
+            $reservation_option->kenshin_sys_option_id = $option_id;
+            $reservation_option->kenshin_sys_option_no = $option_no;
+            $reservation_option->kenshin_sys_option_name = $option_nm;
+            $reservation_option->kenshin_sys_option_price = $option_futan_kin;
             $reservation_option->status = Status::VALID;
             $reservation_option->save();
         }

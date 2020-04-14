@@ -47,18 +47,16 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
 
                 foreach( $reservations as $key => $reservation) {
 
-                    if ( count($reservations) == ($key+1) ) {
-                        // $channel = $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->monthly_contract_fee;
-                        $channel = '月額';
+                    if ( $reservation->terminal_type == '2' || $reservation->terminal_type == '3' ) {
+                        $channel = 'WEB';
                     } else {
-
-                        if ( $reservation->channel == 2 || $reservation->channel == 3 ) {
-                            $channel = 'WEB';
-                        } else {
-                            $channel = 'TEL';
-                        }
-
+                        $channel = 'TEL';
                     }
+
+                    $comp_date = $reservation->reservation_date->format('Y/m/d');
+//                    if (isset($reservation->completed_date)) {
+//                        $comp_date = $reservation->completed_date->format('Y/m/d');
+//                    }
 
                     $hp_link_status = '';
                     if ( ($reservation->site_code == 'HP') && ( $reservation->fee == 0) && ( $reservation->reservation_status->value == '4') ) {
@@ -69,6 +67,11 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
 
                     $the_amount = $reservation->tax_included_price + $reservation->adjustment_price + $reservation->reservation_options->pluck('option_price')->sum();
 
+                    $tax_rate = 10;
+                    if (!is_null($reservation->tax_rate) && is_numeric($reservation->tax_rate) && $reservation->tax_rate != 0) {
+                        $tax_rate = $reservation->tax_rate;
+                    }
+
                     $row[] = [
                         // $reservation->hospital_id, sorting testing
                         $billing->created_at->format('Y/m'),
@@ -76,15 +79,16 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         $billing->hospital->contract_information->contractor_name,
                         $billing->hospital->name,
                         $channel,
-                        $reservation->completed_date->format('Y/m/d'),
+                        $comp_date,
                         $hp_link_status,
-                        $channel == '月額' ? $reservation->course->name : $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->plan_name,
+                        $reservation->course->name,
                         $reservation->reservation_options->isEmpty() ? '' : '有',
                         number_format($the_amount),
-                        number_format($the_amount / $reservation->tax_rate), //need to verify calculation1
+                        number_format($the_amount / $tax_rate), //need to verify calculation1
                         number_format($reservation->tax_excluded_price),
                         $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->plan_name ?? '',
                         (isset($reservation->site_code) && ( $reservation->site_code == 'HP') ) ? 'HPリンク' : '',
+                        (isset($reservation->site_code) && ( $reservation->site_code == 'Special') ) ? '○' : '',
                         $reservation->fee_rate . '%',
                     ];
 
@@ -114,7 +118,8 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
             '手数料_税抜',
             'ROOKプラン',
             'OP',
-            '手数料料率',
+            '特集ページ',
+            '手数料率',
         ];
     }
 

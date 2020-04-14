@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Enums\Status;
 use Illuminate\Support\Facades\Log;
 
 use App\Enums\WebReception;
@@ -98,6 +99,11 @@ class Course extends SoftDeleteModel
         return $this->hasOne('App\CourseMeta');
     }
 
+    public function hospital_metas()
+    {
+        return $this->hasOne('App\HospitalMeta', 'hospital_id', 'hospital_id');
+    }
+
     public function hospital()
     {
         return $this->belongsTo('App\Hospital');
@@ -106,6 +112,12 @@ class Course extends SoftDeleteModel
     public function contract_information()
     {
         return $this->hasOne('App\ContractInformation', 'hospital_id', 'hospital_id');
+    }
+
+    public function kenshin_sys_courses()
+    {
+        return $this->belongsToMany('App\KenshinSysCourse', 'course_match')
+            ->as('course_match')->withTimestamps();
     }
 
 //    public function hospital()
@@ -220,19 +232,19 @@ class Course extends SoftDeleteModel
             $query->whereHas('calendar_days', function ($query) use ($from, $to) {
                 $query->where('date', '>=', $from)
                     ->where('date', '<=', $to)
-                    ->where('is_reservation_acceptance', 1);
+                    ->where('is_reservation_acceptance', 0);
             });
         }
         // 受診希望日FROM
         else if (isset($from) and empty($to)) {
             $query->whereHas('calendar_days', function ($query) use ($from) {
-                $query->where('date', '>=', $from)->where('is_reservation_acceptance', 1);
+                $query->where('date', '>=', $from)->where('is_reservation_acceptance', 0);
             });
         }
         // 受診希望日TO
         else if (empty($from) and isset($to)) {
             $query->whereHas('calendar_days', function ($query) use ($to) {
-                $query->where('date', '<=', $to)->where('is_reservation_acceptance', 1);
+                $query->where('date', '<=', $to)->where('is_reservation_acceptance', 0);
             });
         }
 
@@ -295,4 +307,11 @@ class Course extends SoftDeleteModel
         'auto_calc_application',
         'calender_id',
     ];
+
+    public function preview_url() {
+        $url = env('FRONT_URL');
+        $code = ContractInformation::where('hospital_id', $this->hospital_id)->first()->code;
+
+        return $url . 'prev/' . $code . '/' . $this->code;
+    }
 }

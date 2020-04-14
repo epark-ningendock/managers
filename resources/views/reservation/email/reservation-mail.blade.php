@@ -17,8 +17,8 @@
       <p>受診日：{{ $data['reservation']->reservation_date }}</p>
       <p>検査コース名：{{ implode(", ", $data['reservation']->course()->get()->pluck('name')->toArray()) }}</p>
       <p>オプション：{{ implode(", ", Option::whereIn('id', $data['reservation']->reservation_options()->get()->pluck('option_id'))->get()->pluck('name')->toArray()) }}</p>
-      <p>調整金額：{{ $data['reservation']->adjustment_price }}</p>
-      <p>金額：{{ $total }}</p>
+      <p>調整金額：{{number_format($data['reservation']->adjustment_price) }}</p>
+      <p>金額：{{ number_format($total) }}</p>
       <p>健保：{{ $data['reservation']->is_health_insurance ? '◯' : '-' }}</p>
       @if($data['reservation']->reservation_status->is(ReservationStatus::PENDING))
         <p>受付ステータス：仮受付</p>

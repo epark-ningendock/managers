@@ -12,6 +12,7 @@ class Hospital extends Model
 {
     use SoftDeletes, OptimisticLocking;
     protected $table = 'hospitals';
+    private $kenshin_relation_flg;
 
     //Note $fillable is temporary for factory, make it realistic field when business logic
     protected $fillable = [
@@ -163,6 +164,10 @@ class Hospital extends Model
             ->withDefault();
     }
 
+    public function kenshin_sys_courses() {
+        return $this->hasMany(KenshinSysCourse::class, 'kenshin_sys_hospital_id', 'kenshin_sys_hospital_id');
+    }
+
     /**
      * 医療機関一覧検索
      *
@@ -244,21 +249,21 @@ class Hospital extends Model
             $query->whereHas('courses.calendar_days', function ($query) use ($from, $to) {
                 $query->where('date', '>=', $from)
                     ->where('date', '<=', $to)
-                    ->where('is_reservation_acceptance', 1);
+                    ->where('is_reservation_acceptance', 0);
             });
         } // 受診希望日FROM
         else {
             if (isset($from) and empty($to)) {
                 $query->whereHas('courses.calendar_days', function ($query) use ($from) {
                     $query->where('date', '>=', $from)
-                        ->where('is_reservation_acceptance', 1);
+                        ->where('is_reservation_acceptance', 0);
                 });
             } // 受診希望日TO
             else {
                 if (empty($from) and isset($to)) {
                     $query->whereHas('courses.calendar_days', function ($query) use ($to) {
                         $query->where('date', '<=', $to)
-                            ->where('is_reservation_acceptance', 1);
+                            ->where('is_reservation_acceptance', 0);
                     });
                 }
             }
@@ -404,5 +409,51 @@ class Hospital extends Model
         } else {
             return null;
         }
+    }
+
+    public function setKenshinRelation($kenshin_relation_flg, $sex, $birth, $honnin_kbn) {
+
+        if ($this->courses) {
+            foreach ($this->courses as $course) {
+                $course->kenshin_relation_flg = $kenshin_relation_flg;
+                $course->sex = $sex;
+                $course->birth = $birth;
+                $course->honnin_kbn = $honnin_kbn;
+            }
+        }
+
+        $this->kenshin_relation_flg = $kenshin_relation_flg;
+    }
+
+    public function getKenshinRelationFlg() {
+        return $this->kenshin_relation_flg;
+    }
+
+    public function getStationInfo() {
+
+        $hospital_metas = $this->hospital_metas;
+        $returnData = [];
+
+        for ($i = 1; $i < 6; $i++) {
+            if (empty($hospital_metas->{'station' .$i})) {
+                continue;
+            }
+            if (!empty($hospital_metas->{'rail' .$i})) {
+                $returnData[$i - 1]['rail_line'] = $hospital_metas->{'rail' .$i};
+            } else {
+                $returnData[$i - 1]['rail_line'] = '';
+            }
+            if (!empty($hospital_metas->{'station' .$i})) {
+                $returnData[$i - 1]['station'] = $hospital_metas->{'station' .$i};
+            } else {
+                $returnData[$i - 1]['station'] = '';
+            }
+            if (!empty($hospital_metas->{'access' .$i})) {
+                $returnData[$i - 1]['access'] =  $hospital_metas->{'access' .$i};
+            } else {
+                $returnData[$i - 1]['access'] =  '';
+            }
+        }
+        return $returnData;
     }
 }

@@ -7,7 +7,7 @@ use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class KenshinSysDantaiInfo extends SoftDeleteModel
 {
-    use SoftDeletes, OptimisticLocking;
+    use SoftDeletes;
 
     protected $dates = [
         'deleted_at'];
@@ -18,9 +18,9 @@ class KenshinSysDantaiInfo extends SoftDeleteModel
         'kenshin_sys_dantai_nm',
         'created_at',
         'updated_at'
-        ];
+    ];
 
-    public function courses()
+    public function kenshin_sys_courses()
     {
         return $this->hasMany(KenshinSysCourse::class);
     }

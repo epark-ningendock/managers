@@ -42,7 +42,7 @@ class CoursesFramesResource extends Resource
             'price_memo' => $this->price_memo ?? '',
             'pre_account_price' => $this->pre_account_price,
             'category_type' => $this->getCategoryType(),
-            'calendars' => new DailyCalendarResource($this),
+            'all_calender' => new DailyCalendarResource($this),
         ]);
     }
 

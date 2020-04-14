@@ -79,7 +79,7 @@ class TemporaryReservationCheckCommand extends Command
         $mailContext = [
             'reservation_dates' => $reservationDates
         ];
-        $to = config('mail.to.admin_reservation');
+        $to = config('mail.to.gyoumu');
         Mail::to($to)->send(new TemporaryReservationCheckMail($mailContext));
     }
 }

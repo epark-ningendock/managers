@@ -11,6 +11,8 @@ use App\Enums\MailInfoDelivery;
 use App\Enums\NickUse;
 use App\Enums\Status;
 use App\MemberLoginInfo;
+use App\Http\Requests\MemberLoginInfoRequest;
+use App\Http\Requests\MemberLoginInfoStoreRequest;
 
 
 class MemberLoginInfoController extends ApiBaseController
@@ -19,30 +21,8 @@ class MemberLoginInfoController extends ApiBaseController
      * ログイン情報登録を実行する
      * @param Request $request
      */
-    public function store(Request $request)
+    public function store(MemberLoginInfoStoreRequest $request)
     {
-        $messages = config('api.member_login_info_api.message');
-        $sysErrorMessages = config('api.sys_error.message');
-        // パラメータチェック
-        if (!isset($request->epark_member_id) || !is_numeric($request->epark_member_id)) {
-            return $this->createResponse($messages['errorEparkMemberId']);
-        }
-        if (!isset($request->mail_info_delivery) || !MailInfoDelivery::hasValue($request->mail_info_delivery)) {
-            return $this->createResponse($messages['errorMailInfoDelivery']);
-        }
-        if (!isset($request->nick_use) || !NickUse::hasValue($request->nick_use)) {
-            return $this->createResponse($messages['errorNickUse']);
-        }
-        if (!isset($request->contact) || !Contact::hasValue($request->contact)) {
-            return $this->createResponse($messages['errorContact']);
-        }
-        if (mb_strlen($request->contact_name) > 32) {
-            return $this->createResponse($messages['errorContactName']);
-        }
-        if (!isset($request->status) || !Status::hasValue($request->status)) {
-            return $this->createResponse($messages['errorStatus']);
-        }
-
         $params = [
             'epark_member_id' => $request->epark_member_id,
             'mail_info_delivery' => $request->mail_info_delivery,
@@ -64,44 +44,36 @@ class MemberLoginInfoController extends ApiBaseController
                 'exception' => $e,
             ]);
             DB::rollback();
-            return $this->createResponse($sysErrorMessages['errorDB']);
+            return $this->createResponse($this->messages['errorDB'], $request->input('callback'));
         }
 
-        return $this->createResponse($messages['success']);
+        return $this->createResponse($this->messages['success'], $request->input('callback'));
     }
 
     /**
      * EPARK会員ログイン情報を返す
      * @param Request $request
      */
-    public function show(Request $request)
+    public function show(MemberLoginInfoRequest $request)
     {
-        $messages = config('api.member_login_info_api.message');
-        $sysErrorMessages = config('api.sys_error.message');
-        // パラメータチェック
-        if (!isset($request->epark_member_id) || !is_numeric($request->epark_member_id)) {
-            return $this->createResponse($messages['errorEparkMemberId']);
-        }
-
-        try {
-            //
+        try { 
             $memberLoginInfo = MemberLoginInfo::where('epark_member_id', $request->epark_member_id)
                 ->where('status', Status::VALID)
                 ->first();
-            if (! $memberLoginInfo) {
-                return $this->createResponse($messages['errorNotExistInfo']);
-            }
         } catch (\Throwable $e) {
             $message = '[EPARK会員ログイン情報API] DB処理に失敗しました。';
             Log::error($message, [
                 'epark_member_id' => $request->epark_member_id,
                 'exception' => $e,
             ]);
-            return $this->createResponse($sysErrorMessages['errorDB']);
+            return $this->createResponse($this->messages['errorDB'], $request->input('callback'));
         }
 
-        return $this->createLoginInfoResponse($messages['success'], $memberLoginInfo);
+        if (!$memberLoginInfo) {
+            return $this->createResponse($this->messages['data_empty_error']);
+        }
 
+        return $this->createLoginInfoResponse($this->messages['success'], $memberLoginInfo);
     }
 
     /**
@@ -113,16 +85,15 @@ class MemberLoginInfoController extends ApiBaseController
      */
     protected function createLoginInfoResponse(array $message, MemberLoginInfo $memberLoginInfo) {
         return response([
-            'statusCode' => strval(200),
-            'message' => $message['description'],
-            'messageId' => $message['code'],
+            'status' =>0,
+            'message' => $message['message'],
+            'messageId' => $message['message_id'],
             'no' => $memberLoginInfo->id,
             'epark_member_id' => $memberLoginInfo->epark_member_id,
             'mail_info_delivery' => $memberLoginInfo->mail_info_delivery,
             'nick_use' => $memberLoginInfo->nick_use,
             'contact' => $memberLoginInfo->contact,
             'contact_name' => $memberLoginInfo->contact_name,
-            'status' => $memberLoginInfo->status,
         ], 200)->header('Content-Type', 'application/json; charset=utf-8');
     }
 

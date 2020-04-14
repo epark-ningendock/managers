@@ -19,8 +19,9 @@ class CreateHokenInfosTable extends Migration
             $table->increments('id');
             $table->integer('kenshin_sys_dantai_info_id')->unsigned();
             $table->foreign('kenshin_sys_dantai_info_id')->references('id')->on('kenshin_sys_dantai_infos');
-            $table->integer('hoken_no');
-            $table->integer('hoken_kigou');
+            $table->char('hoken_no', 8);
+            $table->char('hoken_kigou', 2);
+            $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
         });
     }

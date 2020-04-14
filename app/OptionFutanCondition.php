@@ -7,7 +7,7 @@ use Reshadman\OptimisticLocking\OptimisticLocking;
 
 class OptionFutanCondition extends SoftDeleteModel
 {
-    use SoftDeletes, OptimisticLocking;
+    use SoftDeletes;
 
     protected $dates = [
         'riyou_bgn_date',
@@ -15,8 +15,10 @@ class OptionFutanCondition extends SoftDeleteModel
         'deleted_at'];
 
     protected $fillable = [
-        'option_id',
-        'kenshin_sys_option_id',
+        'kenshin_sys_hospital_id',
+        'kenshin_sys_dantai_no',
+        'kenshin_sys_course_no',
+        'kenshin_sys_option_no',
         'jouken_no',
         'sex',
         'honnin_kbn',

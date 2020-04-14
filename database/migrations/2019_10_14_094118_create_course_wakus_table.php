@@ -18,9 +18,11 @@ class CreateCourseWakusTable extends Migration
         Schema::create('kenshin_sys_course_wakus', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('kenshin_sys_course_id')->unsigned();
-            $table->integer('kenshin_sys_course_no');
+            $table->Biginteger('kenshin_sys_course_no');
+            $table->Biginteger('jouken_no');
             $table->integer('year_month');
             $table->integer('waku_kbn');
+            $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
         });
     }

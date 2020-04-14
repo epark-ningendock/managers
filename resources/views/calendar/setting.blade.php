@@ -112,6 +112,7 @@
               <p><input type="checkbox" class="week" id="week-3" checked /> <label for="week-3">第3週</label></p>
               <p><input type="checkbox" class="week" id="week-4" checked /> <label for="week-4">第4週</label></p>
               <p><input type="checkbox" class="week" id="week-5" checked /> <label for="week-5">第5週</label></p>
+              <p><input type="checkbox" class="week" id="week-6" checked /> <label for="week-5">第6週</label></p>
           </div>
         <button class="btn btn-primary pull-right" id="bulk-update">一括反映</button>
     </div>
@@ -155,19 +156,19 @@
                               <span class="day-label text-red">休</span>
                             @else
                               <a class="is_reservation_acceptance day-label" data-origin="{{  isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">
-                                {{ isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0' ? '✕' : '◯' }}
+                                {{ isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '1' ? '✕' : '◯' }}
                               </a>
                             @endif
                             <input type="hidden" name="is_reservation_acceptances[]" value="{{ isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">                
                             @php
                               $reservation_frames = 0;
-                              if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0')) {
+                              if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '1')) {
                                 $reservation_frames = '';
                               } else if (isset($day['calendar_day']) || $day['is_holiday'] == 1) {
                                 if(isset($day['calendar_day'])) $reservation_frames = $day['calendar_day']->reservation_frames;
                               }
                             @endphp
-                            <select name="reservation_frames[]" @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0')) disabled @endif class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
+                            <select name="reservation_frames[]" @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '1')) disabled @endif class='calendar-frame mt-1' data-day="{{ $day['date']->day }}"
                                     @if($day['is_holiday']) data-holiday="true" @endif
                                     @if(isset($day['holiday'])) data-public-holiday="true" @endif
                                     data-origin="{{ $reservation_frames }}">
@@ -179,7 +180,7 @@
                               @endforeach
                             </select>
                             {{-- 受付不可の場合、受付枠数ををhidden属性にする --}}
-                            @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '0'))
+                            @if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '1'))
                               <input type="hidden" name="reservation_frames[]" />
                             @endif
 
@@ -280,15 +281,15 @@
               $('.is_reservation_acceptance').click(function() {
                   if($(this).html().trim() == '✕') {
                       $(this).html('◯');
-                      $(this).next('input:hidden').val('1');
+                      $(this).next('input:hidden').val('0');
                       $(this).siblings('select')
                              .prop('disabled', false)
-                             .val('0')
+                             .val('1')
                              .change()
                              .next('input:hidden').remove();
                   } else {
                       $(this).html('✕');
-                      $(this).next('input:hidden').val('0');
+                      $(this).next('input:hidden').val('1');
                       $(this).siblings('select')
                              .prop('disabled', true)
                              .val('')
@@ -365,6 +366,8 @@
                                   weekKey += 4;
                               } else if(ele.parent().parent().parent().attr('class') === 'week-5') {
                                   weekKey += 5;
+                              } else if(ele.parent().parent().parent().attr('class') === 'week-6') {
+                                  weekKey += 6;
                               }
 
                               if (isPublicHoliday && holidayFrame) {
@@ -419,17 +422,17 @@
                   $('.is_reservation_acceptance').each(function(i, ele) {
                       ele = $(ele)
                        const origin = ele.data('origin');
-                      if(origin == '1') {
+                      if(origin == '0') {
                           ele.html('◯');
-                          ele.next('input:hidden').val('1');
+                          ele.next('input:hidden').val('0');
                           ele.siblings('select')
                               .prop('disabled', false)
-                              .val('0')
+                              .val('1')
                               .change()
                               .next('input:hidden').remove();
                       } else {
                           ele.html('✕');
-                          ele.next('input:hidden').val('0');
+                          ele.next('input:hidden').val('1');
                           const select = ele.siblings('select')
                                             .prop('disabled', true)
                                             .val('')

@@ -6,6 +6,7 @@
       -
       <i class="fa fa-book"> 受付登録</i>
   </h1>
+  <h5 align="right"><a href="{{ './manual/06_reception.pdf' }}" target="_blank">受付の使い方</a></h5>
 @stop
 
 @section('form')

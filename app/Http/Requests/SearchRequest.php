@@ -48,6 +48,7 @@ class SearchRequest extends ValidationRequest
             'exam_type_text' => $this->get_course_category_text($this->input('exam_type')),
             'disease' => $this->get_course_category_text($this->input('disease')),
             'part' => $this->get_course_category_text($this->input('part')),
+            'site_card' => $this->get_site_card_name($this->input('site_card')),
         ];
         return compact('serach_condition', 'serach_condition_string');
     }
@@ -63,16 +64,20 @@ class SearchRequest extends ValidationRequest
             $result = '';
             $distoricts = DistrictCode::whereIn('district_code', $params)->get();
             foreach ($distoricts as $district) {
-                $result = $result . ',' . $district->name;
+                $result = $result . '、' . $district->name;
             }
-            return ltrim($result, ',');
+            return ltrim($result, '、');
         }
         return '';
     }
     protected function get_rail_name($rail_no)
     {
         if (isset($rail_no)) {
-            $params = explode(',', $rail_no);
+            if (is_array($rail_no)) {
+                $params = $rail_no;
+            } else {
+                $params = explode(',', $rail_no);
+            }
             $result = '';
             $rails = Rail::whereIn('id', $params)->get();
             foreach ($rails as $rail) {
@@ -101,12 +106,13 @@ class SearchRequest extends ValidationRequest
         if ($hospital_category_code) {
             $array = explode(",", $hospital_category_code);
             $data = HospitalMinorClassification::select('name')->whereIn('id', $array)->get();
-            $text = $data->map(function ($d) {
-                return $d->name ?? '';
-            });
-            return $text;
+            $results = [];
+            foreach ($data as $d) {
+                $results[] = $d->name ?? '';
+            }
+            return $results;
         } else {
-            return '';
+            return [];
         }
     }
     protected function get_course_category_text($course_category_code)
@@ -114,10 +120,19 @@ class SearchRequest extends ValidationRequest
         if ($course_category_code) {
             $array = explode(",", $course_category_code);
             $data = MinorClassification::select('name')->whereIn('id', $array)->get();
-            $text = $data->map(function ($d) {
-                return $d->name ?? '';
-            });
-            return $text;
+            $results = [];
+            foreach ($data as $d) {
+                $results[] = $d->name ?? '';
+            }
+            return $results;
+        } else {
+            return [];
+        }
+    }
+    protected function get_site_card_name($site_card)
+    {
+        if ($site_card == 1) {
+            return 'クレジットカード払い可';
         } else {
             return '';
         }

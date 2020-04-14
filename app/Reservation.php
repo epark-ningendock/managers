@@ -153,6 +153,11 @@ class Reservation extends SoftDeleteModel
         return $this->hasMany('App\ReservationOption');
     }
 
+    public function reservation_kenshin_sys_options()
+    {
+        return $this->hasMany('App\ReservationKenshinSysOption');
+    }
+
     public function reservation_answers()
     {
         return $this->hasMany(ReservationAnswer::class);

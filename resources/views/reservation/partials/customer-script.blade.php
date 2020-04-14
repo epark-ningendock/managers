@@ -94,6 +94,15 @@
         $('#family_name_kana').val($this.attr('data-family_name_kana'));
         $('#first_name_kana').val($this.attr('data-first_name_kana'));
         $('#tel').val($this.attr('data-tel'));
+        $('#sex').val($this.attr('data-sex'));
+        $('#birthday').val($this.attr('data-birthday'));
+        $('#postcode1').val($this.attr('data-postcode1'));
+        $('#postcode2').val($this.attr('data-postcode2'));
+        $('#prefecture_id').val($this.attr('data-prefecture_id'));
+        $('#address1').val($this.attr('data-address1'));
+        $('#address2').val($this.attr('data-address2'));
+        $('#email').val($this.attr('data-email'));
+        $('#memo').val($this.attr('data-memo'));
         $('#registration_card_number').val($this.attr('data-registration_card_number'));
 
         $('.customer-search-box').modal('hide');

@@ -18,13 +18,13 @@ class CreateOptionFutanConditionsTable extends Migration
         Schema::create('option_futan_conditions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('kenshin_sys_option_id')->unsigned();
-            $table->integer('jouken_no');
             $table->integer('sex');
             $table->integer('honnin_kbn');
             $table->integer('futan_kingaku');
             $table->integer('yusen_kbn');
             $table->date('riyou_bgn_date');
             $table->date('riyou_end_date');
+            $table->char('status', 1)->default('1');
             $this->addCommonColumns($table);
         });
     }

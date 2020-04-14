@@ -19,12 +19,20 @@ class HospitalCategoryResource extends Resource
         if (!empty($this->hospital_details)) {
             foreach ($this->hospital_details as $detail) {
 
-                if (!empty($detail->inputstring) || (isset($detail->select_status) && ($detail->select_status === '1'))) {
+                if (!empty($detail->inputstring) || (isset($detail->select_status) && ($detail->select_status == 1))) {
+
+                    if (empty($detail->inputstring)) {
+                        $text = $detail->minor_classification->name;
+                    } else {
+                        $text = $detail->inputstring;
+                    }
+
+
                     $result =
                         [
                             'id' => $detail->minor_classification_id,
                             'title' => $detail->minor_classification->icon_name != null ? $detail->minor_classification->icon_name : '',
-                            'text' => $detail->inputstring,
+                            'text' => $text,
                         ];
                     if (!empty($result)) {
                         $results[] = $result;

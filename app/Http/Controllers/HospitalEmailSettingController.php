@@ -48,7 +48,7 @@ class HospitalEmailSettingController extends Controller
                 'staff_name' => Auth::user()->name,
                 'processing' => '更新'
                 ];
-            Mail::to(env('DOCK_EMAIL_ADDRESS'))->send(new HospitalEmailSettingOperationMail($data));
+//            Mail::to(config('mail.to.gyoumu'))->send(new HospitalEmailSettingOperationMail($data));
 
             return redirect('hospital-email-setting')->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_email_setting')]));
         } catch (StaleModelLockingException $e) {

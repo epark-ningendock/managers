@@ -148,6 +148,7 @@ return [
     'memo'                                 => '顧客メモ',
     'remarks'                              => '備考',
     'examination_system_name'              => '検診システム名',
+    'kenshin_sys_hospital_id'              => '健診システム医療機関ID',
     'reservation_memo'                     => '次回受付メモ',
     'claim_count'                          => 'クレーム数',
     'recall_count'                         => 'リコール数',
@@ -177,6 +178,7 @@ return [
     'option_description'                   => 'オプションの説明',
     'price'                                => '価格',
     'tax_classification'                   => '税区分',
+    'invalid_kenshin_course_id'            => '無効な検診システムコースID',
     'invalid_option_id'                    => '無効なオプションID',
     'option_sorting_updated'               => 'オプションソートの更新',
     'need_to_login'                        => 'あなたは最初にログインする必要があります',
@@ -236,5 +238,9 @@ return [
     'perform_identification'               => '名寄せを実行する',
     'integration-success'                  => '名寄せが完了しました。',
     'integration-error'                    => 'エラーが発生しました。',
-    'input-required'                       => '入力内容をご確認ください。'
+    'input-required'                       => '入力内容をご確認ください。',
+
+    'for_api' => [
+        'success'                           => '正常に受け付けました',
+    ],
 ];

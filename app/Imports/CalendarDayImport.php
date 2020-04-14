@@ -42,32 +42,36 @@ class CalendarDayImport extends ImportBAbstract implements WithChunkReading
     {
         try {
             $row = $row->toArray();
-            $c = ConvertedIdString::where('table_name', 'calendars')
-                ->where('old_id', $row['line_id'])
-                ->where('hospital_no', $this->hospital_no)
-                ->first();
 
-            $appoint_num = Availabil::where('hospital_no', $this->hospital_no)
-                ->where('line_id',  $row['line_id'])
-                ->where('reservation_dt', $row['date'])
-                ->sum('appoint_number');
+            $date = $row['date'];
+            if ($date >= '20200101') {
+                $c = ConvertedIdString::where('table_name', 'calendars')
+                    ->where('old_id', $row['line_id'])
+                    ->where('hospital_no', $this->hospital_no)
+                    ->first();
 
-            if (empty($appoint_num)) {
-                $appoint_num = 0;
+                $appoint_num = Availabil::where('hospital_no', $this->hospital_no)
+                    ->where('line_id',  $row['line_id'])
+                    ->where('reservation_dt', $row['date'])
+                    ->sum('appoint_number');
+
+                if (empty($appoint_num)) {
+                    $appoint_num = 0;
+                }
+
+                $model = new CalendarDay([
+                    'date' => Carbon::create($row['date']),
+                    'is_holiday' => 0,  //
+                    'is_reservation_acceptance' => 1,
+                    'reservation_frames' => $row['frame'],
+                    'calendar_id' => $c->new_id,
+                    'reservation_count' => $appoint_num,
+                    'status' => Status::VALID,
+                    'created_at' => Carbon::today(),
+                    'updated_at' => Carbon::today(),
+                ]);
+                $model->save();
             }
-
-            $model = new CalendarDay([
-                'date' => Carbon::create($row['date']),
-                'is_holiday' => 0,  //
-                'is_reservation_acceptance' => 1,
-                'reservation_frames' => $row['frame'],
-                'calendar_id' => $c->new_id,
-                'reservation_count' => $appoint_num,
-                'status' => Status::VALID,
-                'created_at' => Carbon::today(),
-                'updated_at' => Carbon::today(),
-            ]);
-            $model->save();
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
