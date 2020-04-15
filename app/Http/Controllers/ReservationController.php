@@ -508,12 +508,9 @@ class ReservationController extends Controller
             $query->where('in_hospital_change_email_reception_flg', '1');
         }
         $hospital_email_setting = $query->first();
-        Log::info('施設めーるあどれす医療機関ID：'. $hospital_email_setting->hospital_id);
         $hospital_mails = [];
         $hospital_fax = [];
         if ($hospital_email_setting) {
-            Log::info('施設めーるあどれす1：'. $hospital_email_setting->reception_email1);
-            Log::info('施設めーるあどれす2：'. $hospital_email_setting->reception_email2);
             if (strpos($hospital_email_setting->reception_email1, 'fax') === false) {
                 $hospital_mails[] = $hospital_email_setting->reception_email1;
             } else {
@@ -548,7 +545,6 @@ class ReservationController extends Controller
                     $tos[] = $m;
                 }
             }
-            Log::info('送信先件数：'. count($tos));
             // 医療機関へメール送信
             $gyoumu_mail = config('mail.to.gyoumu');
             if ($change_flg) {
