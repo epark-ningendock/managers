@@ -568,11 +568,11 @@ class ReservationController extends Controller
             }
             // 医療機関へメール送信
             if ($change_flg) {
-                Mail::to($tos)->send(new ReservationChangeFaxToMail($reservation));
+                Mail::to($fax_tos)->send(new ReservationReceptionCompleteFaxToMail($reservation));
             } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
-                Mail::to($tos)->send(new ReservationCancelFaxToMail($reservation));
+                Mail::to($fax_tos)->send(new ReservationCancelFaxToMail($reservation));
             } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
-                Mail::to($tos)->send(new ReservationReceptionCompleteFaxToMail($reservation));
+                Mail::to($fax_tos)->send(new ReservationReceptionCompleteFaxToMail($reservation));
             }
         }
     }
