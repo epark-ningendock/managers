@@ -450,12 +450,12 @@ class ReservationController extends Controller
             $reservation->completed_date = Carbon::now();
             $reservation->save();
 
-//            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
 
             Session::flash('success', trans('messages.reservation.complete_success'));
             DB::commit();
 
-//            $this->reservation_mail_send($reservation, false);
+            $this->reservation_mail_send($reservation, false);
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -483,11 +483,9 @@ class ReservationController extends Controller
     private function reservation_mail_send($reservation, $change_flg) {
 
         // 確定メール送信（受診者）
-        if (!empty($reservation->epark_member_id)) {
+        if (!empty($reservation->customer) && !empty($reservation->customer->email)) {
             $to = $reservation->customer->email;
             Mail::to($to)->send(new ReservationReceptionCompleteMail($reservation, true));
-        } else {
-            Mail::to('taro.kimura@banana-877.com')->send(new ReservationReceptionCompleteMail($reservation, true));
         }
 
         // 確定メール送信（施設）
@@ -503,34 +501,36 @@ class ReservationController extends Controller
         if ($change_flg) {
             $query->where('in_hospital_change_email_reception_flg', '1');
         }
-        $hospital_email_setting = $query->first();
+        $hospital_email_settings = $query->get();
         $hospital_mails = [];
         $hospital_fax = [];
-        if ($hospital_email_setting) {
-            if (strpos($hospital_email_setting->reception_email1, 'fax') === false) {
-                $hospital_mails[] = $hospital_email_setting->reception_email1;
-            } else {
-                $hospital_fax[] = $hospital_email_setting->reception_email1;
-            }
-            if (strpos($hospital_email_setting->reception_email2, 'fax') === false) {
-                $hospital_mails[] = $hospital_email_setting->reception_email2;
-            } else {
-                $hospital_fax[] = $hospital_email_setting->reception_email2;
-            }
-            if (strpos($hospital_email_setting->reception_email3, 'fax') === false) {
-                $hospital_mails[] = $hospital_email_setting->reception_email3;
-            } else {
-                $hospital_fax[] = $hospital_email_setting->reception_email3;
-            }
-            if (strpos($hospital_email_setting->reception_email4, 'fax') === false) {
-                $hospital_mails[] = $hospital_email_setting->reception_email4;
-            } else {
-                $hospital_fax[] = $hospital_email_setting->reception_email4;
-            }
-            if (strpos($hospital_email_setting->reception_email5, 'fax') === false) {
-                $hospital_mails[] = $hospital_email_setting->reception_email5;
-            } else {
-                $hospital_fax[] = $hospital_email_setting->reception_email5;
+        foreach ($hospital_email_settings as $hospital_email_setting) {
+            if ($hospital_email_setting) {
+                if (strpos($hospital_email_setting->reception_email1, 'fax') === false) {
+                    $hospital_mails[] = $hospital_email_setting->reception_email1;
+                } else {
+                    $hospital_fax[] = $hospital_email_setting->reception_email1;
+                }
+                if (strpos($hospital_email_setting->reception_email2, 'fax') === false) {
+                    $hospital_mails[] = $hospital_email_setting->reception_email2;
+                } else {
+                    $hospital_fax[] = $hospital_email_setting->reception_email2;
+                }
+                if (strpos($hospital_email_setting->reception_email3, 'fax') === false) {
+                    $hospital_mails[] = $hospital_email_setting->reception_email3;
+                } else {
+                    $hospital_fax[] = $hospital_email_setting->reception_email3;
+                }
+                if (strpos($hospital_email_setting->reception_email4, 'fax') === false) {
+                    $hospital_mails[] = $hospital_email_setting->reception_email4;
+                } else {
+                    $hospital_fax[] = $hospital_email_setting->reception_email4;
+                }
+                if (strpos($hospital_email_setting->reception_email5, 'fax') === false) {
+                    $hospital_mails[] = $hospital_email_setting->reception_email5;
+                } else {
+                    $hospital_fax[] = $hospital_email_setting->reception_email5;
+                }
             }
         }
 
