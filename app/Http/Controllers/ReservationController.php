@@ -538,6 +538,15 @@ class ReservationController extends Controller
             }
         }
 
+        $gyoumu_mail = config('mail.to.gyoumu');
+        if ($change_flg) {
+            Mail::to($gyoumu_mail)->send(new ReservationChangeMail($reservation, false));
+        } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
+            Mail::to($gyoumu_mail)->send(new ReservationReceptionCancelMail($reservation, false));
+        } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+            Mail::to($gyoumu_mail)->send(new ReservationReceptionCompleteMail($reservation, false));
+        }
+
         $tos = [];
         if (!empty($hospital_mails)) {
             foreach ($hospital_mails as $m) {
@@ -546,13 +555,12 @@ class ReservationController extends Controller
                 }
             }
             // 医療機関へメール送信
-            $gyoumu_mail = config('mail.to.gyoumu');
             if ($change_flg) {
-                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationChangeMail($reservation, false));
+                Mail::to($tos)->send(new ReservationChangeMail($reservation, false));
             } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
-                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationReceptionCancelMail($reservation, false));
+                Mail::to($tos)->send(new ReservationReceptionCancelMail($reservation, false));
             } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
-                Mail::to($tos)->cc($gyoumu_mail)->send(new ReservationReceptionCompleteMail($reservation, false));
+                Mail::to($tos)->send(new ReservationReceptionCompleteMail($reservation, false));
             }
         }
 
