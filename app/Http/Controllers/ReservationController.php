@@ -485,7 +485,13 @@ class ReservationController extends Controller
         // 確定メール送信（受診者）
         if (!empty($reservation->customer) && !empty($reservation->customer->email)) {
             $to = $reservation->customer->email;
-            Mail::to($to)->send(new ReservationReceptionCompleteMail($reservation, true));
+            if ($change_flg) {
+                Mail::to($to)->send(new ReservationChangeMail($reservation, true));
+            } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
+                Mail::to($to)->send(new ReservationReceptionCancelMail($reservation, true));
+            } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+                Mail::to($to)->send(new ReservationReceptionCompleteMail($reservation, true));
+            }
         }
 
         // 確定メール送信（施設）
@@ -501,38 +507,40 @@ class ReservationController extends Controller
         if ($change_flg) {
             $query->where('in_hospital_change_email_reception_flg', '1');
         }
-        $hospital_email_settings = $query->get();
+        $hospital_email_setting = $query->first();
+        Log::info('施設めーるあどれす医療機関ID：'. $hospital_email_setting->hospital_id);
         $hospital_mails = [];
         $hospital_fax = [];
-        foreach ($hospital_email_settings as $hospital_email_setting) {
-            if ($hospital_email_setting) {
-                if (strpos($hospital_email_setting->reception_email1, 'fax') === false) {
-                    $hospital_mails[] = $hospital_email_setting->reception_email1;
-                } else {
-                    $hospital_fax[] = $hospital_email_setting->reception_email1;
-                }
-                if (strpos($hospital_email_setting->reception_email2, 'fax') === false) {
-                    $hospital_mails[] = $hospital_email_setting->reception_email2;
-                } else {
-                    $hospital_fax[] = $hospital_email_setting->reception_email2;
-                }
-                if (strpos($hospital_email_setting->reception_email3, 'fax') === false) {
-                    $hospital_mails[] = $hospital_email_setting->reception_email3;
-                } else {
-                    $hospital_fax[] = $hospital_email_setting->reception_email3;
-                }
-                if (strpos($hospital_email_setting->reception_email4, 'fax') === false) {
-                    $hospital_mails[] = $hospital_email_setting->reception_email4;
-                } else {
-                    $hospital_fax[] = $hospital_email_setting->reception_email4;
-                }
-                if (strpos($hospital_email_setting->reception_email5, 'fax') === false) {
-                    $hospital_mails[] = $hospital_email_setting->reception_email5;
-                } else {
-                    $hospital_fax[] = $hospital_email_setting->reception_email5;
-                }
+        if ($hospital_email_setting) {
+            Log::info('施設めーるあどれす1：'. $hospital_email_setting->reception_email1);
+            Log::info('施設めーるあどれす2：'. $hospital_email_setting->reception_email2);
+            if (strpos($hospital_email_setting->reception_email1, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email1;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email1;
+            }
+            if (strpos($hospital_email_setting->reception_email2, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email2;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email2;
+            }
+            if (strpos($hospital_email_setting->reception_email3, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email3;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email3;
+            }
+            if (strpos($hospital_email_setting->reception_email4, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email4;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email4;
+            }
+            if (strpos($hospital_email_setting->reception_email5, 'fax') === false) {
+                $hospital_mails[] = $hospital_email_setting->reception_email5;
+            } else {
+                $hospital_fax[] = $hospital_email_setting->reception_email5;
             }
         }
+
 
         if (!empty($hospital_mails)) {
             foreach ($hospital_mails as $m) {
@@ -540,6 +548,7 @@ class ReservationController extends Controller
                     $tos[] = $m;
                 }
             }
+            Log::info('送信先件数：'. count($tos));
             // 医療機関へメール送信
             $gyoumu_mail = config('mail.to.gyoumu');
             if ($change_flg) {
@@ -561,9 +570,9 @@ class ReservationController extends Controller
             if ($change_flg) {
                 Mail::to($fax_tos)->send(new ReservationChangeFaxToMail($reservation));
             } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
-                Mail::to($fax_tos)->cc($gyoumu_mail)->send(new ReservationCancelFaxToMail($reservation));
+                Mail::to($fax_tos)->send(new ReservationCancelFaxToMail($reservation));
             } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
-                Mail::to($fax_tos)->cc($gyoumu_mail)->send(new ReservationReceptionCompleteFaxToMail($reservation));
+                Mail::to($fax_tos)->send(new ReservationReceptionCompleteFaxToMail($reservation));
             }
         }
     }
