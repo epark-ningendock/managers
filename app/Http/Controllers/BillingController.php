@@ -246,12 +246,12 @@ class BillingController extends Controller {
 	            'selectedMonth' => $selectedMonth
             ];
 
-//            Mail::to( [
-//                $hospitalEmailSetting->billing_email1,
-//                $hospitalEmailSetting->billing_email2,
-//                $hospitalEmailSetting->billing_email3,
-//                $hospitalEmailSetting->billing_fax_number . '@faxmail.com',
-//            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
+            Mail::to( [
+                $hospitalEmailSetting->billing_email1,
+                $hospitalEmailSetting->billing_email2,
+                $hospitalEmailSetting->billing_email3,
+                $hospitalEmailSetting->billing_fax_number . '@faxmail.com',
+            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
 
             $billingMailHistory = new BillingMailHistory();
 
@@ -294,9 +294,9 @@ class BillingController extends Controller {
 		            'selectedMonth' => $billing->billing_month
 	            ];
 
-//	            Mail::to( [
-//	                config('mail.to.gyoumu'),
-//	            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
+	            Mail::to( [
+	                config('mail.to.gyoumu'),
+	            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
 	        }
 		}	
 

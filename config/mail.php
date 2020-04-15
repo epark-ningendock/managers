@@ -130,6 +130,7 @@ return [
         // 管理者
         'gyoumu' => env('MAIL_TO_GYOUMU_ADMIN_ADDRESS'),
         'system' => env('MAIL_TO_SYSTEM_ADMIN_ADDRESS'),
+        'unei' => env('EPARK_EMAIL_ADDRESS'),
         'dev' => env('MAIL_TO_DEV_ADMIN_ADDRESS'),
     ],
 

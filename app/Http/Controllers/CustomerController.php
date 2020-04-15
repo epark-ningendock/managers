@@ -217,7 +217,7 @@ class CustomerController extends Controller
            'email' => $customer->email
         ]);
 
-//        Mail::to($customer->email)->send(new CustomerSendMail($attributes));
+        Mail::to($customer->email)->send(new CustomerSendMail($attributes));
 
         $mail_history = new MailHistory($attributes);
         $mail_history->save();

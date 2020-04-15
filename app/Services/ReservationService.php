@@ -46,7 +46,7 @@ use Carbon\Carbon;
 use Log;
 
 // epark本部宛てアドレス
-define('EPARK_MAIL_TO', config('mail.to.gyoumu'));
+define('EPARK_MAIL_TO', config('mail.to.unei'));
 class ReservationService
 {
     // 処理区分[登録]
@@ -481,6 +481,7 @@ class ReservationService
         }
 
         try {
+            $tos = [];
             if (!empty($hospital_mails)) {
                 foreach ($hospital_mails as $m) {
                     if (!empty($m)) {
@@ -488,13 +489,14 @@ class ReservationService
                     }
                 }
                 // 医療機関へメール送信
-                if ($is_cancel && $hospital_email_setting->in_hospital_cancellation_email_reception_flg == 1) {
+                if ($is_cancel) {
                     Mail::to($tos)->send(new ReservationCancelMail($entity, false));
-                } elseif ($hospital_email_setting->web_reception_email_flg == 1) {
+                } else {
                     Mail::to($tos)->send(new ReservationCompleteMail($entity, false));
                 }
             }
 
+            $fax_tos = [];
             if (!empty($hospital_fax)) {
                 foreach ($hospital_fax as $fax_to) {
                     if (!empty($fax_to)) {
