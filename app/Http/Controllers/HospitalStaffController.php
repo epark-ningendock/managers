@@ -119,7 +119,7 @@ class HospitalStaffController extends Controller
                 'subject' => '【EPARK人間ドック】医療機関スタッフ登録・更新・削除のお知らせ',
                 'processing' => '更新'
                 ];
-//            Mail::to(config('mail.to.gyoumu'))->send(new HospitalStaffOperationMail($data));
+            Mail::to(config('mail.to.gyoumu'))->send(new HospitalStaffOperationMail($data));
 
             return redirect('hospital-staff')->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_staff')]));
         } catch (ExclusiveLockException $e) {

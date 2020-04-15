@@ -46,7 +46,7 @@ use Carbon\Carbon;
 use Log;
 
 // epark本部宛てアドレス
-define('EPARK_MAIL_TO', config('mail.to.gyoumu'));
+define('EPARK_MAIL_TO', config('mail.to.unei'));
 class ReservationService
 {
     // 処理区分[登録]

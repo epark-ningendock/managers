@@ -117,8 +117,8 @@ class StaffController extends Controller
                 'password' => $staff_data['password']
             ];
             
-//            Mail::to($staff->email)
-//                ->send(new RegisteredMail($data));
+            Mail::to($staff->email)
+                ->send(new RegisteredMail($data));
 
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.staff')]));
             DB::commit();

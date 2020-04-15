@@ -508,12 +508,9 @@ class ReservationController extends Controller
             $query->where('in_hospital_change_email_reception_flg', '1');
         }
         $hospital_email_setting = $query->first();
-        Log::info('施設めーるあどれす医療機関ID：'. $hospital_email_setting->hospital_id);
         $hospital_mails = [];
         $hospital_fax = [];
         if ($hospital_email_setting) {
-            Log::info('施設めーるあどれす1：'. $hospital_email_setting->reception_email1);
-            Log::info('施設めーるあどれす2：'. $hospital_email_setting->reception_email2);
             if (strpos($hospital_email_setting->reception_email1, 'fax') === false) {
                 $hospital_mails[] = $hospital_email_setting->reception_email1;
             } else {
@@ -548,7 +545,6 @@ class ReservationController extends Controller
                     $tos[] = $m;
                 }
             }
-            Log::info('送信先件数：'. count($tos));
             // 医療機関へメール送信
             $gyoumu_mail = config('mail.to.gyoumu');
             if ($change_flg) {
@@ -560,21 +556,26 @@ class ReservationController extends Controller
             }
         }
 
-        if (!empty($hospital_fax)) {
-            foreach ($hospital_fax as $fax_to) {
-                if (!empty($fax_to)) {
-                    $fax_tos[] = $fax_to;
+        try {
+            if (!empty($hospital_fax)) {
+                foreach ($hospital_fax as $fax_to) {
+                    if (!empty($fax_to)) {
+                        $fax_tos[] = $fax_to;
+                    }
+                }
+                // 医療機関へメール送信
+                if ($change_flg) {
+                    Mail::to($fax_tos)->send(new ReservationChangeFaxToMail($reservation));
+                } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
+                    Mail::to($fax_tos)->send(new ReservationCancelFaxToMail($reservation));
+                } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+                    Mail::to($fax_tos)->send(new ReservationReceptionCompleteFaxToMail($reservation));
                 }
             }
-            // 医療機関へメール送信
-            if ($change_flg) {
-                Mail::to($fax_tos)->send(new ReservationChangeFaxToMail($reservation));
-            } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
-                Mail::to($fax_tos)->send(new ReservationCancelFaxToMail($reservation));
-            } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
-                Mail::to($fax_tos)->send(new ReservationReceptionCompleteFaxToMail($reservation));
-            }
+        } catch (\Exception $e) {
+            Log::error($e);
         }
+
     }
 
     /**
@@ -998,6 +999,7 @@ class ReservationController extends Controller
             $this->reservation_mail_send($reservation, true);
 
         } catch (\Exception $i) {
+            Log::error($i);
             DB::rollback();
 
             return redirect()->back()->with('error', trans('messages.reservation.status_update_error'))->withInput();
