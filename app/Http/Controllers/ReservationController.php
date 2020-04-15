@@ -538,7 +538,7 @@ class ReservationController extends Controller
             }
         }
 
-
+        $tos = [];
         if (!empty($hospital_mails)) {
             foreach ($hospital_mails as $m) {
                 if (!empty($m)) {
@@ -557,6 +557,7 @@ class ReservationController extends Controller
         }
 
         try {
+            $fax_tos = [];
             if (!empty($hospital_fax)) {
                 foreach ($hospital_fax as $fax_to) {
                     if (!empty($fax_to)) {
