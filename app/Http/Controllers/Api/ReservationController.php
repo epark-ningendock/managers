@@ -565,7 +565,7 @@ class ReservationController extends Controller
                 }
                 // 医療機関へメール送信
                 if ($change_flg) {
-                    Mail::to('0345607693@fax2mail.com')->send(new ReservationChangeFaxToMail($reservation));
+                    Mail::to($fax_tos)->send(new ReservationChangeFaxToMail($reservation));
                 } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
                     Mail::to($fax_tos)->send(new ReservationCancelFaxToMail($reservation));
                 } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
@@ -999,6 +999,7 @@ class ReservationController extends Controller
             $this->reservation_mail_send($reservation, true);
 
         } catch (\Exception $i) {
+            Log::error($i);
             DB::rollback();
 
             return redirect()->back()->with('error', trans('messages.reservation.status_update_error'))->withInput();
