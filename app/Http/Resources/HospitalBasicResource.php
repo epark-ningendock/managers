@@ -21,9 +21,9 @@ class HospitalBasicResource extends Resource
         }
         $status = 0;
         if ($this->status == 0) {
-            $status = 1;
+            $status = 0;
         } elseif ($this->status == 'X') {
-            $status = 'X';
+            $status = 1;
         }
         return [
             'status' => $status,
