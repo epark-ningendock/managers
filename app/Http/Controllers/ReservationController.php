@@ -239,13 +239,13 @@ class ReservationController extends Controller
 
 
         $reservations = $reservations->map(function ($reservation) use (&$question_count, $option_count) {
-            $fee = $reservation->course->price + $reservation->adjustment_price;
+            $fee = $reservation->tax_included_price + $reservation->adjustment_price;
             $options = collect();
 
             foreach ($reservation->reservation_options as $reservation_option) {
                 $options->push($reservation_option->option->name);
-                $options->push($reservation_option->option->price);
-                $fee += $reservation_option->option->price;
+                $options->push($reservation_option->option_price);
+                $fee += $reservation_option->option_price;
             }
 
             // fill to fix maximum option count
@@ -260,7 +260,7 @@ class ReservationController extends Controller
                 $reservation->customer->name,
                 $reservation->reservation_status ? $reservation->reservation_status->description : '',
                 $reservation->course->name,
-                $reservation->course->tax_included_price,
+                $reservation->tax_included_price,
                 $reservation->adjustment_price,
                 $fee,
                 $reservation->payment_status ? $reservation->payment_status->description : '',

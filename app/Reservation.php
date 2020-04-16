@@ -130,7 +130,7 @@ class Reservation extends SoftDeleteModel
     public function customer()
     {
         return $this->belongsTo('App\Customer')
-            ->withDefault();
+            ->withTrashed();
     }
 
     public function scopeNearestDate($query)
