@@ -91,7 +91,7 @@ class ReservationController extends Controller
         $page_per_record = $request->input('record_per_page', 10);
 
         $query = $this->get_reception_list_query($request);
-        $reservations = $query->withTrashed()->paginate($page_per_record)
+        $reservations = $query->paginate($page_per_record)
             ->appends($request->query());
         $courses = Course::where('hospital_id', session()->get('hospital_id'))->get();
 
