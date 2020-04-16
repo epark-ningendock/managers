@@ -99,10 +99,10 @@ class ReservationController extends Controller
 
         // for initial default value if it has not been set empty purposely
         if (!$request->has('reservation_start_date')) {
-            $params['reservation_start_date'] = Carbon::now()->startOfMonth()->format('Y/m/d');
+            $params['reservation_start_date'] = '';
         }
         if (!$request->has('reservation_end_date')) {
-            $params['reservation_end_date'] = Carbon::now()->endOfMonth()->format('Y/m/d');
+            $params['reservation_end_date'] = '';
         }
 
         return view('reservation.index', compact('reservations', 'courses'))
@@ -140,18 +140,13 @@ class ReservationController extends Controller
             $query->whereDate('created_at', '<=', $request->input('reservation_created_end_date'));
         }
 
+        Log::info('受診日（開始）:'. $request->input('reservation_start_date', '') );
         if ($request->input('reservation_start_date', '') != '') {
             $query->whereDate('reservation_date', '>=', $request->input('reservation_start_date'));
-            // 初期表示は月初を指定する
-        } else {
-            $query->whereDate('reservation_date', '>=', Carbon::now()->startOfMonth()->format('Y/m/d'));
         }
 
         if ($request->input('reservation_end_date', '') != '') {
             $query->whereDate('reservation_date', '<=', $request->input('reservation_end_date'));
-            // 初期表示は月末を指定する
-        } else {
-            $query->whereDate('reservation_date', '<=', Carbon::now()->endOfMonth()->format('Y/m/d'));
         }
 
 
@@ -243,13 +238,13 @@ class ReservationController extends Controller
 
 
         $reservations = $reservations->map(function ($reservation) use (&$question_count, $option_count) {
-            $fee = $reservation->course->price + $reservation->adjustment_price;
+            $fee = $reservation->tax_included_price + $reservation->adjustment_price;
             $options = collect();
 
             foreach ($reservation->reservation_options as $reservation_option) {
                 $options->push($reservation_option->option->name);
-                $options->push($reservation_option->option->price);
-                $fee += $reservation_option->option->price;
+                $options->push($reservation_option->option_price);
+                $fee += $reservation_option->option_price;
             }
 
             // fill to fix maximum option count
@@ -264,7 +259,7 @@ class ReservationController extends Controller
                 $reservation->customer->name,
                 $reservation->reservation_status ? $reservation->reservation_status->description : '',
                 $reservation->course->name,
-                $reservation->course->tax_included_price,
+                $reservation->tax_included_price,
                 $reservation->adjustment_price,
                 $fee,
                 $reservation->payment_status ? $reservation->payment_status->description : '',

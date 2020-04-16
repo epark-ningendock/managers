@@ -540,7 +540,7 @@ class ValidationRequest extends FormRequest
         $response['code_detail']  = $detail_code;
         $response['message']  = $message;
         throw new HttpResponseException(
-            response()->json($response, 400)->setCallback($callback)
+            response()->json($response, 200)->setCallback($callback)
         );
     }
 }

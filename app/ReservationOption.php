@@ -13,6 +13,6 @@ class ReservationOption extends SoftDeleteModel
 
     public function option()
     {
-        return $this->belongsTo('App\Option');
+        return $this->belongsTo('App\Option')->withTrashed();
     }
 }
