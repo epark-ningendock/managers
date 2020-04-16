@@ -98,12 +98,12 @@ class ReservationController extends Controller
         $params = $request->input();
 
         // for initial default value if it has not been set empty purposely
-//        if (!$request->has('reservation_start_date')) {
-//            $params['reservation_start_date'] = Carbon::now()->startOfMonth()->format('Y/m/d');
-//        }
-//        if (!$request->has('reservation_end_date')) {
-//            $params['reservation_end_date'] = Carbon::now()->endOfMonth()->format('Y/m/d');
-//        }
+        if (!$request->has('reservation_start_date')) {
+            $params['reservation_start_date'] = '';
+        }
+        if (!$request->has('reservation_end_date')) {
+            $params['reservation_end_date'] = '';
+        }
 
         return view('reservation.index', compact('reservations', 'courses'))
             ->with($params);
