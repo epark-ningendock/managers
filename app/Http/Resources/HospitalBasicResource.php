@@ -19,8 +19,14 @@ class HospitalBasicResource extends Resource
         if (isset($this->contract_information) && isset($this->contract_information->code)) {
             $hospital_code = $this->contract_information->code;
         }
+        $status = 0;
+        if ($this->status == 0) {
+            $status = 1;
+        } elseif ($this->status == 'X') {
+            $status = 'X';
+        }
         return [
-            'status' => $this->status,
+            'status' => $status,
             'no' => $this->id,
             'url_basic' => $this->url,
             'hospital_code' => $hospital_code,
