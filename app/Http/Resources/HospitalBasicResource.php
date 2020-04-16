@@ -20,7 +20,7 @@ class HospitalBasicResource extends Resource
             $hospital_code = $this->contract_information->code;
         }
         return [
-            'status' => 0,
+            'status' => $this->status,
             'no' => $this->id,
             'url_basic' => $this->url,
             'hospital_code' => $hospital_code,
