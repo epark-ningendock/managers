@@ -294,9 +294,9 @@ class BillingController extends Controller {
 		            'selectedMonth' => $billing->billing_month
 	            ];
 
-	            Mail::to( [
-	                config('mail.to.gyoumu'),
-	            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
+//	            Mail::to( [
+//	                config('mail.to.gyoumu'),
+//	            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
 	        }
 		}	
 
