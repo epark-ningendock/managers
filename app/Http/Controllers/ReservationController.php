@@ -765,10 +765,10 @@ class ReservationController extends Controller
             $this->reservationCourseOptionSaveOrUpdate($request, $reservation);
             $this->reservationAnswerCreate($request, $reservation);
 
-            $this->reservation_mail_send($reservation, false);
 //            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $customer, '登録');
 
             DB::commit();
+            $this->reservation_mail_send($reservation, false);
 
         } catch (\Exception $i) {
             DB::rollback();
