@@ -18,7 +18,6 @@ use App\Mail\ReservationCompleteFaxToMail;
 use App\MonthlyWaku;
 use App\ReservationKenshinSysOption;
 use App\TaxClass;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Collection;
@@ -44,6 +43,10 @@ use App\Exceptions\ReservationFrameException;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
 use Log;
+
+use SendGrid;
+use SendGrid\Mail\From;
+use SendGrid\Mail\Mail;
 
 // epark本部宛てアドレス
 define('EPARK_MAIL_TO', config('mail.to.unei'));
@@ -440,10 +443,15 @@ class ReservationService
         $to = $entity->customer->email;
         try {
             if (!$is_cancel) { // 登録/変更完了メール
-                Mail::to($to)->send(new ReservationCompleteMail($entity, true));
+                $mailTest = new ReservationCompleteMail($entity, true);
             } else { // 予約キャンセルメール
-                Mail::to($to)->send(new ReservationCancelMail($entity, true));
+                $mailTest = new ReservationCancelMail($entity, true);
             }
+
+            $sendgrid = new SendGrid(config('mail.sendgrid.key'));
+            $email = new Mail(new From(config('mail.from.address'), config('mail.from.name')),
+                $to, $mailTest->subject, $mailTest->buildText());
+            $sendgrid->send($email);
         } catch (\Exception $e) { // mail送信失敗
             Log::error($e);
             return -1; // メール送信失敗
@@ -490,10 +498,14 @@ class ReservationService
                 }
                 // 医療機関へメール送信
                 if ($is_cancel) {
-                    Mail::to($tos)->send(new ReservationCancelMail($entity, false));
+                    $mailTest = new ReservationCancelMail($entity, false);
                 } else {
-                    Mail::to($tos)->send(new ReservationCompleteMail($entity, false));
+                    $mailTest = new ReservationCompleteMail($entity, false);
                 }
+                $sendgrid = new SendGrid(config('mail.sendgrid.key'));
+                $email = new Mail(new From(config('mail.from.address'), config('mail.from.name')),
+                    $tos, $mailTest->subject, $mailTest->buildText());
+                $sendgrid->send($email);
             }
 
             $fax_tos = [];
@@ -513,10 +525,14 @@ class ReservationService
 
             // 事業部へメール
             if ($is_cancel) {
-                Mail::to(EPARK_MAIL_TO)->send(new ReservationCancelMail($entity, false));
+                $mailTest = new ReservationCancelMail($entity, false);
             } else {
-                Mail::to(EPARK_MAIL_TO)->send(new ReservationCompleteMail($entity, false));
+                $mailTest = new ReservationCompleteMail($entity, false);
             }
+            $sendgrid = new SendGrid(config('mail.sendgrid.key'));
+            $email = new Mail(new From(config('mail.from.address'), config('mail.from.name')),
+                EPARK_MAIL_TO, $mailTest->subject, $mailTest->buildText());
+            $sendgrid->send($email);
         } catch (\Exception $e) { // mail送信失敗
             Log::error($e);
         }
