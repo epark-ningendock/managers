@@ -103,10 +103,9 @@ class CourseCloseCheckCommand extends Command
     public function sendCourseCloseCheckMail($publishCloseCourses)
     {
         $mailContext = [
-//            'receptionCloseCourses' => $receptionCloseCourses,
             'publishCloseCourses' => $publishCloseCourses
         ];
         $to = config('mail.to.system');
-        Mail::to($to)->send(new CourseCloseCheckMail($mailContext));
+//        Mail::to($to)->send(new CourseCloseCheckMail($mailContext));
     }
 }

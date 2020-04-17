@@ -52,15 +52,15 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if($exception->getCode() == 0) {
-            Mail::send('email.error_mail', [
-                'error_message' => $exception->getMessage(),
-                'file' => $exception->getFile(),
-                'line' => $exception->getLine(),
-            ], function($message) {
-                $message
-                    ->to(config('mail.to.system'))
-                    ->subject("エラーメールを送信します");
-            });
+//            Mail::send('email.error_mail', [
+//                'error_message' => $exception->getMessage(),
+//                'file' => $exception->getFile(),
+//                'line' => $exception->getLine(),
+//            ], function($message) {
+//                $message
+//                    ->to(config('mail.to.system'))
+//                    ->subject("エラーメールを送信します");
+//            });
 
         }
 
