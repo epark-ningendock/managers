@@ -24,6 +24,8 @@ use App\Mail\ReservationChangeMail;
 use App\Mail\ReservationReceptionCancelMail;
 use App\Mail\ReservationReceptionCompleteFaxToMail;
 use App\Mail\ReservationReceptionCompleteMail;
+use App\Mail\ReservationReceptionFaxToMail;
+use App\Mail\ReservationReceptionMail;
 use App\Prefecture;
 use App\Reservation;
 use App\ReservationOption;
@@ -143,12 +145,10 @@ class ReservationController extends Controller
         Log::info('受診日（開始）:'. $request->input('reservation_start_date', '') );
         if ($request->input('reservation_start_date', '') != '') {
             $query->whereDate('reservation_date', '>=', $request->input('reservation_start_date'));
-            // 初期表示は月初を指定する
         }
 
         if ($request->input('reservation_end_date', '') != '') {
             $query->whereDate('reservation_date', '<=', $request->input('reservation_end_date'));
-            // 初期表示は月末を指定する
         }
 
 
@@ -488,6 +488,8 @@ class ReservationController extends Controller
                 Mail::to($to)->send(new ReservationReceptionCancelMail($reservation, true));
             } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
                 Mail::to($to)->send(new ReservationReceptionCompleteMail($reservation, true));
+            } elseif ($reservation->reservation_status == ReservationStatus::PENDING) {
+                Mail::to($to)->send(new ReservationReceptionMail($reservation, true));
             }
         }
 
@@ -542,6 +544,8 @@ class ReservationController extends Controller
             Mail::to($gyoumu_mail)->send(new ReservationReceptionCancelMail($reservation, false));
         } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
             Mail::to($gyoumu_mail)->send(new ReservationReceptionCompleteMail($reservation, false));
+        } elseif ($reservation->reservation_status == ReservationStatus::PENDING) {
+            Mail::to($gyoumu_mail)->send(new ReservationReceptionMail($reservation, false));
         }
 
         $tos = [];
@@ -558,6 +562,8 @@ class ReservationController extends Controller
                 Mail::to($tos)->send(new ReservationReceptionCancelMail($reservation, false));
             } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
                 Mail::to($tos)->send(new ReservationReceptionCompleteMail($reservation, false));
+            } elseif ($reservation->reservation_status == ReservationStatus::PENDING) {
+                Mail::to($tos)->send(new ReservationReceptionMail($reservation, false));
             }
         }
 
@@ -576,6 +582,8 @@ class ReservationController extends Controller
                     Mail::to($fax_tos)->send(new ReservationCancelFaxToMail($reservation));
                 } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
                     Mail::to($fax_tos)->send(new ReservationReceptionCompleteFaxToMail($reservation));
+                } elseif ($reservation->reservation_status == ReservationStatus::PENDING) {
+                    Mail::to($fax_tos)->send(new ReservationReceptionFaxToMail($reservation));
                 }
             }
         } catch (\Exception $e) {
@@ -757,7 +765,8 @@ class ReservationController extends Controller
             $this->reservationCourseOptionSaveOrUpdate($request, $reservation);
             $this->reservationAnswerCreate($request, $reservation);
 
-            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $customer, '登録');
+            $this->reservation_mail_send($reservation, false);
+//            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $customer, '登録');
 
             DB::commit();
 
@@ -998,7 +1007,7 @@ class ReservationController extends Controller
 
             $this->reservationAnswerCreate($request, $reservation);
 
-            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '変更');
+//            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '変更');
 
             DB::commit();
 

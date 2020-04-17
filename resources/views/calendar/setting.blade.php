@@ -159,7 +159,7 @@
                                 {{ isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '1' ? '✕' : '◯' }}
                               </a>
                             @endif
-                            <input type="hidden" name="is_reservation_acceptances[]" value="{{ isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 1 }}">                
+                            <input type="hidden" name="is_reservation_acceptances[]" value="{{ isset($day['calendar_day']) ? $day['calendar_day']->is_reservation_acceptance : 0 }}">
                             @php
                               $reservation_frames = 0;
                               if((isset($day['calendar_day']) && $day['calendar_day']->is_reservation_acceptance == '1')) {
