@@ -479,6 +479,7 @@ class ReservationController extends Controller
      */
     private function reservation_mail_send($reservation, $change_flg) {
 
+        $reservation->process_kbn = '1';
         // 確定メール送信（受診者）
         if (!empty($reservation->customer) && !empty($reservation->customer->email)) {
             $to = $reservation->customer->email;

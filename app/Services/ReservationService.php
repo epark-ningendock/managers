@@ -281,6 +281,10 @@ class ReservationService
             ->whereDate('date', $target->toDateString())
             ->first();
 
+        if (!$calendar_day) {
+            return;
+        }
+
         $reservation_count = intval($calendar_day->reservation_count) + $count;
         if ($reservation_count < 0) {
             $reservation_count = 0;
