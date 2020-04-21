@@ -433,7 +433,7 @@ class HospitalImagesController extends Controller
                     $hospital_img->hospital_category()->where('is_display', SelectPhotoFlag::UNSELECTED)
                         ->update($save_sub_image_categories);
                 } else {
-                    Log::info('画像情報がありませんでした。');
+                    Log::info('画像情報がありませんでした。画像ID:'.$image_order_exists->hospital_image_id);
                 }
 
             }
