@@ -35,7 +35,7 @@ class CourseContentBaseResource extends Resource
 
     /**
      * コースカテゴリ情報生成
-     * 
+     *
      * @param  コース詳細
      * @return カテゴリ
      */
@@ -136,7 +136,7 @@ class CourseContentBaseResource extends Resource
 
     /**
      * コースオプション情報生成
-     * 
+     *
      * @param  コースオプション
      * @return コースオプション
      */
@@ -163,7 +163,7 @@ class CourseContentBaseResource extends Resource
 
     /**
      * コース質問生成
-     * 
+     *
      * @param  コース質問
      * @return $questions
      */
@@ -173,7 +173,7 @@ class CourseContentBaseResource extends Resource
 
         $questions = [];
         foreach ($course_questions as $q) {
-            if (isset($q) && !empty($q->question_title)) {
+            if (isset($q) && ($q->is_question == 0) && !empty($q->question_title)) {
                 $answers = collect(
                     [
                         ['no' => 1, 'text' => $q->answer01 ?? ''],
