@@ -409,11 +409,11 @@ class HospitalImagesController extends Controller
             }
 
             if(isset($file[$image_prefix.$i])) {
-             $extension = $file[$image_prefix.$i]->getClientOriginalExtension();
-            //pc保存 putFile メソッドでuniqueファイル名を返す
-            $img_info =$this->putFileStorageImage($file[$image_prefix.$i],$hospital_id);
-            $save_sub_images = ['extension' => $extension, 'name' => $img_info['pc_img_name'], 'path' => $img_info['pc_img_url'], 'memo1' => $memo1, 'memo2' => $memo2];
-            $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name_2,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order' => $i, 'order2' => $order2, 'file_location_no' => $location_no];
+                $extension = $file[$image_prefix.$i]->getClientOriginalExtension();
+                //pc保存 putFile メソッドでuniqueファイル名を返す
+                $img_info =$this->putFileStorageImage($file[$image_prefix.$i],$hospital_id);
+                $save_sub_images = ['extension' => $extension, 'name' => $img_info['pc_img_name'], 'path' => $img_info['pc_img_url'], 'memo1' => $memo1, 'memo2' => $memo2];
+                $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name_2,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order' => $i, 'order2' => $order2, 'file_location_no' => $location_no];
             } else {
                 $save_sub_images = ['memo1' => $memo1, 'memo2' => $memo2];
                 $save_sub_image_categories = [ 'title' => $title,'caption' => $caption, 'name' => $name_2,'career' => $career,  'memo' => $memo, 'hospital_id' => $hospital_id, 'image_order' => $image_order, 'order' => $i, 'order2' => $order2 , 'file_location_no' => $location_no];
@@ -427,9 +427,15 @@ class HospitalImagesController extends Controller
                 return $hospital_img->hospital_category()->create($save_sub_image_categories);
             } else {
                 $hospital_img = $hospital->hospital_images()->find($image_order_exists->hospital_image_id);
-                $hospital_img->update($save_sub_images);
-                $hospital_img->hospital_category()->where('is_display', SelectPhotoFlag::UNSELECTED)
-                    ->update($save_sub_image_categories);
+                if ($hospital_img) {
+                    Log::info('画像情報があり。'. var_dump($save_sub_images));
+                    $hospital_img->update($save_sub_images);
+                    $hospital_img->hospital_category()->where('is_display', SelectPhotoFlag::UNSELECTED)
+                        ->update($save_sub_image_categories);
+                } else {
+                    Log::info('画像情報がありませんでした。');
+                }
+
             }
         } else {
             $save_sub_images = ['extension' => 'dummy', 'name' => 'dummy', 'path' => 'dummy', 'memo1' => $file['map_url']];
