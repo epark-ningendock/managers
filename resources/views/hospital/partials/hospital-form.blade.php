@@ -435,7 +435,7 @@
         <div class="col-md-12">
           <div class="form-group margin-none py-sm-1 @if( $errors->has('principal_history'))  has-error @endif">
             <label for="history">略歴</label>
-            <textarea name="biography" id="biography" rows="5"
+            <textarea name="principal_history" id="principal_history" rows="5"
                       class="form-control">{{ old('principal_history',(isset($hospital->principal_history)) ? $hospital->principal_history : null) }}</textarea>
 
             @if ($errors->has('principal_history')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('principal_history') }}</p> @endif
