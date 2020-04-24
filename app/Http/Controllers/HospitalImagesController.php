@@ -428,12 +428,9 @@ class HospitalImagesController extends Controller
             } else {
                 $hospital_img = $hospital->hospital_images()->find($image_order_exists->hospital_image_id);
                 if ($hospital_img) {
-                    Log::info('画像情報があり。'. var_dump($save_sub_images));
                     $hospital_img->update($save_sub_images);
                     $hospital_img->hospital_category()->where('is_display', SelectPhotoFlag::UNSELECTED)
                         ->update($save_sub_image_categories);
-                } else {
-                    Log::info('画像情報がありませんでした。画像ID:'.$image_order_exists->hospital_image_id);
                 }
 
             }

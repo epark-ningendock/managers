@@ -310,8 +310,10 @@ class Course extends SoftDeleteModel
 
     public function preview_url() {
         $url = env('FRONT_URL');
-        $code = ContractInformation::where('hospital_id', $this->hospital_id)->first()->code;
-
-        return $url . 'prev/' . $code . '/' . $this->code;
+        $contract = ContractInformation::where('hospital_id', $this->hospital_id)->first();
+        if ($contract) {
+            return $url . 'prev/' . $contract->code . '/' . $this->code;
+        }
+        return '';
     }
 }
