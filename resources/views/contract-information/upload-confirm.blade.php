@@ -4,7 +4,7 @@
 @stop
 
 @section('form')
-  <form method="POST" action="/hospital/contract-store" class="h-adr form-horizontal">
+  <form method="POST" action="{{ route('contract-store') }}" class="h-adr form-horizontal">
     {{ csrf_field() }}
     <label class="mb-2">契約管理</label>
     <br/>
@@ -15,6 +15,7 @@
         <tr>
           <th></th>
           <th>{{ trans('messages.property_no') }}</th>
+          <th>{{ trans('messages.customer_no') }}</th>
           <th>{{ trans('messages.contractor_name')  }}</th>
           <th>{{ trans('messages.contractor_name_kana') }}</th>
           <th>{{ trans('messages.application_date') }}</th>
@@ -42,6 +43,10 @@
               {{ $contract->property_no }}
               <input type="hidden" name="contracts[{{$i}}][property_no]" value="{{ $contract->property_no }}">
               <input type="hidden" name="contracts[{{$i}}][code]" value="{{ $contract->code }}">
+            </td>
+            <td class="@if(isset($contract->id) && $contract->isDirty('customer_no')) text-red @endif">
+              {{ $contract->customer_no }}
+              <input type="hidden" name="contracts[{{$i}}][customer_no]" value="{{ $contract->customer_no }}">
             </td>
             <td class="@if(isset($contract->id) && $contract->isDirty('contractor_name')) text-red @endif">
               {{ $contract->contractor_name }}
