@@ -174,7 +174,6 @@ class HospitalContractInformationController extends Controller
             DB::beginTransaction();
 
              $uploaded_contracts = $request->input('contracts');
-            Log::error(var_dump($uploaded_contracts));
              $validator = Validator::make($uploaded_contracts, $this->rules(), $this->messages());
 
 
@@ -245,6 +244,7 @@ class HospitalContractInformationController extends Controller
             DB::rollback();
             throw $e;
         } catch (\Exception $e) {
+            Log::error(var_dump($e));
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.create_error'));
         }
