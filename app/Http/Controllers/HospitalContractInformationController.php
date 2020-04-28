@@ -231,12 +231,12 @@ class HospitalContractInformationController extends Controller
             DB::commit();
 
             // 完了メール送信
-            $data = [
-                'hospital' => $hospital,
-                'contract_information' => $contract,
-                'subject' => '【EPARK人間ドック】医療機関契約情報登録・更新のお知らせ'
-            ];
-            Mail::to(config('mail.to.gyoumu'))->send(new HospitalNewRegistMail($data));
+            // $data = [
+            //     'hospital' => $hospital,
+            //     'contract_information' => $contract,
+            //     'subject' => '【EPARK人間ドック】医療機関契約情報登録・更新のお知らせ'
+            // ];
+            // Mail::to(config('mail.to.gyoumu'))->send(new HospitalNewRegistMail($data));
 
             return redirect()->route('contract.index')->with('success', trans('messages.contract_saved') );
         } catch(ValidationException $e) {
