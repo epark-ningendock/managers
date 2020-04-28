@@ -4,7 +4,7 @@
 @stop
 
 @section('form')
-  <form method="POST" action="{{ route('contract-store') }}" class="h-adr form-horizontal">
+  <form method="POST" action="{{ '/hospital/contract-store' }}" class="h-adr form-horizontal">
     {{ csrf_field() }}
     <label class="mb-2">契約管理</label>
     <br/>
