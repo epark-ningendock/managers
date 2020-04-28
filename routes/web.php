@@ -145,7 +145,7 @@ Route::middleware('auth:staffs')->group(function () {
      */
     Route::group(['prefix' => 'hospital'], function() {
         Route::post('/contract/upload', 'HospitalContractInformationController@upload')->name('contract.upload');
-        Route::post('/contract/store', 'HospitalContractInformationController@store')->name('contract.store');
+        Route::post('contract-store', 'HospitalContractInformationController@store');
         Route::get('/contract', 'HospitalContractInformationController@index')->name('contract.index');
         Route::get('/{hospital_id}/contract/show', 'HospitalContractInformationController@show')->name('contract.show');
     });
