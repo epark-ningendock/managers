@@ -12,6 +12,7 @@ use App\Http\Requests\ContractInformationFormRequest;
 use Illuminate\Support\Facades\DB;
 use App\Filters\ContractInformation\ContractInformationFilters;
 use \Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -173,6 +174,7 @@ class HospitalContractInformationController extends Controller
             DB::beginTransaction();
 
              $uploaded_contracts = $request->input('contracts');
+            Log::error(var_dump($uploaded_contracts));
              $validator = Validator::make($uploaded_contracts, $this->rules(), $this->messages());
 
 
@@ -230,13 +232,13 @@ class HospitalContractInformationController extends Controller
 
             DB::commit();
 
-            // 完了メール送信
-            // $data = [
-            //     'hospital' => $hospital,
-            //     'contract_information' => $contract,
-            //     'subject' => '【EPARK人間ドック】医療機関契約情報登録・更新のお知らせ'
-            // ];
-            // Mail::to(config('mail.to.gyoumu'))->send(new HospitalNewRegistMail($data));
+//            // 完了メール送信
+//            $data = [
+//                'hospital' => $hospital,
+//                'contract_information' => $contract,
+//                'subject' => '【EPARK人間ドック】医療機関契約情報登録・更新のお知らせ'
+//            ];
+//            Mail::to(config('mail.to.gyoumu'))->send(new HospitalNewRegistMail($data));
 
             return redirect()->route('contract.index')->with('success', trans('messages.contract_saved') );
         } catch(ValidationException $e) {
