@@ -74,7 +74,7 @@ class HospitalContractInformationController extends Controller
         while(($row = fgetcsv($file, 0, "\t")) !== false) {
             $uploaded_contracts->push([
                 'property_no' => trimToNull($row[1]),
-                'customer_no' => "$row[2]",
+                'customer_no' => $row[2],
                 'code' => null,
                 'contractor_name_kana' => $row[3],
                 'contractor_name' => $row[4],
