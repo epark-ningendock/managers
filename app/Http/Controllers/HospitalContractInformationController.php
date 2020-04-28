@@ -167,7 +167,7 @@ class HospitalContractInformationController extends Controller
             ]);
     }
 
-    public function storeupload(Request $request)
+    public function store(Request $request)
     {
         try {
             DB::beginTransaction();
