@@ -256,6 +256,9 @@ class BillingController extends Controller {
             if (!empty($hospitalEmailSetting->billing_email3)) {
                 $tos[] = $hospitalEmailSetting->billing_email3;
             }
+            if (!empty($hospitalEmailSetting->billing_email4)) {
+                $tos[] = $hospitalEmailSetting->billing_email4;
+            }
             if (!empty($hospitalEmailSetting->billing_fax_number)) {
                 $tos[] = $hospitalEmailSetting->billing_fax_number;
             }
@@ -270,8 +273,9 @@ class BillingController extends Controller {
                     'to_address1' => $hospitalEmailSetting->billing_email1,
                     'to_address2' => $hospitalEmailSetting->billing_email2,
                     'to_address3' => $hospitalEmailSetting->billing_email3,
+                    'to_address4' => $hospitalEmailSetting->billing_email4,
                     'cc_name'     => $hospitalEmailSetting->hospital->name,
-                    'fax'         => $hospitalEmailSetting->billing_fax_number . '@faxmail.com',
+                    'fax'         => $hospitalEmailSetting->billing_fax_number,
                     'mail_type'   => ( $hospitalEmailSetting->mail_type == 1 ) ? 1 : 2,
                 ] );
             }
