@@ -59,10 +59,10 @@ class HospitalAttentionController extends Controller
             $this->validate($request, [
                 'pvad' => 'numeric|digits_between:1,10'
             ]);
-
+    
             try {
                 DB::beginTransaction();
-
+    
                 $hospital = Hospital::findOrFail($hospital_id);
                 $hospital->pvad = $request->get('pvad');
                 if ($request->get('is_pickup')) {
@@ -144,20 +144,20 @@ class HospitalAttentionController extends Controller
                 } else {
                     $this->deleteOptionPlan($hospital_id, 6);
                 }
-
+    
                 $minor_ids = collect($request->input('minor_ids'), []);
                 $minor_values = collect($request->input('minor_values'), []);
-
+    
                 if ($minor_ids->isNotEmpty()) {
                     $minors = HospitalMinorClassification::whereIn('id', $minor_ids)->orderBy('order')->get();
-
+    
                     if ($minors->count() != count($minor_ids)) {
                         $request->session()->flash('error', trans('messages.invalid_minor_id'));
                         return redirect()->back();
                     }
-
+    
                     $hospital->hospital_details()->forceDelete();
-
+    
                     foreach ($minors as $index => $minor) {
 
                         $input_index = $minor_ids->search(function ($id) use ($minor) {
@@ -168,8 +168,8 @@ class HospitalAttentionController extends Controller
                             || ($minor->is_fregist == '0' && $minor_values[$input_index] == '')) {
                             continue;
                         }
-
-
+    
+    
                         $hospital_details = new HospitalDetail();
                         $hospital_details->hospital_id = $hospital->id;
                         $hospital_details->minor_classification_id = $minor->id;
@@ -178,18 +178,18 @@ class HospitalAttentionController extends Controller
                             $hospital_details->select_status = 1;
                         } else if ($minor->is_fregist == RegistrationDivision::CHECK_BOX_AND_TEXT) {
                             if ($minor_values[$input_index]) {
-
+                                
                                 $validator = Validator::make(["minor_id_${minor_id}" => $minor_values[$input_index]], [
                                     "minor_id_${minor_id}" => 'nullable|between:0,50'
                                 ]);
-
+                                
                                 if ($validator->fails()) {
                                     DB::rollback();
                                     throw new ValidationException($validator);
                                     return redirect()->back();
                                 }
                                 $hospital_details->select_status = 1;
-                                $hospital_details->inputstring = $minor_values[$input_index];
+                                $hospital_details->inputstring = $minor_values[$input_index];  
                             } else {
                                 $hospital_details->select_status = 0;
                                 $hospital_details->inputstring = '';
@@ -199,7 +199,7 @@ class HospitalAttentionController extends Controller
                             $validator = Validator::make(["minor_id_${minor_id}" => $minor_values[$input_index]], [
                                 "minor_id_${minor_id}" => 'nullable|between:0,2000'
                             ]);
-
+                    
                             if ($validator->fails()) {
                                 DB::rollback();
                                 throw new ValidationException($validator);
@@ -210,7 +210,7 @@ class HospitalAttentionController extends Controller
                         $hospital_details->save();
                     }
                 }
-
+    
                 DB::commit();
 
                 $this->registHospitalMeta($hospital);

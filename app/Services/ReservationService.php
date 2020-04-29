@@ -678,7 +678,8 @@ class ReservationService
             $options = json_decode(json_encode($request->input('option_array')));
         }
 
-        if ($hospital->hplink_contract_type == HplinkContractType::NONE) {
+        if ($hospital->hplink_contract_type == HplinkContractType::NONE
+        || $entity->site_code != 'HP') {
             $option_price = 0;
 
             foreach ($options as $option) {

@@ -12,6 +12,7 @@ use App\Http\Requests\ContractInformationFormRequest;
 use Illuminate\Support\Facades\DB;
 use App\Filters\ContractInformation\ContractInformationFilters;
 use \Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -73,7 +74,7 @@ class HospitalContractInformationController extends Controller
         while(($row = fgetcsv($file, 0, "\t")) !== false) {
             $uploaded_contracts->push([
                 'property_no' => trimToNull($row[1]),
-                'customer_no' => "$row[2]",
+                'customer_no' => $row[2],
                 'code' => null,
                 'contractor_name_kana' => $row[3],
                 'contractor_name' => $row[4],
@@ -167,7 +168,7 @@ class HospitalContractInformationController extends Controller
             ]);
     }
 
-    public function storeUpload(Request $request)
+    public function store(Request $request)
     {
         try {
             DB::beginTransaction();
@@ -230,19 +231,20 @@ class HospitalContractInformationController extends Controller
 
             DB::commit();
 
-            // 完了メール送信
-            $data = [
-                'hospital' => $hospital,
-                'contract_information' => $contract,
-                'subject' => '【EPARK人間ドック】医療機関契約情報登録・更新のお知らせ'
-            ];
-            Mail::to(config('mail.to.gyoumu'))->send(new HospitalNewRegistMail($data));
+//            // 完了メール送信
+//            $data = [
+//                'hospital' => $hospital,
+//                'contract_information' => $contract,
+//                'subject' => '【EPARK人間ドック】医療機関契約情報登録・更新のお知らせ'
+//            ];
+//            Mail::to(config('mail.to.gyoumu'))->send(new HospitalNewRegistMail($data));
 
             return redirect()->route('contract.index')->with('success', trans('messages.contract_saved') );
         } catch(ValidationException $e) {
             DB::rollback();
             throw $e;
         } catch (\Exception $e) {
+            Log::error(var_dump($e));
             DB::rollback();
             return redirect()->back()->withErrors(trans('messages.create_error'));
         }
