@@ -35,7 +35,7 @@ class CourseContentBaseResource extends Resource
 
     /**
      * コースカテゴリ情報生成
-     *
+     * 
      * @param  コース詳細
      * @return カテゴリ
      */
@@ -136,7 +136,7 @@ class CourseContentBaseResource extends Resource
 
     /**
      * コースオプション情報生成
-     *
+     * 
      * @param  コースオプション
      * @return コースオプション
      */
@@ -163,7 +163,7 @@ class CourseContentBaseResource extends Resource
 
     /**
      * コース質問生成
-     *
+     * 
      * @param  コース質問
      * @return $questions
      */

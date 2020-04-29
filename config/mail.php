@@ -134,4 +134,8 @@ return [
         'dev' => env('MAIL_TO_DEV_ADMIN_ADDRESS'),
     ],
 
+    'sendgrid' => [
+        'key' => env('SENDGRID_API_KEY', '')
+    ]
+
 ];

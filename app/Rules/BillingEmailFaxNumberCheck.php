@@ -27,10 +27,13 @@ class BillingEmailFaxNumberCheck implements Rule
     {
         if (  ( request('billing_email_flg') == '1')) {
 
-            $emails = !is_null(request('billing_email1')) || !is_null(request('billing_email2')) || !is_null(request('billing_email3'));
-            $fax_number = !is_null(request('billing_fax_number'));
+            $emails = !is_null(request('billing_email1'))
+                || !is_null(request('billing_email2'))
+                || !is_null(request('billing_email3'))
+                || !is_null(request('billing_email4'))
+                || !is_null(request('billing_fax_number'));
 
-            return ( $emails || $fax_number );
+            return ( $emails );
 
         } else {
             return true;
@@ -45,6 +48,6 @@ class BillingEmailFaxNumberCheck implements Rule
      */
     public function message()
     {
-        return '受け取るを設定した場合、最低1つのメールアドレスかFAX番号を登録してください。';
+        return '受け取るを設定した場合、最低1つのメールアドレスを登録してください。';
     }
 }

@@ -43,9 +43,9 @@ TEL　　　　　　　　　　　 {{$電話番号}}
 @foreach($questions as $question)
 {{$question['question_title']}} : {{$question['answer']}}
 @endforeach
-電話がつながりやすい時間帯　{{$電話が繋がりやすい時間帯}}
+
 所属する健康保険組合名　　　{{$所属する健康保険組合名}}
-備考　　　　　　　　　　　　{{$備考}}
+備考　　　　　　　　　　　　{{$受付・予約メモ}}
 
 </pre>
     </body>

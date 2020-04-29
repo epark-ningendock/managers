@@ -42,7 +42,7 @@ class BillingConfirmationSendMail extends Mailable
         }
 
         return $this
-                ->from(env('EPARK_EMAIL_ADDRESS'))
+                ->from(env('MAIL_FROM_ADDRESS'))
                 ->subject($this->data['subject'])
                 ->attachData(
                     $this->attchment->output(),

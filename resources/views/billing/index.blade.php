@@ -112,9 +112,7 @@
             <th>HPリンク月額金額</th>
             <th>手数料合計金額</th>
             <th>成果コース</th>
-            <!--
             <th colspan="4"></th>
-            -->
         </tr>
         </thead>
         <tbody>
@@ -124,9 +122,7 @@
                     <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
                         <td>{{ $billing->hospital->contract_information->customer_no ?? '' }}</td>
                         <td style="text-align: left"><a target="_blank" href="{{ route('hospital.select', $billing->hospital_id) }}">{{ $billing->hospital->name }}</a></td>
-                        <!--
                         <td>{{ BillingStatus::getDescription($billing->status) }}</td>
-                        -->
                         <td style="text-align: left">
                             {{ empty($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan) ? '' : $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name }}
                         </td>
@@ -156,7 +152,6 @@
                         <td>
                             <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
                         </td>
-                        <!--
                         <td>
                             <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CHECKING, 'claim_check' => 'yes'] )) }}"
                                 class="btn @if( $billing->status != BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
@@ -176,7 +171,6 @@
                                 @if( $billing->status == BillingStatus::CONFIRM) style="pointer-events: unset;" @else style="pointer-events: none;" @endif
                             >確定取消</a>
                         </td>
-                        -->
                     </tr>
                 @endif
             @endforeach

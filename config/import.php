@@ -134,11 +134,11 @@ return [
 //        'import' => StaffImport::class,
 //        'seed' => false,
 //    ],
-//    'm_course_basic.csv' => [
-//        'model' => Course::class,
-//        'import' => CourseImport::class,
-//        'seed' => false,
-//    ],
+    'm_course_basic.csv' => [
+        'model' => Course::class,
+        'import' => CourseImport::class,
+        'seed' => false,
+    ],
 //    'm_course_detail.csv' => [
 //        'model' => CourseDetail::class,
 //        'import' => CourseDetailImport::class,
@@ -230,14 +230,14 @@ return [
 //        'import' => \App\Imports\ConsiderationListImport::class,
 //        'seed' => true,
 //    ],
-//    't_pv.csv' => [
-//        'model' => PvRecord::class,
-//        'import' => PvRecordImport::class,
-//        'seed' => false,
-//    ],
-    'm_hospital_meta.csv' => [
-        'model' => HospitalMeta::class,
-        'import' => HospitalMetaImport::class,
+    't_pv.csv' => [
+        'model' => PvRecord::class,
+        'import' => PvRecordImport::class,
         'seed' => false,
     ],
+//    'm_hospital_meta.csv' => [
+//        'model' => HospitalMeta::class,
+//        'import' => HospitalMetaImport::class,
+//        'seed' => false,
+//    ],
 ];

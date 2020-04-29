@@ -204,6 +204,18 @@
                     </div>
                 </div>
 
+                <div class="form-group @if ($errors->has('billing_email4')) has-error @endif">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="billing_email4">{{ trans('messages.billing_email4') }}</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="billing_email4" name="billing_email4" value="{{ old('billing_email4', $hospital_email_setting->billing_email4 ?? '') }}" />
+                            @if ($errors->has('billing_email4')) <p class="help-block"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('billing_email4') }}</p> @endif
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group @if ($errors->has('billing_fax_number') || ($errors->has('billing_email_flg') && ($errors->first('billing_email_flg') !== '請求メールの設定は、必ず指定してください。'))) has-error @endif">
                     <div class="row">
                         <div class="col-md-4">
@@ -243,6 +255,7 @@
             billing_email1: $('#billing_email1').val(),
             billing_email2: $('#billing_email2').val(),
             billing_email3: $('#billing_email3').val(),
+            billing_email4: $('#billing_email4').val(),
             billing_fax_number: $('#billing_fax_number').val(),
         }
       }
@@ -251,6 +264,7 @@
             $('#billing_email1').val(billingData.billing_email1)
             $('#billing_email2').val(billingData.billing_email2)
             $('#billing_email3').val(billingData.billing_email3)
+            $('#billing_email4').val(billingData.billing_email4)
             $('#billing_fax_number').val(billingData.billing_fax_number)
       }
 
@@ -258,6 +272,7 @@
             $('#billing_email1').val('')
             $('#billing_email2').val('')
             $('#billing_email3').val('')
+            $('#billing_email4').val('')
             $('#billing_fax_number').val('')
       }
 

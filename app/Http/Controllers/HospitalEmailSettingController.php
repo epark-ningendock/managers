@@ -36,6 +36,7 @@ class HospitalEmailSettingController extends Controller
                 $inputs['billing_email1'] = null;
                 $inputs['billing_email2'] = null;
                 $inputs['billing_email3'] = null;
+                $inputs['billing_email4'] = null;
                 $inputs['billing_fax_number'] = null;
                 $hospital_email_setting->update($inputs);
             } else {

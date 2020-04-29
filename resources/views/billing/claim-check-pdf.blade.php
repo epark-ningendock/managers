@@ -234,7 +234,7 @@ use App\Enums\ReservationStatus;
             @foreach( $billing->hospital->reservationByCompletedDate($startedDate, $endedDate) as $reservation)
                 <tr>
                     <td>{{ $reservation->id }}</td>
-                    <td>{{ $reservation->completed_date->format('Y-m-d') }}</td>
+                    <td>{{ $reservation->reservation_date->format('Y-m-d') }}</td>
                     <td>{{ $reservation->customer->family_name . ' ' . $reservation->customer->first_name }}</td>
                     <td>{{ ( isset($reservation->channel) && ( $reservation->channel == 1)) ? 'WEB' : 'TEL' }}</td>
                     <td>

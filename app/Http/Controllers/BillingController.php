@@ -223,7 +223,9 @@ class BillingController extends Controller {
     {
 	    $selectedMonth = $this->getSelectedMonth();
         $dateFilter = billingDateFilter($billing->billing_month);
-        $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
+        $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )
+            ->where('billing_email_flg', 1)
+            ->first();
 
         if ( $hospitalEmailSetting ) {
 
@@ -232,8 +234,6 @@ class BillingController extends Controller {
                 'startedDate'     => $dateFilter['startedDate'],
                 'endedDate'      => $dateFilter['endedDate'],
             ] )->setPaper('legal', 'landscape');
-
-            $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )->first();
 
             $confirmMailComposition = [
                 'subject' => $request->has('claim_check') ? '【EPARK人間ドック】請求内容確認のお願い' : '【EPARK人間ドック】請求金額確定のお知らせ',
@@ -246,24 +246,39 @@ class BillingController extends Controller {
 	            'selectedMonth' => $selectedMonth
             ];
 
-            Mail::to( [
-                $hospitalEmailSetting->billing_email1,
-                $hospitalEmailSetting->billing_email2,
-                $hospitalEmailSetting->billing_email3,
-                $hospitalEmailSetting->billing_fax_number . '@faxmail.com',
-            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
+            $tos = [];
+            if (!empty($hospitalEmailSetting->billing_email1)) {
+                $tos[] = $hospitalEmailSetting->billing_email1;
+            }
+            if (!empty($hospitalEmailSetting->billing_email2)) {
+                $tos[] = $hospitalEmailSetting->billing_email2;
+            }
+            if (!empty($hospitalEmailSetting->billing_email3)) {
+                $tos[] = $hospitalEmailSetting->billing_email3;
+            }
+            if (!empty($hospitalEmailSetting->billing_email4)) {
+                $tos[] = $hospitalEmailSetting->billing_email4;
+            }
+            if (!empty($hospitalEmailSetting->billing_fax_number)) {
+                $tos[] = $hospitalEmailSetting->billing_fax_number;
+            }
 
-            $billingMailHistory = new BillingMailHistory();
+            if (!empty($tos)) {
+                Mail::to($tos)->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
 
-            $billingMailHistory->create( [
-                'hospital_id' => $hospitalEmailSetting->hospital_id,
-                'to_address1' => $hospitalEmailSetting->billing_email1,
-                'to_address2' => $hospitalEmailSetting->billing_email2,
-                'to_address3' => $hospitalEmailSetting->billing_email3,
-                'cc_name'     => $hospitalEmailSetting->hospital->name,
-                'fax'         => $hospitalEmailSetting->billing_fax_number . '@faxmail.com',
-                'mail_type'   => ( $hospitalEmailSetting->mail_type == 1 ) ? 1 : 2,
-            ] );
+                $billingMailHistory = new BillingMailHistory();
+
+                $billingMailHistory->create( [
+                    'hospital_id' => $hospitalEmailSetting->hospital_id,
+                    'to_address1' => $hospitalEmailSetting->billing_email1,
+                    'to_address2' => $hospitalEmailSetting->billing_email2,
+                    'to_address3' => $hospitalEmailSetting->billing_email3,
+                    'to_address4' => $hospitalEmailSetting->billing_email4,
+                    'cc_name'     => $hospitalEmailSetting->hospital->name,
+                    'fax'         => $hospitalEmailSetting->billing_fax_number,
+                    'mail_type'   => ( $hospitalEmailSetting->mail_type == 1 ) ? 1 : 2,
+                ] );
+            }
         }
 	}
 

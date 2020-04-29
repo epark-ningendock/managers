@@ -29,6 +29,7 @@ class HospitalEmailSetting extends Model
         'billing_email1',
         'billing_email2',
         'billing_email3',
+        'billing_email4',
         'billing_fax_number',
         'lock_version'
     ];

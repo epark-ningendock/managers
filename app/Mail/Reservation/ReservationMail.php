@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Enums\Gender;
+use App\Enums\ReservationStatus;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -120,6 +121,7 @@ class ReservationMail extends Mailable
                 '受付形態' => $type,
 
                 '備考' => $this->entity->reservation_memo ?? '',
+                '受付・予約メモ' => $this->entity->todays_memo ?? '',
 
                 '第一希望日' => date('Y/m/d', strtotime($this->entity->reservation_date)) ?? '',
                 '第二希望日' => '1970/01/01' !== date('Y/m/d', strtotime($this->entity->second_date)) ?
