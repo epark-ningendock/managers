@@ -576,16 +576,20 @@ class ReservationController extends Controller
                         $fax_tos[] = $fax_to;
                     }
                 }
-                // 医療機関へメール送信
-                if ($change_flg) {
-                    Mail::to($fax_tos)->send(new ReservationChangeFaxToMail($reservation));
-                } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
-                    Mail::to($fax_tos)->send(new ReservationCancelFaxToMail($reservation));
-                } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+                // 医療機関へFAX送信
+                if ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
                     Mail::to($fax_tos)->send(new ReservationReceptionCompleteFaxToMail($reservation));
-                } elseif ($reservation->reservation_status == ReservationStatus::PENDING) {
-                    Mail::to($fax_tos)->send(new ReservationReceptionFaxToMail($reservation));
                 }
+
+//                if ($change_flg) {
+//                    Mail::to($fax_tos)->send(new ReservationChangeFaxToMail($reservation));
+//                } elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
+//                    Mail::to($fax_tos)->send(new ReservationCancelFaxToMail($reservation));
+//                } elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+//                    Mail::to($fax_tos)->send(new ReservationReceptionCompleteFaxToMail($reservation));
+//                } elseif ($reservation->reservation_status == ReservationStatus::PENDING) {
+//                    Mail::to($fax_tos)->send(new ReservationReceptionFaxToMail($reservation));
+//                }
             }
         } catch (\Exception $e) {
             Log::error($e);
@@ -939,6 +943,8 @@ class ReservationController extends Controller
         try {
             DB::beginTransaction();
             $today = Carbon::today();
+            $old_reservation = Reservation::find($reservation->id);
+            $old_reservation_options = $reservation->reservation_options();
 
             $course = Course::find($request->course_id);
             $reservation_date = Carbon::parse($request->reservation_date);
@@ -1012,7 +1018,9 @@ class ReservationController extends Controller
 
             DB::commit();
 
-            $this->reservation_mail_send($reservation, true);
+            if (self::is_send_mail($reservation, $old_reservation, $request->course_options, $old_reservation_options)) {
+                $this->reservation_mail_send($reservation, true);
+            }
 
         } catch (\Exception $i) {
             Log::error($i);
@@ -1032,6 +1040,54 @@ class ReservationController extends Controller
         }
 
         return redirect('reservation')->with('success', trans('messages.reservation.update_success'));
+    }
+
+    private function is_send_mail($reservation, $old_reservation, $options, $old_options) {
+        // コースチェック
+        if ($reservation->course_id != $old_reservation->course_id) {
+            return true;
+        }
+
+        // 調整額
+        if ($reservation->adjustment_price != $old_reservation->adjustment_price) {
+            return true;
+        }
+
+        // 受診日
+        if ($reservation->reservation_date != $old_reservation->reservation_date) {
+            true;
+        }
+
+        // うけつ時間
+        if ($reservation->start_time_hour != $old_reservation->start_time_hour) {
+            return true;
+        }
+
+        if ($reservation->start_time_min != $old_reservation->start_time_min) {
+            return true;
+        }
+
+        // オプション
+        if ((empty($options) && !empty($old_options))
+            || (!empty($options) && empty($old_options))) {
+            return true;
+        }
+
+        if (empty($options) && empty($old_options)) {
+            return false;
+        }
+
+        if (count($options) != count($old_options)) {
+            return true;
+        }
+
+        foreach ($old_options as $o) {
+            if (!array_key_exists($o->id, $options)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

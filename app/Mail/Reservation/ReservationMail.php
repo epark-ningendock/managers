@@ -44,10 +44,10 @@ class ReservationMail extends Mailable
             . $this->entity->hospital->district_code->name . ' '
             . $this->entity->hospital->address1 . ' ' . $this->entity->hospital->address2;
 
-        $options = $this->_options($this->entity->reservation_options);
+        $options = $this->_options($this->entity->reservation_options());
  
         // コース料金＋オプション総額
-        $reservation_options_price = $this->_calc_reservation_options_price($this->entity->reservation_options);
+        $reservation_options_price = $this->_calc_reservation_options_price($this->entity->reservation_options());
         $course_options_price = intval($this->entity->course->price) + $reservation_options_price;
 
         // コース料金＋オプション総額＋調整金額
