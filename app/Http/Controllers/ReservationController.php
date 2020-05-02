@@ -1077,6 +1077,10 @@ class ReservationController extends Controller
             return false;
         }
 
+        if (count($options) != $old_options->count()) {
+            return true;
+        }
+
         foreach ($old_options as $o) {
             if (!array_key_exists($o->id, $options)) {
                 return true;
