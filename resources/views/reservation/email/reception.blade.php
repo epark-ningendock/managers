@@ -35,7 +35,7 @@
 @if($loop->first)
 オプション：{{ $option['name'] }} {{ $option['price'] }}円（税込）
 @else
-　　　　　　{{$option['name']}} {{$option['price']}}円（税込）
+　　　　　 　　　{{$option['name']}} {{$option['price']}}円（税込）
 @endif
 @endforeach
 
