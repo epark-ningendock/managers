@@ -1106,6 +1106,7 @@ class ReservationController extends Controller
         }
 
         if (empty($options) && empty($old_options)) {
+            Log::error('オプションなし');
             return false;
         }
 
