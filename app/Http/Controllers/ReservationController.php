@@ -1045,44 +1045,56 @@ class ReservationController extends Controller
     private function is_send_mail($reservation, $old_reservation, $options, $old_options) {
         // コースチェック
         if ($reservation->course_id != $old_reservation->course_id) {
+            Log::error('コース違い');
             return true;
         }
 
         // 調整額
         if (!empty($reservation->adjustment_price) && empty($old_reservation->adjustment_price)) {
+            Log::error('調整額違い1');
             return true;
         } elseif (empty($reservation->adjustment_price) && !empty($old_reservation->adjustment_price)) {
+            Log::error('調整額違い2');
             return true;
         } elseif ($reservation->adjustment_price != $old_reservation->adjustment_price) {
+            Log::error('調整額違い3');
             true;
         }
 
         // 受診日
         if ($reservation->reservation_date != $old_reservation->reservation_date) {
+            Log::error('受診日違い');
             true;
         }
 
         // うけつ時間
         if (!empty($reservation->start_time_hour) && empty($old_reservation->start_time_hour)) {
+            Log::error('受付違い1');
             return true;
         } elseif (empty($reservation->start_time_hour) && !empty($old_reservation->start_time_hour)) {
+            Log::error('受付違い2');
             return true;
         } elseif ($reservation->start_time_hour != $old_reservation->start_time_hour) {
+            Log::error('受付違い3');
             true;
         }
 
 
         if (!empty($reservation->start_time_min) && empty($old_reservation->start_time_min)) {
+            Log::error('受付分違い1');
             return true;
         } elseif (empty($reservation->start_time_min) && !empty($old_reservation->start_time_min)) {
+            Log::error('受付分違い2');
             return true;
         } elseif ($reservation->start_time_min != $old_reservation->start_time_min) {
+            Log::error('受付分違い3');
             true;
         }
 
         // オプション
         if ((empty($options) && !empty($old_options))
             || (!empty($options) && empty($old_options))) {
+            Log::error('オプション違い1');
             return true;
         }
 
@@ -1091,11 +1103,13 @@ class ReservationController extends Controller
         }
 
         if (count($options) != $old_options->count()) {
+            Log::error('オプション違い2');
             return true;
         }
 
         foreach ($old_options as $o) {
             if (!array_key_exists($o->id, $options)) {
+                Log::error('オプション違い3');
                 return true;
             }
         }
