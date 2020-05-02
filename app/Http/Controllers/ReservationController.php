@@ -1094,6 +1094,13 @@ class ReservationController extends Controller
         // オプション
         if ((empty($options) && !empty($old_options))
             || (!empty($options) && empty($old_options))) {
+
+            if (empty($options)) {
+                Log::error('画面オプションが空');
+            }
+            if (empty($old_options)) {
+                Log::error('登録済みオプションが空');
+            }
             Log::error('オプション違い1');
             return true;
         }
