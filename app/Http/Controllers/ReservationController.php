@@ -944,7 +944,7 @@ class ReservationController extends Controller
             DB::beginTransaction();
             $today = Carbon::today();
             $old_reservation = Reservation::find($reservation->id);
-            $old_reservation_options = $reservation->reservation_options();
+            $old_reservation_options = $reservation->reservation_options;
 
             $course = Course::find($request->course_id);
             $reservation_date = Carbon::parse($request->reservation_date);
