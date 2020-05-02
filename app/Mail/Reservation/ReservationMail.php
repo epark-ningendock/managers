@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Enums\Gender;
 use App\Enums\ReservationStatus;
+use App\Reservation;
 use App\ReservationOption;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -46,6 +47,7 @@ class ReservationMail extends Mailable
             . $this->entity->hospital->address1 . ' ' . $this->entity->hospital->address2;
 
         $reservation_options = ReservationOption::where('reservation_id', $this->entity->id)->get();
+        $this->entity = Reservation::find($this->entity->id);
 
         $options = $this->_options($reservation_options);
  
