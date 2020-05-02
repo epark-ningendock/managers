@@ -1049,8 +1049,12 @@ class ReservationController extends Controller
         }
 
         // 調整額
-        if ($reservation->adjustment_price != $old_reservation->adjustment_price) {
+        if (!empty($reservation->adjustment_price) && empty($old_reservation->adjustment_price)) {
             return true;
+        } elseif (empty($reservation->adjustment_price) && !empty($old_reservation->adjustment_price)) {
+            return true;
+        } elseif ($reservation->adjustment_price != $old_reservation->adjustment_price) {
+            true;
         }
 
         // 受診日
@@ -1059,12 +1063,21 @@ class ReservationController extends Controller
         }
 
         // うけつ時間
-        if ($reservation->start_time_hour != $old_reservation->start_time_hour) {
+        if (!empty($reservation->start_time_hour) && empty($old_reservation->start_time_hour)) {
             return true;
+        } elseif (empty($reservation->start_time_hour) && !empty($old_reservation->start_time_hour)) {
+            return true;
+        } elseif ($reservation->start_time_hour != $old_reservation->start_time_hour) {
+            true;
         }
 
-        if ($reservation->start_time_min != $old_reservation->start_time_min) {
+
+        if (!empty($reservation->start_time_min) && empty($old_reservation->start_time_min)) {
             return true;
+        } elseif (empty($reservation->start_time_min) && !empty($old_reservation->start_time_min)) {
+            return true;
+        } elseif ($reservation->start_time_min != $old_reservation->start_time_min) {
+            true;
         }
 
         // オプション
