@@ -1080,18 +1080,18 @@ class ReservationController extends Controller
             return true;
         }
 
-//
-//        if (!empty($reservation->start_time_min) && empty($old_reservation->start_time_min)) {
-//            Log::error('受付分違い1');
-//            return true;
-//        } elseif (empty($reservation->start_time_min) && !empty($old_reservation->start_time_min)) {
-//            Log::error('受付分違い2');
-//            return true;
-//        } elseif ($reservation->start_time_min != $old_reservation->start_time_min) {
-//            Log::error('受付分違い3');
-//            return true;
-//        }
-//
+
+        if (!empty($reservation->start_time_min) && empty($old_reservation->start_time_min)) {
+            Log::error('受付分違い1');
+            return true;
+        } elseif (empty($reservation->start_time_min) && !empty($old_reservation->start_time_min)) {
+            Log::error('受付分違い2');
+            return true;
+        } elseif ($reservation->start_time_min != $old_reservation->start_time_min) {
+            Log::error('受付分違い3');
+            return true;
+        }
+
 //        // オプション
 //        if ((empty($options) && !$old_options->isEmpty())
 //            || (!empty($options) && $old_options->isEmpty())) {
