@@ -1092,29 +1092,29 @@ class ReservationController extends Controller
             return true;
         }
 
-//        // オプション
-//        if ((empty($options) && !$old_options->isEmpty())
-//            || (!empty($options) && $old_options->isEmpty())) {
-//            Log::error('オプション違い1');
-//            return true;
-//        }
-//
-//        if (empty($options) && $old_options->isEmpty()) {
-//            Log::error('オプションなし');
-//            return false;
-//        }
-//
-//        if (count($options) != $old_options->count()) {
-//            Log::error('オプション違い2');
-//            return true;
-//        }
-//
-//        foreach ($old_options as $o) {
-//            if (!array_key_exists($o->id, $options)) {
-//                Log::error('オプション違い3');
-//                return true;
-//            }
-//        }
+        // オプション
+        if ((empty($options) && !$old_options->isEmpty())
+            || (!empty($options) && $old_options->isEmpty())) {
+            Log::error('オプション違い1');
+            return true;
+        }
+
+        if (empty($options) && $old_options->isEmpty()) {
+            Log::error('オプションなし');
+            return false;
+        }
+
+        if (count($options) != $old_options->count()) {
+            Log::error('オプション違い2');
+            return true;
+        }
+
+        foreach ($old_options as $o) {
+            if (!array_key_exists($o->id, $options)) {
+                Log::error('オプション違い3');
+                return true;
+            }
+        }
 
         Log::error('変更なし！！！！！！！！！！！！！！！！！！！！！！！！！！');
         return false;
