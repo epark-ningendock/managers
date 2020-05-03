@@ -1064,7 +1064,7 @@ class ReservationController extends Controller
 
         // 受診日
         if ($reservation->reservation_date != $old_reservation->reservation_date) {
-            Log::error('受診日違い');
+            Log::error('受診日違い?');
             return true;
         }
 
