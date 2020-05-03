@@ -944,7 +944,7 @@ class ReservationController extends Controller
             DB::beginTransaction();
             $today = Carbon::today();
             $old_reservation = Reservation::find($reservation->id);
-            $old_reservation_options = $reservation->reservation_options;
+            $old_reservation_options = ReservationOption::where('reservation_id', $reservation->id)->get();
 
             $course = Course::find($request->course_id);
             $reservation_date = Carbon::parse($request->reservation_date);
@@ -1092,20 +1092,13 @@ class ReservationController extends Controller
         }
 
         // オプション
-        if ((empty($options) && !empty($old_options))
-            || (!empty($options) && empty($old_options))) {
-
-            if (empty($options)) {
-                Log::error('画面オプションが空');
-            }
-            if (empty($old_options)) {
-                Log::error('登録済みオプションが空');
-            }
+        if ((empty($options) && !$old_options->is_Empty())
+            || (!empty($options) && $old_options->is_Empty())) {
             Log::error('オプション違い1');
             return true;
         }
 
-        if (empty($options) && empty($old_options)) {
+        if (empty($options) && $old_options->is_Empty()) {
             Log::error('オプションなし');
             return false;
         }
