@@ -1023,7 +1023,7 @@ class ReservationController extends Controller
             }
 
         } catch (\Exception $i) {
-            Log::error($i);
+            Log::error('エラー発生' .$i);
             DB::rollback();
 
             return redirect()->back()->with('error', trans('messages.reservation.status_update_error'))->withInput();
@@ -1043,6 +1043,7 @@ class ReservationController extends Controller
     }
 
     private function is_send_mail($reservation, $old_reservation, $options, $old_options) {
+        Log::error('変更チェック！！！！！！！！！！！！！！！！！！！！！！！！！！');
         // コースチェック
         if ($reservation->course_id != $old_reservation->course_id) {
             Log::error('コース違い');
