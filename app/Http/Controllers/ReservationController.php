@@ -1059,13 +1059,13 @@ class ReservationController extends Controller
             return true;
         } elseif ($reservation->adjustment_price != $old_reservation->adjustment_price) {
             Log::error('調整額違い3');
-            true;
+            return true;
         }
 
         // 受診日
         if ($reservation->reservation_date != $old_reservation->reservation_date) {
             Log::error('受診日違い');
-            true;
+            return true;
         }
 
         // うけつ時間
@@ -1077,7 +1077,7 @@ class ReservationController extends Controller
             return true;
         } elseif ($reservation->start_time_hour != $old_reservation->start_time_hour) {
             Log::error('受付違い3');
-            true;
+            return true;
         }
 
 
@@ -1089,7 +1089,7 @@ class ReservationController extends Controller
             return true;
         } elseif ($reservation->start_time_min != $old_reservation->start_time_min) {
             Log::error('受付分違い3');
-            true;
+            return true;
         }
 
         // オプション
