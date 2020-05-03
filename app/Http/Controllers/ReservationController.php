@@ -1062,59 +1062,59 @@ class ReservationController extends Controller
             return true;
         }
 
-        // 受診日
-        if ($reservation->reservation_date != $old_reservation->reservation_date) {
-            Log::error('受診日違い?');
-            return true;
-        }
-
-        // うけつ時間
-        if (!empty($reservation->start_time_hour) && empty($old_reservation->start_time_hour)) {
-            Log::error('受付違い1');
-            return true;
-        } elseif (empty($reservation->start_time_hour) && !empty($old_reservation->start_time_hour)) {
-            Log::error('受付違い2');
-            return true;
-        } elseif ($reservation->start_time_hour != $old_reservation->start_time_hour) {
-            Log::error('受付違い3');
-            return true;
-        }
-
-
-        if (!empty($reservation->start_time_min) && empty($old_reservation->start_time_min)) {
-            Log::error('受付分違い1');
-            return true;
-        } elseif (empty($reservation->start_time_min) && !empty($old_reservation->start_time_min)) {
-            Log::error('受付分違い2');
-            return true;
-        } elseif ($reservation->start_time_min != $old_reservation->start_time_min) {
-            Log::error('受付分違い3');
-            return true;
-        }
-
-        // オプション
-        if ((empty($options) && !$old_options->isEmpty())
-            || (!empty($options) && $old_options->isEmpty())) {
-            Log::error('オプション違い1');
-            return true;
-        }
-
-        if (empty($options) && $old_options->isEmpty()) {
-            Log::error('オプションなし');
-            return false;
-        }
-
-        if (count($options) != $old_options->count()) {
-            Log::error('オプション違い2');
-            return true;
-        }
-
-        foreach ($old_options as $o) {
-            if (!array_key_exists($o->id, $options)) {
-                Log::error('オプション違い3');
-                return true;
-            }
-        }
+//        // 受診日
+//        if ($reservation->reservation_date != $old_reservation->reservation_date) {
+//            Log::error('受診日違い?');
+//            return true;
+//        }
+//
+//        // うけつ時間
+//        if (!empty($reservation->start_time_hour) && empty($old_reservation->start_time_hour)) {
+//            Log::error('受付違い1');
+//            return true;
+//        } elseif (empty($reservation->start_time_hour) && !empty($old_reservation->start_time_hour)) {
+//            Log::error('受付違い2');
+//            return true;
+//        } elseif ($reservation->start_time_hour != $old_reservation->start_time_hour) {
+//            Log::error('受付違い3');
+//            return true;
+//        }
+//
+//
+//        if (!empty($reservation->start_time_min) && empty($old_reservation->start_time_min)) {
+//            Log::error('受付分違い1');
+//            return true;
+//        } elseif (empty($reservation->start_time_min) && !empty($old_reservation->start_time_min)) {
+//            Log::error('受付分違い2');
+//            return true;
+//        } elseif ($reservation->start_time_min != $old_reservation->start_time_min) {
+//            Log::error('受付分違い3');
+//            return true;
+//        }
+//
+//        // オプション
+//        if ((empty($options) && !$old_options->isEmpty())
+//            || (!empty($options) && $old_options->isEmpty())) {
+//            Log::error('オプション違い1');
+//            return true;
+//        }
+//
+//        if (empty($options) && $old_options->isEmpty()) {
+//            Log::error('オプションなし');
+//            return false;
+//        }
+//
+//        if (count($options) != $old_options->count()) {
+//            Log::error('オプション違い2');
+//            return true;
+//        }
+//
+//        foreach ($old_options as $o) {
+//            if (!array_key_exists($o->id, $options)) {
+//                Log::error('オプション違い3');
+//                return true;
+//            }
+//        }
 
         Log::error('変更なし！！！！！！！！！！！！！！！！！！！！！！！！！！');
         return false;
