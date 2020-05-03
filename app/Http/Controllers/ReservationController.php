@@ -1062,24 +1062,24 @@ class ReservationController extends Controller
             return true;
         }
 
-//        // 受診日
-//        if ($reservation->reservation_date != $old_reservation->reservation_date) {
-//            Log::error('受診日違い?');
-//            return true;
-//        }
-//
-//        // うけつ時間
-//        if (!empty($reservation->start_time_hour) && empty($old_reservation->start_time_hour)) {
-//            Log::error('受付違い1');
-//            return true;
-//        } elseif (empty($reservation->start_time_hour) && !empty($old_reservation->start_time_hour)) {
-//            Log::error('受付違い2');
-//            return true;
-//        } elseif ($reservation->start_time_hour != $old_reservation->start_time_hour) {
-//            Log::error('受付違い3');
-//            return true;
-//        }
-//
+        // 受診日
+        if ($reservation->reservation_date != $old_reservation->reservation_date) {
+            Log::error('受診日違い?');
+            return true;
+        }
+
+        // うけつ時間
+        if (!empty($reservation->start_time_hour) && empty($old_reservation->start_time_hour)) {
+            Log::error('受付違い1');
+            return true;
+        } elseif (empty($reservation->start_time_hour) && !empty($old_reservation->start_time_hour)) {
+            Log::error('受付違い2');
+            return true;
+        } elseif ($reservation->start_time_hour != $old_reservation->start_time_hour) {
+            Log::error('受付違い3');
+            return true;
+        }
+
 //
 //        if (!empty($reservation->start_time_min) && empty($old_reservation->start_time_min)) {
 //            Log::error('受付分違い1');
