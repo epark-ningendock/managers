@@ -1018,7 +1018,7 @@ class ReservationController extends Controller
 
             DB::commit();
 
-            if (self::is_send_mail($reservation, $old_reservation, $request->course_options, $old_reservation_options)) {
+            if ($this->is_send_mail($reservation, $old_reservation, $request->course_options, $old_reservation_options)) {
                 $this->reservation_mail_send($reservation, true);
             }
 
@@ -1115,6 +1115,7 @@ class ReservationController extends Controller
             }
         }
 
+        Log::error('変更なし！！！！！！！！！！！！！！！！！！！！！！！！！！');
         return false;
     }
 
