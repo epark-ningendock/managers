@@ -4,6 +4,8 @@ namespace App\Mail;
 
 use App\Enums\Gender;
 use App\Enums\ReservationStatus;
+use App\Reservation;
+use App\ReservationOption;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -44,10 +46,13 @@ class ReservationMail extends Mailable
             . $this->entity->hospital->district_code->name . ' '
             . $this->entity->hospital->address1 . ' ' . $this->entity->hospital->address2;
 
-        $options = $this->_options($this->entity->reservation_options);
+        $reservation_options = ReservationOption::where('reservation_id', $this->entity->id)->get();
+        $this->entity = Reservation::find($this->entity->id);
+
+        $options = $this->_options($reservation_options);
  
         // コース料金＋オプション総額
-        $reservation_options_price = $this->_calc_reservation_options_price($this->entity->reservation_options);
+        $reservation_options_price = $this->_calc_reservation_options_price($reservation_options);
         $course_options_price = intval($this->entity->course->price) + $reservation_options_price;
 
         // コース料金＋オプション総額＋調整金額
@@ -162,14 +167,17 @@ class ReservationMail extends Mailable
      */
     private function _options($reservation_options): array
     {
-        $options = collect(json_decode(json_encode($reservation_options)))->filter(function ($r) {
-            return isset($r->option);
-        });
+        $results = [];
+        if (empty($reservation_options)) {
+            return $results;
+        }
+        foreach ($reservation_options as $ro) {
+            if (isset($ro->option)) {
+                $results[] = ['name' => $ro->option->name, 'price' => $ro->option_price];
+            }
+        }
 
-        $results = $options->map(function ($o) {
-            return ['name' => $o->option->name, 'price' => $o->option_price];
-        });
-        return $results->isEmpty() ? [] : $results->toArray();
+        return $results;
     }
 
     /**
@@ -180,13 +188,14 @@ class ReservationMail extends Mailable
      */
     private function _calc_reservation_options_price($reservation_options): int {
 
-        $options = collect(json_decode(json_encode($reservation_options)))->filter(function ($r) {
-            return isset($r->option);
-        });
         $result = 0;
-        foreach($options as $o) {
-           $result += intval($o->option_price);
+        if (empty($reservation_options)) {
+            return $result;
         }
+        foreach ($reservation_options as $ro) {
+            $result += $ro->option_price;
+        }
+
         return $result;
     }
 
