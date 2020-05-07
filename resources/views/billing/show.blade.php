@@ -114,7 +114,7 @@
                     + $billing->adjustment_price
                     + $billing->hospital->hpLinkMonthPrice()
                                 + $billing->hospital->hospitalOptionPlanPrice($billing->id, $endedDate)
-                    + $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) * 0.9) }}円 )</p>
+                    + $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) / 1.1) }}円 )</p>
                 </div>
                     <div class="form-group ">
                         <button type="submit" class="btn btn-primary">更新</button>
