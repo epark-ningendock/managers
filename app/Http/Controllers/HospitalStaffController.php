@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Exceptions\ExclusiveLockException;
 
 class HospitalStaffController extends Controller
-{   
+{
     public function index()
     {
         $hospital_staffs = HospitalStaff::where('hospital_id', session()->get('hospital_id'));
@@ -59,10 +59,10 @@ class HospitalStaffController extends Controller
                 'hospital_staff' => $hospital_staff,
                 'password' => $hospital_staff_data['password']
             ];
-            
+
             Mail::to($hospital_staff->email)
                 ->send(new RegisteredMail($data));
-            
+
             $data = [
                 'hospital_staff' => $hospital_staff,
                 'staff_name' => Auth::user()->name,
@@ -107,7 +107,7 @@ class HospitalStaffController extends Controller
             if ($hospital_staff->updated_at > $request['updated_at']) {
                 throw new ExclusiveLockException;
             }
-            
+
             $inputs  = request()->all();
             $hospital_staff->update($inputs);
 
@@ -132,7 +132,7 @@ class HospitalStaffController extends Controller
     {
         try {
             DB::beginTransaction();
-            
+
             $hospital_staff = HospitalStaff::findOrFail($id);
             $hospital_staff->delete();
 
@@ -145,7 +145,7 @@ class HospitalStaffController extends Controller
                 'processing' => '削除'
                 ];
 //            Mail::to(config('mail.to.gyoumu'))->send(new HospitalStaffOperationMail($data));
-            
+
             return redirect('hospital-staff')->with('error', trans('messages.deleted', ['name' => trans('messages.names.hospital_staff')]));
 
         } catch (ExclusiveLockException $e) {
@@ -157,7 +157,7 @@ class HospitalStaffController extends Controller
 
     public function editPassword(Request $request)
     {
-        $hospital_staff = HospitalStaff::where('email', $request->session()->get('staff_email'))->first();
+        $hospital_staff = HospitalStaff::where('login_id', session()->get('login_id'))->first();
         return view('hospital_staff.edit-password', compact('hospital_staff'));
     }
 
@@ -168,9 +168,9 @@ class HospitalStaffController extends Controller
             'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation|different:old_password|regex:/^[-_@\.a-zA-Z0-9]+$/',
             'password_confirmation' => 'min:8|max:20|regex:/^[-_@\.a-zA-Z0-9]+$/'
         ]);
-        
+
         $hospital_staff = HospitalStaff::findOrFail($hospital_staff_id);
-        
+
         try {
             DB::beginTransaction();
             if ($hospital_staff->updated_at > $request['updated_at']) {
@@ -219,7 +219,7 @@ class HospitalStaffController extends Controller
         $this->validate($request, [
             'email' => 'required|email',
         ]);
-        
+
         $staff = Staff::where('email', $request->email)->first();
         if (!$staff) {
             $staff = HospitalStaff::where('email', $request->email)->first();
@@ -269,7 +269,7 @@ class HospitalStaffController extends Controller
             'password' => 'min:8|max:20|required_with:password_confirmation|same:password_confirmation|regex:/^[-_@\.a-zA-Z0-9]+$/',
             'password_confirmation' => 'min:8|max:20|regex:/^[-_@\.a-zA-Z0-9]+$/'
         ]);
-                
+
         $staff = Staff::where('email', $email)->first();
         if (!$staff) {
             $staff = HospitalStaff::where('email', $email)->first();
