@@ -392,7 +392,7 @@ class HospitalImagesController extends Controller
     private function hospitalImageUploader (array $file, string $image_prefix, int $i, object $hospital, int $hospital_id, int $image_order, string $name = null, $career = null, string $memo = null, string $title = null, string $caption = null) {
         //地図も画像情報として保存されるが、画像の実態はないのでダミーで保存するっぽい。
         if ($image_order != ImageGroupNumber::IMAGE_GROUP_MAP) {
-            $memo1 = isset($file[$image_prefix.$i.'_memo1']) ? $file[$image_prefix.$i.'_memo1'] : '' ;
+            $memo1 = isset($file[$image_prefix.$i.'_memo2']) ? $file[$image_prefix.$i.'_memo2'] : '' ;
             $memo2 = isset($file[$image_prefix.$i.'_memo2']) ? $file[$image_prefix.$i.'_memo2'] : '' ;
             $order2 = isset($file[$image_prefix.$i.'_order2']) ? $file[$image_prefix.$i.'_order2'] : 0 ;
             $name_2 = isset($file[$image_prefix.$i.'_name']) ? $file[$image_prefix.$i.'_name'] : '' ;
