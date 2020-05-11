@@ -157,7 +157,7 @@ class HospitalStaffController extends Controller
 
     public function editPassword(Request $request)
     {
-        $hospital_staff = HospitalStaff::where('email', $request->session()->get('staff_email'))->first();
+        $hospital_staff = HospitalStaff::where('login_id', session()->get('login_id'))->first();
         return view('hospital_staff.edit-password', compact('hospital_staff'));
     }
 

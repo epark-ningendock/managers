@@ -154,10 +154,10 @@
                             $('.ajax-data-popup').modal('hide');
 
                             // showing success message
-                            const message = $(`<div class="alert alert-success alert-block">
+                            const message = $('<div class="alert alert-success alert-block">
                                                  <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
                                                  <strong class="white-space">${data.success}</strong>
-                                               </div>`).prependTo('section.content>div.row>div.col-xs-12>div.box');
+                                               </div>').prependTo('section.content>div.row>div.col-xs-12>div.box');
 
                             //scroll up for message box
                             $('html, body').animate({

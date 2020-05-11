@@ -208,7 +208,7 @@ module.exports.addScrollToTop = function () {
             Modal.showConfirm(message, btnText, modal, function () {
                 $(modal).find('input, select, textarea').each(function(i, e){
                     e = $(e);
-                    $(`<input type="hidden" name="${e.prop('name')}" />`)
+                    $('<input type="hidden" name="${e.prop(\'name\')}" />')
                         .val(e.val())
                         .appendTo($(targetForm));
                 });

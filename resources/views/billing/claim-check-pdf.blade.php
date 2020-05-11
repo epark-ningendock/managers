@@ -199,7 +199,7 @@ use App\Enums\ReservationStatus;
             </span>
     </li>
     <li>
-        <small class="text-bold label-text">手数料合計金額（税抜価格）</small>
+        <small class="text-bold label-text">手数料合計金</small>
         <span class="value-text">
                 {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
             </span>
