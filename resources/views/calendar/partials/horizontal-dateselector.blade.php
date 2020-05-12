@@ -13,7 +13,9 @@
                 }
             }
 
-            function dateLoader(ajaxRoute, chooseByCalendar = false) {
+            function dateLoader(ajaxRoute, chooseByCalendar) {
+
+                if(typeof chooseByCalendar === 'undefined') chooseByCalendar = false;
 
                 $.ajax({
                     url: ajaxRoute,
