@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CalendarDay;
 use App\Course;
 use App\Customer;
 use App\Enums\IsFreeHpLink;
@@ -1000,6 +1001,7 @@ class ReservationController extends Controller
             $reservation->update($params);
 
             if (!$calendar_day) {
+                $calendar_day = new CalendarDay();
                 $calendar_day->date = $reservation_date;
                 $calendar_day->is_holiday = 0;
                 $calendar_day->is_reservation_acceptance = 0;
