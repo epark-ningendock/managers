@@ -7,6 +7,7 @@ use App\Customer;
 use App\Enums\IsFreeHpLink;
 use App\Enums\Permission;
 use App\Enums\ReservationStatus;
+use App\Enums\Status;
 use App\Holiday;
 use App\ContractInformation;
 use App\Hospital;
@@ -957,7 +958,7 @@ class ReservationController extends Controller
                 ->where('is_holiday', 1)
                 ->whereDate('date', $reservation_date)->get()->first();
 
-            if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '0') && $calendar_day->reservation_frames == 0) {
+            if(isset($holiday) || (isset($calendar_day) && $calendar_day->is_reservation_acceptance != '0') && (isset($calendar_day) && $calendar_day->reservation_frames == 0)) {
                 DB::rollback();
                 return redirect()->back()->with('error', trans('messages.reservation.not_reservable'))->withInput();
             }
@@ -997,6 +998,19 @@ class ReservationController extends Controller
             }
 
             $reservation->update($params);
+
+            if (!$calendar_day) {
+                $calendar_day->date = $reservation_date;
+                $calendar_day->is_holiday = 0;
+                $calendar_day->is_reservation_acceptance = 0;
+                $calendar_day->reservation_frames = 1;
+                $calendar_day->reservation_count = 1;
+                $calendar_day->calendar_id = $course->calendar->id;
+                $calendar_day->status = Status::VALID;
+                $calendar_day->created_at = Carbon::today();
+                $calendar_day->update_at = Carbon::today();
+                $calendar_day->save();
+            }
 
             if (!$reservation_date->eq($old_reservation_date)) {
                 // カレンダーの予約数を1つ減らす

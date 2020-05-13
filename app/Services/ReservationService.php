@@ -874,7 +874,7 @@ class ReservationService
             ->where('site_code', 'HP')
             ->count();
 
-        if ($hospital->hplink_contract_type == HplinkContractType::PAY_PER_USE) {
+        if ($hospital->hplink_contract_type == '1') {
             $free_count = $hospital->hplink_count;
             if ($targets < $free_count) {
                 return 0;
