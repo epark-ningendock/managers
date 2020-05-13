@@ -1010,7 +1010,7 @@ class ReservationController extends Controller
                 $calendar_day->calendar_id = $course->calendar->id;
                 $calendar_day->status = Status::VALID;
                 $calendar_day->created_at = Carbon::today();
-                $calendar_day->update_at = Carbon::today();
+                $calendar_day->updated_at = Carbon::today();
                 $calendar_day->save();
             }
 
