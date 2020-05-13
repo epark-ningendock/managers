@@ -84,9 +84,10 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         $hp_link_status,
                         $reservation->course->name,
                         $reservation->reservation_options->isEmpty() ? '' : '有',
-                        number_format($the_amount),
-                        number_format($the_amount / (($tax_rate + 100) / 100)), //need to verify calculation1
-                        number_format($reservation->fee),
+                        $the_amount,
+                        $the_amount / (($tax_rate + 100) / 100), //need to verify calculation1
+                        $reservation->fee,
+                        $reservation->fee / (($tax_rate + 100) / 100),
                         $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->plan_name ?? '',
                         (isset($reservation->site_code) && ( $reservation->site_code == 'HP') ) ? 'HPリンク' : '',
                         (isset($reservation->site_code) && ( $reservation->site_code == 'Special') ) ? '○' : '',
@@ -118,6 +119,7 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
             '総額',
             '税抜き価格', //need to verify calculation1
             '手数料',
+            '手数料（税抜き）',
             'ROOKプラン',
             'OP',
             '特集ページ',
