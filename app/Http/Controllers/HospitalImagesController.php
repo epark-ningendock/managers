@@ -171,6 +171,11 @@ class HospitalImagesController extends Controller
         for($i = 1; $i <= 4; $i++){
             if(isset($file['speciality_'.$i]) or isset($file['speciality_'.$i.'_title']) or isset($file['speciality_'.$i.'_caption'])) {
                 $this->hospitalImageUploader($file, 'speciality_', $i, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_SPECIALITY,null,null,null,$file['speciality_'.$i.'_title'],$file['speciality_'.$i.'_caption'] );
+            } else {
+                $hospital_category = HospitalCategory::where('hospital_id', $hospital_id)->where('image_order', ImageGroupNumber::IMAGE_GROUP_SPECIALITY)->where('order', $i)->first();
+                if ($hospital_category) {
+                    $hospital_category->forceDelete();
+                }
             }
         }
         //スタッフ
