@@ -496,14 +496,14 @@
                                     let checkedOldValue = ($courseOptionOldValue.hasOwnProperty(courseOption.option.id)  ) ? 'checked' : '';
 
                                     $('<tr></tr>')
-                                        .append($('<td style="text-align:left; padding-left:15px;">
+                                        .append($(`<td style="text-align:left; padding-left:15px;">
                                                      <input ${checkedOldValue} id ="option-${courseOption.option.id}" type="checkbox" class="checkbox option"
                                                         data-price="${courseOption.option.price}" name="course_options[${courseOption.option.id}]"
                                                         value="${courseOption.option.price}"/>
                                                      <label for="option-${courseOption.option.id}""></label>
-                                                    </td>'))
-                                        .append($('<td>${courseOption.option.name}</td>'))
-                                        .append($('<td>${courseOption.option.price.toLocaleString()}円</td>'))
+                                                    </td>`))
+                                        .append($(`<td>${courseOption.option.name}</td>`))
+                                        .append($(`<td>${courseOption.option.price.toLocaleString()}円</td>`))
                                         .appendTo(tbody);
                                 });
 
