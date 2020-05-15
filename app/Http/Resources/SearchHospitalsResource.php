@@ -66,7 +66,7 @@ class SearchHospitalsResource extends Resource
             if ($entity->tue == 1) {
                 $tue_flg = true;
             }
-            if ($entity->wed == 1) {
+            if ($entity->web == 1) {
                 $wed_flg = true;
             }
             if ($entity->thu == 1) {
