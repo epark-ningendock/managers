@@ -28,7 +28,7 @@ class MonthlyCalendarResource extends Resource
                 $to = Carbon::today()->addMonthsNoOverflow(2)->endOfMonth()->format('Ym');
                 if (empty($this->kenshin_sys_courses[0]->course_futan_conditions[0]->jouken_no)) {
                     $course_wakus = KenshinSysCourseWaku::where('kenshin_sys_course_id', $this->kenshin_sys_courses[0]->id)
-                        ->whereNull('jouken_no')
+//                        ->whereNull('jouken_no')
                         ->where('year_month', '>=', $from)
                         ->where('year_month', '<=', $to)
                         ->orderBy('year_month')
