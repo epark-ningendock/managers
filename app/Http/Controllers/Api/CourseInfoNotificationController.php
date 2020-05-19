@@ -682,7 +682,7 @@ class CourseInfoNotificationController extends Controller
                     }
 
                     $option = KenshinSysOption::where('kenshin_sys_course_id', $course->id)
-                        ->where('kenshisn_sys_option_no', $kenshin_option['optionNo'])
+                        ->where('kenshin_sys_option_no', $kenshin_option['optionNo'])
                         ->first();
 
                     if (!$option) {
