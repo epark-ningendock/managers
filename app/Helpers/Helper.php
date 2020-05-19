@@ -225,6 +225,32 @@ if (! function_exists('getAgeTargetDate')) :
                 $target_date = $today->setDate($today->year + 1, $target_m, $target_d);
                 return calcAge($birthday, $target_date);
             }
+        } elseif ($medicalExamSysId == config('constant.medical_exam_sys_id.itec')) {
+
+            if (empty($ageKisanDate)) {
+                return calcAge($birthday, $reservation_date);
+            }
+
+            $targets = explode('/', $ageKisanDate);
+            $m = $targets[0];
+            $d = $targets[1];
+            $y = \Carbon\Carbon::today()->year;
+
+            if ($ageKisanKbn == 1) {
+                if ($m < 4) {
+                    $y = $y + 1;
+                }
+                $target_date = \Carbon\Carbon::create($y, $m, $d);
+                return calcAge($birthday, $target_date);
+            } elseif ($ageKisanKbn == 2) {
+                if ($m < 4) {
+                    $y = $y + 2;
+                } else {
+                    $y = $y + 1;
+                }
+                $target_date = \Carbon\Carbon::create($y, $m, $d);
+                return calcAge($birthday, $target_date);
+            }
         }
     }
 

@@ -26,12 +26,21 @@ class MonthlyCalendarResource extends Resource
                 && count($this->kenshin_sys_courses[0]->course_futan_conditions) > 0) {
                 $from = Carbon::today()->format('Ym');
                 $to = Carbon::today()->addMonthsNoOverflow(2)->endOfMonth()->format('Ym');
-                $course_wakus = KenshinSysCourseWaku::where('kenshin_sys_course_id', $this->kenshin_sys_courses[0]->id)
-                    ->where('jouken_no', $this->kenshin_sys_courses[0]->course_futan_conditions[0]->jouken_no)
-                    ->where('year_month', '>=', $from)
-                    ->where('year_month', '<=', $to)
-                    ->orderBy('year_month')
-                    ->get();
+                if (empty($this->kenshin_sys_courses[0]->course_futan_conditions[0]->jouken_no)) {
+                    $course_wakus = KenshinSysCourseWaku::where('kenshin_sys_course_id', $this->kenshin_sys_courses[0]->id)
+                        ->whereNull('jouken_no')
+                        ->where('year_month', '>=', $from)
+                        ->where('year_month', '<=', $to)
+                        ->orderBy('year_month')
+                        ->get();
+                } else {
+                    $course_wakus = KenshinSysCourseWaku::where('kenshin_sys_course_id', $this->kenshin_sys_courses[0]->id)
+                        ->where('jouken_no', $this->kenshin_sys_courses[0]->course_futan_conditions[0]->jouken_no)
+                        ->where('year_month', '>=', $from)
+                        ->where('year_month', '<=', $to)
+                        ->orderBy('year_month')
+                        ->get();
+                }
 
                 if ($course_wakus) {
                     foreach ($course_wakus as $course_waku) {
