@@ -35,7 +35,7 @@
                             $('.hor-date-table tbody tr').addClass('hide-tr').first('tr').addClass('show-tr');
                             const oldData = $('.calendar-box').data('old');
                             if (oldData) {
-                                const selectedDate = $(`.hor-date-table tbody td[data-date=${oldData}]`)
+                                const selectedDate = $('.hor-date-table tbody td[data-date=' + oldData + ']')
                                 $('#reservation_date').val(oldData);
                                 selectedDate.addClass('it-would-reserve');
                                 $('.hor-date-table tbody tr').removeClass('show-tr').addClass('hide-tr');

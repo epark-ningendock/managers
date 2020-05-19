@@ -79,25 +79,22 @@ if ( !function_exists('billingDateFilter') ) :
             $date = now();
         }
 
-        $startedDate = $date->copy()->setDate( $date->year, $date->copy()->subMonth( 1 )->month, 21 );
-        $endedMonth  = $date->copy()->setDate( $date->year, $date->month, 20 );
+
+        if ( $date->day < 21 ) {
 
 
-//        if ( $date->day < 21 ) {
-//
-//
-//            $startMonthNumber = ( $date->isCurrentMonth() ) ? $date->copy()->subMonth( 2 )->month : $date->copy()->subMonth( 1 )->month;
-//            $endMonthNumber   = ( $date->isCurrentMonth() ) ? $date->copy()->subMonth( 1 )->month : $date->month;
-//
-//            $startedDate = $date->copy()->setDate( $date->year, $startMonthNumber, 21 );
-//            $endedMonth  = $date->copy()->setDate( $date->year, $endMonthNumber, 20 );
-//
-//        } else {
-//
-//            $startedDate = $date->copy()->setDate( $date->year, $date->copy()->subMonth( 1 )->month, 21 );
-//            $endedMonth  = $date->copy()->setDate( $date->year, $date->month, 20 );
-//
-//        }
+            $startMonthNumber = ( $date->isCurrentMonth() ) ? $date->copy()->subMonth( 2 )->month : $date->copy()->subMonth( 1 )->month;
+            $endMonthNumber   = ( $date->isCurrentMonth() ) ? $date->copy()->subMonth( 1 )->month : $date->month;
+
+            $startedDate = $date->copy()->setDate( $date->year, $startMonthNumber, 21 );
+            $endedMonth  = $date->copy()->setDate( $date->year, $endMonthNumber, 20 );
+
+        } else {
+
+            $startedDate = $date->copy()->setDate( $date->year, $date->copy()->subMonth( 1 )->month, 21 );
+            $endedMonth  = $date->copy()->setDate( $date->year, $date->month, 20 );
+
+        }
 
         if ($startedDate->month > $date->month) {
             $startedDate->year = $startedDate->year - 1;
@@ -226,6 +223,32 @@ if (! function_exists('getAgeTargetDate')) :
                 $target_m = (int)substr($ageKisanDate, 0, 2);
                 $target_d = (int)substr($ageKisanDate, 2, 2);
                 $target_date = $today->setDate($today->year + 1, $target_m, $target_d);
+                return calcAge($birthday, $target_date);
+            }
+        } elseif ($medicalExamSysId == config('constant.medical_exam_sys_id.itec')) {
+
+            if (empty($ageKisanDate)) {
+                return calcAge($birthday, $reservation_date);
+            }
+
+            $targets = explode('/', $ageKisanDate);
+            $m = $targets[0];
+            $d = $targets[1];
+            $y = \Carbon\Carbon::today()->year;
+
+            if ($ageKisanKbn == 1) {
+                if ($m < 4) {
+                    $y = $y + 1;
+                }
+                $target_date = \Carbon\Carbon::create($y, $m, $d);
+                return calcAge($birthday, $target_date);
+            } elseif ($ageKisanKbn == 2) {
+                if ($m < 4) {
+                    $y = $y + 2;
+                } else {
+                    $y = $y + 1;
+                }
+                $target_date = \Carbon\Carbon::create($y, $m, $d);
                 return calcAge($birthday, $target_date);
             }
         }
