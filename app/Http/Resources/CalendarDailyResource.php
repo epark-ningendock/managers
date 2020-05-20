@@ -28,7 +28,7 @@ class CalendarDailyResource extends Resource
                 $uri = $serv->getApiPath($medicalExamSysId).'coursewaku';
                 $params = $serv->createKenshinCourseWakuParam($this, null, null);
                 $client = app()->make(Client::class);
-                $response = $client->request('GET', $uri, [
+                $response = $client->request('POST', $uri, [
                     'headers' => $headers,
                     'json' => $params,
                 ]);
