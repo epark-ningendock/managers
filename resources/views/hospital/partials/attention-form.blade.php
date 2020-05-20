@@ -16,19 +16,19 @@ if(isset($hospital)) {
   foreach ($hospital_option_plans as $hospital_option_plan) {
       if ($hospital_option_plan->option_plan_id == 1) {
         $dr_movie = 1;
-
+        $dr_movie_price = $hospital_option_plan->price ?? 0;
       } elseif ($hospital_option_plan->option_plan_id == 2) {
         $access_movie = 2;
-        $access_movie_price = $hospital_option_plan->price;
+        $access_movie_price = $hospital_option_plan->price ?? 0;
       } elseif ($hospital_option_plan->option_plan_id == 3) {
         $one_min_movie = 3;
-        $one_min_movie_price = $hospital_option_plan->price;
+        $one_min_movie_price = $hospital_option_plan->price ?? 0;
       } elseif ($hospital_option_plan->option_plan_id == 4) {
         $tour_movie = 4;
-        $tour_movie_price = $hospital_option_plan->price;
+        $tour_movie_price = $hospital_option_plan->price ?? 0;
       } elseif ($hospital_option_plan->option_plan_id == 5) {
         $exam_movie = 5;
-        $exam_movie_price = $hospital_option_plan->price;
+        $exam_movie_price = $hospital_option_plan->price ?? 0;
       } elseif ($hospital_option_plan->option_plan_id == 6) {
         $special_page = 6;
         $pay_per_use_price = $hospital_option_plan->pay_per_use_price ?? 0;
@@ -156,7 +156,7 @@ $o_minor_values = collect(old('minor_values'));
                       <input type="hidden" name="dr_movie" value="0"/>
                       <input type="checkbox" id="dr_movie" name="dr_movie" value="1"  @if( $dr_movie == 1) checked @endif />
                       <label for="dr_movie">Dr.動画　（16,500円）</label>
-                  　　<input class="form-control w8em" type="number" id="dr_movie_price" name="dr_movie_price" value="{{ old('dr_movie_price', (isset($dr_movie_price_price) ? $dr_movie_price_price : 0)) }}">円
+                  　　<input class="form-control w8em" type="number" id="dr_movie_price" name="dr_movie_price" value="{{ old('dr_movie_price', (isset($dr_movie_price) ? $dr_movie_price : 0)) }}">円
 
               </div>
 
