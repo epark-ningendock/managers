@@ -148,11 +148,11 @@ $o_minor_values = collect(old('minor_values'));
               </div>
             </div>
           </div>
-          <div class="col-md-12 mt-4">
+          <div class="col-md-16 mt-4">
 
                   <legend>オプションプラン</legend>
 
-              <div class="form-group margin-none py-sm-1">
+              <div class="form-group margin-none py-sm-2">
                       <input type="hidden" name="dr_movie" value="0"/>
                       <input type="checkbox" id="dr_movie" name="dr_movie" value="1"  @if( $dr_movie == 1) checked @endif />
                       <label for="dr_movie">Dr.動画　（16,500円）</label>
