@@ -682,7 +682,7 @@ class CourseInfoNotificationController extends Controller
                     }
 
                     $option = KenshinSysOption::where('kenshin_sys_course_id', $course->id)
-                        ->where('kenshisn_sys_option_no', $kenshin_option['optionNo'])
+                        ->where('kenshin_sys_option_no', $kenshin_option['optionNo'])
                         ->first();
 
                     if (!$option) {
@@ -697,7 +697,7 @@ class CourseInfoNotificationController extends Controller
                     $option->save();
 
                     $option_futan_jouken_list = $kenshin_option['optionFutanJoukenList'];
-                    $option_futan_conditions = OptionFutanCondition::where('kenshin_sys_option_id', $kenshin_option->id)->get();
+                    $option_futan_conditions = OptionFutanCondition::where('kenshin_sys_option_id', $option->id)->get();
                     foreach ($option_futan_conditions as $option_futan_condition) {
                         OptionTargetAge::where('option_futan_condition_id', $option_futan_condition->id)->forceDelete();
                         $option_futan_condition->forceDelete();
