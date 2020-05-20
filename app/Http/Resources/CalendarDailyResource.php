@@ -49,6 +49,7 @@ class CalendarDailyResource extends Resource
                                 'closed_day' => 1];
                         } else {
                             foreach ($waku['wakuInfoList'] as $waku_info) {
+                                Log::info('枠:' .  (int) $waku_info['akiWakuCount']);
                                 $waku_cnt = $waku_cnt + (int) $waku_info['akiWakuCount'];
                             }
 
