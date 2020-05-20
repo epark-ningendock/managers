@@ -63,6 +63,7 @@ class CalendarDailyResource extends Resource
                 }
 
             } catch (\Exception $e) {
+                Log::error('枠取得エラー：' . $e);
                 $from = Carbon::today();
                 $to = Carbon::today()->addMonthsNoOverflow(5)->endOfMonth();
                 $count = $from->diffInDays($to);
