@@ -38,8 +38,6 @@ class CalendarDailyResource extends Resource
                 $riyou_start_date = $this->kenshin_sys_courses[0]->kenshin_sys_riyou_bgn_date->format('Ymd');
                 $riyou_end_date = $this->kenshin_sys_courses[0]->kenshin_sys_riyou_end_date->format('Ymd');
 
-                Log::info('枠取得：' . var_dump($res));
-
                 if (!empty($res)) {
                     $wakus = $res['dayWakuList'];
                     foreach ($wakus as $waku) {
@@ -63,7 +61,6 @@ class CalendarDailyResource extends Resource
                 }
 
             } catch (\Exception $e) {
-                Log::error('枠取得エラー：' . $e);
                 $from = Carbon::today();
                 $to = Carbon::today()->addMonthsNoOverflow(5)->endOfMonth();
                 $count = $from->diffInDays($to);
