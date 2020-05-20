@@ -6,6 +6,7 @@ use App\Services\KenshinRelationService;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Resources\Json\Resource;
+use Illuminate\Support\Facades\Log;
 
 class CalendarDailyResource extends Resource
 {
@@ -36,6 +37,8 @@ class CalendarDailyResource extends Resource
 
                 $riyou_start_date = $this->kenshin_sys_courses[0]->kenshin_sys_riyou_bgn_date->format('Ymd');
                 $riyou_end_date = $this->kenshin_sys_courses[0]->kenshin_sys_riyou_end_date->format('Ymd');
+
+                Log::info('枠取得：' . var_dump($res));
 
                 if (!empty($res)) {
                     $wakus = $res['dayWakuList'];

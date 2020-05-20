@@ -18,17 +18,17 @@ return [
             'api_url'       => 'http://153.122.82.23/kenshinwebeparkapi/',
         ],
         'prod' => [
-            'api_url'       => 'http://153.122.82.23/kenshinwebeparkapi/c',
+            'api_url'       => 'http://153.122.82.23/kenshinwebeparkapi/',
         ],
     ],
 
     // アイテック阪急阪神
     'itec_api' => [
         'stg' => [
-            'api_url'       => 'https://api-proxy-test-1.ss.sevenbank.co.jp/real_transfer_8-3/v1/transfer',
+            'api_url'       => 'http://153.126.178.64/epark/v1/',
         ],
         'prod' => [
-            'api_url'       => 'https://api-proxy-1.ss.sevenbank.co.jp/real_transfer_8/v1/transfer',
+            'api_url'       => 'http://153.126.178.64/epark/v1/',
         ],
     ],
 ];
