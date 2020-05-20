@@ -187,9 +187,15 @@ use App\Enums\ReservationStatus;
         <span class="value-text">{{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}</span>
     </li>
     <li>
-        <small class="text-bold label-text">月額契約料（税抜金額）</small>
+        <small class="text-bold label-text">プラン金額</small>
         <span class="value-text">
-                {{ number_format($billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->monthly_contract_fee )}}円
+               {{ number_format($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee  + $billing->adjustment_price )}}円
+            </span>
+    </li>
+    <li>
+        <small class="text-bold label-text">オプションプラン金額</small>
+        <span class="value-text">
+                {{ number_format($billing->hospital->hospitalOptionPlanPrice($billing->id, $billing->endedDate)}} 円
             </span>
     </li>
     <li>
