@@ -103,7 +103,7 @@ class SearchController extends ApiBaseController
             $course_price_sort = $request->input('course_price_sort');
 
             // 件数のみ返却
-            $search_count = $this->getCourseCount($request, true);
+//            $search_count = $this->getCourseCount($request, true);
             $targets =  $this->getCourseCount($request, false);
             $entities = $this->getCourses($targets, $course_price_sort);
 
@@ -113,7 +113,7 @@ class SearchController extends ApiBaseController
             // 件数要素セット
             $return_count = $entities->count();
             $return_from = $return_flag == 0 ? 1 : $request->input('return_from');
-            $return_to = $return_flag == 0 ? $search_count : $request->input('return_to');
+            $return_to = $return_flag == $request->input('return_to');
             
             $callback = $request->input('callback');
 
