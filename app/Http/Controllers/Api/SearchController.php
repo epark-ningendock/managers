@@ -445,6 +445,7 @@ class SearchController extends ApiBaseController
         });
 
         $query->join('hospital_metas', 'hospitals.id', 'hospital_metas.hospital_id');
+        $query->leftJoin('course_metas', 'courses.id', 'course_metas.course_id');
 
         if (isset($reservation_dt)
             || !empty($request->input('freewords'))
@@ -461,7 +462,7 @@ class SearchController extends ApiBaseController
             || !empty($request->input('hospital_category_code'))
             || !empty($request->input('site_card'))) {
 
-            $query->leftJoin('course_metas', 'courses.id', 'course_metas.course_id');
+
             if (isset($reservation_dt)) {
                 $query->leftJoin('calendars', 'calendars.id', 'courses.calendar_id');
                 $query->leftJoin('calendar_days', function ($join) use ($target) {
