@@ -444,6 +444,8 @@ class SearchController extends ApiBaseController
                 ->whereNotNull('contract_informations.code');
         });
 
+        $query->join('hospital_metas', 'hospitals.id', 'hospital_metas.hospital_id');
+
         if (isset($reservation_dt)
             || !empty($request->input('freewords'))
             || !empty($request->input('pref_cd'))
@@ -458,8 +460,6 @@ class SearchController extends ApiBaseController
             || !empty($request->input('price_lower_limit'))
             || !empty($request->input('hospital_category_code'))
             || !empty($request->input('site_card'))) {
-
-            $query->join('hospital_metas', 'hospitals.id', 'hospital_metas.hospital_id');
 
             $query->leftJoin('course_metas', 'courses.id', 'course_metas.course_id');
             if (isset($reservation_dt)) {
