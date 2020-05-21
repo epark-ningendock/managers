@@ -806,7 +806,7 @@ class SearchController extends ApiBaseController
                 'course_questions',
                 'course_images',
                 'calendar',
-//                'calendar_days',
+                'calendar_days',
                 'hospital',
 //                'hospital_metas',
                 'contract_information',
