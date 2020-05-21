@@ -103,8 +103,16 @@ class SearchController extends ApiBaseController
             $course_price_sort = $request->input('course_price_sort');
 
             // 件数のみ返却
-            $search_count = $this->getCourseCount($request, true);
-            $targets =  $this->getCourseCount($request, false);
+            $query = $this->getCourseCount($request);
+
+
+
+            $search_count = $query->count();
+            // limit/offset
+            $offset = intval($request->input('return_from')-1);
+            $limit = intval($request->input('return_to')) - $offset;
+            $query->offset($offset)->limit($limit);
+            $targets =  $query->get();
             $entities = $this->getCourses($targets, $course_price_sort);
 
             // 結果生成
@@ -416,7 +424,7 @@ class SearchController extends ApiBaseController
      * @param $count_flg
      * @return int
      */
-    private function getCourseCount($request, $count_flg) {
+    private function getCourseCount($request) {
         $reservation_dt = $request->input('reservation_dt');
         $target = null;
         if (isset($reservation_dt)) {
@@ -629,13 +637,6 @@ class SearchController extends ApiBaseController
             $query->where('hospital_metas.credit_card_flg', 1);
         }
 
-        // limit/offset
-        if (!$count_flg && $request->input('return_flag') != 0) {
-            $offset = intval($request->input('return_from')-1);
-            $limit = intval($request->input('return_to')) - $offset;
-            $query->offset($offset)->limit($limit);
-        }
-
         // 並び順
         if($request->input('course_price_sort') == 0) {
             $query->orderBy('courses.price');
@@ -649,13 +650,7 @@ class SearchController extends ApiBaseController
             $query->orderBy('hospitals.pv_count', 'desc');
         }
 
-        $results = $query->get();
-
-        if ($count_flg) {
-            return count($results);
-        }
-
-        return $results;
+        return $query;
     }
 
     /**
