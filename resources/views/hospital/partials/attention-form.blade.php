@@ -16,14 +16,19 @@ if(isset($hospital)) {
   foreach ($hospital_option_plans as $hospital_option_plan) {
       if ($hospital_option_plan->option_plan_id == 1) {
         $dr_movie = 1;
+        $dr_movie_price = $hospital_option_plan->price ?? 0;
       } elseif ($hospital_option_plan->option_plan_id == 2) {
         $access_movie = 2;
+        $access_movie_price = $hospital_option_plan->price ?? 0;
       } elseif ($hospital_option_plan->option_plan_id == 3) {
         $one_min_movie = 3;
+        $one_min_movie_price = $hospital_option_plan->price ?? 0;
       } elseif ($hospital_option_plan->option_plan_id == 4) {
         $tour_movie = 4;
+        $tour_movie_price = $hospital_option_plan->price ?? 0;
       } elseif ($hospital_option_plan->option_plan_id == 5) {
         $exam_movie = 5;
+        $exam_movie_price = $hospital_option_plan->price ?? 0;
       } elseif ($hospital_option_plan->option_plan_id == 6) {
         $special_page = 6;
         $pay_per_use_price = $hospital_option_plan->pay_per_use_price ?? 0;
@@ -143,35 +148,41 @@ $o_minor_values = collect(old('minor_values'));
               </div>
             </div>
           </div>
-          <div class="col-md-12 mt-4">
+          <div class="col-md-16 mt-4">
 
                   <legend>オプションプラン</legend>
 
               <div class="form-group margin-none py-sm-1">
                       <input type="hidden" name="dr_movie" value="0"/>
                       <input type="checkbox" id="dr_movie" name="dr_movie" value="1"  @if( $dr_movie == 1) checked @endif />
-                      <label for="dr_movie">Dr.動画　（5,500円）</label>
+                      <label for="dr_movie">Dr.動画　（16,500円）</label>
+                  　　<input class="form-control w8em" type="number" id="dr_movie_price" name="dr_movie_price" value="{{ old('dr_movie_price', (isset($dr_movie_price) ? $dr_movie_price : 0)) }}">円
+
               </div>
 
                   <div class="form-group margin-none py-sm-1">
                       <input type="hidden" name="access_movie" value="0"/>
                       <input type="checkbox" id="access_movie" class="option-plan-checkbox"  name="access_movie" value="2" @if($access_movie == 2) checked @endif />
-                      <label for="access_movie">アクセス動画　（3,300円）</label>
+                      <label for="access_movie">アクセス動画　（11,000円）</label>
+                      <input class="form-control w8em" type="number" id="access_movie_price" name="access_movie_price" value="{{ old('access_movie_price', (isset($access_movie_price) ? $access_movie_price : 0)) }}">円
                   </div>
                   <div class="form-group margin-none py-sm-1">
                       <input type="hidden" name="one_min_movie" value="0"/>
                       <input type="checkbox" id="one_min_movie" class="option-plan-checkbox"  name="one_min_movie" value="3" @if( $one_min_movie == 3) checked @endif/>
-                      <label for="one_min_movie">院内1分動画　（4,400円）</label>
+                      <label for="one_min_movie">院内1分動画　（5,500円）</label>
+                      <input class="form-control w8em" type="number" id="one_min_movie_price" name="one_min_movie_price" value="{{ old('one_min_movie_price', (isset($one_min_movie_price) ? $one_min_movie_price : 0)) }}">円
                   </div>
                   <div class="form-group margin-none py-sm-1">
                       <input type="hidden" name="tour_movie" value="0"/>
                       <input type="checkbox" id="tour_movie" class="option-plan-checkbox"  name="tour_movie" value="4" @if($tour_movie == 4) checked @endif/>
-                      <label for="tour_movie">院内ツアー　（2,200円）</label>
+                      <label for="tour_movie">院内ツアー　（27,500円）</label>
+                      <input class="form-control w8em" type="number" id="tour_movie_price" name="tour_movie_price" value="{{ old('tour_movie_price', (isset($tour_movie_price) ? $tour_movie_price : 0)) }}">円
                   </div>
                   <div class="form-group margin-none py-sm-1">
                       <input type="hidden" name="exam_movie" value="0"/>
                       <input type="checkbox" id="exam_movie" class="option-plan-checkbox" name="exam_movie" value="5" @if($exam_movie == 5) checked @endif/>
-                      <label for="exam_movie">検査動画　（2,750円）</label>
+                      <label for="exam_movie">検査動画　（4,400円）</label>
+                      <input class="form-control w8em" type="number" id="exam_movie_price" name="exam_movie_price" value="{{ old('exam_movie_price', (isset($exam_movie_price) ? $exam_movie_price : 0)) }}">円
                   </div>
                   <div class="form-group margin-none py-sm-1">
                       <input type="hidden" name="special_page" value="0"/>

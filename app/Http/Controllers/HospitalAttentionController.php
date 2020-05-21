@@ -102,45 +102,50 @@ class HospitalAttentionController extends Controller
                 ]);
 
                 $dr_movie = $request->get('dr_movie');
+                $dr_movie_price = $request->get('dr_movie_price');
                 $access_movie = $request->get('access_movie');
+                $access_movie_price = $request->get('access_movie_price');
                 $one_min_movie = $request->get('one_min_movie');
+                $one_min_movie_price = $request->get('one_min_movie_price');
                 $tour_movie = $request->get('tour_movie');
+                $tour_movie_price = $request->get('tour_movie_price');
                 $exam_movie = $request->get('exam_movie');
+                $exam_movie_price = $request->get('exam_movie_price');
                 $special_page = $request->get('special_page');
                 $pay_per_use_price = $request->get('pay_per_use_price');
 
                 if ($dr_movie == 1) {
-                    $this->registOptionPlan($hospital_id, $dr_movie);
+                    $this->registOptionPlan($hospital_id, $dr_movie_price, $dr_movie);
                 } else {
                     $this->deleteOptionPlan($hospital_id, 1);
                 }
 
                 if ($access_movie == 2) {
-                    $this->registOptionPlan($hospital_id, $access_movie);
+                    $this->registOptionPlan($hospital_id, $access_movie_price, $access_movie);
                 } else {
                     $this->deleteOptionPlan($hospital_id, 2);
                 }
 
                 if ($one_min_movie == 3) {
-                    $this->registOptionPlan($hospital_id, $one_min_movie);
+                    $this->registOptionPlan($hospital_id, $one_min_movie_price, $one_min_movie);
                 } else {
                     $this->deleteOptionPlan($hospital_id, 3);
                 }
 
                 if ($tour_movie == 4) {
-                    $this->registOptionPlan($hospital_id, $tour_movie);
+                    $this->registOptionPlan($hospital_id, $tour_movie_price,  $tour_movie);
                 } else {
                     $this->deleteOptionPlan($hospital_id, 4);
                 }
 
                 if ($exam_movie == 5) {
-                    $this->registOptionPlan($hospital_id, $exam_movie);
+                    $this->registOptionPlan($hospital_id, $exam_movie_price,  $exam_movie);
                 } else {
                     $this->deleteOptionPlan($hospital_id, 5);
                 }
 
                 if ($special_page == 6) {
-                    $this->registOptionPlan($hospital_id, $special_page, $pay_per_use_price);
+                    $this->registOptionPlan($hospital_id, 0, $special_page, $pay_per_use_price);
                 } else {
                     $this->deleteOptionPlan($hospital_id, 6);
                 }
@@ -271,7 +276,7 @@ class HospitalAttentionController extends Controller
      * @param $hospital_id
      * @param $option_plan_id
      */
-    private function registOptionPlan($hospital_id, $option_plan_id, $pay_per_use = null) {
+    private function registOptionPlan($hospital_id, $price, $option_plan_id, $pay_per_use = null) {
         $hospital_option_plan = HospitalOptionPlan::where('hospital_id', $hospital_id)
             ->where('option_plan_id', $option_plan_id)
             ->first();
@@ -283,6 +288,7 @@ class HospitalAttentionController extends Controller
             $hospital_option_plan->option_plan_id = $option_plan_id;
         }
 
+        $hospital_option_plan->price = $price;
         $hospital_option_plan->pay_per_use_price = $pay_per_use;
         $hospital_option_plan->save();
     }

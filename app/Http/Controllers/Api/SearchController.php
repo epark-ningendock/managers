@@ -103,8 +103,14 @@ class SearchController extends ApiBaseController
             $course_price_sort = $request->input('course_price_sort');
 
             // 件数のみ返却
-            $search_count = $this->getCourseCount($request, true);
-            $targets =  $this->getCourseCount($request, false);
+            $query = $this->getCourseCount($request);
+
+            $search_count = $query->count();
+            // limit/offset
+            $offset = intval($request->input('return_from')-1);
+            $limit = intval($request->input('return_to')) - $offset;
+            $query->offset($offset)->limit($limit);
+            $targets =  $query->get();
             $entities = $this->getCourses($targets, $course_price_sort);
 
             // 結果生成
@@ -416,7 +422,7 @@ class SearchController extends ApiBaseController
      * @param $count_flg
      * @return int
      */
-    private function getCourseCount($request, $count_flg) {
+    private function getCourseCount($request) {
         $reservation_dt = $request->input('reservation_dt');
         $target = null;
         if (isset($reservation_dt)) {
@@ -437,203 +443,214 @@ class SearchController extends ApiBaseController
             $join->on('hospitals.id', 'contract_informations.hospital_id')
                 ->whereNotNull('contract_informations.code');
         });
-        $query->join('hospital_metas', 'hospitals.id', 'hospital_metas.hospital_id');
 
-        $query->leftJoin('course_metas', 'courses.id', 'course_metas.course_id');
-        if (isset($reservation_dt)) {
-            $query->leftJoin('calendars', 'calendars.id', 'courses.calendar_id');
-            $query->leftJoin('calendar_days', function ($join) use ($target) {
-                $join->on('calendars.id', 'calendar_days.calendar_id')
-                    ->where('reservation_frames', '>', 'reservation_count')
-                    ->where('is_reservation_acceptance', 0)
-                    ->whereDate('calendar_days.date', $target)
-                    ->where('is_holiday', 0);
-            });
-        }
         $query->where('courses.web_reception', WebReception::ACCEPT);
         $query->where('courses.is_category', 0);
         $query->where('publish_start_date', '<=', $target);
         $query ->where('publish_end_date', '>=', $target);
 
-        if (isset($reservation_dt)) {
-            $query->whereRaw('? >= DATE_ADD(CURRENT_DATE(), INTERVAL (30 * (reception_start_date DIV 1000) + MOD(reception_start_date, 1000)) DAY) ', [$target]);
-            $query->whereDate('calendar_days.date', $target);
-        }
- 
-        if (!empty($request->input('freewords'))) {
-            $freeword_str = str_replace('　', ' ', $request->input('freewords'));
-            $freewords = explode(' ', $freeword_str);
+        if (isset($reservation_dt)
+            || !empty($request->input('freewords'))
+            || !empty($request->input('pref_cd'))
+            || !empty($request->input('district_no'))
+            || !empty($request->input('rail_no'))
+            || !empty($request->input('station_no'))
+            || !empty($request->input('course_category_code'))
+            || !empty($request->input('exam_type'))
+            || !empty($request->input('disease'))
+            || !empty($request->input('part'))
+            || !empty($request->input('price_upper_limit'))
+            || !empty($request->input('price_lower_limit'))
+            || !empty($request->input('hospital_category_code'))
+            || !empty($request->input('site_card'))) {
 
-            foreach($freewords as $freeword) {
-                $query->where(function($q) use($freeword) {
-                    $q->orWhere('hospital_metas.hospital_name', 'like', '%'.$freeword.'%');
-                    $q->orWhere('hospital_metas.course_name', 'like', '%'.$freeword.'%');
-                    $q->orWhere('hospital_metas.area_station', 'like', '%'.$freeword.'%');
-                    $q->orWhere('hospital_metas.category_exam_name', 'like', '%'.$freeword.'%');
-//                    $q->orWhere('course_metas.category_disease_name', 'like', '%'.$freeword.'%');
+            $query->join('hospital_metas', 'hospitals.id', 'hospital_metas.hospital_id');
+            $query->leftJoin('course_metas', 'courses.id', 'course_metas.course_id');
+            
+            if (isset($reservation_dt)) {
+                $query->leftJoin('calendars', 'calendars.id', 'courses.calendar_id');
+                $query->leftJoin('calendar_days', function ($join) use ($target) {
+                    $join->on('calendars.id', 'calendar_days.calendar_id')
+                        ->where('reservation_frames', '>', 'reservation_count')
+                        ->where('is_reservation_acceptance', 0)
+                        ->whereDate('calendar_days.date', $target)
+                        ->where('is_holiday', 0);
                 });
             }
-        }
 
-        // 都道府県コード
-        $pref_cd = $request->input('pref_cd');
-        if (isset($pref_cd)) {
-            $query->where('prefecture_id', $pref_cd);
-        };
-
-        // 市区町村コード
-        $district_no = $request->input('district_no');
-        if (isset($district_no)) {
-            $districts = explode(',', $district_no);
-            $query->whereIn('hospital_metas.district_code', $districts);
-        };
-
-        // 路線コード
-        $rail_no = $request->input('rail_no');
-        if (isset($rail_no)) {
-            if (is_array($rail_no)) {
-                $rails = $rail_no;
-            } else {
-                $rails = explode(',', $rail_no);
+            if (isset($reservation_dt)) {
+                $query->whereRaw('? >= DATE_ADD(CURRENT_DATE(), INTERVAL (30 * (reception_start_date DIV 1000) + MOD(reception_start_date, 1000)) DAY) ', [$target]);
+                $query->whereDate('calendar_days.date', $target);
             }
 
-            $query->where(function ($q) use ($rails) {
-                $q->whereIn('hospitals.rail1', $rails)
-                    ->orWhereIn('hospitals.rail2', $rails)
-                    ->orWhereIn('hospitals.rail3', $rails)
-                    ->orWhereIn('hospitals.rail4', $rails)
-                    ->orWhereIn('hospitals.rail5', $rails);
-            });
-        };
+            if (!empty($request->input('freewords'))) {
+                $freeword_str = str_replace('　', ' ', $request->input('freewords'));
+                $freewords = explode(' ', $freeword_str);
 
-        // 駅コード
-        $station_no = $request->input('station_no');
-        if (isset($station_no)) {
-            $stations = explode(',', $station_no);
-            $query->where(function ($q) use ($stations) {
-                $q->whereIn('hospitals.station1', $stations)
-                    ->orWhereIn('hospitals.station2', $stations)
-                    ->orWhereIn('hospitals.station3', $stations)
-                    ->orWhereIn('hospitals.station4', $stations)
-                    ->orWhereIn('hospitals.station5', $stations);
-            });
-        };
-
-        // 食事あり
-        $meal_flg = false;
-        // ペア
-        $pear_flg = false;
-        // 女性医師
-        $female_doctor_flg = false;
-        // コース分類コード
-        $course_category = $request->input('course_category_code');
-
-        if (isset($course_category)) {
-            $course_categories = explode(',', $course_category);
-            foreach ($course_categories as $code) {
-                if ($code == '256') {
-                    $meal_flg = true;
-                }
-                if ($code == '132') {
-                    $pear_flg = true;
-                }
-                if ($code == '126') {
-                    $female_doctor_flg = true;
+                foreach($freewords as $freeword) {
+                    $query->where(function($q) use($freeword) {
+                        $q->orWhere('hospital_metas.hospital_name', 'like', '%'.$freeword.'%');
+                        $q->orWhere('hospital_metas.course_name', 'like', '%'.$freeword.'%');
+                        $q->orWhere('hospital_metas.area_station', 'like', '%'.$freeword.'%');
+                        $q->orWhere('hospital_metas.category_exam_name', 'like', '%'.$freeword.'%');
+//                    $q->orWhere('course_metas.category_disease_name', 'like', '%'.$freeword.'%');
+                    });
                 }
             }
-        }
 
-        if ($meal_flg) {
-            $query->where('course_metas.meal_flg', 1);
-        }
-        if ($pear_flg) {
-            $query->where('course_metas.pear_flg', 1);
-        }
-        if ($female_doctor_flg) {
-            $query->where('course_metas.female_doctor_flg', 1);
-        }
+            // 都道府県コード
+            $pref_cd = $request->input('pref_cd');
+            if (isset($pref_cd)) {
+                $query->where('prefecture_id', $pref_cd);
+            };
 
-        // 検査種別
-        $exam_types = $request->input('exam_type');
-        if (isset($exam_types)) {
-            $exam_types = explode(',', $exam_types);
-            $query->where(function ($q) use ($exam_types, $meal_flg, $pear_flg, $female_doctor_flg) {
-                $q->where('course_metas.category_exam', 'like', '%' . sprintf('%03d', $exam_types[0]) . '%' );
-                for($i = 1; $i < count($exam_types); $i++) {
-                    $q->where('course_metas.category_exam', 'like', '%' . sprintf('%03d', $exam_types[$i]) . '%' );
-                }
-            });
-        }
+            // 市区町村コード
+            $district_no = $request->input('district_no');
+            if (isset($district_no)) {
+                $districts = explode(',', $district_no);
+                $query->whereIn('hospital_metas.district_code', $districts);
+            };
 
-        // 対象となる疾患
-        $diseases = $request->input('disease');
-        if (isset($diseases)) {
-            $diseases = explode(',', $diseases);
-            $query->where(function ($q) use ($diseases, $meal_flg, $pear_flg, $female_doctor_flg) {
-                $q->where('course_metas.category_disease', 'like', '%' . sprintf('%03d', $diseases[0]) . '%' );
-                for($i = 1; $i < count($diseases); $i++) {
-                    $q->where('course_metas.category_disease', 'like', '%' . sprintf('%03d', $diseases[$i]) . '%' );
+            // 路線コード
+            $rail_no = $request->input('rail_no');
+            if (isset($rail_no)) {
+                if (is_array($rail_no)) {
+                    $rails = $rail_no;
+                } else {
+                    $rails = explode(',', $rail_no);
                 }
-            });
-        }
 
-        // 気になる部位
-        $parts = $request->input('part');
-        if (isset($parts)) {
-            $parts = explode(',', $parts);
-            $query->where(function ($q) use ($parts, $meal_flg, $pear_flg, $female_doctor_flg) {
-                $q->where('course_metas.category_part', 'like', '%' . sprintf('%03d', $parts[0]) . '%' );
-                for($i = 1; $i < count($parts); $i++) {
-                    $q->where('course_metas.category_part', 'like', '%' . sprintf('%03d', $parts[$i]) . '%' );
-                }
-            });
-        }
+                $query->where(function ($q) use ($rails) {
+                    $q->whereIn('hospitals.rail1', $rails)
+                        ->orWhereIn('hospitals.rail2', $rails)
+                        ->orWhereIn('hospitals.rail3', $rails)
+                        ->orWhereIn('hospitals.rail4', $rails)
+                        ->orWhereIn('hospitals.rail5', $rails);
+                });
+            };
 
-        // コース金額(上限)
-        $price_upper_limit = $request->input('price_upper_limit');
-        if (isset($price_upper_limit)) {
-            $query->where('courses.price', '<=', $price_upper_limit);
-        }
+            // 駅コード
+            $station_no = $request->input('station_no');
+            if (isset($station_no)) {
+                $stations = explode(',', $station_no);
+                $query->where(function ($q) use ($stations) {
+                    $q->whereIn('hospitals.station1', $stations)
+                        ->orWhereIn('hospitals.station2', $stations)
+                        ->orWhereIn('hospitals.station3', $stations)
+                        ->orWhereIn('hospitals.station4', $stations)
+                        ->orWhereIn('hospitals.station5', $stations);
+                });
+            };
 
-        // コース金額(下限)
-        $price_lower_limit = $request->input('price_lower_limit');
-        if (isset($price_lower_limit)) {
-            $query->where('courses.price', '>=', $price_lower_limit);
-        }
+            // 食事あり
+            $meal_flg = false;
+            // ペア
+            $pear_flg = false;
+            // 女性医師
+            $female_doctor_flg = false;
+            // コース分類コード
+            $course_category = $request->input('course_category_code');
 
-        // 医療機関カテゴリ
-        $hospital_category_code = $request->input('hospital_category_code');
-        if (!empty($request->input('hospital_category_code'))) {
-            $hospital_categories = explode(',', $hospital_category_code);
-            foreach ($hospital_categories as $code) {
-                if ($code == '5') {
-                    $query->where('hospital_metas.credit_card_flg', 1);
-                }
-                if ($code == '1') {
-                    $query->where('hospital_metas.parking_flg', 1);
-                }
-                if ($code == '3') {
-                    $query->where('hospital_metas.pick_up_flg', 1);
-                }
-                if ($code == '16') {
-                    $query->where('hospital_metas.children_flg', 1);
-                }
-                if ($code == '19') {
-                    $query->where('hospital_metas.dedicate_floor_flg', 1);
+            if (isset($course_category)) {
+                $course_categories = explode(',', $course_category);
+                foreach ($course_categories as $code) {
+                    if ($code == '256') {
+                        $meal_flg = true;
+                    }
+                    if ($code == '132') {
+                        $pear_flg = true;
+                    }
+                    if ($code == '126') {
+                        $female_doctor_flg = true;
+                    }
                 }
             }
-        }
 
-        // 現地カード対応
-        if (!empty($request->input('site_card'))) {
-            $query->where('hospital_metas.credit_card_flg', 1);
-        }
+            if ($meal_flg) {
+                $query->where('course_metas.meal_flg', 1);
+            }
+            if ($pear_flg) {
+                $query->where('course_metas.pear_flg', 1);
+            }
+            if ($female_doctor_flg) {
+                $query->where('course_metas.female_doctor_flg', 1);
+            }
 
-        // limit/offset
-        if (!$count_flg && $request->input('return_flag') != 0) {
-            $offset = intval($request->input('return_from')-1);
-            $limit = intval($request->input('return_to')) - $offset;
-            $query->offset($offset)->limit($limit);
+            // 検査種別
+            $exam_types = $request->input('exam_type');
+            if (isset($exam_types)) {
+                $exam_types = explode(',', $exam_types);
+                $query->where(function ($q) use ($exam_types, $meal_flg, $pear_flg, $female_doctor_flg) {
+                    $q->where('course_metas.category_exam', 'like', '%' . sprintf('%03d', $exam_types[0]) . '%' );
+                    for($i = 1; $i < count($exam_types); $i++) {
+                        $q->where('course_metas.category_exam', 'like', '%' . sprintf('%03d', $exam_types[$i]) . '%' );
+                    }
+                });
+            }
+
+            // 対象となる疾患
+            $diseases = $request->input('disease');
+            if (isset($diseases)) {
+                $diseases = explode(',', $diseases);
+                $query->where(function ($q) use ($diseases, $meal_flg, $pear_flg, $female_doctor_flg) {
+                    $q->where('course_metas.category_disease', 'like', '%' . sprintf('%03d', $diseases[0]) . '%' );
+                    for($i = 1; $i < count($diseases); $i++) {
+                        $q->where('course_metas.category_disease', 'like', '%' . sprintf('%03d', $diseases[$i]) . '%' );
+                    }
+                });
+            }
+
+            // 気になる部位
+            $parts = $request->input('part');
+            if (isset($parts)) {
+                $parts = explode(',', $parts);
+                $query->where(function ($q) use ($parts, $meal_flg, $pear_flg, $female_doctor_flg) {
+                    $q->where('course_metas.category_part', 'like', '%' . sprintf('%03d', $parts[0]) . '%' );
+                    for($i = 1; $i < count($parts); $i++) {
+                        $q->where('course_metas.category_part', 'like', '%' . sprintf('%03d', $parts[$i]) . '%' );
+                    }
+                });
+            }
+
+            // コース金額(上限)
+            $price_upper_limit = $request->input('price_upper_limit');
+            if (isset($price_upper_limit)) {
+                $query->where('courses.price', '<=', $price_upper_limit);
+            }
+
+            // コース金額(下限)
+            $price_lower_limit = $request->input('price_lower_limit');
+            if (isset($price_lower_limit)) {
+                $query->where('courses.price', '>=', $price_lower_limit);
+            }
+
+            // 医療機関カテゴリ
+            $hospital_category_code = $request->input('hospital_category_code');
+            if (!empty($request->input('hospital_category_code'))) {
+                $hospital_categories = explode(',', $hospital_category_code);
+                foreach ($hospital_categories as $code) {
+                    if ($code == '5') {
+                        $query->where('hospital_metas.credit_card_flg', 1);
+                    }
+                    if ($code == '1') {
+                        $query->where('hospital_metas.parking_flg', 1);
+                    }
+                    if ($code == '3') {
+                        $query->where('hospital_metas.pick_up_flg', 1);
+                    }
+                    if ($code == '16') {
+                        $query->where('hospital_metas.children_flg', 1);
+                    }
+                    if ($code == '19') {
+                        $query->where('hospital_metas.dedicate_floor_flg', 1);
+                    }
+                }
+            }
+
+            // 現地カード対応
+            if (!empty($request->input('site_card'))) {
+                $query->where('hospital_metas.credit_card_flg', 1);
+            }
         }
 
         // 並び順
@@ -649,13 +666,7 @@ class SearchController extends ApiBaseController
             $query->orderBy('hospitals.pv_count', 'desc');
         }
 
-        $results = $query->get();
-
-        if ($count_flg) {
-            return count($results);
-        }
-
-        return $results;
+        return $query;
     }
 
     /**
@@ -797,7 +808,7 @@ class SearchController extends ApiBaseController
 
         $query = Course::whereIn('id', $courses->pluck('id'))
             ->with([
-                'course_metas',
+//                'course_metas',
                 'course_details' => function ($query) {
                     $query->whereIn('major_classification_id', [1, 2, 3, 4, 5, 6, 11, 13, 24])->with(['minor_classification']);
                 },
@@ -806,9 +817,9 @@ class SearchController extends ApiBaseController
                 'course_questions',
                 'course_images',
                 'calendar',
-//                'calendar_days',
+                'calendar_days',
                 'hospital',
-                'hospital_metas',
+//                'hospital_metas',
                 'contract_information',
             ]);
         if($course_price_sort == 0) {

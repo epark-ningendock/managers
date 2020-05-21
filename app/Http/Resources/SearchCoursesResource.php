@@ -6,7 +6,7 @@ use App\CalendarDay;
 use App\Station;
 use Carbon\Carbon;
 
-class SearchCoursesResource extends CoursesBaseResource
+class SearchCoursesResource extends SearchCoursesBaseResource
 {
     /**
      * 検査コース一覧検索 リソースクラス

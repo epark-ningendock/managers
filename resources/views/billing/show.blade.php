@@ -61,7 +61,7 @@
                             @foreach($billing->hospital->hospitalOptionPlan($billing->id, $endedDate) as $hospital_plan)
                                 <p>
                                     　{{ $hospital_plan->option_plan->option_plan_name ?? '' }}　
-                                    {{number_format($hospital_plan->option_plan->option_plan_price + $hospital_plan->billing_option_plans->adjustment_price)}}円　
+                                    {{number_format($hospital_plan->price + $hospital_plan->billing_option_plans->adjustment_price)}}円　
                                 </p>
 
                             @endforeach
@@ -75,11 +75,11 @@
                             @foreach($billing->hospital->hospitalOptionPlan($billing->id, $endedDate) as $hospital_plan)
                                 <p>
                                     　{{ $hospital_plan->option_plan->option_plan_name ?? '' }}　
-                                    {{ number_format($hospital_plan->option_plan->option_plan_price) }}円　
+                                    {{ number_format($hospital_plan->price) }}円　
                                     オプションプラン調整金額
                                     <input type="text" id="optionplanadjustmentprice_{{$hospital_plan->option_plan_id}}" name="optionplanadjustmentprice_{{$hospital_plan->option_plan_id}}" value="{{$hospital_plan->optionPlanAdjustmentPrice($billing->id)}}">　
                                     オプションプラン請求金額
-                                    {{number_format($hospital_plan->option_plan->option_plan_price + $hospital_plan->optionPlanAdjustmentPrice($billing->id))}}円
+                                    {{number_format($hospital_plan->price + $hospital_plan->optionPlanAdjustmentPrice($billing->id))}}円
                                 </p>
 
                             @endforeach

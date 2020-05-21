@@ -382,7 +382,7 @@ class Hospital extends Model
             }
 
             $optionPlanPrice = $optionPlanPrice
-                + $hospital_option_plan->option_plan->option_plan_price
+                + $hospital_option_plan->price
                 + $billing_adjustment_price;
         }
 

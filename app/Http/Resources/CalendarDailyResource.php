@@ -28,7 +28,7 @@ class CalendarDailyResource extends Resource
                 $uri = $serv->getApiPath($medicalExamSysId).'coursewaku';
                 $params = $serv->createKenshinCourseWakuParam($this, null, null);
                 $client = app()->make(Client::class);
-                $response = $client->request('GET', $uri, [
+                $response = $client->request('POST', $uri, [
                     'headers' => $headers,
                     'json' => $params,
                 ]);
@@ -37,8 +37,6 @@ class CalendarDailyResource extends Resource
 
                 $riyou_start_date = $this->kenshin_sys_courses[0]->kenshin_sys_riyou_bgn_date->format('Ymd');
                 $riyou_end_date = $this->kenshin_sys_courses[0]->kenshin_sys_riyou_end_date->format('Ymd');
-
-                Log::info('枠取得：' . var_dump($res));
 
                 if (!empty($res)) {
                     $wakus = $res['dayWakuList'];
@@ -51,6 +49,7 @@ class CalendarDailyResource extends Resource
                                 'closed_day' => 1];
                         } else {
                             foreach ($waku['wakuInfoList'] as $waku_info) {
+                                Log::info('枠:' .  (int) $waku_info['akiWakuCount']);
                                 $waku_cnt = $waku_cnt + (int) $waku_info['akiWakuCount'];
                             }
 
