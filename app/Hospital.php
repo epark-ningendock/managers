@@ -380,7 +380,6 @@ class Hospital extends Model
                 && isset($hospital_option_plan->billing_option_plans->adjustment_price)) {
                 $billing_adjustment_price = $hospital_option_plan->billing_option_plans->adjustment_price;
             }
-
             $optionPlanPrice = $optionPlanPrice
                 + $hospital_option_plan->price
                 + $billing_adjustment_price;
