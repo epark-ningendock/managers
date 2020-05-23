@@ -69,6 +69,7 @@ class SearchCoursesBaseResource extends CourseBaseResource
             'district_name' => $h->districtCode->name,
             'address1' => $h->address1 ?? '',
             'address2' => $h->address2 ?? '',
+            'tel_ppc'=> $this->paycall ?? '',
             'stations' => $h->getStationInfo()
         ];
     }
