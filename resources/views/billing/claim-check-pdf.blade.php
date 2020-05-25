@@ -195,7 +195,7 @@ use App\Enums\ReservationStatus;
     <li>
         <small class="text-bold label-text">オプションプラン金額</small>
         <span class="value-text">
-                {{ number_format($billing->hospital->hospitalOptionPlanPrice($billing->id, $billing->endedDate)}} 円
+                {{ number_format($billing->hospital->hospitalOptionPlanPrice($billing->id, $billing->endedDate)) }} 円
             </span>
     </li>
     <li>
