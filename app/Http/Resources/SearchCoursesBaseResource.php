@@ -351,7 +351,7 @@ class SearchCoursesBaseResource extends CourseBaseResource
      */
     protected function getCourseImg($course_images)
     {
-        if (!isset($course_images)) return [];
+        if (!isset($course_images)) return ['url' => '', 'alt' => ''];
 
         foreach ($course_images as $course_image) {
             if ($course_image->type == '0') {
@@ -362,7 +362,7 @@ class SearchCoursesBaseResource extends CourseBaseResource
             }
         }
 
-        return [];
+        return ['url' => '', 'alt' => ''];
     }
 
     /**
