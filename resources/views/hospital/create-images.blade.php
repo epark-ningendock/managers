@@ -1,7 +1,7 @@
 @extends('layouts.hospital_image_form')
 
 @section('content_header')
-    <h1>画像登録 {{ request()->session()->get('hospital_name') }}</h1>
+    <h1>画像登録 - {{ $hospital->name }}</h1>
 @stop
 @section('form')
     {!! Form::open(['url' => route('hospital.image.store', $hospital_id), 'files' => true]) !!}
@@ -15,4 +15,3 @@
     {!! Form::close() !!}
 
 @stop
-
