@@ -344,9 +344,13 @@ class ReservationService
         $reception_end_date = Carbon::today();
         $reception_end_date->addMonthsNoOverflow($end_month);
         $reception_end_date->addDays($end_day);
+        $reservation_date = Carbon::createFromFormat('Y-m-d', $request->input('reservation_date'));
         if ($reception_start_date > $reservation_date
             || $reception_end_date < $reservation_date
         ) {
+            \Illuminate\Support\Facades\Log::info('カレンダー確認(受付開始日)：' . $reception_start_date);
+            \Illuminate\Support\Facades\Log::info('カレンダー確認(受付終了日)：' . $reception_end_date);
+            \Illuminate\Support\Facades\Log::info('予約日：' . $reservation_date);
             return 3;
         }
 

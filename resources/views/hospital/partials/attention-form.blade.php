@@ -12,6 +12,7 @@ if(isset($hospital)) {
   $tour_movie = 0;
   $exam_movie = 0;
   $special_page = 0;
+  $special_page_price = 0;
   $pay_per_use_price = 0;
   foreach ($hospital_option_plans as $hospital_option_plan) {
       if ($hospital_option_plan->option_plan_id == 1) {
@@ -31,6 +32,7 @@ if(isset($hospital)) {
         $exam_movie_price = $hospital_option_plan->price ?? 0;
       } elseif ($hospital_option_plan->option_plan_id == 6) {
         $special_page = 6;
+        $special_page_price = $hospital_option_plan->price ?? 0;
         $pay_per_use_price = $hospital_option_plan->pay_per_use_price ?? 0;
       }
   }
@@ -157,7 +159,6 @@ $o_minor_values = collect(old('minor_values'));
                       <input type="checkbox" id="dr_movie" name="dr_movie" value="1"  @if( $dr_movie == 1) checked @endif />
                       <label for="dr_movie">Dr.動画　（16,500円）</label>
                   　　<input class="form-control w8em" type="number" id="dr_movie_price" name="dr_movie_price" value="{{ old('dr_movie_price', (isset($dr_movie_price) ? $dr_movie_price : 0)) }}">円
-
               </div>
 
                   <div class="form-group margin-none py-sm-1">
@@ -188,6 +189,8 @@ $o_minor_values = collect(old('minor_values'));
                       <input type="hidden" name="special_page" value="0"/>
                       <input type="checkbox" id="special_page" class="option-plan-checkbox" name="special_page" value="6" @if($special_page == 6) checked @endif/>
                       <label for="special_page">特集ページ　（11,000円）</label>
+                      <label class="mr-2" for="special_page_price" style="margin-left: 12px;">月額料金</label>
+                      <input class="form-control w8em" type="number" id="special_page_price" name="special_page_price" value="{{ old('special_page_price', (isset($special_page_price) ? $special_page_price : 0)) }}">円
                       <label class="mr-2" for="pay_per_use_price" style="margin-left: 12px;">1回当たりの料金</label>
                       <input class="form-control w8em" type="number" id="pay_per_use_price" name="pay_per_use_price" value="{{ old('pay_per_use_price', (isset($pay_per_use_price) ? $pay_per_use_price : 0)) }}">円
                   </div>
