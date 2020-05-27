@@ -344,6 +344,7 @@ class ReservationService
         $reception_end_date = Carbon::today();
         $reception_end_date->addMonthsNoOverflow($end_month);
         $reception_end_date->addDays($end_day);
+        $reservation_date = Carbon::createFromFormat('Y-m-d', $request->input('reservation_date'));
         if ($reception_start_date > $reservation_date
             || $reception_end_date < $reservation_date
         ) {
