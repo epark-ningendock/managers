@@ -112,6 +112,7 @@ class HospitalAttentionController extends Controller
                 $exam_movie = $request->get('exam_movie');
                 $exam_movie_price = $request->get('exam_movie_price');
                 $special_page = $request->get('special_page');
+                $special_page_price = $request->get('special_page_price');
                 $pay_per_use_price = $request->get('pay_per_use_price');
 
                 if ($dr_movie == 1) {
@@ -145,7 +146,7 @@ class HospitalAttentionController extends Controller
                 }
 
                 if ($special_page == 6) {
-                    $this->registOptionPlan($hospital_id, 0, $special_page, $pay_per_use_price);
+                    $this->registOptionPlan($hospital_id, $special_page_price, $special_page, $pay_per_use_price);
                 } else {
                     $this->deleteOptionPlan($hospital_id, 6);
                 }
