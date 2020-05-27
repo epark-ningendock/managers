@@ -61,7 +61,11 @@
                             @foreach($billing->hospital->hospitalOptionPlan($billing->id, $endedDate) as $hospital_plan)
                                 <p>
                                     　{{ $hospital_plan->option_plan->option_plan_name ?? '' }}　
-                                    {{number_format($hospital_plan->price + $hospital_plan->billing_option_plans->adjustment_price)}}円　
+                                    @if (!empty($hospital_plan->billing_option_plans)))
+                                        {{number_format($hospital_plan->price + $hospital_plan->billing_option_plans->adjustment_price)}}円
+                                    　@else
+                                        {{number_format($hospital_plan->price)}}円
+                                      @endif
                                 </p>
 
                             @endforeach
