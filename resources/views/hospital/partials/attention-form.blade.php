@@ -259,6 +259,28 @@ $o_minor_values = collect(old('minor_values'));
               </div>
             </div>
           </div>
+
+          <div class="col-md-12 mt-4">
+              <div class="form-group py-sm-1 " style="margin-left: 0;">
+                  <legend>支払い方法</legend>
+                  <div class="form-group @if( $errors->has('payment_type'))  has-error @endif">
+                      <div class="ml-12 radio">
+                          <div class="form-group mt-3">
+                              <input type="radio" name="payment_type" value="0" id="payment_type_0"
+                                     @if( old('payment_type', $hospital->payment_type) == 0 ) checked @endif>
+                              <label class="radio-label" for="payment_type_0">振込</label>
+                          </div>
+                          <div class="form-group mt-3">
+                              <input type="radio" name="payment_type" value="1" id="payment_type_1"
+                                     @if( old('payment_type', $hospital->payment_type) == 1 ) checked @endif>
+                              <label class="radio-label" for="payment_type_1">引き落とし</label>
+                          </div>
+                      </div>
+                      @if ($errors->has('payment_type')) <p class="help-block" style="text-align: center !important;">{{ $errors->first('payment_type') }}</p> @endif
+                  </div>
+              </div>
+          </div>
+
         </div>
       </div>
   </div>
