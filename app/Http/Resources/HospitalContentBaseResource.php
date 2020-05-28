@@ -196,8 +196,8 @@ class HospitalContentBaseResource extends Resource
         $results = [];
         foreach ($categories as $i) {
             $url = $this->_filepath($i->hospital_image);
-            $alt = $i->hospital_image->memo1 ?? '';
-            $desc = $i->hospital_image->memo1 ?? '';
+            $alt = $i->hospital_image->memo2 ?? '';
+            $desc = $i->hospital_image->memo2 ?? '';
             $img_pos = $i->file_location_no ?? '';
             $results[] = [
                 'img_url' => $url,

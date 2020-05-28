@@ -89,6 +89,7 @@ class HospitalAttentionController extends Controller
                     $hospital->hplink_price = $request->get('hplink_price_monthly');
                 }
                 $hospital->is_pre_account = $request->get('is_pre_account');
+                $hospital->payment_type = $request->get('payment_type');
                 $hospital->save();
 
                 HospitalPlan::updateOrCreate([
