@@ -229,10 +229,12 @@ class BillingController extends Controller {
 
         if ( $hospitalEmailSetting ) {
 
+            $payment_info = self::create_payment_info();
             $pdf =  PDF::loadView( 'billing.claim-check-pdf', [
                 'billing' => $billing,
                 'startedDate'     => $dateFilter['startedDate'],
                 'endedDate'      => $dateFilter['endedDate'],
+                'payment_info'  => $payment_info,
             ] )->setPaper('legal', 'landscape');
 
             $confirmMailComposition = [
@@ -281,6 +283,16 @@ class BillingController extends Controller {
             }
         }
 	}
+
+	private function create_payment_info() {
+	    $l1 = '【振込先】 銀行名：りそな銀行';
+	    $l2 = '支店名：市ヶ谷支店';
+	    $l3 = '預金種目：普通預金';
+	    $l4 = '口座番号：1659966';
+	    $l5 = '口座名義：エンパワーヘルスケア(カ';
+
+	    return [$l1, $l2, $l3, $l4, $l5];
+    }
 
 	public function claimEmailCheckForHospital($request, $billing, $attributes = [])
 	    {
