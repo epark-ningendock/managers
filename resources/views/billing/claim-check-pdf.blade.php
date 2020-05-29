@@ -272,18 +272,20 @@
 
     </table>
 
+    <br>
+    @if ($billing->hospital->payment_type == 0)
+        【振込先】 銀行名：りそな銀行　　　　　　　　<br>
+        　　　　　　支店名：市ヶ谷支店　　　　　 　　<br>
+        　　　　　　預金種目：普通預金　　　　 　　　<br>
+        　　　　　　口座番号：1659966　　　　　　 　<br>
+        　　　　　　口座名義：エンパワーヘルスケア(カ<br>
+    @elseif($billing->hospital->payment_type == 1)
+        【引落名義】 エンパワーヘルスケア 株式会社　　<br>
+        　　　　　　 エンパワーヘルスケア（カ　　 　　<br>
+    @endif
+
 </div>
-<br>
-@if ($billing->hospital->payment_type == 0)
-    {{$payment_info[0] }}　　　　　　　<br>
-    　　　　　　{{$payment_info[1] }}　　　　　 　　<br>
-    　　　　　　{{$payment_info[2] }}　　　　 　　　<br>
-    　　　　　　{{$payment_info[3] }}　　　　　　 　<br>
-    　　　　　　{{$payment_info[4] }}<br>
-@elseif($billing->hospital->payment_type == 1)
-    【引落名義】 エンパワーヘルスケア 株式会社　　<br>
-    　　　　　　 エンパワーヘルスケア（カ　　 　　<br>
-@endif
+
 
 </body>
 </html>
