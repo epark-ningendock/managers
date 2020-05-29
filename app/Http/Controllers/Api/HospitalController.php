@@ -42,11 +42,13 @@ class HospitalController extends ApiBaseController
     {
         try {
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
-
+            $hospital = Hospital::find($hospital_id);
+            $sex = $this->convert_sex($hospital->medical_examination_system_id, $request->input('sex'));
+            $request->sex = $sex;
             $hospital = $this->getHospitalData($hospital_id, $request);
             if (!empty($request->input('sex'))) {
                 $hospital->setKenshinRelation(true,
-                    $request->input('sex'),
+                    $sex,
                     $request->input('birth'),
                     $request->input('honnin_kbn'));
             }
@@ -71,9 +73,10 @@ class HospitalController extends ApiBaseController
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
             $hospital = $this->getHospitalData($hospital_id, $request);
+            $sex = $this->convert_sex($hospital->medical_examination_system_id, $request->input('sex'));
             if (!empty($request->input('sex'))) {
                 $hospital->setKenshinRelation(true,
-                    $request->input('sex'),
+                    $sex,
                     $request->input('birth'),
                     $request->input('honnin_kbn'));
             }
@@ -260,7 +263,7 @@ class HospitalController extends ApiBaseController
                         ->where('kenshin_sys_riyou_end_date', '>=', $today);
                 },
                 'courses.kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
-                    $q->whereIn('sex', [$request->input('sex'), GenderTak::ALL])
+                    $q->whereIn('sex', [$request->sex, GenderTak::ALL])
                     ->whereIn('honnin_kbn', [$request->input('honnin_kbn'), HonninKbn::ALL]);
 
             },
