@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 @php
-use App\Enums\ReservationStatus;
+    use App\Enums\ReservationStatus;
 @endphp
 <head>
 
