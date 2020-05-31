@@ -36,9 +36,7 @@
         <thead>
         <tr>
             <th>請求月</th>
-            <!--
             <th>請求ステータス</th>
-            -->
             <th>プラン</th>
             <th>請求金額</th>
             <th>プラン金額</th>
@@ -46,9 +44,7 @@
             <th>HPリンク月額金額</th>
             <th>手数料合計金額</th>
             <th>成果コース</th>
-            <!--
             <th colspan="2"></th>
-            -->
         </tr>
         </thead>
         <tbody>
@@ -56,9 +52,7 @@
             @foreach ($billings as $billing)
                 <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
                     <td style="width: 80px;">{{  $billing->billing_month }}</td>
-                    <!--
                     <td>{{ BillingStatus::getDescription($billing->status) }}</td>
-                    -->
                     @if (isset($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan))
                         <td>
                             {{ $billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->plan_name }}
@@ -89,14 +83,12 @@
                         <td>
                             <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
                         </td>
-                    <!--
                         <td>
                             <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CONFIRMED, 'claim_check' => 'yes'] )) }}"
                                 class="btn @if( $billing->status != BillingStatus::CHECKING ) btn-default @else btn-primary @endif"
                                 @if( $billing->status != BillingStatus::CHECKING ) style="pointer-events: none;" @endif
                             >請求確認</a>
                         </td>
-                        -->
                     @else
                         <td></td>
                         <td></td>
