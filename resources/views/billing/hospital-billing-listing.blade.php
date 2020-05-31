@@ -36,9 +36,7 @@
         <thead>
         <tr>
             <th>請求月</th>
-            <!--
             <th>請求ステータス</th>
-            -->
             <th>プラン</th>
             <th>請求金額</th>
             <th>プラン金額</th>
@@ -54,9 +52,7 @@
             @foreach ($billings as $billing)
                 <tr class="billing-id-{{ $billing->id }} status-{{ $billing->status }}">
                     <td style="width: 80px;">{{  $billing->billing_month }}</td>
-                    <!--
                     <td>{{ BillingStatus::getDescription($billing->status) }}</td>
-                    -->
                     @if (isset($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan))
                         <td>
                             {{ $billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->plan_name }}
