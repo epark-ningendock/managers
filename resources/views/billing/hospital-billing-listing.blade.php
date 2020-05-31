@@ -46,9 +46,7 @@
             <th>HPリンク月額金額</th>
             <th>手数料合計金額</th>
             <th>成果コース</th>
-            <!--
             <th colspan="2"></th>
-            -->
         </tr>
         </thead>
         <tbody>
@@ -89,14 +87,12 @@
                         <td>
                             <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
                         </td>
-                    <!--
                         <td>
                             <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CONFIRMED, 'claim_check' => 'yes'] )) }}"
                                 class="btn @if( $billing->status != BillingStatus::CHECKING ) btn-default @else btn-primary @endif"
                                 @if( $billing->status != BillingStatus::CHECKING ) style="pointer-events: none;" @endif
                             >請求確認</a>
                         </td>
-                        -->
                     @else
                         <td></td>
                         <td></td>
