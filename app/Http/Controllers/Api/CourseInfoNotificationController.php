@@ -642,7 +642,7 @@ class CourseInfoNotificationController extends Controller
                     $course_futan_condition = new CourseFutanCondition();
                     $course_futan_condition->kenshin_sys_course_id = $course->id;
                     $course_futan_condition->jouken_no = $kenshin_course_futan_jouken['joukenNo'];
-                    $course_futan_condition->sex = $kenshin_course_futan_jouken['sex'] ?? 3;
+                    $course_futan_condition->sex = self::changeSex($kenshin_course_futan_jouken['sex']);
                     $course_futan_condition->honnin_kbn = $kenshin_course_futan_jouken['honninKbn'] ?? 3;
                     $course_futan_condition->futan_kingaku = $kenshin_course_futan_jouken['futanKin'];
                     $course_futan_condition->save();
@@ -708,7 +708,7 @@ class CourseInfoNotificationController extends Controller
                             $option_futan_condition = new OptionFutanCondition();
                             $option_futan_condition->kenshin_sys_option_id = $option->id;
                             $option_futan_condition->jouken_no = $kenshin_option_futan_jouken['joukenNo'];
-                            $option_futan_condition->sex = $kenshin_option_futan_jouken['sex'] ?? 3;
+                            $option_futan_condition->sex = self::changeSex($kenshin_option_futan_jouken['sex']);
                             $option_futan_condition->honnin_kbn = $kenshin_option_futan_jouken['honninKbn'] ?? 3;
                             $option_futan_condition->futan_kingaku = $kenshin_option_futan_jouken['futanKin'];
                             $option_futan_condition->yusen_kbn = $kenshin_option_futan_jouken['yusenKbn'];
@@ -746,6 +746,21 @@ class CourseInfoNotificationController extends Controller
                 $kenshin_option->forceDelete();
             }
 
+        }
+    }
+
+    private function changeSex($sex) {
+
+        if (empty($sex) || $sex == 2) {
+            return 3;
+        }
+
+        if ($sex == 0) {
+            return 1;
+        }
+
+        if ($sex == 1) {
+            return 2;
         }
     }
 }

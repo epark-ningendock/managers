@@ -136,17 +136,10 @@ class ApiBaseController extends Controller
     }
 
     protected function convert_sex($medical_examination_system_id, $sex) {
-        $medical_sys_ids = config('constant.medical_exam_sys_id');
-        if ($medical_examination_system_id == $medical_sys_ids['tak']) {
-            if ($sex == 0) {
-                return 1;
-            } else {
-                return 2;
-            }
-        } elseif ($medical_examination_system_id == $medical_sys_ids['itec']) {
-            return $sex;
+        if ($sex == 0) {
+            return 1;
         } else {
-            return $sex;
+            return 2;
         }
     }
 }
