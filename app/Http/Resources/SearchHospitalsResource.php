@@ -213,7 +213,7 @@ class SearchHospitalsResource extends Resource
      */
     private function getTourInterview() {
 
-        $free_area_strs = explode(' ', $this->free_area);
+        $free_area_strs = explode('iframe src', $this->free_area);
         $tour = 0;
         $interview = 0;
 
