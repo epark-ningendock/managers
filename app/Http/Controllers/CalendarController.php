@@ -434,6 +434,10 @@ class CalendarController extends Controller
      */
     public function updateSetting($id, CalendarFormRequest $request)
     {
+        $target = $request->target_num * 6;
+        $start = Carbon::now()->addMonthsNoOverflow($target)->startOfMonth();
+//            $start = Carbon::parse($request->input('days')[0]);
+        $end = Carbon::now()->addMonthsNoOverflow($target + 5)->endOfMonth();
         try {
             DB::beginTransaction();
 
@@ -443,10 +447,10 @@ class CalendarController extends Controller
             $calendar->touch();
             $calendar->save();
 
-            $target = $request->target_num * 6;
-            $start = Carbon::now()->addMonthsNoOverflow($target)->startOfMonth();
+//            $target = $request->target_num * 6;
+//            $start = Carbon::now()->addMonthsNoOverflow($target)->startOfMonth();
 //            $start = Carbon::parse($request->input('days')[0]);
-            $end = Carbon::now()->addMonthsNoOverflow($target + 5)->endOfMonth();
+//            $end = Carbon::now()->addMonthsNoOverflow($target + 5)->endOfMonth();
 
             $calendar_days = CalendarDay::where('calendar_id', $id)
                 ->whereDate('date', '>=', $start->toDateString())
@@ -498,7 +502,7 @@ class CalendarController extends Controller
             Session::flash('error', trans('messages.model_changed_error'));
             return redirect()->back();
         } catch (\Exception $e) {
-            Log::info('エラーーーーー:' . $e);
+            Log::info('エラーーーーー:スタート：' . $start . 'エンド：' . $end . 'エラー:' . $e);
             DB::rollback();
             Session::flash('error', trans('messages.update_error'));
             return redirect()->back()->withInput();
