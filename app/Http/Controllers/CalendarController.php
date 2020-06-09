@@ -282,7 +282,147 @@ class CalendarController extends Controller
             ->with('calendar', $calendar)
             ->with('months', $months)
             ->with('start', $start)
-            ->with('end', $end);
+            ->with('end', $end)
+            ->with('target_num', 0);
+    }
+
+    /**
+     * Display calendar setting
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    public function prevSetting($id, $target_num)
+    {
+        $calendar = Calendar::findOrFail($id);
+        $hospital_id = session()->get('hospital_id');
+        if (isset($hospital_id) && $hospital_id != $calendar->hospital_id) {
+            abort(404);
+        }
+        $target_num = $target_num - 1;
+        $data = self::createCalendarSettingData($id, 1, $target_num);
+
+        return view('calendar.setting')
+            ->with('calendar', $calendar)
+            ->with('months', $data[0])
+            ->with('start', $data[1])
+            ->with('end', $data[2])
+            ->with('target_num', $target_num);
+    }
+
+    /**
+     * Display calendar setting
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    public function nextSetting($id, $target_num)
+    {
+        $calendar = Calendar::findOrFail($id);
+        $hospital_id = session()->get('hospital_id');
+        if (isset($hospital_id) && $hospital_id != $calendar->hospital_id) {
+            abort(404);
+        }
+        $target_num = $target_num + 1;
+        $data = self::createCalendarSettingData($id, 2, $target_num);
+
+        return view('calendar.setting')
+            ->with('calendar', $calendar)
+            ->with('months', $data[0])
+            ->with('start', $data[1])
+            ->with('end', $data[2])
+            ->with('target_num', $target_num);
+    }
+
+    private function createCalendarSettingData($id, $kbn, $num) {
+
+        $s = $num * 6;
+        $e = $s + 5;
+        if ($kbn == 1) {
+            $start = Carbon::now()->addMonthsNoOverflow($s)->startOfMonth();
+            $end = Carbon::now()->addMonth($e)->endOfMonth();
+        } elseif ($kbn == 2) {
+            $start = Carbon::now()->addMonthsNoOverflow($s)->startOfMonth();
+            $end = Carbon::now()->addMonth($e)->endOfMonth();
+        } else {
+            $start = Carbon::now()->startOfMonth();
+            $end = Carbon::now()->addMonth(5)->endOfMonth();
+        }
+
+        $months = collect();
+
+        $calendar_days = CalendarDay::where('calendar_id', $id)
+            ->whereDate('date', '>=', $start->toDateString())
+            ->whereDate('date', '<=', $end->toDateString())->get();
+
+        $holidays = Holiday::whereDate('date', '>=', $start->toDateString())
+            ->where('hospital_id', session()->get('hospital_id'))
+            ->whereDate('date', '<=', $end->toDateString())->get();
+
+        $public_holidays = collect(Yasumi::create('Japan', $start->year, 'ja_JP')->getHolidays())->flatten(1);
+
+        if ($start->year != $end->year) {
+            $temp = collect(Yasumi::create('Japan', $end->year, 'ja_JP')->getHolidays())->flatten(1);
+            $public_holidays = $public_holidays->merge($temp);
+        }
+
+        $reservation_counts = Reservation::join('courses', 'courses.id', '=', 'reservations.course_id')
+            ->whereDate('reservation_date', '>=', $start->toDateString())
+            ->whereDate('reservation_date', '<=', $end->toDateString())
+            ->where('courses.calendar_id', $id)
+            ->groupBy('reservation_date')
+            ->orderBy('reservation_date')
+            ->selectRaw('count(*) as count, DATE_FORMAT(reservation_date, "%Y%m%d") as reservation_date')
+            ->pluck('count', 'reservation_date');
+
+        while ($start->lt($end)) {
+            $key = $start->format('Y年m月');
+            $month = $months->get($key);
+
+            if (!isset($month)) {
+                $month = collect();
+                $months->put($key, $month);
+            }
+
+            if ($start->day == 1 && $start->dayOfWeek != 0) {
+                for ($i = 0; $i < $start->dayOfWeek; $i++) {
+                    $month->push(null);
+                }
+            }
+
+            $calendar_day = $calendar_days->first(function ($day) use ($start) {
+                return $day->date->isSameDay($start);
+            });
+
+            $holiday = $holidays->first(function ($day) use ($start) {
+                return $day->date->isSameDay($start);
+            });
+
+            $p_holiday = $public_holidays->first(function ($h) use ($start) {
+                return $start->isSameDay($h);
+            });
+
+            $reservation = $reservation_counts->get($start->format('Ymd'));
+            $is_holiday = isset($holiday) ? $holiday->is_holiday : 0;
+            $month->push([ 'date' => $start->copy(), 'is_holiday' => $is_holiday, 'holiday' =>  $p_holiday, 'calendar_day' => $calendar_day, 'reservation_count' => $reservation ]);
+
+            if ($start->isLastOfMonth() && !$start->isSaturday()) {
+                for ($i = $start->dayOfWeek; $i < 6; $i++) {
+                    $month->push(null);
+                }
+            }
+
+            $start->addDay(1);
+        }
+
+        if ($kbn == 1) {
+            $start = Carbon::now()->addMonthsNoOverflow($s)->startOfMonth();
+        } elseif ($kbn == 2) {
+            $start = Carbon::now()->addMonthsNoOverflow($s)->startOfMonth();
+        } else {
+            $start = Carbon::now()->startOfMonth();
+        }
+
+        return [$months, $start, $end];
+
     }
 
     /**
@@ -302,8 +442,10 @@ class CalendarController extends Controller
             $calendar->touch();
             $calendar->save();
 
-            $start = Carbon::parse($request->input('days')[0]);
-            $end = Carbon::now()->addMonth(5)->endOfMonth();
+            $target = $request->target_num * 6;
+            $start = Carbon::now()->addMonthsNoOverflow($target)->startOfMonth();
+//            $start = Carbon::parse($request->input('days')[0]);
+            $end = Carbon::now()->addMonthsNoOverflow($target + 5)->endOfMonth();
 
             $calendar_days = CalendarDay::where('calendar_id', $id)
                 ->whereDate('date', '>=', $start->toDateString())
