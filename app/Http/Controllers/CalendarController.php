@@ -15,6 +15,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use App\Reservation;
 use Yasumi\Yasumi;
@@ -497,6 +498,7 @@ class CalendarController extends Controller
             Session::flash('error', trans('messages.model_changed_error'));
             return redirect()->back();
         } catch (\Exception $e) {
+            Log::info('エラーーーーー:' . $e);
             DB::rollback();
             Session::flash('error', trans('messages.update_error'));
             return redirect()->back()->withInput();
