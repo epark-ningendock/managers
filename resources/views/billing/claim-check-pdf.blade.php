@@ -192,12 +192,16 @@
                {{ number_format($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee  + $billing->adjustment_price )}}円
             </span>
     </li>
-    <li>
-        <small class="text-bold label-text">オプションプラン金額</small>
-        <span class="value-text">
-                {{ number_format($billing->hospital->hospitalOptionPlanPrice($billing->id, $billing->endedDate)) }} 円
+    @if (!empty($billing->hospital->hospital_option_plans) )
+        @foreach( $billing->hospital->hospital_option_plans as $hospital_option_plan)
+            <li>
+                <small class="text-bold label-text">{{ $hospital_option_plan->option_plan->option_plan_name }}</small>
+                <span class="value-text">
+                {{ number_format($hospital_option_plan->price) }} 円
             </span>
-    </li>
+            </li>
+        @endforeach
+    @endif
     <li>
         <small class="text-bold label-text">成果コース</small>
         <span class="value-text">

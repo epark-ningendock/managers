@@ -682,8 +682,7 @@ class ReservationService
             $options = json_decode(json_encode($request->input('option_array')));
         }
 
-        if ($hospital->hplink_contract_type == HplinkContractType::NONE
-        || $entity->site_code != 'HP') {
+        if ($entity->site_code != 'HP') {
             $option_price = 0;
 
             foreach ($options as $option) {
@@ -705,7 +704,7 @@ class ReservationService
                 }
             }
             $entity->is_free_hp_link = 0;
-        } elseif ($entity->site_code == 'HP') {
+        } elseif ($entity->site_code == 'HP' && $hospital->hplink_contract_type == HplinkContractType::PAY_PER_USE) {
             $entity->fee = $this->getHpfee($hospital);
             if ($entity->fee > 0) {
                 $entity->is_free_hp_link = IsFreeHpLink::FREE;

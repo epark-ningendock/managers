@@ -125,6 +125,12 @@
         @endphp
         @foreach($months as $key => $month)
           <div class="col-md-6">
+              @if ($index == 1)
+                  <a href="{{ route('calendar.prevSetting', [$calendar->id, $target_num]) }}"> << </a>
+              @elseif ($index == 2)
+                  <div style="text-align: right"> <a href="{{ route('calendar.nextSetting', [$calendar->id, $target_num]) }}"> >> </a> </div>
+               @endif
+              <input type="hidden" name="target_num" value="{{$target_num}}">
               <h4 class="text-center">{{ $key }}</h4>
               <table class="table table-bordered calendar-table">
                 <thead>

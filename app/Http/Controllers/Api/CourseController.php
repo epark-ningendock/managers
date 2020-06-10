@@ -81,12 +81,12 @@ class CourseController extends ApiBaseController
             // その他コース情報取得
             $hospital = $this->getHospitalData($course->hospital_id);
             $data = ['course' => $course,  'hospital' => $hospital];
-
+            $sex = $this->convert_sex($hospital->medical_examination_system_id, $request->input('sex'));
             if (!empty($request->input('sex'))) {
                 $course->kenshin_relation_flg = true;
                 $course->medical_exam_sys_id = $hospital->medical_examination_system_id;
                 $course->reservation_date = $request->input('reservation_date');
-                $course->sex = $request->input('sex');
+                $course->sex = $sex;
                 $course->birth = $request->input('birth');
                 $course->honnin_kbn = $request->input('honnin_kbn');
             }
