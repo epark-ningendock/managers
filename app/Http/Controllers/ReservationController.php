@@ -257,6 +257,7 @@ class ReservationController extends Controller
             }
 
             $result = [
+                $reservation->id,
                 $reservation->reservation_date ? $reservation->reservation_date->format('Y/m/d') : '',
                 $reservation->start_time_hour,
                 $reservation->created_at->format('Y/m/d'),
@@ -304,6 +305,7 @@ class ReservationController extends Controller
         });
 
         $headers = [
+            '予約ID',
             '受診日',
             '受診時間',
             '予約日',
