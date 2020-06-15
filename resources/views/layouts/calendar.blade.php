@@ -25,7 +25,8 @@
         </div>
   @if(isset($delete_route))
     <form id="delete-record-form" class="hide" method="POST"
-          action="{{ route($delete_route, ':id').'?'.(isset($delete_params) ? $delete_params : '') }}">
+          {{--action="{{ route($delete_route, ':id').'?'.(isset($delete_params) ? $delete_params : '') }}">--}}
+          action="{{ route($delete_route, ':id') }}">
       {{ csrf_field() }}
       {{ method_field('DELETE') }}
     </form>

@@ -52,7 +52,7 @@
             <div class="input-group input-group-sm hidden-xs">
 
               <a class="btn btn-primary btn-mini" href="{{ route('calendar.setting', $calendar->id) }}">カレンダー設定</a>
-              <button class="btn btn-primary btn-mini ml-2 delete-btn delete-popup-btn" data-id="{{ $calendar->id }}">
+              <button class="btn btn-primary btn-mini ml-2 delete-btn calendar-delete-popup-btn" data-id="{{ $calendar->id }}">
                   <i class="fa fa-trash"></i>
               </button>
             </div>
