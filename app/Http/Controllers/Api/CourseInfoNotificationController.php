@@ -241,7 +241,7 @@ class CourseInfoNotificationController extends Controller
                         return $this->createResponse($messages['errorValidationId']);
                     }
                     foreach ($course['courseFutanJoukenList'] as $futanJouken) {
-                        if (!empty($futanJouken['joukenNo']) && (!is_numeric($futanJouken['joukenNo']) || strlen($futanJouken['joukenNo']) > 10)) {
+                        if (!empty($futanJouken['joukenNo']) && (strlen($futanJouken['joukenNo']) > 10)) {
                             return $this->createResponse($messages['errorValidationId']);
                         }
                         if (!empty($futanJouken['sex']) && (!is_numeric($futanJouken['sex']) || (intval($futanJouken['sex']) != 0 && intval($futanJouken['sex']) != 1 && intval($futanJouken['sex']) != 2))) {
@@ -263,7 +263,7 @@ class CourseInfoNotificationController extends Controller
                             if (empty($option['optionNo'])) {
                                 continue;
                             }
-                            if (empty($option['optionNo']) || !is_numeric($option['optionNo']) || strlen($option['optionNo']) > 10) {
+                            if (empty($option['optionNo']) || strlen($option['optionNo']) > 10) {
                                 return $this->createResponse($messages['errorValidationId']);
                             }
                             if (empty($option['optionNm'])) {

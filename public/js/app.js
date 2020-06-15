@@ -219,6 +219,28 @@ module.exports.addScrollToTop = function () {
     })();
 
     (function () {
+        $('.calendar-delete-popup-btn').on('click', function () {
+            var id = $(this).data('id');
+            var targetForm = $(this).data('target-form') || '#delete-record-form';
+            var message = $(this).data('message');
+            var btnText = $(this).data('button-text') || 'OK';
+            var targetFormAction = $(targetForm).attr('action').replace(':id', id);
+            let modal = $(this).data('modal') || '#confirm-modal';
+            $(targetForm).attr('action', '/calendar/' + id);
+            Modal.showConfirm(message, btnText, modal, function () {
+                $(modal).find('input, select, textarea').each(function(i, e){
+                    e = $(e);
+                    $('<input type="hidden" name="' + e.prop('name') + '" />')
+                        .val(e.val())
+                        .appendTo($(targetForm));
+                });
+                $(targetForm).submit();
+            });
+            return false;
+        });
+    })();
+
+    (function () {
         $('.insert-hospital-id-popup-btn').on('click', function(){
             let id = $(this).data('id');
             let targetForm = $(this).data('target-form') || '#select-hospital-form';
