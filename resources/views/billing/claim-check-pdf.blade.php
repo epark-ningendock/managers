@@ -227,6 +227,7 @@
             <th>予約番号</th>
             <th>受診日</th>
             <th>受診者名</th>
+            <th>受診者名（かな）</th>
             <th>媒体</th>
             <th>ステータス</th>
             <th>決済方法</th>
@@ -246,6 +247,7 @@
                     <td>{{ $reservation->id }}</td>
                     <td>{{ $reservation->reservation_date->format('Y-m-d') }}</td>
                     <td>{{ $reservation->customer->family_name . ' ' . $reservation->customer->first_name }}</td>
+                    <td>{{ $reservation->customer->family_name_kana . ' ' . $reservation->customer->first_name_kana }}</td>
                     <td>{{ ( isset($reservation->channel) && ( $reservation->channel == 1)) ? 'WEB' : 'TEL' }}</td>
                     <td>
                         @if ( $reservation->reservation_status->is(ReservationStatus::PENDING) )

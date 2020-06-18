@@ -316,6 +316,10 @@ class CourseController extends Controller
                     $course_option->option_id = $option_id;
                     $course_option->save();
                 }
+            } else {
+                if (isset($course_param)) {
+                    $course->course_options()->forceDelete();
+                }
             }
 
             //Course Detail
