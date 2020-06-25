@@ -21,6 +21,11 @@ use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
 {
+    /**
+     * 顧客管理初期表示
+     * @param CustomerFilters $customerFilters
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index(CustomerFilters $customerFilters)
     {
         $pagination = (in_array(request()->get('pagination'), [
@@ -38,6 +43,12 @@ class CustomerController extends Controller
     }
 
 
+    /**
+     * 顧客詳細
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function detail(Request $request)
     {
         $page_number     = ($request->page_id) ?? 1;
@@ -102,14 +113,21 @@ class CustomerController extends Controller
         }
     }
 
-
+    /**
+     * 顧客新規登録
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create()
     {
         $prefectures = Prefecture::all();
         return view('customer.create', ['prefectures' => $prefectures]);
     }
 
-
+    /**
+     * 顧客登録
+     * @param CustomerFormRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(CustomerFormRequest $request)
     {
     	$request->merge([
@@ -131,7 +149,11 @@ class CustomerController extends Controller
         }
     }
 
-
+    /**
+     * 顧客編集
+     * @param Customer $customer
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit(Customer $customer)
     {
         $hospital_id = session()->get('hospital_id');
@@ -145,7 +167,12 @@ class CustomerController extends Controller
         return view('customer.edit', [ 'customer_detail' => $customer_detail, 'prefectures' => $prefectures ]);
     }
 
-
+    /**
+     * 顧客更新
+     * @param CustomerFormRequest $request
+     * @param Customer $customer
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(CustomerFormRequest $request, Customer $customer)
     {
         $customer = Customer::findOrFail($customer->id);
@@ -166,6 +193,11 @@ class CustomerController extends Controller
         }
     }
 
+    /**
+     * 顧客削除
+     * @param Customer $customer
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Customer $customer)
     {
         $customer = Customer::findOrFail($customer->id);
@@ -174,7 +206,12 @@ class CustomerController extends Controller
         return redirect('customer')->with('success', trans('messages.deleted', [ 'name' => trans('messages.names.customers') ]));
     }
 
-
+    /**
+     * メールフォーム 表示
+     * @param $customer_id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function showEmailForm($customer_id)
     {
         $email_templates = EmailTemplate::where('hospital_id', session()->get('hospital_id'))->get()->toArray();
@@ -194,7 +231,11 @@ class CustomerController extends Controller
         ]);
     }
 
-
+    /**
+     * メール送信
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function emailSend(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -225,6 +266,13 @@ class CustomerController extends Controller
         return response()->json(['success' => trans('messages.sent', [ 'mail' => trans('messages.mails.customer') ])]);
     }
 
+    /**
+     * メール履歴
+     * @param $customer_id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function email_history($customer_id, Request $request){
         $record_per_page = $request->input('record_per_page', 10);
         $mail_histories = MailHistory::where('customer_id', $customer_id)->orderBy('sent_datetime', 'DESC')->paginate($record_per_page);
@@ -237,7 +285,11 @@ class CustomerController extends Controller
         ]);
     }
 
-
+    /**
+     * 顧客検索
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function customerSearch()
     {
         $customers = Customer::where('hospital_id', session()->get('hospital_id'))
@@ -253,6 +305,12 @@ class CustomerController extends Controller
         ]);  
     }
 
+    /**
+     * 名寄せ
+     * @param $id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function integration($id, Request $request)
     {
         try {

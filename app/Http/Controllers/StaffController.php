@@ -32,6 +32,12 @@ class StaffController extends Controller
         $this->middleware('permission.staff.edit')->except(['index', 'editPersonalPassword', 'updatePersonalPassword']);
     }
 
+    /**
+     * スタッフ一覧
+     * @param StaffSearchFormRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     */
     public function index(StaffSearchFormRequest $request)
     {
         if (Auth::user()->staff_auth->is_staff === Permission::NONE) {
@@ -53,12 +59,22 @@ class StaffController extends Controller
             ->with($request->input());
     }
 
+    /**
+     * スタッフ作成
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create()
     {
         $departments = Department::all();
         return view('staff.create', ['departments' => $departments ]);
     }
 
+    /**
+     * スタッフ登録
+     * @param StaffFormRequest $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws ValidationException
+     */
     public function store(StaffFormRequest $request)
     {
         if (intval($request->authority) === Authority::CONTRACT_STAFF) {
@@ -129,6 +145,11 @@ class StaffController extends Controller
         }
     }
 
+    /**
+     * スタッフ編集
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($id)
     {
         $staff = Staff::findOrFail($id);
@@ -136,6 +157,14 @@ class StaffController extends Controller
         return view('staff.edit', ['staff' => $staff, 'departments' => $departments]);
     }
 
+    /**
+     * スタッフ更新
+     * @param StaffFormRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws ExclusiveLockException
+     * @throws ValidationException
+     */
     public function update(StaffFormRequest $request, $id)
     {
         if (intval($request->authority) === Authority::CONTRACT_STAFF) {
@@ -191,6 +220,12 @@ class StaffController extends Controller
         }
     }
 
+    /**
+     * スタッフ削除
+     * @param $id
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy($id, Request $request)
     {
         $staff = Staff::find($id);
@@ -200,6 +235,11 @@ class StaffController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * パスワード編集
+     * @param $staff_id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function editPassword($staff_id)
     {
         $staff = Staff::find($staff_id);
@@ -212,6 +252,13 @@ class StaffController extends Controller
         return view('staff.edit-password', ['staff' => $staff]);
     }
 
+    /**
+     * パスワード更新
+     * @param $staff_id
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws ExclusiveLockException
+     */
     public function updatePassword($staff_id, Request $request)
     {
         $this->validate($request, [
@@ -241,6 +288,10 @@ class StaffController extends Controller
         }
     }
 
+    /**
+     * パスワード変更
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function editPersonalPassword()
     {
         $staff = Staff::findOrFail(Auth::user()->id);
@@ -248,6 +299,13 @@ class StaffController extends Controller
         return view('staff.edit-password-personal', ['staff' => $staff]);
     }
 
+    /**
+     * パスワード更新
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws ExclusiveLockException
+     * @throws ValidationException
+     */
     public function updatePersonalPassword(Request $request)
     {
         $this->validate($request, [
@@ -305,6 +363,12 @@ class StaffController extends Controller
 //        }
 //    }
 
+    /**
+     * ログインバリデーション
+     * @param $login_id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws ValidationException
+     */
     public function staffLoginIdValidation($login_id)
     {
         $hospital_staff = HospitalStaff::where('login_id', $login_id)->first();

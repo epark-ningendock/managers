@@ -27,6 +27,11 @@ class BillingController extends Controller {
         return ( request('billing_month') ) ? request('billing_month') : $default_month;
 	}
 
+    /**
+     * 請求管理画面初期表示
+     * @param BillingFilters $billingFilters
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
 	public function index( BillingFilters $billingFilters ) {
 
 		$selectedMonth = $this->getSelectedMonth();
@@ -46,6 +51,13 @@ class BillingController extends Controller {
 	}
 
 
+    /**
+     * 請求管理エクセル出力
+     * @param BillingFilters $billingFilters
+     * @return Excel|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
 	public function excelExport( BillingFilters $billingFilters ) {
 
 	    $selectedMonth = $this->getSelectedMonth();
@@ -69,7 +81,7 @@ class BillingController extends Controller {
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * 請求詳細登録
 	 *
 	 * @param \Illuminate\Http\Request $request
 	 *
@@ -128,8 +140,7 @@ class BillingController extends Controller {
     }
 
 	/**
-	 * Display the specified resource.
-	 *
+	 * 請求詳細表示
 	 * @param \App\Billing $billing
 	 *
 	 * @return \Illuminate\Http\Response
@@ -191,6 +202,13 @@ class BillingController extends Controller {
 	}
 
 
+    /**
+     *
+     *　請求ステータス更新
+     * @param Billing $billing
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
 	public function statusUpdate( Billing $billing, Request $request ) {
 
         $email_send =  ( $request->has('claim_check') || $request->has('claim_confirmation') ) ? true : false;
@@ -219,6 +237,12 @@ class BillingController extends Controller {
 		}
 	}
 
+    /**
+     * 請求メール送信
+     * @param $request
+     * @param $billing
+     * @param array $attributes
+     */
     public function claimEmailCheck($request, $billing, $attributes = [])
     {
 	    $selectedMonth = $this->getSelectedMonth();
@@ -282,6 +306,12 @@ class BillingController extends Controller {
         }
 	}
 
+    /**
+     *
+     * @param $request
+     * @param $billing
+     * @param array $attributes
+     */
 	public function claimEmailCheckForHospital($request, $billing, $attributes = [])
 	    {
 		    $selectedMonth = $this->getSelectedMonth();
@@ -313,8 +343,12 @@ class BillingController extends Controller {
 //	                config('mail.to.gyoumu'),
 //	            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
 	        }
-		}	
+		}
 
+    /**
+     * 医療機関請求管理表示
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
 	public function hospitalBilling() {
 
 		$hospital_id = session('hospital_id');

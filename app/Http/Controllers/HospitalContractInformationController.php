@@ -215,6 +215,7 @@ class HospitalContractInformationController extends Controller
                     $hospital = $contract->hospital;
                 } else {
                     $contract = new ContractInformation($contract_arr);
+                    $contract->code = 'D2' . $hospital->id;
                 }
 
                 $hospital->name = $contract_arr['hospital_name'];
@@ -223,9 +224,6 @@ class HospitalContractInformationController extends Controller
 
                 $contract->contract_plan_id = $contract_plans->get($contract_arr['plan_code'])->first()->id;
                 $contract->hospital_id = $hospital->id;
-                $max_code = ContractInformation::max('code');
-                $max_code = substr($max_code, 1);
-                $contract->code = 'D' . (intval($max_code) + 1);
                 $contract->save();
             }
 

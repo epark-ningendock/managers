@@ -220,6 +220,11 @@ class ReservationController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
+    /**
+     * 受付csv出力
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
     public function reception_csv(Request $request)
     {
         $this->validate($request, [
@@ -798,6 +803,11 @@ class ReservationController extends Controller
 
     }
 
+    /**
+     * 受付コースオプション登録
+     * @param $request
+     * @param $reservation
+     */
     protected function reservationCourseOptionSaveOrUpdate($request, $reservation)
     {
         if (!empty($request->course_options) && isset($request->course_options)) {
@@ -817,6 +827,11 @@ class ReservationController extends Controller
         }
     }
 
+    /**
+     * オプション金額合計処理
+     * @param $request
+     * @return int
+     */
     protected function calculateCourseOptionTotalPrice($request)
     {
         $total = 0;
@@ -828,6 +843,11 @@ class ReservationController extends Controller
         return $total;
     }
 
+    /**
+     * 医療機関からの質問生成
+     * @param $request
+     * @param $reservation
+     */
     protected function reservationAnswerCreate($request, $reservation)
     {
         if (isset(request()->course_id) && !empty(request()->course_id)) {
@@ -888,6 +908,11 @@ class ReservationController extends Controller
         }
     }
 
+    /**
+     * 受付編集
+     * @param Reservation $reservation
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit(Reservation $reservation)
     {
         $hospital_id = session()->get('hospital_id');
@@ -942,6 +967,12 @@ class ReservationController extends Controller
 
     }
 
+    /**
+     * 受付更新
+     * @param ReservationUpdateFormRequest $request
+     * @param Reservation $reservation
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(ReservationUpdateFormRequest $request, Reservation $reservation)
     {
         try {
@@ -1060,6 +1091,14 @@ class ReservationController extends Controller
         return redirect('reservation')->with('success', trans('messages.reservation.update_success'));
     }
 
+    /**
+     * メール送信判別
+     * @param $reservation
+     * @param $old_reservation
+     * @param $options
+     * @param $old_options
+     * @return bool
+     */
     private function is_send_mail($reservation, $old_reservation, $options, $old_options) {
         // コースチェック
         if ($reservation->course_id != $old_reservation->course_id) {

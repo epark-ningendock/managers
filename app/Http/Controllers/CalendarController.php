@@ -707,6 +707,13 @@ class CalendarController extends Controller
         }
     }
 
+    /**
+     * 受付管理カレンダー作成
+     * @param $course_id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
     public function reservationDays($course_id, Request $request)
     {
         $calendars = [];
@@ -779,7 +786,10 @@ class CalendarController extends Controller
         ]);
     }
 
-
+    /**
+     * 日付構築
+     * @return mixed
+     */
     public function showCalendarGenerator()
     {
 
