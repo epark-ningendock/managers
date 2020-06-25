@@ -12,7 +12,11 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\HospitalEmailSetting\HospitalEmailSettingOperationMail;
 
 class HospitalEmailSettingController extends Controller
-{   
+{
+    /**
+     * メール設定画面表示
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         self::is_staff();
@@ -22,6 +26,12 @@ class HospitalEmailSettingController extends Controller
         ]);
     }
 
+    /**
+     * 医療機関メール設定更新
+     * @param HospitalEmailSettingRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(HospitalEmailSettingRequest $request, $id)
     {
         self::is_staff();

@@ -479,6 +479,13 @@ class CourseController extends Controller
         return $course;
     }
 
+    /**
+     * コース画像登録
+     * @param CourseFormRequest $request
+     * @param String $target_image
+     * @param String $target_type
+     * @param int $course_id
+     */
     private function saveCourseImage(CourseFormRequest $request, String $target_image, String $target_type, int $course_id)
     {
         $image = \Image::make(file_get_contents($request->file($target_image)));

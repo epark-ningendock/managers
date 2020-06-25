@@ -20,18 +20,32 @@ use Illuminate\Support\Facades\Auth;
 use App\Exceptions\ExclusiveLockException;
 
 class HospitalStaffController extends Controller
-{   
+{
+    /**
+     * 医療機関スタッフ一覧
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $hospital_staffs = HospitalStaff::where('hospital_id', session()->get('hospital_id'));
         return view('hospital_staff.index', [ 'hospital_staffs' => $hospital_staffs->paginate(10)]);
     }
 
+    /**
+     * スタッフ作成
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function create()
     {
         return view('hospital_staff.create');
     }
 
+    /**
+     * スタッフ登録
+     * @param HospitalStaffFormRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws ValidationException
+     */
     public function store(HospitalStaffFormRequest $request)
     {
         $this->hospitalStaffLoginIdValidation($request->login_id);
@@ -79,6 +93,11 @@ class HospitalStaffController extends Controller
         }
     }
 
+    /**
+     * スタッフ編集表示
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit($id)
     {
         $hospital_staff = HospitalStaff::findOrFail($id);
@@ -92,6 +111,14 @@ class HospitalStaffController extends Controller
         return view('hospital_staff.edit', compact('hospital_staff'));
     }
 
+    /**
+     * スタッフ更新
+     * @param HospitalStaffFormRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws ExclusiveLockException
+     * @throws ValidationException
+     */
     public function update(HospitalStaffFormRequest $request, $id)
     {
         $this->hospitalStaffLoginIdValidation($request->login_id);
@@ -128,6 +155,12 @@ class HospitalStaffController extends Controller
         }
     }
 
+    /**
+     * スタッフ削除
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws ExclusiveLockException
+     */
     public function destroy($id)
     {
         try {
@@ -155,12 +188,25 @@ class HospitalStaffController extends Controller
 
     }
 
+    /**
+     * パスワード変更
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function editPassword(Request $request)
     {
         $hospital_staff = HospitalStaff::where('login_id', session()->get('login_id'))->first();
         return view('hospital_staff.edit-password', compact('hospital_staff'));
     }
 
+    /**
+     * パスワード更新
+     * @param $hospital_staff_id
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws ExclusiveLockException
+     * @throws ValidationException
+     */
     public function updatePassword($hospital_staff_id, Request $request)
     {
         $this->validate($request, [
@@ -208,6 +254,10 @@ class HospitalStaffController extends Controller
         }
     }
 
+    /**
+     * パスワードリセット画面表示
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function showPasswordResetsMail()
     {
         return view('hospital_staff.send-password-reset-mail');
@@ -245,6 +295,12 @@ class HospitalStaffController extends Controller
         }
     }
 
+    /**
+     * リセットパスワード画面表示
+     * @param $reset_token
+     * @param $email
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function showResetPassword($reset_token, $email)
     {
         $staff = Staff::where('email', $email)->first();
@@ -263,6 +319,12 @@ class HospitalStaffController extends Controller
         }
     }
 
+    /**
+     * パスワードリセット
+     * @param $email
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function resetPassword($email, Request $request)
     {
         $this->validate($request, [
@@ -284,6 +346,13 @@ class HospitalStaffController extends Controller
         return redirect('/login')->with('success', 'パスワードを更新しました。');
     }
 
+    /**
+     *
+     * メールアドレスバリデーション
+     * @param $email
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws ValidationException
+     */
     public function hospitalStaffEmailValidation($email)
     {
         $staff = Staff::where('email', $email)->first();
@@ -296,6 +365,12 @@ class HospitalStaffController extends Controller
         }
     }
 
+    /**
+     * 医療機関スタッフログインチェック
+     * @param $login_id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws ValidationException
+     */
     public function hospitalStaffLoginIdValidation($login_id)
     {
         $staff = Staff::where('login_id', $login_id)->first();

@@ -28,6 +28,11 @@ class HospitalController extends Controller
         $this->middleware('permission.hospital.edit')->except('index');
     }
 
+    /**
+     * 医療機関一覧表示
+     * @param HospitalFormRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     */
     public function index(HospitalFormRequest $request)
     {
         if (Auth::user()->staff_auth->is_hospital === Permission::NONE) {
@@ -71,7 +76,11 @@ class HospitalController extends Controller
         return view('hospital.index', ['hospitals' => $hospitals, 'request' => $request]);
     }
 
-
+    /**
+     * 検索窓テキスト検索
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function searchText(Request $request)
     {
         $hospitals = Hospital::select('name', 'address1')->where('name', 'LIKE', "%" . $request->get('s_text') . "%")->get();
@@ -242,6 +251,11 @@ class HospitalController extends Controller
         //
     }
 
+    /**
+     * 医療機関編集表示
+     * @param Hospital $hospital
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function edit(Hospital $hospital)
     {
         $prefectures = Prefecture::all();
@@ -350,6 +364,12 @@ class HospitalController extends Controller
     {
     }
 
+    /**
+     * 医療機関操作ボタン押下処理
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function selectHospital(Request $request, $id)
     {
         $hospital_name = Hospital::findOrFail($id)->name;
