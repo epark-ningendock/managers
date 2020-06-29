@@ -235,7 +235,7 @@ class HospitalContractInformationController extends Controller
                 }
 
                 $hospital->name = $contract_arr['hospital_name'];
-                $hospital->status = '1';
+                $hospital->status = '0';
                 $hospital->save();
 
                 $contract->contract_plan_id = $contract_plans->get($contract_arr['plan_code'])->first()->id;
