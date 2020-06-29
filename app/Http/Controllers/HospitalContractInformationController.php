@@ -7,6 +7,7 @@ use App\ContractPlan;
 use App\Hospital;
 use App\HospitalStaff;
 use App\Mail\Course\HospitalNewRegistMail;
+use App\Prefecture;
 use Illuminate\Http\Request;
 use App\Http\Requests\ContractInformationFormRequest;
 use Illuminate\Support\Facades\DB;
@@ -81,7 +82,7 @@ class HospitalContractInformationController extends Controller
                 'representative_name_kana' => $row[5],
                 'representative_name' => $row[6],
                 'postcode' => $row[7],
-                'address' => trimToNull(join(array_slice($row, 8, 4), ' ')),
+                'address' => self::convert_prefecture($row[8]) . trimToNull(join(array_slice($row, 9, 3), ' ')),
                 'state' => $row[8],
                 'county' => $row[9],
                 'town' => $row[10],
@@ -166,6 +167,21 @@ class HospitalContractInformationController extends Controller
             [
                 'contracts' => $contracts
             ]);
+    }
+
+    /**
+     * 都道府県名を返す
+     * @param $pref_code
+     * @return string
+     */
+    private function convert_prefecture($pref_code) {
+        if (empty($pref_code)) {
+            return '';
+        }
+
+        $pref = Prefecture::find((int) $pref_code);
+
+        return empty($pref) ? '' : $pref->name;
     }
 
     public function store(Request $request)
