@@ -593,7 +593,6 @@
                     @endif
                     </div>
                     <div class="form-group @if ($errors->has('internal_tab_'.$i.'_memo2')) has-error @endif">
-                        {{$internal_tab['id']}}
                     {{Form::label('internal_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                     {{Form::textarea('internal_tab_'.$i.'_memo2', is_null($internal_tab) ? null : $internal_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
                     @if ($errors->has('internal_tab_'.$i.'_memo2'))
@@ -713,7 +712,6 @@
                     @endif
                     </div>
                     <div class="form-group @if ($errors->has('external_tab_'.$i.'_memo2')) has-error @endif">
-                        {{$external_tab['id']}}
                     {{Form::label('external_tab_'.$i.'_memo2', '説明',['class' => 'form_label'])}}
                     {{Form::textarea('external_tab_'.$i.'_memo2', is_null($external_tab) ? null : $external_tab->hospital_image->memo2, ['class' => 'form-control','rows' => "2"])}}
                     @if ($errors->has('external_tab_'.$i.'_memo2'))
