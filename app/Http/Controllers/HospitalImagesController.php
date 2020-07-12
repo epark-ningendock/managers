@@ -397,6 +397,7 @@ class HospitalImagesController extends Controller
     private function hospitalImageUploader (array $file, string $image_prefix, int $i, object $hospital, int $hospital_id, int $image_order, string $name = null, $career = null, string $memo = null, string $title = null, string $caption = null) {
         //地図も画像情報として保存されるが、画像の実態はないのでダミーで保存するっぽい。
         if ($image_order != ImageGroupNumber::IMAGE_GROUP_MAP) {
+            $category_id = isset($file[$image_prefix.$i.'_category_id']) ? $file[$image_prefix.$i.'_category_id'] : null ;
             $memo1 = isset($file[$image_prefix.$i.'_memo2']) ? $file[$image_prefix.$i.'_memo2'] : '' ;
             $memo2 = isset($file[$image_prefix.$i.'_memo2']) ? $file[$image_prefix.$i.'_memo2'] : '' ;
             $order2 = isset($file[$image_prefix.$i.'_order2']) ? $file[$image_prefix.$i.'_order2'] : 0 ;
@@ -408,7 +409,13 @@ class HospitalImagesController extends Controller
             //画像の登録確認
             //tab画像だけはタブのカテゴリ$file_locationもチェックする
             if($image_order == ImageGroupNumber::IMAGE_GROUP_TAB) {
-                $image_order_exists = $this->hospital_category->ByImageOrderAndFileLocationNo($hospital_id, $image_order, $i, $location_no)->first();
+                if ($category_id) {
+                    $image_order_exists = HospitalCategory::find($category_id);
+                } else {
+                    $image_order_exists = null;
+                }
+
+//                $image_order_exists = $this->hospital_category->ByImageOrderAndFileLocationNo($hospital_id, $image_order, $i, $location_no)->first();
             } else {
                 $image_order_exists = $this->hospital_category->ByImageOrder($hospital_id, $image_order, $i)->first();
             }
