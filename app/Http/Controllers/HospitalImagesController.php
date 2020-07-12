@@ -434,8 +434,8 @@ class HospitalImagesController extends Controller
                 $hospital_img = $hospital->hospital_images()->find($image_order_exists->hospital_image_id);
                 if ($hospital_img) {
                     $hospital_img->update($save_sub_images);
-//                    $hospital_img->hospital_category()->where('is_display', SelectPhotoFlag::UNSELECTED)
-//                        ->update($save_sub_image_categories);
+                    $hospital_img->hospital_category()->where('is_display', SelectPhotoFlag::UNSELECTED)
+                        ->update($save_sub_image_categories);
                 }
 
             }
