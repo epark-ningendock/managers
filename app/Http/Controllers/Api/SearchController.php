@@ -148,6 +148,7 @@ class SearchController extends ApiBaseController
     }
 
     /**
+     * 医療機関件数取得
      * @param $request
      */
     private function getHospitalCount($request, $count_flg) {
@@ -418,6 +419,7 @@ class SearchController extends ApiBaseController
     }
 
     /**
+     * コース件数取得
      * @param $request
      * @param $count_flg
      * @return int
@@ -670,6 +672,7 @@ class SearchController extends ApiBaseController
     }
 
     /**
+     * 医療機関情報取得
      * @param $hospitals
      */
     private function getHospitals($request, $hospitals) {
@@ -799,6 +802,7 @@ class SearchController extends ApiBaseController
     }
 
     /**
+     * コース情報取得
      * @param $courses
      * @param $course_price_sort
      * @return Course[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection

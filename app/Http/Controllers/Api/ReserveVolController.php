@@ -34,7 +34,11 @@ class ReserveVolController extends ApiBaseController
         }
     }
 
-
+    /**
+     * 医療機関情報取得
+     * @param $hospital_id
+     * @return Hospital|Hospital[]|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
+     */
     private function getHospitalData($hospital_id)
     {
         $today = Carbon::today()->toDateString();

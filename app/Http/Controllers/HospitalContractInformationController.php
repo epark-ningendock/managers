@@ -184,6 +184,12 @@ class HospitalContractInformationController extends Controller
         return empty($pref) ? '' : $pref->name;
     }
 
+    /**
+     * 契約情報登録
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws ValidationException
+     */
     public function store(Request $request)
     {
         try {

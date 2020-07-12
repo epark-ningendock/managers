@@ -363,7 +363,7 @@ class ReservationController extends Controller
             $reservation->reservation_status = ReservationStatus::RECEPTION_COMPLETED;
             $reservation->save();
 
-            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+//            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
 
             Session::flash('success', trans('messages.reservation.accept_success'));
             DB::commit();
@@ -411,7 +411,7 @@ class ReservationController extends Controller
             // カレンダーの予約数を1つ減らす
             $this->_reservation_service->registReservationToCalendar($reservation, -1);
 
-            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+//            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
 
             Session::flash('success', trans('messages.reservation.cancel_success'));
             DB::commit();
@@ -456,7 +456,7 @@ class ReservationController extends Controller
             $reservation->completed_date = Carbon::now();
             $reservation->save();
 
-            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
+//            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $reservation->customer, '受付ステータス変更');
 
             Session::flash('success', trans('messages.reservation.complete_success'));
             DB::commit();
@@ -579,7 +579,7 @@ class ReservationController extends Controller
 
         try {
             $fax_tos = [];
-            if (!empty($hospital_fax)) {
+            if (!empty($hospital_fax) && !(!$change_flg && $reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED)) {
                 foreach ($hospital_fax as $fax_to) {
                     if (!empty($fax_to)) {
                         $fax_tos[] = $fax_to;

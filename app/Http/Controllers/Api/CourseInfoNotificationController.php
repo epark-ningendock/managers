@@ -524,6 +524,11 @@ class CourseInfoNotificationController extends Controller
 //        $this->deleteCourse($params['hospital_id'], $params['dantai_no'], $course_ids);
     }
 
+    /**
+     * オプション削除
+     * @param $kenshin_sys_course_id
+     * @param $option_nos
+     */
     private function deleteOption($kenshin_sys_course_id, $option_nos) {
         $kenshin_sys_options = KenshinSysOption::whereNotIn('kenshin_sys_option_no', $option_nos)
             ->where('kenshin_sys_course_id', $kenshin_sys_course_id)
