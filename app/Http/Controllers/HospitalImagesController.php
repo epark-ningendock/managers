@@ -446,9 +446,11 @@ class HospitalImagesController extends Controller
 //                    $hospital_img->hospital_category()
 //                        ->update($save_sub_image_categories);
                 } else {
-                    $hospital_img = new HospitalImage($save_sub_images);
-                    $hospital_img->update();
-                    $hospital_img->hospital_category()
+                    $hospital->hospital_images()->saveMany([
+                            $hospital_img = new HospitalImage($save_sub_images)
+                        ]
+                    );
+                    $hospital->hospital_images()->hospital_category()
                         ->update($save_sub_image_categories);
                 }
 
