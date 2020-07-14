@@ -450,7 +450,7 @@ class HospitalImagesController extends Controller
                             $hospital_img = new HospitalImage($save_sub_images)
                         ]
                     );
-                    $hospital->hospital_images()->hospital_category()
+                    $hospital_img->hospital_category()
                         ->update($save_sub_image_categories);
                 }
 
