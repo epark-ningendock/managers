@@ -452,8 +452,7 @@ class HospitalImagesController extends Controller
                             ]
                         );
                         $save_sub_image_categories[] = ['hospital_image_id' => $hospital_img->id];
-                        $hospital_img->hospital_category()
-                            ->update($save_sub_image_categories);
+                        $image_order_exists->update($save_sub_image_categories);
                     }
 
                 }
