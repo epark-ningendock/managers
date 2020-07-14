@@ -48,12 +48,12 @@ class HospitalImageFormRequest extends FormRequest
                 'numeric',
                 'max:99',
                 'min:1',
-                Rule::unique('hospital_categories', 'order2')
-                    ->ignore($id)
-                    ->where('hospital_id', $this->hospital)
-                    ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
-                    ->where('file_location_no', FileLocationNo::TAB_CATEGORY_STAFF)
-                    ->whereNull('deleted_at')
+//                Rule::unique('hospital_categories', 'order2')
+//                    ->ignore($id)
+//                    ->where('hospital_id', $this->hospital)
+//                    ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
+//                    ->where('file_location_no', FileLocationNo::TAB_CATEGORY_STAFF)
+//                    ->whereNull('deleted_at')
             ],
             "staff_tab_{$i}_memo2" => 'nullable|max:200',
             "staff_tab_{$i}_location" => 'nullable',
@@ -71,12 +71,12 @@ class HospitalImageFormRequest extends FormRequest
                     'numeric',
                     'max:99',
                     'min:1',
-                    Rule::unique('hospital_categories', 'order2')
-                        ->ignore($id)
-                        ->where('hospital_id', $this->hospital)
-                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
-                        ->where('file_location_no', FileLocationNo::TAB_CATEGORY_FACILITY)
-                        ->whereNull('deleted_at')
+//                    Rule::unique('hospital_categories', 'order2')
+//                        ->ignore($id)
+//                        ->where('hospital_id', $this->hospital)
+//                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
+//                        ->where('file_location_no', FileLocationNo::TAB_CATEGORY_FACILITY)
+//                        ->whereNull('deleted_at')
                 ],
                 "facility_tab_{$i}_memo2" => 'nullable|max:200',
                 "facility_tab_{$i}_location" => 'nullable',
@@ -94,12 +94,12 @@ class HospitalImageFormRequest extends FormRequest
                     'numeric',
                     'max:99',
                     'min:1',
-                    Rule::unique('hospital_categories', 'order2')
-                        ->ignore($id)
-                        ->where('hospital_id', $this->hospital)
-                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
-                        ->where('file_location_no', FileLocationNo::TAB_CATEGORY_INTERNAL)
-                        ->whereNull('deleted_at'),
+//                    Rule::unique('hospital_categories', 'order2')
+//                        ->ignore($id)
+//                        ->where('hospital_id', $this->hospital)
+//                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
+//                        ->where('file_location_no', FileLocationNo::TAB_CATEGORY_INTERNAL)
+//                        ->whereNull('deleted_at'),
                 ],
                 "internal_tab_{$i}_memo2" => 'nullable|max:200',
                 "internal_tab_{$i}_location" => 'nullable',
@@ -117,12 +117,12 @@ class HospitalImageFormRequest extends FormRequest
                     'numeric',
                     'max:99',
                     'min:1',
-                    Rule::unique('hospital_categories', 'order2')
-                        ->ignore($id)
-                        ->where('hospital_id', $this->hospital)
-                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
-                        ->where('file_location_no', FileLocationNo::TAB_CATEGORY_EXTERNAL)
-                        ->whereNull('deleted_at'),
+//                    Rule::unique('hospital_categories', 'order2')
+//                        ->ignore($id)
+//                        ->where('hospital_id', $this->hospital)
+//                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
+//                        ->where('file_location_no', FileLocationNo::TAB_CATEGORY_EXTERNAL)
+//                        ->whereNull('deleted_at'),
                 ],
                 "external_tab_{$i}_memo2" => 'nullable|max:200',
                 "external_tab_{$i}_location" => 'nullable',
@@ -140,12 +140,12 @@ class HospitalImageFormRequest extends FormRequest
                     'numeric',
                     'max:99',
                     'min:1',
-                    Rule::unique('hospital_categories', 'order2')
-                        ->ignore($id)
-                        ->where('hospital_id', $this->hospital)
-                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
-                        ->where('file_location_no', FileLocationNo::TAB_CATEGORY_ANOTHER)
-                        ->whereNull('deleted_at'),
+//                    Rule::unique('hospital_categories', 'order2')
+//                        ->ignore($id)
+//                        ->where('hospital_id', $this->hospital)
+//                        ->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)
+//                        ->where('file_location_no', FileLocationNo::TAB_CATEGORY_ANOTHER)
+//                        ->whereNull('deleted_at'),
                 ],
                 "another_tab_{$i}_memo2" => 'nullable|max:200',
                 "another_tab_{$i}_location" => 'nullable',
