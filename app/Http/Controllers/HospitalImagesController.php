@@ -163,7 +163,7 @@ class HospitalImagesController extends Controller
 
         //sub
         for($i = 1; $i <= 4; $i++){
-            if(isset($file['sub_'.$i])) {
+            if(isset($file['sub_'.$i])  or isset($file['sub_'.$i.'_category_id'])) {
                 $this->hospitalImageUploader($file, 'sub_', $i, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB);
             }
         }
@@ -397,6 +397,7 @@ class HospitalImagesController extends Controller
     private function hospitalImageUploader (array $file, string $image_prefix, int $i, object $hospital, int $hospital_id, int $image_order, string $name = null, $career = null, string $memo = null, string $title = null, string $caption = null) {
         //地図も画像情報として保存されるが、画像の実態はないのでダミーで保存するっぽい。
         if ($image_order != ImageGroupNumber::IMAGE_GROUP_MAP) {
+            $category_id = isset($file[$image_prefix.$i.'_category_id']) ? $file[$image_prefix.$i.'_category_id'] : null ;
             $memo1 = isset($file[$image_prefix.$i.'_memo2']) ? $file[$image_prefix.$i.'_memo2'] : '' ;
             $memo2 = isset($file[$image_prefix.$i.'_memo2']) ? $file[$image_prefix.$i.'_memo2'] : '' ;
             $order2 = isset($file[$image_prefix.$i.'_order2']) ? $file[$image_prefix.$i.'_order2'] : 0 ;
@@ -408,7 +409,13 @@ class HospitalImagesController extends Controller
             //画像の登録確認
             //tab画像だけはタブのカテゴリ$file_locationもチェックする
             if($image_order == ImageGroupNumber::IMAGE_GROUP_TAB) {
-                $image_order_exists = $this->hospital_category->ByImageOrderAndFileLocationNo($hospital_id, $image_order, $i, $location_no)->first();
+                if ($category_id) {
+                    $image_order_exists = HospitalCategory::find($category_id);
+                } else {
+                    $image_order_exists = null;
+                }
+
+//                $image_order_exists = $this->hospital_category->ByImageOrderAndFileLocationNo($hospital_id, $image_order, $i, $location_no)->first();
             } else {
                 $image_order_exists = $this->hospital_category->ByImageOrder($hospital_id, $image_order, $i)->first();
             }
@@ -434,8 +441,19 @@ class HospitalImagesController extends Controller
                 $hospital_img = $hospital->hospital_images()->find($image_order_exists->hospital_image_id);
                 if ($hospital_img) {
                     $hospital_img->update($save_sub_images);
-                    $hospital_img->hospital_category()->where('is_display', SelectPhotoFlag::UNSELECTED)
-                        ->update($save_sub_image_categories);
+                    $image_order_exists->update($save_sub_image_categories);
+//                    $hospital_img->hospital_category()
+//                        ->update($save_sub_image_categories);
+                } else {
+                    if (isset($file[$image_prefix.$i])) {
+                        $hospital->hospital_images()->saveMany([
+                                $hospital_img = new HospitalImage($save_sub_images)
+                            ]
+                        );
+                        $save_sub_image_categories = array_merge($save_sub_image_categories,array('hospital_image_id' => $hospital_img->id));
+                        $image_order_exists->update($save_sub_image_categories);
+                    }
+
                 }
 
             }
