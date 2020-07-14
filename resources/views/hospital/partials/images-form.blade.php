@@ -57,6 +57,7 @@
         <div class="col-sm-6">
             {{Form::label('sub_'.$i, 'サブメイン'.$i,['class' => 'form_label'])}}
             <?php $sub_image_category = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB)->where('file_location_no', $i)->first(); ?>
+            {{Form::hidden('sub_'.$i.'_category_id', $sub_image_category['id'] )}}
             @if (!is_null($sub_image_category) && !is_null($sub_image_category->hospital_image))
                 <div class="sub_image_area">
                     <img class="object-fit" src="{{$sub_image_category->hospital_image->path}}">
