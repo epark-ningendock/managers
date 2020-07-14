@@ -163,10 +163,10 @@ class HospitalImagesController extends Controller
 
         //sub
         for($i = 1; $i <= 4; $i++){
-            if(isset($file['sub_'.$i])  or isset($file['sub_'.$i.'_category_id'])) {
+//            if(isset($file['sub_'.$i])  or isset($file['sub_'.$i.'_category_id'])) {
                 $this->hospitalImageUploader($file, 'sub_', $i, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_FACILITY_SUB);
                 Log::error('画像あり：！！！！！！！！！！！！！！！！！');
-            }
+//            }
         }
         //こだわり
         for($i = 1; $i <= 4; $i++){
