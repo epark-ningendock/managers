@@ -306,10 +306,11 @@
     <?php $staff_tab_box = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_TAB)->where('file_location_no', FileLocationNo::TAB_CATEGORY_STAFF);?>
     <?php $staff_tab_box = $staff_tab_box->sortBy('order2');?>
     <?php $staff_show_order2 = $staff_tab_box->pluck('order')->toArray();?>
+    <?php $staff_tab_count = empty($staff_tab_box) ? 0 : count($staff_tab_box);?>
     <!--登録済のタブ画像フォーム-->
     <div class="open_close_tab">
     @foreach($staff_tab_box as $staff_tab)
-        <?php $i = $staff_tab['order'];?>
+        <?php $i = $loop->iteration ;?>
         <div class="row photo-tab" data-order="{{$i}}" @if(is_null($staff_tab) && $i != 1) style="display: none" @endif>
             <div class="col-sm-6">
                 @if(!is_null($staff_tab) && !is_null($staff_tab->hospital_image) && !is_null($staff_tab->hospital_image->path))
@@ -371,8 +372,8 @@
     @endforeach
     <!--//登録済のタブ画像フォーム-->
     <!--未登録のタブ画像フォーム-->
-    @for ($i = 1; $i <= 30; $i++)
-        @if(!in_array($i, $staff_show_order2))
+    @for ($i = $staff_tab_count + 1; $i <= 30; $i++)
+        {{--@if(!in_array($i, $staff_show_order2))--}}
         <div class="row photo-tab" data-order="{{$i}}"
              @if($i != 1 && (!old('staff_tab_'.$i.'_order2') && !old('staff_tab_'.$i.'_memo2')) )
              style="display: none"
@@ -415,7 +416,7 @@
             <i class="icon-trash icon-white"></i>
             追加
         </a>
-        @endif
+        {{--@endif--}}
     @endfor
     <!--//未登録のタブ画像フォーム-->
     </div>
