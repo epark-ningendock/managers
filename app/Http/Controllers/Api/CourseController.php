@@ -82,7 +82,7 @@ class CourseController extends ApiBaseController
             $hospital = $this->getHospitalData($course->hospital_id);
             $data = ['course' => $course,  'hospital' => $hospital];
             $sex = $this->convert_sex($hospital->medical_examination_system_id, $request->input('sex'));
-            if ($request->input('sex')) {
+            if (is_numeric($request->input('sex'))) {
                 $course->kenshin_relation_flg = true;
                 $course->medical_exam_sys_id = $hospital->medical_examination_system_id;
                 $course->reservation_date = $request->input('reservation_date');
@@ -165,7 +165,7 @@ class CourseController extends ApiBaseController
 
         $query->with(['course_options']);
 
-        if ($request->input('sex')) {
+        if (is_numeric($request->input('sex'))) {
             $query->with([
                 'kenshin_sys_courses',
                 'kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
@@ -356,7 +356,7 @@ class CourseController extends ApiBaseController
                 ->where('hospital_id', $hospital_id)
                 ->where('is_category', 0);
 
-            if ($request->input('sex')) {
+            if (is_numeric($request->input('sex'))) {
                 $query->with([
                     'kenshin_sys_courses',
                     'kenshin_sys_courses.course_futan_conditions' => function ($q) use ($request) {
@@ -372,7 +372,7 @@ class CourseController extends ApiBaseController
                 return $this->createResponse($this->messages['data_empty_error'], $request->input('callback'));
             }
 
-            if ($request->input('sex')) {
+            if (is_numeric($request->input('sex'))) {
                 $course->kenshin_relation_flg = true;
                 $course->sex = $request->input('sex');
                 $course->birth = $request->input('birth');
