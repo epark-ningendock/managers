@@ -136,10 +136,19 @@ class ApiBaseController extends Controller
     }
 
     protected function convert_sex($medical_examination_system_id, $sex) {
-        if ($sex == 0) {
-            return 1;
+        if ($medical_examination_system_id == 1) {
+            if ($sex == 0) {
+                return 1;
+            } else {
+                return 2;
+            }
         } else {
-            return 2;
+            if ($sex == 0) {
+                return 0;
+            } else {
+                return 1;
+            }
         }
+
     }
 }
