@@ -735,9 +735,9 @@ class SearchController extends ApiBaseController
             ->orderBy('hospitals.pvad', 'DESC')
             ->orderBy('hospitals.pv_count', 'DESC');
 
-        if (!empty($request->input('sex'))) {
-            $query->with(['courses.kenshin_sys_courses', 'courses.kenshin_sys_courses.course_futan_conditions']);
-        }
+//        if ($request->input('sex')) {
+//            $query->with(['courses.kenshin_sys_courses', 'courses.kenshin_sys_courses.course_futan_conditions']);
+//        }
 
         $hospitals = $query->get();
 
