@@ -200,13 +200,13 @@
 </head>
 <body>
 <div class="table-responsive">
-<span class="span_center">請求内訳明細書</span><span class="span_right">発効日：　{{$today_date}}</span><br/>
-<span class="span_center_date">{{$period}}</span><br/>
+<span class="span_center">請求内訳明細書</span><span class="span_right">発効日：{{$today_date}}</span><br/>
+<span class="span_center_date">（{{$period}}）</span><br/>
 
 <span style="border-bottom: solid 2px;">{{ $billing->hospital->contract_information->contractor_name }} 御中 </span>
 <span class="span_right_comp">株式会社EPARK人間ドック　　　　　　 　　　</span>
 <span class="span_right">東京都港区芝大門1-2-13　MSC芝大門ビル6F　　　　</span>　
-　　　　　ご請求金額<span style="border-bottom: solid 1px;">　　{{$total_price}}</span>（税込）
+　　　　　ご請求金額<span style="border-bottom: solid 1px;">　¥{{number_format($total_price)}}</span>（税込）
 <span class="span_right">TEL：0120-201-637　FAX：03-4560-769　 　　　</span><br/><br/>
 
 各プラン・サービス別内訳明細
@@ -226,13 +226,13 @@
         <td>
             月額費用
         </td>
-        <td>
+        <td align="center">
             1
         </td>
-        <td>
+        <td align="right">
             ¥{{ number_format($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee  + $billing->adjustment_price )}}
         </td>
-        <td>
+        <td align="right">
             ¥{{ number_format($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee  + $billing->adjustment_price )}}
         </td>
         <td>
@@ -254,7 +254,7 @@
                         従量課金
                     @endif
                 </td>
-                <td>
+                <td align="center">
                     @if ($hospital_option_plan->option_plan_id != 6)
                         1
                     @elseif($hospital_option_plan->price > 0)
@@ -263,7 +263,7 @@
                         {{$special_count}}
                     @endif
                 </td>
-                <td>
+                <td align="right">
                     @if ($hospital_option_plan->option_plan_id != 6)
                         {{ number_format($hospital_option_plan->price) }}
                     @elseif($hospital_option_plan->price > 0)
@@ -272,7 +272,7 @@
                         {{ number_format($hospital_option_plan->pay_per_use_price) }}
                     @endif
                 </td>
-                <td>
+                <td align="right">
                     @if ($hospital_option_plan->option_plan_id != 6)
                         {{ number_format($hospital_option_plan->price) }}
                     @elseif($hospital_option_plan->price > 0)
@@ -305,14 +305,14 @@
         @foreach( $billing->hospital->reservationByCompletedDate($startedDate, $endedDate) as $reservation)
             <tr>
                 <td>{{ $reservation->id }}</td>
-                <td>{{ ( isset($reservation->channel) && ( $reservation->channel == 1)) ? 'WEB' : 'TEL' }}<br>@if ($reservation->site_code == 'HP') HPリンク @elseif ($reservation->site_code == 'special') 特集 @else　@endif</td>
+                <td align="center">{{ ( isset($reservation->channel) && ( $reservation->channel == 1)) ? 'WEB' : 'TEL' }}<br>@if ($reservation->site_code == 'HP') HPリンク @elseif ($reservation->site_code == 'special') 特集 @else　@endif</td>
                 <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
                 <td>{{ $reservation->customer->family_name . ' ' . $reservation->customer->first_name }}</td>
                 <td>{{ $reservation->customer->family_name_kana . ' ' . $reservation->customer->first_name_kana }}</td>
                 <td>{{ $reservation->course->name }}</td>
-                <td>'¥' . {{ number_format($reservation->tax_included_price + $reservation->adjustment_price) }}</td>
-                <td>{{ ( $reservation->reservation_options->pluck('option_price')->sum() ) ? '¥' . number_format($reservation->reservation_options->pluck('option_price')->sum())  : '' }}</td>
-                <td>{{ ( isset($reservation->fee) ) ? '¥' . number_format($reservation->fee) : '' }}</td>
+                <td align="right">¥{{ number_format($reservation->tax_included_price + $reservation->adjustment_price) }}</td>
+                <td align="right">{{ ( $reservation->reservation_options->pluck('option_price')->sum() ) ? '¥' . number_format($reservation->reservation_options->pluck('option_price')->sum())  : '' }}</td>
+                <td align="right">{{ ( isset($reservation->fee) ) ? '¥' . number_format($reservation->fee) : '' }}</td>
             </tr>
         @endforeach
     @endif
