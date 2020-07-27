@@ -196,46 +196,34 @@
         .plan_head {
             background-color: #d3d3d3;
         }
-        .parent {
-            width: 100%;
-            display: flex;
-        }
-        .child_center {
-            width: 100px;
-            font-size: 2ex;
-            font-weight: bold;
-            text-align:center;
-        }
-        .child_right {
-            width: 100px;
-            text-align:right;/*右寄せ*/
+        .tr_cont {
+            font-size: x-small;
         }
     </style>
 </head>
 <body>
 <div class="table-responsive">
-    <div class="parent">
-        <div class="child_center">請求内訳明細書</div><div class="child_right">発効日：{{$today_date}}</div>
-    </div>
-<span class="span_center_date">（{{$period}}）</span><br/>
+    <span class="span_center">請求内訳明細書</span>
+    <span class="span_center_date">（{{$period}}）</span>
+    <span class="span_right">発効日：{{$today_date}}</span>
 
-<span style="border-bottom: solid 2px;">{{ $billing->hospital->contract_information->contractor_name }} 御中 </span>
-<span class="span_right_comp">株式会社EPARK人間ドック　　　　　　 　　　</span>
-<span class="span_right">東京都港区芝大門1-2-13　MSC芝大門ビル6F　　　　</span>　
-　　　　　ご請求金額<span style="border-bottom: solid 1px;">　¥{{number_format($total_price)}}</span>（税込）
-<span class="span_right">TEL：0120-201-637　FAX：03-4560-769　 　　　</span><br/><br/>
+    <span style="border-bottom: solid 2px;">{{ $billing->hospital->contract_information->contractor_name }} 御中 </span>
+    <span class="span_right_comp">株式会社EPARK人間ドック　　　　　　 　　　</span>
+    <span class="span_right">東京都港区芝大門1-2-13　MSC芝大門ビル6F　　　　</span>
+    <span class="span_right">TEL：0120-201-637　FAX：03-4560-769　 　　　</span>
+    ご請求金額<span style="border-bottom: solid 1px;">　¥{{number_format($total_price)}}</span>（税込）<br/><br/>
 
 各プラン・サービス別内訳明細
 <table border="1" style="border-collapse: collapse">
     <tr class="plan_head">
-        <th width="35%">プラン・サービス名</th>
-        <th width="10%">項目</th>
-        <th width="5%">数量</th>
-        <th width="10%">単価</th>
-        <th width="10%">金額(税込)</th>
-        <th width="30%">備考</th>
+        <th width="35%">　　プラン・サービス名　　</th>
+        <th width="10%">　項目　</th>
+        <th width="5%">　数量　</th>
+        <th width="10%">　単価　</th>
+        <th width="10%">　金額(税込)　</th>
+        <th width="30%">　　　　備考　　　　</th>
     </tr>
-    <tr>
+    <tr class="tr_cont">
         <td>
             {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}
         </td>
@@ -257,7 +245,7 @@
     </tr>
     @if (!empty($billing->hospital->hospital_option_plans) )
         @foreach( $billing->hospital->hospital_option_plans as $hospital_option_plan)
-            <tr>
+            <tr class="tr_cont">
                 <td>
                     {{ $hospital_option_plan->option_plan->option_plan_name }}
                 </td>
@@ -307,19 +295,19 @@
 予約受付別明細
 <table border="1" style="border-collapse: collapse">
     <tr class="plan_head">
-        <th width="5%">予約番号</th>
-        <th width="10%">媒体<br/>HPﾘﾝｸ/特集</th>
-        <th width="5%">受診日</th>
-        <th width="10%">受診者名</th>
-        <th width="10%">受診者名（かな）</th>
-        <th width="30%">コース</th>
-        <th width="10%">コース金額<br>（税込）</th>
-        <th width="10%">オプション金額<br>（税込）</th>
-        <th width="10%">手数料<br>（税込）</th>
+        <th width="5%">　予約番号　</th>
+        <th width="10%">媒体<br/>　HPﾘﾝｸ/特集　</th>
+        <th width="5%">　受診日　</th>
+        <th width="10%">　　受診者名　　</th>
+        <th width="10%">　　　　受診者名（かな）　　　　</th>
+        <th width="30%">　　　　　　　　　　コース　　　　　　　　　　</th>
+        <th width="10%">　コース金額　<br>（税込）</th>
+        <th width="10%">　オプション金額　<br>（税込）</th>
+        <th width="10%">　手数料　<br>（税込）</th>
     </tr>
     @if (! $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->isEmpty() )
         @foreach( $billing->hospital->reservationByCompletedDate($startedDate, $endedDate) as $reservation)
-            <tr>
+            <tr class="tr_cont">
                 <td>{{ $reservation->id }}</td>
                 <td align="center">{{ ( isset($reservation->channel) && ( $reservation->channel == 1)) ? 'WEB' : 'TEL' }}<br>@if ($reservation->site_code == 'HP') HPリンク @elseif ($reservation->site_code == 'special') 特集 @else　@endif</td>
                 <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
