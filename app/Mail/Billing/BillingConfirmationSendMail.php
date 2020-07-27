@@ -38,16 +38,17 @@ class BillingConfirmationSendMail extends Mailable
             $view = 'billing.mail.billing-claim-hospital-confirmation';
         } elseif ( $this->attributes['email_type'] === 'claim_confirmation') {
             if ($this->fax_flg) {
-                $view = 'billing.mail.billing-claim-confirmation-fax';
-            } else {
-                $view = 'billing.mail.billing-claim-confirmation';
-            }
-        } else {
-            if ($this->fax_flg) {
                 $view = 'billing.mail.billing-confirmation-fax';
             } else {
                 $view = 'billing.mail.billing-confirmation';
             }
+        } else {
+            if ($this->fax_flg) {
+                $view = 'billing.mail.billing-claim-confirmation-fax';
+            } else {
+                $view = 'billing.mail.billing-claim-confirmation';
+            }
+
         }
 
         return $this
