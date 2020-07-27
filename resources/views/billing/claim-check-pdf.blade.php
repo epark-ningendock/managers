@@ -210,8 +210,8 @@
 
     <span style="border-bottom: solid 2px;">{{ $billing->hospital->contract_information->contractor_name }} 御中 </span>
     <span class="span_right_comp">株式会社EPARK人間ドック　　　　　　 　　　</span>
-    <span class="span_right">東京都港区芝大門1-2-13　MSC芝大門ビル6F　　　　</span>
-    <span class="span_right">TEL：0120-201-637　FAX：03-4560-769　 　　　</span>
+    <span class="span_right">　　　東京都港区芝大門1-2-13　MSC芝大門ビル6F　</span>
+    <span class="span_right">　　　TEL：0120-201-637　FAX：03-4560-769　 </span>
     ご請求金額<span style="border-bottom: solid 1px;">　¥{{number_format($total_price)}}</span>（税込）<br/><br/>
 
 各プラン・サービス別内訳明細
@@ -300,11 +300,11 @@
         <th width="10%">媒体<br/>　HPﾘﾝｸ/特集　</th>
         <th width="5%">　受診日　</th>
         <th width="10%">　　受診者名　　</th>
-        <th width="10%">　　　　受診者名（かな）　　　　</th>
+        <th width="10%">　　受診者名（かな）　　</th>
         <th width="30%">　　　　　　　　　コース　　　　　　　　　</th>
-        <th width="10%">　コース金額　<br>（税込）</th>
+        <th width="10%">　　コース金額　　<br>（税込）</th>
         <th width="10%">　オプション金額　<br>（税込）</th>
-        <th width="10%">手数料<br>（税込）</th>
+        <th width="10%">　　　手数料　　　<br>（税込）</th>
     </tr>
     @if (! $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->isEmpty() )
         @foreach( $billing->hospital->reservationByCompletedDate($startedDate, $endedDate) as $reservation)
@@ -314,7 +314,7 @@
                 <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
                 <td>{{ $reservation->customer->family_name . ' ' . $reservation->customer->first_name }}</td>
                 <td>{{ $reservation->customer->family_name_kana . ' ' . $reservation->customer->first_name_kana }}</td>
-                <td>{{ str_limit($reservation->course->name, $limit = 20, $end = '...') }}</td>
+                <td>{{ str_limit($reservation->course->name, $limit = 40, $end = '...') }}</td>
                 <td align="right">¥{{ number_format($reservation->tax_included_price + $reservation->adjustment_price) }}</td>
                 <td align="right">{{ ( $reservation->reservation_options->pluck('option_price')->sum() ) ? '¥' . number_format($reservation->reservation_options->pluck('option_price')->sum())  : '' }}</td>
                 <td align="right">{{ ( isset($reservation->fee) ) ? '¥' . number_format($reservation->fee) : '' }}</td>

@@ -315,7 +315,7 @@ class BillingController extends Controller {
                     if (strpos($to, 'fax') !== false) {
                         $fax_flg = true;
                     }
-                    Mail::to($tos)->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $fax_flg, $attributes));
+                    Mail::to($to)->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $fax_flg, $attributes));
                 }
 
 
