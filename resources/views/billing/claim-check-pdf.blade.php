@@ -314,7 +314,7 @@
                 <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
                 <td>{{ $reservation->customer->family_name . ' ' . $reservation->customer->first_name }}</td>
                 <td>{{ $reservation->customer->family_name_kana . ' ' . $reservation->customer->first_name_kana }}</td>
-                <td>{{ str_limit($reservation->course->name, $limit = 60, $end = '...') }}</td>
+                <td>{{ $reservation->course->name }}</td>
                 <td align="right">¥{{ number_format($reservation->tax_included_price + $reservation->adjustment_price) }}</td>
                 <td align="right">{{ ( $reservation->reservation_options->pluck('option_price')->sum() ) ? '¥' . number_format($reservation->reservation_options->pluck('option_price')->sum())  : '' }}</td>
                 <td align="right">{{ ( isset($reservation->fee) ) ? '¥' . number_format($reservation->fee) : '' }}</td>
