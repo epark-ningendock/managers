@@ -195,6 +195,7 @@
         }
         .plan_head {
             background-color: #d3d3d3;
+            font-size: small;
         }
         .tr_cont {
             font-size: x-small;
@@ -227,7 +228,7 @@
         <td>
             {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}
         </td>
-        <td>
+        <td align="center">
             月額費用
         </td>
         <td align="center">
@@ -249,7 +250,7 @@
                 <td>
                     {{ $hospital_option_plan->option_plan->option_plan_name }}
                 </td>
-                <td>
+                <td align="center">
                     @if ($hospital_option_plan->option_plan_id != 6)
                         月額費用
                     @elseif($hospital_option_plan->price > 0)
@@ -295,15 +296,15 @@
 予約受付別明細
 <table border="1" style="border-collapse: collapse">
     <tr class="plan_head">
-        <th width="5%">　予約番号　</th>
+        <th width="5%">予約番号</th>
         <th width="10%">媒体<br/>　HPﾘﾝｸ/特集　</th>
         <th width="5%">　受診日　</th>
         <th width="10%">　　受診者名　　</th>
         <th width="10%">　　　　受診者名（かな）　　　　</th>
-        <th width="30%">　　　　　　　　　　コース　　　　　　　　　　</th>
+        <th width="30%">　　　　　　　　　コース　　　　　　　　　</th>
         <th width="10%">　コース金額　<br>（税込）</th>
         <th width="10%">　オプション金額　<br>（税込）</th>
-        <th width="10%">　手数料　<br>（税込）</th>
+        <th width="10%">手数料<br>（税込）</th>
     </tr>
     @if (! $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->isEmpty() )
         @foreach( $billing->hospital->reservationByCompletedDate($startedDate, $endedDate) as $reservation)
