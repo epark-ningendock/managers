@@ -196,11 +196,27 @@
         .plan_head {
             background-color: #d3d3d3;
         }
+        .parent {
+            width: 100%;
+            display: flex;
+        }
+        .child_center {
+            width: 100px;
+            font-size: 2ex;
+            font-weight: bold;
+            text-align:center;
+        }
+        .child_right {
+            width: 100px;
+            text-align:right;/*右寄せ*/
+        }
     </style>
 </head>
 <body>
 <div class="table-responsive">
-<span class="span_center">請求内訳明細書</span><span class="span_right">発効日：{{$today_date}}</span><br/>
+    <div class="parent">
+        <div class="child_center">請求内訳明細書</div><div class="child_right">発効日：{{$today_date}}</div>
+    </div>
 <span class="span_center_date">（{{$period}}）</span><br/>
 
 <span style="border-bottom: solid 2px;">{{ $billing->hospital->contract_information->contractor_name }} 御中 </span>
