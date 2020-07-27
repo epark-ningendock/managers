@@ -2,12 +2,12 @@
 <body>
 
 
-{{ $billing->hospital->contract_information->contractor_name }} 御中<br/>
+{{ $billing->hospital->contract_information->contractor_name }} 御中<br/><br/>
 <br/>
 いつも大変お世話になっております。<br/>
-株式会社EPARK人間ドックでございます。<br/>
+株式会社EPARK人間ドックでございます。<br/><br/>
 
-平素は弊社に格別のお引き立てを賜り、誠にありがとうございます。<br/>
+平素は弊社に格別のお引き立てを賜り、誠にありがとうございます。<br/><br/>
 
 さてこの度は、{{ substr($attributes['selectedMonth'], 0, 4) }}年 {{ substr($attributes['selectedMonth'], -2) }}月 の請求金額が確定いたしましたのでご連絡させていただきました。<br/>
 別途送付させていただきます請求書の内容をご確認いただき、期日までにお支払いいただきま<br/>

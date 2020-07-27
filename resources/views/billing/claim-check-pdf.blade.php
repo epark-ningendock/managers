@@ -199,7 +199,7 @@
     </style>
 </head>
 <body>
-
+<div class="table-responsive">
 <span class="span_center">請求内訳明細書</span><span class="span_right">発効日：　{{$today_date}}</span><br/>
 <span class="span_center_date">{{$period}}</span><br/>
 
@@ -318,7 +318,7 @@
     @endif
 </table>
 
-<div class="table-responsive">
+
 
     <br>
     @if ($billing->hospital->payment_type == 0)
