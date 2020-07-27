@@ -210,8 +210,8 @@
 
     <span style="border-bottom: solid 2px;">{{ $billing->hospital->contract_information->contractor_name }} 御中 </span>
     <span class="span_right_comp">株式会社EPARK人間ドック　　　　　　 　　</span>
-    <span class="span_right">東京都港区芝大門1-2-13　MSC芝大門ビル6F</span>
-    <span class="span_right">TEL：0120-201-637 　FAX：03-4560-769</span>
+    <span class="span_right">東京都港区芝大門1-2-13　MSC芝大門ビル6F　</span>
+    <span class="span_right">TEL：0120-201-637　FAX：03-4560-769　　</span>
     ご請求金額<span style="border-bottom: solid 1px;">　¥{{number_format($total_price)}}</span>（税込）<br/><br/>
 
 各プラン・サービス別内訳明細
