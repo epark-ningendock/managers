@@ -37,7 +37,7 @@
             　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
         </td>
         <td width="25%"　align="right">
-            　　<span style="border-bottom: solid 2px;">Date　{{$today_date}}</span>
+            　　<span style="border-bottom: solid 2px;">Date　{{$attributes['today_date']}}</span>
         </td>
     </tr>
     <tr>
