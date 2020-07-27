@@ -173,121 +173,163 @@
         .table-responsive.table-bordered {
             border: 0;
         }
+        .span_center {
+            font-size: 2ex;
+            font-weight: bold;
+            display:block;
+            text-align:center;
+        }
+        .span_center_date {
+            display:block;
+            text-align:center;
+        }
+        .span_right {
+            display:block;
+            text-align:right;/*右寄せ*/
+        }
+        .span_right_comp {
+            font-size: 2ex;
+            font-weight: bold;
+            display:block;
+            text-align:right;/*右寄せ*/
+        }
+        .plan_head {
+            background-color: #d3d3d3;
+        }
     </style>
 </head>
 <body>
 
-<ul class="billing-detail-list">
-    <li>
-        <small class="text-bold label-text">{{ __('医療機関') }}</small>
-        <span class="value-text">{{ $billing->hospital->name }}</span>
-    </li>
-    <li>
-        <small class="text-bold label-text">プラン名</small>
-        <span class="value-text">{{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}</span>
-    </li>
-    <li>
-        <small class="text-bold label-text">プラン金額</small>
-        <span class="value-text">
-               {{ number_format($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee  + $billing->adjustment_price )}}円
-            </span>
-    </li>
+<span class="span_center">請求内訳明細書</span><span class="span_right">発効日：　{{$today_date}}</span><br/>
+<span class="span_center_date">{{$period}}</span><br/>
+
+<span style="border-bottom: solid 2px;">{{ $billing->hospital->contract_information->contractor_name }} 御中 </span>
+<span class="span_right_comp">株式会社EPARK人間ドック　　　　　　 　　　</span>
+<span class="span_right">東京都港区芝大門1-2-13　MSC芝大門ビル6F　　　　</span>　
+　　　　　ご請求金額<span style="border-bottom: solid 1px;">　　{{$total_price}}</span>（税込）
+<span class="span_right">TEL：0120-201-637　FAX：03-4560-769　 　　　</span><br/><br/>
+
+各プラン・サービス別内訳明細
+<table border="1" style="border-collapse: collapse">
+    <tr class="plan_head">
+        <th width="35%">プラン・サービス名</th>
+        <th width="10%">項目</th>
+        <th width="5%">数量</th>
+        <th width="10%">単価</th>
+        <th width="10%">金額(税込)</th>
+        <th width="30%">備考</th>
+    </tr>
+    <tr>
+        <td>
+            {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->plan_name ?? '' }}
+        </td>
+        <td>
+            月額費用
+        </td>
+        <td>
+            1
+        </td>
+        <td>
+            ¥{{ number_format($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee  + $billing->adjustment_price )}}
+        </td>
+        <td>
+            ¥{{ number_format($billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->monthly_contract_fee  + $billing->adjustment_price )}}
+        </td>
+        <td>
+            手数料　{{$billing->hospital->hospitalPlanByDate($billing->endedDate)->contractPlan->fee_rate}}%
+        </td>
+    </tr>
     @if (!empty($billing->hospital->hospital_option_plans) )
         @foreach( $billing->hospital->hospital_option_plans as $hospital_option_plan)
-            <li>
-                <small class="text-bold label-text">{{ $hospital_option_plan->option_plan->option_plan_name }}</small>
-                <span class="value-text">
-                {{ number_format($hospital_option_plan->price) }} 円
-            </span>
-            </li>
+            <tr>
+                <td>
+                    {{ $hospital_option_plan->option_plan->option_plan_name }}
+                </td>
+                <td>
+                    @if ($hospital_option_plan->option_plan_id != 6)
+                        月額費用
+                    @elseif($hospital_option_plan->price > 0)
+                        月額費用
+                    @else
+                        従量課金
+                    @endif
+                </td>
+                <td>
+                    @if ($hospital_option_plan->option_plan_id != 6)
+                        1
+                    @elseif($hospital_option_plan->price > 0)
+                        1
+                    @else
+                        {{$special_count}}
+                    @endif
+                </td>
+                <td>
+                    @if ($hospital_option_plan->option_plan_id != 6)
+                        {{ number_format($hospital_option_plan->price) }}
+                    @elseif($hospital_option_plan->price > 0)
+                        {{ number_format($hospital_option_plan->price) }}
+                    @else
+                        {{ number_format($hospital_option_plan->pay_per_use_price) }}
+                    @endif
+                </td>
+                <td>
+                    @if ($hospital_option_plan->option_plan_id != 6)
+                        {{ number_format($hospital_option_plan->price) }}
+                    @elseif($hospital_option_plan->price > 0)
+                        {{ number_format($hospital_option_plan->price) }}
+                    @else
+                        {{ number_format($hospital_option_plan->pay_per_use_price * $special_count) }}
+                    @endif
+                </td>
+                <td>　</td>
+            </tr>
         @endforeach
     @endif
-    <li>
-        <small class="text-bold label-text">成果コース</small>
-        <span class="value-text">
-                {{ $billing->hospital->hospitalPlanByDate($endedDate)->contractPlan->fee_rate }}%
-            </span>
-    </li>
-    <li>
-        <small class="text-bold label-text">手数料合計金</small>
-        <span class="value-text">
-                {{ number_format($billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->pluck('fee')->sum()) }}円
-            </span>
-    </li>
-</ul>
 
-<br><br><br>
+</table>
+<br/><br/>
+予約受付別明細
+<table border="1" style="border-collapse: collapse">
+    <tr class="plan_head">
+        <th width="5%">予約番号</th>
+        <th width="10%">媒体<br/>HPﾘﾝｸ/特集</th>
+        <th width="5%">受診日</th>
+        <th width="10%">受診者名</th>
+        <th width="10%">受診者名（かな）</th>
+        <th width="30%">コース</th>
+        <th width="10%">コース金額<br>（税込）</th>
+        <th width="10%">オプション金額<br>（税込）</th>
+        <th width="10%">手数料<br>（税込）</th>
+    </tr>
+    @if (! $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->isEmpty() )
+        @foreach( $billing->hospital->reservationByCompletedDate($startedDate, $endedDate) as $reservation)
+            <tr>
+                <td>{{ $reservation->id }}</td>
+                <td>{{ ( isset($reservation->channel) && ( $reservation->channel == 1)) ? 'WEB' : 'TEL' }}<br>@if ($reservation->site_code == 'HP') HPリンク @elseif ($reservation->site_code == 'special') 特集 @else　@endif</td>
+                <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
+                <td>{{ $reservation->customer->family_name . ' ' . $reservation->customer->first_name }}</td>
+                <td>{{ $reservation->customer->family_name_kana . ' ' . $reservation->customer->first_name_kana }}</td>
+                <td>{{ $reservation->course->name }}</td>
+                <td>'¥' . {{ number_format($reservation->tax_included_price + $reservation->adjustment_price) }}</td>
+                <td>{{ ( $reservation->reservation_options->pluck('option_price')->sum() ) ? '¥' . number_format($reservation->reservation_options->pluck('option_price')->sum())  : '' }}</td>
+                <td>{{ ( isset($reservation->fee) ) ? '¥' . number_format($reservation->fee) : '' }}</td>
+            </tr>
+        @endforeach
+    @endif
+</table>
 
 <div class="table-responsive">
 
-    <table id="example2" class="table table-bordered table-hover table-striped mb-5 pdftable">
-
-        <thead>
-        <tr>
-            <th>予約番号</th>
-            <th>受診日</th>
-            <th>受診者名</th>
-            <th>受診者名（かな）</th>
-            <th>媒体</th>
-            <th>ステータス</th>
-            <th>決済方法</th>
-            <th>コース</th>
-            <th>コース金額</th>
-            <th>オプション金額</th>
-            <th>調整額</th>
-            <th>手数料率</th>
-            <th>手数料（税込）</th>
-            <th>無料HPリンク</th>
-        </tr>
-        </thead>
-        <tbody>
-        @if (! $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->isEmpty() )
-            @foreach( $billing->hospital->reservationByCompletedDate($startedDate, $endedDate) as $reservation)
-                <tr>
-                    <td>{{ $reservation->id }}</td>
-                    <td>{{ $reservation->reservation_date->format('Y-m-d') }}</td>
-                    <td>{{ $reservation->customer->family_name . ' ' . $reservation->customer->first_name }}</td>
-                    <td>{{ $reservation->customer->family_name_kana . ' ' . $reservation->customer->first_name_kana }}</td>
-                    <td>{{ ( isset($reservation->channel) && ( $reservation->channel == 1)) ? 'WEB' : 'TEL' }}</td>
-                    <td>
-                        @if ( $reservation->reservation_status->is(ReservationStatus::PENDING) )
-                            仮受付
-                        @elseif ( $reservation->reservation_status->is(ReservationStatus::RECEPTION_COMPLETED) )
-                            受付確定
-                        @elseif ( $reservation->reservation_status->is(ReservationStatus::COMPLETED) )
-                            受診完了
-                        @elseif ( $reservation->reservation_status->is(ReservationStatus::CANCELLED) )
-                            キャンセル
-                        @endif
-                    </td>
-                    <td>@if ( isset($reservation->is_payment) && ( $reservation->is_payment == 1 ) ) 事前決済 @else 現地決済 @endif</td>
-                    <td>{{ $reservation->course->name }}</td>
-                    <td>{{ number_format($reservation->tax_included_price) . '円' ?? '' }}</td>
-                    <td>{{ ( $reservation->reservation_options->pluck('option_price')->sum() ) ? number_format($reservation->reservation_options->pluck('option_price')->sum()) . '円' : '' }}</td>
-                    <td>{{ (isset($reservation->adjustment_price) ) ? number_format($reservation->adjustment_price) . '円' : '' }}</td>
-                    <td>{{ $reservation->fee_rate }}%</td>
-                    <td>{{ ( isset($reservation->fee) ) ? number_format($reservation->fee) . '円' : '' }}</td>
-                    <td>{{ (isset($reservation->is_free_hp_link) && ( $reservation->is_free_hp_link == 1) ) ? '無料HPリンク' : '' }}</td>
-                </tr>
-            @endforeach
-        @else
-
-            <tr><td colspan="13">{{ trans('messages.no_record') }}</td></tr>
-        @endif
-        </tbody>
-
-    </table>
-
     <br>
     @if ($billing->hospital->payment_type == 0)
-        【振込先】 銀行名：りそな銀行　　　　　　　　<br>
-        　　　　　　支店名：市ヶ谷支店　　　　　 　　<br>
-        　　　　　　預金種目：普通預金　　　　 　　　<br>
-        　　　　　　口座番号：1659966　　　　　　 　<br>
-        　　　　　　口座名義：エンパワーヘルスケア(カ<br>
+        【振込先】<br/>
+        銀行名：りそな銀行　　　　口座番号：普通）1659966<br>
+        支店名：市ヶ谷支店　　　　口座名義：エンパワーヘルスケア(カ<br>
+
     @elseif($billing->hospital->payment_type == 1)
-        【引落名義】 エンパワーヘルスケア 株式会社　　<br>
-        　　　　　　 エンパワーヘルスケア（カ　　 　　<br>
+        【引落名義】<br/>
+        エンパワーヘルスケア 株式会社<br>
+        エンパワーヘルスケア（カ<br>
     @endif
 
 </div>

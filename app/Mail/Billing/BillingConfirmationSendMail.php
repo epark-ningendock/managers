@@ -19,10 +19,11 @@ class BillingConfirmationSendMail extends Mailable
      *
      * @return void
      */
-    public function __construct($data, $attchment, $attributes = [])
+    public function __construct($data, $attchment, $fax_flg, $attributes = [])
     {
         $this->data = $data;
         $this->attchment = $attchment;
+        $this->fax_flg = $fax_flg;
         $this->attributes = $attributes;
     }
 
@@ -36,9 +37,17 @@ class BillingConfirmationSendMail extends Mailable
         if ( session('hospital_id') ) {
             $view = 'billing.mail.billing-claim-hospital-confirmation';
         } elseif ( $this->attributes['email_type'] === 'claim_confirmation') {
-            $view = 'billing.mail.billing-claim-confirmation';
+            if ($this->fax_flg) {
+                $view = 'billing.mail.billing-claim-confirmation-fax';
+            } else {
+                $view = 'billing.mail.billing-claim-confirmation';
+            }
         } else {
-            $view = 'billing.mail.billing-confirmation';
+            if ($this->fax_flg) {
+                $view = 'billing.mail.billing-confirmation-fax';
+            } else {
+                $view = 'billing.mail.billing-confirmation';
+            }
         }
 
         return $this
