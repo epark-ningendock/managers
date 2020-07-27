@@ -46,7 +46,7 @@ class HospitalController extends ApiBaseController
             $sex = $this->convert_sex($hospital->medical_examination_system_id, $request->input('sex'));
             $request->sex = $sex;
             $hospital = $this->getHospitalData($hospital_id, $request);
-            if (!empty($request->input('sex'))) {
+            if (is_numeric($request->input('sex'))) {
                 $hospital->setKenshinRelation(true,
                     $sex,
                     $request->input('birth'),
@@ -71,10 +71,12 @@ class HospitalController extends ApiBaseController
         try {
 
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
-
-            $hospital = $this->getHospitalData($hospital_id, $request);
+            $hospital = Hospital::find($hospital_id);
             $sex = $this->convert_sex($hospital->medical_examination_system_id, $request->input('sex'));
-            if (!empty($request->input('sex'))) {
+            $request->sex = $sex;
+            $hospital = $this->getHospitalData($hospital_id, $request);
+//            $sex = $this->convert_sex($hospital->medical_examination_system_id, $request->input('sex'));
+            if (is_numeric($request->input('sex'))) {
                 $hospital->setKenshinRelation(true,
                     $sex,
                     $request->input('birth'),
@@ -230,7 +232,7 @@ class HospitalController extends ApiBaseController
 
         ]);
 
-        if (!empty($request->input('sex'))) {
+        if (is_numeric($request->input('sex'))) {
             $query->with([
                 'courses' => function ($query) use ($today, $request) {
                     if ($request->input('preview_flg') != '1') {
