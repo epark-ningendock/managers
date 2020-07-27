@@ -210,7 +210,7 @@
 
     <span style="border-bottom: solid 2px;">{{ $billing->hospital->contract_information->contractor_name }} 御中 </span>
     <span class="span_right_comp">株式会社EPARK人間ドック　　　　　　 　　</span>
-    <span class="span_right">東京都港区芝大門1-2-13　MSC芝大門ビル6F　</span>
+    <span class="span_right">東京都港区芝大門1-2-13　 MSC芝大門ビル6F</span>
     <span class="span_right">TEL：0120-201-637　FAX：03-4560-769　　</span>
     ご請求金額<span style="border-bottom: solid 1px;">　¥{{number_format($total_price)}}</span>（税込）<br/><br/>
 
@@ -270,20 +270,20 @@
                 </td>
                 <td align="right">
                     @if ($hospital_option_plan->option_plan_id != 6)
-                        {{ number_format($hospital_option_plan->price) }}
+                        ¥{{ number_format($hospital_option_plan->price) }}
                     @elseif($hospital_option_plan->price > 0)
-                        {{ number_format($hospital_option_plan->price) }}
+                        ¥{{ number_format($hospital_option_plan->price) }}
                     @else
-                        {{ number_format($hospital_option_plan->pay_per_use_price) }}
+                        ¥{{ number_format($hospital_option_plan->pay_per_use_price) }}
                     @endif
                 </td>
                 <td align="right">
                     @if ($hospital_option_plan->option_plan_id != 6)
-                        {{ number_format($hospital_option_plan->price) }}
+                        ¥{{ number_format($hospital_option_plan->price) }}
                     @elseif($hospital_option_plan->price > 0)
-                        {{ number_format($hospital_option_plan->price) }}
+                        ¥{{ number_format($hospital_option_plan->price) }}
                     @else
-                        {{ number_format($hospital_option_plan->pay_per_use_price * $special_count) }}
+                        ¥{{ number_format($hospital_option_plan->pay_per_use_price * $special_count) }}
                     @endif
                 </td>
                 <td>　</td>
