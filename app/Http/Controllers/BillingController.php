@@ -253,18 +253,6 @@ class BillingController extends Controller {
 
         if ( $hospitalEmailSetting ) {
 
-            $pdf =  PDF::loadView( 'billing.claim-check-pdf', [
-                'billing' => $billing,
-                'startedDate'     => $dateFilter['startedDate'],
-                'endedDate'      => $dateFilter['endedDate'],
-            ] )->setPaper('legal', 'landscape');
-
-            $confirmMailComposition = [
-                'subject' => $request->has('claim_check') ? '【EPARK人間ドック】請求内容ご確認のお願い' : '【EPARK人間ドック】請求内容確定のお知らせ',
-                'billing' => $billing,
-                'attachment_file_name' => $request->has('claim_check') ? '請求確認' : '請求確定',
-            ];
-
             $special_count = 0;
             foreach( $billing->hospital->reservationByCompletedDate($dateFilter['startedDate'], $dateFilter['endedDate']) as $reservation) {
                 if ($reservation->site_code == 'special') {
@@ -277,6 +265,23 @@ class BillingController extends Controller {
                 + $billing->hospital->hpLinkMonthPrice()
                 + $billing->hospital->hospitalOptionPlanPrice($billing->id, $dateFilter['endedDate'])
                 + $billing->hospital->reservationByCompletedDate($dateFilter['startedDate'], $dateFilter['endedDate'])->pluck('fee')->sum();
+
+
+            $pdf =  PDF::loadView( 'billing.claim-check-pdf', [
+                'billing' => $billing,
+                'startedDate'     => $dateFilter['startedDate'],
+                'endedDate'      => $dateFilter['endedDate'],
+                'today_date' => Carbon::now()->format('Y年m月d日'),
+                'period' => $dateFilter['startedDate']->format('Y/m/d') . '〜' . $dateFilter['endedDate']->format('Y/m/d'),
+                'special_count' => $special_count,
+                'total_price' => $total_price
+            ] )->setPaper('legal', 'landscape');
+
+            $confirmMailComposition = [
+                'subject' => $request->has('claim_check') ? '【EPARK人間ドック】請求内容ご確認のお願い' : '【EPARK人間ドック】請求内容確定のお知らせ',
+                'billing' => $billing,
+                'attachment_file_name' => $request->has('claim_check') ? '請求確認' : '請求確定',
+            ];
 
             $attributes = [
                 'email_type' => $request->has('claim_check') ? 'claim_check' : 'claim_confirmation',
