@@ -301,10 +301,10 @@
         <th width="5%">　受診日　</th>
         <th width="10%">　　受診者名　　</th>
         <th width="10%">　　受診者名（かな）　　</th>
-        <th width="30%">　　　　　　　　　コース　　　　　　　　　</th>
-        <th width="10%">　　コース金額　　<br>（税込）</th>
-        <th width="10%">　オプション金額　<br>（税込）</th>
-        <th width="10%">　　　手数料　　　<br>（税込）</th>
+        <th width="30%">　　　　　　　　　　コース　　　　　　　　　　</th>
+        <th width="10%">　コース金額　<br>（税込）</th>
+        <th width="10%">　オプション　<br>金額（税込）</th>
+        <th width="10%">　　手数料　　<br>（税込）</th>
     </tr>
     @if (! $billing->hospital->reservationByCompletedDate($startedDate, $endedDate)->isEmpty() )
         @foreach( $billing->hospital->reservationByCompletedDate($startedDate, $endedDate) as $reservation)
@@ -314,7 +314,7 @@
                 <td>{{ $reservation->reservation_date->format('Y/m/d') }}</td>
                 <td>{{ $reservation->customer->family_name . ' ' . $reservation->customer->first_name }}</td>
                 <td>{{ $reservation->customer->family_name_kana . ' ' . $reservation->customer->first_name_kana }}</td>
-                <td>{{ str_limit($reservation->course->name, $limit = 40, $end = '...') }}</td>
+                <td>{{ str_limit($reservation->course->name, $limit = 60, $end = '...') }}</td>
                 <td align="right">¥{{ number_format($reservation->tax_included_price + $reservation->adjustment_price) }}</td>
                 <td align="right">{{ ( $reservation->reservation_options->pluck('option_price')->sum() ) ? '¥' . number_format($reservation->reservation_options->pluck('option_price')->sum())  : '' }}</td>
                 <td align="right">{{ ( isset($reservation->fee) ) ? '¥' . number_format($reservation->fee) : '' }}</td>
