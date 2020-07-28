@@ -306,7 +306,7 @@ class BillingController extends Controller {
                     $attributes = [
                         'email_type' => $request->has('claim_check') ? 'claim_check' : 'claim_confirmation',
 	                    'selectedMonth' => $selectedMonth,
-                        'today_date' => Carbon::now()->format('Y年m月d日'),
+                        'today_date' => Carbon::now()->format('Y/m/d'),
                         'period' => $dateFilter['startedDate']->format('Y/m/d') . '〜' . $dateFilter['endedDate']->format('Y/m/d'),
                         'special_count' => $special_count,
                         'total_price' => $total_price
