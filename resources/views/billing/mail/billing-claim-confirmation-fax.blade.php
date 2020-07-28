@@ -33,11 +33,11 @@
         <td width="50%" rowspan="2">
             <p class="size_title">FAX</p>
         </td>
-        <td width="25%">
+        <td width="20%">
             　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
         </td>
-        <td width="25%"　align="right">
-            　　<span style="border-bottom: solid 2px;">Date　{{$attributes['today_date']}}/</span>
+        <td width="30%"　align="right">
+            　　<span style="border-bottom: solid 2px;">Date {{$attributes['today_date']}}/</span>
         </td>
     </tr>
     <tr>
@@ -47,7 +47,8 @@
 </table>
 <br>
 <p class="size_title2">【EPARK人間ドック】請求内容ご確認のお願い</p><br>
-<span style="border-bottom: solid 2px;">送付先：{{ $billing->hospital->contract_information->contractor_name }} 御担当者様 </span><span class="span_right">株式会社EPARK人間ドック</span>
+<span style="border-bottom: solid 2px;">送付先：{{ $billing->hospital->contract_information->contractor_name }} 御担当者様 </span>
+<span class="span_right">株式会社EPARK人間ドック</span>
 <span class="span_right">〒105-0012　　 　　　　</span>
 <span class="span_right">東京都港区芝大門1-2-13　</span>
 <span class="span_right">MSC芝大門ビル6F　 　　</span>
@@ -58,7 +59,7 @@
 
 　　いつも大変お世話になっております。<br/>
 　　株式会社EPARK人間ドックです。<br/>
-　　平素は弊社に格別のお引き立てを賜り、誠にありがとうございます。<br/><br/>
+　　平素は格別のお引き立てを賜り、誠にありがとうございます。<br/><br/>
 
 　　この度は、{{ substr($attributes['selectedMonth'], 0, 4) }}年 {{ substr($attributes['selectedMonth'], -2) }}月 の請求内容のご確認を<br>
 　　お願いしたくご連差し上げました。<br/>

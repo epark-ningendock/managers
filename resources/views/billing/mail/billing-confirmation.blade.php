@@ -6,7 +6,7 @@
 
 いつも大変お世話になっております。<br/>
 株式会社EPARK人間ドックでございます。<br/>
-平素は弊社に格別のお引き立てを賜り、誠にありがとうございます。<br/><br/>
+平素は格別のお引き立てを賜り、誠にありがとうございます。<br/><br/>
 
 {{ substr($attributes['selectedMonth'], 0, 4) }}年 {{ substr($attributes['selectedMonth'], -2) }}月 の請求内容が確定いたしましたのでご報告いたします。<br/><br/>
 
@@ -24,6 +24,8 @@
 東京都港区芝大門1-2-13　MSC芝大門ビル6F<br/>
 TEL:0120-201-637　　 FAX:03-4560-7693<br/>
 Mail: dock_gyoumu@eparkdock.com<br/>
+電話受付時間：平日 10:00 17:00
+
 
 </body>
 </html>
