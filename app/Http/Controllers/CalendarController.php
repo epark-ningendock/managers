@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Calendar;
+use App\CalendarBaseWaku;
 use App\CalendarDay;
+use App\Enums\Status;
 use App\Holiday;
 use App\Hospital;
 use Carbon\CarbonPeriod;
+use DemeterChain\C;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Course;
@@ -107,7 +110,7 @@ class CalendarController extends Controller
     {
         try {
             DB::beginTransaction();
-            $calendar_data = $request->only(['name', 'is_calendar_display', 'lock_version']);
+            $calendar_data = $request->only(['name', 'is_calendar_display', 'auto_update_flg', 'auto_update_start_date', 'auto_update_end_date', 'lock_version']);
             if (!isset($calendar)) {
                 $calendar = new Calendar($calendar_data);
                 $calendar->hospital_id = session()->get('hospital_id');
@@ -284,6 +287,14 @@ class CalendarController extends Controller
             ->with('months', $months)
             ->with('start', $start)
             ->with('end', $end)
+            ->with('sunday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->sun : 0)
+            ->with('monday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->mon : 0)
+            ->with('tuesday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->tue : 0)
+            ->with('wednesday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->wed : 0)
+            ->with('thursday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->thu : 0)
+            ->with('friday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->fri : 0)
+            ->with('saturday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->sat : 0)
+            ->with('holiday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->hol : 0)
             ->with('target_num', 0);
     }
 
@@ -446,6 +457,23 @@ class CalendarController extends Controller
             $calendar->lock_version = $request->input('lock_version');
             $calendar->touch();
             $calendar->save();
+
+            $calendar_base_waku = CalendarBaseWaku::where('calendar_id', $calendar->id)->first();
+            if (!$calendar_base_waku) {
+                $calendar_base_waku = new CalendarBaseWaku();
+                $calendar_base_waku->hospital_id = $calendar->hospital_id;
+                $calendar_base_waku->calendar_id = $calendar->id;
+                $calendar_base_waku->status = Status::VALID;
+            }
+            $calendar_base_waku->mon = $request->input('monday_frame');
+            $calendar_base_waku->tue = $request->input('tuesday_frame');
+            $calendar_base_waku->wed = $request->input('wednesday_frame');
+            $calendar_base_waku->thu = $request->input('thursday_frame');
+            $calendar_base_waku->fri = $request->input('friday_frame');
+            $calendar_base_waku->sat = $request->input('saturday_frame');
+            $calendar_base_waku->sun = $request->input('sunday_frame');
+            $calendar_base_waku->hol = $request->input('holiday_frame');
+            $calendar_base_waku->save();
 
 //            $target = $request->target_num * 6;
 //            $start = Carbon::now()->addMonthsNoOverflow($target)->startOfMonth();

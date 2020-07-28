@@ -25,6 +25,46 @@
         </group>
         @if ($errors->has('is_calendar_display')) <p class="help-block has-error">{{ $errors->first('is_calendar_display') }}</p> @endif
     </div>
+    <div class="form-group py-sm-2 ">
+        <label for="status">カレンダー自動更新</label>
+        <group class="inline-radio two-option-large" style="width: 350px;">
+            <div>
+                <input type="radio" name="auto_update_flg" id="auto_update_flg_true"
+                       {{ old('auto_update_flg', (isset($calendar) ? $calendar->auto_update_flg : null) ) == 1 ? 'checked' : '' }}
+                       value="1">
+                <label for="auto_update_flg_true">自動更新する</label>
+            </div>
+            <div>
+                <input type="radio" name="auto_update_flg" id="auto_update_flg_false"
+                       {{ old('in_hospital_email_reception_flg', (isset($calendar) ? $calendar->auto_update_flg : 0) ) == 0 ? 'checked' : '' }}
+                       value="0">
+                <label id="auto_update_flg_false">自動更新しない</label>
+            </div>
+        </group>
+    </div>
+    <div class="form-group @if ($errors->has('auto_update_start_date') or $errors->has('auto_update_end_date')) has-error @endif">
+        <label>カレンダー枠自動更新期間</label>
+        <div class="form-horizontal display-period">
+            <span>開始日</span>
+            {{ Form::text('auto_update_start_date', old('auto_update_start_date', (isset($calendar) && isset($calendar->auto_update_start_date) ? $calendar->auto_update_start_date :  null)),
+                ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-start']) }}
+            <span>終了日</span>
+            {{ Form::text('auto_update_end_date', old('auto_update_end_date', ((isset($calendar) && isset($calendar->auto_update_end_date)) ? $calendar->auto_update_end_date :  null)),
+                ['class' => 'd-inline-block w16em form-control', 'id' => 'datetimepicker-disp-end']) }}
+        </div>
+        @if ($errors->has('auto_update_start_date'))
+            <p class="help-block">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                {{ $errors->first('auto_update_start_date') }}
+            </p>
+        @endif
+        @if ($errors->has('auto_update_end_date'))
+            <p class="help-block">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                {{ $errors->first('auto_update_end_date') }}
+            </p>
+        @endif
+    </div>
   <div class="form-group">
     <label>検査コース</label>
     <div class="role">
@@ -116,3 +156,22 @@
       })(jQuery);
   </script>
 @stop
+
+@push('js')
+    <script src="{{ url('js/handlebars.js') }}"></script>
+    <script src="{{ url('js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ url('js/bootstrap-datepicker.ja.min.js') }}"></script>
+    <script src="{{ url('js/bootstrap3-typeahead.min.js') }}"></script>
+    <script type="text/javascript">
+        (function ($) {
+            $('#datetimepicker-disp-start').datepicker({
+                language:'ja',
+                format: 'yyyy-mm-dd',
+            });
+            $('#datetimepicker-disp-end').datepicker({
+                language:'ja',
+                format: 'yyyy-mm-dd',
+            });
+        })(jQuery);
+    </script>
+@endpush

@@ -32,7 +32,7 @@ class CalendarFormRequest extends FormRequest
                 'is_reservation_acceptances' => 'required|array',
                 'is_reservation_acceptances.*' => [Rule::in(['0', '1'])],
                 'reservation_frames' => 'required|array',
-                'reservation_frames.*' => 'nullable|integer',
+                'reservation_frames.*' => 'nullable|integer'
             ];
         } elseif (str_contains($this->url(), 'holiday')) {
             return [
@@ -48,7 +48,9 @@ class CalendarFormRequest extends FormRequest
                 'unregistered_course_ids' => 'array',
                 'registered_course_ids' => 'array',
                 'unregistered_course_ids.*' => 'integer',
-                'registered_course_ids.*' => 'integer'
+                'registered_course_ids.*' => 'integer',
+                'auto_update_start_date' => 'date|nullable',
+                'auto_update_end_date' => 'date|nullable'
             ];
         }
     }
