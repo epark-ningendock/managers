@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         Commands\TemporaryReservationCheckCommand::class,
         Commands\ClaimRecordCreateCommand::class,
         Commands\CourseCloseCheckCommand::class,
+        Commands\CalendarDaysCreateCommand::class,
         /** 路線情報更新バッチ */
         Commands\EkiSpertManagerCommand::class,
     ];
@@ -35,6 +36,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('claim-record-create')->monthlyOn(21, '05:00');
         $schedule->command('course-close-check')->monthlyOn(1, '05:15');
         $schedule->command('course-close-check')->monthlyOn(15, '05:15');
+        $schedule->command('calendar-day-create')->monthlyOn(20, '02:05');
     }
 
     /**
