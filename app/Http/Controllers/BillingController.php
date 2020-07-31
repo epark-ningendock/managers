@@ -348,31 +348,32 @@ class BillingController extends Controller {
 	        $dateFilter = billingDateFilter($billing->billing_month);
 	        $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', session('hospital_id') )->first();
 
-	        if ( $hospitalEmailSetting ) {
-
-	            $pdf =  PDF::loadView( 'billing.claim-check-pdf', [
-	                'billing' => $billing,
-	                'startedDate'     => $billing->startedDate,
-	                'endedDate'      => $billing->endedDate,
-	            ] )->setPaper('legal', 'landscape');
-
-	            $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', session('hospital_id') )->first();
-
-	            $confirmMailComposition = [
-	                'subject' => '【EPARK人間ドック】請求確認完了のお知らせ',
-	                'billing' => $billing,
-	                'attachment_file_name' => '請求確認PDF',
-	            ];
-
-	            $attributes = [
-	                'email_type' => $request->has('claim_check') ? 'claim_check' : 'claim_confirmation',
-		            'selectedMonth' => $billing->billing_month
-	            ];
+//	        if ( $hospitalEmailSetting ) {
+//
+//	            $pdf =  PDF::loadView( 'billing.claim-check-pdf', [
+//	                'billing' => $billing,
+//	                'startedDate'     => $billing->startedDate,
+//	                'endedDate'      => $billing->endedDate,
+//
+//	            ] )->setPaper('legal', 'landscape');
+//
+//	            $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', session('hospital_id') )->first();
+//
+//	            $confirmMailComposition = [
+//	                'subject' => '【EPARK人間ドック】請求確認完了のお知らせ',
+//	                'billing' => $billing,
+//	                'attachment_file_name' => '請求確認PDF',
+//	            ];
+//
+//	            $attributes = [
+//	                'email_type' => $request->has('claim_check') ? 'claim_check' : 'claim_confirmation',
+//		            'selectedMonth' => $billing->billing_month
+//	            ];
 
 //	            Mail::to( [
 //	                config('mail.to.gyoumu'),
 //	            ] )->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $attributes));
-	        }
+//	        }
 		}
 
     /**
@@ -386,6 +387,6 @@ class BillingController extends Controller {
 
 		return view( 'billing.hospital-billing-listing', [
 			'billings'        => $billings,
-		] );		
+		] );
 	}
 }
