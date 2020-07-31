@@ -73,7 +73,7 @@ if ( !function_exists('billingDateFilter') ) :
 
         if ( $yearMonth ) {
             $date = Carbon\Carbon::parse( $yearMonth . 28 );
-            $date = ( $date->isCurrentMonth() ) ? now() : $date;
+//            $date = ( $date->isCurrentMonth() ) ? now() : $date;
 
         } else {
             $date = now();
