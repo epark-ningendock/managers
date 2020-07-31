@@ -387,6 +387,6 @@ class BillingController extends Controller {
 
 		return view( 'billing.hospital-billing-listing', [
 			'billings'        => $billings,
-		] );
+		] );		
 	}
 }

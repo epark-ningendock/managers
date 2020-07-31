@@ -279,6 +279,8 @@ return [
         'text' => '本文',
         'contents' => '本文',
         'hospital_id' => '医療機関ID',
+        'auto_update_start_date' => '開始日',
+        'auto_update_end_date' => '終了日',
         // 受付メール設定系
         'in_hospital_email_reception_flg' => '院内受付メール受信フラグ',
         'in_hospital_confirmation_email_reception_flg' => '受付確定メール受信フラグ',

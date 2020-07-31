@@ -32,66 +32,98 @@
         <div class="bulk-weekday">
             <ul>
                 <li><label for="sunday-frame">日</label>
-                    <select id="sunday-frame" class="form-control select-box w4em">
+                    <select id="sunday-frame" name="sunday_frame" class="form-control select-box w4em">
                         <option></option>
                         @foreach(range(0, 99) as $i)
-                            <option>{{ $i }}</option>
+                            <option value="{{ $i }}"
+                            @if ( (old('sunday_frame',  $sunday_frame) == $i ) )
+                                    selected="selected"
+                            @endif
+                                    > {{ $i }}</option>
                         @endforeach
                     </select>
                 </li>
                 <li><label for="monday-frame">月</label>
-                    <select id="monday-frame" class="form-control select-box w4em">
+                    <select id="monday-frame" name="monday_frame" class="form-control select-box w4em">
                         <option></option>
                         @foreach(range(0, 99) as $i)
-                            <option>{{ $i }}</option>
+                            <option value="{{ $i }}"
+                                    @if ( (old('monday_frame',  $monday_frame) == $i ) )
+                                    selected="selected"
+                                    @endif
+                            >{{ $i }}</option>
                         @endforeach
                     </select>
                 </li>
                 <li><label for="tuesday-frame">火</label>
-                    <select id="tuesday-frame" class="form-control select-box w4em">
+                    <select id="tuesday-frame" name="tuesday_frame" class="form-control select-box w4em">
                         <option></option>
                         @foreach(range(0, 99) as $i)
-                            <option>{{ $i }}</option>
+                            <option value="{{ $i }}"
+                                    @if ( (old('tuesday_frame',  $tuesday_frame) == $i ) )
+                                    selected="selected"
+                                    @endif
+                            >{{ $i }}</option>
                         @endforeach
                     </select>
                 </li>
                 <li><label for="wednesday-frame">水</label>
-                    <select id="wednesday-frame" class="form-control select-box w4em">
+                    <select id="wednesday-frame" name="wednesday_frame" class="form-control select-box w4em">
                         <option></option>
                         @foreach(range(0, 99) as $i)
-                            <option>{{ $i }}</option>
+                            <option value="{{ $i }}"
+                                    @if ( (old('wednesday_frame',  $wednesday_frame) == $i ) )
+                                    selected="selected"
+                                    @endif
+                            >{{ $i }}</option>
                         @endforeach
                     </select>
                 </li>
                 <li><label for="thursday-frame">木</label>
-                    <select id="thursday-frame" class="form-control select-box w4em">
+                    <select id="thursday-frame" name="thursday_frame" class="form-control select-box w4em">
                         <option></option>
                         @foreach(range(0, 99) as $i)
-                            <option>{{ $i }}</option>
+                            <option value="{{ $i }}"
+                                    @if ( (old('thursday_frame',  $thursday_frame) == $i ) )
+                                    selected="selected"
+                                    @endif
+                            >{{ $i }}</option>
                         @endforeach
                     </select>
                 </li>
                 <li><label for="friday-frame">金</label>
-                    <select id="friday-frame" class="form-control select-box w4em">
+                    <select id="friday-frame" name="friday_frame" class="form-control select-box w4em">
                         <option></option>
                         @foreach(range(0, 99) as $i)
-                            <option>{{ $i }}</option>
+                            <option value="{{ $i }}"
+                                    @if ( (old('friday_frame',  $friday_frame) == $i ) )
+                                    selected="selected"
+                                    @endif
+                            >{{ $i }}</option>
                         @endforeach
                     </select>
                 </li>
                 <li><label for="saturday-frame">土</label>
-                    <select id="saturday-frame" class="form-control select-box w4em">
+                    <select id="saturday-frame" name="saturday_frame" class="form-control select-box w4em">
                         <option></option>
                         @foreach(range(0, 99) as $i)
-                            <option>{{ $i }}</option>
+                            <option value="{{ $i }}"
+                                    @if ( (old('saturday_frame',  $saturday_frame) == $i ) )
+                                    selected="selected"
+                                    @endif
+                            >{{ $i }}</option>
                         @endforeach
                     </select>
                 </li>
                 <li><label for="holiday-frame">祝</label>
-                    <select id="holiday-frame" class="form-control select-box w4em">
+                    <select id="holiday-frame" name="holiday_frame" class="form-control select-box w4em">
                         <option></option>
                         @foreach(range(0, 99) as $i)
-                            <option>{{ $i }}</option>
+                            <option value="{{ $i }}"
+                                    @if ( (old('holiday_frame',  $holiday_frame) == $i ) )
+                                    selected="selected"
+                                    @endif
+                            >{{ $i }}</option>
                         @endforeach
                     </select>
                 </li>
