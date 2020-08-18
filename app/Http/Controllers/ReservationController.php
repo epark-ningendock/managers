@@ -1017,10 +1017,10 @@ class ReservationController extends Controller
 
             if ($reservation->site_code == 'HP') {
                 $params['fee'] = $this->_reservation_service->getHpfee($hospital);
-                if ($reservation->fee > 0) {
-                    $params['is_free_hp_link'] = IsFreeHpLink::FREE;
-                } else {
+                if ($params['fee'] > 0) {
                     $params['is_free_hp_link'] = IsFreeHpLink::FEE;
+                } else {
+                    $params['is_free_hp_link'] = IsFreeHpLink::FREE;
                 }
             } else {
                 $params['fee'] = floor((
