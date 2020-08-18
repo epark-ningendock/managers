@@ -1,7 +1,8 @@
 <div class="form-entry" id="reservation">
 <div class="box-body">
     <input type="hidden" name="lock_version" value="{{ $reservation->lock_version or '' }}" />
-    <h2 class="section-title">受付情報</h2>
+    <h2 class="section-title">受付情報&nbsp;<small>（予約ID:{{ $reservation->id }}）</small></h2>
+    <!-- サイトコード：{{$reservation->site_code}} -->
 
     <div class="row">
         <div class="col-md-3">
@@ -283,6 +284,18 @@
             <span id="terminal_type" class="ml-2">{{ $reservation->terminal_type->description or '-' }}</span>
         </div>
 
+    </div>
+
+
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="reservation_memo">申込者様からのメモ</label>
+        </div>
+
+        <div class="col-md-9">
+            <div>{!! nl2br(strip_tags($reservation->reservation_memo)) !!}</div>
+        </div>
     </div>
 
     <div class="row form-group">
