@@ -64,22 +64,23 @@ TEL： {{$電話番号}}
         {{$question['question_title']}}： {{$question['answer']}}
     @endforeach
 
+電話がつながりやすい時間帯：{{$電話が繋がりやすい時間帯}}
 所属する健康保険組合名：{{$所属する健康保険組合名}}
 @endif
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ■備考
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-{{$受付・予約メモ}}
+{{$備考}}
 
 @if($customer_flg)
 ■■■■予約の確認・変更・キャンセルについて■■■■
 マイページの予約履歴から、ご予約内容の確認、検査コースの変更・キャンセルが出来ます。
-https://www.docknet.jp/mypage/accept.html
+https://www.docknet.jp/mypage/accept
 ※変更・キャンセルは、{{$キャンセル変更受付期限日}}まで受付けております。
 
 
-※本メールはEPARK人間ドック（ http://www.docknet.jp/ ）にて
+※本メールはEPARK人間ドック（ https://www.docknet.jp/ ）にて
 　健診のご予約をされたお客様へお送りしています。
 ※本メールにお心あたりが無い場合は、誠に恐れ入りますが、
 　破棄して頂きますようお願いいします。
@@ -89,9 +90,9 @@ https://www.docknet.jp/mypage/accept.html
 
 ---------------------------------------------------------
 人間ドックの総合ポータルサイト　EPARK人間ドック
-http://www.docknet.jp/
+https://www.docknet.jp/
 運営：株式会社EPARK人間ドック
-http://eparkdock.com/
+https://eparkdock.com/
 ---------------------------------------------------------
 </pre>
     </body>
