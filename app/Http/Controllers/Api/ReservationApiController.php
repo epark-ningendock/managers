@@ -177,6 +177,8 @@ class ReservationApiController extends ApiBaseController
 
             // 予約登録／更新
             $entity = $this->_reservation_service->store($request);
+            Log::info('dump $entity');
+            Log::info($entity);
             // カレンダーの予約数を1つ増やす
             $this->_reservation_service->registReservationToCalendar($entity, 1);
 
