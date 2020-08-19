@@ -63,7 +63,7 @@ class Handler extends ExceptionHandler
 								->subject("エラーメールを送信します");
 						});
 					}else{
-        		Log::error("Error from Handler:");
+        		Log::error("Caught an Error from Handler:");
 						Log::error($exception);
 					}
         }
