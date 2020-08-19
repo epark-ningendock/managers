@@ -204,7 +204,7 @@ class ReservationService
             // 店舗URL
             'shop_url' => 'https://www.docknet.jp/detail_hospital/'.$contract_information->code ,
             // 店舗画像URL
-            'shop_image_url' => $hospital_category->hospital_image->path,
+            'shop_image_url' => $hospital_category->hospital_image->path ?? 'https://www.docknet.jp/images/logo.png',
             // 予約キャンセルURL
             'appoint_cancel_url' => $this->createURL().'/'.'reservation/confirm.html?code=&id=' . $entity->id . '&sid=' . $entity->hospital_id,
             // 予約変更URL
