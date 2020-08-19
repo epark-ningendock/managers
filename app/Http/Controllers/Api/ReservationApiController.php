@@ -146,8 +146,7 @@ class ReservationApiController extends ApiBaseController
      */
     public function store(ReservationStoreRequest $request)
     {
-    		Log::info("In ReservationApiController::store");
-    		Log::info($request);
+
         try {
 
             $reservation_id = $request->input('reservation_id');
@@ -177,8 +176,7 @@ class ReservationApiController extends ApiBaseController
 
             // 予約登録／更新
             $entity = $this->_reservation_service->store($request);
-            Log::info('dump $entity');
-            Log::info($entity);
+
             // カレンダーの予約数を1つ増やす
             $this->_reservation_service->registReservationToCalendar($entity, 1);
 
@@ -191,7 +189,6 @@ class ReservationApiController extends ApiBaseController
 
             // 処理区分をentityに追加
             $entity->process_kbn = intval($request->input('process_kbn'));
-
             Log::info('メール送信処理開始');
             // 完了メール送信
             $entity->result_code = $this->_reservation_service->mail($entity);
