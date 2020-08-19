@@ -146,6 +146,8 @@ class ReservationApiController extends ApiBaseController
      */
     public function store(ReservationStoreRequest $request)
     {
+    		Log::info("In ReservationApiController::store");
+    		Log::info($request);
         try {
 
             $reservation_id = $request->input('reservation_id');
@@ -180,7 +182,6 @@ class ReservationApiController extends ApiBaseController
 
             try {
                 // 予約履歴apiより予約履歴登録を実行する。
-								Log::info($entity);
                 $this->_reservation_service->request($entity);
             } catch (\Exception $e) {
                 Log::error('予約履歴API実行に失敗しました。:'. $e);
