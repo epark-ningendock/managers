@@ -101,8 +101,8 @@ class ReservationMail extends Mailable
             $type = '特集ページ';
         }
 
-        Log::info('In Mail/Reservation/ReservationMail');
-        Log::info($this->entity);
+//        Log::info('In Mail/Reservation/ReservationMail');
+//        Log::info($this->entity);
 
         return $this
             ->from(EPARK_MAIL_FROM)
