@@ -52,16 +52,20 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if($exception->getCode() == 0) {
-            Mail::send('email.error_mail', [
-                'error_message' => $exception->getMessage(),
-                'file' => $exception->getFile(),
-                'line' => $exception->getLine(),
-            ], function($message) {
-                $message
-                    ->to(config('mail.to.system'))
-                    ->subject("エラーメールを送信します");
-            });
-
+        	if(env('APP_ENV') === 'production'){
+						Mail::send('email.error_mail', [
+							'error_message' => $exception->getMessage(),
+							'file' => $exception->getFile(),
+							'line' => $exception->getLine(),
+						], function($message) {
+							$message
+								->to('dock_alert@eparkdock.com')
+								->subject("エラーメールを送信します");
+						});
+					}else{
+        		Log::error("Error from Handler:");
+						Log::error($exception);
+					}
         }
 
         if ($exception instanceof TokenMismatchException) {
