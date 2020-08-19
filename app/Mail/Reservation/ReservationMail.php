@@ -73,7 +73,7 @@ class ReservationMail extends Mailable
 
         // 電話が繋がりやすい時間帯
         $timezones =  ['', '特に希望なし', '9時～12時', '', '12時～13時', '', '', '', '13時～17時', ];
-        $tel_timezone = $this->entity->tel_timezone ?? 4;
+        $tel_timezone = $this->entity->tel_timezone ?? 0;
         $timezone = $timezones[$tel_timezone];
 
         // キャンセル変更受付期限日
