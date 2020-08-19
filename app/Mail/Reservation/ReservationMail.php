@@ -47,7 +47,11 @@ class ReservationMail extends Mailable
             . $this->entity->hospital->address1 . ' ' . $this->entity->hospital->address2;
 
         $reservation_options = ReservationOption::where('reservation_id', $this->entity->id)->get();
+        // process_kbnを退避
+				$process_kbn = $this->entity->process_kbn;
+
         $this->entity = Reservation::find($this->entity->id);
+				$this->entity->process_kbn = $process_kbn;
 
         $options = $this->_options($reservation_options);
  
