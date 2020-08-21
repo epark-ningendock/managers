@@ -257,7 +257,7 @@
               <input type="number" id="reception_start_day" name="reception_start_day" class="form-control d-inline-block ml-2" style="width:60px;"
                      value="{{ old('reception_start_day', (isset($course) ? $course->reception_start_date%1000 : 7)) }}" />
           </div>
-          日から受付開始。
+          日前から受付開始。
       </div>
       <div class="mt-2">(事前決済のみ利用の場合、受付期限は90日となります。）</div>
       @if ($errors->has('reception_start_day')) <p class="help-block text-red">{{ $errors->first('reception_start_day') }}</p>@endif
