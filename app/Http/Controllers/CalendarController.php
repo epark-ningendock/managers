@@ -235,6 +235,7 @@ class CalendarController extends Controller
             ->whereDate('reservation_date', '>=', $start->toDateString())
             ->whereDate('reservation_date', '<=', $end->toDateString())
             ->where('courses.calendar_id', $id)
+						->where('reservation_status', '!=', '5')
             ->groupBy('reservation_date')
             ->orderBy('reservation_date')
             ->selectRaw('count(*) as count, DATE_FORMAT(reservation_date, "%Y%m%d") as reservation_date')
