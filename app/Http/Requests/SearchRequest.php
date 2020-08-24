@@ -70,7 +70,7 @@ class SearchRequest extends ValidationRequest
             $result = '';
             $distoricts = DistrictCode::whereIn('district_code', $params)->get();
             foreach ($distoricts as $district) {
-                $result = $result . '、' . $district->name;
+                $result = $result . ',' . $district->name;
             }
             return ltrim($result, '、');
         }
