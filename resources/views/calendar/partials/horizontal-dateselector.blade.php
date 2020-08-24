@@ -24,23 +24,27 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function (response) {
+                        const oldData = $('.calendar-box').data('old');
 
                         if (chooseByCalendar) {
                             $('.calendar-box').html(response.data);
                             $('.hor-date-table tbody tr').addClass('hide-tr').first('tr').addClass('show-tr');
                         } else if ( $('.hor-date-table').length > 0 ) {
+                            const hasShow_tr = $('.hor-date-table tbody tr').addClass('hide-tr').first('tr').hasClass('show-tr');
+                            $('.hor-date-table tbody').empty();
                             $('.hor-date-table tbody').append($(response.data).find('tbody').children());
+                            hasShow_tr && $('.hor-date-table tbody tr').addClass('hide-tr').first('tr').addClass('show-tr');
                         } else {
                             $('.calendar-box').html(response.data);
                             $('.hor-date-table tbody tr').addClass('hide-tr').first('tr').addClass('show-tr');
-                            const oldData = $('.calendar-box').data('old');
-                            if (oldData) {
-                                const selectedDate = $('.hor-date-table tbody td[data-date=' + oldData + ']')
-                                $('#reservation_date').val(oldData);
-                                selectedDate.addClass('it-would-reserve');
-                                $('.hor-date-table tbody tr').removeClass('show-tr').addClass('hide-tr');
-                                selectedDate.parent('tr').addClass('show-tr');
-                            }
+                        }
+
+                        if (oldData) {
+                            const selectedDate = $('.hor-date-table tbody td[data-date=' + oldData + ']')
+                            $('#reservation_date').val(oldData);
+                            selectedDate.addClass('it-would-reserve');
+                            $('.hor-date-table tbody tr').removeClass('show-tr').addClass('hide-tr');
+                            selectedDate.parent('tr').addClass('show-tr');
                         }
 
                         $('.date-row-bar').show();
