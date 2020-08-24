@@ -5,12 +5,8 @@
 
 
             function checkPrevNextButton() {
-                if ( $('.show-tr').prev('tr').length === 0 ) {
-                    $('.prev-link').hide();
-                }
-                else {
-                    $('.prev-link').show();
-                }
+                ($('.show-tr').prev('tr').length === 0) ? $('.prev-link').hide() : $('.prev-link').show();
+                ($('.show-tr').next('tr').length === 0) ? $('.next-link').hide() : $('.next-link').show();
             }
 
             function dateLoader(ajaxRoute, chooseByCalendar) {
@@ -30,16 +26,19 @@
                             $('.calendar-box').html(response.data);
                             $('.hor-date-table tbody tr').addClass('hide-tr').first('tr').addClass('show-tr');
                         } else if ( $('.hor-date-table').length > 0 ) {
-                            const hasShow_tr = $('.hor-date-table tbody tr').addClass('hide-tr').first('tr').hasClass('show-tr');
+                            const hasShow_tr = $('.hor-date-table tbody tr').hasClass('show-tr');
                             $('.hor-date-table tbody').empty();
                             $('.hor-date-table tbody').append($(response.data).find('tbody').children());
-                            hasShow_tr && $('.hor-date-table tbody tr').addClass('hide-tr').first('tr').addClass('show-tr');
+                            if (hasShow_tr){
+                                $('.hor-date-table tbody tr').addClass('hide-tr');
+                                $('.hor-date-table tbody tr').first().addClass('show-tr');
+                            }
                         } else {
                             $('.calendar-box').html(response.data);
                             $('.hor-date-table tbody tr').addClass('hide-tr').first('tr').addClass('show-tr');
                         }
 
-                        if (oldData) {
+                        if (!chooseByCalendar && oldData) {
                             const selectedDate = $('.hor-date-table tbody td[data-date=' + oldData + ']')
                             $('#reservation_date').val(oldData);
                             selectedDate.addClass('it-would-reserve');
@@ -113,12 +112,12 @@
 
                 week_row.removeClass('show-tr');
 
-                if ( show_tr.nextAll('tr').length == 14 ) {
+                if ( show_tr.nextAll('tr').length == 1 ) {
                     const lastDate = new Date(week_row.last().find('td').last().data('date'));
                     lastDate.setDate(lastDate.getDate() + 1);
                     const  startDate = lastDate.getFullYear() + '/' + (lastDate.getMonth() + 1) + '/' + lastDate.getDate();
                     let ajaxRoute = "{{  route('course.reservation.days', ['course_id' => ':1']) }}".replace(":1", $('#course_id').val()) + '?start_date=' + startDate;
-                    dateLoader(ajaxRoute);
+                    dateLoader(ajaxRoute, true);
                 }
 
                 if ( $(this).hasClass('prev-link')  ) {
