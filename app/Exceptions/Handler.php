@@ -52,7 +52,7 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if($exception->getCode() == 0) {
-        	if(env('APP_ENV') === 'production'){
+        	if(env('APP_ENV') === 'production' || false){
 						Mail::send('email.error_mail', [
 							'error_message' => $exception->getMessage(),
 							'file' => $exception->getFile(),
