@@ -611,7 +611,7 @@
        */
       function getAddress() {
         return $('#prefecture option:selected').text() + $('#district_code_id option:selected').text() + $('#address1').val() + $('#address2').val()
-      };
+      }
 
       /**
        * 北緯東経を取得し、入力フォームにセットする
@@ -619,7 +619,7 @@
        */
       function setLatLng(address) {
         let geocoder = new google.maps.Geocoder();
-        geocoder.geocode({'address': address}, (results, status) => {
+        geocoder.geocode({'address': address}, function(results, status){
           if(status == google.maps.GeocoderStatus.OK) {
             let lat = results[0].geometry.location.lat();
             let lng = results[0].geometry.location.lng();
@@ -627,7 +627,7 @@
             $('#longitude').val(lng.toFixed(7));
           }
         });
-      };
+      }
 
       $('#prefecture, #district_code_id, #address1, #address2')
         .focusin(e => {
