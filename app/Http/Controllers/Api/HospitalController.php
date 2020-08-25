@@ -440,6 +440,7 @@ class HospitalController extends ApiBaseController
             }
             $course_data = [];
             foreach ($hospital->courses as $course) {
+								if ($course->is_category != '0' || $course->web_reception != '0' || $course->status != Status::VALID) continue;
                 $course_data[] = ['course_code' => $course->code, 'course_no' => $course->id];
             }
             $results[] = ['hospital_code' => $hospital->contract_information->code, 'courses' => $course_data];
