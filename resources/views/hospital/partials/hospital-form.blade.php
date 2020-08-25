@@ -630,10 +630,10 @@
       }
 
       $('#prefecture, #district_code_id, #address1, #address2')
-        .focusin(e => {
+        .focusin(function(e){
           setLatLng(getAddress())
         })
-        .focusout(e => {
+        .focusout(function(e){
           setLatLng(getAddress())
         });
 
