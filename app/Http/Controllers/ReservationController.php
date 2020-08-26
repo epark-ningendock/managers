@@ -786,6 +786,8 @@ class ReservationController extends Controller
 
         } catch (\Exception $i) {
             DB::rollback();
+            Log::error('Error Occured in Reservation::store.');
+            Log::error($i);
 
             return redirect()->back()->with('error', trans('messages.reservation.complete_error'))->withInput();
         }
