@@ -41,7 +41,7 @@ class CourseController extends ApiBaseController
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
             // //検査コースコンテンツ情報取得
-            $course = $this->getCourseContents($hospital_id, $course_code);
+            $course = $this->getCourseContents($hospital_id, $course_code, $request);
 
             if (!$course) {
                 return $this->createResponse($this->messages['data_empty_error'], $request->input('callback'));
