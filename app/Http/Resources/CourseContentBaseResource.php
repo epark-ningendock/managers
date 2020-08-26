@@ -188,6 +188,7 @@ class CourseContentBaseResource extends Resource
                         ['no' => 10, 'text' => $q->answer10 ?? ''],
                     ]);
                     $questions[] = [
+												'id' => $q->id,
                         'no' => $q->question_number,
                         'text' => $q->question_title,
                         'answer' => $answers->map(function ($a) {

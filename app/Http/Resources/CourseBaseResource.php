@@ -189,7 +189,7 @@ class CourseBaseResource extends Resource
                 $answer[] = ['no' => 10, 'text' => $question->answer10];
             }
 
-            $results[] = ['no' => $question->question_number, 'text' => $question->question_title, 'answer' => $answer];
+            $results[] = ['id' => $question->id, 'no' => $question->question_number, 'text' => $question->question_title, 'answer' => $answer];
         }
 
         return $results;
