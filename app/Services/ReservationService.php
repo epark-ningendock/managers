@@ -793,7 +793,7 @@ class ReservationService
             foreach ($courseQuestions as $courseQuestion) {
                 foreach ($q_answers as $q_answer) {
 
-                    if ($courseQuestion->question_number == $q_answer->id) {
+                    if ($courseQuestion->id == $q_answer->id) {
                         $entity = new ReservationAnswer();
                         $entity->reservation_id = $reservation_id;
                         $entity->course_id = $request->input('course_id');
