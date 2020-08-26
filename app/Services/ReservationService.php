@@ -783,7 +783,8 @@ class ReservationService
         try {
             $q_answers = json_decode(json_encode($request->input('q_anser')));
             $courseQuestions = CourseQuestion::where('course_id', $request->input('course_id'))->get();
-
+					\Log::info($q_answers);
+					\Log::info($courseQuestions);
             if (! $courseQuestions) {
                 return;
             }
@@ -792,7 +793,7 @@ class ReservationService
             foreach ($courseQuestions as $courseQuestion) {
                 foreach ($q_answers as $q_answer) {
 
-                    if ($courseQuestion->id == $q_answer->id) {
+                    if ($courseQuestion->question_number == $q_answer->id) {
                         $entity = new ReservationAnswer();
                         $entity->reservation_id = $reservation_id;
                         $entity->course_id = $request->input('course_id');
