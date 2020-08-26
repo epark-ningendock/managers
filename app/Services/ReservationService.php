@@ -797,7 +797,7 @@ class ReservationService
                         $entity = new ReservationAnswer();
                         $entity->reservation_id = $reservation_id;
                         $entity->course_id = $request->input('course_id');
-                        $entity->course_question_id = $q_answer->id;
+                        $entity->course_question_id = $courseQuestion->id;
                         $entity->question_title = $q_answer->question_title;
                         $entity->question_answer01 = $courseQuestion->answer01;
                         $entity->question_answer02 = $courseQuestion->answer02;
