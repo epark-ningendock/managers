@@ -420,6 +420,35 @@
 
     </div>
 
+    <div class="row form-group">
+
+        <div class="col-md-3">
+            <label for="">電話がつながりやすい時間帯</label>
+        </div>
+
+        <div class="col-md-9">
+            <span id="" class="ml-2">
+                @switch($reservation->tel_timezone)
+                    @case(1)
+                    特になし
+                    @break
+
+                    @case(2)
+                    9時～12時
+                    @break
+
+                    @case(4)
+                    12時～13時
+                    @break
+
+                    @case(8)
+                    13時～17時
+                    @break
+                @endswitch
+            </span>
+        </div>
+
+    </div>
 
     <div class="row form-group">
 
