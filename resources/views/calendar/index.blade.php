@@ -63,14 +63,16 @@
           <div class="box-body table-responsive no-padding">
             <table class="table table-hover">
               <tbody><tr>
-                <th>検査コースID</th>
-                <th>検査コース名</th>
-                <th>WEB受付</th>
+                <th style="width: 10em;text-align: left">検査コースID</th>
+                <th style="text-align: left">検査コース名</th>
+                <th style="width: 7em;text-align: left">価格</th>
+                <th style="width: 7em">WEB受付</th>
               </tr>
               @foreach($calendar->courses as $course)
               <tr>
-                <td>{{ $course->id }}</td>
+                <td style="text-align: left">{{ $course->id }}</td>
                 <td style="text-align: left">{{ $course->name }}</td>
+                <td style="text-align: left">{{ number_format((int)$course->price) }}円</td>
                 <td><span class="label label-danger">{{ $course->web_reception->description }}</span></td>
               </tr>
               @endforeach
