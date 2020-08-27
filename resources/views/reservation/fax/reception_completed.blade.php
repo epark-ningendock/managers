@@ -40,10 +40,14 @@ EPARK人間ドック 予約・確定のお知らせ
 生年月日　　　　　　　　　{{$年}}年{{$月}}月{{$日}}日
 住所　　　　　　　　　　　〒{{$郵便番号}} 　{{$都道府県}}{{$市区群}}{{$町村番地}}{{$建物名}}
 TEL　　　　　　　　　　　 {{$電話番号}}
-メールアドレ　　　　　　　{{$メールアドレス}}
+メールアドレス　　　　　　{{$メールアドレス}}
 施設の選び方　　　　　　　{{$施設の選び方}}
+
+医療機関からの質問・回答：
 @foreach($questions as $question)
-{{$question['question_title']}} ： {{$question['answer']}}
+Q. {{$question['question_title']}}
+A. {{$question['answer']}}
+
 @endforeach
 
 所属する健康保険組合名　　　{{$所属する健康保険組合名}}
