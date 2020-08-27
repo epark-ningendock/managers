@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\ContractInformation;
 use App\ContractPlan;
 use App\Hospital;
+use App\HospitalPlan;
 use App\HospitalStaff;
 use App\Mail\Course\HospitalNewRegistMail;
 use App\Prefecture;
@@ -249,6 +250,14 @@ class HospitalContractInformationController extends Controller
                 $contract->contract_plan_id = $contract_plans->get($contract_arr['plan_code'])->first()->id;
                 $contract->hospital_id = $hospital->id;
                 $contract->save();
+
+								// 医療機関プラン
+								$hospitalPlan = new HospitalPlan();
+								$hospitalPlanFill = ['hospital_id' => $hospital->id, 'contract_plan_id' => $contract->contract_plan_id];
+								if (!is_null($contract_arr['service_start_date'])) $hospitalPlanFill['from'] = $contract_arr['service_start_date'];
+								if (!is_null($contract_arr['service_end_date'])) $hospitalPlanFill['to'] = $contract_arr['service_end_date'];
+								if (!is_null($contract_arr['cancellation_date'])) $hospitalPlanFill['deleted_at'] = $contract_arr['cancellation_date'];
+								$hospitalPlan->fill($hospitalPlanFill);
             }
 
             DB::commit();
