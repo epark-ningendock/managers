@@ -80,7 +80,9 @@ TEL： {{$電話番号}}
 
 医療機関からの質問・回答：
 @foreach($questions as $question)
-{{$question['question_title']}}： {{$question['answer']}}
+Q. {{$question['question_title']}}
+A. {{$question['answer']}}
+
 @endforeach
 
 電話がつながりやすい時間帯：{{$電話が繋がりやすい時間帯}}
