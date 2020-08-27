@@ -76,7 +76,6 @@ class HospitalContractInformationController extends Controller
             $uploaded_contracts->push([
                 'property_no' => trimToNull($row[1]),
                 'customer_no' => $row[2],
-                'code' => null,
                 'contractor_name_kana' => $row[3],
                 'contractor_name' => $row[4],
                 'representative_name_kana' => $row[5],
@@ -236,12 +235,15 @@ class HospitalContractInformationController extends Controller
                     $contract->fill($contract_arr);
                     $hospital = $contract->hospital;
                 } else {
+                		// 新規登録
                     $contract = new ContractInformation($contract_arr);
-                    $contract->code = 'D2' . $hospital->id;
+										$max_code = ContractInformation::max('code');
+										$max_code = substr($max_code, 1);
+                    $contract->code = 'D'. ((int)$max_code + 1);
+										$hospital->status = '0';
                 }
 
                 $hospital->name = $contract_arr['hospital_name'];
-                $hospital->status = '0';
                 $hospital->save();
 
                 $contract->contract_plan_id = $contract_plans->get($contract_arr['plan_code'])->first()->id;

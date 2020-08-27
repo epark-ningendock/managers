@@ -42,7 +42,6 @@
             <td class="@if(isset($contract->id) && $contract->isDirty('property_no')) text-red @endif">
               {{ $contract->property_no }}
               <input type="hidden" name="contracts[{{$i}}][property_no]" value="{{ $contract->property_no }}">
-              <input type="hidden" name="contracts[{{$i}}][code]" value="{{ $contract->code }}">
             </td>
             <td class="@if(isset($contract->id) && $contract->isDirty('customer_no')) text-red @endif">
               {{ $contract->customer_no }}
