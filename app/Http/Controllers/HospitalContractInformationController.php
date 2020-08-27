@@ -258,6 +258,7 @@ class HospitalContractInformationController extends Controller
 								if (!is_null($contract_arr['service_end_date'])) $hospitalPlanFill['to'] = $contract_arr['service_end_date'];
 								if (!is_null($contract_arr['cancellation_date'])) $hospitalPlanFill['deleted_at'] = $contract_arr['cancellation_date'];
 								$hospitalPlan->fill($hospitalPlanFill);
+								$hospitalPlan->save();
             }
 
             DB::commit();
