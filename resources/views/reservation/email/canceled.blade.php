@@ -53,6 +53,8 @@
 TEL： {{$電話番号}}
 メールアドレス：{{$メールアドレス}}
 施設の選び方：{{$施設の選び方}}
+
+医療機関からの質問・回答：
 @foreach($questions as $question)
 {{$question['question_title']}} : {{$question['answer']}}
 @endforeach
