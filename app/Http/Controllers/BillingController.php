@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Billing;
 use App\BillingMailHistory;
 use App\BillingOptionPlan;
+use App\Enums\ReservationStatus;
 use App\Exports\BillingExport;
 use App\Filters\Billing\BillingFilters;
 use App\HospitalEmailSetting;
 use App\Mail\Billing\BillingConfirmationSendMail;
+use App\Reservation;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -210,20 +212,14 @@ class BillingController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
 	public function statusUpdate( Billing $billing, Request $request ) {
+		if ($request->admin == 1) session()->put('hospital_id', null);
 
-        $email_send =  ( $request->has('claim_check') || $request->has('claim_confirmation') ) ? true : false;
+		$email_send =  ( $request->has('claim_check') || $request->has('claim_confirmation') ) ? true : false;
 
-        $billing->update( [ 'status' => $request->status ] );
+		$billing->update( [ 'status' => $request->status ] );
 
-        if ( $email_send ){
+		if ( $email_send ) $this->claimEmailCheck($request, $billing, []);
 
-        	if ( session('hospital_id') ) {
-        		$this->claimEmailCheckForHospital($request, $billing, []);
-        	} else {
-        		$this->claimEmailCheck($request, $billing, []);
-        	}
-
-        }
 		if ($request->route()->getName() == "billing.status.update" ) {
 
 			if ( session('hospital_id') ) {
@@ -243,98 +239,105 @@ class BillingController extends Controller {
      * @param $billing
      * @param array $attributes
      */
-    public function claimEmailCheck($request, $billing, $attributes = [])
+    public function claimEmailCheck($request, $billing)
     {
-	    $selectedMonth = $this->getSelectedMonth();
-        $dateFilter = billingDateFilter($billing->billing_month);
-        $hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )
-            ->where('billing_email_flg', 1)
-            ->first();
+			$selectedMonth = $this->getSelectedMonth();
+			$dateFilter = billingDateFilter($billing->billing_month);
 
-        if ( $hospitalEmailSetting ) {
+			$special_count = 0;
+			foreach( $billing->hospital->reservationByCompletedDate($dateFilter['startedDate'], $dateFilter['endedDate']) as $reservation) {
+				// 「完了」に変更する。
+				$reservation->reservation_status = ReservationStatus::COMPLETED;
+				$reservation->save();
 
-            $tos = [];
-            if (!empty($hospitalEmailSetting->billing_email1)) {
-                $tos[] = $hospitalEmailSetting->billing_email1;
-            }
-            if (!empty($hospitalEmailSetting->billing_email2)) {
-                $tos[] = $hospitalEmailSetting->billing_email2;
-            }
-            if (!empty($hospitalEmailSetting->billing_email3)) {
-                $tos[] = $hospitalEmailSetting->billing_email3;
-            }
-            if (!empty($hospitalEmailSetting->billing_email4)) {
-                $tos[] = $hospitalEmailSetting->billing_email4;
-            }
-            if (!empty($hospitalEmailSetting->billing_fax_number)) {
-                $tos[] = $hospitalEmailSetting->billing_fax_number;
-            }
+				if ($reservation->site_code === 'special') $special_count++;
+			}
 
-            if (!empty($tos)) {
-                foreach ($tos as $to) {
-                    $fax_flg = false;
-                    $special_count = 0;
-                    foreach( $billing->hospital->reservationByCompletedDate($dateFilter['startedDate'], $dateFilter['endedDate']) as $reservation) {
-                        if ($reservation->site_code == 'special') {
-                        $special_count++;
-                        }
-                    }
-
-                    $total_price = $billing->hospital->hospitalPlanByDate($dateFilter['endedDate'])->contractPlan->monthly_contract_fee
-                    + $billing->adjustment_price
-                    + $billing->hospital->hpLinkMonthPrice()
-                    + $billing->hospital->hospitalOptionPlanPrice($billing->id, $dateFilter['endedDate'])
-                    + $billing->hospital->reservationByCompletedDate($dateFilter['startedDate'], $dateFilter['endedDate'])->pluck('fee')->sum();
+			$total_price = $billing->hospital->hospitalPlanByDate($dateFilter['endedDate'])->contractPlan->monthly_contract_fee
+				+ $billing->adjustment_price
+				+ $billing->hospital->hpLinkMonthPrice()
+				+ $billing->hospital->hospitalOptionPlanPrice($billing->id, $dateFilter['endedDate'])
+				+ $billing->hospital->reservationByCompletedDate($dateFilter['startedDate'], $dateFilter['endedDate'])->pluck('fee')->sum();
 
 
-                    $pdf =  PDF::loadView( 'billing.claim-check-pdf', [
-                        'billing' => $billing,
-                        'startedDate'     => $dateFilter['startedDate'],
-                        'endedDate'      => $dateFilter['endedDate'],
-                        'today_date' => Carbon::now()->format('Y年m月d日'),
-                        'period' => $dateFilter['startedDate']->format('Y/m/d') . '〜' . $dateFilter['endedDate']->format('Y/m/d'),
-                        'special_count' => $special_count,
-                        'total_price' => $total_price
-                    ] )->setPaper('legal', 'landscape');
-
-                    $confirmMailComposition = [
-                        'subject' => $request->has('claim_check') ? '【EPARK人間ドック】請求内容ご確認のお願い' : '【EPARK人間ドック】請求内容確定のお知らせ',
-                        'billing' => $billing,
-                        'attachment_file_name' => $request->has('claim_check') ? '請求確認' : '請求確定',
-                    ];
-
-                    $attributes = [
-                        'email_type' => $request->has('claim_check') ? 'claim_check' : 'claim_confirmation',
-	                    'selectedMonth' => $selectedMonth,
-                        'today_date' => Carbon::now()->format('Y/m/d'),
-                        'period' => $dateFilter['startedDate']->format('Y/m/d') . '〜' . $dateFilter['endedDate']->format('Y/m/d'),
-                        'special_count' => $special_count,
-                        'total_price' => $total_price
-                    ];
+			$pdf =  PDF::loadView( 'billing.claim-check-pdf', [
+				'billing' => $billing,
+				'startedDate'     => $dateFilter['startedDate'],
+				'endedDate'      => $dateFilter['endedDate'],
+				'today_date' => Carbon::now()->format('Y年m月d日'),
+				'period' => $dateFilter['startedDate']->format('Y/m/d') . '〜' . $dateFilter['endedDate']->format('Y/m/d'),
+				'special_count' => $special_count,
+				'total_price' => $total_price
+			] )->setPaper('legal', 'landscape');
 
 
-                    if (strpos($to, 'fax') !== false) {
-                        $fax_flg = true;
-                    }
-                    Mail::to($to)->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $fax_flg, $attributes));
-                }
+			$attributes = [
+				'email_type' => $request->has('claim_check') ? 'claim_check' : 'claim_confirmation',
+				'selectedMonth' => $selectedMonth,
+				'today_date' => Carbon::now()->format('Y/m/d'),
+				'period' => $dateFilter['startedDate']->format('Y/m/d') . '〜' . $dateFilter['endedDate']->format('Y/m/d'),
+				'special_count' => $special_count,
+				'total_price' => $total_price
+			];
 
 
-                $billingMailHistory = new BillingMailHistory();
+			if (session('hospital_id')){
 
-                $billingMailHistory->create( [
-                    'hospital_id' => $hospitalEmailSetting->hospital_id,
-                    'to_address1' => $hospitalEmailSetting->billing_email1,
-                    'to_address2' => $hospitalEmailSetting->billing_email2,
-                    'to_address3' => $hospitalEmailSetting->billing_email3,
-                    'to_address4' => $hospitalEmailSetting->billing_email4,
-                    'cc_name'     => $hospitalEmailSetting->hospital->name,
-                    'fax'         => $hospitalEmailSetting->billing_fax_number,
-                    'mail_type'   => ( $hospitalEmailSetting->mail_type == 1 ) ? 1 : 2,
-                ] );
-            }
-        }
-	}
+				// gyoumuに送信
+				$confirmMailComposition4Gyoumu = [
+					'subject' => '【EPARK人間ドック】医療機関による請求確認完了のお知らせ',
+					'billing' => $billing,
+					'attachment_file_name' => '請求確認PDF',
+				];
+
+				Mail::to(env('MAIL_TO_GYOUMU_ADMIN_ADDRESS'))->send(new BillingConfirmationSendMail( $confirmMailComposition4Gyoumu, $pdf, false, $attributes));
+
+			}else{
+
+				$hospitalEmailSetting = HospitalEmailSetting::where( 'hospital_id', '=', (int)$request->hospital_id )
+					->where('billing_email_flg', 1)
+					->first();
+
+				if ( $hospitalEmailSetting ) {
+
+					$confirmMailComposition = [
+						'subject' => $request->has('claim_check') ? '【EPARK人間ドック】請求内容ご確認のお願い' : '【EPARK人間ドック】請求内容確定のお知らせ',
+						'billing' => $billing,
+						'attachment_file_name' => $request->has('claim_check') ? '請求確認' : '請求確定',
+					];
+
+					$tos = [];
+					if (!empty($hospitalEmailSetting->billing_email1)) $tos[] = $hospitalEmailSetting->billing_email1;
+					if (!empty($hospitalEmailSetting->billing_email2)) $tos[] = $hospitalEmailSetting->billing_email2;
+					if (!empty($hospitalEmailSetting->billing_email3)) $tos[] = $hospitalEmailSetting->billing_email3;
+					if (!empty($hospitalEmailSetting->billing_email4)) $tos[] = $hospitalEmailSetting->billing_email4;
+					if (!empty($hospitalEmailSetting->billing_fax_number)) $tos[] = $hospitalEmailSetting->billing_fax_number;
+
+					$fax_flg = false;
+
+					if (!empty($tos)) {
+						foreach ($tos as $to) {
+							if (strpos($to, 'fax') !== false) $fax_flg = true;
+							Mail::to($to)->send( new BillingConfirmationSendMail( $confirmMailComposition, $pdf, $fax_flg, $attributes));
+						}
+
+						$billingMailHistory = new BillingMailHistory();
+						$billingMailHistory->create( [
+							'hospital_id' => $hospitalEmailSetting->hospital_id,
+							'to_address1' => $hospitalEmailSetting->billing_email1,
+							'to_address2' => $hospitalEmailSetting->billing_email2,
+							'to_address3' => $hospitalEmailSetting->billing_email3,
+							'to_address4' => $hospitalEmailSetting->billing_email4,
+							'cc_name'     => $hospitalEmailSetting->hospital->name,
+							'fax'         => $hospitalEmailSetting->billing_fax_number,
+							'mail_type'   => ( $hospitalEmailSetting->mail_type == 1 ) ? 1 : 2,
+						]);
+					}
+				}
+
+			}
+
+		}
 
     /**
      *
