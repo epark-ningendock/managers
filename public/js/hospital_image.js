@@ -149,4 +149,16 @@ $(document).ready(function() {
 
     });
 
+    // プレビューボタン
+    $('#Preview').on('click', function(e){
+        e.preventDefault(), e.stopPropagation();
+
+        const url = $('#ImageForm').attr('action');
+        const previewUrl = $('#ImageForm').data('previewurl');
+
+        window.open('', '_preview');
+        $('#ImageForm').attr({action: previewUrl, target: '_preview'}).submit();
+
+        $('#ImageForm').attr({action: url, target: null});
+    });
 });

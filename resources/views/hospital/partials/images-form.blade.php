@@ -14,7 +14,10 @@
         @include('layouts.partials.message')
     @endif
     @includeIf('hospital.partials.nav-bar')
-        <!--
+        <div class="text-right form-box" style="margin-top: -100px">
+            <button class="btn btn-info" id="Preview">プレビュー</button>
+        </div>
+    <!--
     <div class="form-entry">
 
     <h2>施設メイン登録</h2>

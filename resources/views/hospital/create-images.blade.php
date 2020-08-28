@@ -4,7 +4,7 @@
     <h1>画像登録 - {{ $hospital->name }} </h1>
 @stop
 @section('form')
-    {!! Form::open(['url' => route('hospital.image.store', $hospital_id), 'files' => true]) !!}
+    {!! Form::open(['url' => route('hospital.image.store', $hospital_id), 'files' => true, 'id' => 'ImageForm', 'data-previewurl' => env('FRONT_URL'). 'prev/'. $docknetID]) !!}
         {{ csrf_field() }}
 
         @includeIf('hospital.partials.images-form')

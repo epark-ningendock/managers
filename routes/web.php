@@ -258,6 +258,5 @@ Route::middleware(['auth:staffs,hospital_staffs', 'permission.hospital.edit'])->
     Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
 
 
-
 });
 Route::get('/ok', 'CalendarController@showCalendarGenerator');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ContractInformation;
 use App\Hospital;
 use App\HospitalImage;
 use App\Http\Requests\HospitalImageFormRequest;
@@ -54,6 +55,10 @@ class HospitalImagesController extends Controller
     {
         $hospital = Hospital::with(['hospital_images', 'hospital_categories', 'lock'])->find($hospital_id);
 
+        // docknetID取得
+				$contract_information = ContractInformation::where('hospital_id', $hospital->id)->first();
+				$docknetID = $contract_information->code;
+
         $select_photos = $hospital->hospital_categories()->where('is_display', SelectPhotoFlag::SELECTED)->where('hospital_id', $hospital_id)->get();
         $interview_top = $hospital->hospital_categories()->where('image_order', ImageGroupNumber::IMAGE_GROUP_INTERVIEW)->first();
 
@@ -77,7 +82,7 @@ class HospitalImagesController extends Controller
 
         $tab_name_list = [ 1 => 'スタッフ',  2 => '設備',  3 => '院内' , 4 => '外観',  5 => 'その他'];
 
-        return view('hospital.create-images', compact('hospital', 'hospital_id', 'image_order', 'tab_name_list', 'interview_top', 'interviews', 'hospital_category','select_photos'));
+        return view('hospital.create-images', compact('hospital', 'hospital_id', 'image_order', 'tab_name_list', 'interview_top', 'interviews', 'hospital_category','select_photos', 'docknetID'));
     }
 
     /**
