@@ -579,7 +579,7 @@ class ReservationController extends Controller
 
         try {
             $fax_tos = [];
-            if (!empty($hospital_fax) && !(!$change_flg && $reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED)) {
+            if (!empty($hospital_fax) && !$change_flg) {
                 foreach ($hospital_fax as $fax_to) {
                     if (!empty($fax_to)) {
                         $fax_tos[] = $fax_to;
