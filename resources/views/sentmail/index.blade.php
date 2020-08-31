@@ -49,14 +49,14 @@
 				<label>送信日時</label>
 				<div class="form-inline">
 					<div class="input-group datetimepicker">
-						<input type="text" class="form-control" name="date_from" placeholder="yyyy-mm-dd H:i" value="{{ $request->date_to or '' }}">
+						<input type="text" class="form-control" name="date_from" placeholder="yyyy-mm-dd H:i" value="{{ $request->date_to or '' }}" autocomplete="off">
 						<div class="input-group-addon">
 							<span class="glyphicon glyphicon-calendar"></span>
 						</div>
 					</div>
 					〜
 					<div class="input-group datetimepicker">
-						<input type="text" class="form-control" name="date_to" placeholder="yyyy-mm-dd H:i" value="{{ $request->date_to or '' }}">
+						<input type="text" class="form-control" name="date_to" placeholder="yyyy-mm-dd H:i" value="{{ $request->date_to or '' }}" autocomplete="off">
 						<div class="input-group-addon">
 							<span class="glyphicon glyphicon-calendar"></span>
 						</div>
