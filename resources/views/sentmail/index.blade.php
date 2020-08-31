@@ -13,7 +13,7 @@
 	<script>
 		$(function(){
 			$('button[type="reset"]').on('click', function(){
-				$('.datetimepicker').find('input').attr('value', null);
+				$('form').find('input').attr('value', null);
 			});
 			$('table tbody tr').on('click', function(){
 				const id = $(this).data('id');
@@ -49,7 +49,7 @@
 				<label>送信日時</label>
 				<div class="form-inline">
 					<div class="input-group datetimepicker">
-						<input type="text" class="form-control" name="date_from" placeholder="yyyy-mm-dd H:i" value="{{ $request->date_to or '' }}" autocomplete="off">
+						<input type="text" class="form-control" name="date_from" placeholder="yyyy-mm-dd H:i" value="{{ $request->date_from or '' }}" autocomplete="off">
 						<div class="input-group-addon">
 							<span class="glyphicon glyphicon-calendar"></span>
 						</div>
