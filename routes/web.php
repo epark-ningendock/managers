@@ -135,6 +135,13 @@ Route::middleware('auth:staffs')->group(function () {
         Route::get('reservation/operation', 'ReservationController@operation')->name('reservation.operation');
         Route::get('reservation', 'ReservationController@index')->name('reservation.index');
 
+        /*
+        |--------------------------------------------------------------------------
+        | メール送信履歴
+        |--------------------------------------------------------------------------
+        */
+				Route::get('sentmail', 'SentMailController@index')->name('sentmail.index');
+				Route::get('sentmail/{id}', 'SentMailController@find')->name('sentmail.find');
     });
 
 
