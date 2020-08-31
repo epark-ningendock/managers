@@ -119,6 +119,9 @@
                 @if (Auth::user()->authority->value !== Authority::CONTRACT_STAFF && Auth::user()->staff_auth->is_invoice !== Permission::NONE)
                   <li class="{{ request()->path() === 'billing' ? 'active' : null }}"><a href="/billing"><i class="fa fa-dollar"></i>&nbsp;&nbsp;&nbsp;&nbsp;請求管理</a></li>
                 @endif
+                @if (Auth::user()->authority->value !== Authority::CONTRACT_STAFF && Auth::user()->staff_auth->is_staff !== Permission::NONE)
+                  <li class="{{ request()->segment(1) === 'sentmail' ? 'active' : null }}"><a href="/sentmail"><i class="fa fa-mail-forward"></i>&nbsp;&nbsp;&nbsp;&nbsp;メール送信履歴</a></li>
+                @endif
               </ul>
           @endif
           {{-- 医療機関スタッフの機能 --}}
