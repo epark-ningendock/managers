@@ -191,6 +191,7 @@ return [
         App\Providers\ValidationExtensionServiceProvider::class,
         //App\Providers\MinIOStorageServiceProvider::class
         Barryvdh\DomPDF\ServiceProvider::class,
+				ShvetsGroup\LaravelEmailDatabaseLog\LaravelEmailDatabaseLogServiceProvider::class,
     ],
 
     /*
