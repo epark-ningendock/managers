@@ -319,6 +319,14 @@ class CalendarController extends Controller
             ->with('months', $data[0])
             ->with('start', $data[1])
             ->with('end', $data[2])
+						->with('sunday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->sun : 0)
+						->with('monday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->mon : 0)
+						->with('tuesday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->tue : 0)
+						->with('wednesday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->wed : 0)
+						->with('thursday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->thu : 0)
+						->with('friday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->fri : 0)
+						->with('saturday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->sat : 0)
+						->with('holiday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->hol : 0)
             ->with('target_num', $target_num);
     }
 
@@ -342,6 +350,14 @@ class CalendarController extends Controller
             ->with('months', $data[0])
             ->with('start', $data[1])
             ->with('end', $data[2])
+						->with('sunday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->sun : 0)
+						->with('monday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->mon : 0)
+						->with('tuesday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->tue : 0)
+						->with('wednesday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->wed : 0)
+						->with('thursday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->thu : 0)
+						->with('friday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->fri : 0)
+						->with('saturday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->sat : 0)
+						->with('holiday_frame', isset($calendar->calendar_base_wakus) ? $calendar->calendar_base_wakus->hol : 0)
             ->with('target_num', $target_num);
     }
 
