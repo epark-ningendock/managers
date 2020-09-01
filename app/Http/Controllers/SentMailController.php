@@ -12,7 +12,7 @@ class SentMailController extends Controller
 		{
 			define('ROWPERPAGE', 20);
 
-			$query = EmailLog::query();
+			$query = EmailLog::query()->orderBy('date', 'DESC');
 
 			if ($request->input('date_from')){
 				$query->where('date', '>=', Carbon::parse($request->input('date_from'))->format('Y-m-d H:i'));
