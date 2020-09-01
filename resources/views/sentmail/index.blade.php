@@ -5,7 +5,8 @@
 		#MailPreview{ background: #f4fbff; padding: 2em; height: 40em; margin: 2em; box-shadow: 2px 2px 4px; border-radius: 2px }
 		#MailBody{ width: 100%; height: 30em; overflow-y: scroll }
 		.table-hover tbody tr:hover{ cursor: pointer }
-		input[type="datetime-local"]::-webkit-clear-button{ -webkit-appearance: none; display: none }
+		.body{ position: relative }
+		.attechments{ position: absolute; right: 0; bottom: 0; top: auto }
 	</style>
 @endpush
 
@@ -15,6 +16,7 @@
 			$('button[type="reset"]').on('click', function(){
 				$('form').find('input').attr('value', null);
 			});
+
 			$('table tbody tr').on('click', function(){
 				const id = $(this).data('id');
 				$.ajax({
@@ -22,12 +24,38 @@
 					type: 'GET'
 				}).done(function(data){
 					var body = data.body.replace(/\s?<[^>]*>\s?/gm, '');
-					$('#MailPreview').find('.date').text(data.date).end()
+					$('#MailPreview')
+					.find('.date').text(data.date).end()
 					.find('#to').val(data.to).end()
 					.find('.subject').text(data.subject).end()
-					.find('#MailBody').val(body).end();
+					.find('#MailBody').val(body).end()
+					.attr('data-id', id);
+
+					$('#Mailto').attr('disabled', false);
 				});
-			})
+
+				$('#Mailto').on('click', function(e){
+					e.preventDefault(), e.stopImmediatePropagation();
+
+					const preview = $('#MailPreview');
+					const a = document.createElement('a');
+					const subject = encodeURI($(preview).find('.subject').text());
+					const body = encodeURI($(preview).find('#MailBody').val());
+					let href = 'mailto:' + $(preview).find('#to').val();
+					href += '?subject=' + subject;
+					href += '&body=' + body;
+					a.href = href;
+
+					const mailId = $(preview).attr('data-id');
+					const hasAttechment = (function(id){
+						return $('table tbody tr[data-id="' + id + '"]').find('.attechments').length;
+					})(mailId);
+
+					if (hasAttechment > 0) alert("このメールには添付ファイルがあります。\nリスト中のクリップ・アイコンをクリックすると、添付ファイルをダウンロードできます。");
+
+					a.click();
+				});
+			});
 		});
 	</script>
 @endpush
@@ -105,12 +133,15 @@
 							<td>
 								<div class="row">
 									<div class="col-md-7 text-left">
-										@if($d->attachments)<i class="glyphicon glyphicon-file"></i>@else<i class="glyphicon"></i>@endif
 										{{ $d->to }}
 									</div>
 									<div class="col-md-5 text-right">{{ \Carbon\Carbon::parse($d->date)->format('Y-m-d H:i:s') }}</div>
 								</div>
-								<div class="text-left"><strong>{{ $d->subject }}</strong></div>
+								<div class="text-left body">
+									<strong>{{ $d->subject }}</strong>
+									@if($d->attachments)
+										<a href="{{ $d->attachments }}" download><i class="glyphicon glyphicon-paperclip attechments"></i></a>
+									@endif								</div>
 								<div class="text-left mt-3">{!! mb_substr(strip_tags($d->body), 0, 60) !!}...</div>
 							</td>
 							</tr>
@@ -119,16 +150,17 @@
 					@endif
 				@endforeach
 			</div>
+			{{ $data->links() }}
 		</div>
 		<div class="col-md-7">
-			<div id="MailPreview">
+			<div id="MailPreview" data-id="">
 				<div>
 					<strong>送信日時：</strong><span class="date"></span>
 				</div>
 				<div>
 					<div class="form-inline">
 						<strong>受信メールアドレス：</strong>
-						<input type="text" id="to" class="form-control" style="width: 24em" readonly>
+						<input type="text" id="to" class="form-control" style="width: 18em; background: #fff; padding: 0 .5em; height: 1.75em" readonly>
 					</div>
 				</div>
 
@@ -144,6 +176,10 @@
 						<textarea id="MailBody" readonly></textarea>
 					</div>
 				</div>
+			</div>
+
+			<div class="text-center">
+				<button id="Mailto" disabled class="btn btn-info">メーラーでメールを送信する</button>
 			</div>
 		</div>
 	</div>
