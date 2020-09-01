@@ -44,6 +44,15 @@ class SentMailController extends Controller
 
 			$data = $query->paginate(ROWPERPAGE);
 
+			foreach($data as $d){
+				if ($d->attachments != ''){
+					$file = preg_split('/^\r\n/m', $d->attachments);
+					$headers = preg_split('/\r\n/m', $file[0]);
+					$mime = str_replace('Content-Type: ', '', $headers[0]);
+					$d->attachments = "data:{$mime}base64,{$file[1]}";
+				}
+			}
+
 			return view('sentmail.index')->with([
 				'request' => $request,
 				'data' => $data

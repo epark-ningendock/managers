@@ -141,7 +141,8 @@
 									<strong>{{ $d->subject }}</strong>
 									@if($d->attachments)
 										<a href="{{ $d->attachments }}" download><i class="glyphicon glyphicon-paperclip attechments"></i></a>
-									@endif								</div>
+									@endif
+								</div>
 								<div class="text-left mt-3">{!! mb_substr(strip_tags($d->body), 0, 60) !!}...</div>
 							</td>
 							</tr>
