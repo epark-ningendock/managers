@@ -55,7 +55,7 @@ class BillingConfirmationSendMail extends Mailable
                 ->from(env('MAIL_FROM_ADDRESS'))
                 ->subject($this->data['subject'])
                 ->attachData(
-                    $this->attchment->output(),
+                    $this->attchment,
                     $this->data['attachment_file_name'] . '.pdf',
                     ['mime' => 'application/pdf',]
                 )
