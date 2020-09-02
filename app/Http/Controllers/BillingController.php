@@ -15,6 +15,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Excel;
 
 class BillingController extends Controller {
@@ -268,7 +269,7 @@ class BillingController extends Controller {
 				'period' => $dateFilter['startedDate']->format('Y/m/d') . '〜' . $dateFilter['endedDate']->format('Y/m/d'),
 				'special_count' => $special_count,
 				'total_price' => $total_price
-			] )->setPaper('legal', 'landscape');
+			] )->setPaper('legal', 'landscape')->output();
 
 
 			$attributes = [
