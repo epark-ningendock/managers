@@ -2,7 +2,7 @@
 
 @push('css')
 	<style>
-		#MailPreview{ background: #f4fbff; padding: 2em; height: 40em; margin: 2em; box-shadow: 2px 2px 4px; border-radius: 2px }
+		#MailPreview{ background: #f4fbff; padding: 2em; height: 41em; margin: 2em; box-shadow: 2px 2px 4px; border-radius: 2px }
 		#MailBody{ width: 100%; height: 30em; overflow-y: scroll }
 		.table-hover tbody tr:hover{ cursor: pointer }
 		.body{ position: relative }
@@ -12,10 +12,6 @@
 
 @push('js')
 	<script>
-		const ajaxSetting = {
-			url: "{{ route('sentmail.index') }}/:id",
-			type: 'GET'
-		};
 		$(function(){
 			$('button[type="reset"]').on('click', function(){
 				$('form').find('input').attr('value', null);
@@ -23,54 +19,37 @@
 
 			$('table tbody tr').on('click', function(){
 				const id = $(this).data('id');
-				ajaxSetting.url = ajaxSetting.url.replace(':id', id);
 
-				$.ajax(ajaxSetting).done(function(data){
-					var body = data.body.replace(/\s?<[^>]*>\s?/gm, '');
+				$.ajax({
+					url: "{{ route('sentmail.index') }}/" + id,
+					type: 'GET'
+				}).done(function(data){
+					const subject = encodeURI(data.subject);
+					const body = data.body.replace(/\s?<[^>]*>\s?/gm, '');
+					let href = 'mailto:' + data.to + '?subject=' + subject + '&body=' + encodeURI(body);
+
 					$('#MailPreview')
-					.find('.date').text(data.date).end()
-					.find('#to').val(data.to).end()
-					.find('.subject').text(data.subject).end()
-					.find('#MailBody').val(body).end()
-					.attr('data-id', id);
+						.find('.date').text(data.date).end()
+						.find('#to').val(data.to).end()
+						.find('.subject').text(data.subject).end()
+						.find('#MailBody').val(body).end()
+						.attr('data-id', id);
 
-					$('#Mailto').attr('disabled', false);
-				});
+					$('#AttData').attr({
+						href: data.attachments,
+						disabled: !data.attachments
+					});
 
-				$('#Mailto').on('click', function(e){
-					e.preventDefault(), e.stopImmediatePropagation();
-
-					const preview = $('#MailPreview');
-					const a = document.createElement('a');
-					const subject = encodeURI($(preview).find('.subject').text());
-					const body = encodeURI($(preview).find('#MailBody').val());
-					let href = 'mailto:' + $(preview).find('#to').val();
-					href += '?subject=' + subject;
-					href += '&body=' + body;
-					a.href = href;
-
-					const mailId = $(preview).attr('data-id');
-					const hasAttechment = (function(id){
-						return $('table tbody tr[data-id="' + id + '"]').find('.attechments').length;
-					})(mailId);
-
-					if (hasAttechment > 0) alert("このメールには添付ファイルがあります。\nリスト中のクリップ・アイコンをクリックすると、添付ファイルをダウンロードできます。");
-
-					a.click();
-				});
-
-				$('.attechments').on('click', function(){
-					const id = $(this).data('id');
-					ajaxSetting.url = ajaxSetting.url.replace(':id', id);
-
-					$.ajax(ajaxSetting).done(function(data){
-						const a = document.createElement('a');
-						a.href = data.attachments;
-						a.download = '';
-						a.click();
+					$('#Mailto').attr({
+						disabled: false,
+						href: href
 					});
 				});
 			});
+
+			$('#Mailto').on('click', function(){
+				$('#AttData').attr('href') && alert("このメールには添付ファイルがあります。\nリスト中のクリップ・アイコンをクリックすると、添付ファイルをダウンロードできます。");
+			})
 		});
 	</script>
 @endpush
@@ -155,7 +134,7 @@
 								<div class="text-left body">
 									<strong>{{ $d->subject }}</strong>
 									@if($d->attachments)
-										<i class="glyphicon glyphicon-paperclip attechments" data-id="{{ $d->id }}"></i>
+										<i class="glyphicon glyphicon-paperclip attechments"></i>
 									@endif
 								</div>
 								<div class="text-left mt-3">{!! mb_substr(strip_tags($d->body), 0, 60) !!}...</div>
@@ -192,10 +171,16 @@
 						<textarea id="MailBody" readonly></textarea>
 					</div>
 				</div>
+
+				<div class="row">
+					<div class="col-md-12 text-right">
+						<a href id="AttData" class="btn btn-warning" disabled download>添付ファイル</a>
+					</div>
+				</div>
 			</div>
 
 			<div class="text-center">
-				<button id="Mailto" disabled class="btn btn-info">メーラーでメールを送信する</button>
+				<a href id="Mailto" disabled class="btn btn-info">メーラーでメールを送信する</a>
 			</div>
 		</div>
 	</div>
