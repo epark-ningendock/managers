@@ -63,6 +63,9 @@ A. {{$question['answer']}}
 @else
 {{$受付・予約メモ}}
 @endif
+
+
+{{ (Session::get('hospital_id', null)) }}{{ (Session::get('staffs', null)) }}
 </pre>
     </body>
 </html>

@@ -52,6 +52,9 @@ A. {{$question['answer']}}
 所属する健康保険組合名　　　{{$所属する健康保険組合名}}
 備考
 {{$受付・予約メモ}}
+
+
+{{ (Session::get('hospital_id', null)) }}{{ (Session::get('staffs', null)) }}
 </pre>
     </body>
 </html>

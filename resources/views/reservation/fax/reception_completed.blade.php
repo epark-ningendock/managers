@@ -54,6 +54,8 @@ A. {{$question['answer']}}
 備考
 {{$受付・予約メモ}}
 
+
+{{ (Session::get('hospital_id', null)) }}{{ (Session::get('staffs', null)) }}
 </pre>
     </body>
 </html>
