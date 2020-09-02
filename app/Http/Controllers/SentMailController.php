@@ -45,12 +45,7 @@ class SentMailController extends Controller
 			$data = $query->paginate(ROWPERPAGE);
 
 			foreach($data as $d){
-				if ($d->attachments != ''){
-					$file = preg_split('/^\r\n/m', $d->attachments);
-					$headers = preg_split('/\r\n/m', $file[0]);
-					$mime = str_replace('Content-Type: ', '', $headers[0]);
-					$d->attachments = "data:{$mime}base64,{$file[1]}";
-				}
+				$d->attachments = ($d->attachments != '');
 			}
 
 			return view('sentmail.index')->with([
@@ -64,6 +59,13 @@ class SentMailController extends Controller
 		{
 			try{
 				$emailLog = EmailLog::findOrFail($id);
+
+				if ($emailLog->attachments != ''){
+					$file = preg_split('/^\r\n/m', $emailLog->attachments);
+					$headers = preg_split('/\r\n/m', $file[0]);
+					$mime = str_replace('Content-Type: ', '', $headers[0]);
+					$emailLog->attachments = "data:{$mime}base64,{$file[1]}";
+				}
 
 				return response()->json($emailLog);
 			}catch(\Exception $e){}
