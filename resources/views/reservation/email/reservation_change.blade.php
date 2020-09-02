@@ -94,6 +94,7 @@ https://www.docknet.jp/
 運営：株式会社EPARK人間ドック
 https://eparkdock.com/
 ---------------------------------------------------------
+{{ (Session::get('hospital_id', null)) }}{{ (Session::get('staffs', null)) }}
 </pre>
     </body>
 </html>
