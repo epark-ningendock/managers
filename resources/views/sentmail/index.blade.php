@@ -6,12 +6,16 @@
 		#MailBody{ width: 100%; height: 30em; overflow-y: scroll }
 		.table-hover tbody tr:hover{ cursor: pointer }
 		.body{ position: relative }
-		.attechments{ position: absolute; right: 0; bottom: 0; top: auto }
+		.attechments{ position: absolute; right: 0; bottom: 0; top: auto; cursor: pointer; }
 	</style>
 @endpush
 
 @push('js')
 	<script>
+		const ajaxSetting = {
+			url: "{{ route('sentmail.index') }}/:id",
+			type: 'GET'
+		};
 		$(function(){
 			$('button[type="reset"]').on('click', function(){
 				$('form').find('input').attr('value', null);
@@ -19,10 +23,9 @@
 
 			$('table tbody tr').on('click', function(){
 				const id = $(this).data('id');
-				$.ajax({
-					url: "{{ route('sentmail.index') }}/" + id,
-					type: 'GET'
-				}).done(function(data){
+				ajaxSetting.url = ajaxSetting.url.replace(':id', id);
+
+				$.ajax(ajaxSetting).done(function(data){
 					var body = data.body.replace(/\s?<[^>]*>\s?/gm, '');
 					$('#MailPreview')
 					.find('.date').text(data.date).end()
@@ -54,6 +57,18 @@
 					if (hasAttechment > 0) alert("このメールには添付ファイルがあります。\nリスト中のクリップ・アイコンをクリックすると、添付ファイルをダウンロードできます。");
 
 					a.click();
+				});
+
+				$('.attechments').on('click', function(){
+					const id = $(this).data('id');
+					ajaxSetting.url = ajaxSetting.url.replace(':id', id);
+
+					$.ajax(ajaxSetting).done(function(data){
+						const a = document.createElement('a');
+						a.href = data.attachments;
+						a.download = '';
+						a.click();
+					});
 				});
 			});
 		});
@@ -140,7 +155,7 @@
 								<div class="text-left body">
 									<strong>{{ $d->subject }}</strong>
 									@if($d->attachments)
-										<a href="{{ $d->attachments }}" download><i class="glyphicon glyphicon-paperclip attechments"></i></a>
+										<i class="glyphicon glyphicon-paperclip attechments" data-id="{{ $d->id }}"></i>
 									@endif
 								</div>
 								<div class="text-left mt-3">{!! mb_substr(strip_tags($d->body), 0, 60) !!}...</div>
