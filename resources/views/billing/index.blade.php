@@ -151,20 +151,20 @@
                             <a href="{{ route('billing.show', ['billing' => $billing]) }}" class="btn btn-primary">明細</a>
                         </td>
                         <td>
-                            <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CHECKING, 'claim_check' => 'yes'] )) }}"
+                            <a href="{{ route('billing.status.update', array_merge( request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CHECKING, 'claim_check' => 'yes', 'admin' => 1] )) }}"
                                 class="btn @if( $billing->status != BillingStatus::UNCONFIRMED ) btn-default @else btn-primary @endif"
                                 @if( $billing->status != BillingStatus::UNCONFIRMED ) style="pointer-events: none;" @endif
                             >請求確認</a>
                         </td>
                         <td>
-                            <a href="{{ route('billing.status.update', array_merge(request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CONFIRM, 'claim_confirmation' => 'yes'])) }}"
+                            <a href="{{ route('billing.status.update', array_merge(request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CONFIRM, 'claim_confirmation' => 'yes', 'admin' => 1])) }}"
                                 class="btn @if( ($billing->status == BillingStatus::CHECKING) || ($billing->status == BillingStatus::CONFIRMED) ) btn-primary @else btn-default @endif"
                                 @if( ($billing->status == BillingStatus::CHECKING) || ($billing->status == BillingStatus::CONFIRMED) )  style="pointer-events: unset;" @else style="pointer-events: none;" @endif
                             >請求確定</a>
                         </td>
 
                         <td>
-                            <a href="{{ route('billing.status.update', array_merge(request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CHECKING, 'undo_commit' => 'yes'])) }}"
+                            <a href="{{ route('billing.status.update', array_merge(request()->all(), [ 'hospital_id' => $billing->hospital->id, 'billing' => $billing, 'status' => BillingStatus::CHECKING, 'undo_commit' => 'yes', 'admin' => 1])) }}"
                                 class="btn @if( $billing->status == BillingStatus::CONFIRM) btn-primary @else btn-default @endif"
                                 @if( $billing->status == BillingStatus::CONFIRM) style="pointer-events: unset;" @else style="pointer-events: none;" @endif
                             >確定取消</a>
