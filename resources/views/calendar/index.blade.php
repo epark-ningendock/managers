@@ -50,7 +50,7 @@
 
           <div class="box-tools">
             <div class="input-group input-group-sm hidden-xs">
-
+              <strong>@if($calendar->auto_update_flg === 1)自動更新　@endif
               <a class="btn btn-primary btn-mini" href="{{ route('calendar.setting', $calendar->id) }}">カレンダー設定</a>
               <button class="btn btn-primary btn-mini ml-2 delete-btn calendar-delete-popup-btn" data-id="{{ $calendar->id }}">
                   <i class="fa fa-trash"></i>
