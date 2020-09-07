@@ -142,6 +142,7 @@ class SearchController extends ApiBaseController
                 + compact('courses'))->setCallback($callback);
         } catch (\Exception $e) {
             Log::error($e);
+						Log::error($courses);
             return $this->createResponse($this->messages['system_error_api'], $request->input('callback'));
         }
 
