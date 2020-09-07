@@ -234,7 +234,7 @@ class SearchController extends ApiBaseController
 
                     $q->orWhere('hospitals.search_word', 'like', "%{$freewords[0]}%");
                     for ($i = 1; $i < count($freewords); $i++){
-                    		$q->orWhere('hospitals', 'like', "%{$freewords[$i]}%");
+                    		$q->orWhere('hospitals.search_word', 'like', "%{$freewords[$i]}%");
 										}
 
 //                    $q->orWhere('course_metas.category_disease_name', 'like', '%' . $freewords[0] . '%');
