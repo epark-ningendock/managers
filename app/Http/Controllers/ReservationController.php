@@ -1044,10 +1044,10 @@ class ReservationController extends Controller
 
 					// 受診日変更により、請求月が変わる場合は変更元の請求月のHPリンクのカウントをし直す
 					\Log::info('Value check on normal');
-					\Log::info($params['claim_month']);
+					\Log::info(@$params['claim_month']);
 					\Log::info($old_claim_month);
 					\Log::info($hospital->hplink_contract_type);
-						if ($params['claim_month'] != $old_claim_month &&
+						if (isset($params['claim_month']) && $params['claim_month'] != $old_claim_month &&
 							$reservation->site_code === 'HP' &&
 							$hospital->hplink_contract_type == HplinkContractType::PAY_PER_USE)
 						{
