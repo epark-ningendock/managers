@@ -97,7 +97,7 @@ class ReservationMail extends Mailable
         $type = '';
         if ($this->entity->site_code == 'HP') {
             $type = 'HP';
-        } elseif ($this->entity->site_code == 'Special') {
+        } elseif ($this->entity->site_code == 'special') {
             $type = '特集ページ';
         }
 

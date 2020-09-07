@@ -90,7 +90,7 @@ class BillingDetailSheet implements FromCollection, WithHeadings, ShouldAutoSize
                         $reservation->fee / (($tax_rate + 100) / 100),
                         $billing->hospital->hospitalPlanByDate($this->endedDate)->contractPlan->plan_name ?? '',
                         (isset($reservation->site_code) && ( $reservation->site_code == 'HP') ) ? 'HPリンク' : '',
-                        (isset($reservation->site_code) && ( $reservation->site_code == 'Special') ) ? '○' : '',
+                        (isset($reservation->site_code) && ( $reservation->site_code == 'special') ) ? '○' : '',
                         $reservation->fee_rate . '%',
                     ];
 

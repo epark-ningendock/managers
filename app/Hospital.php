@@ -319,10 +319,14 @@ class Hospital extends Model
 
     public function reservationByCompletedDate($start, $end)
     {
-        return $this->reservations()
-            ->whereBetween('reservation_date', [$start, $end])
-            ->where('reservation_status', '<>', ReservationStatus::CANCELLED )
-            ->get();
+    	// HPリンクはキャンセル分もカウントされるため、キャンセルされたHPリンクの予約もリストアップ
+			return $this->reservations()
+				->whereBetween('reservation_date', [$start, $end])
+				->where(function($query){
+					$query->where('reservation_status', '<>', ReservationStatus::CANCELLED)
+						->orWhere('site_code', 'HP');
+				})
+				->get();
     }
 
     public function hospitalPlans()
