@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Course;
 use App\Customer;
+use App\Enums\HplinkContractType;
 use App\Enums\IsFreeHpLink;
 use App\Enums\Permission;
 use App\Enums\ReservationStatus;
@@ -927,6 +928,7 @@ class ReservationController extends Controller
             $course = Course::find($request->course_id);
             $reservation_date = Carbon::parse($request->reservation_date);
             $old_reservation_date = $reservation->reservation_date;
+						$old_claim_month = $reservation->claim_month;
 
             $calendar_day = $course->calendar->calendar_days()
                 ->whereDate('date', [$reservation_date])->get()->first();
@@ -958,8 +960,14 @@ class ReservationController extends Controller
             $params['tax_included_price'] = $course->is_price == '1' ? $course->price : 0;
             $hospital = Hospital::find(session()->get('hospital_id'));
 
-            if ($reservation->site_code == 'HP') {
-                $params['fee'] = $this->_reservation_service->getHpfee($hospital);
+						// 受診日変更の場合は請求月（claim_month）も更新する
+						if (!$reservation_date->eq($old_reservation_date)) {
+							$params['claim_month'] = $this->_reservation_service->getClaimMonth($reservation_date);
+						}
+
+
+						if ($reservation->site_code === 'HP' && $hospital->hplink_contract_type == HplinkContractType::PAY_PER_USE) {
+                $params['fee'] = $this->_reservation_service->getHpfee($hospital, $reservation_date);
                 if ($reservation->fee > 0) {
                     $params['is_free_hp_link'] = IsFreeHpLink::FREE;
                 } else {
@@ -975,6 +983,18 @@ class ReservationController extends Controller
             }
 
             $reservation->update($params);
+
+						// 受診日変更により、請求月が変わる場合は変更元の請求月のHPリンクのカウントをし直す
+						\Log::info('Value check on API');
+						\Log::info($params['claim_month']);
+						\Log::info($old_claim_month);
+						\Log::info($hospital->hplink_contract_type);
+						if ($params['claim_month'] != $old_claim_month &&
+							$reservation->site_code === 'HP' &&
+							$hospital->hplink_contract_type == HplinkContractType::PAY_PER_USE)
+						{
+							$this->_reservation_service->reCountHpfee($hospital, $old_reservation_date);
+						}
 
             if (!$reservation_date->eq($old_reservation_date)) {
                 // カレンダーの予約数を1つ減らす

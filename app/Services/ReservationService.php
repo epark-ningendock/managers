@@ -683,7 +683,7 @@ class ReservationService
             $options = json_decode(json_encode($request->input('option_array')));
         }
 
-        if ($entity->site_code != 'HP') {
+        if ($entity->site_code !== 'HP') {
             $option_price = 0;
 
             foreach ($options as $option) {
@@ -691,7 +691,7 @@ class ReservationService
             }
             $entity->fee = ($request->input('course_price_tax')
                     + $option_price + $entity->adjustment_price) * ($entity->fee_rate / 100);
-            if ($entity->site_code == 'Special') {
+            if ($entity->site_code === 'special') {
                 $hospital_option_plan = HospitalOptionPlan::where('hospital_id', $entity->hospital_id)
                     ->where('option_plan_id', 6)
                     ->where('from', '<=', Carbon::today()->toDateString())
@@ -705,14 +705,19 @@ class ReservationService
                 }
             }
             $entity->is_free_hp_link = 0;
-        } elseif ($entity->site_code == 'HP' && $hospital->hplink_contract_type == HplinkContractType::PAY_PER_USE) {
-            $entity->fee = $this->getHpfee($hospital);
+        } elseif ($entity->site_code === 'HP' && $hospital->hplink_contract_type == HplinkContractType::PAY_PER_USE) {
+            $entity->fee = $this->getHpfee($hospital, $entity->reservation_date);
             if ($entity->fee > 0) {
                 $entity->is_free_hp_link = IsFreeHpLink::FREE;
             } else {
                 $entity->is_free_hp_link = IsFreeHpLink::FEE;
             }
         }
+
+        // HPリンク契約のない医療機関にはサイトコードを削除
+				if ($entity->site_code === 'HP' && $hospital->hplink_contract_type == HplinkContractType::NONE){
+					$entity->site_code = null;
+				}
 
         return $entity;
     }
@@ -859,44 +864,88 @@ class ReservationService
             ->first();
     }
 
-    public function getHpfee(Hospital $hospital) {
+    public function getHpfee(Hospital $hospital, Carbon $reservationDate) {
 
-        $fromDate = Carbon::today();
-        $toDate =Carbon::today();
+			// カウントの基準日は受診日
+			$fromDate = $reservationDate->copy();
+			$toDate = $reservationDate->copy();
 
-        if (Carbon::today()->day < 21) {
-            $fromDate->subMonth();
-            $fromDate->day = 21;
-            $toDate->day = 20;
-        } else {
-            $fromDate->day = 21;
-            $toDate->addMonth();
-            $toDate->day = 20;
+			if ($reservationDate->day < 21) {
+				$fromDate->subMonth();
+				$fromDate->day = 21;
+				$toDate->day = 20;
+			} else {
+				$fromDate->day = 21;
+				$toDate->addMonth();
+				$toDate->day = 20;
+			}
 
-        }
-        $targets = Reservation::where('hospital_id', $hospital->id)
-            ->where('reservation_date', '>=', $fromDate)
-            ->where('reservation_date', '<=', $toDate)
-            ->where('site_code', 'HP')
-            ->count();
+			$targets = Reservation::where('hospital_id', $hospital->id)
+				->where('reservation_date', '>=', $fromDate)
+				->where('reservation_date', '<=', $toDate)
+				->where('site_code', 'HP')
+				->count();
 
-        if ($hospital->hplink_contract_type == '1') {
-            $free_count = $hospital->hplink_count;
-            if ($targets < $free_count) {
-                return 0;
-            } else {
-                return $hospital->hplink_price;
-            }
-        } else {
-            if ($targets == 0) {
-                return $hospital->hplink_price;
-            } else {
-                return 0;
-            }
-        }
+			if ($hospital->hplink_contract_type == HplinkContractType::PAY_PER_USE) {
+				$free_count = $hospital->hplink_count;
+				if ($targets < $free_count) {
+					return 0;
+				} else {
+						return $hospital->hplink_price;
+				}
+			} else {
+				if ($targets == 0) {
+					return $hospital->hplink_price;
+				} else {
+					return 0;
+				}
+			}
     }
 
-    private function getClaimMonth(Carbon $reservationDate) {
+
+	/**
+	 * @description 受診日変更で請求月が変わった場合に、HPリンクの予約回数をカウントし直す
+	 * @param Hospital $hospital
+	 * @param Carbon $reservationDate
+	 * @return void
+	 */
+    public function reCountHpfee(Hospital $hospital, Carbon $reservationDate) : void{
+    	$fromDate = $reservationDate->copy();
+    	$toDate = $reservationDate->copy();
+			\Log::info("old reservation date: ". $reservationDate);
+
+			if ($reservationDate->day < 21) {
+				$fromDate->subMonth();
+				$fromDate->day = 21;
+				$toDate->day = 20;
+			} else {
+				$fromDate->day = 21;
+				$toDate->addMonth();
+				$toDate->day = 20;
+			}
+			\Log::info("old reservation date from: ". $fromDate);
+			\Log::info("old reservation date to: ". $toDate);
+
+			$targets = Reservation::where('hospital_id', $hospital->id)
+				->where('reservation_date', '>=', $fromDate)
+				->where('reservation_date', '<=', $toDate)
+				->where('site_code', 'HP')
+				->get();
+
+			if ($hospital->hplink_contract_type == HplinkContractType::PAY_PER_USE){
+				$free_count = $hospital->hplink_count;
+				\Log::info('------------- reCountHpfee ---------------');
+				\Log::info($targets);
+
+				foreach($targets as $index => $target){
+					$fee = ($index < $free_count) ? 0 : $hospital->hplink_price;
+					$target->fee = $fee;
+					$target->save();
+				}
+			}
+		}
+
+    public function getClaimMonth(Carbon $reservationDate) {
         if ($reservationDate->day < 21) {
             return $reservationDate->year . sprintf('%02d', $reservationDate->month);
         } else {
