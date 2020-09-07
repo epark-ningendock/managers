@@ -37,8 +37,8 @@ class CalendarBaseWakuCreateCommand extends Command
                     continue;
                 }
                 $calendar_days = CalendarDay::where('calendar_id', $calendar->id)
-                    ->where('date', '>=', '2020-06-01')
-                    ->where('date', '<=', '2020-07-31')
+                    ->where('date', '>=', '2020-09-01')
+                    ->where('date', '<=', '2020-09-30')
                     ->get();
 
                 $medical_treatment_times = MedicalTreatmentTime::where('hospital_id', $calendar->hospital_id)->get();
