@@ -94,9 +94,11 @@ class HospitalContentsResource extends HospitalContentBaseResource
         $results = [];
         foreach ($categories as $category) {
 
-            $result = ['image_location_no' => $category->file_location_no,
-                'img_url' => $category->hospital_image ? $category->hospital_image->path ?? '' : '',
-                'img_desc' =>$category->hospital_image ? $category->hospital_image->memo2 ?? '' : ''];
+            $result = [
+							'img_url' => $category->hospital_image ? $category->hospital_image->path ?? '' : '',
+							'img_desc' => $category->hospital_image ? $category->hospital_image->memo2 ?? '' : '',
+							'image_location_no' => $category->file_location_no,
+						];
 
             $results[] = $result;
         }

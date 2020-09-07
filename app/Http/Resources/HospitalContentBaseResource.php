@@ -191,7 +191,7 @@ class HospitalContentBaseResource extends Resource
         $categories = $hospital_categories->filter(function ($c) {
             return isset($c->image_order)
                 && $c->image_order == 8;
-        });
+        })->sortBy(function($hospital_categories){ return sprintf('%d%d', $hospital_categories->file_location_no, $hospital_categories->order2); });
 
         $results = [];
         foreach ($categories as $i) {
