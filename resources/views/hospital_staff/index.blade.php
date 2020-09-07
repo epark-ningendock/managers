@@ -18,7 +18,7 @@
         - 
         <i class="fa fa-users"> 医療機関スタッフ管理</i>
     </h1>
-    <h5 align="right"><a href="{{ './manual/01_staff.pdf' }}" target="_blank">医療機関スタッフ管理の使い方</a></h5>
+    <h5 align="right"><a href="{{ '/manual/01_staff.pdf' }}" target="_blank">医療機関スタッフ管理の使い方</a></h5>
 @stop
 
 
