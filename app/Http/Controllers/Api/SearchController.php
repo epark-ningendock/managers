@@ -134,7 +134,6 @@ class SearchController extends ApiBaseController
             $courses = SearchCoursesResource::collection($entities);
 
             // response
-						Log::info($courses->all());
             return $search_condition_return_flag == 0 ?
                 response()->json(compact('status', 'search_count', 'return_count', 'return_from', 'return_to', 'courses'))
                     ->setCallback($callback)
