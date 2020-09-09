@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Course;
 use App\CourseOption;
 use App\Http\Requests\OptionformStore;
 use App\Option;
@@ -19,7 +20,13 @@ class OptionController extends Controller
     public function index()
     {
         $pagination = config('epark.pagination.option_index');
-        $options    = Option::where('hospital_id', session()->get('hospital_id'))->orderBy('order')->paginate($pagination);
+        $options    = Option::with('course_options')->where('hospital_id', session()->get('hospital_id'))->orderBy('order')->paginate($pagination);
+
+        foreach($options as $option){
+        	$courseIds = $option->course_options->pluck('course_id')->all();
+        	$courses = (!empty($courseIds)) ? Course::whereIn('id', $courseIds)->orderBy('order')->get(['id', 'name']) : [];
+        	$option->courses = $courses;
+				}
 
         return view('option.index', [ 'options' => $options ]);
     }
