@@ -44,7 +44,7 @@
                 <th>オプション名</th>
                 <th>オプション内容</th>
                 <th>価格</th>
-                <th></th>
+                <th style="width: 10em"></th>
             </tr>
             </thead>
             <tbody>
@@ -52,8 +52,8 @@
                 @foreach($options as $option)
                     <tr>
                         <td>{{ $option->id }}</td>
-                        <td style="text-align: left">{{ $option->name }}</td>
-                        <td>{{ $option->confirm }}</td>
+                        <td class="text-left">{{ $option->name }}</td>
+                        <td class="text-left">{{ $option->confirm }}</td>
                         <td>{{ number_format($option->price) }}</td>
                         <td>
                             <a href="{{ route('option.edit', $option->id) }}"
