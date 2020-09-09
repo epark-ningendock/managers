@@ -36,6 +36,7 @@
 @section('table')
     <div class="table-responsive">
         @include('layouts.partials.pagination-label', ['paginator' => $options])
+        {{ $options->appends($_GET)->links() }}
         <table class="table no-border table-hover table-striped mb-5">
             <thead>
             <tr>
