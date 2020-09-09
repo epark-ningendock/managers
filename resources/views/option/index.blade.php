@@ -4,7 +4,11 @@
         'delete_route' => 'option.destroy'
     ];
 @endphp
-
+<style>
+    .toCourseEdit{ height: 5em; overflow-y: hidden }
+    .toCourseEdit.on{ height: auto }
+    .readMore{ font-size: 90%; width: 100% }
+</style>
 @extends('layouts.list', $params)
 
 <!-- ページタイトルを入力 -->
@@ -42,7 +46,7 @@
             <tr>
                 <th>オプションID</th>
                 <th>オプション名</th>
-                <th>オプション内容</th>
+                <th>提供コース名</th>
                 <th>価格</th>
                 <th style="width: 10em"></th>
             </tr>
@@ -53,7 +57,16 @@
                     <tr>
                         <td>{{ $option->id }}</td>
                         <td class="text-left">{{ $option->name }}</td>
-                        <td class="text-left">{{ $option->confirm }}</td>
+                        <td class="text-left">
+                            @php $i = 0; @endphp
+                            @foreach($option->courses as $course)
+                                @if($loop->first)<ul class="toCourseEdit">@endif
+                                    <li><a href="/course/{{ $course->id }}/edit" target="_blank" title="{{ $course->name }}">{{ mb_strimwidth($course->name, 0, 80, "...") }}</a></li>
+                                @if($loop->last)</ul>@endif
+                                @php $i++; @endphp
+                            @endforeach
+                            @if($i > 3)<div class="text-center mt-4"><button class="btn btn-default btn-sm readMore">もっと見る</button></div>@endif
+                        </td>
                         <td>{{ number_format($option->price) }}</td>
                         <td>
                             <a href="{{ route('option.edit', $option->id) }}"
@@ -77,6 +90,15 @@
     </div>
 
     {{ $options->appends($_GET)->links() }}
+@stop
 
-
+@section('js')
+<script>
+    $(function(){
+        $('.readMore').on('click', function(e){
+            $(this).parent('div').prev('ul').toggleClass('on');
+            ($(this).parent('div').prev('ul').hasClass('on')) ? $(e.target).text('折りたたむ') : $(e.target).text('もっと見る')
+        });
+    });
+</script>
 @stop

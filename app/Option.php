@@ -30,6 +30,11 @@ class Option extends SoftDeleteModel
         return $this->hasMany('App\ReservationOption');
     }
 
+    public function course_options()
+		{
+			return $this->hasMany('App\CourseOption');
+		}
+
     public function tax_class()
     {
         return $this->belongsTo('App\TaxClass');
