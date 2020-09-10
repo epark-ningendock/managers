@@ -61,7 +61,7 @@
                             @php $i = 0; @endphp
                             @foreach($option->courses as $course)
                                 @if($loop->first)<ul class="toCourseEdit">@endif
-                                    <li><a href="/course/{{ $course->id }}/edit" target="_blank" title="{{ $course->name }}">{{ mb_strimwidth($course->name, 0, 80, "...") }}</a></li>
+                                    <li><a href="/course/{{ $course->id }}/edit" target="_blank" title="{{ $course->name }}">{{ mb_strimwidth($course->name, 0, 70, "...") }}</a></li>
                                 @if($loop->last)</ul>@endif
                                 @php $i++; @endphp
                             @endforeach
