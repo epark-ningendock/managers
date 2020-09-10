@@ -8,6 +8,8 @@
     .toCourseEdit{ height: 5em; overflow-y: hidden }
     .toCourseEdit.on{ height: auto }
     .readMore{ font-size: 90%; width: 100% }
+    .toCourseEdit li{ width: 100% }
+    .toCourseEdit a{ display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 </style>
 @extends('layouts.list', $params)
 
@@ -41,12 +43,12 @@
     <div class="table-responsive">
         @include('layouts.partials.pagination-label', ['paginator' => $options])
         {{ $options->appends($_GET)->links() }}
-        <table class="table no-border table-hover table-striped mb-5">
+        <table class="table no-border table-hover table-striped mb-5" style="table-layout: fixed">
             <thead>
             <tr>
                 <th>オプションID</th>
                 <th>オプション名</th>
-                <th>提供コース名</th>
+                <th style="width: 60%">提供コース名</th>
                 <th>価格</th>
                 <th style="width: 10em"></th>
             </tr>
@@ -61,7 +63,7 @@
                             @php $i = 0; @endphp
                             @foreach($option->courses as $course)
                                 @if($loop->first)<ul class="toCourseEdit">@endif
-                                    <li><a href="/course/{{ $course->id }}/edit" target="_blank" title="{{ $course->name }}">{{ mb_strimwidth($course->name, 0, 70, "...") }}</a></li>
+                                    <li><a href="/course/{{ $course->id }}/edit" target="_blank" title="{{ $course->name }}" class="course_name">{{ $course->name }}</a></li>
                                 @if($loop->last)</ul>@endif
                                 @php $i++; @endphp
                             @endforeach
