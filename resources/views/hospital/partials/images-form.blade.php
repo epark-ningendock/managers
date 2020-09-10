@@ -116,62 +116,75 @@
     <div class="form-entry">
         <div class="box-body" style="padding-bottom: 0px">
             <h2>こだわり</h2>
-            <div class="row" style="position: relative;padding: 0 0 44px 0;">
-                @for ($i = 1; $i <= 4; $i++)
-                    <?php $image_speciality = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_SPECIALITY)->where('file_location_no', $i)->first(); ?>
-                    <div class="col-sm-6" @if(is_null($image_speciality) && $i != 1) style="display: none" @endif>
-                        {{Form::label('speciality_1_caption', 'こだわり'.$i,['class' => 'form_label'])}}
-                        @if (!is_null($image_speciality) && !is_null($image_speciality->hospital_image) && !is_null($image_speciality->hospital_image->path))
-                            <div class="speciality_image_area">
-                                <img class="object-fit" src="{{$image_speciality->hospital_image->path}}" width="150">
-                                <p class="file_delete_text">
-                                    <a class="btn btn-mini btn-danger" onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $image_speciality->hospital_image_id]) }}">
-                                        <i class="icon-trash icon-white"></i>
-                                        ファイル削除
-                                    </a>
-                                </p>
-                            </div>
-                        @else
-                            <div class="speciality_image_area">
-                                <img src="/img/no_image.png">
-                            </div>
-                        @endif
-                        <label class="file-upload btn btn-primary">
-                            ファイル選択 {{Form::file("speciality_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
-                        </label>
+            @for ($i = 1; $i <= 4; $i++)
+                @if($i === 1 || $i === 3)<div class="row" style="position: relative;padding: 0 0 44px 0">@endif
 
-                        @if ($errors->has('speciality_'.$i))
-                            <div class="error_message">
+                <?php $image_speciality = $hospital->hospital_categories->where('image_order', ImageGroupNumber::IMAGE_GROUP_SPECIALITY)->where('file_location_no', $i)->first(); ?>
+                <div class="col-sm-6" @if(is_null($image_speciality) && $i != 1) style="display: none" @endif>
+                    {{Form::label('speciality_1_caption', 'こだわり'.$i,['class' => 'form_label'])}}
+                    @if (!is_null($image_speciality) && !is_null($image_speciality->hospital_image) && !is_null($image_speciality->hospital_image->path))
+                        <div class="speciality_image_area">
+                            <img class="object-fit" src="{{$image_speciality->hospital_image->path}}" width="150">
+                            <p class="file_delete_text">
+                                <a class="btn btn-mini btn-danger" onclick="return confirm('{{ trans('messages.delete_image_popup_content') }}')" href="{{ route('hospital.delete_image', ['hospital' => $hospital->id, 'hospital_image_id' => $image_speciality->hospital_image_id]) }}">
+                                    <i class="icon-trash icon-white"></i>
+                                    ファイル削除
+                                </a>
+                            </p>
+                        </div>
+                    @else
+                        <div class="speciality_image_area">
+                            <img src="/img/no_image.png">
+                        </div>
+                    @endif
+
+                    <label class="file-upload btn btn-primary">
+                        ファイル選択 {{Form::file("speciality_".$i, ['class' => 'field', 'accept' => 'image/*'])}}
+                    </label>
+
+                    @if ($errors->has('speciality_'.$i))
+                        <div class="error_message">
                             {{ $errors->first('speciality_'.$i) }}
-                            </div>
+                        </div>
+                    @endif
+
+                    <div class="form-group @if($errors->has('speciality_'.$i.'_title')) has-error @endif">
+                        {{Form::label('interview_1_caption', 'タイトル',['class' => 'form_label'])}}
+                        {{Form::text('speciality_'.$i.'_title', is_null($image_speciality) ? '' : $image_speciality->title, ['class' => 'form-control'])}}
+                        @if ($errors->has('speciality_'.$i.'_title'))
+                            <p class="help-block">
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('speciality_'.$i.'_title') }}
+                            </p>
                         @endif
-
-                        <div class="form-group @if($errors->has('speciality_'.$i.'_title')) has-error @endif">
-                            {{Form::label('interview_1_caption', 'タイトル',['class' => 'form_label'])}}
-                            {{Form::text('speciality_'.$i.'_title', is_null($image_speciality) ? '' : $image_speciality->title, ['class' => 'form-control'])}}
-                            @if ($errors->has('speciality_'.$i.'_title'))
-                                <p class="help-block">
-                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('speciality_'.$i.'_title') }}
-                                </p>
-                            @endif
-                        </div>
-
-                        <div class="form-group @if($errors->has('speciality_'.$i.'_caption')) has-error @endif">
-                            {{Form::label('caption', '本文',['class' => 'form_label'])}}
-                            {{Form::textarea('speciality_'.$i.'_caption', is_null($image_speciality) ? '' : $image_speciality->caption, ['class' => 'form-control', 'rows' => 4])}}
-                            @if ($errors->has('speciality_'.$i.'_caption'))
-                                <p class="help-block">
-                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('speciality_'.$i.'_caption') }}
-                                </p>
-                            @endif
-                        </div>
                     </div>
-                    <a href="javascript:void(0)" class="speciality_add btn btn-info" style="@if(!is_null($image_speciality) OR $i == 1)display: none; @endif z-index: {{ 100 - $i}}">
-                        <i class="icon-trash icon-white"></i>
-                        追加
-                    </a>
-                @endfor
-            </div>
+
+                    <div class="form-group @if($errors->has('speciality_'.$i.'_caption')) has-error @endif">
+                        {{Form::label('caption', '本文',['class' => 'form_label'])}}
+                        {{Form::textarea('speciality_'.$i.'_caption', is_null($image_speciality) ? '' : $image_speciality->caption, ['class' => 'form-control', 'rows' => 4])}}
+                        @if ($errors->has('speciality_'.$i.'_caption'))
+                            <p class="help-block">
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>{{ $errors->first('speciality_'.$i.'_caption') }}
+                            </p>
+                        @endif
+                    </div>
+
+                    @if (!is_null($image_speciality))
+                        <p style="text-align: center; margin-top: 10px">
+                            <a onclick="return confirm('こだわり{{ $i }}を削除します、よろしいですか？')" class="btn btn-mini btn-danger" href="{{ route('hospital.image.delete', ['hospital' => $hospital->id, 'hospital_category_id' => $image_speciality->id, 'hospital_image_id' => $image_speciality->hospital_image_id]) }}">
+                                削除
+                            </a>
+                        </p>
+                    @endif
+
+                </div>
+
+                <a href="javascript:void(0)" class="speciality_add btn btn-info" data-i="{{ $i }}" data-sp="{{ (is_null($image_speciality)) }}" style="@if(!is_null($image_speciality) OR $i < 2)display: none; @endif z-index: {{ 100 - $i}}">
+                    <i class="icon-trash icon-white"></i>
+                    追加
+                </a>
+
+                @if($i === 2 || $i === 4)</div>@endif
+            @endfor
     </div>
     </div>
 </div>
