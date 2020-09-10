@@ -245,9 +245,9 @@ class HospitalImagesController extends Controller
             }
         }
 
-        if(isset($file['map_url'])) {
-            $this->hospitalImageUploader($file, 'map_url', 1, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_MAP);
-        }
+        // アクセス動画の変更
+        $this->hospitalImageUploader($file, 'map_url', 1, $hospital, $hospital_id,ImageGroupNumber::IMAGE_GROUP_MAP);
+
         return redirect()->route('hospital.image.create', ['hospital_id' => $hospital_id])->with('success', trans('messages.updated', ['name' => trans('messages.names.hospital_categories')]));
     }
 
