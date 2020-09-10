@@ -239,7 +239,10 @@ class HospitalController extends ApiBaseController
                         $query->where('is_category', 0)
                             ->where('web_reception', 0)
                             ->where('publish_start_date', '<=', $today)
-                            ->where('publish_end_date', '>=', $today);
+														->where(function($query) use ($today){
+                            	$query->orWhere('publish_end_date', '>=', $today)
+                            	->orWhereNull('publish_end_date');
+														});
                     }
 
                     if (!empty($request->input('sort_key'))) {
@@ -293,7 +296,10 @@ class HospitalController extends ApiBaseController
                         $query->where('is_category', 0)
                             ->where('web_reception', 0)
                             ->where('publish_start_date', '<=', $today)
-                            ->where('publish_end_date', '>=', $today);
+                            ->where(function($query) use ($today){
+															$query->orWhere('publish_end_date', '>=', $today)
+																->orWhereNull('publish_end_date');
+														});
                     }
 
                 if (!empty($request->input('sort_key'))) {
@@ -367,7 +373,10 @@ class HospitalController extends ApiBaseController
                 $query->where('is_category', 0)
                         ->where('web_reception', 0)
                         ->where('publish_start_date', '<=', $today)
-                        ->where('publish_end_date', '>=', $today)
+                        ->where(function($query) use ($today){
+                        	$query->orWhere('publish_end_date', '>=', $today)
+														->orWhereNull('publish_end_date');
+												})
                         ->orderBy('courses.order');
             },
             'courses.course_details' => function ($query) {
