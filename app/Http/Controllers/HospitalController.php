@@ -95,9 +95,6 @@ class HospitalController extends Controller
 				$query->orwhere('hospitals.name', 'LIKE', "%" . $request->get('term') . "%");
 
         $hospitals = $query->get(['hospitals.name', 'prefectures.name as prefecture', 'contract_informations.code']);
-        clock()->info($hospitals);
-
-
         return response()->json($hospitals);
     }
 
