@@ -159,7 +159,6 @@
           });
         },
         displayText: function (item) {
-          console.log(item);
           return item.name + '（' + item.prefecture + '）　' + item.code;
         },
         afterSelect: function (item) {
