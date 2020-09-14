@@ -151,13 +151,16 @@
     (function ($) {
       var route = "{{ route('hospital.search.text') }}";
       $('#s_text').typeahead({
+        minLength: 2,
+        delay: 500,
         source: function (term, process) {
           return $.get(route, {term: term}, function (data) {
             return process(data);
           });
         },
         displayText: function (item) {
-          return item.name + ' - ' + item.address1;
+          console.log(item);
+          return item.name + '（' + item.prefecture + '）　' + item.code;
         },
         afterSelect: function (item) {
           $('#s_text').val(item.name);

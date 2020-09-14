@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ContractInformation;
 use App\DistrictCode;
 use App\Enums\HospitalEnums;
 use App\Enums\Permission;
@@ -59,7 +60,9 @@ class HospitalController extends Controller
             $query->where(function ($query) use ($request) {
                 $query->whereHas('contract_information', function ($query) use ($request) {
                     $query->where('customer_no', 'like', '%' . $request->get('s_text') . '%');
+                    $query->orWhere('code', $request->get('s_text'));
                 });
+                $query->orWhere('id', $request->get('s_text'));
                 $query->orWhere('name', 'LIKE', "%" . $request->get('s_text') . "%");
             });
         }
@@ -83,7 +86,18 @@ class HospitalController extends Controller
      */
     public function searchText(Request $request)
     {
-        $hospitals = Hospital::select('name', 'address1')->where('name', 'LIKE', "%" . $request->get('s_text') . "%")->get();
+        $query = Hospital::query();
+        $query->join('contract_informations', 'hospitals.id', '=', 'contract_informations.hospital_id');
+        $query->join('prefectures', 'hospitals.prefecture_id',  '=', 'prefectures.id');
+				$query->where('contract_informations.customer_no', 'like', '%' . $request->get('term') . '%');
+				$query->orWhere('contract_informations.code', 'like', '%' . $request->get('term') . '%');
+				$query->orWhere('hospitals.id', 'LIKE', "%{$request->get('term')}%");
+				$query->orwhere('hospitals.name', 'LIKE', "%" . $request->get('term') . "%");
+
+        $hospitals = $query->get(['hospitals.name', 'prefectures.name as prefecture', 'contract_informations.code']);
+        clock()->info($hospitals);
+
+
         return response()->json($hospitals);
     }
 
