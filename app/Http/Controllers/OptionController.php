@@ -32,13 +32,14 @@ class OptionController extends Controller
     }
 
     /**
-     * オプションん作成
+     * オプション作成
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
         $tax_classes = TaxClass::all();
-        return view('option.create', [ 'tax_classes' => $tax_classes ]);
+				$course = Course::where('hospital_id', session()->get('hospital_id'))->get(['id', 'name']);
+        return view('option.create', [ 'tax_classes' => $tax_classes, 'courses' => $course, 'applied' => [] ]);
     }
 
     /**
@@ -48,13 +49,33 @@ class OptionController extends Controller
      */
     public function store(OptionformStore $request)
     {
-        $request->request->add([
-            'hospital_id' => session()->get('hospital_id'),
-            'order'       => 0,
-        ]);
-        Option::create($request->all());
+    	try{
+    		DB::beginTransaction();
 
-        return redirect(route('option.index'))->with('success', trans('messages.created', ['name' => trans('messages.option_name')]));
+				$request->request->add([
+					'hospital_id' => session()->get('hospital_id'),
+					'order'       => 0,
+				]);
+				$option = Option::create($request->all());
+
+				// 紐付けコース（CourseOption）の登録
+				foreach($request->courses as $course){
+					$applied = new CourseOption();
+					$applied->option_id = $option->id;
+					$applied->course_id = $course;
+					$applied->save();
+				}
+
+				DB::commit();
+
+				return redirect(route('option.index'))->with('success', trans('messages.created', ['name' => trans('messages.option_name')]));
+			} catch (StaleModelLockingException $e) {
+				DB::rollback();
+				return redirect()->back()->with('error', trans('messages.model_changed_error'));
+			} catch (Exception $e) {
+				DB::rollback();
+				return redirect()->back()->with('error', trans('messages.update_error'))->withInput();
+			}
     }
 
     /**
@@ -65,11 +86,14 @@ class OptionController extends Controller
     public function edit($id)
     {
         $option = Option::where('id', $id)->where('hospital_id', session()->get('hospital_id'))->first();
-        if (!isset($option)) {
-            abort(404);
-        }
+        if (!isset($option)) abort(404);
+
+        $course = Course::where('hospital_id', session()->get('hospital_id'))->get(['id', 'name']);
+        $applied = CourseOption::where('option_id', $id)->get(['course_id'])->toArray();
+        $applied = array_column($applied, 'course_id');
+
         $tax_classes = TaxClass::all();
-        return view('option.edit', ['option' => $option, 'tax_classes' => $tax_classes]);
+        return view('option.edit', ['option' => $option, 'tax_classes' => $tax_classes, 'courses' => $course, 'applied' => $applied]);
     }
 
     /**
@@ -82,14 +106,24 @@ class OptionController extends Controller
     {
         try{
             DB::beginTransaction();
+
             $option = Option::where('id', $id)->where('hospital_id', session()->get('hospital_id'))->first();
-            if (!isset($option)) {
-                abort(404);
-            }
+            if (!isset($option)) abort(404);
+
             $request->request->add([
                 'hospital_id' => session()->get('hospital_id')
             ]);
-            $option->update($request->all());
+            $option->fill($request->all())->save();
+
+            // 紐付けコース（CourseOption）の更新
+						CourseOption::where('option_id', $id)->forceDelete();
+						foreach($request->courses as $course){
+							$applied = new CourseOption();
+							$applied->option_id = $id;
+							$applied->course_id = $course;
+							$applied->save();
+						}
+
             DB::commit();
 
             return redirect(route('option.index'))->with('success', trans('messages.updated_common'));

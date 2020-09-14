@@ -48,6 +48,22 @@
             @endif
         </div>
     </div>
+
+    <div class="box-body staff-form">
+        <h2>適用検査コース</h2>
+        <div class="form-group py-sm-1" id="option-setting">
+            @foreach($courses as $course)
+                @if($loop->first)<table class="table no-border table-hover table-striped">@endif
+                <tr>
+                    <td class="text-left">
+                        <input type="checkbox" name="courses[]" id="course_{{ $course->id }}" value="{{ $course->id }}"@if(in_array($course->id, $applied)) checked @endif>
+                        <label class="mr-2" for="course_{{ $course->id }}">{{ $course->name }}</label>
+                    </td>
+                </tr>
+                @if($loop->last)</table>@endif
+            @endforeach
+        </div>
+    </div>
 </div>
 @section('script')
   <script>
