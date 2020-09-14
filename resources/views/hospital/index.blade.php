@@ -25,7 +25,7 @@
       <div class="row">
         <div class="col-sm-9">
           <div class="form-group">
-            <label for="s_text">医療機関名・顧客番号</label>
+            <label for="s_text">医療機関名・ドクネットID・顧客番号</label>
             <input type="text" class="form-control" autocomplete="off" name="s_text" id="s_text"
                  value="{{ request('s_text') }}"/>
           </div>
@@ -159,7 +159,7 @@
           });
         },
         displayText: function (item) {
-          return item.name + '（' + item.prefecture + '）　' + item.code;
+          return item.name + '（' + item.prefecture + '）　' + item.code + ' - ' + item.customer_no;
         },
         afterSelect: function (item) {
           $('#s_text').val(item.name);
