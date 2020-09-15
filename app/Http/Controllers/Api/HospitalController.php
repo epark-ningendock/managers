@@ -70,7 +70,7 @@ class HospitalController extends ApiBaseController
     {
         try {
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
-            $hospital = Hospital::where('public_status', Status::VALID)->find($hospital_id);
+						$hospital = Hospital::where('status', '!=', Status::DELETED)->find($hospital_id);
             $sex = $this->convert_sex($hospital->medical_examination_system_id, $request->input('sex'));
             $request->sex = $sex;
             $hospital = $this->getHospitalData($hospital_id, $request);
