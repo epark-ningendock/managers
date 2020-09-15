@@ -42,7 +42,7 @@ class HospitalController extends ApiBaseController
     {
         try {
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
-            $hospital = Hospital::find($hospital_id);
+            $hospital = Hospital::where('public_status', Status::VALID)->find($hospital_id);
             $sex = $this->convert_sex($hospital->medical_examination_system_id, $request->input('sex'));
             $request->sex = $sex;
             $hospital = $this->getHospitalData($hospital_id, $request);
@@ -69,9 +69,8 @@ class HospitalController extends ApiBaseController
     public function courses(HospitalRequest $request)
     {
         try {
-
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
-            $hospital = Hospital::find($hospital_id);
+            $hospital = Hospital::where('public_status', Status::VALID)->find($hospital_id);
             $sex = $this->convert_sex($hospital->medical_examination_system_id, $request->input('sex'));
             $request->sex = $sex;
             $hospital = $this->getHospitalData($hospital_id, $request);
@@ -99,7 +98,6 @@ class HospitalController extends ApiBaseController
     public function contents(HospitalRequest $request)
     {
         try {
-
             $hospital_id =  ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
 
             return new HospitalContentsResource($this->getContent($hospital_id));
@@ -150,7 +148,6 @@ class HospitalController extends ApiBaseController
      */
     public function fee_rate(HospitalRequest $request){
         try {
-            $hospital_code = $request->input('hospital_code');
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
             $hospitalPlan = HospitalPlan::where('hospital_id', $hospital_id)
             ->whereDate('from', '<=', Carbon::today())
@@ -174,9 +171,7 @@ class HospitalController extends ApiBaseController
      */
     public function access(HospitalRequest $request)
     {
-        try { 
-            $hospital_code = $request->input('hospital_code');
-
+        try {
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
            
             return new HospitalAccessResource($this->getAccessData($hospital_id));
