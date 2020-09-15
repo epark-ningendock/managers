@@ -309,6 +309,11 @@
       @if ($errors->has('cancellation_deadline')) <p class="help-block">{{ $errors->first('cancellation_deadline') }}</p> @endif
     </div>
 
+      <div class="box-footer">
+        <a href="{{ url()->previous() }}" class="btn btn-default">戻る</a>
+        <button type="submit" class="btn btn-primary">保存</button>
+      </div>
+
   </div>
   </div>
 </div>
@@ -617,93 +622,96 @@
                 <group class="inline-radio two-option" style="width: 200px;">
                     <div class="status-btn">
                         <input type="radio" class="checkbox d-inline-block mr-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 0 ? 'checked' : '' }}
-                        value="0"
+                        value="0" data-toggle="collapse" data-target="#collapseQuestion_{{$qi}}:not(.in)"
                         ><label>利用する</label>
                     </div>
                     <div class="status-btn">
                         <input type="radio" class="checkbox d-inline-block mr-2 ml-2 is_question" name="is_question_{{ $qi }}" {{ $is_question == 1 ? 'checked' : '' }}
-                        value="1"><label>利用しない</label>
+                        value="1" data-toggle="collapse" data-target="#collapseQuestion_{{$qi}}.in"
+                        ><label>利用しない</label>
                     </div>
                     <input type="hidden" class="hidden-q" value="{{ $is_question }}" name="is_questions[]"/>
                 </group>
                 @if ($errors->has('is_question_'.$qi)) <p class="help-block has-error">{{ $errors->first('is_question_'.$qi) }}</p> @endif
             </div>
 
-      <div class="form-group">
-        <label for="question_title_{{$qi}}">質問事項タイトル</label>
-        <input type="text" class="form-control" id="question_title_{{$qi}}"
-               value = "{{ $question_title }}" name="question_titles[]"/>
-      </div>
+        <div class="collapse @if($is_question == 0) show @endif" id="collapseQuestion_{{$qi}}">
+          <div class="form-group">
+            <label for="question_title_{{$qi}}">質問事項タイトル</label>
+            <input type="text" class="form-control" id="question_title_{{$qi}}"
+                   value = "{{ $question_title }}" name="question_titles[]"/>
+          </div>
 
-      <div class="form-group">
-        <label for="anser01_{{$qi}}">回答1</label>
-        <input type="text" class="form-control" id="answer01_{{$qi}}"
-               value = "{{ $answer01 }}"
-               name="answer01s[]"/>
-      </div>
+          <div class="form-group">
+            <label for="anser01_{{$qi}}">回答1</label>
+            <input type="text" class="form-control" id="answer01_{{$qi}}"
+                   value = "{{ $answer01 }}"
+                   name="answer01s[]"/>
+          </div>
 
-      <div class="form-group">
-        <label for="anser02_{{$qi}}">回答2</label>
-        <input type="text" class="form-control" id="answer02_{{$qi}}"
-               value = "{{ $answer02 }}"
-               name="answer02s[]"/>
-      </div>
+          <div class="form-group">
+            <label for="anser02_{{$qi}}">回答2</label>
+            <input type="text" class="form-control" id="answer02_{{$qi}}"
+                   value = "{{ $answer02 }}"
+                   name="answer02s[]"/>
+          </div>
 
-      <div class="form-group">
-        <label for="anser03_{{$qi}}">回答3</label>
-        <input type="text" class="form-control" id="answer03_{{$qi}}"
-               value = "{{ $answer03 }}"
-               name="answer03s[]"/>
-      </div>
+          <div class="form-group">
+            <label for="anser03_{{$qi}}">回答3</label>
+            <input type="text" class="form-control" id="answer03_{{$qi}}"
+                   value = "{{ $answer03 }}"
+                   name="answer03s[]"/>
+          </div>
 
-      <div class="form-group">
-        <label for="anser04_{{$qi}}">回答4</label>
-        <input type="text" class="form-control" id="answer04_{{$qi}}"
-               value = "{{ $answer04 }}"
-               name="answer04s[]"/>
-      </div>
+          <div class="form-group">
+            <label for="anser04_{{$qi}}">回答4</label>
+            <input type="text" class="form-control" id="answer04_{{$qi}}"
+                   value = "{{ $answer04 }}"
+                   name="answer04s[]"/>
+          </div>
 
-      <div class="form-group">
-        <label for="anser05_{{$qi}}">回答5</label>
-        <input type="text" class="form-control" id="answer05_{{$qi}}"
-               value = "{{ $answer05 }}"
-               name="answer05s[]"/>
-      </div>
+          <div class="form-group">
+            <label for="anser05_{{$qi}}">回答5</label>
+            <input type="text" class="form-control" id="answer05_{{$qi}}"
+                   value = "{{ $answer05 }}"
+                   name="answer05s[]"/>
+          </div>
 
-      <div class="form-group">
-        <label for="anser06_{{$qi}}">回答6</label>
-        <input type="text" class="form-control" id="answer06_{{$qi}}"
-               value = "{{ $answer06 }}"
-               name="answer06s[]"/>
-      </div>
+          <div class="form-group">
+            <label for="anser06_{{$qi}}">回答6</label>
+            <input type="text" class="form-control" id="answer06_{{$qi}}"
+                   value = "{{ $answer06 }}"
+                   name="answer06s[]"/>
+          </div>
 
-      <div class="form-group">
-        <label for="anser07_{{$qi}}">回答7</label>
-        <input type="text" class="form-control" id="answer07_{{$qi}}"
-               value = "{{ $answer07 }}"
-               name="answer07s[]"/>
-      </div>
+          <div class="form-group">
+            <label for="anser07_{{$qi}}">回答7</label>
+            <input type="text" class="form-control" id="answer07_{{$qi}}"
+                   value = "{{ $answer07 }}"
+                   name="answer07s[]"/>
+          </div>
 
-      <div class="form-group">
-        <label for="anser08_{{$qi}}">回答8</label>
-        <input type="text" class="form-control" id="answer08_{{$qi}}"
-               value = "{{ $answer08 }}"
-               name="answer08s[]"/>
-      </div>
+          <div class="form-group">
+            <label for="anser08_{{$qi}}">回答8</label>
+            <input type="text" class="form-control" id="answer08_{{$qi}}"
+                   value = "{{ $answer08 }}"
+                   name="answer08s[]"/>
+          </div>
 
-      <div class="form-group">
-        <label for="anser09_{{$qi}}">回答9</label>
-        <input type="text" class="form-control" id="answer09_{{$qi}}"
-               value = "{{ $answer09 }}"
-               name="answer09s[]"/>
-      </div>
+          <div class="form-group">
+            <label for="anser09_{{$qi}}">回答9</label>
+            <input type="text" class="form-control" id="answer09_{{$qi}}"
+                   value = "{{ $answer09 }}"
+                   name="answer09s[]"/>
+          </div>
 
-      <div class="form-group">
-        <label for="anser10_{{$qi}}">回答10</label>
-        <input type="text" class="form-control" id="answer10_{{$qi}}"
-               value = "{{ $answer10 }}"
-               name="answer10s[]"/>
-      </div>
+          <div class="form-group">
+            <label for="anser10_{{$qi}}">回答10</label>
+            <input type="text" class="form-control" id="answer10_{{$qi}}"
+                   value = "{{ $answer10 }}"
+                   name="answer10s[]"/>
+          </div>
+        </div>
 
     </div>
     </div>
