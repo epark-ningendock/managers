@@ -245,13 +245,15 @@ class HospitalContractInformationController extends Controller
                 }
 
                 $hospital->name = $contract_arr['hospital_name'];
-                $hospital->save();
 
                 $contract->contract_plan_id = $contract_plans->get($contract_arr['plan_code'])->first()->id;
                 $contract->hospital_id = $hospital->id;
-                $contract->save();
+                $hospital->plan_code = $contract->contract_plan_id;
 
-								// 医療機関プラン
+								$hospital->save();
+								$contract->save();
+
+							// 医療機関プラン
 								$hospitalPlan = new HospitalPlan();
 								$hospitalPlanFill = ['hospital_id' => $hospital->id, 'contract_plan_id' => $contract->contract_plan_id];
 								if (!is_null($contract_arr['service_start_date'])) $hospitalPlanFill['from'] = $contract_arr['service_start_date'];
