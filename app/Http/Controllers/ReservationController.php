@@ -1031,6 +1031,8 @@ class ReservationController extends Controller
                 } else {
                     $params['is_free_hp_link'] = IsFreeHpLink::FEE;
                 }
+            } elseif ($reservation->site_code === 'HP' && $hospital->hplink_contract_type == HplinkContractType::MONTHLY_SUBSCRIPTION) {
+							$params['is_free_hp_link'] = IsFreeHpLink::FREE;
             } else {
                 $params['fee'] = floor((
                         $params['tax_included_price'] +
