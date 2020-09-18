@@ -520,10 +520,11 @@ class ReservationController extends Controller
 
     	if ($hospital_email_setting) {
     		for ($i = 1; $i < 6; $i++){
-    			if (strpos($hospital_email_setting->reception_email{$i}, 'fax') === false) {
-    				$hospital_mails[] = $hospital_email_setting->reception_email{$i};
+    			$_prop = "reception_email{$i}";
+    			if (strpos($hospital_email_setting->$_prop, 'fax') === false) {
+    				$hospital_mails[] = $hospital_email_setting->$_prop;
 					}else{
-						$hospital_fax[] = $hospital_email_setting->reception_email{$i};
+						$hospital_fax[] = $hospital_email_setting->$_prop;
 					}
 				}
 
