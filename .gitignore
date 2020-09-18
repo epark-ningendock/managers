@@ -7,7 +7,7 @@
 /.vagrant
 /storage/images
 .env
-.env.testing
+.env.*
 .keep
 Homestead.json
 Homestead.yaml
