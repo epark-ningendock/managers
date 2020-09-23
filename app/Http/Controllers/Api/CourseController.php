@@ -160,7 +160,10 @@ class CourseController extends ApiBaseController
             $query->where('is_category', 0)
                 ->where('web_reception', 0)
                 ->where('publish_start_date', '<=', $today)
-                ->where('publish_end_date', '>=', $today);
+								->where(function($query) use ($today){
+									$query->where('publish_end_date', '>=', $today)
+										->orWhereNull('publish_end_date');
+								});
         }
 
         $query->with(['course_options']);
@@ -231,7 +234,10 @@ class CourseController extends ApiBaseController
             $query->where('is_category', 0)
                 ->where('web_reception', 0)
                 ->where('publish_start_date', '<=', $today)
-                ->where('publish_end_date', '>=', $today);
+								->where(function($query) use ($today){
+									$query->where('publish_end_date', '>=', $today)
+									->orWhereNull('publish_end_date');
+								});
         }
 
         return $query ->first();
@@ -261,7 +267,10 @@ class CourseController extends ApiBaseController
             ->where('is_category', 0)
             ->where('web_reception', 0)
             ->where('publish_start_date', '<=', $today)
-            ->where('publish_end_date', '>=', $today)
+						->where(function($query) use ($today){
+							$query->where('publish_end_date', '>=', $today)
+								->orWhereNull('publish_end_date');
+						})
             ->get();
     }
 
