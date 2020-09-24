@@ -498,6 +498,7 @@ class ReservationController extends Controller
     	$status_flg = [
     		ReservationStatus::RECEPTION_COMPLETED => 'in_hospital_confirmation_email_reception_flg',
 				ReservationStatus::CANCELLED => 'in_hospital_cancellation_email_reception_flg',
+				ReservationStatus::PENDING => 1,
 				9999 => 'in_hospital_change_email_reception_flg',
 			];
     	$staus_mail = [
