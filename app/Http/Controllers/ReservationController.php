@@ -533,11 +533,11 @@ class ReservationController extends Controller
 
 				try{
 					// 医療機関にメール送信
-					Mail::to($hospital_mails)->send($staus_mail[$status]);
+					Mail::to($hospital_mails)->send($staus_mail[$status], false);
 
 					// 医療機関にFAX送信（EPARKによる、予約確定の場合のみ）
 					if (!IS_CHANGE && $status == ReservationStatus::RECEPTION_COMPLETED && $isEpark) {
-						Mail::to($hospital_fax)->send($status_fax[$status]);
+						Mail::to($hospital_fax)->send($status_fax[$status], false);
 					}
 				}catch(\Exception $e){
 					Log::error('Occurred on ReservationController@mailsend.');
@@ -547,7 +547,21 @@ class ReservationController extends Controller
 
 
 			// EPARK側にメール送信
-			Mail::to($gyoumu_mail)->send($staus_mail[$status]);
+			Mail::to($gyoumu_mail)->send($staus_mail[$status], false);
+
+    	// 受診者にメール送信
+			if (!empty($reservation->customer) && !empty($reservation->customer->email)){
+				$to = $reservation->customer->email;
+				if (IS_CHANGE) {
+					Mail::to($to)->send(new ReservationChangeMail($reservation, true));
+				} elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
+					Mail::to($to)->send(new ReservationReceptionCancelMail($reservation, true));
+				} elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+					Mail::to($to)->send(new ReservationReceptionCompleteMail($reservation, true));
+				} elseif ($reservation->reservation_status == ReservationStatus::PENDING) {
+					Mail::to($to)->send(new ReservationReceptionMail($reservation, true));
+				}
+			}
 
     }
 
