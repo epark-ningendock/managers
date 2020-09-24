@@ -230,7 +230,7 @@
                     <td>{{ $reservation->fee_rate }}%</td>
                     <td>{{ ( isset($reservation->fee) ) ? number_format($reservation->fee) . '円' : '' }}</td>
                     <td>{{ (isset($reservation->site_code) && ( $reservation->site_code === 'HP') ) ? '○' : '' }}</td>
-                    <td>{{ (isset($reservation->site_code) && ( $reservation->site_code === 'special') ) ? '○' : '' }}</td>
+                    <td>{{ (isset($reservation->site_code) && ( $reservation->site_code === 'special') ) ? number_format($specialPayPerPrice * 1.1). '円' : '' }}</td>
                 </tr>
             @endforeach
                 @else
