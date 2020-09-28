@@ -145,7 +145,7 @@
 					@endif
 				@endforeach
 			</div>
-			{{ $data->links() }}
+			{{ $data->appends(request()->input())->links() }}
 		</div>
 		<div class="col-md-7">
 			<div id="MailPreview" data-id="">
