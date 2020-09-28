@@ -248,8 +248,10 @@ class BillingController extends Controller {
 			$special_count = 0;
 			foreach( $billing->hospital->reservationByCompletedDate($dateFilter['startedDate'], $dateFilter['endedDate']) as $reservation) {
 				// 「完了」に変更する。
-				$reservation->reservation_status = ReservationStatus::COMPLETED;
-				$reservation->save();
+				if (!$request->has('claim_check')){
+					$reservation->reservation_status = ReservationStatus::COMPLETED;
+					$reservation->save();
+				}
 
 				if ($reservation->site_code === 'special') $special_count++;
 			}
