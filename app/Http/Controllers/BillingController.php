@@ -146,27 +146,22 @@ class BillingController extends Controller {
 	 * 請求詳細表示
 	 * @param \App\Billing $billing
 	 *
-	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\Http\Response|\Illuminate\View\View
+	 * @return \Illuminate\Http\Response
 	 */
 	public function show( Billing $billing ) {
 
 		$hospital_id = session()->get('hospital_id');
 
-		if (isset($hospital_id) && $hospital_id != $billing->hospital_id) abort(404);
-
+        if (isset($hospital_id) && $hospital_id != $billing->hospital_id) {
+            abort(404);
+        }
 
 		$dateFilter = billingDateFilter($billing->billing_month);
-
-		$hospitalOptionPlan = $billing->hospital->hospitalOptionPlan($billing->id, $dateFilter['endedDate']);
-		$specialPlan = [];
-		if ($hospitalOptionPlan) $specialPlan = $hospitalOptionPlan->where('option_plan_id', 6);
-		$specialPayPer = (!empty($specialPlan)) ? $specialPlan[0]->pay_per_use_price : 0;
 
 		return view( 'billing.show', [
 			'billing' => $billing,
 			'startedDate'     => $dateFilter['startedDate'],
 			'endedDate'      => $dateFilter['endedDate'],
-			'specialPayPerPrice' => $specialPayPer
 		]);
 	}
 
