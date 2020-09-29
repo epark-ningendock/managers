@@ -159,7 +159,7 @@ class CourseContentBaseResource extends Resource
             }
         }
 
-        return collect($options)->sortBy('order')->values()->all();
+        return collect($options)->sortBy('option.order')->values()->all();
     }
 
     /**
