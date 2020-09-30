@@ -491,7 +491,7 @@ class ReservationController extends Controller
     	define('IS_CHANGE', $change_flg);
 
 			$gyoumu_mail = config('mail.to.gyoumu');
-			$isEpark = session()->put('isEpark', false);
+			$isEpark = session()->get('isEpark', false);
     	$status = (!IS_CHANGE) ? $reservation->reservation_status->value : 9999;
 			$reservation->process_kbn = '1';
 
