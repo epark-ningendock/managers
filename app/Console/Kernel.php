@@ -19,7 +19,6 @@ class Kernel extends ConsoleKernel
         Commands\ClaimRecordCreateCommand::class,
         Commands\CourseCloseCheckCommand::class,
         Commands\CalendarDaysCreateCommand::class,
-				Commands\CalendarDaysCreate2009Command::class,
         /** 路線情報更新バッチ */
         Commands\EkiSpertManagerCommand::class,
     ];
