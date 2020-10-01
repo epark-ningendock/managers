@@ -619,13 +619,15 @@ class ReservationService
         $entity->course_id = $request->input('course_id');
         $entity->course_name = $request->input('cours_name');
         $entity->reservation_date = new Carbon($request->input('reservation_date'));
-        $entity->start_time_hour = $request->input('start_time_hour') ?? $entity->start_time_hour;
-        $entity->start_time_min = $request->input('start_time_min') ?? $entity->start_time_min;
-        $entity->end_time_hour = $request->input('end_time_hour') ?? $entity->end_time_hour;
-        $entity->end_time_min = $request->input('end_time_min') ?? $entity->end_time_min;
+        $entity->start_time_hour = $request->input('start_time_hour', null);
+        $entity->start_time_min = $request->input('start_time_min', null);
+        $entity->end_time_hour = $request->input('end_time_hour', null);
+        $entity->end_time_min = $request->input('end_time_min', null);
         $entity->channel = 1;
-        $entity->reservation_status = $process === self::REGISTRATION ? ReservationStatus::PENDING : $entity->reservation_status;
-        $entity->user_message = $request->input('user_message');
+//        $entity->reservation_status = $process === self::REGISTRATION ? ReservationStatus::PENDING : $entity->reservation_status;
+				$entity->reservation_status = ReservationStatus::PENDING;
+
+				$entity->user_message = $request->input('user_message');
         $entity->reservation_memo = $request->input('user_message');
         $entity->site_code = $request->input('site_code') ?? $entity->site_code;
         $entity->customer_id = $request->input('customer_id') ?? $entity->customer_id;
