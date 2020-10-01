@@ -18,7 +18,7 @@ use Yasumi\Yasumi;
 
 class CalendarDaysCreate2103Command extends Command
 {
-    protected $signature = 'calendar-day-create 
+    protected $signature = 'calendar-day-create-2103
                             {--addmonth= : 追加月数}';
     protected $description = 'カレンダー基本枠を作成する';
 
