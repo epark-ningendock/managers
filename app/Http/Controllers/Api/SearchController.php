@@ -173,7 +173,10 @@ class SearchController extends ApiBaseController
                 ->where('courses.web_reception', WebReception::ACCEPT)
                 ->where('courses.is_category', 0)
                 ->where('publish_start_date', '<=', $target)
-                ->where('publish_end_date', '>=', $target);
+                ->where(function($query) use ($target){
+									$query->orWhere('publish_end_date', '>=', $target)
+										->orWhereNull('publish_end_date');
+								});
         });
 
         if (isset($reservation_dt)
