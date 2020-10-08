@@ -94,7 +94,7 @@
     {{ $options->appends($_GET)->links() }}
 @stop
 
-@section('js')
+@section('script')
 <script>
     $(function(){
         $('.readMore').on('click', function(e){

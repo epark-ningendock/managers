@@ -491,13 +491,14 @@ class ReservationController extends Controller
     	define('IS_CHANGE', $change_flg);
 
 			$gyoumu_mail = config('mail.to.gyoumu');
-			$isEpark = session()->put('isEpark', false);
-    	$status = (!IS_CHANGE) ? $reservation->reservation_status : 9999;
+			$isEpark = session()->get('isEpark', false);
+    	$status = (!IS_CHANGE) ? $reservation->reservation_status->value : 9999;
 			$reservation->process_kbn = '1';
 
     	$status_flg = [
     		ReservationStatus::RECEPTION_COMPLETED => 'in_hospital_confirmation_email_reception_flg',
 				ReservationStatus::CANCELLED => 'in_hospital_cancellation_email_reception_flg',
+				ReservationStatus::PENDING => 1,
 				9999 => 'in_hospital_change_email_reception_flg',
 			];
     	$staus_mail = [
@@ -533,11 +534,11 @@ class ReservationController extends Controller
 
 				try{
 					// 医療機関にメール送信
-					Mail::to($hospital_mails)->send($staus_mail[$status]);
+					Mail::to($hospital_mails)->send($staus_mail[$status], false);
 
 					// 医療機関にFAX送信（EPARKによる、予約確定の場合のみ）
 					if (!IS_CHANGE && $status == ReservationStatus::RECEPTION_COMPLETED && $isEpark) {
-						Mail::to($hospital_fax)->send($status_fax[$status]);
+						Mail::to($hospital_fax)->send($status_fax[$status], false);
 					}
 				}catch(\Exception $e){
 					Log::error('Occurred on ReservationController@mailsend.');
@@ -547,7 +548,21 @@ class ReservationController extends Controller
 
 
 			// EPARK側にメール送信
-			Mail::to($gyoumu_mail)->send($staus_mail[$status]);
+			Mail::to($gyoumu_mail)->send($staus_mail[$status], false);
+
+    	// 受診者にメール送信
+			if (!empty($reservation->customer) && !empty($reservation->customer->email)){
+				$to = $reservation->customer->email;
+				if (IS_CHANGE) {
+					Mail::to($to)->send(new ReservationChangeMail($reservation, true));
+				} elseif ($reservation->reservation_status == ReservationStatus::CANCELLED) {
+					Mail::to($to)->send(new ReservationReceptionCancelMail($reservation, true));
+				} elseif ($reservation->reservation_status == ReservationStatus::RECEPTION_COMPLETED) {
+					Mail::to($to)->send(new ReservationReceptionCompleteMail($reservation, true));
+				} elseif ($reservation->reservation_status == ReservationStatus::PENDING) {
+					Mail::to($to)->send(new ReservationReceptionMail($reservation, true));
+				}
+			}
 
     }
 
@@ -632,6 +647,7 @@ class ReservationController extends Controller
             if (isset($calendar_day) && $calendar_day->reservation_frames > 0) {
                 $count = Reservation::join('courses', 'courses.id', '=', 'reservations.course_id')
                     ->whereDate('reservation_date', '=', $reservation_date)
+										->where('reservation_status', '!=', ReservationStatus::CANCELLED)
                     ->where('courses.calendar_id', $course->calendar_id)
                     ->count();
 
@@ -949,6 +965,7 @@ class ReservationController extends Controller
             if ($course->calendar_id != $reservation->course->calendar_id && isset($calendar_day) && $calendar_day->reservation_frames > 0) {
                 $count = Reservation::join('courses', 'courses.id', '=', 'reservations.course_id')
                     ->whereDate('reservation_date', '=', $reservation_date)
+										->where('reservation_status', '!=', ReservationStatus::CANCELLED)
                     ->where('courses.calendar_id', $course->calendar_id)
                     ->count();
 

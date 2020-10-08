@@ -153,12 +153,13 @@ class CourseContentBaseResource extends Resource
                         'confirm' => $o->option->confirm,
                         'price' => $o->option->price,
                         'tax_class' => $o->option->tax_class_id,
+												'order' => $o->option->order,
                     ],
                 ];
             }
         }
 
-        return $options;
+        return collect($options)->sortBy('option.order')->values()->all();
     }
 
     /**

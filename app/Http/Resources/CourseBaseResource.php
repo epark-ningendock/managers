@@ -110,7 +110,8 @@ class CourseBaseResource extends Resource
                                 'title' => $option->kenshin_sys_option_name,
                                 'confirm' => '',
                                 'price' => $c->futan_kingaku,
-                                'id' => $option->id];
+                                'id' => $option->id,
+																'order' => $option->order];
                         } else {
                             $target_date = getAgeTargetDate($this->birth,
                                 $this->reservation_date,
@@ -124,7 +125,8 @@ class CourseBaseResource extends Resource
                                         'title' => $option->kenshin_sys_option_name,
                                         'confirm' => '',
                                         'price' => $c->futan_kingaku,
-                                        'id' => $option->id];
+                                        'id' => $option->id,
+																				'order' => $option->order];
                                 }
                             }
                         }
@@ -138,12 +140,12 @@ class CourseBaseResource extends Resource
                 if (!$option || empty($option->id)) {
                     continue;
                 }
-                $results[] = ['cd' => $option->id, 'title' => $option->name, 'confirm' => $option->confirm, 'price' => $option->price];
+                $results[] = ['cd' => $option->id, 'title' => $option->name, 'confirm' => $option->confirm, 'price' => $option->price, 'order' => $option->order];
             }
         }
 
 
-        return $results;
+        return collect($results)->sortBy('order')->values()->all();
     }
 
     /**
