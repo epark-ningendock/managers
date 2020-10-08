@@ -647,6 +647,7 @@ class ReservationController extends Controller
             if (isset($calendar_day) && $calendar_day->reservation_frames > 0) {
                 $count = Reservation::join('courses', 'courses.id', '=', 'reservations.course_id')
                     ->whereDate('reservation_date', '=', $reservation_date)
+										->where('reservation_status', '!=', ReservationStatus::CANCELLED)
                     ->where('courses.calendar_id', $course->calendar_id)
                     ->count();
 
@@ -964,6 +965,7 @@ class ReservationController extends Controller
             if ($course->calendar_id != $reservation->course->calendar_id && isset($calendar_day) && $calendar_day->reservation_frames > 0) {
                 $count = Reservation::join('courses', 'courses.id', '=', 'reservations.course_id')
                     ->whereDate('reservation_date', '=', $reservation_date)
+										->where('reservation_status', '!=', ReservationStatus::CANCELLED)
                     ->where('courses.calendar_id', $course->calendar_id)
                     ->count();
 
