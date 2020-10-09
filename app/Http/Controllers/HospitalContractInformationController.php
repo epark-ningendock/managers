@@ -247,10 +247,10 @@ class HospitalContractInformationController extends Controller
                 $hospital->name = $contract_arr['hospital_name'];
 
 								$contract->contract_plan_id = $contract_plans->get($contract_arr['plan_code'])->first()->id;
-								$contract->hospital_id = $hospital->id;
 								$hospital->plan_code = $contract->contract_plan_id;
-
 								$hospital->save();
+								$contract->hospital_id = $hospital->id;
+
 								$contract->save();
 
 								// 医療機関プラン
