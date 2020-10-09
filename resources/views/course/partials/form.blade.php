@@ -129,7 +129,7 @@
             </div>
           @endif
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4" style="display: none">
           {{Form::label('course_image_pc', '受診の流れメイン（PC）' , ['class' => 'form_label'])}}
           @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::PC)->first()))
             <div class="sub_image_area">
@@ -159,7 +159,7 @@
             </div>
           @endif
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4" style="display: none">
           {{Form::label('course_image_sp', '受診の流れメイン（SP）' , ['class' => 'form_label'])}}
           @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::SP)->first()))
             <div class="sub_image_area">
