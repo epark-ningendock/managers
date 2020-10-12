@@ -92,7 +92,7 @@ A. {{$question['answer']}}
 ■備考
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 {{$備考}}
-@if($process_kbn != '0')
+@if($process_kbn != '0' && !$customer_flg)
 ・・・・・・・・・・・・・・・・・・・・
 {{$受付・予約メモ}}
 @endif
