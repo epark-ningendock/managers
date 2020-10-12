@@ -301,17 +301,6 @@
     <div class="row form-group">
 
         <div class="col-md-3">
-            <label for="reservation_memo">申込者様からのメモ</label>
-        </div>
-
-        <div class="col-md-9">
-            <div>{!! nl2br(strip_tags($reservation->reservation_memo)) !!}</div>
-        </div>
-    </div>
-
-    <div class="row form-group">
-
-        <div class="col-md-3">
             <label for="reservation_memo">受付・予約メモ</label>
         </div>
 
