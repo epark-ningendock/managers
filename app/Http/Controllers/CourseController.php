@@ -11,6 +11,7 @@ use App\CourseMeta;
 use App\CourseOption;
 use App\CourseQuestion;
 use App\Enums\CourseImageType;
+use App\Enums\WebReception;
 use App\Hospital;
 use App\HospitalImage;
 use App\HospitalMeta;
@@ -658,12 +659,13 @@ class CourseController extends Controller
 			];
 
 			$web_recep = ['公開', '非公開'];
+			$c_recep = ($course->web_reception === WebReception::ACCEPT) ? '公開' : '非公開';
 
 			$description = '';
 
 			if($process === 'update'){
 				$description = "■コース名：{$course->name}　→　{$request->name}\n\n";
-				$description.= "■Web公開：{$web_recep[(int)$course->web_reception]}　→　{$web_recep[(int)$request->web_reception]}\n\n";
+				$description.= "■Web公開：{$c_recep}　→　{$web_recep[$request->web_reception]}\n\n";
 				$description.= "■価格：{$course->price}　→　{$request->price}\n\n";
 				$description.= "■コース特徴：\n{$course->course_point}\n\nから\n\n{$request->course_point}\n\n";
 			}
