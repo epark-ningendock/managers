@@ -58,12 +58,10 @@ A. {{$question['answer']}}
 電話がつながりやすい時間帯：{{$電話が繋がりやすい時間帯}}
 所属する健康保険組合名　　　{{$所属する健康保険組合名}}
 備考
-@if($process_kbn == '0')
 {{$備考}}
-@else
-{{$受付・予約メモ}}
-@endif
 
+受付・予約メモ
+{{$受付・予約メモ}}
 
 {{ (Session::get('hospital_id', null)) }}{{ (Session::get('staffs', null)) }}
 </pre>

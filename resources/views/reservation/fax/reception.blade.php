@@ -55,7 +55,6 @@ A. {{$question['answer']}}
 備考
 {{$備考}}
 
-
 {{ (Session::get('hospital_id', null)) }}{{ (Session::get('staffs', null)) }}
 </pre>
     </body>
