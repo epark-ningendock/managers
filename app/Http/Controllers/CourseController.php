@@ -657,10 +657,13 @@ class CourseController extends Controller
 				]
 			];
 
+			$web_recep = ['公開', '非公開'];
+
 			$description = '';
 
 			if($process === 'update'){
 				$description = "■コース名：{$course->name}　→　{$request->name}\n\n";
+				$description.= "■Web公開：{$web_recep[$course->web_reception]}　→　{$web_recep[$request->web_reception]}\n\n";
 				$description.= "■価格：{$course->price}　→　{$request->price}\n\n";
 				$description.= "■コース特徴：\n{$course->course_point}\n\nから\n\n{$request->course_point}\n\n";
 			}
@@ -694,7 +697,7 @@ class CourseController extends Controller
 			$params += [
 				'projectId' => $project,
 				'priorityId' => 3,
-				'notifiedUserId' => ['329633'], // '322846', '176880', '144863?'
+				'notifiedUserId' => ['322846', '144863', '176880', '252491'],
 			];
 
 			try{
