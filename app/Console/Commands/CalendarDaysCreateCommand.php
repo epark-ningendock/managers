@@ -41,7 +41,10 @@ class CalendarDaysCreateCommand extends Command
         // 対象データ取得
         $from_date = Carbon::today()->addMonths($add_month)->startOfMonth();
         $calendars = Calendar::where('auto_update_flg', 1)
-            ->where('auto_update_start_date', '<=', $from_date)
+            ->where(function ($query) use ($from_date) {
+            	$query->where('auto_update_start_date', '<=', $from_date)
+										->orWhereNull('auto_update_start_date');
+						})
             ->where(function ($query) use ($from_date) {
                 $query->where('auto_update_end_date', '>=', $from_date)
                     ->orWhereNull('auto_update_end_date');
