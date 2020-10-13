@@ -657,7 +657,7 @@ class CourseController extends Controller
 				]
 			];
 
-			$web_recep = ['公開', '非公開'];
+			$web_recep = ['0' => '公開', '1' => '非公開'];
 
 			$description = '';
 
