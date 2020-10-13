@@ -72,6 +72,7 @@ class CourseController extends Controller
         $course_matches = collect();
 
         $is_presettlement = $hospital->is_pre_account == '1' &&
+					(isset(Auth::user()->staff_auth)) &&
             (Auth::user()->staff_auth->is_pre_account == Permission::EDIT
                 || Auth::user()->staff_auth->is_pre_account == Permission::UPLOAD);
 

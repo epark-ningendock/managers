@@ -97,6 +97,7 @@
     </div>
 
     <div class="form-group">
+      @if(Session::get('isEpark'))
       <legend>コース画像</legend>
       <div class="row">
         <div class="col-sm-4">
@@ -129,6 +130,7 @@
             </div>
           @endif
         </div>
+
         <div class="col-sm-4" style="display: none">
           {{Form::label('course_image_pc', '受診の流れメイン（PC）' , ['class' => 'form_label'])}}
           @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::PC)->first()))
@@ -159,6 +161,7 @@
             </div>
           @endif
         </div>
+
         <div class="col-sm-4" style="display: none">
           {{Form::label('course_image_sp', '受診の流れメイン（SP）' , ['class' => 'form_label'])}}
           @if (isset($course) && !is_null($course->course_images) && !is_null($course->course_images->where('type', CourseImageType::SP)->first()))
@@ -190,6 +193,7 @@
           @endif
         </div>
       </div>
+      @endif
     </div>
 
     <div class="form-group">
