@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ContractInformation;
 use App\Course;
 use App\CourseDetail;
 use App\CourseImage;
@@ -13,11 +14,14 @@ use App\Enums\CourseImageType;
 use App\Hospital;
 use App\HospitalImage;
 use App\HospitalMeta;
+use App\HospitalStaff;
 use App\Http\Requests\CourseFormRequest;
 use App\KenshinSysCourse;
 use App\MajorClassification;
 use App\MinorClassification;
+use App\Staff;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Option;
@@ -68,6 +72,7 @@ class CourseController extends Controller
         $course_matches = collect();
 
         $is_presettlement = $hospital->is_pre_account == '1' &&
+					(isset(Auth::user()->staff_auth)) &&
             (Auth::user()->staff_auth->is_pre_account == Permission::EDIT
                 || Auth::user()->staff_auth->is_pre_account == Permission::UPLOAD);
 
@@ -113,12 +118,8 @@ class CourseController extends Controller
     {
         try {
             $course = $this->saveCourse($request, null);
-            $data = [
-                'course' => $course,
-                'staff_name' => Auth::user()->name,
-                'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
-                'processing' => '登録'
-            ];
+						self::postBacklog($this->setParamBacklog($request, $course, 'create'));
+
 //            Mail::to(config('mail.to.system'))->send(new CourseSettingNotificationMail($data));
             $request->session()->flash('success', trans('messages.created', ['name' => trans('messages.names.course')]));
             return redirect('course');
@@ -167,6 +168,7 @@ class CourseController extends Controller
             ->whereDate('life_time_to', '>=', $today)->get()->first();
 
         $is_presettlement = $hospital->is_pre_account == '1' &&
+					(isset(Auth::user()->staff_auth)) &&
             (Auth::user()->staff_auth->is_pre_account == Permission::EDIT
                 || Auth::user()->staff_auth->is_pre_account == Permission::UPLOAD);
 
@@ -521,16 +523,13 @@ class CourseController extends Controller
                 'is_price' => (integer)$request->has('is_price'),
                 'is_price_memo' => (integer)$request->has('is_price_memo'),
             ]);
+            $_course = clone $course;
             $course = $this->saveCourse($request, $course);
-            $data = [
-                'course' => $course,
-                'staff_name' => Auth::user()->name,
-                'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
-                'processing' => '更新'
-            ];
 //            Mail::to(config('mail.to.system'))->send(new CourseSettingNotificationMail($data));
 
-            $request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.course')]));
+						self::postBacklog($this->setParamBacklog($request, $_course, 'update'));
+
+						$request->session()->flash('success', trans('messages.updated', ['name' => trans('messages.names.course')]));
             return redirect('course');
         }  catch(StaleModelLockingException $e) {
             $request->session()->flash('error', trans('messages.model_changed_error'));
@@ -555,14 +554,9 @@ class CourseController extends Controller
         $course->course_questions()->delete();
         $course->course_images()->delete();
         $course->delete();
-        $data = [
-            'course' => $course,
-            'staff_name' => Auth::user()->name,
-            'subject' => '【EPARK人間ドック】検査コース登録・更新・削除のお知らせ',
-            'processing' => '削除'
-        ];
 //        Mail::to(config('mail.to.system'))->send(new CourseSettingNotificationMail($data));
 
+				self::postBacklog($this->setParamBacklog($request, $course, 'delete'));
         $request->session()->flash('success', trans('messages.deleted', ['name' => trans('messages.names.course')]));
         return redirect()->back();
     }
@@ -637,4 +631,77 @@ class CourseController extends Controller
         CourseImage::find($course_image_id)->delete();
         return redirect()->route('course.edit', ['course' => $course])->with('success', trans('messages.deleted', ['name' => trans('messages.names.course_image')]));
     }
+
+	/**
+	 * @param Request $request
+	 * @param Course $course
+	 * @param $process
+	 * @return array
+	 */
+    private function setParamBacklog(Request $request, Course $course, $process){
+			$hospital_id = session()->get('hospital_id');
+			$hospital = Hospital::find($hospital_id);
+			$contract = ContractInformation::where('hospital_id', $hospital_id)->first();
+			$operator = (session()->get('isEpark')) ? Staff::find(session()->get('staffs')) : HospitalStaff::find(session()->get('staffs'));
+
+			$kind = [
+				'title' => [
+					'create' => '新規登録',
+					'update' => '変更',
+					'delete' => '削除'
+				],
+				'issue' => [
+					'create' => '692428',
+					'update' => '692446',
+					'delete' => '692505'
+				]
+			];
+
+			$description = '';
+
+			if($process === 'update'){
+				$description = "■コース名：{$course->name}　→　{$request->name}\n\n";
+				$description.= "■価格：{$course->price}　→　{$request->price}\n\n";
+				$description.= "■コース特徴：\n{$course->course_point}\n\nから\n\n{$request->course_point}\n\n";
+			}
+
+			$description.="■操作者：{$operator->name}\n";
+
+			return [
+				'summary' => "{$hospital->name}様がコースを{$kind['title'][$process]}しました",
+				'issueTypeId' => $kind['issue'][$process],
+				'description' => $description,
+				'categoryId' => ['324353'],
+				'customField_101553' => $hospital->name,	// 医療機関名
+				'customField_101552' => $course->name,	// コース名
+				'customField_101554' => Config('app.url'). "/course/{$course->id}/edit",	// 管理画面URL
+				'customField_101561' => env('FRONT_URL'). "detail_hospital/{$contract->code}/course/{$course->code}",	// C画面URL
+			];
+		}
+
+	/**
+	 * @param $params
+	 * @throws \GuzzleHttp\Exception\GuzzleException
+	 */
+    public static function postBacklog($params){
+    	// Backlog API設定
+			$space = 'docknet';
+			$project = 141056;
+			$apiKey = '?apiKey=c8OKWdGGr9inkSoyLdLo3ipKKZG6UPXoH6LRP1fCnpIcTQYWvhATPxCtWxKPL5Ol';
+			$baseUri = "https://{$space}.backlog.jp/api/v2/";
+			$client = new Client(['base_uri' => $baseUri]);
+
+			$params += [
+				'projectId' => $project,
+				'priorityId' => 3,
+				'notifiedUserId' => ['329633'], // '322846', '176880', '144863?'
+			];
+
+			try{
+				$res = $client->post('issues'. $apiKey, ['form_params' => $params]);
+				\Log::debug($res);
+			}catch(\Exception $e){
+				\Log::error($e);
+			}
+		}
 }
