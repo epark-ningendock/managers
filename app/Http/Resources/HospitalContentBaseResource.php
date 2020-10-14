@@ -226,7 +226,7 @@ class HospitalContentBaseResource extends Resource
         $images = $categories->map(function ($t) {
             $img_url = '';
             $img_alt = '';
-            if ($t->hospital_image->is_display === 1) { // 写真
+            if (isset($t->hospital_image) && $t->hospital_image->is_display === 1) { // 写真
                 $img_url = $this->_filepath($t->hospital_image);
                 $img_alt = $t->caption ?? '';
             }
