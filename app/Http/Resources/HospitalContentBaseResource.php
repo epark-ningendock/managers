@@ -32,6 +32,7 @@ class HospitalContentBaseResource extends Resource
         $hospital_movie = collect(['access_movie_url' => '',]);
         $staff = $this->_staff($this->hospital_categories);
 
+        \Log::info($this->hospital_categories);
         return collect([])
             ->merge($this->_main_image($this->hospital_categories, 2, 1) ?? $main_image_pc)
             ->merge($this->_main_image($this->hospital_categories, 2, 2) ?? $main_image_sp)
@@ -222,12 +223,10 @@ class HospitalContentBaseResource extends Resource
             return isset($c->image_order)
                 && $c->image_order == 9;
         });
-			\Log::info($categories);
 
         $images = $categories->map(function ($t) {
             $img_url = '';
             $img_alt = '';
-            \Log::info($t);
             if ($t->hospital_image->is_display === 1) { // 写真
                 $img_url = $this->_filepath($t->hospital_image);
                 $img_alt = $t->caption ?? '';
