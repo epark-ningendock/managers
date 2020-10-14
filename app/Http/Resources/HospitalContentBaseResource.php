@@ -222,6 +222,7 @@ class HospitalContentBaseResource extends Resource
             return isset($c->image_order)
                 && $c->image_order == 9;
         });
+			\Log::info($categories);
 
         $images = $categories->map(function ($t) {
             $img_url = '';
