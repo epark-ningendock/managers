@@ -689,24 +689,26 @@ class CourseController extends Controller
 	 * @throws \GuzzleHttp\Exception\GuzzleException
 	 */
     public static function postBacklog($params){
-    	// Backlog API設定
-			$space = 'docknet';
-			$project = 141056;
-			$apiKey = '?apiKey=c8OKWdGGr9inkSoyLdLo3ipKKZG6UPXoH6LRP1fCnpIcTQYWvhATPxCtWxKPL5Ol';
-			$baseUri = "https://{$space}.backlog.jp/api/v2/";
-			$client = new Client(['base_uri' => $baseUri]);
+    	if(session()->get('isEpark') != 'false'){
+				// Backlog API設定
+				$space = 'docknet';
+				$project = 141056;
+				$apiKey = '?apiKey=c8OKWdGGr9inkSoyLdLo3ipKKZG6UPXoH6LRP1fCnpIcTQYWvhATPxCtWxKPL5Ol';
+				$baseUri = "https://{$space}.backlog.jp/api/v2/";
+				$client = new Client(['base_uri' => $baseUri]);
 
-			$params += [
-				'projectId' => $project,
-				'priorityId' => 3,
-				'notifiedUserId' => ['322846', '144863', '176880', '252491'],
-			];
+				$params += [
+					'projectId' => $project,
+					'priorityId' => 3,
+					'notifiedUserId' => ['322846', '144863', '176880', '252491'],
+				];
 
-			try{
-				$res = $client->post('issues'. $apiKey, ['form_params' => $params]);
-				\Log::debug($res);
-			}catch(\Exception $e){
-				\Log::error($e);
+				try{
+					$res = $client->post('issues'. $apiKey, ['form_params' => $params]);
+					\Log::debug($res);
+				}catch(\Exception $e){
+					\Log::error($e);
+				}
 			}
 		}
 }
