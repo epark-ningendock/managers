@@ -10,7 +10,7 @@
 @stop
 
 @section('form')
-  <form method="POST" action="{{ route('reservation.store') }}">
+  <form method="POST" action="{{ route('reservation.store') }}" class="h-adr">
   	{!! csrf_field() !!}
     @include('reservation.partials.form')
   </form>

@@ -94,7 +94,9 @@
         $('#family_name_kana').val($this.attr('data-family_name_kana'));
         $('#first_name_kana').val($this.attr('data-first_name_kana'));
         $('#tel').val($this.attr('data-tel'));
-        $('#sex').val($this.attr('data-sex'));
+				$('input[name="sex"]').each(function(){
+					$(this).attr('checked', ($(this).val() === $this.attr('data-sex')));
+				});
         $('#birthday').val($this.attr('data-birthday'));
         $('#postcode1').val($this.attr('data-postcode1'));
         $('#postcode2').val($this.attr('data-postcode2'));
