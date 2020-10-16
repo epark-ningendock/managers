@@ -72,6 +72,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'authority.level.not-contract-staff' => \App\Http\Middleware\AuthorityLevelNotContractStaff::class,
         'jsonp' => \App\Http\Middleware\ResponseJsonp::class,
+				'cacheResponse' => \Spatie\ResponseCache\Middlewares\CacheResponse::class,
     ];
 
     /**
