@@ -10,8 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::any('{all}', function(){ abort('503'); })->where('all', '.*');
-
+if($_SERVER["REMOTE_ADDR"] !== '106.72.140.160'){
+	Route::any('{all}', function(){ abort('503'); })->where('all', '.*');
+}
 
 Route::get('/', function () {
     return view('index');
