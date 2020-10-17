@@ -10,9 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-if($_SERVER["HTTP_X_FORWARDED_FOR"] !== '106.72.140.160'){
-	Route::any('{all}', function(){ abort('503'); })->where('all', '.*');
-}
+Route::any('{all}', function(){ abort('503'); })->where('all', '.*');
+
 
 Route::get('/', function () {
     return view('index');
