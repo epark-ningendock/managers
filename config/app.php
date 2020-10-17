@@ -175,7 +175,7 @@ return [
          * Package Service Providers...
          */
         Maatwebsite\Excel\ExcelServiceProvider::class,
-				Clockwork\Support\Laravel\ClockworkServiceProvider::class,
+//				Clockwork\Support\Laravel\ClockworkServiceProvider::class,
         /*
          * Application Service Providers...
          */
