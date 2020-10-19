@@ -42,5 +42,5 @@ return [
      *
      * You may use a string or an array here.
      */
-    'cache_tag' => ['search_h', 'search_c', 'hospital', 'course', 'cal'],
+    'cache_tag' => '',
 ];
