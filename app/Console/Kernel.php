@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CacheClear;
 use App\Console\Commands\CourseCloseCheckCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -21,6 +22,7 @@ class Kernel extends ConsoleKernel
         Commands\CalendarDaysCreateCommand::class,
         /** 路線情報更新バッチ */
         Commands\EkiSpertManagerCommand::class,
+				Commands\CacheClear::class,
     ];
 
     /**
@@ -32,10 +34,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('pv-aggregate')->dailyAt('02:00');
-        $schedule->command('temporary-reservation-check')->dailyAt('06:30');
+        //$schedule->command('temporary-reservation-check')->dailyAt('06:30');
         $schedule->command('claim-record-create')->monthlyOn(21, '05:00');
-        $schedule->command('course-close-check')->monthlyOn(1, '05:15');
-        $schedule->command('course-close-check')->monthlyOn(15, '05:15');
+        //$schedule->command('course-close-check')->monthlyOn(1, '05:15');
+        //$schedule->command('course-close-check')->monthlyOn(15, '05:15');
         $schedule->command('calendar-day-create')->monthlyOn(20, '02:05');
     }
 
