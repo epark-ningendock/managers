@@ -22,7 +22,6 @@ class Kernel extends ConsoleKernel
         Commands\CalendarDaysCreateCommand::class,
         /** 路線情報更新バッチ */
         Commands\EkiSpertManagerCommand::class,
-				Commands\CacheClear::class,
     ];
 
     /**
