@@ -42,7 +42,7 @@ class ClaimRecordCreateCommand extends Command
      */
     protected function createBillingMonth() {
         $date = Carbon::today();
-        $date->addMonth(1);
+        //$date->addMonth(1);
         return $date->year . sprintf('%02d', $date->month) ;
     }
 }
