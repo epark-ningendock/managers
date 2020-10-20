@@ -500,6 +500,8 @@ class CourseController extends Controller
         $name = $course_image->name_for_upload($request->file($target_image)->getClientOriginalName());
         \Storage::disk(env('FILESYSTEM_CLOUD'))->put($name, (string) $image->encode(), 'public');
         $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($name);
+        $image_path = str_replace(env('S3DOMAIN'), env('CLOUDFRONT'), $image_path);
+
 
         $course_image_data = [
             'name' => $name,

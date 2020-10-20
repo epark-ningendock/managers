@@ -486,6 +486,7 @@ class HospitalImagesController extends Controller
         //pc画像を保存 putFile メソッドでuniqueファイル名を返す
         $image_path = \Storage::disk(env('FILESYSTEM_CLOUD'))->putFile($hospital_id.'/'.$this->base_name, $file, 'public');
         $img_url = \Storage::disk(env('FILESYSTEM_CLOUD'))->url($image_path);
+        $img_url = str_replace(env('S3DOMAIN'), env('CLOUDFRONT'), $img_url);
         $file_name = str_replace($hospital_id.'/'.$this->base_name, '', $image_path);
         $img_info = [
             'pc_img_url' => $img_url,
@@ -501,6 +502,7 @@ class HospitalImagesController extends Controller
             //sp画像はputでファイル名指定
             \Storage::disk(env('FILESYSTEM_CLOUD'))->put($hospital_id.'/'.$this->sp_dir.'/'.$this->base_name.$file_name, (string) $sp_image->encode(), 'public');
             $img_url_sp = \Storage::url($hospital_id.'/'.$this->sp_dir.'/'.$this->base_name.$file_name);
+            $img_url_sp = str_replace(env('S3DOMAIN'), env('CLOUDFRONT'), $img_url_sp);
             $img_info['sp_img_url'] =  $img_url_sp;
             $img_info['sp_img_name'] =  $hospital_id.'/'.$this->sp_dir.'/'.$this->base_name.$file_name;
         }
