@@ -108,10 +108,6 @@ class ReservationMail extends Mailable
 				// 操作者
 				$_operator = session()->get('isEpark');
 				$operator = '';
-				\Log::info(get_class($this->entity->terminal_type));
-				\Log::info($this->entity->terminal_type);
-				\Log::info($this->entity->terminal_type === TerminalType::PC);
-				\Log::info($this->entity->terminal_type === TerminalType::SMART_PHONE);
 
 			if($this->entity->terminal_type == '2' || $this->entity->terminal_type == '3'){
 					$operator = 'From:C';
