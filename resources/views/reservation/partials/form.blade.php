@@ -509,7 +509,7 @@
 
                                         flag = true;
 
-                                        questionGroup.append('<label>' + question.question_title + '</label><input type="hidden" name="course_question_ids[]" value="${question.id}" />')
+                                        questionGroup.append('<label>' + question.question_title + '</label><input type="hidden" name="course_question_ids[]" value="' + question.id + '" />')
                                         const answerGroup = $('<div class="answer-group"></div>').appendTo(questionGroup);
                                         for (let i = 1; i <= 10; i++) {
                                             let key = 'answer' + (i < 10 ? '0' : '') + i;
