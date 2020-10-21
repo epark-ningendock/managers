@@ -634,7 +634,7 @@
                                             let key = 'answer' + (i < 10 ? '0' : '') + i;
                                             if (question[key]) {
 
-                                                let input_name = `questions_${question.id}`;
+                                                let input_name = 'questions_' + question.id;
                                                 let $questionGroupOldData = @json(old(), JSON_PRETTY_PRINT);
 
                                                 if ( ! $questionGroupOldData.length > 0) {
