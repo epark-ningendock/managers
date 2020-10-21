@@ -104,6 +104,17 @@ class ReservationMail extends Mailable
 //        Log::info('In Mail/Reservation/ReservationMail');
 //        Log::info($this->entity);
 
+				// 操作者
+				$_operator = session()->get('isEpark');
+				if($_operator == 'false'){
+					$operator = 'From:M';
+				}elseif($_operator == 'true'){
+					$operator = 'From:E';
+				}else{
+					$operator = 'From:C';
+					if($this->entity->site_code !== '') $operator .= "（$this->entity->site_code）";
+				}
+
         return $this
             ->from(EPARK_MAIL_FROM)
             ->subject($this->subject)
@@ -163,6 +174,8 @@ class ReservationMail extends Mailable
                 'status' => $this->entity->reservation_status,
                 'process_kbn' => $this->entity->process_kbn,
                 '管理画面URL' => $this->createURL(),
+								'isCategory' => $this->entity->course->is_category,
+								'操作者' => $operator,
             ]);
     }
 
