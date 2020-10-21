@@ -113,7 +113,7 @@ class ReservationMail extends Mailable
 				\Log::info($this->entity->terminal_type === TerminalType::PC);
 				\Log::info($this->entity->terminal_type === TerminalType::SMART_PHONE);
 
-			if((int)$this->entity->terminal_type == TerminalType::PC || (int)$this->entity->terminal_type == TerminalType::SMART_PHONE){
+			if($this->entity->terminal_type == '2' || $this->entity->terminal_type == '3'){
 					$operator = 'From:C';
 					if($this->entity->site_code != '') $operator .= "（{$this->entity->site_code}）";
 				}elseif($_operator == 'false'){
