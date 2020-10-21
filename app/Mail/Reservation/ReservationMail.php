@@ -107,7 +107,7 @@ class ReservationMail extends Mailable
 
 				// 操作者
 				$_operator = session()->get('isEpark');
-				if(in_array($this->entity->terminal_type, [2, 3])){
+				if($this->entity->terminal_type === TerminalType::PC || $this->entity->terminal_type === TerminalType::SMART_PHONE){
 					$operator = 'From:C';
 					if($this->entity->site_code != '') $operator .= "（{$this->entity->site_code}）";
 				}elseif($_operator == 'false'){
