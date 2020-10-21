@@ -32,6 +32,7 @@
 @endif
 
 仮受付日：{{$受付日}} @if(!$customer_flg)　【{{ $operator }}】@endif
+
 @if($process_kbn == '0')
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ■ご予約内容

@@ -175,7 +175,7 @@ class ReservationMail extends Mailable
                 'process_kbn' => $this->entity->process_kbn,
                 '管理画面URL' => $this->createURL(),
 								'isCategory' => $this->entity->course->is_category,
-								'操作者' => $operator,
+								'operator' => $operator,
             ]);
     }
 
