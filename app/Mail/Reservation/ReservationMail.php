@@ -112,7 +112,7 @@ class ReservationMail extends Mailable
 					$operator = 'From:E';
 				}else{
 					$operator = 'From:C';
-					if($this->entity->site_code !== '') $operator .= "（{$this->entity->site_code}）";
+					if($this->entity->site_code != '') $operator .= "（{$this->entity->site_code}）";
 				}
 
         return $this
