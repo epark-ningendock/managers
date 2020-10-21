@@ -644,7 +644,9 @@
                                                 $questionGroupOldValue = ( $questionGroupOldData ) ? $questionGroupOldData : {};
                                                 checkedOldValue = ( $questionGroupOldValue.hasOwnProperty(input_name) && ($questionGroupOldValue[input_name].hasOwnProperty(key))  ) ? 'checked' : '';
 
-                                                answerGroup.append('<input ' + checkedOldValue + ' type="checkbox" class="checkbox" id="questions_' + question.id + '[' + key + ']" name="questions_' + question.id + '[' + key + ']" value="' + question[key] + '">' +
+                                                answerGroup.append('<input ' + checkedOldValue + ' type="checkbox" class="checkbox" ' +
+                                                                   'id="questions_' + question.id + '[' + key + ']" ' +
+                                                                   'name="questions_' + question.id + '[' + key + ']" value="' + question[key] + '">' +
                                                                    '<label for="questions_' + question.id + '[' + key + ']">' +
                                                                    '<span>' + question[key] + '</span></label>');
                                             }
