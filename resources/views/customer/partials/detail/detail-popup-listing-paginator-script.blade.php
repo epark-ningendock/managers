@@ -126,20 +126,17 @@
                         } else {
                             let detailMessage = '';
                             if (data.error) {
-                                detailMessage = `<strong class="white-space">${data.error}</strong>`;
+                                detailMessage = '<strong class="white-space">' + data.error + '</strong>';
                             } else if(data.errors) {
-                                detailMessage = '<url>';
+                                detailMessage = '<ul>';
                                 for(const key in data.errors) {
-                                    detailMessage += `<li><strong class="white-space">${ data.errors[key] }</strong></li>`;
+                                    detailMessage += '<li><strong class="white-space">' + data.errors[key] + '</strong></li>';
                                 }
-                                detailMessage += '</url>';
+                                detailMessage += '</ul>';
                             }
 
                             // showing error message
-                            const message = $(`<div class="alert alert-danger alert-block">
-                                                 <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
-                                                 ${detailMessage}
-                                               </div>`).prependTo('#name-identification .modal-body');
+                            const message = $('<div class="alert alert-danger alert-block"><button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>' + detailMessage + '</div>').prependTo('#name-identification .modal-body');
 
                             $('.alert-danger').fadeOut(4000, function() {
                                 $('.alert-danger').remove();
