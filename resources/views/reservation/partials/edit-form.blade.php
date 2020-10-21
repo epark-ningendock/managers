@@ -220,7 +220,7 @@
                 <div class="col-md-5">
                     <select class="form-control" name="start_time_min" id="start_time_min">
                         <option value=""></option>
-                        @for ( $x = 0; $x < 61; $x++)
+                        @for ( $x = 0; $x < 56; $x += 5)
                             <option
                                     value="{{ ( $x < 10 ) ? '0'.$x :  $x }}"
                                     @if ( old('start_time_min', $reservation->start_time_min) == (( $x < 10 ) ? '0'.$x :  $x))
