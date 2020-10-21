@@ -109,9 +109,12 @@ class ReservationMail extends Mailable
 				$_operator = session()->get('isEpark');
 				$operator = '';
 				\Log::info(get_class($this->entity->terminal_type));
+				\Log::info($this->entity->terminal_type);
 				\Log::info($this->entity->terminal_type === TerminalType::PC);
 				\Log::info($this->entity->terminal_type === TerminalType::SMART_PHONE);
-				if($this->entity->terminal_type === TerminalType::PC || $this->entity->terminal_type === TerminalType::SMART_PHONE){
+			\Log::info($this->entity->terminal_type == TerminalType::PC);
+			\Log::info($this->entity->terminal_type == TerminalType::SMART_PHONE);
+			if($this->entity->terminal_type === TerminalType::PC || $this->entity->terminal_type === TerminalType::SMART_PHONE){
 					$operator = 'From:C';
 					if($this->entity->site_code != '') $operator .= "（{$this->entity->site_code}）";
 				}elseif($_operator == 'false'){
