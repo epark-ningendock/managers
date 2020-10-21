@@ -129,7 +129,7 @@
                                 detailMessage = '<strong class="white-space">' + data.error + '</strong>';
                             } else if(data.errors) {
                                 detailMessage = '<ul>';
-                                for(const key in data.errors) {
+                                for(let key in data.errors) {
                                     detailMessage += '<li><strong class="white-space">' + data.errors[key] + '</strong></li>';
                                 }
                                 detailMessage += '</ul>';
