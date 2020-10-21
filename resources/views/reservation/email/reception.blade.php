@@ -18,7 +18,7 @@
  {{$管理画面URL}}
 @endif
 
-受付日：{{$受付日}}
+受付日：{{$受付日}} @if(!$customer_flg)　【{{ $operator }}】@endif
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ■ご予約内容
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -30,19 +30,19 @@
 住所：{{$医療施設住所}}
 電話番号：{{$医療施設電話番号}}
 
-検査コース：{{$検査コース名}} {{$コース料金}}円（税込）
+検査コース：{{$検査コース名}} {{ number_format($コース料金) }}円（税込）
 @foreach($options as $option)
 @if($loop->first)
-オプション：{{ $option['name'] }} {{ $option['price'] }}円（税込）
+オプション：{{ $option['name'] }} {{ number_format($option['price']) }}円（税込）
 @else
-　　　　　 　　　{{$option['name']}} {{$option['price']}}円（税込）
+　　　　　 　　　{{$option['name']}} {{ number_format($option['price']) }}円（税込）
 @endif
 @endforeach
 
 小計：{{number_format($コース料金＋オプション総額)}}円（税込）
 調整：{{number_format($調整金額)}}円（税込）
 合計：{{number_format($コース料金＋オプション総額＋調整金額)}}円（税込）
-@if($customer_flg)
+@if($customer_flg && $isCategory == 1)
 ご加入の保険により金額が異なります。
 金額につきましては医療施設よりご連絡いたします。
 @endif

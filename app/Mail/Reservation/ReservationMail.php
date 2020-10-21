@@ -4,6 +4,7 @@ namespace App\Mail;
 
 use App\Enums\Gender;
 use App\Enums\ReservationStatus;
+use App\Enums\TerminalType;
 use App\Reservation;
 use App\ReservationOption;
 use Illuminate\Bus\Queueable;
@@ -106,13 +107,15 @@ class ReservationMail extends Mailable
 
 				// 操作者
 				$_operator = session()->get('isEpark');
-				if($_operator == 'false'){
+				$operator = '';
+
+			if($this->entity->terminal_type == '2' || $this->entity->terminal_type == '3'){
+					$operator = 'From:C';
+					if($this->entity->site_code != '') $operator .= "（{$this->entity->site_code}）";
+				}elseif($_operator == 'false'){
 					$operator = 'From:M';
 				}elseif($_operator == 'true'){
 					$operator = 'From:E';
-				}else{
-					$operator = 'From:C';
-					if($this->entity->site_code !== '') $operator .= "（$this->entity->site_code）";
 				}
 
         return $this
@@ -175,7 +178,7 @@ class ReservationMail extends Mailable
                 'process_kbn' => $this->entity->process_kbn,
                 '管理画面URL' => $this->createURL(),
 								'isCategory' => $this->entity->course->is_category,
-								'操作者' => $operator,
+								'operator' => $operator,
             ]);
     }
 
