@@ -123,8 +123,8 @@ return [
     |
     */
 
-    'log' => env('APP_LOG', 'single'),
-
+    'log' => env('APP_LOG', 'daily'),
+		'log_max_files' => 365,
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
     'Excel' => 'Maatwebsite\Excel\Facades\Excel',

@@ -59,9 +59,6 @@ class CalendarMonthlyRequest extends ValidationRequest
     public function toObject()
     {
         $days = $this->getBetween();
-        Log::debug($days->from);
-        Log::debug($days->to);
-
 
         return (object) [
             'hospital_code' => $this->input('hospital_code'),
