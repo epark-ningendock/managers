@@ -109,14 +109,14 @@ class ReservationMail extends Mailable
 				$_operator = session()->get('isEpark');
 				$operator = '';
 
-			if($this->entity->terminal_type == '2' || $this->entity->terminal_type == '3'){
-					$operator = 'From:C';
-					if($this->entity->site_code != '') $operator .= "（{$this->entity->site_code}）";
-				}elseif($_operator == true){
+			if($_operator == true){
 					$operator = 'From:E';
-				}elseif($_operator == false){
+			}elseif($_operator == false){
 					$operator = 'From:M';
-				}
+			}else{
+				$operator = 'From:C';
+				if($this->entity->site_code != '') $operator .= "（{$this->entity->site_code}）";
+			}
 
         return $this
             ->from(EPARK_MAIL_FROM)
