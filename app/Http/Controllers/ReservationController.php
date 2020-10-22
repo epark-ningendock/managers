@@ -546,6 +546,7 @@ class ReservationController extends Controller
 
 
 			// EPARK側にメール送信
+			\Log::info('Gyomu');
 			\Log::info($gyoumu_mail);
 			Mail::to($gyoumu_mail)->send($staus_mail[$status], false);
 
