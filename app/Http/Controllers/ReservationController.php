@@ -531,6 +531,7 @@ class ReservationController extends Controller
 
 				try{
 					// 医療機関にメール送信
+					\Log::info($hospital_mails);
 					Mail::to($hospital_mails)->send($staus_mail[$status], false);
 
 					// 医療機関にFAX送信（EPARKによる、予約確定の場合のみ）
