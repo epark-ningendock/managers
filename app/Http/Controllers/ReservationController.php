@@ -145,7 +145,6 @@ class ReservationController extends Controller
             $query->whereDate('created_at', '<=', $request->input('reservation_created_end_date'));
         }
 
-        Log::info('受診日（開始）:'. $request->input('reservation_start_date', '') );
         if ($request->input('reservation_start_date', '') != '') {
             $query->whereDate('reservation_date', '>=', $request->input('reservation_start_date'));
         }
