@@ -109,14 +109,20 @@ class ReservationMail extends Mailable
 				$_operator = session()->get('isEpark');
 				$operator = '';
 
-			if($this->entity->terminal_type == '2' || $this->entity->terminal_type == '3'){
-					$operator = 'From:C';
-					if($this->entity->site_code != '') $operator .= "（{$this->entity->site_code}）";
-				}elseif($_operator == true){
+			if($_operator == true){
 					$operator = 'From:E';
-				}elseif($_operator == false){
+			}elseif($_operator == false){
 					$operator = 'From:M';
-				}
+			}else{
+				$operator = 'From:C';
+				if($this->entity->site_code != '') $operator .= "（{$this->entity->site_code}）";
+			}
+
+			// 受付時間
+			$rsv_time = '';
+			if($this->entity->start_time_hour != '' && $this->entity->start_time_min != ''){
+				$rsv_time = $this->entity->start_time_hour . ':' . $this->entity->start_time_min;
+			}
 
         return $this
             ->from(EPARK_MAIL_FROM)
@@ -143,7 +149,7 @@ class ReservationMail extends Mailable
                 '未決済金額' => $this->entity->amount_unsettled ?? '',
                 '確定日' => $reservation_date,
                 '受付日' => date('Y/m/d', strtotime($this->entity->created_at)),
-                '受付時間' => $this->entity->start_time_hour . ':' . $this->entity->start_time_min,
+                '受付時間' => $rsv_time,
                 '受付形態' => $type,
 
                 '備考' => $this->entity->reservation_memo ?? '',

@@ -14,6 +14,7 @@ use App\HospitalEmailSetting;
 use App\HospitalOptionPlan;
 use App\HospitalPlan;
 use App\Mail\ReservationCancelFaxToMail;
+use App\Mail\ReservationChangeFaxToMail;
 use App\Mail\ReservationCompleteFaxToMail;
 use App\MonthlyWaku;
 use App\ReservationKenshinSysOption;
@@ -516,7 +517,12 @@ class ReservationService
                 if ($is_cancel && $hospital_email_setting->in_hospital_cancellation_email_reception_flg == 1) {
                     Mail::to($fax_tos)->send(new ReservationCancelFaxToMail($entity));
                 } elseif ($hospital_email_setting->web_reception_email_flg == 1) {
-                    Mail::to($fax_tos)->send(new ReservationCompleteFaxToMail($entity));
+                	if($reservation->process_kbn != '1'){
+										Mail::to($fax_tos)->send(new ReservationCompleteFaxToMail($entity));
+									}else{
+										Mail::to($fax_tos)->send(new ReservationChangeFaxToMail($entity));
+									}
+
                 }
             }
 
