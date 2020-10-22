@@ -368,6 +368,7 @@ class ReservationController extends Controller
 
             Session::flash('success', trans('messages.reservation.accept_success'));
             DB::commit();
+						\Log::info("Mail Sending from accept");
             $this->reservation_mail_send($reservation, false);
 
         } catch (\Exception $e) {
@@ -741,6 +742,7 @@ class ReservationController extends Controller
 //            $this->sendReservationCheckMail(Hospital::find(session('hospital_id')), $reservation, $customer, '登録');
 
             DB::commit();
+            \Log::info("Mail Sending from store");
             $this->reservation_mail_send($reservation, false);
 
         } catch (\Exception $i) {
@@ -1050,6 +1052,7 @@ class ReservationController extends Controller
             DB::commit();
 
             if ($this->is_send_mail($reservation, $old_reservation, $request->course_options, $old_reservation_options)) {
+								\Log::info("Mail Sending from update");
                 $this->reservation_mail_send($reservation, true);
             }
 
