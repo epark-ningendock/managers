@@ -43,15 +43,15 @@ class HospitalController extends ApiBaseController
         try {
             $hospital_id = ContractInformation::where('code', $request->input('hospital_code'))->first()->hospital_id;
             $hospital = Hospital::where('status', '!=', Status::DELETED)->find($hospital_id);
-            $sex = $this->convert_sex($hospital->medical_examination_system_id, $request->input('sex'));
-            $request->sex = $sex;
+//            $sex = $this->convert_sex($hospital->medical_examination_system_id, $request->input('sex'));
+//            $request->sex = $sex;
             $hospital = $this->getHospitalData($hospital_id, $request);
-            if (is_numeric($request->input('sex'))) {
-                $hospital->setKenshinRelation(true,
-                    $sex,
-                    $request->input('birth'),
-                    $request->input('honnin_kbn'));
-            }
+//            if (is_numeric($request->input('sex'))) {
+//                $hospital->setKenshinRelation(true,
+//                    $sex,
+//                    $request->input('birth'),
+//                    $request->input('honnin_kbn'));
+//            }
 
             return new HospitalIndexResource($hospital);
         } catch (\Exception $e) {
