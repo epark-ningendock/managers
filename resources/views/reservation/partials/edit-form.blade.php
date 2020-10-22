@@ -628,13 +628,13 @@
 
                                         flag = true;
 
-                                        questionGroup.append($(`<label>${question.question_title}</label><input type="hidden" name="course_question_ids[]" value="${question.id}" />`))
+                                        questionGroup.append('<label>' + question.question_title + '</label><input type="hidden" name="course_question_ids[]" value="' + question.id + '" />')
                                         const answerGroup = $('<div class="answer-group"></div>').appendTo(questionGroup);
                                         for (let i = 1; i <= 10; i++) {
                                             let key = 'answer' + (i < 10 ? '0' : '') + i;
                                             if (question[key]) {
 
-                                                let input_name = `questions_${question.id}`;
+                                                let input_name = 'questions_' + question.id;
                                                 let $questionGroupOldData = @json(old(), JSON_PRETTY_PRINT);
 
                                                 if ( ! $questionGroupOldData.length > 0) {
@@ -644,12 +644,11 @@
                                                 $questionGroupOldValue = ( $questionGroupOldData ) ? $questionGroupOldData : {};
                                                 checkedOldValue = ( $questionGroupOldValue.hasOwnProperty(input_name) && ($questionGroupOldValue[input_name].hasOwnProperty(key))  ) ? 'checked' : '';
 
-                                                answerGroup.append($(`<input ${checkedOldValue} type="checkbox" class="checkbox"
-                                                                        id="questions_${question.id}[${key}]"
-                                                                        name="questions_${question.id}[${key}]" value="${question[key]}">
-                                                                      <label for="questions_${question.id}[${key}]">
-                                                                        <span>${question[key]}</span>
-                                                                      </label>`));
+                                                answerGroup.append('<input ' + checkedOldValue + ' type="checkbox" class="checkbox" ' +
+                                                                   'id="questions_' + question.id + '[' + key + ']" ' +
+                                                                   'name="questions_' + question.id + '[' + key + ']" value="' + question[key] + '">' +
+                                                                   '<label for="questions_' + question.id + '[' + key + ']">' +
+                                                                   '<span>' + question[key] + '</span></label>');
                                             }
                                         }
                                     }
