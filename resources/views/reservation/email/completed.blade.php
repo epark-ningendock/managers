@@ -125,6 +125,7 @@ https://www.docknet.jp/mypage/accept
 　破棄して頂きますようお願いいします。
 ※本メールは配信専用です。検査に関するお問い合わせは、
 　医療施設へ直接ご連絡ください。
+@endif
 
 ---------------------------------------------------------
 人間ドックの総合ポータルサイト　EPARK人間ドック
@@ -132,7 +133,6 @@ https://www.docknet.jp/
 運営：株式会社EPARK人間ドック
 https://eparkdock.com/
 ---------------------------------------------------------
-@endif
 {{ (Session::get('hospital_id', null)) }}{{ (Session::get('staffs', null)) }}
 </pre>
     </body>
