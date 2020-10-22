@@ -486,8 +486,8 @@ class ReservationController extends Controller
      */
     private function reservation_mail_send($reservation, $change_flg) {
     	define('IS_CHANGE', $change_flg);
-			define('GYOUMU_MAIL_TO', config('mail.to.gyoumu'));
 
+			$gyoumu_mail = config('mail.to.gyoumu');
 			$isEpark = session()->get('isEpark', false);
     	$status = (!IS_CHANGE) ? $reservation->reservation_status->value : 9999;
 			$reservation->process_kbn = '1';
@@ -498,7 +498,7 @@ class ReservationController extends Controller
 				ReservationStatus::PENDING => 1,
 				9999 => 'in_hospital_change_email_reception_flg',
 			];
-    	$staus_mail = [
+    	$status_mail = [
 				ReservationStatus::RECEPTION_COMPLETED => new ReservationReceptionCompleteMail($reservation, false),
 				ReservationStatus::CANCELLED => new ReservationReceptionCancelMail($reservation, false),
 				ReservationStatus::PENDING => new ReservationReceptionMail($reservation, false),
@@ -531,11 +531,11 @@ class ReservationController extends Controller
 
 				try{
 					// 医療機関にメール送信
-					\Log::info($hospital_mails);
-					Mail::to($hospital_mails)->send($staus_mail[$status], false);
+					$hospital_mails[] = $gyoumu_mail;
+					Mail::to($hospital_mails)->send($status_mail[$status], false);
 
 					// 医療機関にFAX送信（EPARKによる、予約確定の場合のみ）
-					if (!IS_CHANGE && $status == ReservationStatus::RECEPTION_COMPLETED && $isEpark) {
+					if (!IS_CHANGE && $status == ReservationStatus::RECEPTION_COMPLETED && $isEpark && count($hospital_fax) > 0) {
 						Mail::to($hospital_fax)->send($status_fax[$status], false);
 					}
 				}catch(\Exception $e){
@@ -543,12 +543,6 @@ class ReservationController extends Controller
 					Log::error($e);
 				}
 			}
-
-
-			// EPARK側にメール送信
-			\Log::info('Gyomu');
-			\Log::info(GYOUMU_MAIL_TO);
-			Mail::to(GYOUMU_MAIL_TO)->send($staus_mail[$status], false);
 
     	// 受診者にメール送信
 			if (!empty($reservation->customer) && !empty($reservation->customer->email)){
