@@ -487,7 +487,7 @@ class ReservationController extends Controller
     private function reservation_mail_send($reservation, $change_flg) {
     	define('IS_CHANGE', $change_flg);
 
-			$gyoumu_mail = config('mail.to.gyoumu');
+			$gyoumu_to = config('mail.to.gyoumu');
 			$isEpark = session()->get('isEpark', false);
     	$status = (!IS_CHANGE) ? $reservation->reservation_status->value : 9999;
 			$reservation->process_kbn = '1';
@@ -498,12 +498,7 @@ class ReservationController extends Controller
 				ReservationStatus::PENDING => 1,
 				9999 => 'in_hospital_change_email_reception_flg',
 			];
-    	$status_mail = [
-				ReservationStatus::RECEPTION_COMPLETED => new ReservationReceptionCompleteMail($reservation, false),
-				ReservationStatus::CANCELLED => new ReservationReceptionCancelMail($reservation, false),
-				ReservationStatus::PENDING => new ReservationReceptionMail($reservation, false),
-				9999 => new ReservationChangeMail($reservation, false),
-			];
+
     	$status_fax = [
     		ReservationStatus::RECEPTION_COMPLETED => new ReservationReceptionCompleteFaxToMail($reservation)
 			];
@@ -557,8 +552,20 @@ class ReservationController extends Controller
 					Mail::to($to)->send(new ReservationReceptionMail($reservation, true));
 				}
 			}
-
     }
+
+    static function setMailObj($reservation, $status){
+			switch($status){
+				case ReservationStatus::RECEPTION_COMPLETED :
+					return new ReservationReceptionCompleteMail($reservation, false);
+				case ReservationStatus::CANCELLED :
+					return new ReservationReceptionCancelMail($reservation, false);
+				case ReservationStatus::PENDING :
+					return new ReservationReceptionMail($reservation, false);
+				case 9999 :
+					return new ReservationChangeMail($reservation, false);
+			}
+		}
 
     /**
      * bulk reservation status update
