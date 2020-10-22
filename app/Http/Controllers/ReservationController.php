@@ -486,8 +486,8 @@ class ReservationController extends Controller
      */
     private function reservation_mail_send($reservation, $change_flg) {
     	define('IS_CHANGE', $change_flg);
+			define('EPARK_MAIL_TO', config('mail.to.gyoumu'));
 
-			$gyoumu_mail = config('mail.to.gyoumu');
 			$isEpark = session()->get('isEpark', false);
     	$status = (!IS_CHANGE) ? $reservation->reservation_status->value : 9999;
 			$reservation->process_kbn = '1';
@@ -547,8 +547,8 @@ class ReservationController extends Controller
 
 			// EPARK側にメール送信
 			\Log::info('Gyomu');
-			\Log::info($gyoumu_mail);
-			Mail::to($gyoumu_mail)->send($staus_mail[$status], false);
+			\Log::info(EPARK_MAIL_TO);
+			Mail::to(EPARK_MAIL_TO)->send($staus_mail[$status], false);
 
     	// 受診者にメール送信
 			if (!empty($reservation->customer) && !empty($reservation->customer->email)){
