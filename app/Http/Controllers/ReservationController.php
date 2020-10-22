@@ -526,8 +526,7 @@ class ReservationController extends Controller
 
 				try{
 					// 医療機関にメール送信
-					$hospital_mails[] = $gyoumu_mail;
-					Mail::to($hospital_mails)->send($status_mail[$status], false);
+					Mail::to($hospital_mails)->send(self::setMailObj($reservation, $status), false);
 
 					// 医療機関にFAX送信（EPARKによる、予約確定の場合のみ）
 					if (!IS_CHANGE && $status == ReservationStatus::RECEPTION_COMPLETED && $isEpark && count($hospital_fax) > 0) {
@@ -538,6 +537,10 @@ class ReservationController extends Controller
 					Log::error($e);
 				}
 			}
+
+
+			// EPARK側にメール送信
+			Mail::to($gyoumu_to)->send(self::setMailObj($reservation, $status), false);
 
     	// 受診者にメール送信
 			if (!empty($reservation->customer) && !empty($reservation->customer->email)){
