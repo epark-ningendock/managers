@@ -392,6 +392,10 @@
                   <input type="checkbox" name="medical_treatment_time[{{$i}}][sun]" value="1"
                          @if ( old('medical_treatment_time.' . $i . '.sun', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->sun : null)) == 1 ) checked @endif> {{ trans('messages.sun') }}
                 </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" name="medical_treatment_time[{{$i}}][hol]" value="1"
+                         @if ( old('medical_treatment_time.' . $i . '.hol', ( isset($medical_treatment_times[$i-1]) ? $medical_treatment_times[$i-1]->hol : null)) == 1 ) checked @endif> {{ trans('messages.hol') }}
+                </label>
               </div>
             </td>
           </tr>

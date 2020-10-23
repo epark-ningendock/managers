@@ -123,6 +123,7 @@ return [
     'fri'                                  => '金曜',
     'sat'                                  => '土曜',
     'sun'                                  => '日曜',
+		'hol'                                  => '祝日',
     'consultation_note'                    => '休診補足',
     'latitude'                             => '北緯',
     'longitude'                            => '東経',
