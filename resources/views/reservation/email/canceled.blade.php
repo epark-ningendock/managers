@@ -35,7 +35,7 @@
 小計：{{number_format($コース料金＋オプション総額)}}円（税込）
 調整：{{number_format($調整金額)}}円（税込）
 合計：{{number_format($コース料金＋オプション総額＋調整金額)}}円（税込）
-@if($customer_flg)ご加入の保険により金額が異なります。@endif
+@if($customer_flg && $isCategory == 1)ご加入の保険により金額が異なります。@endif
 
 受診日：{{$確定日}}
 @if($受付時間 != '')受付時間：{{$受付時間}}@endif
