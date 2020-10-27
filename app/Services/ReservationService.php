@@ -796,8 +796,6 @@ class ReservationService
         try {
             $q_answers = json_decode(json_encode($request->input('q_anser')));
             $courseQuestions = CourseQuestion::where('course_id', $request->input('course_id'))->get();
-					\Log::info($q_answers);
-					\Log::info($courseQuestions);
             if (! $courseQuestions) {
                 return;
             }

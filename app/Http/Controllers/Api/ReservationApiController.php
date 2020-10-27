@@ -217,6 +217,7 @@ class ReservationApiController extends ApiBaseController
         $response['code_number']  = $error_no;
         $response['code_detail']  = $detail_code;
         $response['message']  = $message;
+				Log::debug($response);
         throw new HttpResponseException(
             response()->json($response, 400)->setCallback($callback)
         );
