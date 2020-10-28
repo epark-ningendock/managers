@@ -211,8 +211,8 @@ class SearchController extends ApiBaseController
             }
 
             if (!empty($request->input('freewords'))) {
+							\Log::debug(mb_detect_encoding($request->input('freewords')));
             		$rawFreeword = mb_convert_encoding($request->input('freewords'), 'utf-8', 'SJIS');
-            		\Log::debug($rawFreeword);
                 $freeword_str = str_replace('　', ' ', $rawFreeword);
                 $freewords = explode(' ', $freeword_str);
 
