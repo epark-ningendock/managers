@@ -49,7 +49,8 @@ class HospitalMetaInformation extends Model
     public function scopeWhereForSearchAPI($query, $request)
     {
         if ($request->input('freewords') != null) {
-            $freeword_str = str_replace('　', ' ', $request->input('freewords'));
+						$rawFreeword = mb_convert_encoding($request->input('freewords'), 'utf-8', 'auto');
+						$freeword_str = str_replace('　', ' ', $rawFreeword);
             $freewords = explode(' ', $freeword_str);
             // フリーワード（地名など）
             $query->where(function ($q) use ($freewords) {

@@ -169,25 +169,29 @@ class Course extends SoftDeleteModel
         // フリーワード（施設名など）
         if ($request->input('freewords') !== null)
             $query->whereHas('course_meta_informations', function ($query) use ($request) {
-                $query->where('freewords', 'like', '%' . $request->input('freewords') . '%');
+								$rawFreeword = mb_convert_encoding($request->input('freewords'), 'utf-8', 'auto');
+                $query->where('freewords', 'like', '%' . $rawFreeword . '%');
             });
 
         // フリーワード（エリアなど）
         if ($request->input('freewords') !== null)
             $query->whereHas('course_meta_informations', function ($query) use ($request) {
-                $query->where('area_station', 'like', '%' . $request->input('freewords') . '%');
+							$rawFreeword = mb_convert_encoding($request->input('freewords'), 'utf-8', 'auto');
+							$query->where('area_station', 'like', '%' . $rawFreeword . '%');
             });
 
         // フリーワード（施設特徴）
         if ($request->input('freewords') !== null)
             $query->whereHas('course_meta_informations', function ($query) use ($request) {
-                $query->where('hospital_classification', 'like', '%' . $request->input('freewords') . '%');
+								$rawFreeword = mb_convert_encoding($request->input('freewords'), 'utf-8', 'auto');
+                $query->where('hospital_classification', 'like', '%' . $rawFreeword . '%');
             });
 
         // フリーワード（路線）
         if ($request->input('freewords') !== null)
             $query->whereHas('course_meta_informations', function ($query) use ($request) {
-                $query->where('rails', 'like', '%' . $request->input('freewords') . '%');
+								$rawFreeword = mb_convert_encoding($request->input('freewords'), 'utf-8', 'auto');
+                $query->where('rails', 'like', '%' . $rawFreeword . '%');
             });
 
         // 都道府県コード
