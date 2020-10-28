@@ -21,8 +21,10 @@ class SearchRequest extends ValidationRequest
      */
     public function toJson()
     {
-        $serach_condition = [
-            'freewords' => $this->input('freewords') ?? '',
+			$rawFreeword = mb_convert_encoding($this->input('freewords'), 'utf-8', 'auto');
+
+			$serach_condition = [
+            'freewords' => $rawFreeword ?? '',
             'pref_cd' => $this->input('pref_cd') ?? '',
             'district_no' => $this->input('district_no') ?? '',
             'rail_no' => $this->input('rail_no') ?? '',
