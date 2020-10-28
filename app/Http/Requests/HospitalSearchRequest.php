@@ -69,8 +69,9 @@ class HospitalSearchRequest extends SearchRequest
      */
     public function toJson()
     {
+    		$rawFreeword = mb_convert_encoding($this->input('freewords'), 'utf-8', 'auto');
         $serach_condition = [
-            'freewords' => $this->input('freewords') ?? '',
+            'freewords' => $rawFreeword ?? '',
             'pref_cd' => $this->input('pref_cd') ?? '',
             'district_no' => $this->input('district_no') ?? '',
             'rail_no' => $this->input('rail_no') ?? '',
