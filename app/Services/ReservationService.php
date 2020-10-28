@@ -138,21 +138,12 @@ class ReservationService
 
         $params = $this->getApiParams($entity);
 
-        $quotaguard_env = env("QUOTAGUARDSTATIC_URL");
-        $quotaguard = parse_url($quotaguard_env);
-
-        $proxyUrl       = $quotaguard['host'].":".$quotaguard['port'];
-        $proxyAuth       = $quotaguard['user'].":".$quotaguard['pass'];
-
         $client = app()->make(Client::class);
         try {
             Log::info('予約履歴 APIリクエスト処理', ['予約ID' => $entity->id ]);
             $response = $client->request('POST', $uri, [
                 'headers' => $headers,
                 'query' => $params,
-                'proxy' => $quotaguard_env,
-//                'proxyauth' => 'CURLAUTH_BASIC',
-//                'proxyuserpwd' => $proxyAuth,
             ]);
             Log::info('予約履歴 APIリクエスト処理終了', ['レスポンス' => $response ]);
         } catch (Exception $e) {
@@ -439,8 +430,6 @@ class ReservationService
 
         \Illuminate\Support\Facades\Log::info('予約ID:'. $reservation->id);
         \Illuminate\Support\Facades\Log::info('医療機関ID:'. $reservation->hospital_id);
-				\Illuminate\Support\Facades\Log::info('dump $entity');
-				\Illuminate\Support\Facades\Log::info($entity);
         // キャンセル処理(処理区分がある)かどうか
         $is_cancel = $entity->reservation_status == ReservationStatus::CANCELLED ? true : false;
 
